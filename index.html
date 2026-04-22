@@ -66,12 +66,25 @@ body {
 .hero-bg { position: absolute; inset: 0; z-index: 0; }
 .hero-bg-image {
   position: absolute; inset: 0;
-  background-image: url('https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=2400&q=85');
+  background-image: url('https://images.unsplash.com/photo-1559087867-ce4c91325525?auto=format&fit=crop&w=2400&q=85');
   background-size: cover; background-position: center;
+  transform: scale(1.02);
+  animation: heroZoom 18s ease-out forwards;
 }
 .hero-bg-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(26, 29, 46, 0.88) 0%, rgba(26, 29, 46, 0.55) 50%, rgba(26, 29, 46, 0.75) 100%);
+  background:
+    linear-gradient(180deg, rgba(26, 29, 46, 0.35) 0%, rgba(26, 29, 46, 0.15) 35%, rgba(26, 29, 46, 0.88) 100%),
+    linear-gradient(90deg, rgba(26, 29, 46, 0.78) 0%, rgba(26, 29, 46, 0.35) 55%, rgba(26, 29, 46, 0.15) 100%);
+}
+.hero-bg-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 65%, rgba(26, 29, 46, 0.45) 0%, rgba(26, 29, 46, 0) 55%);
+  pointer-events: none;
+}
+
+@keyframes heroZoom {
+  to { transform: scale(1.08); }
 }
 
 .nav {
@@ -144,18 +157,60 @@ body {
   margin: 0 auto;
 }
 
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--gold);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 42px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.7;
+}
+
 .hero-headline {
   font-family: var(--serif);
-  font-size: clamp(44px, 6.5vw, 84px);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  color: var(--gold);
-  max-width: 900px;
-  margin-bottom: 60px;
+  font-size: clamp(44px, 6.8vw, 88px);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  color: var(--cream);
+  max-width: 980px;
+  margin-bottom: 28px;
   opacity: 0;
   transform: translateY(30px);
   animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+}
+
+.hero-headline .italic {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.65;
+  color: rgba(245, 240, 230, 0.82);
+  font-weight: 300;
+  max-width: 560px;
+  margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
 }
 
 .hero-cta {
@@ -6477,6 +6532,7 @@ body {
     <div class="hero-bg">
       <div class="hero-bg-image"></div>
       <div class="hero-bg-overlay"></div>
+      <div class="hero-bg-vignette"></div>
     </div>
 
     <nav class="nav">
@@ -6503,12 +6559,16 @@ body {
 
     <div class="hero-content">
       <div class="hero-inner">
+        <div class="hero-eyebrow">Electra Skill Academy</div>
         <h1 class="hero-headline">
-          Siap memulai karir<br>
-          menjadi profesional<br>
-          electrician
+          Bangun Karir sebagai<br>
+          Profesional <span class="italic">Kelistrikan</span><br>
+          di Era Energi Terbarukan
         </h1>
-        <a href="#practices" class="hero-cta">Start Journey</a>
+        <p class="hero-sub">
+          Dari dasar kelistrikan hingga keahlian PLTS dan energi terbarukan — pendidikan vokasi yang menyiapkan kamu siap kerja di industri.
+        </p>
+        <a href="#practices" class="hero-cta">Mulai Perjalananmu</a>
       </div>
     </div>
   </section>
