@@ -142,6 +142,183 @@ body {
 
 .nav-right:hover { color: var(--gold); }
 
+/* ===== NAV AUTH SLOT (Daftar / Login, or user chip) ===== */
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: 10px;
+  padding-left: 26px;
+  border-left: 1px solid rgba(245, 240, 230, 0.18);
+}
+
+.nav-auth-link {
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.nav-auth-link:hover { color: var(--gold); }
+
+.nav-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--gold);
+  color: var(--navy-deep);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-auth-btn:hover {
+  background: var(--gold-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(201, 169, 110, 0.25);
+}
+
+.nav-user {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 8px;
+  background: rgba(26, 29, 46, 0.55);
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: var(--cream);
+  font-family: var(--sans);
+  backdrop-filter: blur(6px);
+}
+.nav-user:hover {
+  border-color: var(--gold);
+  background: rgba(26, 29, 46, 0.8);
+}
+
+.nav-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--navy-deep);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.nav-user-avatar img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.nav-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-user-caret {
+  width: 10px; height: 10px;
+  color: var(--gold);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.nav-user.open .nav-user-caret { transform: rotate(180deg); }
+
+.nav-user-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  background: var(--navy);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: all 0.2s ease;
+  z-index: 200;
+}
+.nav-user.open .nav-user-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-user-menu-header {
+  padding: 10px 12px 14px;
+  border-bottom: 1px solid rgba(245, 240, 230, 0.08);
+  margin-bottom: 6px;
+}
+.nav-user-menu-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nav-user-menu-email {
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.nav-user-menu-item:hover {
+  background: rgba(201, 169, 110, 0.12);
+  color: var(--gold);
+}
+.nav-user-menu-item.danger:hover {
+  background: rgba(220, 38, 38, 0.12);
+  color: #fca5a5;
+}
+
 .hero-content {
   position: relative;
   z-index: 10;
@@ -5269,11 +5446,25 @@ body {
   .purchase-modal-inner { padding: 44px 32px 36px; }
 }
 
+@media (max-width: 1024px) {
+  .nav-right-group { gap: 20px; }
+  .nav-auth { margin-left: 4px; padding-left: 16px; gap: 10px; }
+  .nav-user-name { max-width: 90px; }
+}
+
 @media (max-width: 640px) {
   .nav { padding: 24px 20px; }
   .nav-logo-mark { width: 36px; height: 36px; }
   .nav-logo-text { font-size: 13px; letter-spacing: 0.18em; }
   .nav-right { font-size: 11px; letter-spacing: 0.18em; }
+  .nav-right-group .nav-right[data-secondary="true"] { display: none; }
+  .nav-auth { padding-left: 10px; margin-left: 0; gap: 8px; }
+  .nav-auth-link { font-size: 10px; letter-spacing: 0.16em; }
+  .nav-auth-btn { padding: 8px 14px; font-size: 10px; letter-spacing: 0.16em; }
+  .nav-user { padding: 6px 12px 6px 6px; gap: 8px; }
+  .nav-user-avatar { width: 28px; height: 28px; font-size: 11px; }
+  .nav-user-name { max-width: 80px; font-size: 12px; }
+  .nav-user-menu { right: -8px; min-width: 200px; }
   .hero-content { padding: 0 20px 40px; }
   .hero-headline { margin-bottom: 40px; }
   .hero-cta { padding: 18px 36px; font-size: 11px; width: 100%; }
@@ -6551,9 +6742,10 @@ body {
         </div>
       </a>
       <div class="nav-right-group">
-        <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
-        <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
-        <a class="nav-right" onclick="showView('sertifikasi')" style="cursor:pointer;">Ambil Sertifikasi</a>
+        <a class="nav-right" data-secondary="true" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
+        <a class="nav-right" data-secondary="true" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
+        <a class="nav-right" data-secondary="true" onclick="showView('sertifikasi')" style="cursor:pointer;">Ambil Sertifikasi</a>
+        <div class="nav-auth" id="nav-auth-slot"><!-- filled by renderNavAuth() --></div>
       </div>
     </nav>
 
@@ -26724,6 +26916,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     saveData(state);
     document.getElementById('esa-onboarding-modal').classList.remove('active');
     updateHomeProgress();
+    renderNavAuth();
 
     const firstName = name.split(' ')[0];
     if (state.promoCode) {
@@ -27860,6 +28053,79 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     panel.style.display = 'grid';
   }
 
+  // ========== NAV AUTH SLOT (Daftar / Login, or user chip) ==========
+  function renderNavAuth() {
+    const slot = document.getElementById('nav-auth-slot');
+    if (!slot) return;
+
+    const p = state.profile;
+    if (!p || !p.name) {
+      slot.innerHTML = `
+        <button type="button" class="nav-auth-link" onclick="esaOpenAuth('register')">Daftar</button>
+        <button type="button" class="nav-auth-btn" onclick="esaOpenAuth('login')">Login</button>
+      `;
+      return;
+    }
+
+    const firstName = String(p.name).trim().split(/\s+/)[0] || p.name;
+    const initials = p.avatarInitials
+      || String(p.name).trim().split(/\s+/).map(n => n[0]).slice(0, 2).join('').toUpperCase();
+    const avatarInner = p.picture
+      ? `<img src="${escapeHtml(p.picture)}" alt="${escapeHtml(firstName)}" referrerpolicy="no-referrer">`
+      : escapeHtml(initials);
+
+    slot.innerHTML = `
+      <div class="nav-user" id="nav-user-chip" onclick="esaToggleUserMenu(event)">
+        <div class="nav-user-avatar">${avatarInner}</div>
+        <div class="nav-user-name">${escapeHtml(firstName)}</div>
+        <svg class="nav-user-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 3 3-3"/></svg>
+        <div class="nav-user-menu" onclick="event.stopPropagation()">
+          <div class="nav-user-menu-header">
+            <div class="nav-user-menu-name">${escapeHtml(p.name)}</div>
+            <div class="nav-user-menu-email">${escapeHtml(p.email || '')}</div>
+          </div>
+          <button type="button" class="nav-user-menu-item" onclick="esaCloseUserMenu(); showView('home'); setTimeout(()=>{const el=document.getElementById('esa-home-progress-panel'); if(el) el.scrollIntoView({behavior:'smooth', block:'center'});}, 100);">
+            <span>Dashboard</span>
+          </button>
+          <button type="button" class="nav-user-menu-item" onclick="esaCloseUserMenu(); esaRedeemPromoCode();">
+            <span>Redeem Kode Promo</span>
+          </button>
+          <button type="button" class="nav-user-menu-item danger" onclick="esaCloseUserMenu(); esaLogout();">
+            <span>Keluar</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+  window.esaRenderNavAuth = renderNavAuth;
+
+  function openAuth(/* mode */) {
+    showOnboardingModal();
+  }
+  window.esaOpenAuth = openAuth;
+
+  function toggleUserMenu(e) {
+    if (e) { e.stopPropagation(); }
+    const chip = document.getElementById('nav-user-chip');
+    if (!chip) return;
+    chip.classList.toggle('open');
+  }
+  window.esaToggleUserMenu = toggleUserMenu;
+
+  function closeUserMenu() {
+    const chip = document.getElementById('nav-user-chip');
+    if (chip) chip.classList.remove('open');
+  }
+  window.esaCloseUserMenu = closeUserMenu;
+
+  // Close the user menu when clicking outside
+  document.addEventListener('click', function(e) {
+    const chip = document.getElementById('nav-user-chip');
+    if (chip && chip.classList.contains('open') && !chip.contains(e.target)) {
+      chip.classList.remove('open');
+    }
+  });
+
   // ========== UTILITIES ==========
   function showToast(title, msg, icon) {
     icon = icon || '⭐';
@@ -27895,6 +28161,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       original(view);
       setTimeout(() => {
         updateUserHUD();
+        renderNavAuth();
         if (view === 'home') updateHomeProgress();
         if (view === 'talent' && typeof renderTalents === 'function') renderTalents();
       }, 100);
@@ -27917,6 +28184,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const oldHud = document.getElementById('esa-user-hud');
     if (oldHud) oldHud.remove();
 
+    renderNavAuth();
     updateHomeProgress();
 
     // Hook "Start Journey" CTA → show login modal if not logged in, then scroll
