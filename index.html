@@ -482,6 +482,162 @@ body {
 }
 
 /* ================================================
+   ACADEMY PRICING
+================================================ */
+.academy-pricing {
+  position: relative;
+  padding: 140px 80px;
+  background: var(--cream-soft);
+  color: var(--navy-deep);
+  overflow: hidden;
+}
+
+.academy-pricing-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.academy-pricing-card {
+  position: relative;
+  background: var(--navy-deep);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  padding: 64px 56px;
+  color: var(--cream);
+  box-shadow: 0 30px 80px rgba(26, 29, 46, 0.18);
+}
+
+.academy-pricing-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.academy-pricing-title {
+  font-family: var(--serif);
+  font-size: clamp(34px, 4.4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  line-height: 1.05;
+  margin-bottom: 18px;
+}
+
+.academy-pricing-title .italic {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.academy-pricing-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.25);
+}
+
+.academy-pricing-price {
+  font-family: var(--serif);
+  font-size: clamp(38px, 4.8vw, 56px);
+  font-weight: 500;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.academy-pricing-period {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: rgba(245, 240, 230, 0.65);
+}
+
+.academy-pricing-section-title {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.academy-pricing-section-title::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.academy-pricing-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 32px;
+}
+
+.academy-pricing-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(245, 240, 230, 0.85);
+  font-weight: 300;
+}
+
+.academy-pricing-list li svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--gold);
+}
+
+.academy-pricing-cta {
+  display: inline-block;
+  padding: 18px 44px;
+  background: var(--gold);
+  color: var(--navy-deep);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.academy-pricing-cta:hover {
+  background: var(--gold-hover);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1024px) {
+  .academy-pricing { padding: 100px 40px; }
+  .academy-pricing-card { padding: 48px 36px; }
+  .academy-pricing-list { grid-template-columns: 1fr; gap: 12px; }
+}
+
+@media (max-width: 640px) {
+  .academy-pricing { padding: 80px 20px; }
+  .academy-pricing-card { padding: 40px 24px; }
+  .academy-pricing-cta { width: 100%; text-align: center; }
+}
+
+/* ================================================
    TESTIMONIAL
 ================================================ */
 .testimonial { padding: 120px 80px; background: var(--cream-soft); }
@@ -2140,6 +2296,290 @@ body {
 }
 
 .prakt-btn:hover { background: var(--gold); color: var(--navy-deep); }
+
+/* ================================================
+   JOB OPPORTUNITY VIEW
+================================================ */
+.jobs-hero {
+  padding: 110px 80px 90px;
+  background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
+  color: var(--cream);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.jobs-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 30%, rgba(201, 169, 110, 0.15) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 70%, rgba(201, 169, 110, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.jobs-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.jobs-hero-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+}
+
+.jobs-hero-eyebrow::before,
+.jobs-hero-eyebrow::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.5;
+}
+
+.jobs-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 32px;
+  color: var(--cream);
+}
+
+.jobs-hero h1 .italic {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--gold);
+}
+
+.jobs-hero-desc {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(245, 240, 230, 0.72);
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.jobs-list-section {
+  padding: 100px 80px;
+  background: var(--cream-soft);
+}
+
+.jobs-list-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 40px;
+}
+
+.job-card {
+  background: #fff;
+  border: 1px solid rgba(26, 29, 46, 0.08);
+  box-shadow: 0 20px 60px rgba(26, 29, 46, 0.06);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.job-card-header {
+  padding: 32px 40px 24px;
+  border-bottom: 1px solid rgba(26, 29, 46, 0.08);
+  background: linear-gradient(180deg, #fff 0%, #fbfaf6 100%);
+}
+
+.job-card-companies {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.job-card-company {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(26, 29, 46, 0.04);
+  border: 1px solid rgba(26, 29, 46, 0.08);
+  border-radius: 2px;
+  color: var(--navy-deep);
+}
+
+.job-card-company.accent { color: var(--gold-dark); border-color: rgba(201, 169, 110, 0.4); background: rgba(201, 169, 110, 0.08); }
+
+.job-card-title {
+  font-family: var(--serif);
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--navy-deep);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.job-card-meta {
+  font-family: var(--sans);
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--ink-dim);
+}
+
+.job-card-body {
+  padding: 32px 40px 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.job-card-block-title {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.job-card-block-title::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.job-card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.job-card-list li {
+  display: flex;
+  gap: 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--navy-deep);
+  font-weight: 400;
+}
+
+.job-card-list li::before {
+  content: '';
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+
+.job-card-list.numbered {
+  counter-reset: jobitem;
+}
+
+.job-card-list.numbered li {
+  counter-increment: jobitem;
+}
+
+.job-card-list.numbered li::before {
+  content: counter(jobitem) ".";
+  width: auto;
+  height: auto;
+  margin-top: 0;
+  background: transparent;
+  border-radius: 0;
+  color: var(--gold-dark);
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  font-style: italic;
+  min-width: 18px;
+}
+
+.job-card-footer {
+  padding: 24px 40px;
+  border-top: 1px solid rgba(26, 29, 46, 0.08);
+  background: var(--cream-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.job-card-footer-text {
+  font-family: var(--sans);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+
+.job-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--navy-deep);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--navy-deep);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.job-card-cta:hover {
+  background: var(--gold);
+  color: var(--navy-deep);
+  border-color: var(--gold);
+}
+
+@media (max-width: 1024px) {
+  .jobs-list-section { padding: 80px 40px; }
+  .job-card-body { grid-template-columns: 1fr; gap: 28px; }
+  .job-card-header,
+  .job-card-body,
+  .job-card-footer { padding-left: 28px; padding-right: 28px; }
+}
+
+@media (max-width: 640px) {
+  .jobs-hero { padding: 80px 20px 60px; }
+  .jobs-list-section { padding: 60px 20px; }
+  .job-card-header,
+  .job-card-body,
+  .job-card-footer { padding-left: 22px; padding-right: 22px; }
+  .job-card-cta { width: 100%; justify-content: center; }
+}
 
 @media (max-width: 900px) {
   .labs-hero { padding: 80px 24px 60px; }
@@ -6495,6 +6935,7 @@ body {
         </div>
       </a>
       <div class="nav-right-group">
+        <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
         <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
         <a class="nav-right" onclick="showView('sertifikasi')" style="cursor:pointer;">Ambil Sertifikasi</a>
@@ -6567,6 +7008,67 @@ body {
           <p>Lulus ujian sertifikasi ESA (passing 70%) dan dapat sertifikat resmi sebagai bekal ke lembaga sertifikasi BNSP.</p>
           <div class="offer-card-signature">— Bagas Nurcahya</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="academy-pricing">
+    <div class="academy-pricing-inner">
+      <div class="academy-pricing-card reveal">
+        <div class="academy-pricing-eyebrow">Paket Tahunan</div>
+        <h2 class="academy-pricing-title">
+          Electra <span class="italic">Academy</span>
+        </h2>
+        <div class="academy-pricing-price-row">
+          <span class="academy-pricing-price">Rp 250.000</span>
+          <span class="academy-pricing-period">/ Tahun</span>
+        </div>
+
+        <div class="academy-pricing-section-title">Yang Kamu Dapat</div>
+        <ul class="academy-pricing-list">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>600+ Modul dan Video edukasi Kelistrikan dengan 8 Jalur karier (dasar &rarr; advanced)</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Sertifikat Digital tiap modul (LinkedIn-ready)</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Simulator &amp; Virtual Lab (Wiring, Panel, PLC)</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>15.000+ Bank Soal + Simulasi UKK + BNSP/LSP</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Akses Offline &mdash; belajar tanpa kuota</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Komunitas + Mentor Praktisi PLN/Industri</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Live Q&amp;A Bulanan dengan engineer &amp; alumni</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>CV Builder + Mock Interview + Portofolio</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Job Board Internal + jaringan partner industri</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Update Modul Gratis sepanjang langganan</span>
+          </li>
+        </ul>
+
+        <button class="academy-pricing-cta" onclick="startPayment('all')">Mulai Langganan</button>
       </div>
     </div>
   </section>
@@ -7236,6 +7738,210 @@ body {
 </div>
 
 <!-- ========================================================== -->
+<!-- VIEW: JOB OPPORTUNITY                                      -->
+<!-- ========================================================== -->
+<div class="view" id="view-jobs">
+  <div class="detail-nav">
+    <a class="detail-nav-logo" onclick="showView('home')" style="cursor:pointer;">
+      <div class="detail-nav-logo-mark">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+          <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+          <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+        </svg>
+      </div>
+      <div class="detail-nav-logo-text">
+        Electra<br>
+        <span class="line-2">Skill Academy</span>
+      </div>
+    </a>
+    <div class="detail-nav-center">Job Opportunity</div>
+    <div class="detail-nav-right">
+      <button class="detail-nav-back" onclick="showView('home')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kembali
+      </button>
+      <a href="#" class="detail-nav-ai">AI Tutor</a>
+    </div>
+  </div>
+
+  <section class="jobs-hero">
+    <div class="jobs-hero-inner">
+      <div class="jobs-hero-eyebrow">Lowongan Mitra Industri</div>
+      <h1>Karir nyata bareng <span class="italic">partner</span> ESA</h1>
+      <p class="jobs-hero-desc">Lowongan langsung dari mitra industri Electra Skill Academy. Lamar posisi yang cocok dengan jalur karirmu dan terhubung dengan perusahaan terbaik di sektor energi dan manufaktur.</p>
+    </div>
+  </section>
+
+  <section class="jobs-list-section">
+    <div class="jobs-list-inner">
+
+      <!-- Job 1: Operator Produksi Trafo Power/Daya -->
+      <article class="job-card reveal">
+        <div class="job-card-header">
+          <div class="job-card-companies">
+            <span class="job-card-company">GE VERNOVA</span>
+            <span class="job-card-company">PLN</span>
+            <span class="job-card-company accent">UNINDO &middot; Joint Venture</span>
+          </div>
+          <h2 class="job-card-title">Operator Produksi Trafo Power/Daya</h2>
+          <p class="job-card-meta">Posisi ini akan dipekerjakan melalui mitra perusahaan kami secara kontrak.</p>
+        </div>
+
+        <div class="job-card-body">
+          <div>
+            <div class="job-card-block-title">Tugas &amp; Tanggung Jawab</div>
+            <ul class="job-card-list">
+              <li>Menjalankan Instruksi Kerja (SOP) dengan penuh tanggung jawab dan memastikan mutu produk terjaga.</li>
+              <li>Melakukan perawatan mesin dan alat kerja yang digunakan.</li>
+              <li>Memprioritaskan &amp; melaksanakan peraturan Kesehatan, Keselamatan kerja dan Lingkungan.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="job-card-block-title">Kualifikasi</div>
+            <ul class="job-card-list">
+              <li>Minimal pendidikan SMK (Teknik Pemesinan, Teknik Listrik, Teknik Fabrikasi Logam &amp; Manufaktur) atau SMA dengan pengalaman bekerja di industri manufaktur.</li>
+              <li>Laki-laki/Perempuan; kami terbuka bagi pelamar disabilitas yang dapat melaksanakan pekerjaan pada posisi ini.</li>
+              <li>Pengalaman Kerja di Trafo Power bagian Winding, Pre-Assembly, Stacking, Upper Yok, Connection, dan Final Assembly menjadi nilai plus.</li>
+              <li>Mampu membaca dan memahami gambar kerja serta mengikuti prosedur dengan teliti.</li>
+              <li>Mampu berkomunikasi yang baik dan bekerjasama dalam tim.</li>
+              <li>Keterampilan analitis dan pemecahan masalah selama produksi.</li>
+              <li>Memiliki fisik dan mental yang sehat (lebih diutamakan tidak merokok).</li>
+              <li>Tidak buta warna.</li>
+              <li>Dapat bekerja dengan target dan mengikuti sistem shift.</li>
+              <li>Dapat mengoperasikan komputer &amp; menguasai Ms. Office.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="job-card-footer">
+          <div class="job-card-footer-text">*Hanya yang memenuhi kualifikasi dan persyaratan akan diproses lebih lanjut.</div>
+          <button class="job-card-cta" onclick="applyJob('operator-trafo-power')">
+            Lamar Posisi
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <!-- Job 2: Junior Expeditor -->
+      <article class="job-card reveal">
+        <div class="job-card-header">
+          <div class="job-card-companies">
+            <span class="job-card-company">GE VERNOVA</span>
+            <span class="job-card-company">PLN</span>
+            <span class="job-card-company accent">UNINDO &middot; Joint Venture</span>
+          </div>
+          <h2 class="job-card-title">Junior Expeditor &mdash; Indramayu</h2>
+          <p class="job-card-meta">This position would be hired as a fixed term contract, under our corporate partner.</p>
+        </div>
+
+        <div class="job-card-body">
+          <div>
+            <div class="job-card-block-title">Job Summary</div>
+            <ul class="job-card-list">
+              <li>Interact with suppliers to ensure timely delivery of materials and products.</li>
+              <li>Check production schedules and deadlines and adjust them as needed.</li>
+              <li>Monitor and manage inventory levels and reorder supplies as necessary.</li>
+              <li>Coordinate with various departments to ensure smooth workflow and timely completion of projects.</li>
+              <li>Resolve issues related to delayed shipments or unexpected changes in the supply chain.</li>
+              <li>Track orders and ensure they are fulfilled in a timely manner.</li>
+              <li>Communicate with project managers and provide updates on the status of materials and equipment.</li>
+              <li>Identify and mitigate potential risks in the supply chain.</li>
+              <li>Prepare and maintain detailed reports on materials and equipment status.</li>
+              <li>Inspect deliveries for damage or discrepancies and report those to the supplier.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="job-card-block-title">Qualifications</div>
+            <ul class="job-card-list">
+              <li>Bachelor&rsquo;s degree in administration, logistics, supply chain, or related field.</li>
+              <li>+3 years proven experience in procurement and supplier relationships.</li>
+              <li>Proficiency in Microsoft Word, PowerPoint, Excel, and Outlook.</li>
+              <li>ERP (SAP) experienced.</li>
+              <li>A thorough understanding of sourcing methodologies.</li>
+              <li>Strong negotiation skills.</li>
+              <li>High level skill of communication in English.</li>
+              <li>Sound time-management and organizational skills.</li>
+              <li>Team player and change agent with strong credibility at all levels of the organization.</li>
+              <li>Focus on timely and cost-effective output. Knows how to deal with figures.</li>
+              <li>Integrity, autonomy, and results oriented.</li>
+              <li>Preferably a non-smoker candidate.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="job-card-footer">
+          <div class="job-card-footer-text">*Company will notify shortlisted candidates only.</div>
+          <button class="job-card-cta" onclick="applyJob('junior-expeditor')">
+            Lamar Posisi
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <!-- Job 3: Project Site Engineer (HVS - AIS) -->
+      <article class="job-card reveal">
+        <div class="job-card-header">
+          <div class="job-card-companies">
+            <span class="job-card-company accent">UNINDO &middot; Joint Venture</span>
+          </div>
+          <h2 class="job-card-title">Project Site Engineer (HVS &ndash; AIS)</h2>
+          <p class="job-card-meta">This position would be hired as a fixed term contract, under our corporate partner.</p>
+        </div>
+
+        <div class="job-card-body">
+          <div>
+            <div class="job-card-block-title">Job Summary</div>
+            <ol class="job-card-list numbered">
+              <li>Responsible for supervising the installation, commissioning, and servicing of <strong>High Voltage Switchgear (HVS) &amp; Air Insulated Switchgear (AIS)</strong>, ensuring compliance with technical standards and safety regulations. Includes troubleshooting, providing technical support, and managing on-site activities.</li>
+              <li>Ensuring all materials delivered to site adhere to project specifications, approved submittals, and quality standards before being used on site.</li>
+              <li>Identify and secure service opportunities such as maintenance contracts and retrofit projects. Once awarded, oversee the execution to ensure timely completion, resource efficiency, and customer satisfaction.</li>
+            </ol>
+          </div>
+          <div>
+            <div class="job-card-block-title">Qualifications</div>
+            <ul class="job-card-list">
+              <li>Diploma or Bachelor degree in Electrical Power, Mechanical, or Industrial Engineering.</li>
+              <li>Knowledgeable in HVS &ndash; AIS including operation, maintenance, and diagnostic techniques.</li>
+              <li>Proven experience in site supervision, troubleshooting, and maintenance of HVS &ndash; AIS.</li>
+              <li>Willingness to travel extensively (domestic &amp; international) to customer sites for installation, commissioning, and service support.</li>
+              <li>Fluent in English both oral and written.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="job-card-footer">
+          <div class="job-card-footer-text">*Company will notify shortlisted candidates only.</div>
+          <button class="job-card-cta" onclick="applyJob('project-site-engineer-hvs-ais')">
+            Lamar Posisi
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-mark">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+            <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+            <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+            <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+          </svg>
+        </div>
+        <div class="footer-brand-text">Electra<br><span class="line-2">Skill Academy</span></div>
+      </div>
+      <div class="footer-copy">© 2026 Electra Skill Academy. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ========================================================== -->
 <!-- SIMULATOR MODAL (dynamic content based on which sim opened)-->
 <!-- ========================================================== -->
 <div class="sim-modal" id="sim-modal" onclick="if(event.target===this) closeSimulator()">
@@ -7734,6 +8440,21 @@ let paymentState = {
   timerInterval: null,
   expiresIn: 900           // 15 min in seconds
 };
+
+function applyJob(jobId) {
+  const titles = {
+    'operator-trafo-power': 'Operator Produksi Trafo Power/Daya',
+    'junior-expeditor': 'Junior Expeditor (Indramayu)',
+    'project-site-engineer-hvs-ais': 'Project Site Engineer (HVS - AIS)'
+  };
+  const title = titles[jobId] || 'posisi ini';
+  if (typeof showToast === 'function') {
+    showToast('Lamaran diterima', 'Lamaran ' + title + ' diteruskan ke talent pool ESA. Lengkapi profil & CV-mu.', true);
+  }
+  if (typeof showView === 'function') {
+    showView('talent');
+  }
+}
 
 function startPayment(pkg) {
   // Determine price + track
