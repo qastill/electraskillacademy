@@ -28620,5 +28620,177 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 })();
 
 </script>
+
+<script id="esa-login-gate">
+(function() {
+  'use strict';
+
+  var ESA_USER_KEY = 'esa_logged_in_user';
+
+  function getUser() {
+    try { return JSON.parse(localStorage.getItem(ESA_USER_KEY)); } catch(e) { return null; }
+  }
+
+  function saveUser(userData) {
+    localStorage.setItem(ESA_USER_KEY, JSON.stringify(userData));
+  }
+
+  function parseJwt(token) {
+    try {
+      var base64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+      var json = decodeURIComponent(atob(base64).split('').map(function(c){
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(json);
+    } catch(e) { return {}; }
+  }
+
+  function createLoginOverlay() {
+    var overlay = document.createElement('div');
+    overlay.id = 'esa-login-gate-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(15,17,28,0.97);display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;';
+
+    overlay.innerHTML = '<div style="background:#1a1d2e;border:1px solid #2a2d3e;border-radius:20px;padding:48px 40px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.6);">' +
+      '<div style="width:56px;height:56px;margin:0 auto 20px;background:linear-gradient(135deg,#c9a96e,#a07840);border-radius:50%;display:flex;align-items:center;justify-content:center;">' +
+        '<svg viewBox="0 0 44 44" fill="none" width="32" height="32"><circle cx="22" cy="22" r="20" stroke="#fff" stroke-width="1.5"/><path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#fff" stroke-width="1.5" fill="none"/></svg>' +
+      '</div>' +
+      '<h2 style="color:#fff;font-size:22px;font-weight:700;margin:0 0 8px;">Electra Skill Academy</h2>' +
+      '<p style="color:#9ca3af;font-size:14px;margin:0 0 32px;line-height:1.6;">Silakan masuk dengan akun Google Anda untuk mengakses semua konten platform.</p>' +
+      '<button id="esa-gate-google-btn" onclick="esaGateGoogleLogin()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;color:#1a1a1a;border:none;border-radius:12px;padding:14px 20px;font-size:15px;font-weight:600;cursor:pointer;" >' +
+        '<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>' +
+        'Masuk dengan Google' +
+      '</button>' +
+      '<div id="esa-gate-gsi" style="margin-top:12px;"></div>' +
+      '<p style="color:#6b7280;font-size:12px;margin:20px 0 0;">Dengan masuk, Anda menyetujui syarat &amp; ketentuan Electra Skill Academy</p>' +
+    '</div>';
+
+    document.body.appendChild(overlay);
+
+    if (window.google && google.accounts && google.accounts.id) {
+      google.accounts.id.initialize({
+        client_id: '110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com',
+        callback: window.esaGateHandleCredential,
+        auto_select: false,
+        cancel_on_tap_outside: false
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('esa-gate-gsi'),
+        { theme: 'outline', size: 'large', width: 340 }
+      );
+    }
+  }
+
+  window.esaGateHandleCredential = function(response) {
+    var payload = parseJwt(response.credential);
+    if (payload && payload.email) {
+      saveUser({
+        name: payload.name || payload.email,
+        email: payload.email,
+        picture: payload.picture || '',
+        loggedAt: Date.now()
+      });
+      window.esaGateUnlock();
+    }
+  };
+
+  window.esaGateGoogleLogin = function() {
+    if (window.google && google.accounts && google.accounts.id) {
+      google.accounts.id.initialize({
+        client_id: '110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com',
+        callback: window.esaGateHandleCredential,
+        auto_select: false,
+        cancel_on_tap_outside: false
+      });
+      google.accounts.id.prompt(function(notification) {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          var gsiDiv = document.getElementById('esa-gate-gsi');
+          if (gsiDiv) { gsiDiv.style.display = 'block'; }
+        }
+      });
+    }
+  };
+
+  window.esaGateUnlock = function() {
+    var overlay = document.getElementById('esa-login-gate-overlay');
+    if (overlay) {
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.3s';
+      setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 300);
+    }
+    esaUpdateNavUser();
+  };
+
+  function esaUpdateNavUser() {
+    var user = getUser();
+    if (!user) return;
+    if (document.getElementById('esa-gate-user-info')) return;
+
+    var navEls = document.querySelectorAll('.nav');
+    navEls.forEach(function(nav) {
+      var userDiv = document.createElement('div');
+      userDiv.id = 'esa-gate-user-info';
+      userDiv.style.cssText = 'display:flex;align-items:center;gap:8px;cursor:pointer;margin-left:auto;';
+      userDiv.title = 'Klik untuk keluar';
+      userDiv.onclick = window.esaGateLogout;
+
+      if (user.picture) {
+        var img = document.createElement('img');
+        img.src = user.picture;
+        img.referrerPolicy = 'no-referrer';
+        img.style.cssText = 'width:32px;height:32px;border-radius:50%;border:2px solid #c9a96e;';
+        img.onerror = function() { this.style.display = 'none'; };
+        userDiv.appendChild(img);
+      }
+
+      var nameSpan = document.createElement('span');
+      nameSpan.textContent = (user.name || user.email).split(' ')[0];
+      nameSpan.style.cssText = 'color:#c9a96e;font-size:13px;font-weight:600;';
+      userDiv.appendChild(nameSpan);
+      nav.appendChild(userDiv);
+    });
+  }
+
+  window.esaGateLogout = function() {
+    if (!confirm('Yakin ingin keluar dari Electra Skill Academy?')) return;
+    localStorage.removeItem(ESA_USER_KEY);
+    if (window.google && google.accounts && google.accounts.id) {
+      google.accounts.id.disableAutoSelect();
+    }
+    location.reload();
+  };
+
+  function hookShowView() {
+    if (typeof window.showView === 'function' && !window.__esaGateHooked) {
+      var _orig = window.showView;
+      window.showView = function() {
+        if (!getUser()) {
+          if (!document.getElementById('esa-login-gate-overlay')) {
+            createLoginOverlay();
+          }
+          return;
+        }
+        return _orig.apply(this, arguments);
+      };
+      window.__esaGateHooked = true;
+    }
+  }
+
+  function init() {
+    var user = getUser();
+    if (user) {
+      esaUpdateNavUser();
+    } else {
+      createLoginOverlay();
+    }
+    hookShowView();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 400); });
+  } else {
+    setTimeout(init, 400);
+  }
+})();
+</script>
 </body>
 </html>
