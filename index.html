@@ -27467,16 +27467,16 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   window.esaLogout = logout;
 
   // ========== GOOGLE SIGN-IN ==========
-  // IMPORTANT: Replace YOUR_GOOGLE_CLIENT_ID below with your real Client ID from
+  // IMPORTANT: Replace YOUR_110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com below with your real Client ID from
   // Google Cloud Console (https://console.cloud.google.com → Credentials → OAuth 2.0 Client IDs).
   // Add your deployment domain (e.g. plnakademi.vercel.app) to "Authorized JavaScript origins".
-  const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+  const 110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com = 'YOUR_110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com.apps.googleusercontent.com';
 
   function initGoogleSignIn() {
     // Show fallback button if not configured or GSI not loaded
     const fallbackBtn = document.getElementById('esa-google-fallback-btn');
 
-    if (GOOGLE_CLIENT_ID.indexOf('YOUR_GOOGLE_CLIENT_ID') === 0) {
+    if (110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com.indexOf('YOUR_110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com') === 0) {
       // Not configured — show styled fallback button
       if (fallbackBtn) fallbackBtn.style.display = 'flex';
       return;
@@ -27495,7 +27495,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
     try {
       google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
+        client_id: 110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com,
         callback: handleGoogleCredential,
         auto_select: false,
         cancel_on_tap_outside: true
@@ -27560,7 +27560,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
                 '1. Buka console.cloud.google.com\n' +
                 '2. Buat OAuth 2.0 Client ID (Web)\n' +
                 '3. Tambahkan domain deployment ke "Authorized JavaScript origins"\n' +
-                '4. Replace GOOGLE_CLIENT_ID di addon_features.js dengan Client ID asli\n\n' +
+                '4. Replace 110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com di addon_features.js dengan Client ID asli\n\n' +
                 'Untuk sekarang, silakan gunakan form manual di bawah.';
     alert(msg);
     // Focus on name field
