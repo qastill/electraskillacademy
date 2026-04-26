@@ -28625,182 +28625,155 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
 
 
+
+
 <script id="esa-auth-gate">
-(function() {
-  'use strict';
-  var ESA_USER_KEY = 'esa_logged_in_user';
+!function(){
+var K="esa_logged_in_user";
+var CID="110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com";
 
-  function getUser() {
-    try { return JSON.parse(localStorage.getItem(ESA_USER_KEY)); } catch(e) { return null; }
+function getUser(){try{return JSON.parse(localStorage.getItem(K));}catch(e){return null;}}
+function saveUser(u){localStorage.setItem(K,JSON.stringify(u));}
+function pJwt(t){try{var b=t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");return JSON.parse(decodeURIComponent(atob(b).split("").map(function(c){return "%"+("00"+c.charCodeAt(0).toString(16)).slice(-2);}).join("")));}catch(e){return{};}}
+
+function buildModal(){
+  if(document.getElementById("esa-auth-modal"))return;
+  var overlay=document.createElement("div");
+  overlay.id="esa-auth-modal";
+  overlay.style.position="fixed";overlay.style.inset="0";overlay.style.zIndex="99999";
+  overlay.style.background="rgba(10,12,24,0.92)";overlay.style.display="flex";
+  overlay.style.alignItems="center";overlay.style.justifyContent="center";
+  overlay.style.fontFamily="Inter,sans-serif";overlay.style.backdropFilter="blur(6px)";
+  overlay.onclick=function(e){if(e.target===overlay)closeModal();};
+
+  var box=document.createElement("div");
+  box.style.background="#1a1d2e";box.style.border="1px solid rgba(201,169,110,0.25)";
+  box.style.borderRadius="20px";box.style.padding="48px 40px";box.style.maxWidth="420px";
+  box.style.width="90%";box.style.textAlign="center";box.style.position="relative";
+  box.style.boxShadow="0 24px 80px rgba(0,0,0,0.7)";
+
+  var closeBtn=document.createElement("button");
+  closeBtn.innerHTML="&times;";closeBtn.onclick=closeModal;
+  closeBtn.style.position="absolute";closeBtn.style.top="16px";closeBtn.style.right="20px";
+  closeBtn.style.background="none";closeBtn.style.border="none";closeBtn.style.color="#6b7280";
+  closeBtn.style.fontSize="22px";closeBtn.style.cursor="pointer";closeBtn.style.lineHeight="1";
+
+  var iconDiv=document.createElement("div");
+  iconDiv.style.width="52px";iconDiv.style.height="52px";iconDiv.style.margin="0 auto 18px";
+  iconDiv.style.background="linear-gradient(135deg,#c9a96e,#a07840)";iconDiv.style.borderRadius="50%";
+  iconDiv.style.display="flex";iconDiv.style.alignItems="center";iconDiv.style.justifyContent="center";
+  iconDiv.innerHTML='<svg viewBox="0 0 44 44" fill="none" width="28" height="28"><circle cx="22" cy="22" r="20" stroke="#fff" stroke-width="1.5"/><path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#fff" stroke-width="1.5" fill="none"/></svg>';
+
+  var h2=document.createElement("h2");
+  h2.textContent="Daftar / Masuk";h2.style.color="#fff";h2.style.fontSize="20px";
+  h2.style.fontWeight="700";h2.style.margin="0 0 6px";
+
+  var p1=document.createElement("p");
+  p1.textContent="Masuk dengan akun Google untuk mengakses fitur Electra Skill Academy.";
+  p1.style.color="#9ca3af";p1.style.fontSize="13px";p1.style.margin="0 0 28px";p1.style.lineHeight="1.6";
+
+  var googleBtn=document.createElement("button");
+  googleBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Masuk dengan Google';
+  googleBtn.style.width="100%";googleBtn.style.display="flex";googleBtn.style.alignItems="center";
+  googleBtn.style.justifyContent="center";googleBtn.style.background="#fff";googleBtn.style.color="#1a1a1a";
+  googleBtn.style.border="none";googleBtn.style.borderRadius="12px";googleBtn.style.padding="14px 20px";
+  googleBtn.style.fontSize="14px";googleBtn.style.fontWeight="600";googleBtn.style.cursor="pointer";
+  googleBtn.style.marginBottom="12px";
+  googleBtn.addEventListener("mouseenter",function(){this.style.boxShadow="0 4px 20px rgba(201,169,110,0.35)";});
+  googleBtn.addEventListener("mouseleave",function(){this.style.boxShadow="none";});
+  googleBtn.onclick=triggerGoogleLogin;
+
+  var gsiDiv=document.createElement("div");gsiDiv.id="esa-auth-gsi-btn";gsiDiv.style.marginBottom="12px";
+
+  var p2=document.createElement("p");
+  p2.textContent="Dengan mendaftar, Anda menyetujui syarat & ketentuan Electra Skill Academy";
+  p2.style.color="#6b7280";p2.style.fontSize="11px";p2.style.margin="16px 0 0";
+
+  box.appendChild(closeBtn);box.appendChild(iconDiv);box.appendChild(h2);
+  box.appendChild(p1);box.appendChild(googleBtn);box.appendChild(gsiDiv);box.appendChild(p2);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  if(window.google&&google.accounts&&google.accounts.id){
+    google.accounts.id.initialize({client_id:CID,callback:handleCred,auto_select:false});
+    google.accounts.id.renderButton(gsiDiv,{theme:"outline",size:"large",width:340});
   }
+}
 
-  function saveUser(u) {
-    localStorage.setItem(ESA_USER_KEY, JSON.stringify(u));
+function closeModal(){
+  var m=document.getElementById("esa-auth-modal");
+  if(m){m.style.opacity="0";m.style.transition="opacity 0.2s";setTimeout(function(){if(m.parentNode)m.remove();},200);}
+}
+
+function handleCred(resp){
+  var pl=pJwt(resp.credential);
+  if(pl&&pl.email){
+    saveUser({name:pl.name||pl.email,email:pl.email,picture:pl.picture||"",loggedAt:Date.now()});
+    closeModal();
+    updateNavUser();
+    if(window._esaPending&&window._origSV){var v=window._esaPending;window._esaPending=null;window._origSV(v);}
   }
+}
 
-  function parseJwt(token) {
-    try {
-      var b = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
-      return JSON.parse(decodeURIComponent(atob(b).split('').map(function(c){
-        return '%'+('00'+c.charCodeAt(0).toString(16)).slice(-2);
-      }).join('')));
-    } catch(e) { return {}; }
-  }
-
-  // ── Buat modal login/daftar ──
-  function createAuthModal() {
-    if (document.getElementById('esa-auth-modal')) return;
-    var modal = document.createElement('div');
-    modal.id = 'esa-auth-modal';
-    modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(10,12,24,0.92);display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;backdrop-filter:blur(6px);';
-    modal.onclick = function(e) { if (e.target === modal) esaCloseAuthModal(); };
-
-    modal.innerHTML = '<div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.25);border-radius:20px;padding:48px 40px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.7);position:relative;">' +
-      '<button onclick="esaCloseAuthModal()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#6b7280;font-size:22px;cursor:pointer;line-height:1;">&times;</button>' +
-      '<div style="width:52px;height:52px;margin:0 auto 18px;background:linear-gradient(135deg,#c9a96e,#a07840);border-radius:50%;display:flex;align-items:center;justify-content:center;">' +
-        '<svg viewBox="0 0 44 44" fill="none" width="28" height="28"><circle cx="22" cy="22" r="20" stroke="#fff" stroke-width="1.5"/><path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#fff" stroke-width="1.5" fill="none"/></svg>' +
-      '</div>' +
-      '<h2 style="color:#fff;font-size:20px;font-weight:700;margin:0 0 6px;">Daftar / Masuk</h2>' +
-      '<p style="color:#9ca3af;font-size:13px;margin:0 0 28px;line-height:1.6;">Masuk dengan akun Google Anda untuk mengakses fitur Electra Skill Academy.</p>' +
-      '<button onclick="esaAuthGoogleLogin()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;color:#1a1a1a;border:none;border-radius:12px;padding:14px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:box-shadow 0.2s;margin-bottom:12px;" onmouseover="this.style.boxShadow='0 4px 20px rgba(201,169,110,0.35)'" onmouseout="this.style.boxShadow='none'">' +
-        '<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>' +
-        'Masuk dengan Google' +
-      '</button>' +
-      '<div id="esa-auth-gsi-btn" style="margin-bottom:12px;"></div>' +
-      '<p style="color:#6b7280;font-size:11px;margin:16px 0 0;">Dengan mendaftar, Anda menyetujui syarat &amp; ketentuan Electra Skill Academy</p>' +
-    '</div>';
-
-    document.body.appendChild(modal);
-
-    // Render Google button
-    if (window.google && google.accounts && google.accounts.id) {
-      google.accounts.id.initialize({
-        client_id: '110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com',
-        callback: window.esaAuthHandleCredential,
-        auto_select: false
-      });
-      google.accounts.id.renderButton(document.getElementById('esa-auth-gsi-btn'), {
-        theme: 'outline', size: 'large', width: 340
-      });
-    }
-  }
-
-  window.esaShowAuthModal = function() { createAuthModal(); };
-
-  window.esaCloseAuthModal = function() {
-    var m = document.getElementById('esa-auth-modal');
-    if (m) { m.style.opacity='0'; m.style.transition='opacity 0.2s'; setTimeout(function(){if(m.parentNode)m.remove();},200); }
-  };
-
-  window.esaAuthHandleCredential = function(response) {
-    var payload = parseJwt(response.credential);
-    if (payload && payload.email) {
-      saveUser({ name: payload.name||payload.email, email: payload.email, picture: payload.picture||'', loggedAt: Date.now() });
-      esaCloseAuthModal();
-      esaUpdateNavUser();
-      // Jika ada pending view, navigasi ke sana
-      if (window._esaPendingView && typeof window._origShowView === 'function') {
-        var v = window._esaPendingView;
-        window._esaPendingView = null;
-        window._origShowView(v);
+function triggerGoogleLogin(){
+  if(window.google&&google.accounts&&google.accounts.id){
+    google.accounts.id.initialize({client_id:CID,callback:handleCred,auto_select:false,cancel_on_tap_outside:false});
+    google.accounts.id.prompt(function(n){
+      if(n.isNotDisplayed()||n.isSkippedMoment()){
+        var b=document.getElementById("esa-auth-gsi-btn");if(b)b.style.display="block";
       }
-    }
-  };
-
-  window.esaAuthGoogleLogin = function() {
-    if (window.google && google.accounts && google.accounts.id) {
-      google.accounts.id.initialize({
-        client_id: '110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com',
-        callback: window.esaAuthHandleCredential,
-        auto_select: false,
-        cancel_on_tap_outside: false
-      });
-      google.accounts.id.prompt(function(n) {
-        if (n.isNotDisplayed() || n.isSkippedMoment()) {
-          var btn = document.getElementById('esa-auth-gsi-btn');
-          if (btn) btn.style.display = 'block';
-        }
-      });
-    }
-  };
-
-  function esaUpdateNavUser() {
-    var user = getUser();
-    if (!user) return;
-    if (document.getElementById('esa-nav-user')) return;
-
-    // Ubah tombol Daftar jadi info user
-    var daftarBtns = document.querySelectorAll('.nav-daftar-btn');
-    daftarBtns.forEach(function(btn) {
-      btn.textContent = (user.name||user.email).split(' ')[0];
-      btn.style.background = 'transparent';
-      btn.style.color = '#c9a96e';
-      btn.style.border = '1px solid #c9a96e';
-      btn.onclick = window.esaShowLogoutMenu;
-      btn.id = 'esa-nav-user';
     });
-
-    // Tambah foto profil jika ada
-    if (user.picture) {
-      daftarBtns.forEach(function(btn) {
-        var img = document.createElement('img');
-        img.src = user.picture;
-        img.referrerPolicy = 'no-referrer';
-        img.style.cssText = 'width:22px;height:22px;border-radius:50%;margin-right:6px;vertical-align:middle;';
-        img.onerror = function() { this.remove(); };
-        btn.prepend(img);
-      });
-    }
   }
+}
 
-  window.esaShowLogoutMenu = function() {
-    var user = getUser();
-    if (!user) return;
-    if (confirm('Keluar dari ' + (user.name||user.email) + '?')) {
-      localStorage.removeItem(ESA_USER_KEY);
-      if (window.google && google.accounts && google.accounts.id) {
-        google.accounts.id.disableAutoSelect();
-      }
-      location.reload();
+function updateNavUser(){
+  var u=getUser();if(!u)return;
+  if(document.getElementById("esa-nav-user-info"))return;
+  var btns=document.querySelectorAll(".nav-daftar-btn");
+  btns.forEach(function(btn){
+    btn.textContent=(u.name||u.email).split(" ")[0];
+    btn.style.background="transparent";btn.style.color="#c9a96e";btn.style.border="1px solid #c9a96e";
+    btn.id="esa-nav-user-info";
+    btn.onclick=doLogout;
+    if(u.picture){
+      var img=document.createElement("img");img.src=u.picture;img.referrerPolicy="no-referrer";
+      img.style.width="22px";img.style.height="22px";img.style.borderRadius="50%";
+      img.style.marginRight="6px";img.style.verticalAlign="middle";
+      img.onerror=function(){this.remove();};
+      btn.prepend(img);
     }
-  };
+  });
+}
 
-  // ── Hook showView: landing page bebas, fitur lain wajib login ──
-  function hookShowView() {
-    if (typeof window.showView === 'function' && !window.__esaAuthHooked) {
-      window._origShowView = window.showView;
-      window.showView = function(view) {
-        // 'home' selalu bebas diakses
-        if (view === 'home') {
-          return window._origShowView.apply(this, arguments);
-        }
-        // Fitur lain: cek login
-        if (!getUser()) {
-          window._esaPendingView = view;
-          esaShowAuthModal();
-          return;
-        }
-        return window._origShowView.apply(this, arguments);
-      };
-      window.__esaAuthHooked = true;
-    }
+function doLogout(){
+  var u=getUser();
+  if(confirm("Keluar dari "+(u&&u.name?u.name:"akun")+"?")){
+    localStorage.removeItem(K);
+    if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
+    location.reload();
   }
+}
 
-  // ── Init ──
-  function init() {
-    hookShowView();
-    var user = getUser();
-    if (user) {
-      esaUpdateNavUser();
-    }
+function hookSV(){
+  if(typeof window.showView==="function"&&!window.__esaGateOn){
+    window._origSV=window.showView;
+    window.showView=function(v){
+      if(v==="home")return window._origSV.apply(this,arguments);
+      if(!getUser()){window._esaPending=v;buildModal();return;}
+      return window._origSV.apply(this,arguments);
+    };
+    window.__esaGateOn=true;
   }
+}
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 300); });
-  } else {
-    setTimeout(init, 300);
-  }
-})();
+window.esaShowAuthModal=buildModal;
+window.esaCloseAuthModal=closeModal;
+
+function init(){hookSV();var u=getUser();if(u)updateNavUser();}
+
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){setTimeout(init,200);});}
+else{setTimeout(init,200);}
+}();
 </script>
 </body>
 </html>
