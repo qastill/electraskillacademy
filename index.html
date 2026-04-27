@@ -26669,23 +26669,65 @@ function renderQuiz(module) {
   const list = document.getElementById('quiz-list');
   if (!list) return;
 
+  // Cooldown gate: kalau modul lagi cooldown, tampilkan layar tunggu, jangan render soal.
+  if (typeof window.esaGetModuleCooldownInfo === 'function' && module && module.code) {
+    const cd = window.esaGetModuleCooldownInfo(module.code);
+    if (cd.active) {
+      list.innerHTML = `
+        <div class="quiz-cooldown-screen" style="text-align:center;padding:80px 24px;background:rgba(220,90,90,0.06);border:1px solid rgba(220,90,90,0.2);border-radius:16px;">
+          <div style="font-size:3rem;margin-bottom:12px;">⏳</div>
+          <h3 style="font-size:1.4rem;font-weight:700;color:var(--rose);margin:0 0 8px;">Quiz Terkunci 1 Jam</h3>
+          <p style="color:var(--ink-mute);max-width:460px;margin:0 auto 18px;line-height:1.6;">
+            Kamu sudah 3× gagal berturut-turut di modul ini. Pelajari ulang Video & Materi (PPT) sebentar — quiz akan terbuka kembali otomatis.
+          </p>
+          <div id="quiz-cd-big" style="font-size:2.2rem;font-weight:700;color:var(--gold-dark);font-variant-numeric:tabular-nums;letter-spacing:0.05em;">${window.esaFormatCooldown(cd.remainingMs)}</div>
+          <div style="font-size:0.78rem;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.12em;margin-top:6px;">Sisa waktu</div>
+        </div>
+      `;
+      const big = document.getElementById('quiz-cd-big');
+      const tick = setInterval(() => {
+        const fresh = window.esaGetModuleCooldownInfo(module.code);
+        if (!fresh.active) {
+          clearInterval(tick);
+          renderQuiz(module);
+          return;
+        }
+        if (big) big.textContent = window.esaFormatCooldown(fresh.remainingMs);
+      }, 1000);
+      const answeredEl = document.getElementById('quiz-answered');
+      if (answeredEl) answeredEl.textContent = '0';
+      answeredCount = 0;
+      answeredQuestions = new Set();
+      return;
+    }
+  }
+
+  // Helper shuffle (Fisher-Yates)
+  const shuffleArr = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
   // Check QUIZ_BANK first for handcrafted questions
   const handcrafted = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : null;
   let quiz;
 
   if (handcrafted && handcrafted.length >= 20) {
-    // Use handcrafted, take up to 25
-    quiz = handcrafted.slice(0, 25);
-    // Pad to 25 if less (unlikely but safe)
+    // Always shuffle handcrafted set then take 25 (pads safely)
+    const shuffled = shuffleArr(handcrafted);
+    quiz = shuffled.slice(0, 25);
     while (quiz.length < 25 && handcrafted.length > 0) {
       quiz.push(handcrafted[quiz.length % handcrafted.length]);
     }
   } else {
     // Fallback to generic QUIZ_TEMPLATE (shuffle + slice 25)
-    const shuffled = [...QUIZ_TEMPLATE].sort(() => 0.5 - Math.random());
+    const shuffled = shuffleArr(QUIZ_TEMPLATE);
     while (shuffled.length < 25) {
-      const extras = [...QUIZ_TEMPLATE].sort(() => 0.5 - Math.random());
-      shuffled.push(...extras);
+      shuffled.push(...shuffleArr(QUIZ_TEMPLATE));
     }
     quiz = shuffled.slice(0, 25).map(q => ({ ...q, type: 'pg' }));
   }
@@ -27394,7 +27436,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   // ========== STORAGE LAYER ==========
   const STORAGE_KEY = 'esa_data_v1';
   const POOL_KEY = 'esa_talent_pool_v1';
-  const PASS_THRESHOLD = 0.80; // 80%
+  const PASS_THRESHOLD = 0.70; // 70%
+  const MAX_FAILED_ATTEMPTS = 3;
+  const QUIZ_COOLDOWN_MS = 60 * 60 * 1000; // 1 jam
 
   // Level order for gating
   const LEVEL_ORDER = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6'];
@@ -27637,20 +27681,14 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   window.esaLogout = logout;
 
   // ========== GOOGLE SIGN-IN ==========
-  // IMPORTANT: Replace YOUR_110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com below with your real Client ID from
-  // Google Cloud Console (https://console.cloud.google.com → Credentials → OAuth 2.0 Client IDs).
-  // Add your deployment domain (e.g. plnakademi.vercel.app) to "Authorized JavaScript origins".
-  const 110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com = 'YOUR_110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com.apps.googleusercontent.com';
+  // Set this to your real Client ID from Google Cloud Console
+  // (https://console.cloud.google.com → Credentials → OAuth 2.0 Client IDs).
+  // Make sure your deployment domain is listed in "Authorized JavaScript origins".
+  const GOOGLE_CLIENT_ID = '110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com';
 
   function initGoogleSignIn() {
-    // Show fallback button if not configured or GSI not loaded
+    // Show fallback button if GSI not loaded
     const fallbackBtn = document.getElementById('esa-google-fallback-btn');
-
-    if (110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com.indexOf('YOUR_110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com') === 0) {
-      // Not configured — show styled fallback button
-      if (fallbackBtn) fallbackBtn.style.display = 'flex';
-      return;
-    }
 
     if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
       // GSI library not loaded yet — retry a few times
@@ -27665,7 +27703,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
     try {
       google.accounts.id.initialize({
-        client_id: 110973101594-8apm9jols5m0g936ctt2h2foviu70iip.apps.googleusercontent.com,
+        client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleCredential,
         auto_select: false,
         cancel_on_tap_outside: true
@@ -27757,7 +27795,13 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   function recordModuleResult(code, level, trackId, correct, total) {
     const pct = total > 0 ? correct / total : 0;
     const passed = pct >= PASS_THRESHOLD;
-    const existing = state.modules[code] || { attempts: 0, bestScore: 0 };
+    const existing = state.modules[code] || { attempts: 0, bestScore: 0, failedAttempts: 0, cooldownUntil: null };
+    const prevFailed = existing.failedAttempts || 0;
+    const newFailedAttempts = passed ? 0 : (prevFailed + 1);
+    let cooldownUntil = passed ? null : (existing.cooldownUntil || null);
+    if (!passed && newFailedAttempts >= MAX_FAILED_ATTEMPTS) {
+      cooldownUntil = Date.now() + QUIZ_COOLDOWN_MS;
+    }
 
     state.modules[code] = {
       code: code,
@@ -27768,6 +27812,8 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       scorePct: Math.round(pct * 100),
       passed: passed,
       attempts: existing.attempts + 1,
+      failedAttempts: newFailedAttempts,
+      cooldownUntil: cooldownUntil,
       bestScore: Math.max(existing.bestScore, Math.round(pct * 100)),
       lastDate: new Date().toISOString()
     };
@@ -27786,6 +27832,36 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     checkLevelCompletion(level, trackId);
     return state.modules[code];
   }
+
+  // ========== QUIZ COOLDOWN HELPERS ==========
+  function getModuleCooldownInfo(code) {
+    const rec = state.modules[code];
+    if (!rec) return { active: false, attemptsLeft: MAX_FAILED_ATTEMPTS, remainingMs: 0 };
+    const failed = rec.failedAttempts || 0;
+    const until = rec.cooldownUntil || 0;
+    const now = Date.now();
+    if (until && until > now) {
+      return { active: true, attemptsLeft: 0, remainingMs: until - now };
+    }
+    // Cooldown expired or never set — clear stale fields so UI shows fresh attempts
+    if (until && until <= now) {
+      rec.cooldownUntil = null;
+      rec.failedAttempts = 0;
+      saveData(state);
+      return { active: false, attemptsLeft: MAX_FAILED_ATTEMPTS, remainingMs: 0 };
+    }
+    return { active: false, attemptsLeft: Math.max(0, MAX_FAILED_ATTEMPTS - failed), remainingMs: 0 };
+  }
+  window.esaGetModuleCooldownInfo = getModuleCooldownInfo;
+
+  function formatCooldown(ms) {
+    if (ms <= 0) return '00:00';
+    const totalSec = Math.ceil(ms / 1000);
+    const m = String(Math.floor(totalSec / 60)).padStart(2, '0');
+    const s = String(totalSec % 60).padStart(2, '0');
+    return `${m}:${s}`;
+  }
+  window.esaFormatCooldown = formatCooldown;
 
   function updateStreak() {
     const today = new Date().toISOString().slice(0, 10);
@@ -27822,7 +27898,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       passed: passed,
       avgScore: avgScore,
       pct: pct,
-      complete: passed === mods.length && avgScore >= 80
+      complete: passed === mods.length && avgScore >= 70
     };
   }
 
@@ -27945,7 +28021,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const total = 25;
     const correct = currentQuizStats.correct;
     const pct = Math.round((correct / total) * 100);
-    const passed = pct >= 80;
+    const passed = pct >= 70;
     const xpGained = passed ? Math.round((correct / total) * 25) : 0;
 
     // Record result
@@ -27973,9 +28049,13 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
     const statusClass = passed ? 'pass' : 'fail';
     const statusTitle = passed ? 'Lulus!' : 'Belum Lulus';
+    const cdInfo = getModuleCooldownInfo(currentQuizModule.code);
+    const inCooldown = !passed && cdInfo.active;
     const statusSub = passed
       ? (isFirstPass ? `Skor memuaskan — modul ${currentQuizModule.code} tuntas.` : `Skor meningkat — skor terbaikmu ${result.bestScore}%`)
-      : `Butuh minimal 80% untuk lulus. Coba lagi — kamu pasti bisa!`;
+      : (inCooldown
+          ? `Sudah ${MAX_FAILED_ATTEMPTS}× gagal berturut-turut. Quiz dikunci 1 jam — pelajari ulang materinya, lalu coba lagi.`
+          : `Butuh minimal 70% untuk lulus. Sisa ${cdInfo.attemptsLeft} percobaan sebelum quiz dikunci 1 jam.`);
 
     // Check if this completes a level
     const levelProgress = getLevelProgress(currentQuizModule.levelId, currentQuizModule.trackId);
@@ -28026,10 +28106,15 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
             <div class="esa-level-complete-banner" style="margin: 24px 0 8px;">
               <div class="esa-level-complete-eyebrow">Level Complete!</div>
               <div class="esa-level-complete-title">${currentQuizModule.levelId} ${TIER[currentQuizModule.levelId].label}</div>
-              <div class="esa-level-complete-desc">Semua modul di level ini tuntas dengan skor ≥80%. Sertifikat sudah diterbitkan dan profil kamu masuk ke Talent Pool.</div>
-              <button class="esa-cert-download-btn" onclick="esaDownloadCertificate('${levelKey}')">
-                ⬇ Unduh Sertifikat PDF
-              </button>
+              <div class="esa-level-complete-desc">Semua modul di level ini tuntas dengan skor ≥70%. Sertifikat sudah diterbitkan dan profil kamu masuk ke Talent Pool.</div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
+                <button class="esa-cert-download-btn" onclick="esaDownloadCertificate('${levelKey}')">
+                  ⬇ Unduh Sertifikat PDF
+                </button>
+                <button class="esa-cert-download-btn" style="background:#0a66c2;border-color:#0a66c2;color:#fff;" onclick="esaShareCertLinkedIn('${levelKey}')">
+                  in  Tambahkan ke LinkedIn
+                </button>
+              </div>
             </div>
           ` : ''}
 
@@ -28037,8 +28122,11 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
             ${passed
               ? `<button class="esa-btn-primary" onclick="esaNextModule()">Modul Selanjutnya →</button>
                  <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
-              : `<button class="esa-btn-primary" onclick="esaRetryModule()">Coba Lagi</button>
-                 <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
+              : (inCooldown
+                  ? `<button class="esa-btn-primary" disabled style="opacity:0.55;cursor:not-allowed;">⏳ Cooldown <span id="esa-cd-timer">${formatCooldown(cdInfo.remainingMs)}</span></button>
+                     <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
+                  : `<button class="esa-btn-primary" onclick="esaRetryModule()">Coba Lagi (${cdInfo.attemptsLeft} tersisa)</button>
+                     <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`)
             }
           </div>
         </div>
@@ -28058,6 +28146,24 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         ring.style.strokeDashoffset = dashOffset;
       }
     }, 100);
+
+    // Live cooldown countdown (if cooldown is active)
+    if (inCooldown) {
+      const cdEl = document.getElementById('esa-cd-timer');
+      if (cdEl) {
+        const tick = setInterval(() => {
+          const fresh = getModuleCooldownInfo(currentQuizModule.code);
+          if (!fresh.active) {
+            clearInterval(tick);
+            const modal = document.getElementById('esa-completion-modal');
+            if (modal) modal.remove();
+            showToast('Cooldown selesai', 'Quiz sudah bisa diulang lagi.', '✅');
+            return;
+          }
+          cdEl.textContent = formatCooldown(fresh.remainingMs);
+        }, 1000);
+      }
+    }
 
     updateUserHUD();
 
@@ -28095,14 +28201,49 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   window.esaNextModule = nextModule;
 
   function retryModule() {
+    if (!currentQuizModule) { closeCompletion(); return; }
+    const cd = getModuleCooldownInfo(currentQuizModule.code);
+    if (cd.active) {
+      showToast('Quiz Terkunci', `Tunggu ${formatCooldown(cd.remainingMs)} lagi sebelum mencoba kembali.`, '⏳');
+      return;
+    }
     closeCompletion();
-    // Re-render same module
-    if (currentQuizModule && typeof openModul === 'function') {
+    if (typeof openModul === 'function') {
       openModul(currentQuizModule.code, currentQuizModule.trackId, currentQuizModule.levelId);
-      setTimeout(() => window.scrollTo(0, 0), 100);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        if (typeof switchTab === 'function') switchTab('quiz');
+      }, 200);
     }
   }
   window.esaRetryModule = retryModule;
+
+  // ========== LINKEDIN CERTIFICATE SHARE ==========
+  function shareCertToLinkedIn(levelKey) {
+    const rec = getCertRecord(levelKey);
+    if (!rec) { alert('Sertifikat tidak ditemukan.'); return; }
+    const tier = TIER[rec.levelId];
+    const trackName = rec.trackId && typeof TRACKS_META !== 'undefined' && TRACKS_META[rec.trackId]
+      ? TRACKS_META[rec.trackId].name
+      : (rec.trackId || 'Pondasi Kelistrikan');
+    const certName = `${rec.levelId} ${tier.label} — ${trackName} (Electra Skill Academy)`;
+    const issued = new Date(rec.completedDate);
+    const issueYear = issued.getFullYear();
+    const issueMonth = issued.getMonth() + 1;
+    const certUrl = `${location.origin}${location.pathname}#cert=${encodeURIComponent(rec.certId)}`;
+    const params = new URLSearchParams({
+      startTask: 'CERTIFICATION_NAME',
+      name: certName,
+      organizationName: 'Electra Skill Academy',
+      issueYear: String(issueYear),
+      issueMonth: String(issueMonth),
+      certUrl: certUrl,
+      certId: rec.certId
+    });
+    window.open(`https://www.linkedin.com/profile/add?${params.toString()}`, '_blank', 'noopener');
+    showToast('Buka LinkedIn', 'Lengkapi form "Add licenses & certifications" lalu Save.', '🔗');
+  }
+  window.esaShareCertLinkedIn = shareCertToLinkedIn;
 
   // ========== CERTIFICATE GENERATION ==========
   function getCertRecord(levelKey) {
@@ -28261,7 +28402,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); font-size:10px; color:var(--ink-mute); text-align:center; font-family: var(--sans);">
             Sertifikat ID: <strong style="color:var(--navy-deep); letter-spacing:1px;">${rec.certId}</strong>
             &nbsp;·&nbsp; Diterbitkan: ${dateStr}
-            &nbsp;·&nbsp; ${mods.length}/${mods.length} modul dinyatakan LULUS (≥80%)
+            &nbsp;·&nbsp; ${mods.length}/${mods.length} modul dinyatakan LULUS (≥70%)
           </div>
         </div>
       </div>
@@ -28426,7 +28567,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         levelName: TIER[t.highestLevel].label,
         status: 'open',
         statusText: 'Skill Knowledge OK',
-        tagline: `Lulus ${t.certifications.length} level sertifikasi dengan skor rata-rata ≥80%. Skill knowledge sudah terverifikasi, tinggal validasi skill praktik di lapangan.`,
+        tagline: `Lulus ${t.certifications.length} level sertifikasi dengan skor rata-rata ≥70%. Skill knowledge sudah terverifikasi, tinggal validasi skill praktik di lapangan.`,
         skills: t.certifications.map(c => `${c.levelId} ${c.trackName}`),
         certs: t.certifications.map(c => ({ name: `${c.tier} Tier — ${c.levelId} ${c.trackName}`, bnsp: false, certId: c.certId })),
         preference: 'Auto-enrolled via platform — siap magang/praktik untuk validasi skill lapangan',
