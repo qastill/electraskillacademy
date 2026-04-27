@@ -63,15 +63,20 @@ body {
   background: var(--navy-deep);
 }
 
-.hero-bg { position: absolute; inset: 0; z-index: 0; }
+.hero-bg { position: absolute; inset: 0; z-index: 0; background: var(--navy-deep); }
 .hero-bg-image {
-  position: absolute; inset: 0;
-  background-image: url('https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=2400&q=85');
-  background-size: cover; background-position: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 55%;
+  background-image: url('https://lh3.googleusercontent.com/d/1PQRN2PcMycTTL9vL1U03H7ENVFbub3Wn=w2400');
+  background-size: cover;
+  background-position: center right;
 }
 .hero-bg-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(26, 29, 46, 0.88) 0%, rgba(26, 29, 46, 0.55) 50%, rgba(26, 29, 46, 0.75) 100%);
+  background: linear-gradient(90deg, rgba(26, 29, 46, 1) 0%, rgba(26, 29, 46, 0.98) 35%, rgba(26, 29, 46, 0.55) 55%, rgba(26, 29, 46, 0.15) 80%, rgba(26, 29, 46, 0.05) 100%);
 }
 
 .nav {
@@ -144,14 +149,17 @@ body {
   margin: 0 auto;
 }
 
+.hero-inner-text {
+  max-width: 52%;
+}
+
 .hero-headline {
   font-family: var(--serif);
-  font-size: clamp(44px, 6.5vw, 84px);
+  font-size: clamp(40px, 5.2vw, 72px);
   font-weight: 600;
   line-height: 1.08;
   letter-spacing: -0.01em;
   color: var(--gold);
-  max-width: 900px;
   margin-bottom: 60px;
   opacity: 0;
   transform: translateY(30px);
@@ -5654,6 +5662,14 @@ body {
   .purchase-modal-inner { padding: 44px 32px 36px; }
 }
 
+@media (max-width: 1024px) {
+  .hero-bg-image { width: 45%; opacity: 0.35; }
+  .hero-bg-overlay {
+    background: linear-gradient(90deg, rgba(26, 29, 46, 1) 0%, rgba(26, 29, 46, 0.92) 60%, rgba(26, 29, 46, 0.7) 100%);
+  }
+  .hero-inner-text { max-width: 100%; }
+}
+
 @media (max-width: 640px) {
   .nav { padding: 24px 20px; }
   .nav-logo-mark { width: 36px; height: 36px; }
@@ -5662,6 +5678,7 @@ body {
   .hero-content { padding: 0 20px 40px; }
   .hero-headline { margin-bottom: 40px; }
   .hero-cta { padding: 18px 36px; font-size: 11px; width: 100%; }
+  .hero-bg-image { width: 100%; opacity: 0.2; }
   .practices-section, .offers, .testimonial, .partners,
   .jalur-hero, .jalur-levels, .modul-hero, .modul-main {
     padding-left: 20px; padding-right: 20px;
@@ -6935,23 +6952,25 @@ body {
         </div>
       </a>
       <div class="nav-right-group">
-        <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
         <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
-        <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
+        <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool &amp; Job Opportunity</a>
         <a class="nav-right" onclick="showView('sertifikasi')" style="cursor:pointer;">Ambil Sertifikasi</a>
+        <a class="nav-right" onclick="showView('home'); setTimeout(function(){var el=document.getElementById('about'); if(el) el.scrollIntoView({behavior:'smooth'});}, 50);" style="cursor:pointer;">About Us</a>
       <button class="nav-daftar-btn" onclick="esaShowAuthModal()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:8px;padding:9px 22px;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Daftar</button>
       </div>
     </nav>
 
     <div class="hero-content">
       <div class="hero-inner">
-        <h1 class="hero-headline">
-          Siap memulai karir<br>
-          menjadi profesional<br>
-          electrician
-        </h1>
-        <a href="#practices" class="hero-cta">Start Journey</a>
-        <button class="hero-daftar-btn" onclick="esaShowAuthModal()" style="display:inline-flex;align-items:center;justify-content:center;padding:22px 44px;background:transparent;color:#c9a96e;border:2px solid rgba(201,169,110,0.6);font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;margin-left:16px;border-radius:0;" onmouseover="this.style.background='rgba(201,169,110,0.12)';this.style.borderColor='#c9a96e'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(201,169,110,0.6)'">Daftar / Masuk</button>
+        <div class="hero-inner-text">
+          <h1 class="hero-headline">
+            Siap memulai karir<br>
+            menjadi profesional<br>
+            electrician
+          </h1>
+          <a href="#practices" class="hero-cta">Start Journey</a>
+          <button class="hero-daftar-btn" onclick="esaShowAuthModal()" style="display:inline-flex;align-items:center;justify-content:center;padding:22px 44px;background:transparent;color:#c9a96e;border:2px solid rgba(201,169,110,0.6);font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;margin-left:16px;border-radius:0;" onmouseover="this.style.background='rgba(201,169,110,0.12)';this.style.borderColor='#c9a96e'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(201,169,110,0.6)'">Daftar / Masuk</button>
+        </div>
       </div>
     </div>
   </section>
@@ -6978,7 +6997,7 @@ body {
     </div>
   </section>
 
-  <section class="offers">
+  <section class="offers" id="about">
     <div class="offers-bg-image"></div>
     <div class="offers-bg-overlay"></div>
 
