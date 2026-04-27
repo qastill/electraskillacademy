@@ -7182,6 +7182,31 @@ body {
 
   <!-- ==================== VIEW: ABOUT US ==================== -->
   <div class="view" id="view-about">
+    <div class="detail-nav">
+      <a class="detail-nav-logo" onclick="showView('home')" style="cursor:pointer;">
+        <div class="detail-nav-logo-mark">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+            <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+            <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+            <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+          </svg>
+        </div>
+        <div class="detail-nav-logo-text">
+          Electra<br>
+          <span class="line-2">Skill Academy</span>
+        </div>
+      </a>
+      <div class="detail-nav-center">About Us</div>
+      <div class="detail-nav-right">
+        <button class="detail-nav-back" onclick="showView('home')">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Kembali
+        </button>
+        <a href="#" class="detail-nav-ai">AI Tutor</a>
+      </div>
+    </div>
+
     <section class="about-hero" style="background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 50%, #0d0f1c 100%); padding: 80px 0 60px; min-height: 100vh;">
       <div class="about-inner" style="max-width: 1100px; margin: 0 auto; padding: 0 40px;">
         
@@ -7285,6 +7310,23 @@ body {
 
       </div>
     </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-brand-mark">
+            <svg viewBox="0 0 44 44" fill="none">
+              <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+              <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+              <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+              <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+            </svg>
+          </div>
+          <div class="footer-brand-text">Electra<br><span class="line-2">Skill Academy</span></div>
+        </div>
+        <div class="footer-copy">© 2026 Electra Skill Academy. All rights reserved.</div>
+      </div>
+    </footer>
   </div>
 
 <div class="view" id="view-jalur">
@@ -7597,6 +7639,31 @@ body {
 <!-- VIEW: TALENT POOL                                          -->
 <!-- ========================================================== -->
 <div class="view" id="view-talent">
+  <div class="detail-nav">
+    <a class="detail-nav-logo" onclick="showView('home')" style="cursor:pointer;">
+      <div class="detail-nav-logo-mark">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+          <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+          <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+        </svg>
+      </div>
+      <div class="detail-nav-logo-text">
+        Electra<br>
+        <span class="line-2">Skill Academy</span>
+      </div>
+    </a>
+    <div class="detail-nav-center">Our Talent</div>
+    <div class="detail-nav-right">
+      <button class="detail-nav-back" onclick="showView('home')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kembali
+      </button>
+      <a href="#" class="detail-nav-ai">AI Tutor</a>
+    </div>
+  </div>
+
     <section style="background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 50%, #0d0f1c 100%); padding: 80px 0; min-height: 100vh;">
       <div style="max-width: 1100px; margin: 0 auto; padding: 0 40px;">
         
@@ -7743,12 +7810,29 @@ body {
         <div style="background: linear-gradient(135deg, rgba(212,175,106,0.12), rgba(212,175,106,0.05)); border: 1px solid rgba(212,175,106,0.25); border-radius: 20px; padding: 48px; text-align: center;">
           <h2 style="font-size: 1.5rem; font-weight: 700; color: #f5f0e6; margin: 0 0 12px;">Rekrut Talent Terbaik Kami</h2>
           <p style="color: rgba(245,240,230,0.7); max-width: 500px; margin: 0 auto 28px; line-height: 1.6;">Dapatkan akses ke database 1000+ alumni bersertifikat. Gratis posting lowongan untuk mitra industri terdaftar.</p>
-          <button onclick="showView('view-jobs')" style="background: #d4af6a; color: #0d0f1c; border: none; border-radius: 8px; padding: 14px 36px; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 12px;">Lihat Job Board</button>
+          <button onclick="showView('jobs')" style="background: #d4af6a; color: #0d0f1c; border: none; border-radius: 8px; padding: 14px 36px; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 12px;">Lihat Job Board</button>
           <button onclick="alert('Hubungi kami di: partnership@electraacademy.com')" style="background: transparent; color: #d4af6a; border: 1px solid #d4af6a; border-radius: 8px; padding: 14px 36px; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase;">Jadi Mitra Rekrutmen</button>
         </div>
 
       </div>
     </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-mark">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+            <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+            <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+            <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+          </svg>
+        </div>
+        <div class="footer-brand-text">Electra<br><span class="line-2">Skill Academy</span></div>
+      </div>
+      <div class="footer-copy">© 2026 Electra Skill Academy. All rights reserved.</div>
+    </div>
+  </footer>
   </div>
 
 <div class="view" id="view-labs">
@@ -8553,7 +8637,7 @@ function applyJob(jobId) {
 
 function startPayment(plan) {
     // Show home view with pricing section
-    showView('view-home');
+    showView('home');
     setTimeout(function() {
       var pricingSection = document.querySelector('.academy-pricing');
       if (pricingSection) {
@@ -28847,14 +28931,14 @@ else{setTimeout(init,200);}
     var daftar=navGroup.querySelector('button.nav-daftar-btn');
     if(!talentPool)return;
     if(labs)labs.textContent='Simulator Room / Labs';
-    if(labs)labs.onclick=function(e){e.preventDefault();showView('view-labs');};
+    if(labs)labs.onclick=function(e){e.preventDefault();showView('labs');};
     if(sert)sert.textContent='Certification';
-    if(sert)sert.onclick=function(e){e.preventDefault();showView('view-sertifikasi');};
+    if(sert)sert.onclick=function(e){e.preventDefault();showView('sertifikasi');};
 
     // About Us link
     var aboutUs=document.createElement('a');
     aboutUs.className='nav-right';aboutUs.href='#';aboutUs.textContent='About Us';
-    aboutUs.onclick=function(e){e.preventDefault();showView('view-about');};
+    aboutUs.onclick=function(e){e.preventDefault();showView('about');};
 
     // Talent Pool dropdown with 2 items: Our Talent + Job Opportunity
     var dropdown=document.createElement('div');
@@ -28877,7 +28961,7 @@ else{setTimeout(init,200);}
     ourTalentItem.style.cssText='display:block;padding:10px 20px;color:#f5f0e6;text-decoration:none;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;transition:background 0.2s;';
     ourTalentItem.onmouseover=function(){ourTalentItem.style.background='rgba(212,175,106,0.12)';};
     ourTalentItem.onmouseout=function(){ourTalentItem.style.background='transparent';};
-    ourTalentItem.onclick=function(e){e.preventDefault();showView('view-talent');menu.style.display='none';};
+    ourTalentItem.onclick=function(e){e.preventDefault();showView('talent');menu.style.display='none';};
 
     // Divider
     var divider=document.createElement('div');
@@ -28890,7 +28974,7 @@ else{setTimeout(init,200);}
     jobItem.style.cssText='display:block;padding:10px 20px;color:#f5f0e6;text-decoration:none;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;transition:background 0.2s;';
     jobItem.onmouseover=function(){jobItem.style.background='rgba(212,175,106,0.12)';};
     jobItem.onmouseout=function(){jobItem.style.background='transparent';};
-    jobItem.onclick=function(e){e.preventDefault();showView('view-jobs');menu.style.display='none';};
+    jobItem.onclick=function(e){e.preventDefault();showView('jobs');menu.style.display='none';};
     
     menu.appendChild(ourTalentItem);
     menu.appendChild(divider);
