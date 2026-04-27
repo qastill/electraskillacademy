@@ -7015,18 +7015,19 @@ body {
     <div class="testimonial-inner">
       <div class="testimonial-content reveal">
         <h2 class="testimonial-title">Siswa kami</h2>
-        <p class="testimonial-text">
+        <p class="testimonial-text" id="testimonial-text">
           Lulus dari sini saya punya banyak skill dan portofolio yang siap jadi modal untuk melanjutkan karir menjadi seorang electrician profesional. Ditambah AI Tutor yang selalu standby, bikin proses belajar jadi jauh lebih cepat dan terarah.
         </p>
-        <a href="#" class="testimonial-name-btn">Ana Pratiwi</a>
+        <a href="#" class="testimonial-name-btn" id="testimonial-name">Ana Pratiwi</a>
+        <div class="testimonial-role" id="testimonial-role" style="margin-top:8px;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-dark);font-weight:600;">Alumni Jalur Instalasi Bangunan</div>
         <div class="testimonial-nav">
-          <button class="testimonial-dot active" aria-label="Testimonial 1"></button>
-          <button class="testimonial-dot" aria-label="Testimonial 2"></button>
-          <button class="testimonial-dot" aria-label="Testimonial 3"></button>
+          <button class="testimonial-dot active" data-index="0" aria-label="Testimonial 1"></button>
+          <button class="testimonial-dot" data-index="1" aria-label="Testimonial 2"></button>
+          <button class="testimonial-dot" data-index="2" aria-label="Testimonial 3"></button>
         </div>
       </div>
       <div class="testimonial-photo reveal">
-        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=85" alt="Alumni ESA">
+        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=85" alt="Alumni ESA" id="testimonial-img">
       </div>
     </div>
   </section>
@@ -27119,11 +27120,43 @@ renderPraktikum();
 renderTalents();
 observeReveals();
 
-// Testimonial dots
+// Testimonial carousel
+const TESTIMONIALS = [
+  {
+    name: 'Ana Pratiwi',
+    role: 'Alumni Jalur Instalasi Bangunan',
+    text: 'Lulus dari sini saya punya banyak skill dan portofolio yang siap jadi modal untuk melanjutkan karir menjadi seorang electrician profesional. Ditambah AI Tutor yang selalu standby, bikin proses belajar jadi jauh lebih cepat dan terarah.',
+    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=85'
+  },
+  {
+    name: 'Rizky Saputra',
+    role: 'Teknisi Distribusi · PT Haleyora Power (PLN Group)',
+    text: 'Dari nol sampai akhirnya keterima jadi teknisi distribusi PLN Haleyora Power, semuanya berawal dari Electra Skill Academy. Materi K3, PUIL, dan praktikum wiring di sini sangat sesuai dengan dunia kerja nyata. Sertifikasi dari ESA langsung dilirik recruiter — saya gak nyangka prosesnya secepat ini.',
+    photo: 'https://lh3.googleusercontent.com/d/1EI8kJwdIJ6TDDkwCPpzbgI2o_qXEaLjA=w800-h1000'
+  },
+  {
+    name: 'Andi Pratama',
+    role: 'Teknisi Pemeliharaan · PT Haleyora Power (PLN Group)',
+    text: 'Saya lulusan SMK biasa, sempat minder lamar ke perusahaan listrik. Setelah ikut jalur Distribusi di ESA dan ambil sertifikasi BNSP-nya, kepercayaan diri naik drastis. Sekarang sudah dua tahun pegang area pemeliharaan jaringan tegangan menengah. ESA bukan cuma kasih ilmu, tapi juga akses ke industri.',
+    photo: 'https://lh3.googleusercontent.com/d/1E0ukxQ9gsABbeYGZqBTYQVmGbG8VYTev=w800-h1000'
+  }
+];
+
 document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   dot.addEventListener('click', () => {
+    const idx = parseInt(dot.dataset.index, 10) || 0;
+    const t = TESTIMONIALS[idx];
+    if (!t) return;
     document.querySelectorAll('.testimonial-dot').forEach(d => d.classList.remove('active'));
     dot.classList.add('active');
+    const textEl = document.getElementById('testimonial-text');
+    const nameEl = document.getElementById('testimonial-name');
+    const roleEl = document.getElementById('testimonial-role');
+    const imgEl = document.getElementById('testimonial-img');
+    if (textEl) textEl.textContent = t.text;
+    if (nameEl) nameEl.textContent = t.name;
+    if (roleEl) roleEl.textContent = t.role;
+    if (imgEl) imgEl.src = t.photo;
   });
 });
 </script>
