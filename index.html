@@ -26736,25 +26736,41 @@ function renderQuiz(module) {
     return a;
   };
 
-  // Check QUIZ_BANK first for handcrafted questions
-  const handcrafted = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : null;
-  let quiz;
+  // Shuffle each question's options and remap the correct-answer index.
+  // Fixes the bias where ~94% of correct answers landed on option B.
+  // True/False questions (type 'tf') keep BENAR/SALAH order to avoid confusion.
+  const shuffleOptions = (q) => {
+    if (!q || !Array.isArray(q.opts) || typeof q.a !== 'number') return q;
+    if (q.type === 'tf') return { ...q };
+    const correctOpt = q.opts[q.a];
+    const newOpts = shuffleArr(q.opts);
+    const newA = newOpts.indexOf(correctOpt);
+    return { ...q, opts: newOpts, a: newA >= 0 ? newA : q.a };
+  };
 
+  // Build the candidate pool. Each module's pool = its own handcrafted bank +
+  // a slice of QUIZ_TEMPLATE (the generic 25-question fundamentals deck), so
+  // every attempt picks a fresh 25 from a ~50-question pool. This is the
+  // "25 soal cadangan" behavior — different mix every retry, with module
+  // questions remaining the majority.
+  const handcrafted = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : null;
+  const generic = (typeof QUIZ_TEMPLATE !== 'undefined') ? QUIZ_TEMPLATE.map(q => ({ ...q, type: q.type || 'pg' })) : [];
+
+  let pool;
   if (handcrafted && handcrafted.length >= 20) {
-    // Always shuffle handcrafted set then take 25 (pads safely)
-    const shuffled = shuffleArr(handcrafted);
-    quiz = shuffled.slice(0, 25);
-    while (quiz.length < 25 && handcrafted.length > 0) {
-      quiz.push(handcrafted[quiz.length % handcrafted.length]);
-    }
+    pool = handcrafted.concat(generic);
   } else {
-    // Fallback to generic QUIZ_TEMPLATE (shuffle + slice 25)
-    const shuffled = shuffleArr(QUIZ_TEMPLATE);
-    while (shuffled.length < 25) {
-      shuffled.push(...shuffleArr(QUIZ_TEMPLATE));
-    }
-    quiz = shuffled.slice(0, 25).map(q => ({ ...q, type: 'pg' }));
+    pool = generic.length ? generic.slice() : (handcrafted || []);
   }
+
+  // Shuffle pool and take 25; pad if pool is small.
+  const shuffledPool = shuffleArr(pool);
+  let quiz = shuffledPool.slice(0, 25);
+  while (quiz.length < 25 && pool.length > 0) {
+    quiz.push(pool[quiz.length % pool.length]);
+  }
+  // Now shuffle option positions within each question.
+  quiz = quiz.map(shuffleOptions);
 
   list.innerHTML = quiz.map((q, i) => {
     const type = q.type || 'pg';
