@@ -8537,6 +8537,25 @@ const MODULE_MEDIA = {
   // Tambah baris lain sesuai kebutuhan...
 };
 
+// === S1 Instalasi Bangunan · Level 3 Profesional → Level 6 Consultant ===
+// One Google Slides deck covers all 64 modules of jalur S1 (L3-L6). Each
+// module's "Materi (PPT)" tab embeds the same deck. Supaya nanti bisa per-modul,
+// override saja dengan slideUrl spesifik di MODULE_MEDIA, atau pakai
+// `...&slide=id.pX` untuk loncat ke halaman tertentu di deck yang sama.
+// REMINDER: Pastikan file Google Slides di-share "Anyone with the link → Viewer"
+// supaya bisa di-embed publik.
+(function applyInstalasiBangunanDeck() {
+  const deck = 'https://docs.google.com/presentation/d/1AAxRPdPcdFGSNB2SIhzDfMNWWvGKkGQY/edit?usp=drive_link&ouid=117328718742184820087&rtpof=true&sd=true';
+  const counts = { '3A': 18, '4A': 16, '5A': 14, '6A': 16 };
+  Object.keys(counts).forEach(prefix => {
+    for (let i = 1; i <= counts[prefix]; i++) {
+      const code = `${prefix}.${String(i).padStart(2, '0')}`;
+      if (!MODULE_MEDIA[code]) MODULE_MEDIA[code] = {};
+      if (!MODULE_MEDIA[code].slideUrl) MODULE_MEDIA[code].slideUrl = deck;
+    }
+  });
+})();
+
 // --- URL Parser Helpers ---
 function parseVideoEmbed(url) {
   if (!url || !url.trim()) return null;
