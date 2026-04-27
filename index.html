@@ -8560,9 +8560,8 @@ function startPayment(plan) {
         pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 200);
-  })
+  }
   //   .then(r => r.json()).then(data => { /* use returned QR string from Midtrans/Xendit */ });
-}
 
 function startPaymentTimer() {
   if (paymentState.timerInterval) clearInterval(paymentState.timerInterval);
