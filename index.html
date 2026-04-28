@@ -7566,9 +7566,12 @@ body {
           <div class="quiz-header">
             <div class="quiz-header-info">
               <h3>Quiz Pemahaman</h3>
-              <p>25 soal pilihan ganda — klik pilihan untuk langsung lihat jawaban & pembahasan</p>
+              <p>25 soal pilihan ganda · batas waktu <strong>15 menit</strong> · skor minimum 70% untuk lulus</p>
             </div>
-            <div class="quiz-progress">Terjawab: <strong id="quiz-answered">0</strong>/25</div>
+            <div class="quiz-progress">
+              Terjawab: <strong id="quiz-answered">0</strong>/25
+              <span id="quiz-timer" style="margin-left:16px;padding:4px 10px;border-radius:6px;background:rgba(212,175,106,0.15);color:var(--gold-dark);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:0.05em;">⏱ 15:00</span>
+            </div>
           </div>
           <div class="quiz-list" id="quiz-list">
             <!-- Filled by JS -->
@@ -26793,6 +26796,9 @@ function renderQuiz(module) {
   const list = document.getElementById('quiz-list');
   if (!list) return;
 
+  // Stop any old quiz timer before re-rendering
+  if (typeof window.esaStopQuizTimer === 'function') window.esaStopQuizTimer();
+
   // Cooldown gate: kalau modul lagi cooldown, tampilkan layar tunggu, jangan render soal.
   if (typeof window.esaGetModuleCooldownInfo === 'function' && module && module.code) {
     const cd = window.esaGetModuleCooldownInfo(module.code);
@@ -26921,6 +26927,9 @@ function renderQuiz(module) {
   if (answeredEl) answeredEl.textContent = '0';
   answeredCount = 0;
   answeredQuestions = new Set();
+
+  // Start the 15-minute quiz timer (auto-submits when expired)
+  if (typeof window.esaStartQuizTimer === 'function') window.esaStartQuizTimer();
 }
 
 let answeredCount = 0;
@@ -27043,8 +27052,24 @@ function setupModulNavigation(trackId, levelId, currentCode) {
   if (currentIdx < allModules.length - 1) {
     const next = allModules[currentIdx + 1];
     nextBtn.disabled = false;
-    nextBtn.style.opacity = 1;
-    nextBtn.onclick = () => openModul(next.code, trackId, levelId);
+    const passedNow = typeof window.esaIsModulePassed === 'function' && window.esaIsModulePassed(currentCode);
+    nextBtn.style.opacity = passedNow ? 1 : 0.6;
+    nextBtn.title = passedNow ? '' : 'Tuntaskan quiz modul ini dulu (skor ≥70%)';
+    nextBtn.onclick = () => {
+      if (typeof window.esaIsModulePassed === 'function' && !window.esaIsModulePassed(currentCode)) {
+        const stats = (typeof window.esaGetQuizProgress === 'function') ? window.esaGetQuizProgress() : null;
+        const detail = stats && stats.answered < 25
+          ? `Baru ${stats.answered}/25 soal terjawab. Selesaikan semua soal dulu.`
+          : `Skor terbaik kamu di modul ${currentCode} belum 70%. Coba lagi quiz-nya.`;
+        if (typeof window.esaToast === 'function') {
+          window.esaToast('🔒 Tuntaskan Quiz Dulu', detail, '🔒');
+        } else {
+          alert('Tuntaskan quiz modul ini dulu sebelum lanjut ke modul berikutnya. ' + detail);
+        }
+        return;
+      }
+      openModul(next.code, trackId, levelId);
+    };
   } else {
     nextBtn.disabled = true;
     nextBtn.style.opacity = 0.4;
@@ -27950,7 +27975,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       correct: correct,
       total: total,
       scorePct: Math.round(pct * 100),
-      passed: passed,
+      // sticky: once a module is passed, it stays passed even if a later
+      // attempt scores lower. Used by the next-module gate.
+      passed: passed || !!existing.passed,
+      lastAttemptPassed: passed,
       attempts: existing.attempts + 1,
       failedAttempts: newFailedAttempts,
       cooldownUntil: cooldownUntil,
@@ -28002,6 +28030,57 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     return `${m}:${s}`;
   }
   window.esaFormatCooldown = formatCooldown;
+
+  function isModulePassed(code) {
+    const rec = state.modules[code];
+    return !!(rec && rec.passed);
+  }
+  window.esaIsModulePassed = isModulePassed;
+
+  function getQuizProgress() {
+    return {
+      answered: currentQuizStats.answered.size,
+      correct: currentQuizStats.correct,
+      wrong: currentQuizStats.wrong,
+      moduleCode: currentQuizModule ? currentQuizModule.code : null
+    };
+  }
+  window.esaGetQuizProgress = getQuizProgress;
+
+  // ========== QUIZ TIME LIMIT (15 menit) ==========
+  const QUIZ_TIME_LIMIT_MS = 15 * 60 * 1000;
+  let quizTimerInterval = null;
+  let quizDeadline = null;
+
+  function startQuizTimer() {
+    stopQuizTimer();
+    quizDeadline = Date.now() + QUIZ_TIME_LIMIT_MS;
+    const tick = () => {
+      const el = document.getElementById('quiz-timer');
+      const remaining = quizDeadline - Date.now();
+      if (remaining <= 0) {
+        if (el) { el.textContent = '⏱ 00:00'; el.style.color = 'var(--rose)'; }
+        stopQuizTimer();
+        showToast('Waktu Habis', 'Quiz berakhir — sisa soal yang belum terjawab dihitung salah.', '⏰');
+        if (currentQuizModule) showModuleCompletion();
+        return;
+      }
+      if (el) {
+        el.textContent = '⏱ ' + formatCooldown(remaining);
+        if (remaining < 60 * 1000) el.style.color = 'var(--rose)';
+        else if (remaining < 5 * 60 * 1000) el.style.color = '#d4823a';
+        else el.style.color = 'var(--gold-dark)';
+      }
+    };
+    tick();
+    quizTimerInterval = setInterval(tick, 1000);
+  }
+  function stopQuizTimer() {
+    if (quizTimerInterval) { clearInterval(quizTimerInterval); quizTimerInterval = null; }
+    quizDeadline = null;
+  }
+  window.esaStartQuizTimer = startQuizTimer;
+  window.esaStopQuizTimer = stopQuizTimer;
 
   function updateStreak() {
     const today = new Date().toISOString().slice(0, 10);
@@ -28158,6 +28237,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
   function showModuleCompletion() {
     if (!currentQuizModule) return;
+    stopQuizTimer();
     const total = 25;
     const correct = currentQuizStats.correct;
     const pct = Math.round((correct / total) * 100);
@@ -28306,6 +28386,18 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     }
 
     updateUserHUD();
+
+    // Refresh prev/next button state on the module page so the next button
+    // unlocks immediately when this attempt passes.
+    if (typeof window.setupModulNavigation === 'function' && currentQuizModule) {
+      try {
+        window.setupModulNavigation(
+          currentQuizModule.trackId,
+          currentQuizModule.levelId,
+          currentQuizModule.code
+        );
+      } catch (e) { /* ignore */ }
+    }
 
     if (passed && isFirstPass) {
       setTimeout(() => showToast('Modul Lulus', `+${xpGained} XP — ${currentQuizModule.code} selesai!`, '⭐'), 400);
@@ -28822,6 +28914,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         showOnboardingModal();
         return;
       }
+      stopQuizTimer();
       resetQuizStats(code, levelId, trackId);
       return original(code, trackId, levelId);
     };
