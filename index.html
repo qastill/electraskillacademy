@@ -27584,14 +27584,42 @@ function sendAI() {
   input.value = '';
   messages.scrollTop = messages.scrollHeight;
 
-  // Generate demo response
-  setTimeout(() => {
-    const botMsg = document.createElement('div');
-    botMsg.className = 'ai-msg bot';
-    botMsg.innerHTML = generateAIResponse(q);
-    messages.appendChild(botMsg);
-    messages.scrollTop = messages.scrollHeight;
-  }, 600);
+  // Loading bubble — diganti isinya begitu jawaban siap
+  const botMsg = document.createElement('div');
+  botMsg.className = 'ai-msg bot';
+  botMsg.innerHTML = '<em style="opacity:0.6">Memproses…</em>';
+  messages.appendChild(botMsg);
+  messages.scrollTop = messages.scrollHeight;
+
+  // Konteks modul (kalau user lagi buka modul)
+  const m = (typeof getCurrentModule === 'function') ? getCurrentModule() : null;
+  const payload = {
+    question: q,
+    moduleTitle: m && m.title ? m.title : '',
+    moduleCode: m && m.code ? m.code : ''
+  };
+
+  // Coba Vercel function dulu (Groq via /api/ai-tutor). Kalau gagal/down,
+  // fallback ke pattern-matching lokal generateAIResponse(). Site tetap jalan
+  // walaupun env var GROQ_API_KEY belum di-set.
+  fetch('/api/ai-tutor', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(r => r.json().then(data => ({ ok: r.ok, data })))
+    .then(({ ok, data }) => {
+      if (!ok || !data || !data.answer) {
+        throw new Error(data && data.error ? data.error : 'API tidak respons');
+      }
+      botMsg.innerHTML = data.answer;
+      messages.scrollTop = messages.scrollHeight;
+    })
+    .catch(err => {
+      console.warn('[AI Tutor] fallback ke local response:', err.message);
+      botMsg.innerHTML = generateAIResponse(q);
+      messages.scrollTop = messages.scrollHeight;
+    });
 }
 
 function generateAIResponse(q) {
