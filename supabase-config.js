@@ -13,8 +13,8 @@
 // =============================================================
 
 window.ESA_SUPABASE = {
-  url: '',       // contoh: 'https://abcdefgh.supabase.co'
-  anonKey: ''    // contoh: 'eyJhbGciOiJIUzI1NiIsInR5cCI6...'
+  url: 'https://jsylculwywvbaxbflske.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzeWxjdWx3eXd2YmF4YmZsc2tlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNTI4MDcsImV4cCI6MjA5MjkyODgwN30.enbGmtZVApcFYimB4Wy5dCO87JNEUlR6aP-7u_-LkgA'
 };
 
 window.ESA_SUPABASE.isConfigured = function () {
