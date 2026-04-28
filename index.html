@@ -7053,6 +7053,8 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 
@@ -28407,6 +28409,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     }
 
     saveData(state);
+    if (typeof window.esaSyncParticipant === 'function') {
+      window.esaSyncParticipant(state.profile, state.promoCode);
+    }
     document.getElementById('esa-onboarding-modal').classList.remove('active');
     updateHomeProgress();
 
@@ -28642,6 +28647,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     updateStreak();
     saveData(state);
 
+    if (typeof window.esaSyncModuleAttempt === 'function') {
+      window.esaSyncModuleAttempt(state.modules[code], state.profile);
+    }
+
     // Check level completion
     checkLevelCompletion(level, trackId);
     return state.modules[code];
@@ -28799,6 +28808,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     state.xp += 100; // Bonus XP for level completion
 
     saveData(state);
+
+    if (typeof window.esaSyncLevelCompletion === 'function') {
+      window.esaSyncLevelCompletion(state.levels[levelKey], state.profile);
+    }
 
     // Auto-enroll to talent pool
     enrollInTalentPool(levelId, trackId, progress.avgScore, certId);
@@ -30293,6 +30306,101 @@ else{setTimeout(init,200);}
   };
 
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',applyNav);}else{applyNav();}
+})();
+</script>
+
+<!-- ================================================================
+     SUPABASE SYNC LAYER
+     Fire-and-forget: gagal sync tidak boleh ganggu UX. Kalau
+     supabase-config.js belum diisi, semua call ini diam saja.
+     ================================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  function getClient() {
+    if (!window.ESA_SUPABASE || !window.ESA_SUPABASE.isConfigured || !window.ESA_SUPABASE.isConfigured()) return null;
+    if (!window.supabase || typeof window.supabase.createClient !== 'function') return null;
+    if (!window.__esaSb) {
+      window.__esaSb = window.supabase.createClient(window.ESA_SUPABASE.url, window.ESA_SUPABASE.anonKey, {
+        auth: { persistSession: false }
+      });
+    }
+    return window.__esaSb;
+  }
+
+  function logSyncError(label, err) {
+    if (err) console.warn('[ESA-Sync] ' + label + ':', err.message || err);
+  }
+
+  // Insert participant; on email conflict, do nothing (write-once).
+  window.esaSyncParticipant = async function (profile, promoCode) {
+    const sb = getClient();
+    if (!sb || !profile || !profile.email) return;
+    try {
+      const { error } = await sb.from('participants').insert({
+        email: profile.email,
+        name: profile.name,
+        phone: profile.phone || '',
+        nik: profile.nik && profile.nik !== '-' ? profile.nik : null,
+        city: profile.city && profile.city !== '-' ? profile.city : null,
+        promo_code: promoCode || null,
+        auth_method: profile.authMethod || 'manual',
+        join_date: profile.joinDate || new Date().toISOString()
+      });
+      // 23505 = unique violation → email sudah pernah daftar, normal
+      if (error && error.code !== '23505') logSyncError('insert participant', error);
+    } catch (e) { logSyncError('insert participant', e); }
+  };
+
+  // Append exam attempt + upsert module_progress
+  window.esaSyncModuleAttempt = async function (rec, profile) {
+    const sb = getClient();
+    if (!sb || !profile || !profile.email || !rec) return;
+    const email = profile.email;
+    try {
+      sb.from('exam_attempts').insert({
+        participant_email: email,
+        module_code: rec.code,
+        level_id: rec.level || null,
+        track_id: rec.trackId || null,
+        correct: rec.correct,
+        total: rec.total,
+        score_pct: rec.scorePct,
+        passed: !!rec.lastAttemptPassed
+      }).then(function (r) { if (r.error) logSyncError('insert exam_attempt', r.error); });
+
+      sb.from('module_progress').upsert({
+        participant_email: email,
+        module_code: rec.code,
+        level_id: rec.level || null,
+        track_id: rec.trackId || null,
+        best_score: rec.bestScore,
+        attempts: rec.attempts,
+        passed: !!rec.passed,
+        last_attempt_at: rec.lastDate || new Date().toISOString()
+      }, { onConflict: 'participant_email,module_code' })
+        .then(function (r) { if (r.error) logSyncError('upsert module_progress', r.error); });
+    } catch (e) { logSyncError('module attempt', e); }
+  };
+
+  // Insert level completion (sertifikat baru)
+  window.esaSyncLevelCompletion = async function (levelRec, profile) {
+    const sb = getClient();
+    if (!sb || !profile || !profile.email || !levelRec) return;
+    try {
+      const { error } = await sb.from('level_completions').insert({
+        participant_email: profile.email,
+        level_id: levelRec.levelId,
+        track_id: levelRec.trackId || null,
+        cert_id: levelRec.certId,
+        avg_score: levelRec.avgScore,
+        module_count: levelRec.moduleCount,
+        completed_at: levelRec.completedDate || new Date().toISOString()
+      });
+      if (error && error.code !== '23505') logSyncError('insert level_completion', error);
+    } catch (e) { logSyncError('insert level_completion', e); }
+  };
 })();
 </script>
 </body>
