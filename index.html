@@ -30244,7 +30244,10 @@ else{setTimeout(init,200);}
     
     var menu=document.createElement('div');
     menu.className='nav-dropdown-menu';
-    menu.style.cssText='display:none;position:absolute;top:100%;left:0;background:#1a1d2e;min-width:190px;z-index:9999;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.4);padding:8px 0;border:1px solid rgba(212,175,106,0.15);';
+    // Add a small visual padding-top via the wrapper so cursor doesn't get
+    // stuck on a layout gap between trigger and menu, plus a much wider
+    // hit-area surrounding the menu via padding inside the wrapper.
+    menu.style.cssText='display:none;position:absolute;top:calc(100% + 4px);left:0;background:#1a1d2e;min-width:200px;z-index:9999;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,0.5);padding:8px 0;border:1px solid rgba(212,175,106,0.2);';
     
     // Our Talent item
     var ourTalentItem=document.createElement('a');
@@ -30273,17 +30276,57 @@ else{setTimeout(init,200);}
     menu.appendChild(jobItem);
     dropdown.appendChild(trigger);
     dropdown.appendChild(menu);
-    // Use mouseenter/mouseleave (don't bubble) + a 250ms hide delay so the
-    // menu doesn't disappear when the cursor crosses from the trigger into
-    // the menu items. Click on the trigger toggles for touch/keyboard.
+
+    // Robust dropdown logic — works for hover, click, and touch.
     var hideTimer=null;
-    var openMenu=function(){if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}menu.style.display='block';};
-    var scheduleClose=function(){if(hideTimer)clearTimeout(hideTimer);hideTimer=setTimeout(function(){menu.style.display='none';hideTimer=null;},250);};
+    var openMenu=function(){
+      if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}
+      menu.style.display='block';
+    };
+    var closeMenu=function(){
+      if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}
+      menu.style.display='none';
+    };
+    var scheduleClose=function(){
+      if(hideTimer)clearTimeout(hideTimer);
+      hideTimer=setTimeout(closeMenu,500); // longer grace window
+    };
+
+    // Hover (desktop)
     dropdown.addEventListener('mouseenter',openMenu);
     dropdown.addEventListener('mouseleave',scheduleClose);
     menu.addEventListener('mouseenter',openMenu);
     menu.addEventListener('mouseleave',scheduleClose);
-    trigger.onclick=function(e){e.preventDefault();menu.style.display=(menu.style.display==='block')?'none':'block';};
+
+    // Click trigger to toggle (touch & desktop both supported).
+    trigger.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(menu.style.display==='block')closeMenu();else openMenu();
+    });
+
+    // Use mousedown/touchstart on items so the action commits BEFORE any
+    // race with the mouseleave hide-timer (mousedown fires before click).
+    [ourTalentItem,jobItem].forEach(function(item,idx){
+      var view=(idx===0)?'talent':'jobs';
+      var run=function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}
+        closeMenu();
+        if(typeof showView==='function')showView(view);
+      };
+      // Replace existing onmousedown/onclick to avoid double-fire.
+      item.onclick=null;
+      item.addEventListener('click',run);
+      item.addEventListener('touchend',function(e){e.preventDefault();run(e);});
+    });
+
+    // Click outside closes the menu.
+    document.addEventListener('click',function(e){
+      if(menu.style.display!=='block')return;
+      if(!dropdown.contains(e.target))closeMenu();
+    });
 
     // Remove Job Opportunity from top level
     if(jobOpp)jobOpp.remove();
