@@ -7356,72 +7356,22 @@ body {
     </div>
   </div>
 
-  <!-- Jalur Hero -->
-  <section class="jalur-hero">
-    <div class="jalur-hero-bg-image" id="jalur-hero-bg"></div>
-    <div class="jalur-hero-overlay"></div>
-    <div class="jalur-hero-inner">
-      <div>
-        <div class="jalur-breadcrumb" id="jalur-breadcrumb">
-          <a onclick="showView('home')" style="cursor:pointer;">Beranda</a>
-          <span class="sep">›</span>
-          <span>Jalur Karir</span>
-          <span class="sep">›</span>
-          <span id="jalur-bc-name"></span>
-        </div>
-        <h1 class="jalur-hero-title" id="jalur-title"></h1>
-        <p class="jalur-hero-desc" id="jalur-desc"></p>
-        <div class="jalur-hero-stats">
-          <div class="jalur-stat">
-            <div class="jalur-stat-num" id="jalur-total-modul">0</div>
-            <div class="jalur-stat-label">Total Modul</div>
-          </div>
-          <div class="jalur-stat">
-            <div class="jalur-stat-num">6</div>
-            <div class="jalur-stat-label">Tingkat</div>
-          </div>
-          <div class="jalur-stat">
-            <div class="jalur-stat-num" id="jalur-total-jp">0</div>
-            <div class="jalur-stat-label">JP Total</div>
-          </div>
-          <div class="jalur-stat">
-            <div class="jalur-stat-num">4</div>
-            <div class="jalur-stat-label">Role Target</div>
-          </div>
-        </div>
-
-        <div class="jalur-hero-cta-row">
-          <button class="jalur-hero-cta" onclick="openPurchaseModal()">
-            <span id="jalur-cta-label">Mulai Jadi Expert</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <button class="jalur-hero-cta-secondary" onclick="document.getElementById('level-list').scrollIntoView({behavior:'smooth',block:'start'})">
-            Lihat Kurikulum
-          </button>
-        </div>
-      </div>
-      <div class="jalur-hero-right">
-        <h4>Yang kamu dapat</h4>
-        <ul>
-          <li>Video pembelajaran profesional tiap modul</li>
-          <li>Materi PPT bisa diunduh untuk belajar offline</li>
-          <li>Quiz 25 soal dengan pembahasan langsung</li>
-          <li>AI Tutor personal siap jawab kapan saja</li>
-          <li>Sertifikasi resmi bila lulus ujian final</li>
-          <li>Masuk talent pool job matching alumni</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Levels Accordion -->
-  <section class="jalur-levels">
+  <!-- Levels Accordion (sekarang langsung di bawah detail-nav, hero lama dihilangkan) -->
+  <section class="jalur-levels" style="padding-top: 60px;">
     <div class="jalur-levels-inner">
       <div class="jalur-levels-title">
-        <h2>6 Tingkatan dari <span class="italic">pemula ke ahli</span></h2>
-        <p>Mulai dari Esensial yang gratis, naik bertahap sampai Consultant level. Setiap tingkat dirancang sistematis.</p>
+        <div class="jalur-breadcrumb" id="jalur-breadcrumb" style="margin-bottom: 18px; font-size: 0.78rem; color: rgba(245,240,230,0.55); letter-spacing: 0.08em; text-transform: uppercase;">
+          <a onclick="showView('home')" style="cursor:pointer; color: var(--gold-dark); text-decoration: none;">Beranda</a>
+          <span style="margin: 0 8px;">›</span>
+          <span>Jalur Karir</span>
+          <span style="margin: 0 8px;">›</span>
+          <span id="jalur-bc-name"></span>
+        </div>
+        <h2>6 Tingkatan dari <span class="italic">pemula ke ahli</span> — <span id="jalur-track-name" style="color: var(--gold-dark); font-style: italic;"></span></h2>
+        <p>Mulai dari Esensial yang gratis, naik bertahap sampai Consultant level. Setiap tingkat dirancang sistematis. <strong>Total <span id="jalur-total-modules">0</span> modul</strong> untuk jalur ini.</p>
+
+        <!-- Profil progress level user -->
+        <div id="jalur-progress-strip" style="margin-top: 28px;"></div>
       </div>
       <div class="level-list" id="level-list">
         <!-- Filled by JS -->
@@ -10111,34 +10061,127 @@ function openJalur(trackId) {
   const foundationL1 = CURRICULUM['L1'] || [];
   const foundationL2 = CURRICULUM['L2'] || [];
 
-  // Calculate totals
+  // Calculate total modul (foundation + jalur-specific)
   const totalMod = trackModules.length + foundationL1.length + foundationL2.length;
-  const totalJP = [...trackModules, ...foundationL1, ...foundationL2].reduce((s, m) => s + (m.jp || 4), 0);
 
-  // Update header
-  document.getElementById('jalur-nav-title').textContent = meta.name;
-  document.getElementById('jalur-bc-name').textContent = meta.name;
-  document.getElementById('jalur-title').textContent = meta.name;
-  document.getElementById('jalur-desc').textContent = meta.desc;
-  document.getElementById('jalur-total-modul').textContent = totalMod;
-  document.getElementById('jalur-total-jp').textContent = totalJP;
+  // Update header (nav + breadcrumb + judul gabungan)
+  const navTitle = document.getElementById('jalur-nav-title');
+  if (navTitle) navTitle.textContent = meta.name;
+  const bcName = document.getElementById('jalur-bc-name');
+  if (bcName) bcName.textContent = meta.name;
+  const trackName = document.getElementById('jalur-track-name');
+  if (trackName) trackName.textContent = meta.name;
+  const totalEl = document.getElementById('jalur-total-modules');
+  if (totalEl) totalEl.textContent = totalMod;
 
-  // Set hero background image (representative photo per jalur)
-  const heroBg = document.getElementById('jalur-hero-bg');
-  if (heroBg && meta.photo) {
-    heroBg.style.backgroundImage = `url('${meta.photo}')`;
-  }
+  // Render user-friendly progress profile per level (L1..L6)
+  renderJalurProgress(trackId);
 
-  // Set CTA label with expert title
-  const ctaLabel = document.getElementById('jalur-cta-label');
-  if (ctaLabel && meta.expertTitle) {
-    ctaLabel.textContent = `Mulai Jadi ${meta.expertTitle}`;
-  }
-
-  // Render levels
+  // Render levels accordion (modules per level)
   renderLevels(trackId);
 
   showView('jalur');
+}
+
+// ================================================
+// RENDER JALUR PROGRESS — profil level yang sudah dituntaskan
+// ================================================
+function renderJalurProgress(trackId) {
+  const strip = document.getElementById('jalur-progress-strip');
+  if (!strip || typeof LEVELS === 'undefined') return;
+
+  // Read state via the addon helpers + localStorage
+  const isPassed = (code) => typeof window.esaIsModulePassed === 'function' && window.esaIsModulePassed(code);
+  let modulesState = {};
+  try { modulesState = JSON.parse(localStorage.getItem('esa_data_v1') || '{}').modules || {}; } catch {}
+
+  const fmtDate = (iso) => {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }); } catch { return ''; }
+  };
+
+  // Build per-level summary
+  const summary = LEVELS.map(lvl => {
+    let mods = [];
+    if (lvl.id === 'L1') mods = CURRICULUM['L1'] || [];
+    else if (lvl.id === 'L2') mods = CURRICULUM['L2'] || [];
+    else mods = (CURRICULUM[trackId] || []).filter(m => m.level === lvl.id);
+
+    const passed = mods.filter(m => isPassed(m.code)).length;
+    const total = mods.length;
+    const complete = total > 0 && passed === total;
+    let avgScore = 0, lastDate = null;
+    if (passed > 0) {
+      let sum = 0;
+      mods.forEach(m => {
+        const r = modulesState[m.code];
+        if (r && r.passed) {
+          sum += r.bestScore || 0;
+          if (!lastDate || (r.lastDate && r.lastDate > lastDate)) lastDate = r.lastDate;
+        }
+      });
+      avgScore = Math.round(sum / passed);
+    }
+
+    const isPaid = !lvl.isFree;
+    const locked = isPaid && typeof hasAccessToLevel === 'function' && !hasAccessToLevel(lvl.id, trackId);
+
+    let status, color, bg, icon, line2;
+    if (complete) {
+      status = 'Done'; color = '#16a34a'; bg = 'rgba(34,197,94,0.12)';
+      icon = '✓'; line2 = `${avgScore}% · ${fmtDate(lastDate)}`;
+    } else if (passed > 0) {
+      status = 'Progress'; color = '#d4823a'; bg = 'rgba(212,130,58,0.12)';
+      icon = '◐'; line2 = `${passed}/${total} modul`;
+    } else if (locked) {
+      status = 'Locked'; color = 'rgba(245,240,230,0.4)'; bg = 'rgba(255,255,255,0.04)';
+      icon = '🔒'; line2 = 'Berbayar';
+    } else {
+      status = 'Belum'; color = 'rgba(245,240,230,0.55)'; bg = 'rgba(255,255,255,0.04)';
+      icon = '○'; line2 = `${total} modul`;
+    }
+    return { lvl, status, color, bg, icon, line2, complete };
+  });
+
+  // Headline summary
+  const totalLevels = summary.length;
+  const completedLevels = summary.filter(s => s.complete).length;
+  const headline = completedLevels === 0
+    ? `Mulai dari level pertama untuk membangun fondasi.`
+    : completedLevels === totalLevels
+      ? `🎉 Hebat! Semua ${totalLevels} level di jalur ini sudah lulus.`
+      : `Progress kamu di jalur ini: <strong>${completedLevels} dari ${totalLevels} level</strong> tuntas.`;
+
+  strip.innerHTML = `
+    <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(212,175,106,0.18); border-radius: 14px; padding: 20px 24px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+        <div style="font-size: 0.85rem; color: rgba(245,240,230,0.85); line-height: 1.5;">${headline}</div>
+        <div style="display:flex; align-items:center; gap: 8px; font-size: 0.72rem; color: rgba(245,240,230,0.5); text-transform: uppercase; letter-spacing: 0.1em;">
+          <span style="color:#16a34a;">●</span> Done
+          <span style="color:#d4823a; margin-left: 6px;">●</span> Progress
+          <span style="color:rgba(245,240,230,0.4); margin-left: 6px;">●</span> Belum
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
+        ${summary.map(s => `
+          <button onclick="document.getElementById('level-${s.lvl.id}')?.scrollIntoView({behavior:'smooth',block:'start'})" style="background: ${s.bg}; border: 1px solid ${s.complete ? 'rgba(34,197,94,0.4)' : 'rgba(255,255,255,0.08)'}; border-radius: 10px; padding: 12px 10px; text-align: left; cursor: pointer; transition: transform 0.15s, border-color 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            <div style="display:flex; align-items:center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 1.05rem; color: ${s.color};">${s.icon}</span>
+              <span style="font-size: 0.7rem; color: rgba(245,240,230,0.5); font-weight: 600; letter-spacing: 0.06em;">${s.lvl.id}</span>
+            </div>
+            <div style="font-size: 0.78rem; color: #f5f0e6; font-weight: 600; margin-bottom: 4px; line-height: 1.3;">${s.lvl.name.replace(/Level \d+ · /, '')}</div>
+            <div style="font-size: 0.7rem; color: ${s.color}; font-weight: 600;">${s.line2}</div>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  // Make grid responsive on mobile (3 cols)
+  if (window.matchMedia && window.matchMedia('(max-width: 720px)').matches) {
+    const grid = strip.querySelector('div[style*="grid-template-columns"]');
+    if (grid) grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+  }
 }
 
 // ================================================
@@ -27862,6 +27905,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     // Re-render current levels to remove lock indicators if on jalur view
     if (typeof window.renderLevels === 'function' && typeof currentTrackId !== 'undefined' && currentTrackId) {
       try { window.renderLevels(currentTrackId); } catch(e) {}
+      try { if (typeof window.renderJalurProgress === 'function') window.renderJalurProgress(currentTrackId); } catch(e) {}
     }
   }
   window.esaRedeemPromoCode = redeemPromoCode;
@@ -28437,6 +28481,12 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           currentQuizModule.code
         );
       } catch (e) { /* ignore */ }
+    }
+
+    // Refresh the jalur progress card so Done badges + level chips update
+    // even before the user navigates back to the jalur view.
+    if (typeof window.renderJalurProgress === 'function' && currentQuizModule && currentQuizModule.trackId) {
+      try { window.renderJalurProgress(currentQuizModule.trackId); } catch (e) { /* ignore */ }
     }
 
     if (passed && isFirstPass) {
