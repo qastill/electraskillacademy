@@ -30232,111 +30232,34 @@ else{setTimeout(init,200);}
     aboutUs.className='nav-right';aboutUs.href='#';aboutUs.textContent='About Us';
     aboutUs.onclick=function(e){e.preventDefault();showView('about');};
 
-    // Talent Pool dropdown with 2 items: Our Talent + Job Opportunity
-    var dropdown=document.createElement('div');
-    dropdown.className='nav-dropdown-wrapper';
-    dropdown.style.cssText='position:relative;display:inline-block;';
-    
-    var trigger=document.createElement('a');
-    trigger.className='nav-right';trigger.href='#';trigger.textContent='Talent Pool ▾';
-    trigger.style.cursor='pointer';
-    trigger.onclick=function(e){e.preventDefault();};
-    
-    var menu=document.createElement('div');
-    menu.className='nav-dropdown-menu';
-    // Add a small visual padding-top via the wrapper so cursor doesn't get
-    // stuck on a layout gap between trigger and menu, plus a much wider
-    // hit-area surrounding the menu via padding inside the wrapper.
-    menu.style.cssText='display:none;position:absolute;top:calc(100% + 4px);left:0;background:#1a1d2e;min-width:200px;z-index:9999;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,0.5);padding:8px 0;border:1px solid rgba(212,175,106,0.2);';
-    
-    // Our Talent item
-    var ourTalentItem=document.createElement('a');
-    ourTalentItem.href='#';
-    ourTalentItem.textContent='Our Talent';
-    ourTalentItem.style.cssText='display:block;padding:10px 20px;color:#f5f0e6;text-decoration:none;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;transition:background 0.2s;';
-    ourTalentItem.onmouseover=function(){ourTalentItem.style.background='rgba(212,175,106,0.12)';};
-    ourTalentItem.onmouseout=function(){ourTalentItem.style.background='transparent';};
-    ourTalentItem.onclick=function(e){e.preventDefault();showView('talent');menu.style.display='none';};
+    // Replace the previous "Talent Pool ▾" dropdown with two simple
+    // top-level links so the click flow can never be intercepted by
+    // hover-timer / dropdown race conditions.
+    var ourTalentLink=document.createElement('a');
+    ourTalentLink.className='nav-right';
+    ourTalentLink.href='#';
+    ourTalentLink.textContent='Our Talent';
+    ourTalentLink.style.cursor='pointer';
+    ourTalentLink.onclick=function(e){e.preventDefault();showView('talent');};
 
-    // Divider
-    var divider=document.createElement('div');
-    divider.style.cssText='border-top:1px solid rgba(255,255,255,0.08);margin:4px 0;';
-    
-    // Job Opportunity item
-    var jobItem=document.createElement('a');
-    jobItem.href='#';
-    jobItem.textContent='Job Opportunity';
-    jobItem.style.cssText='display:block;padding:10px 20px;color:#f5f0e6;text-decoration:none;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;transition:background 0.2s;';
-    jobItem.onmouseover=function(){jobItem.style.background='rgba(212,175,106,0.12)';};
-    jobItem.onmouseout=function(){jobItem.style.background='transparent';};
-    jobItem.onclick=function(e){e.preventDefault();showView('jobs');menu.style.display='none';};
-    
-    menu.appendChild(ourTalentItem);
-    menu.appendChild(divider);
-    menu.appendChild(jobItem);
-    dropdown.appendChild(trigger);
-    dropdown.appendChild(menu);
+    var jobLink=document.createElement('a');
+    jobLink.className='nav-right';
+    jobLink.href='#';
+    jobLink.textContent='Job Opportunity';
+    jobLink.style.cursor='pointer';
+    jobLink.onclick=function(e){e.preventDefault();showView('jobs');};
 
-    // Robust dropdown logic — works for hover, click, and touch.
-    var hideTimer=null;
-    var openMenu=function(){
-      if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}
-      menu.style.display='block';
-    };
-    var closeMenu=function(){
-      if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}
-      menu.style.display='none';
-    };
-    var scheduleClose=function(){
-      if(hideTimer)clearTimeout(hideTimer);
-      hideTimer=setTimeout(closeMenu,500); // longer grace window
-    };
-
-    // Hover (desktop)
-    dropdown.addEventListener('mouseenter',openMenu);
-    dropdown.addEventListener('mouseleave',scheduleClose);
-    menu.addEventListener('mouseenter',openMenu);
-    menu.addEventListener('mouseleave',scheduleClose);
-
-    // Click trigger to toggle (touch & desktop both supported).
-    trigger.addEventListener('click',function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      if(menu.style.display==='block')closeMenu();else openMenu();
-    });
-
-    // Use mousedown/touchstart on items so the action commits BEFORE any
-    // race with the mouseleave hide-timer (mousedown fires before click).
-    [ourTalentItem,jobItem].forEach(function(item,idx){
-      var view=(idx===0)?'talent':'jobs';
-      var run=function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}
-        closeMenu();
-        if(typeof showView==='function')showView(view);
-      };
-      // Replace existing onmousedown/onclick to avoid double-fire.
-      item.onclick=null;
-      item.addEventListener('click',run);
-      item.addEventListener('touchend',function(e){e.preventDefault();run(e);});
-    });
-
-    // Click outside closes the menu.
-    document.addEventListener('click',function(e){
-      if(menu.style.display!=='block')return;
-      if(!dropdown.contains(e.target))closeMenu();
-    });
-
-    // Remove Job Opportunity from top level
+    // Remove the original "Job Opportunity" anchor that lived in the
+    // base markup; we'll re-insert our own controlled instance below.
     if(jobOpp)jobOpp.remove();
-    
+
     var simLabs=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.includes('Simulator')||a.textContent.includes('Labs');});
     var cert=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.trim()==='Certification'||a.textContent.includes('Sertifikasi');});
-    
+
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
-    navGroup.appendChild(dropdown);
+    navGroup.appendChild(ourTalentLink);
+    navGroup.appendChild(jobLink);
     if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
     if(daftar)navGroup.appendChild(daftar);
