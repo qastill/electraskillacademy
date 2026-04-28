@@ -7789,52 +7789,11 @@ body {
         <!-- Filter Bar -->
         <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px;">
           <button onclick="filterTalent('all')" class="talent-filter-btn active" style="background: #d4af6a; color: #0d0f1c; border: none; border-radius: 20px; padding: 8px 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">Semua</button>
-          <button onclick="filterTalent('instalasi')" class="talent-filter-btn" style="background: transparent; color: #d4af6a; border: 1px solid rgba(212,175,106,0.4); border-radius: 20px; padding: 8px 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">Instalasi</button>
-          <button onclick="filterTalent('industri')" class="talent-filter-btn" style="background: transparent; color: #d4af6a; border: 1px solid rgba(212,175,106,0.4); border-radius: 20px; padding: 8px 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">Industri</button>
           <button onclick="filterTalent('distribusi')" class="talent-filter-btn" style="background: transparent; color: #d4af6a; border: 1px solid rgba(212,175,106,0.4); border-radius: 20px; padding: 8px 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">Distribusi</button>
-          <button onclick="filterTalent('renewable')" class="talent-filter-btn" style="background: transparent; color: #d4af6a; border: 1px solid rgba(212,175,106,0.4); border-radius: 20px; padding: 8px 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;">Renewable</button>
         </div>
 
         <!-- Talent Grid -->
         <div id="talent-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 60px;">
-          
-          <!-- Talent Card 1 -->
-          <div class="talent-card" data-specialty="instalasi" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;">
-            <div style="background: linear-gradient(135deg, #1a2a1a, #0d1a0d); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👷</div>
-            <div style="padding: 20px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <h3 style="font-size: 1rem; font-weight: 700; color: #f5f0e6; margin: 0;">Rizky Maulana</h3>
-                <span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 2px 10px; font-size: 0.7rem; font-weight: 600;">Tersedia</span>
-              </div>
-              <div style="font-size: 0.78rem; color: #d4af6a; margin-bottom: 12px; font-weight: 600;">Instalasi Bangunan · Jalur S1</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;">
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Wiring</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Panel MDB</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">AutoCAD</span>
-              </div>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); margin-bottom: 14px;">📍 Jakarta · 2 tahun pengalaman</div>
-              <button onclick="contactTalent('rizky-maulana')" style="width: 100%; background: transparent; border: 1px solid #d4af6a; color: #d4af6a; border-radius: 8px; padding: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s;" onmouseover="this.style.background='rgba(212,175,106,0.15)'" onmouseout="this.style.background='transparent'">Hubungi Talent</button>
-            </div>
-          </div>
-
-          <!-- Talent Card 2 -->
-          <div class="talent-card" data-specialty="industri" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;">
-            <div style="background: linear-gradient(135deg, #1a1a2a, #0d0d1a); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🔌</div>
-            <div style="padding: 20px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <h3 style="font-size: 1rem; font-weight: 700; color: #f5f0e6; margin: 0;">Dewi Rahayu</h3>
-                <span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 2px 10px; font-size: 0.7rem; font-weight: 600;">Tersedia</span>
-              </div>
-              <div style="font-size: 0.78rem; color: #d4af6a; margin-bottom: 12px; font-weight: 600;">Industri & Manufaktur · Jalur S2</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;">
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">PLC Siemens</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Motor Drive</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">SCADA</span>
-              </div>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); margin-bottom: 14px;">📍 Surabaya · 3 tahun pengalaman</div>
-              <button onclick="contactTalent('dewi-rahayu')" style="width: 100%; background: transparent; border: 1px solid #d4af6a; color: #d4af6a; border-radius: 8px; padding: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s;" onmouseover="this.style.background='rgba(212,175,106,0.15)'" onmouseout="this.style.background='transparent'">Hubungi Talent</button>
-            </div>
-          </div>
 
           <!-- Talent Card: Wildan (Distribusi) -->
           <div class="talent-card" data-specialty="distribusi" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;">
@@ -7896,82 +7855,6 @@ body {
               </div>
               <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); margin-bottom: 14px;">📍 Indramayu</div>
               <button onclick="contactTalent('harlan-lingga')" style="width: 100%; background: transparent; border: 1px solid #d4af6a; color: #d4af6a; border-radius: 8px; padding: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s;" onmouseover="this.style.background='rgba(212,175,106,0.15)'" onmouseout="this.style.background='transparent'">Hubungi Talent</button>
-            </div>
-          </div>
-
-          <!-- Talent Card 3 -->
-          <div class="talent-card" data-specialty="distribusi" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;">
-            <div style="background: linear-gradient(135deg, #2a1a0d, #1a0d0d); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">⚡</div>
-            <div style="padding: 20px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <h3 style="font-size: 1rem; font-weight: 700; color: #f5f0e6; margin: 0;">Fajar Nugroho</h3>
-                <span style="background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); border-radius: 12px; padding: 2px 10px; font-size: 0.7rem; font-weight: 600;">Proses</span>
-              </div>
-              <div style="font-size: 0.78rem; color: #d4af6a; margin-bottom: 12px; font-weight: 600;">Distribusi Listrik · Jalur S3</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;">
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Jaringan 20kV</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Gardu Induk</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">GIS</span>
-              </div>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); margin-bottom: 14px;">📍 Bandung · 4 tahun pengalaman</div>
-              <button onclick="contactTalent('fajar-nugroho')" style="width: 100%; background: transparent; border: 1px solid #d4af6a; color: #d4af6a; border-radius: 8px; padding: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s;" onmouseover="this.style.background='rgba(212,175,106,0.15)'" onmouseout="this.style.background='transparent'">Hubungi Talent</button>
-            </div>
-          </div>
-
-          <!-- Talent Card 4 -->
-          <div class="talent-card" data-specialty="renewable" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;">
-            <div style="background: linear-gradient(135deg, #0d2a1a, #0d1a0d); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🌿</div>
-            <div style="padding: 20px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <h3 style="font-size: 1rem; font-weight: 700; color: #f5f0e6; margin: 0;">Putri Ayu</h3>
-                <span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 2px 10px; font-size: 0.7rem; font-weight: 600;">Tersedia</span>
-              </div>
-              <div style="font-size: 0.78rem; color: #d4af6a; margin-bottom: 12px; font-weight: 600;">Renewable Energy · Jalur S7</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;">
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Solar PV</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">PLTS</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">EV Charging</span>
-              </div>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); margin-bottom: 14px;">📍 Yogyakarta · 2 tahun pengalaman</div>
-              <button onclick="contactTalent('putri-ayu')" style="width: 100%; background: transparent; border: 1px solid #d4af6a; color: #d4af6a; border-radius: 8px; padding: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s;" onmouseover="this.style.background='rgba(212,175,106,0.15)'" onmouseout="this.style.background='transparent'">Hubungi Talent</button>
-            </div>
-          </div>
-
-          <!-- Talent Card 5 -->
-          <div class="talent-card" data-specialty="industri" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;">
-            <div style="background: linear-gradient(135deg, #1a0d2a, #0d0d1a); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🏭</div>
-            <div style="padding: 20px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <h3 style="font-size: 1rem; font-weight: 700; color: #f5f0e6; margin: 0;">Hendra Wijaya</h3>
-                <span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 2px 10px; font-size: 0.7rem; font-weight: 600;">Tersedia</span>
-              </div>
-              <div style="font-size: 0.78rem; color: #d4af6a; margin-bottom: 12px; font-weight: 600;">Industri & Manufaktur · Jalur S2</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;">
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Reliability Eng</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Maintenance</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Oil & Gas</span>
-              </div>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); margin-bottom: 14px;">📍 Balikpapan · 5 tahun pengalaman</div>
-              <button onclick="contactTalent('hendra-wijaya')" style="width: 100%; background: transparent; border: 1px solid #d4af6a; color: #d4af6a; border-radius: 8px; padding: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s;" onmouseover="this.style.background='rgba(212,175,106,0.15)'" onmouseout="this.style.background='transparent'">Hubungi Talent</button>
-            </div>
-          </div>
-
-          <!-- Talent Card 6 -->
-          <div class="talent-card" data-specialty="instalasi" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;">
-            <div style="background: linear-gradient(135deg, #2a1a1a, #1a0d0d); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🏗️</div>
-            <div style="padding: 20px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <h3 style="font-size: 1rem; font-weight: 700; color: #f5f0e6; margin: 0;">Nanda Pratiwi</h3>
-                <span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 2px 10px; font-size: 0.7rem; font-weight: 600;">Tersedia</span>
-              </div>
-              <div style="font-size: 0.78rem; color: #d4af6a; margin-bottom: 12px; font-weight: 600;">Instalasi Bangunan · Jalur S1</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;">
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">MEP Design</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Smart Building</span>
-                <span style="background: rgba(212,175,106,0.1); color: rgba(245,240,230,0.7); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem;">Revit MEP</span>
-              </div>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); margin-bottom: 14px;">📍 Jakarta · 3 tahun pengalaman</div>
-              <button onclick="contactTalent('nanda-pratiwi')" style="width: 100%; background: transparent; border: 1px solid #d4af6a; color: #d4af6a; border-radius: 8px; padding: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s;" onmouseover="this.style.background='rgba(212,175,106,0.15)'" onmouseout="this.style.background='transparent'">Hubungi Talent</button>
             </div>
           </div>
 
