@@ -27447,20 +27447,31 @@ function renderQuiz(module) {
     return { ...q, opts: newOpts, a: newA >= 0 ? newA : q.a };
   };
 
-  // Build the candidate pool. Each module's pool = its own handcrafted bank +
-  // a slice of QUIZ_TEMPLATE (the generic 25-question fundamentals deck), so
-  // every attempt picks a fresh 25 from a ~50-question pool. This is the
-  // "25 soal cadangan" behavior — different mix every retry, with module
-  // questions remaining the majority.
+  // Pool builder:
+  //  - handcrafted ≥25 → pakai handcrafted saja (tema modul terjaga, tidak
+  //    bocor ke soal generik PUIL/Ohm dll yang tidak relevan)
+  //  - handcrafted <25 → top up dengan generic supaya tetap dapat 25 soal
+  //  - tidak ada handcrafted → fallback generic
   const handcrafted = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : null;
   const generic = (typeof QUIZ_TEMPLATE !== 'undefined') ? QUIZ_TEMPLATE.map(q => ({ ...q, type: q.type || 'pg' })) : [];
 
   let pool;
-  if (handcrafted && handcrafted.length >= 20) {
+  if (handcrafted && handcrafted.length >= 25) {
+    pool = handcrafted.slice();
+  } else if (handcrafted && handcrafted.length > 0) {
     pool = handcrafted.concat(generic);
   } else {
-    pool = generic.length ? generic.slice() : (handcrafted || []);
+    pool = generic.slice();
   }
+
+  // Filter "no-info" soal: kalau ≥2 dari 4 opsi adalah placeholder kosong
+  // (Random/None/Same/Skip/Always/Never), soal itu tidak punya distractor
+  // riil dan sulit dipahami → buang. Fallback ke pool penuh kalau filter
+  // terlalu agresif (modul masih dapat soal walaupun kualitas lebih rendah).
+  const PLACEHOLDER_OPT_RE = /^\s*(random|none|same|skip|always|never)\s*$/i;
+  const placeholderCount = q => Array.isArray(q.opts) ? q.opts.filter(o => PLACEHOLDER_OPT_RE.test(String(o))).length : 0;
+  const cleaned = pool.filter(q => placeholderCount(q) < 2);
+  if (cleaned.length >= 5) pool = cleaned;
 
   // Shuffle pool and take 25; pad if pool is small.
   const shuffledPool = shuffleArr(pool);
