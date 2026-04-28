@@ -6901,6 +6901,64 @@ body {
   .esa-cert-container { position: absolute; left: 0; top: 0; }
 }
 
+/* ============================================================ */
+/*  MOBILE RESPONSIVE — komponen JS-rendered (profile, jalur)   */
+/* ============================================================ */
+
+/* Profile modal */
+@media (max-width: 720px) {
+  #esa-profile-modal { padding: 12px !important; align-items: flex-start !important; padding-top: 16px !important; }
+  #esa-profile-modal > div { max-height: 96vh !important; border-radius: 12px !important; }
+  .esa-profile-grid-2col { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 520px) {
+  #esa-profile-modal > div > div:first-child { padding: 18px 16px 14px !important; gap: 12px !important; }
+  #esa-profile-modal > div > div:first-child img,
+  #esa-profile-modal > div > div:first-child > div:not([id]):not([style*="flex:1"]) {
+    width: 56px !important; height: 56px !important;
+  }
+  #esa-profile-modal > div > div:nth-child(2),
+  #esa-profile-modal > div > div:nth-child(3) { padding-left: 16px !important; padding-right: 16px !important; }
+  #esa-profile-modal > div > div:last-child { padding: 14px 16px 18px !important; }
+  #esa-profile-modal input,
+  #esa-profile-modal select { font-size: 16px !important; /* prevent iOS zoom */ }
+}
+
+/* Jalur progress strip — break 6 cols → 3 → 2 */
+@media (max-width: 900px) {
+  .esa-jalur-strip-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (max-width: 480px) {
+  .esa-jalur-strip-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+}
+
+/* Jalur levels section padding on mobile */
+@media (max-width: 700px) {
+  .jalur-levels { padding: 40px 18px 80px !important; }
+  .jalur-levels-title { margin-bottom: 32px !important; }
+  .jalur-levels-title h2 { font-size: clamp(24px, 6vw, 32px) !important; }
+}
+
+/* Module-card Done badge wraps on small screens */
+@media (max-width: 520px) {
+  .module-card .module-title { white-space: normal !important; line-height: 1.4; }
+  .module-card .module-title > span { display: inline-block; margin-top: 4px; }
+}
+
+/* Pricing card on mobile — strikethrough + active price stack nicely */
+@media (max-width: 520px) {
+  .academy-pricing-card { padding: 36px 22px !important; }
+  .academy-pricing-price-row { flex-direction: column; align-items: flex-start !important; gap: 4px !important; }
+  .academy-pricing-price-row > span:first-child { font-size: 22px !important; }
+}
+
+/* Talent Pool dropdown — full width on phones, easier tap targets */
+@media (max-width: 700px) {
+  .nav-dropdown-wrapper { display: block !important; width: 100%; }
+  .nav-dropdown-menu { left: 0 !important; right: 0 !important; min-width: 100% !important; }
+  .nav-dropdown-menu a { padding: 14px 20px !important; font-size: 0.9rem !important; }
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -10221,7 +10279,7 @@ function renderJalurProgress(trackId) {
           <span><span style="color: rgba(26,29,46,0.3); margin-right: 4px;">●</span>Belum</span>
         </div>
       </div>
-      <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
+      <div class="esa-jalur-strip-grid" style="display:grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
         ${summary.map(s => {
           // Per-status palette tuned for the cream-soft (#faf7f0) page bg
           const palette = s.complete
@@ -10245,11 +10303,8 @@ function renderJalurProgress(trackId) {
     </div>
   `;
 
-  // Make grid responsive on mobile (3 cols)
-  if (window.matchMedia && window.matchMedia('(max-width: 720px)').matches) {
-    const grid = strip.querySelector('div[style*="grid-template-columns"]');
-    if (grid) grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
-  }
+  // Mobile responsive grid is handled via CSS class .esa-jalur-strip-grid
+  // (see media queries in <style> block).
 }
 
 // ================================================
@@ -29619,7 +29674,7 @@ function showProfileModal(){
     // Form
     '<div style="padding:24px 28px;">'+
       '<div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#c9a96e;font-weight:700;margin-bottom:14px;">Akun</div>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;">'+
+      '<div class="esa-profile-grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;">'+
         '<div>'+
           '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Nama lengkap</label>'+
           '<input id="esa-pf-name" type="text" value="'+escapeHtmlEsa(u.name||p.name||'')+'" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;outline:none;">'+
@@ -29643,7 +29698,7 @@ function showProfileModal(){
           '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Karir tujuan</label>'+
           makeSelect('esa-pf-karir',KARIR_OPTIONS,p.karirTujuan)+
         '</div>'+
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'+
+        '<div class="esa-profile-grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'+
           '<div>'+
             '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Ekspektasi gaji</label>'+
             makeSelect('esa-pf-gaji',GAJI_OPTIONS,p.ekspektasiGaji)+
