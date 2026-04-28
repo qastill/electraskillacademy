@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Electra Skill Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0d0f1c; color: #f5f0e6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  a { color: #d4af6a; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; }
+
+  /* ===== LOGIN ===== */
+  .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .login-card { width: 100%; max-width: 380px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px 28px; }
+  .login-card h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+  .login-card .sub { font-size: 0.85rem; color: rgba(245,240,230,0.6); margin-bottom: 24px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(245,240,230,0.7); margin-bottom: 6px; }
+  .field input { width: 100%; padding: 11px 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #f5f0e6; font-size: 0.95rem; font-family: inherit; }
+  .field input:focus { outline: none; border-color: #d4af6a; }
+  .btn-primary { width: 100%; padding: 12px 16px; background: #d4af6a; color: #0d0f1c; font-weight: 700; border-radius: 8px; margin-top: 8px; font-size: 0.95rem; }
+  .btn-primary:hover { background: #e0bf7a; }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .err { color: #ef6b6b; font-size: 0.82rem; margin-top: 12px; min-height: 1em; }
+  .config-warn { background: rgba(239,107,107,0.08); border: 1px solid rgba(239,107,107,0.3); border-radius: 8px; padding: 12px 14px; font-size: 0.8rem; color: #ef9090; margin-bottom: 18px; line-height: 1.5; }
+
+  /* ===== DASHBOARD (placeholder, akan diisi step berikut) ===== */
+  .dash-wrap { display: none; }
+  .dash-wrap.active { display: block; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); }
+  .topbar h1 { font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #d4af6a; }
+  .topbar .who { font-size: 0.82rem; color: rgba(245,240,230,0.6); }
+  .btn-ghost { padding: 6px 12px; background: transparent; color: rgba(245,240,230,0.7); font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; }
+  .btn-ghost:hover { color: #f5f0e6; border-color: rgba(255,255,255,0.3); }
+  .dash-body { padding: 24px; max-width: 1280px; margin: 0 auto; }
+
+  /* stats cards */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 20px; }
+  .stat-card .lbl { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(245,240,230,0.55); margin-bottom: 8px; }
+  .stat-card .val { font-size: 1.8rem; font-weight: 700; color: #d4af6a; line-height: 1; }
+  .stat-card .sub { font-size: 0.75rem; color: rgba(245,240,230,0.5); margin-top: 6px; }
+
+  /* tabs */
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; flex-wrap: wrap; }
+  .tab-btn { padding: 10px 16px; background: transparent; color: rgba(245,240,230,0.6); font-size: 0.85rem; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab-btn:hover { color: #f5f0e6; }
+  .tab-btn.active { color: #d4af6a; border-bottom-color: #d4af6a; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* tables */
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .toolbar input[type=search] { flex: 1; min-width: 200px; padding: 9px 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #f5f0e6; font-family: inherit; font-size: 0.9rem; }
+  .toolbar input[type=search]:focus { outline: none; border-color: #d4af6a; }
+  .toolbar .count { font-size: 0.8rem; color: rgba(245,240,230,0.5); }
+  .table-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  th { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(245,240,230,0.55); background: rgba(0,0,0,0.2); position: sticky; top: 0; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  td.mono { font-family: ui-monospace, monospace; font-size: 0.78rem; color: rgba(245,240,230,0.7); }
+  td .pill { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  td .pill.ok { background: rgba(34,197,94,0.15); color: #5fd482; }
+  td .pill.fail { background: rgba(239,107,107,0.15); color: #ef9090; }
+  td .pill.warn { background: rgba(212,175,106,0.15); color: #d4af6a; }
+  .empty { padding: 40px 20px; text-align: center; color: rgba(245,240,230,0.45); font-size: 0.88rem; }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN VIEW ============ -->
+<div id="login-view" class="login-wrap">
+  <div class="login-card">
+    <h1>Admin Dashboard</h1>
+    <div class="sub">Electra Skill Academy</div>
+    <div id="config-warn" class="config-warn" hidden>
+      Supabase belum dikonfigurasi. Edit <code>supabase-config.js</code> dengan
+      Project URL + anon key, lalu reload halaman ini.
+    </div>
+    <form id="login-form" onsubmit="return false;">
+      <div class="field">
+        <label>Email</label>
+        <input id="login-email" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="login-pass" type="password" autocomplete="current-password" required>
+      </div>
+      <button id="login-btn" class="btn-primary" type="submit">Masuk</button>
+      <div id="login-err" class="err"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD VIEW (kerangka, diisi step berikut) ============ -->
+<div id="dash-view" class="dash-wrap">
+  <div class="topbar">
+    <h1>Admin · Electra Skill Academy</h1>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span class="who" id="dash-who"></span>
+      <button class="btn-ghost" id="logout-btn">Keluar</button>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="lbl">Total Pendaftar</div><div class="val" id="stat-participants">–</div></div>
+      <div class="stat-card"><div class="lbl">Modul Lulus</div><div class="val" id="stat-modules-passed">–</div><div class="sub">unique module × peserta</div></div>
+      <div class="stat-card"><div class="lbl">Sertifikat Terbit</div><div class="val" id="stat-certs">–</div></div>
+      <div class="stat-card"><div class="lbl">Pembayaran Lunas</div><div class="val" id="stat-paid">–</div><div class="sub">total IDR</div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="participants">Pendaftar</button>
+      <button class="tab-btn" data-tab="progress">Progress Modul</button>
+      <button class="tab-btn" data-tab="exams">Hasil Ujian</button>
+      <button class="tab-btn" data-tab="certs">Sertifikat</button>
+      <button class="tab-btn" data-tab="payments">Pembayaran</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-participants"><div class="empty">Memuat...</div></div>
+    <div class="tab-panel" id="panel-progress"><div class="empty">Memuat...</div></div>
+    <div class="tab-panel" id="panel-exams"><div class="empty">Memuat...</div></div>
+    <div class="tab-panel" id="panel-certs"><div class="empty">Memuat...</div></div>
+    <div class="tab-panel" id="panel-payments"><div class="empty">Memuat...</div></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+  let sb = null;
+
+  function showLogin() {
+    document.getElementById('login-view').style.display = 'flex';
+    document.getElementById('dash-view').classList.remove('active');
+  }
+  function showDash(email) {
+    document.getElementById('login-view').style.display = 'none';
+    document.getElementById('dash-view').classList.add('active');
+    document.getElementById('dash-who').textContent = email || '';
+    if (typeof window.esaLoadDashboard === 'function') window.esaLoadDashboard();
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const errEl = document.getElementById('login-err');
+    const btn = document.getElementById('login-btn');
+    errEl.textContent = '';
+    if (!email || !pass) { errEl.textContent = 'Email dan password wajib diisi.'; return; }
+    btn.disabled = true; btn.textContent = 'Memproses...';
+    try {
+      const { data, error } = await sb.auth.signInWithPassword({ email: email, password: pass });
+      if (error) { errEl.textContent = error.message; return; }
+      showDash(data.user && data.user.email);
+    } catch (e) {
+      errEl.textContent = e.message || String(e);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Masuk';
+    }
+  }
+
+  async function doLogout() {
+    try { if (sb) await sb.auth.signOut(); } catch (e) {}
+    document.getElementById('login-pass').value = '';
+    showLogin();
+  }
+
+  document.addEventListener('DOMContentLoaded', async function () {
+    if (!window.ESA_SUPABASE || !window.ESA_SUPABASE.isConfigured()) {
+      document.getElementById('config-warn').hidden = false;
+      document.getElementById('login-btn').disabled = true;
+      return;
+    }
+    sb = window.supabase.createClient(window.ESA_SUPABASE.url, window.ESA_SUPABASE.anonKey);
+    window.__esaAdminSb = sb;
+
+    document.getElementById('login-form').addEventListener('submit', doLogin);
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+
+    // Tab switcher
+    document.querySelectorAll('.tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+        document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.toggle('active', p.id === 'panel-' + tab); });
+      });
+    });
+
+    // Resume existing session if browser still has one
+    try {
+      const { data } = await sb.auth.getSession();
+      if (data && data.session) showDash(data.session.user.email);
+    } catch (e) {}
+  });
+
+  // Dashboard data loader — dipanggil setelah login berhasil
+  window.esaLoadDashboard = async function () {
+    const sb = window.__esaAdminSb;
+    if (!sb) return;
+
+    const setStat = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+    // Stats: hitung paralel
+    try {
+      const [pCount, mPassed, cCount, payments] = await Promise.all([
+        sb.from('participants').select('*', { count: 'exact', head: true }),
+        sb.from('module_progress').select('*', { count: 'exact', head: true }).eq('passed', true),
+        sb.from('level_completions').select('*', { count: 'exact', head: true }),
+        sb.from('payments').select('amount').eq('status', 'paid')
+      ]);
+      setStat('stat-participants', pCount.count != null ? pCount.count : '–');
+      setStat('stat-modules-passed', mPassed.count != null ? mPassed.count : '–');
+      setStat('stat-certs', cCount.count != null ? cCount.count : '–');
+      const totalPaid = (payments.data || []).reduce((s, r) => s + Number(r.amount || 0), 0);
+      setStat('stat-paid', 'Rp ' + totalPaid.toLocaleString('id-ID'));
+    } catch (e) { console.warn('[admin] stats error:', e); }
+
+    // Load each tab
+    if (typeof window.esaLoadTabParticipants === 'function') window.esaLoadTabParticipants();
+    if (typeof window.esaLoadTabProgress === 'function') window.esaLoadTabProgress();
+    if (typeof window.esaLoadTabExams === 'function') window.esaLoadTabExams();
+    if (typeof window.esaLoadTabCerts === 'function') window.esaLoadTabCerts();
+    if (typeof window.esaLoadTabPayments === 'function') window.esaLoadTabPayments();
+  };
+
+  // ===== Helper: format & escape =====
+  function fmtDate(s) {
+    if (!s) return '–';
+    try { return new Date(s).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }); }
+    catch (e) { return s; }
+  }
+  function esc(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+  function emptyMsg(msg) { return '<div class="empty">' + esc(msg) + '</div>'; }
+
+  // ===== Tab: PENDAFTAR =====
+  window.esaLoadTabParticipants = async function () {
+    const sb = window.__esaAdminSb;
+    const panel = document.getElementById('panel-participants');
+    panel.innerHTML = '<div class="empty">Memuat...</div>';
+    const { data, error } = await sb.from('participants')
+      .select('email,name,phone,city,promo_code,auth_method,join_date')
+      .order('join_date', { ascending: false })
+      .limit(1000);
+    if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
+    if (!data || !data.length) { panel.innerHTML = emptyMsg('Belum ada pendaftar.'); return; }
+
+    panel.innerHTML =
+      '<div class="toolbar">' +
+      '  <input type="search" id="ps-search" placeholder="Cari nama / email / kota...">' +
+      '  <span class="count" id="ps-count">' + data.length + ' pendaftar</span>' +
+      '</div>' +
+      '<div class="table-wrap"><table>' +
+      '<thead><tr><th>Tanggal</th><th>Nama</th><th>Email</th><th>HP</th><th>Kota</th><th>Promo</th><th>Auth</th></tr></thead>' +
+      '<tbody id="ps-tbody"></tbody></table></div>';
+
+    const render = (rows) => {
+      const tb = document.getElementById('ps-tbody');
+      document.getElementById('ps-count').textContent = rows.length + ' pendaftar';
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="7" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      tb.innerHTML = rows.map(r =>
+        '<tr>' +
+        '<td>' + esc(fmtDate(r.join_date)) + '</td>' +
+        '<td>' + esc(r.name || '–') + '</td>' +
+        '<td class="mono">' + esc(r.email) + '</td>' +
+        '<td class="mono">' + esc(r.phone || '–') + '</td>' +
+        '<td>' + esc(r.city || '–') + '</td>' +
+        '<td>' + (r.promo_code ? '<span class="pill warn">' + esc(r.promo_code) + '</span>' : '–') + '</td>' +
+        '<td>' + esc(r.auth_method || '–') + '</td>' +
+        '</tr>'
+      ).join('');
+    };
+    render(data);
+
+    document.getElementById('ps-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) return render(data);
+      render(data.filter(r =>
+        (r.name || '').toLowerCase().includes(q) ||
+        (r.email || '').toLowerCase().includes(q) ||
+        (r.city || '').toLowerCase().includes(q)
+      ));
+    });
+  };
+
+  // ===== Tab: PROGRESS MODUL =====
+  window.esaLoadTabProgress = async function () {
+    const sb = window.__esaAdminSb;
+    const panel = document.getElementById('panel-progress');
+    panel.innerHTML = '<div class="empty">Memuat...</div>';
+    const { data, error } = await sb.from('module_progress')
+      .select('participant_email,module_code,level_id,track_id,best_score,attempts,passed,last_attempt_at')
+      .order('last_attempt_at', { ascending: false })
+      .limit(2000);
+    if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
+    if (!data || !data.length) { panel.innerHTML = emptyMsg('Belum ada progress modul.'); return; }
+
+    panel.innerHTML =
+      '<div class="toolbar">' +
+      '  <input type="search" id="pg-search" placeholder="Cari email / kode modul / level...">' +
+      '  <span class="count" id="pg-count">' + data.length + ' rekaman</span>' +
+      '</div>' +
+      '<div class="table-wrap"><table>' +
+      '<thead><tr><th>Update</th><th>Email</th><th>Modul</th><th>Level</th><th>Jalur</th><th>Skor Terbaik</th><th>Percobaan</th><th>Status</th></tr></thead>' +
+      '<tbody id="pg-tbody"></tbody></table></div>';
+
+    const render = (rows) => {
+      const tb = document.getElementById('pg-tbody');
+      document.getElementById('pg-count').textContent = rows.length + ' rekaman';
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="8" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      tb.innerHTML = rows.map(r =>
+        '<tr>' +
+        '<td>' + esc(fmtDate(r.last_attempt_at)) + '</td>' +
+        '<td class="mono">' + esc(r.participant_email) + '</td>' +
+        '<td class="mono">' + esc(r.module_code) + '</td>' +
+        '<td>' + esc(r.level_id || '–') + '</td>' +
+        '<td>' + esc(r.track_id || '–') + '</td>' +
+        '<td>' + esc(r.best_score) + '%</td>' +
+        '<td>' + esc(r.attempts) + '×</td>' +
+        '<td>' + (r.passed ? '<span class="pill ok">Lulus</span>' : '<span class="pill fail">Belum</span>') + '</td>' +
+        '</tr>'
+      ).join('');
+    };
+    render(data);
+
+    document.getElementById('pg-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) return render(data);
+      render(data.filter(r =>
+        (r.participant_email || '').toLowerCase().includes(q) ||
+        (r.module_code || '').toLowerCase().includes(q) ||
+        (r.level_id || '').toLowerCase().includes(q) ||
+        (r.track_id || '').toLowerCase().includes(q)
+      ));
+    });
+  };
+
+  // ===== Tab: HASIL UJIAN (audit trail attempt) =====
+  window.esaLoadTabExams = async function () {
+    const sb = window.__esaAdminSb;
+    const panel = document.getElementById('panel-exams');
+    panel.innerHTML = '<div class="empty">Memuat...</div>';
+    const { data, error } = await sb.from('exam_attempts')
+      .select('participant_email,module_code,level_id,track_id,correct,total,score_pct,passed,taken_at')
+      .order('taken_at', { ascending: false })
+      .limit(2000);
+    if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
+    if (!data || !data.length) { panel.innerHTML = emptyMsg('Belum ada attempt ujian.'); return; }
+
+    panel.innerHTML =
+      '<div class="toolbar">' +
+      '  <input type="search" id="ex-search" placeholder="Cari email / modul / level...">' +
+      '  <span class="count" id="ex-count">' + data.length + ' attempt</span>' +
+      '</div>' +
+      '<div class="table-wrap"><table>' +
+      '<thead><tr><th>Waktu</th><th>Email</th><th>Modul</th><th>Level</th><th>Jalur</th><th>Skor</th><th>Benar</th><th>Status</th></tr></thead>' +
+      '<tbody id="ex-tbody"></tbody></table></div>';
+
+    const render = (rows) => {
+      const tb = document.getElementById('ex-tbody');
+      document.getElementById('ex-count').textContent = rows.length + ' attempt';
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="8" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      tb.innerHTML = rows.map(r =>
+        '<tr>' +
+        '<td>' + esc(fmtDate(r.taken_at)) + '</td>' +
+        '<td class="mono">' + esc(r.participant_email) + '</td>' +
+        '<td class="mono">' + esc(r.module_code) + '</td>' +
+        '<td>' + esc(r.level_id || '–') + '</td>' +
+        '<td>' + esc(r.track_id || '–') + '</td>' +
+        '<td>' + esc(r.score_pct) + '%</td>' +
+        '<td>' + esc(r.correct) + '/' + esc(r.total) + '</td>' +
+        '<td>' + (r.passed ? '<span class="pill ok">Lulus</span>' : '<span class="pill fail">Gagal</span>') + '</td>' +
+        '</tr>'
+      ).join('');
+    };
+    render(data);
+
+    document.getElementById('ex-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) return render(data);
+      render(data.filter(r =>
+        (r.participant_email || '').toLowerCase().includes(q) ||
+        (r.module_code || '').toLowerCase().includes(q) ||
+        (r.level_id || '').toLowerCase().includes(q) ||
+        (r.track_id || '').toLowerCase().includes(q)
+      ));
+    });
+  };
+
+  // ===== Tab: SERTIFIKAT =====
+  window.esaLoadTabCerts = async function () {
+    const sb = window.__esaAdminSb;
+    const panel = document.getElementById('panel-certs');
+    panel.innerHTML = '<div class="empty">Memuat...</div>';
+    const { data, error } = await sb.from('level_completions')
+      .select('participant_email,level_id,track_id,cert_id,avg_score,module_count,completed_at')
+      .order('completed_at', { ascending: false })
+      .limit(1000);
+    if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
+    if (!data || !data.length) { panel.innerHTML = emptyMsg('Belum ada sertifikat terbit.'); return; }
+
+    panel.innerHTML =
+      '<div class="toolbar">' +
+      '  <input type="search" id="cr-search" placeholder="Cari email / cert ID / level...">' +
+      '  <span class="count" id="cr-count">' + data.length + ' sertifikat</span>' +
+      '</div>' +
+      '<div class="table-wrap"><table>' +
+      '<thead><tr><th>Tanggal</th><th>Email</th><th>Level</th><th>Jalur</th><th>Cert ID</th><th>Skor Rata²</th><th>Modul</th></tr></thead>' +
+      '<tbody id="cr-tbody"></tbody></table></div>';
+
+    const render = (rows) => {
+      const tb = document.getElementById('cr-tbody');
+      document.getElementById('cr-count').textContent = rows.length + ' sertifikat';
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="7" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      tb.innerHTML = rows.map(r =>
+        '<tr>' +
+        '<td>' + esc(fmtDate(r.completed_at)) + '</td>' +
+        '<td class="mono">' + esc(r.participant_email) + '</td>' +
+        '<td>' + esc(r.level_id) + '</td>' +
+        '<td>' + esc(r.track_id || '–') + '</td>' +
+        '<td class="mono">' + esc(r.cert_id || '–') + '</td>' +
+        '<td>' + esc(r.avg_score) + '%</td>' +
+        '<td>' + esc(r.module_count) + '</td>' +
+        '</tr>'
+      ).join('');
+    };
+    render(data);
+
+    document.getElementById('cr-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) return render(data);
+      render(data.filter(r =>
+        (r.participant_email || '').toLowerCase().includes(q) ||
+        (r.cert_id || '').toLowerCase().includes(q) ||
+        (r.level_id || '').toLowerCase().includes(q) ||
+        (r.track_id || '').toLowerCase().includes(q)
+      ));
+    });
+  };
+
+  // ===== Tab: PEMBAYARAN (Xendit belum di-wire-up) =====
+  window.esaLoadTabPayments = async function () {
+    const sb = window.__esaAdminSb;
+    const panel = document.getElementById('panel-payments');
+    panel.innerHTML = '<div class="empty">Memuat...</div>';
+    const { data, error } = await sb.from('payments')
+      .select('participant_email,amount,currency,description,external_id,invoice_url,status,paid_at,created_at')
+      .order('created_at', { ascending: false })
+      .limit(1000);
+    if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
+
+    const note = '<div class="config-warn" style="margin-bottom:14px;">Xendit belum di-wire-up. Tabel <code>payments</code> akan terisi otomatis setelah Edge Function + webhook Xendit dipasang.</div>';
+
+    if (!data || !data.length) { panel.innerHTML = note + emptyMsg('Belum ada transaksi pembayaran.'); return; }
+
+    panel.innerHTML = note +
+      '<div class="toolbar">' +
+      '  <input type="search" id="pm-search" placeholder="Cari email / invoice ID / status...">' +
+      '  <span class="count" id="pm-count">' + data.length + ' transaksi</span>' +
+      '</div>' +
+      '<div class="table-wrap"><table>' +
+      '<thead><tr><th>Dibuat</th><th>Email</th><th>Nominal</th><th>Deskripsi</th><th>Invoice ID</th><th>Status</th><th>Dibayar</th></tr></thead>' +
+      '<tbody id="pm-tbody"></tbody></table></div>';
+
+    const render = (rows) => {
+      const tb = document.getElementById('pm-tbody');
+      document.getElementById('pm-count').textContent = rows.length + ' transaksi';
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="7" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      tb.innerHTML = rows.map(r => {
+        const cls = r.status === 'paid' ? 'ok' : (r.status === 'pending' ? 'warn' : 'fail');
+        const amount = (r.currency || 'IDR') + ' ' + Number(r.amount || 0).toLocaleString('id-ID');
+        const inv = r.invoice_url
+          ? '<a href="' + esc(r.invoice_url) + '" target="_blank" rel="noopener">' + esc(r.external_id || '–') + '</a>'
+          : esc(r.external_id || '–');
+        return '<tr>' +
+          '<td>' + esc(fmtDate(r.created_at)) + '</td>' +
+          '<td class="mono">' + esc(r.participant_email) + '</td>' +
+          '<td>' + esc(amount) + '</td>' +
+          '<td>' + esc(r.description || '–') + '</td>' +
+          '<td class="mono">' + inv + '</td>' +
+          '<td><span class="pill ' + cls + '">' + esc(r.status) + '</span></td>' +
+          '<td>' + esc(r.paid_at ? fmtDate(r.paid_at) : '–') + '</td>' +
+          '</tr>';
+      }).join('');
+    };
+    render(data);
+
+    document.getElementById('pm-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) return render(data);
+      render(data.filter(r =>
+        (r.participant_email || '').toLowerCase().includes(q) ||
+        (r.external_id || '').toLowerCase().includes(q) ||
+        (r.status || '').toLowerCase().includes(q)
+      ));
+    });
+  };
+</script>
+</body>
+</html>
