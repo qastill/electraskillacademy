@@ -29440,7 +29440,8 @@ function updateNavUser(){
     btn.textContent=(u.name||u.email).split(" ")[0];
     btn.style.background="transparent";btn.style.color="#c9a96e";btn.style.border="1px solid #c9a96e";
     btn.id="esa-nav-user-info";
-    btn.onclick=doLogout;
+    btn.onclick=showProfileModal;
+    btn.title="Klik untuk lihat & edit profil";
     if(u.picture){
       var img=document.createElement("img");img.src=u.picture;img.referrerPolicy="no-referrer";
       img.style.width="22px";img.style.height="22px";img.style.borderRadius="50%";
@@ -29459,6 +29460,252 @@ function doLogout(){
     location.reload();
   }
 }
+
+// ========== PROFILE MODAL ==========
+// Career goals, salary expectations, work region preferences,
+// plus level + 1–6 star achievement display.
+var KARIR_OPTIONS = [
+  '— Pilih karir tujuan —',
+  'Building Electrician (Instalasi Bangunan)',
+  'MEP Engineer / Konsultan Bangunan',
+  'Industrial Electrician / Maintenance Pabrik',
+  'Reliability Engineer / Plant Engineer',
+  'Distribution Engineer (PLN UP3/UID)',
+  'Smart Grid / Distribusi Modern',
+  'Transmission Engineer (PLN P3B)',
+  'Power System Specialist / HVDC',
+  'Energy Data Analyst / Data Scientist Utility',
+  'Energy Auditor / Energy Manager',
+  'ESG & Sustainability Consultant',
+  'Power Plant Operator / Engineer',
+  'Renewable Energy Engineer (PLTS/BESS)',
+  'K3 Listrik Officer / Ahli K3 Kemnaker',
+  'Konsultan Independen / Founder Firma',
+  'Lainnya'
+];
+var GAJI_OPTIONS = [
+  '— Pilih ekspektasi gaji —',
+  '< Rp 5.000.000',
+  'Rp 5.000.000 – 8.000.000',
+  'Rp 8.000.000 – 12.000.000',
+  'Rp 12.000.000 – 18.000.000',
+  'Rp 18.000.000 – 25.000.000',
+  'Rp 25.000.000 – 40.000.000',
+  '> Rp 40.000.000',
+  'Negotiable'
+];
+var WILAYAH_OPTIONS = [
+  '— Pilih wilayah kerja —',
+  'Jabodetabek',
+  'Bandung Raya',
+  'Surabaya / Sidoarjo',
+  'Semarang / Jawa Tengah',
+  'Yogyakarta',
+  'Bali',
+  'Sumatera Utara (Medan)',
+  'Sumatera Selatan (Palembang)',
+  'Riau / Kepulauan Riau',
+  'Kalimantan Timur (Balikpapan/Samarinda)',
+  'Kalimantan Selatan/Tengah/Barat',
+  'Sulawesi Selatan (Makassar)',
+  'Sulawesi Utara (Manado)',
+  'Papua / Papua Barat',
+  'Maluku / NTT / NTB',
+  'Remote / Work From Anywhere',
+  'Bersedia ditempatkan di mana saja'
+];
+
+function readESAData(){try{return JSON.parse(localStorage.getItem("esa_data_v1")||"{}");}catch(e){return{};}}
+function writeESAData(d){try{localStorage.setItem("esa_data_v1",JSON.stringify(d));}catch(e){}}
+
+function computeUserAchievements(){
+  var d=readESAData();
+  var modules=d.modules||{};
+  var levels=d.levels||{};
+  var passedCount=Object.values(modules).filter(function(m){return m.passed;}).length;
+  // Count unique completed levels (L1..L6). L1/L2 counted via modules state,
+  // L3+ counted via state.levels keys "Lx_Sy" being certIssued.
+  var levelsDone={};
+  ['L1','L2','L3','L4','L5','L6'].forEach(function(lv){
+    if(lv==='L1'||lv==='L2'){
+      // foundation — check state.levels[lv]
+      if(levels[lv]&&levels[lv].certIssued)levelsDone[lv]=true;
+    } else {
+      // any track-level cert counts
+      if(Object.keys(levels).some(function(k){return k.indexOf(lv+'_')===0&&levels[k]&&levels[k].certIssued;}))
+        levelsDone[lv]=true;
+    }
+  });
+  var stars=Object.keys(levelsDone).length;
+  // highest level for tier label
+  var TIER_LABELS={L1:'Bronze · Esensial',L2:'Silver · Fundamental',L3:'Gold · Profesional',L4:'Platinum · Advance',L5:'Diamond · Expertise',L6:'Master · Consultant'};
+  var highest='—';
+  ['L6','L5','L4','L3','L2','L1'].forEach(function(lv){if(highest==='—'&&levelsDone[lv])highest=lv;});
+  var certs=(d.certificates||[]).length;
+  return {stars:stars,highest:highest,highestLabel:highest==='—'?'Belum ada':TIER_LABELS[highest],levelsDone:levelsDone,passedCount:passedCount,certs:certs,xp:d.xp||0};
+}
+
+function showProfileModal(){
+  var u=getUser()||{};
+  var d=readESAData();
+  var p=d.profile||{};
+  var ach=computeUserAchievements();
+
+  // Cleanup existing
+  var old=document.getElementById("esa-profile-modal");
+  if(old)old.remove();
+
+  var overlay=document.createElement("div");
+  overlay.id="esa-profile-modal";
+  overlay.style.cssText="position:fixed;inset:0;background:rgba(13,15,28,0.7);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;animation:esa-fade-in 0.2s ease;";
+  overlay.onclick=function(e){if(e.target===overlay)overlay.remove();};
+
+  var avatarHTML=(u.picture)
+    ? '<img src="'+u.picture+'" referrerpolicy="no-referrer" style="width:72px;height:72px;border-radius:50%;border:2px solid #c9a96e;flex-shrink:0;" onerror="this.style.display=\'none\'">'
+    : '<div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#c9a96e,#a07840);display:flex;align-items:center;justify-content:center;color:#1a1d2e;font-family:Georgia,serif;font-size:1.6rem;font-weight:700;flex-shrink:0;">'+((u.name||'?').charAt(0).toUpperCase())+'</div>';
+
+  // Build star row
+  var starHTML='';
+  for(var i=1;i<=6;i++){
+    starHTML+='<span style="font-size:1.5rem;color:'+(i<=ach.stars?'#f0d080':'rgba(245,240,230,0.18)')+';line-height:1;">★</span>';
+  }
+
+  // Build levels chip row
+  var levelChipHTML=['L1','L2','L3','L4','L5','L6'].map(function(lv){
+    var done=ach.levelsDone[lv];
+    return '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;'+
+      (done?'background:rgba(34,197,94,0.18);color:#86efac;border:1px solid rgba(34,197,94,0.4);'
+           :'background:rgba(255,255,255,0.05);color:rgba(245,240,230,0.4);border:1px solid rgba(255,255,255,0.08);')+
+      '">'+(done?'✓ ':'')+lv+'</span>';
+  }).join('');
+
+  function makeSelect(id,options,selected){
+    return '<select id="'+id+'" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;outline:none;">'+
+      options.map(function(o,idx){return '<option value="'+(idx===0?'':o)+'" '+(o===selected?'selected':'')+' style="background:#1a1d2e;color:#f5f0e6;">'+o+'</option>';}).join('')+
+      '</select>';
+  }
+
+  overlay.innerHTML='<div onclick="event.stopPropagation()" style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:16px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;color:#f5f0e6;box-shadow:0 30px 80px rgba(0,0,0,0.5);">'+
+    // Header
+    '<div style="padding:24px 28px 18px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:18px;">'+
+      avatarHTML+
+      '<div style="flex:1;min-width:0;">'+
+        '<div style="font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:#c9a96e;font-weight:700;margin-bottom:4px;">Profil Peserta</div>'+
+        '<div style="font-size:1.2rem;font-weight:700;color:#f5f0e6;line-height:1.3;margin-bottom:2px;">'+escapeHtmlEsa(u.name||p.name||'-')+'</div>'+
+        '<div style="font-size:0.78rem;color:rgba(245,240,230,0.6);">'+escapeHtmlEsa(u.email||p.email||'-')+'</div>'+
+      '</div>'+
+      '<button id="esa-profile-close" style="background:transparent;border:none;color:rgba(245,240,230,0.5);font-size:1.5rem;cursor:pointer;padding:0;width:32px;height:32px;line-height:1;">×</button>'+
+    '</div>'+
+    // Achievement Bar
+    '<div style="padding:18px 28px;background:rgba(212,175,106,0.06);border-bottom:1px solid rgba(255,255,255,0.06);">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:10px;">'+
+        '<div>'+
+          '<div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,230,0.55);margin-bottom:4px;">Tingkat tertinggi</div>'+
+          '<div style="font-size:0.95rem;font-weight:700;color:#f0d080;">'+ach.highestLabel+'</div>'+
+        '</div>'+
+        '<div style="text-align:right;">'+
+          '<div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,230,0.55);margin-bottom:4px;">Bintang</div>'+
+          '<div style="display:flex;gap:2px;">'+starHTML+'</div>'+
+          '<div style="font-size:0.68rem;color:rgba(245,240,230,0.5);margin-top:2px;">'+ach.stars+'/6 level lulus</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">'+levelChipHTML+'</div>'+
+      '<div style="display:flex;gap:18px;margin-top:14px;font-size:0.78rem;color:rgba(245,240,230,0.7);">'+
+        '<div><strong style="color:#f5f0e6;">'+ach.passedCount+'</strong> modul lulus</div>'+
+        '<div><strong style="color:#f5f0e6;">'+ach.certs+'</strong> sertifikat</div>'+
+        '<div><strong style="color:#f5f0e6;">'+ach.xp+'</strong> XP</div>'+
+      '</div>'+
+    '</div>'+
+    // Form
+    '<div style="padding:24px 28px;">'+
+      '<div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#c9a96e;font-weight:700;margin-bottom:14px;">Akun</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;">'+
+        '<div>'+
+          '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Nama lengkap</label>'+
+          '<input id="esa-pf-name" type="text" value="'+escapeHtmlEsa(u.name||p.name||'')+'" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;outline:none;">'+
+        '</div>'+
+        '<div>'+
+          '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Email</label>'+
+          '<input id="esa-pf-email" type="email" value="'+escapeHtmlEsa(u.email||p.email||'')+'" '+(u.email?'readonly':'')+' style="width:100%;padding:11px 14px;background:'+(u.email?'rgba(255,255,255,0.03)':'rgba(255,255,255,0.05)')+';border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:'+(u.email?'rgba(245,240,230,0.7)':'#f5f0e6')+';font-size:0.88rem;font-family:inherit;outline:none;">'+
+        '</div>'+
+        '<div>'+
+          '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">No HP / WhatsApp</label>'+
+          '<input id="esa-pf-phone" type="tel" value="'+escapeHtmlEsa(p.phone||'')+'" placeholder="08xxxxxxxxxx" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;outline:none;">'+
+        '</div>'+
+        '<div>'+
+          '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Alamat / Kota</label>'+
+          '<input id="esa-pf-city" type="text" value="'+escapeHtmlEsa(p.city||'')+'" placeholder="Mis. Jakarta Selatan" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;outline:none;">'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#c9a96e;font-weight:700;margin-bottom:14px;">Tujuan Karir</div>'+
+      '<div style="display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:22px;">'+
+        '<div>'+
+          '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Karir tujuan</label>'+
+          makeSelect('esa-pf-karir',KARIR_OPTIONS,p.karirTujuan)+
+        '</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'+
+          '<div>'+
+            '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Ekspektasi gaji</label>'+
+            makeSelect('esa-pf-gaji',GAJI_OPTIONS,p.ekspektasiGaji)+
+          '</div>'+
+          '<div>'+
+            '<label style="display:block;font-size:0.72rem;color:rgba(245,240,230,0.55);margin-bottom:6px;letter-spacing:0.06em;">Wilayah kerja</label>'+
+            makeSelect('esa-pf-wilayah',WILAYAH_OPTIONS,p.wilayahKerja)+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    // Footer
+    '<div style="padding:18px 28px 22px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;">'+
+      '<button id="esa-profile-logout" style="background:transparent;border:1px solid rgba(220,38,38,0.4);color:#fca5a5;border-radius:8px;padding:10px 18px;font-size:0.82rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;">Keluar / Logout</button>'+
+      '<div style="display:flex;gap:8px;">'+
+        '<button id="esa-profile-cancel" style="background:transparent;border:1px solid rgba(255,255,255,0.14);color:rgba(245,240,230,0.7);border-radius:8px;padding:10px 18px;font-size:0.82rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;">Tutup</button>'+
+        '<button id="esa-profile-save" style="background:linear-gradient(135deg,#c9a96e,#a07840);border:none;color:#1a1d2e;border-radius:8px;padding:10px 22px;font-size:0.82rem;font-weight:700;cursor:pointer;letter-spacing:0.04em;">Simpan Profil</button>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+
+  document.body.appendChild(overlay);
+
+  document.getElementById("esa-profile-close").onclick=function(){overlay.remove();};
+  document.getElementById("esa-profile-cancel").onclick=function(){overlay.remove();};
+  document.getElementById("esa-profile-logout").onclick=function(){overlay.remove();doLogout();};
+  document.getElementById("esa-profile-save").onclick=function(){
+    var data=readESAData();
+    if(!data.profile)data.profile={};
+    var nameNew=(document.getElementById("esa-pf-name").value||"").trim();
+    var phoneNew=(document.getElementById("esa-pf-phone").value||"").trim();
+    var cityNew=(document.getElementById("esa-pf-city").value||"").trim();
+    var karirNew=document.getElementById("esa-pf-karir").value||'';
+    var gajiNew=document.getElementById("esa-pf-gaji").value||'';
+    var wilayahNew=document.getElementById("esa-pf-wilayah").value||'';
+    if(nameNew.length<3){alert("Nama minimal 3 karakter");return;}
+    data.profile.name=nameNew;
+    data.profile.phone=phoneNew;
+    data.profile.city=cityNew||'-';
+    data.profile.karirTujuan=karirNew;
+    data.profile.ekspektasiGaji=gajiNew;
+    data.profile.wilayahKerja=wilayahNew;
+    writeESAData(data);
+    // Also update auth user name if it changed
+    var u=getUser();
+    if(u&&nameNew&&u.name!==nameNew){u.name=nameNew;saveUser(u);}
+    overlay.remove();
+    if(typeof window.esaToast==="function"){window.esaToast("Profil tersimpan","Data karir kamu berhasil diupdate.","✅");}
+    // Refresh nav button label
+    var btn=document.getElementById("esa-nav-user-info");
+    if(btn){
+      var firstName=nameNew.split(" ")[0];
+      // preserve picture img if any
+      var existingImg=btn.querySelector("img");
+      btn.textContent=firstName;
+      if(existingImg)btn.prepend(existingImg);
+    }
+  };
+}
+
+function escapeHtmlEsa(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+window.esaShowProfile=showProfileModal;
 
 function hookSV(){
   if(typeof window.showView==="function"&&!window.__esaGateOn){
@@ -29545,8 +29792,17 @@ else{setTimeout(init,200);}
     menu.appendChild(jobItem);
     dropdown.appendChild(trigger);
     dropdown.appendChild(menu);
-    dropdown.onmouseover=function(){menu.style.display='block';};
-    dropdown.onmouseout=function(){menu.style.display='none';};
+    // Use mouseenter/mouseleave (don't bubble) + a 250ms hide delay so the
+    // menu doesn't disappear when the cursor crosses from the trigger into
+    // the menu items. Click on the trigger toggles for touch/keyboard.
+    var hideTimer=null;
+    var openMenu=function(){if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}menu.style.display='block';};
+    var scheduleClose=function(){if(hideTimer)clearTimeout(hideTimer);hideTimer=setTimeout(function(){menu.style.display='none';hideTimer=null;},250);};
+    dropdown.addEventListener('mouseenter',openMenu);
+    dropdown.addEventListener('mouseleave',scheduleClose);
+    menu.addEventListener('mouseenter',openMenu);
+    menu.addEventListener('mouseleave',scheduleClose);
+    trigger.onclick=function(e){e.preventDefault();menu.style.display=(menu.style.display==='block')?'none':'block';};
 
     // Remove Job Opportunity from top level
     if(jobOpp)jobOpp.remove();
