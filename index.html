@@ -27574,6 +27574,47 @@ const QUIZ_TEMPLATE = [
   { q: "Dasar hukum K3 Listrik di tempat kerja Indonesia diatur oleh:",
     opts: ["UU 13/2003 tentang Ketenagakerjaan", "Permenaker No. 12 Tahun 2015", "Permen ESDM 38/2018", "PP 50/2012 SMK3"], a: 1,
     explain: "Permenaker No. 12/2015 tentang K3 Listrik di Tempat Kerja adalah regulasi spesifik yang mengatur kewajiban pengusaha menyediakan listrik aman, kompetensi tenaga teknik, sertifikasi instalasi (SLO via LIT). UU 13/2003 hanya mengatur ketenagakerjaan umum. Permen ESDM 38/2018 mengatur SLO sisi penyedia tenaga listrik. PP 50/2012 mengatur SMK3 secara umum (untuk perusahaan ≥100 orang/risk tinggi). Permenaker 12/2015 paling spesifik untuk K3 listrik." },
+
+  // ====== K3 Listrik & APD ======
+  { q: "LOTO (Lockout-Tagout) adalah prosedur untuk:",
+    opts: ["Mengunci pintu panel agar tidak dimasuki anak-anak", "Mengisolasi sumber energi listrik dengan kunci fisik & label sebelum kerja", "Memberi label pada kabel agar tidak tertukar saat instalasi", "Lock-out untuk overcurrent saja"], a: 1,
+    explain: "LOTO adalah prosedur K3 wajib sebelum kerja pada peralatan listrik: (1) matikan sumber energi, (2) pasang gembok fisik (lockout) di MCB/saklar/disconnector, (3) pasang label tag-out yang menyebut nama pekerja, tanggal, dan alasan. Tujuan: mencegah peralatan tiba-tiba ter-energize selama kerja. Hanya pekerja yang memasang gembok yang boleh membukanya kembali setelah pekerjaan selesai (one-person-one-lock principle). Diatur Permenaker 12/2015 pasal 7." },
+
+  { q: "5 Aturan Emas (5 Golden Rules) sebelum kerja pada peralatan listrik dalam keadaan TANPA tegangan adalah:",
+    opts: ["Hanya: matikan sumber, pasang label", "Disconnect, lock, test, ground, barricade — semua wajib dilakukan berurutan", "Cukup matikan saklar utama saja", "Pakai sarung tangan saja sudah cukup"], a: 1,
+    explain: "5 Golden Rules dari standar EN 50110: (1) DISCONNECT — putus dari semua sumber tegangan (semua fasa); (2) LOCK — pasang LOTO untuk cegah re-energize; (3) TEST/VERIFY — uji dengan voltage tester yang sudah dikalibrasi (tester three-point: cek pada sumber known live → titik kerja → kembali ke sumber); (4) GROUND — pasang grounding kerja (working earth) bila tegangan menengah/tinggi; (5) BARRICADE — pasang penghalang & rambu agar pekerja lain tidak masuk. Urutan tidak boleh dilewati." },
+
+  { q: "Arus listrik mulai berbahaya bagi jantung manusia (risiko fibrilasi ventrikel) pada nilai sekitar:",
+    opts: ["Di atas 1 A", "Di atas 30-100 mA selama beberapa detik", "Di bawah 1 mA", "Hanya di atas 10 A"], a: 1,
+    explain: "Berdasarkan IEC 60479-1: 30-100 mA AC selama >1 detik berisiko fibrilasi ventrikel (jantung berdetak kacau, tidak memompa darah → kematian dalam menit). 0,5-2 mA = perception (terasa). 5-15 mA = let-go threshold (tidak bisa lepas dari konduktor karena otot kontraksi). >100 mA = hampir pasti fatal. Inilah dasar setting RCD/ELCB di 30 mA — putus sebelum mencapai ambang fibrilasi. Tahanan tubuh ~1000-5000 Ω, jadi sentuh 220 V bisa menghasilkan 44-220 mA → mematikan." },
+
+  { q: "Tahanan pentanahan (grounding resistance) yang dipersyaratkan PUIL 2011 untuk sistem instalasi umum maksimal:",
+    opts: ["≤ 1 Ω", "≤ 5 Ω", "≤ 50 Ω", "≤ 100 Ω"], a: 1,
+    explain: "PUIL 2011 mensyaratkan tahanan pembumian sistem ≤ 5 Ω untuk instalasi umum (rumah, gedung). Untuk fasilitas khusus (rumah sakit, IT, area Ex) bisa lebih ketat ≤ 1-2 Ω. Tujuan: kalau ada bocor ke chassis/casing, arus mengalir ke tanah dengan cepat dan membuat MCB/RCD trip. Tahanan tinggi (>5 Ω) berarti chassis bisa tetap bertegangan saat fault → bahaya sentuh. Diukur dengan earth tester (3-point method). Faktor: jenis tanah, kedalaman elektroda, jumlah rod, kelembaban." },
+
+  { q: "Alat Pelindung Diri (APD) wajib MINIMAL untuk pekerja kelistrikan saat membuka panel rendah <1 kV adalah:",
+    opts: ["Helm bermetal, sandal, kaos lengan pendek", "Helm safety isolasi, sarung tangan isolasi sesuai kelas tegangan, sepatu safety insulated, baju arc-rated, kacamata pelindung", "Cukup sarung tangan kain biasa", "Tidak butuh APD untuk panel kecil"], a: 1,
+    explain: "Permenaker 12/2015 mensyaratkan APD listrik minimal: helm safety non-konduktif (Class E/G); sarung tangan isolasi karet sesuai kelas tegangan (Class 00/0/1/2 sesuai voltage rating, dilapisi sarung tangan kulit pelindung mekanis); sepatu safety dielectric; baju lengan panjang flame-resistant atau arc-rated (cat II untuk panel TR); face shield kalau ada risiko arc flash. Helm bermetal DILARANG (konduktif). Sandal/kaos pendek menambah risiko kontak. Kelas APD harus diuji dielektrik tiap 6 bulan." },
+
+  { q: "Permit to Work (PTW) atau Surat Izin Kerja diperlukan saat:",
+    opts: ["Kerja apapun di kantor", "Kerja berisiko tinggi seperti hot work, kerja di ketinggian, kerja pada peralatan listrik bertegangan/area Ex", "Hanya kerja di luar kantor", "Sebelum makan siang"], a: 1,
+    explain: "PTW adalah dokumen formal yang mengontrol kerja berisiko tinggi sebelum dimulai: hot work (panas/api), confined space, ketinggian >1,8 m, kerja listrik bertegangan, area klasifikasi Ex (zone 0/1/2). Isi: identifikasi bahaya, JSA (Job Safety Analysis), APD wajib, tindakan mitigasi, durasi izin, nama pekerja & supervisor, kondisi cuaca. Wajib ditandatangani permit issuer + receiver + safety officer sebelum kerja dimulai. Bila kondisi berubah, izin harus diperbarui. Permenaker 12/2015 dan SMK3 mewajibkan PTW untuk mencegah kecelakaan." },
+
+  { q: "Tindakan pertama yang BENAR saat menemukan korban tersengat listrik dan masih menempel pada konduktor bertegangan:",
+    opts: ["Langsung tarik korban dengan tangan kosong", "Lepaskan korban dengan kayu kering / siram air", "Putuskan sumber listrik dulu (matikan MCB/cabut kabel) baru evakuasi korban — JANGAN sentuh langsung", "Tinggalkan korban dan tunggu petugas"], a: 2,
+    explain: "Prioritas mutlak: SELAMATKAN PENOLONG DULU. Bila menyentuh korban yang masih ter-energize tanpa isolasi, penolong jadi korban berikutnya. Langkah benar: (1) matikan sumber listrik di MCB/saklar utama; (2) kalau tidak bisa, gunakan benda isolator KERING (kayu kering, kain tebal kering — bukan logam, bukan air, bukan benda basah karena air = konduktor); (3) setelah korban terisolasi → cek nadi & napas → CPR/RJP bila perlu; (4) panggil ambulans/PLN. Jangan tarik dengan tangan kosong — fatal. Air SALAH karena justru menghantar listrik." },
+
+  { q: "Sertifikasi kompetensi Ahli K3 Listrik di Indonesia diterbitkan oleh:",
+    opts: ["PLN langsung", "BNSP melalui LSP K3 Listrik terakreditasi", "Disnaker Provinsi", "Universitas teknik"], a: 1,
+    explain: "Ada 2 jalur sertifikasi K3 Listrik: (1) SKP (Surat Keterangan Penunjukan) Ahli K3 Listrik dari Kemnaker RI — wajib untuk perusahaan yang punya instalasi listrik, masa berlaku 3 tahun, syarat ujian Disnaker. (2) Sertifikat Kompetensi BNSP via LSP K3 Listrik terakreditasi (skema KKNI) — pengakuan kompetensi nasional, 3 tahun masa berlaku. Universitas hanya mengeluarkan ijazah, bukan sertifikat kompetensi K3. PLN tidak menerbitkan sertifikasi pekerja (kecuali untuk pekerja internal-nya saja). Untuk pelaksana wajib SKP, untuk pengakuan profesi BNSP." },
+
+  { q: "Working distance / jarak aman minimum saat bekerja dekat penghantar bertegangan menengah 20 kV (tanpa kontak) adalah:",
+    opts: ["10 cm", "30 cm", "60 cm (jarak aman PUIL untuk 1-35 kV)", "Tidak ada batasan"], a: 2,
+    explain: "PUIL 2011 dan Permen ESDM mensyaratkan jarak aman dari penghantar bertegangan untuk kerja TANPA kontak: 0,3 m untuk <1 kV, 0,6 m untuk 1-36 kV (TM), 1,2-1,5 m untuk 70-150 kV (TT), 2,5 m+ untuk 500 kV (TET). Faktor: tegangan flashover di udara ≈ 30 kV/cm tapi keamanan butuh margin besar untuk gerakan tubuh, alat, kondisi cuaca. Untuk kerja BERSENTUHAN langsung pada penghantar bertegangan (live line work), butuh APD khusus + prosedur khusus + petugas tersertifikasi PDKB (Pekerjaan Dalam Keadaan Bertegangan)." },
+
+  { q: "RCD (Residual Current Device) atau ELCB dengan setting 30 mA berfungsi sebagai:",
+    opts: ["Proteksi hubung singkat antar fasa", "Proteksi sengatan listrik untuk manusia (life protection)", "Mengontrol faktor daya", "Pengganti grounding"], a: 1,
+    explain: "RCD/ELCB 30 mA adalah proteksi PERSONAL terhadap sengatan listrik. Cara kerja: deteksi selisih arus antara fasa & netral (residual current). Bila ada bocor ke tanah ≥30 mA (mis. orang tersentuh fasa, arus mengalir ke tanah lewat tubuh), RCD trip dalam <30 ms — sebelum mencapai ambang fibrilasi jantung (50-100 mA). PUIL 2011 mewajibkan RCD 30 mA pada stop kontak rumah tangga, kamar mandi, dapur, garasi, area outdoor. RCD BUKAN pengganti grounding — keduanya saling melengkapi. Untuk proteksi peralatan (kebakaran instalasi), pakai RCD 100-300 mA." },
 ];
 
 function renderQuiz(module) {
