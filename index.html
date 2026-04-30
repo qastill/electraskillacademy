@@ -27615,6 +27615,47 @@ const QUIZ_TEMPLATE = [
   { q: "RCD (Residual Current Device) atau ELCB dengan setting 30 mA berfungsi sebagai:",
     opts: ["Proteksi hubung singkat antar fasa", "Proteksi sengatan listrik untuk manusia (life protection)", "Mengontrol faktor daya", "Pengganti grounding"], a: 1,
     explain: "RCD/ELCB 30 mA adalah proteksi PERSONAL terhadap sengatan listrik. Cara kerja: deteksi selisih arus antara fasa & netral (residual current). Bila ada bocor ke tanah ≥30 mA (mis. orang tersentuh fasa, arus mengalir ke tanah lewat tubuh), RCD trip dalam <30 ms — sebelum mencapai ambang fibrilasi jantung (50-100 mA). PUIL 2011 mewajibkan RCD 30 mA pada stop kontak rumah tangga, kamar mandi, dapur, garasi, area outdoor. RCD BUKAN pengganti grounding — keduanya saling melengkapi. Untuk proteksi peralatan (kebakaran instalasi), pakai RCD 100-300 mA." },
+
+  // ====== Proteksi listrik (MCB / Fuse / RCD / Relay) ======
+  { q: "MCB dengan kode 'C16' artinya:",
+    opts: ["MCB 16 V dengan kurva C", "MCB 16 A, kurva trip magnetik tipe C (5-10 × In)", "MCB kapasitas 16 kVA", "MCB kelas C tahan 16 kA"], a: 1,
+    explain: "Pada MCB, huruf = kurva trip MAGNETIK (instantaneous): B = 3-5 × In (untuk beban resistif murni: pencahayaan rumah, stop kontak biasa); C = 5-10 × In (beban dengan inrush sedang: AC, kulkas, motor kecil — paling umum di rumah/komersial); D = 10-20 × In (beban inrush tinggi: motor besar, trafo, MRI). Angka = arus nominal (rated current). Jadi C16 = nominal 16 A, trip magnetik 80-160 A. Kalau tipe salah, MCB sering trip palsu (tipe B di motor) atau tidak trip cepat saat hubung singkat ringan (tipe D di lighting)." },
+
+  { q: "Breaking capacity (Icu) MCB rumah tangga PUIL minimal:",
+    opts: ["1 kA", "3 kA", "6 kA (untuk hunian umum dengan trafo distribusi standar)", "100 kA"], a: 2,
+    explain: "Breaking capacity = arus hubung singkat maksimum yang masih bisa diputus MCB tanpa rusak/meledak. PUIL 2011 mensyaratkan minimal 6 kA untuk hunian (kabel SR PLN umumnya menghasilkan Isc 4-6 kA di titik kWh meter). Untuk komersial 10 kA, untuk industri MCCB 25-100 kA tergantung trafo. Kalau MCB 3 kA dipasang di sistem dengan Isc 6 kA, saat short-circuit MCB bisa meledak/terbakar. Cek Isc dengan studi short-circuit (impedansi sumber + kabel) sebelum pilih MCB." },
+
+  { q: "Fuse HRC (High Rupturing Capacity) tipe NH biasa dipakai untuk:",
+    opts: ["Pengaman lampu LED rumah", "Pengaman utama panel TR distribusi industri (16-1250 A) dengan breaking capacity 80-100 kA", "Pengganti MCB rumah tangga", "Hanya untuk DC battery"], a: 1,
+    explain: "Fuse NH (Niederspannungs-Hochleistungs / low-voltage high-power) adalah pengaman utama industri: rating 16 A sampai 1250 A, breaking capacity 80-120 kA (jauh lebih tinggi dari MCB 6-25 kA), tahan inrush motor lewat fitur time-delay (gG/aM curve). Konstruksi keramik berisi pasir silika untuk meredam busur saat sekring putus. Dipakai di panel utama gardu trafo, panel motor besar, kabinet distribusi industri. Tidak untuk rumah karena ukuran besar dan butuh handle isolator. Kelas gG = general-purpose, aM = motor protection (tidak proteksi overload, hanya short-circuit)." },
+
+  { q: "Koordinasi proteksi (selectivity / discrimination) bertujuan agar:",
+    opts: ["Semua pengaman trip bersamaan saat fault", "Hanya pengaman PALING DEKAT dengan titik gangguan yang trip — pengaman hulu tidak ikut padam", "Pengaman utama selalu trip lebih dulu", "Mempercepat trip dengan paralel"], a: 1,
+    explain: "Selectivity adalah prinsip wajib: kalau gangguan terjadi di feeder cabang, hanya MCB cabang itu yang trip — MCB induk dan trafo TM tetap menyala, area lain tidak ikut padam. Cara mencapai: (1) current grading — rating downstream lebih kecil dari upstream; (2) time grading — set waktu trip upstream lebih lama 0,3-0,4 detik; (3) zone selective — relay komunikasi blocking. Rasio rating umum 1:1,6 (downstream:upstream) untuk MCB konsumer. Kalau gagal selectivity, satu fault kecil bisa mati seluruh gedung — sangat mengganggu industri." },
+
+  { q: "Setting Over Current Relay (OCR / 51) pada penyulang TM 20 kV PLN biasanya pada arus pickup:",
+    opts: ["10% arus nominal beban", "Sama persis dengan beban puncak", "120-150% arus nominal beban (1,2-1,5 × In)", "10x arus nominal"], a: 2,
+    explain: "OCR 51 (definite/inverse time) di-set 1,2-1,5 × In beban puncak feeder, supaya: (1) tidak trip palsu saat lonjakan beban normal/inrush motor (cukup margin); (2) tetap sensitif terhadap overload sebenarnya. Kurva yang umum: SI (Standard Inverse), VI (Very Inverse), EI (Extremely Inverse) — pilih sesuai karakter beban dan koordinasi. Untuk hubung singkat fasa-fasa, biasanya tambahan elemen 50 (instantaneous) di-set 6-10 × In dengan trip <100 ms. Setting harus dikalkulasi short-circuit study, bukan asal pakai default." },
+
+  { q: "Surge Protection Device (SPD) Tipe 1 dipasang pada:",
+    opts: ["Outlet stop kontak rumah", "Panel distribusi sub-distribusi gedung", "Sisi MASUK utama gedung dekat instalasi penangkal petir (proteksi sambaran langsung)", "Hanya di server room"], a: 2,
+    explain: "Klasifikasi SPD menurut IEC 61643: TIPE 1 — proteksi sambaran petir LANGSUNG, dipasang di main distribution board terdekat dengan air terminal/down-conductor petir, kapasitas surge tinggi (10/350 µs, 25-100 kA per pole), tegangan sisa lebih tinggi. TIPE 2 — proteksi induksi/transient di sub-distribution board (8/20 µs, 20-40 kA). TIPE 3 — proteksi peralatan sensitif (komputer, server) dekat outlet, kapasitas kecil tapi clamping cepat. Sistem proteksi petir lengkap pakai 3 tipe berlapis (cascading)." },
+
+  { q: "Differential Relay 87 di trafo distribusi berfungsi:",
+    opts: ["Mendeteksi overload jangka panjang", "Mendeteksi gangguan internal trafo dengan membandingkan arus sisi primer & sekunder", "Mengukur power factor", "Pengganti tap-changer"], a: 1,
+    explain: "Differential relay 87T mengamankan trafo dari fault internal (short-circuit antar belitan, ke ground, atau insulation breakdown). Cara kerja: bandingkan arus masuk primer dengan arus keluar sekunder (setelah dikoreksi turns ratio CT). Kalau hampir sama → trafo sehat, tidak trip. Kalau beda signifikan → ada arus 'hilang' di dalam trafo = fault internal → trip cepat <50 ms. Trip langsung tanpa time delay karena fault internal sangat merusak. Setting biasanya bias 20-40% untuk hindari trip salah karena tap-changer/inrush. Wajib trafo >5 MVA. Trafo lebih kecil pakai Buchholz + OCR." },
+
+  { q: "Pemilihan kabel listrik berdasar Kemampuan Hantar Arus (KHA / current rating) PUIL menggunakan dasar:",
+    opts: ["Hanya tegangan", "Beban × 0,5", "Arus beban max × derating factor (suhu, instalasi, grouping) — KHA kabel ≥ Arus beban setelah derating", "Pilih sembarang kabel", "Hanya panjang kabel"], a: 2,
+    explain: "Aturan pemilihan KHA kabel PUIL: (1) hitung arus nominal beban Ib (P/(V·cos φ) untuk 1-fasa atau P/(√3·V·cos φ) 3-fasa); (2) tentukan rating MCB In ≥ Ib; (3) pilih kabel dengan KHA Iz ≥ In; (4) terapkan FAKTOR DERATING: suhu lingkungan (k1 ~0,87 di 35°C), instalasi (k2 dalam pipa = 0,8), grouping kabel (k3 = 0,6-0,8 kalau 4-9 kabel paralel). KHA actual = KHA tabel × k1 × k2 × k3. Lalu cek voltage drop ≤4% (PUIL 2011). Kabel undersized = panas → kebakaran. Oversized = boros biaya. Studi kasus: NYM 3×2,5 mm² Cu, dalam pipa, 30°C → KHA tabel 24 A → derate jadi ~16 A. Cocok untuk MCB C10 atau C16." },
+
+  { q: "Backup proteksi (proteksi cadangan) bekerja kalau:",
+    opts: ["Listrik mati", "Proteksi utama (primary) gagal trip — backup trip dengan delay lebih lama untuk amankan sistem", "Hanya saat hujan", "Backup tidak diperlukan kalau ada utama"], a: 1,
+    explain: "Konsep redundansi proteksi: setiap zona harus punya 2 lapis proteksi. (1) PRIMARY — relay utama trip cepat 20-100 ms, area minimum (dimaksudkan untuk trip dulu). (2) BACKUP — relay cadangan dengan delay 0,3-0,5 detik lebih lama, area lebih luas; trip kalau primary gagal (relay rusak, CB stuck, CT putus). Jenis backup: local backup (relay kedua di CB sama dengan logic berbeda) atau remote backup (relay di feeder upstream). Bus differential 87B + breaker failure relay 50BF wajib di GI/GITET. Tanpa backup, satu kegagalan relay = blackout luas. Standar IEC 60834." },
+
+  { q: "Mengapa nilai breaking capacity MCB lebih kecil daripada arus hubung singkat di lokasi pemasangan akan berbahaya?",
+    opts: ["Tidak masalah, MCB tetap aman", "Saat short-circuit, MCB tidak mampu meredam busur listrik — bisa pecah/meledak/terbakar dan TIDAK memutus arus, fault terus mengalir", "MCB jadi lebih hemat", "Hanya berisiko di motor"], a: 1,
+    explain: "Bila Isc lokasi > Icu MCB, saat hubung singkat: (1) busur listrik intens muncul antara kontak; (2) MCB tidak mampu mendinginkan/meredam busur dalam waktu siap; (3) kontak menyatu (welded) atau housing pecah/meledak akibat tekanan; (4) ARUS TERUS MENGALIR ke beban → kabel terbakar, panel meledak, peralatan rusak total, risiko kebakaran/cedera. Ini sebabnya studi short-circuit WAJIB sebelum pilih breaker (PUIL 2011 ayat 4.3.1). Untuk industri, hitung Isc dengan formula Isc = Vph / |Z_total| (Z = impedansi trafo + kabel + sumber). Pilih CB dengan Icu ≥ 1,1 × Isc untuk safety margin." },
 ];
 
 function renderQuiz(module) {
