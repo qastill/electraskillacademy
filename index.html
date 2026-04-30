@@ -27531,33 +27531,49 @@ const QUIZ_BANK = {
   ],
 };
 
-// Generic fallback template (dipakai kalau modul belum di-handcraft)
+// Generic fallback template Indonesia (dipakai kalau modul belum di-handcraft).
+// Pembahasan ditulis detail: jelaskan kenapa jawaban benar, kenapa opsi lain
+// salah, plus konteks praktis (PUIL/PLN/SKKNI/Permenaker) bila relevan.
 const QUIZ_TEMPLATE = [
-  { q: "Satuan tegangan listrik dalam SI adalah:", opts: ["Ampere","Volt","Watt","Ohm"], a: 1, explain: "Volt (V) adalah satuan tegangan listrik. 1 V = 1 Joule/Coulomb." },
-  { q: "Rumus Hukum Ohm yang benar adalah:", opts: ["V = I × R","V = I / R","V = I + R","V = I - R"], a: 0, explain: "V = I × R. Tegangan sama dengan arus dikali hambatan." },
-  { q: "Pada rangkaian seri, nilai arus (I) adalah:", opts: ["Berbeda di tiap komponen","Sama di semua komponen","Nol","Hanya di resistor"], a: 1, explain: "Rangkaian seri: arus sama di semua komponen, tegangan terbagi." },
-  { q: "Frekuensi jaringan listrik Indonesia adalah:", opts: ["50 Hz","60 Hz","110 Hz","220 Hz"], a: 0, explain: "Indonesia menggunakan standar 50 Hz, sama seperti negara Eropa dan sebagian besar Asia." },
-  { q: "Sistem 3 fasa bintang (Y) memiliki hubungan V_line = ?", opts: ["V_phase","√3 × V_phase","2 × V_phase","V_phase / √3"], a: 1, explain: "Bintang: V_line = √3 × V_phase. Contoh 380V line = 220V phase × √3." },
-  { q: "Faktor daya yang baik menurut standar PLN industri:", opts: ["< 0,5","0,6 - 0,7","≥ 0,85","1,5"], a: 2, explain: "PLN menetapkan denda kVARh bila cos φ < 0,85. Target industri ≥ 0,95." },
-  { q: "Satuan daya aktif adalah:", opts: ["VA","VAR","Watt","Henry"], a: 2, explain: "Daya aktif (P) satuannya Watt. VA = daya semu, VAR = daya reaktif." },
-  { q: "Standar instalasi listrik Indonesia adalah:", opts: ["PUIL 2011","NEC","IEC 60364","VDE"], a: 0, explain: "PUIL 2011 (SNI 0225) wajib untuk semua instalasi listrik di Indonesia." },
-  { q: "Warna kabel netral sesuai PUIL adalah:", opts: ["Hitam","Biru","Kuning-hijau","Merah"], a: 1, explain: "Netral biru, PE kuning-hijau, fasa merah/kuning/hitam atau coklat/hitam/abu." },
-  { q: "Dasar hukum K3 Listrik di Indonesia:", opts: ["UU 13/2003","Permenaker 12/2015","PP 22/2021","Kepres 12/2000"], a: 1, explain: "Permenaker 12/2015 tentang K3 Listrik di Tempat Kerja." },
-  { q: "LOTO adalah singkatan dari:", opts: ["Lock-Only Tag-Out","Lockout-Tagout","Line-Out","Low Overcurrent"], a: 1, explain: "Lockout-Tagout: prosedur isolasi energi untuk kerja listrik aman." },
-  { q: "Tahanan pentanahan target PLN:", opts: ["≤ 0,5 Ω","≤ 5 Ω","≤ 50 Ω","100 Ω"], a: 1, explain: "PUIL 2011: tahanan pentanahan ≤ 5 Ω untuk sistem umum." },
-  { q: "MCB dengan kode 'C16' artinya:", opts: ["16A, kurva C","16A, kelas C","16V, kurva C","Kapasitas 16 kVA"], a: 0, explain: "C = kurva trip magnetis 5-10x nominal. 16 = arus nominal 16A." },
-  { q: "Fungsi ELCB/RCD adalah:", opts: ["Proteksi overcurrent","Proteksi arus bocor ke tanah","Pengaman petir","Power factor correction"], a: 1, explain: "ELCB/RCD deteksi arus bocor (biasanya 30 mA) untuk proteksi sengatan listrik." },
-  { q: "Motor induksi 4 kutub 50 Hz kecepatan sinkron:", opts: ["1000 rpm","1500 rpm","3000 rpm","750 rpm"], a: 1, explain: "n_s = 120f/p = 120 × 50 / 4 = 1500 rpm." },
-  { q: "Trafo 20kV/400V rasio transformasinya:", opts: ["1:50","50:1","1:20","20:1"], a: 1, explain: "N₁/N₂ = V₁/V₂ = 20000/400 = 50. Trafo step-down distribusi PLN." },
-  { q: "Efisiensi PLTU umumnya berkisar:", opts: ["10-15%","33-40%","70-80%","95%"], a: 1, explain: "PLTU subkritis 33-36%, superkritis 38-42%. Combined cycle bisa 55-62%." },
-  { q: "Efisiensi panel solar komersial modern:", opts: ["5-8%","18-22%","40-50%","95%"], a: 1, explain: "Silicon mono/poly komersial: 18-22%. Perfroma tropis Indonesia bisa drop karena panas." },
-  { q: "IEEE 1584 adalah standar untuk:", opts: ["Motor","Arc Flash Hazard Analysis","Transformer","Grounding"], a: 1, explain: "IEEE 1584 = metodologi perhitungan Incident Energy arc flash." },
-  { q: "SAIDI adalah singkatan dari:", opts: ["System Average Interruption Duration Index","Single Action Data","System Audit","Safe Area"], a: 0, explain: "SAIDI = total durasi padam / jumlah pelanggan / tahun. Target PLN < 500 min/year." },
-  { q: "ISO 50001 adalah standar:", opts: ["Quality Management","Energy Management System","Environmental","Occupational Safety"], a: 1, explain: "ISO 50001 - Sistem Manajemen Energi. SNI adopsi: SNI ISO 50001:2018." },
-  { q: "PP 50/2012 mengatur tentang:", opts: ["BPJS","Penerapan SMK3","UMR","Tenaga kerja"], a: 1, explain: "PP 50/2012 = SMK3 wajib untuk perusahaan ≥100 karyawan atau berisiko tinggi." },
-  { q: "Sertifikasi Ahli K3 Listrik diterbitkan oleh:", opts: ["PLN","Kemnaker/BNSP via LSP K3","PUPR","Kepolisian"], a: 1, explain: "Kemnaker terbitkan SKP, BNSP terbitkan sertifikat kompetensi via LSP K3 terakreditasi." },
-  { q: "Zone 0 pada klasifikasi hazardous area artinya:", opts: ["Aman","Gas explosive hampir selalu ada","Gas kadang ada","Jarang"], a: 1, explain: "Zone 0: gas explosive ada >1000 jam/tahun (IEC 60079). Perlu peralatan Ex-proof." },
-  { q: "SLO (Sertifikat Laik Operasi) diterbitkan oleh:", opts: ["PLN","Disnaker","Lembaga Inspeksi Teknik terakreditasi","Kontraktor"], a: 2, explain: "LIT terakreditasi ESDM. Permen ESDM 38/2018. Berlaku 15 tahun TM/TT." },
+  { q: "Satuan tegangan listrik dalam Sistem Internasional (SI) adalah:",
+    opts: ["Ampere (A)", "Volt (V)", "Watt (W)", "Ohm (Ω)"], a: 1,
+    explain: "Volt (V) adalah satuan tegangan listrik, didefinisikan sebagai 1 V = 1 Joule per Coulomb (energi per satuan muatan). Ampere adalah satuan arus, Watt satuan daya, dan Ohm satuan resistansi — bukan tegangan. Di Indonesia, tegangan rumah tangga PLN adalah 220 V (fasa-netral), tegangan menengah 20 kV (jaringan distribusi), tegangan tinggi 70/150 kV (transmisi)." },
+
+  { q: "Rumus Hukum Ohm yang benar untuk rangkaian listrik adalah:",
+    opts: ["V = I × R", "V = I / R", "V = I + R", "V = I − R"], a: 0,
+    explain: "Hukum Ohm menyatakan tegangan (V) sama dengan arus (I) dikali hambatan (R), atau V = I × R. Contoh: arus 2 A melalui resistor 10 Ω → V = 2 × 10 = 20 Volt. Variasi rumus: I = V/R dan R = V/I. Pembagian dan operasi tambah/kurang seperti di opsi lain salah secara dimensi (tidak konsisten dengan satuan)." },
+
+  { q: "Pada rangkaian seri, nilai arus listrik (I) di tiap komponen adalah:",
+    opts: ["Berbeda di tiap komponen", "Sama di semua komponen", "Nol di resistor", "Hanya mengalir di sumber"], a: 1,
+    explain: "Di rangkaian seri, arus mengalir melalui satu jalur tertutup sehingga nilai arus SAMA di semua komponen — sesuai Hukum Kirchhoff Arus (KCL): jumlah muatan masuk = keluar. Yang TERBAGI di rangkaian seri adalah TEGANGAN, sebanding dengan resistansi tiap komponen (V₁/V₂ = R₁/R₂). Konsep ini kebalikan dari rangkaian paralel — di mana tegangan sama, arus terbagi." },
+
+  { q: "Frekuensi standar jaringan listrik PLN di Indonesia adalah:",
+    opts: ["50 Hz", "60 Hz", "100 Hz", "400 Hz"], a: 0,
+    explain: "Indonesia memakai 50 Hz, mengikuti standar IEC dan negara Eropa, India, Asia Tenggara, Australia, sebagian besar Afrika & Amerika Selatan. 60 Hz dipakai di Amerika Utara, Jepang sebagian. 400 Hz dipakai di pesawat udara untuk efisiensi bobot trafo. Frekuensi 50 Hz penting karena menentukan kecepatan motor sinkron (n = 120f/p), spesifikasi trafo dan desain peralatan elektronik." },
+
+  { q: "Pada sistem 3-fasa hubungan bintang (Y / wye), tegangan antar-fasa (V_line) terhadap tegangan fasa-netral (V_phase) adalah:",
+    opts: ["V_line = V_phase", "V_line = √3 × V_phase", "V_line = 2 × V_phase", "V_line = V_phase / √3"], a: 1,
+    explain: "Pada hubungan bintang, V_line = √3 × V_phase ≈ 1,732 × V_phase. Contoh praktis Indonesia: V_line 380 V = √3 × 220 V (V_phase). Faktor √3 muncul karena beda sudut fasa 120° antar fasa membuat penjumlahan vektor menghasilkan magnitudo √3. Hubungan delta (Δ) berbeda — V_line = V_phase tapi I_line = √3 × I_phase." },
+
+  { q: "Faktor daya (cos φ) minimum yang ditetapkan PLN untuk pelanggan industri sebelum dikenakan denda kVARh adalah:",
+    opts: ["0,50", "0,75", "0,85", "1,00"], a: 2,
+    explain: "PLN menetapkan cos φ minimal 0,85 untuk pelanggan B2/B3/I-3/I-4. Bila lebih rendah, dikenakan biaya kelebihan kVARh karena beban induktif (motor, ballast) menyerap daya reaktif yang membebani jaringan tanpa menghasilkan kerja. Cos φ 1,0 secara teori sempurna tapi sulit dicapai praktis. Solusi: pasang kapasitor bank untuk koreksi faktor daya. Target industri yang baik biasanya ≥ 0,95." },
+
+  { q: "Satuan daya AKTIF (yang menghasilkan kerja nyata) pada sistem AC adalah:",
+    opts: ["VA (Volt-Ampere)", "VAR (Volt-Ampere Reactive)", "W (Watt)", "Wh (Watt-jam)"], a: 2,
+    explain: "Daya aktif diukur dalam Watt (W) atau kW — daya yang benar-benar dikonversi jadi kerja (panas, putar motor, cahaya). Rumus: P = V × I × cos φ. VA adalah daya semu (apparent), VAR adalah daya reaktif yang ber-osilasi tapi tidak menghasilkan kerja, Wh adalah ENERGI (daya × waktu) bukan daya. Hubungan: S² = P² + Q² (segitiga daya: VA² = W² + VAR²)." },
+
+  { q: "Standar instalasi listrik yang wajib digunakan di Indonesia adalah:",
+    opts: ["PUIL 2011 (SNI 0225:2011)", "NEC (National Electrical Code USA)", "IEC 60364 langsung", "BS 7671 Inggris"], a: 0,
+    explain: "PUIL 2011 (Persyaratan Umum Instalasi Listrik), diadopsi sebagai SNI 0225:2011, adalah standar wajib untuk semua instalasi listrik tegangan rendah di Indonesia — dasarnya IEC 60364 yang disesuaikan kondisi lokal. NEC (USA) dan BS 7671 (UK) tidak berlaku di sini meski sering dijadikan referensi. PUIL mengatur kabel, proteksi, pentanahan, instalasi rumah/komersial/industri. Pelanggaran PUIL bisa menyebabkan SLO ditolak." },
+
+  { q: "Warna kabel untuk konduktor NETRAL menurut PUIL 2011 adalah:",
+    opts: ["Hitam", "Biru muda", "Kuning-hijau strip", "Merah"], a: 1,
+    explain: "PUIL 2011 menetapkan: NETRAL = biru muda, GROUND/PE (Protective Earth) = kuning-hijau strip (wajib dan tidak boleh dipakai untuk fungsi lain), FASA = hitam/coklat/abu-abu (3-fasa) atau merah (umum 1-fasa). Warna kuning-hijau khusus untuk grounding karena terlihat dari sudut mana pun bahkan kondisi penerangan minim. Pemasangan terbalik (netral di posisi fasa) berbahaya — bisa tetap energized saat saklar OFF." },
+
+  { q: "Dasar hukum K3 Listrik di tempat kerja Indonesia diatur oleh:",
+    opts: ["UU 13/2003 tentang Ketenagakerjaan", "Permenaker No. 12 Tahun 2015", "Permen ESDM 38/2018", "PP 50/2012 SMK3"], a: 1,
+    explain: "Permenaker No. 12/2015 tentang K3 Listrik di Tempat Kerja adalah regulasi spesifik yang mengatur kewajiban pengusaha menyediakan listrik aman, kompetensi tenaga teknik, sertifikasi instalasi (SLO via LIT). UU 13/2003 hanya mengatur ketenagakerjaan umum. Permen ESDM 38/2018 mengatur SLO sisi penyedia tenaga listrik. PP 50/2012 mengatur SMK3 secara umum (untuk perusahaan ≥100 orang/risk tinggi). Permenaker 12/2015 paling spesifik untuk K3 listrik." },
 ];
 
 function renderQuiz(module) {
@@ -27639,13 +27655,23 @@ function renderQuiz(module) {
     pool = generic.slice();
   }
 
-  // Filter "no-info" soal: kalau ≥2 dari 4 opsi adalah placeholder kosong
-  // (Random/None/Same/Skip/Always/Never), soal itu tidak punya distractor
-  // riil dan sulit dipahami → buang. Fallback ke pool penuh kalau filter
-  // terlalu agresif (modul masih dapat soal walaupun kualitas lebih rendah).
+  // Filter "no-info" soal: bertahap, jaga supaya pool tidak jadi terlalu kecil.
+  // Stage 1: buang soal yang ≥2 dari 4 opsi adalah placeholder kosong
+  //          (Random/None/Same/Skip/Always/Never) — AI-gen miskin distractor.
+  // Stage 2: kalau pool masih ≥10, buang juga soal full-English (tidak punya kata
+  //          Indonesia di pertanyaannya) — bikin peserta lokal bingung. Filter ini
+  //          cuma jalan kalau hasilnya masih ≥5 soal.
+  // Fallback: kalau sisa < 5 soal, pakai pool sebelumnya supaya quiz tetap render.
   const PLACEHOLDER_OPT_RE = /^\s*(random|none|same|skip|always|never)\s*$/i;
+  const INDO_HINT_RE = /\b(yang|dari|dengan|dan|atau|pada|untuk|adalah|tidak|akan|saat|jika|apa|berapa|bagaimana|mengapa|kapan|tiap|setiap|harus|boleh|lebih|kurang|kasus|seorang|sebuah|sebagai|antara|tentang|sebelum|sesudah|sehingga|karena|maka|menjadi|terjadi|dapat|berlaku|wajib)\b/i;
   const placeholderCount = q => Array.isArray(q.opts) ? q.opts.filter(o => PLACEHOLDER_OPT_RE.test(String(o))).length : 0;
-  const cleaned = pool.filter(q => placeholderCount(q) < 2);
+  const isFullEnglish = q => q && typeof q.q === 'string' && q.q.length > 10 && !INDO_HINT_RE.test(q.q);
+
+  let cleaned = pool.filter(q => placeholderCount(q) < 2);
+  if (cleaned.length >= 10) {
+    const noEnglish = cleaned.filter(q => !isFullEnglish(q));
+    if (noEnglish.length >= 5) cleaned = noEnglish;
+  }
   if (cleaned.length >= 5) pool = cleaned;
 
   // Shuffle pool and take 25; pad if pool is small.
