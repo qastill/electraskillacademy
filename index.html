@@ -27656,6 +27656,47 @@ const QUIZ_TEMPLATE = [
   { q: "Mengapa nilai breaking capacity MCB lebih kecil daripada arus hubung singkat di lokasi pemasangan akan berbahaya?",
     opts: ["Tidak masalah, MCB tetap aman", "Saat short-circuit, MCB tidak mampu meredam busur listrik — bisa pecah/meledak/terbakar dan TIDAK memutus arus, fault terus mengalir", "MCB jadi lebih hemat", "Hanya berisiko di motor"], a: 1,
     explain: "Bila Isc lokasi > Icu MCB, saat hubung singkat: (1) busur listrik intens muncul antara kontak; (2) MCB tidak mampu mendinginkan/meredam busur dalam waktu siap; (3) kontak menyatu (welded) atau housing pecah/meledak akibat tekanan; (4) ARUS TERUS MENGALIR ke beban → kabel terbakar, panel meledak, peralatan rusak total, risiko kebakaran/cedera. Ini sebabnya studi short-circuit WAJIB sebelum pilih breaker (PUIL 2011 ayat 4.3.1). Untuk industri, hitung Isc dengan formula Isc = Vph / |Z_total| (Z = impedansi trafo + kabel + sumber). Pilih CB dengan Icu ≥ 1,1 × Isc untuk safety margin." },
+
+  // ====== Motor & Transformator ======
+  { q: "Kecepatan sinkron (Ns) motor induksi 3-fasa 4-kutub pada frekuensi 50 Hz adalah:",
+    opts: ["750 rpm", "1000 rpm", "1500 rpm", "3000 rpm"], a: 2,
+    explain: "Rumus kecepatan sinkron: Ns = (120 × f) / p, dengan f = frekuensi (Hz), p = jumlah kutub. Untuk 4 kutub di 50 Hz: Ns = (120 × 50) / 4 = 1500 rpm. Ini kecepatan medan magnet putar di stator. Kecepatan rotor sebenarnya (Nr) selalu sedikit lebih lambat karena slip — biasanya 1440-1480 rpm untuk motor 4-kutub berbeban. Motor 2-kutub = 3000 rpm sinkron, 6-kutub = 1000 rpm, 8-kutub = 750 rpm. Pemilihan jumlah kutub menentukan aplikasi: pompa air biasanya 4-kutub (1500 rpm), kompresor 6-kutub, kipas axial 6-8 kutub." },
+
+  { q: "Slip motor induksi sebesar 4% pada motor 4-kutub 50 Hz menghasilkan kecepatan rotor:",
+    opts: ["1500 rpm", "1440 rpm", "1380 rpm", "60 rpm"], a: 1,
+    explain: "Slip s = (Ns − Nr) / Ns. Maka Nr = Ns × (1 − s). Untuk Ns = 1500 rpm dan s = 0,04: Nr = 1500 × (1 − 0,04) = 1500 × 0,96 = 1440 rpm. Slip muncul karena rotor harus 'tertinggal' agar timbul EMF induksi (kalau rotor seputaran sinkron, fluks tidak memotong rotor → tidak ada arus/torsi). Slip nominal motor industri 2-5% saat full load, 0,1-0,5% saat tanpa beban. Slip naik saat beban naik, sampai motor stall (slip ~20%) dan torsi puncak (breakdown torque). Slip diukur via tachometer atau hitung dari frekuensi rotor (fr = s × f)." },
+
+  { q: "Star-Delta starter dipakai untuk motor besar agar:",
+    opts: ["Mempercepat motor", "Menurunkan arus starting (inrush) dari 6-7× In jadi 1/3 saat starting di hubungan bintang", "Menambah daya motor", "Mengubah arah putar"], a: 1,
+    explain: "Saat motor distart langsung (DOL — Direct On Line), arus inrush bisa 6-7× arus nominal selama 5-10 detik. Untuk motor >7,5 kW, ini bikin tegangan jaringan drop & MCB upstream trip. Star-Delta solusi: belitan motor di-koneksi BINTANG saat start (V_phase = V_line/√3 → arus tinggal 1/3 dari delta), motor naik kecepatan; setelah ~70-80% Ns, kontaktor switch ke DELTA untuk full power. Syarat: motor harus dirancang untuk delta operation (3-fasa 6 ujung belitan keluar terminal). Starting torque juga turun jadi 1/3 — tidak cocok kalau motor harus start berbeban penuh. Alternatif modern: Soft starter / VFD." },
+
+  { q: "VFD (Variable Frequency Drive) mengontrol kecepatan motor induksi dengan cara:",
+    opts: ["Mengubah jumlah kutub motor", "Mengubah frekuensi & tegangan supply secara proporsional (V/f konstan)", "Mengubah belitan rotor", "Membatasi arus DC saja"], a: 1,
+    explain: "VFD bekerja dengan: (1) RECTIFIER — ubah AC 50 Hz jadi DC; (2) DC LINK — kapasitor smoothing; (3) INVERTER (IGBT switching dengan PWM) — generate AC variabel frekuensi 0-100+ Hz. Karena Ns = 120f/p, ubah f = ubah kecepatan tanpa ganti motor. Tapi V juga harus diubah proporsional (V/f konstan ≈ 220/50 = 4,4 V/Hz untuk 220 V) agar fluks magnet motor tetap → torsi konstan. Manfaat: hemat energi 20-40% di pompa/kipas (P ∝ N³), soft start, kontrol presisi proses. Dampak negatif: harmonik (THD) ke jaringan → butuh filter/reactor. Standar: IEEE 519 untuk batas harmonik." },
+
+  { q: "Trafo distribusi PLN 20 kV / 400 V dengan rating 100 kVA, arus nominal sisi sekunder (TR) sekitar:",
+    opts: ["5 A", "144 A (kalkulasi: I = S / (√3 × V) = 100000 / (1,732 × 400))", "250 A", "400 A"], a: 1,
+    explain: "Untuk trafo 3-fasa: I_line = S / (√3 × V_line). Sisi sekunder 400 V: I = 100.000 VA / (1,732 × 400) = 100.000 / 692,8 ≈ 144 A. Sisi primer 20 kV: I = 100.000 / (1,732 × 20.000) ≈ 2,89 A. Rasio arus = rasio tegangan terbalik (sesuai konservasi daya). Ini dipakai untuk pilih kabel sekunder (KHA ≥144 A → minimal NYY 4×35 mm² Cu), MCCB 160 A, dan setting OCR sisi TR. Trafo 100 kVA umum di gardu portal/gardu trafo tiang PLN untuk perumahan ~50-80 rumah atau small commercial." },
+
+  { q: "Vektor group trafo 'Dyn11' artinya:",
+    opts: ["Trafo 11 kV saja", "Sisi primer DELTA, sekunder BINTANG dengan netral, pergeseran fasa 11 × 30° = 330° (atau −30°)", "Trafo 11 fasa", "Trafo dengan 11 belitan"], a: 1,
+    explain: "Notasi vektor group IEC 60076: huruf besar = sisi tegangan tinggi (HV), huruf kecil = LV. D/d = Delta, Y/y = bintang, n = ada terminal netral, Z/z = zigzag. Angka = pergeseran fasa LV terhadap HV dalam unit 30° (jam analog: 11 = jam 11 = pergeseran 330° = −30°). Dyn11 paling umum di trafo distribusi PLN 20/0,4 kV: D primer = filter harmonik + tahan unbalanced, yn sekunder = bisa keluarkan 4 kawat (3 fasa + netral) untuk konsumen 1-fasa. Untuk paralel trafo, vektor group HARUS sama (mis. Dyn11 + Dyn11) — beda group bikin sirkulasi arus besar = bakar trafo." },
+
+  { q: "Syarat utama agar 2 trafo bisa di-paralel (operasi bersama) adalah:",
+    opts: ["Sama merek saja", "Sama daya saja", "Sama vektor group, sama rasio tegangan, sama % impedansi (toleransi <10%), urutan fasa & polaritas sama", "Cukup pasang switch sinkron"], a: 2,
+    explain: "5 syarat trafo paralel: (1) RASIO TEGANGAN sama — kalau beda, arus sirkulasi mengalir antar trafo; (2) VEKTOR GROUP sama — beda group bikin tegangan output beda fasa → fault; (3) % IMPEDANSI / Z% sama atau dekat (toleransi 10%) — kalau beda, trafo dengan Z% kecil over-loaded duluan; (4) URUTAN FASA sama (R-S-T) — terbalik = short antar fasa; (5) KAPASITAS sebaiknya rasio max 1:3 (mis. 100 kVA + 250 kVA OK, tapi 100 + 1000 hindari). Cek dengan voltmeter antar terminal sebelum closing CB paralel — harus 0 V kalau benar. Kalau ada beda voltage = STOP, jangan paralel." },
+
+  { q: "Tap-changer pada trafo distribusi berfungsi untuk:",
+    opts: ["Mengubah polaritas trafo", "Menyesuaikan rasio belitan agar tegangan sekunder tetap sesuai standar walaupun tegangan primer fluktuasi", "Menambah jumlah fasa", "Sebagai grounding"], a: 1,
+    explain: "Tap-changer = saklar pemilih posisi tap pada belitan primer trafo. Mengubah jumlah lilitan aktif sehingga rasio transformasi berubah → tegangan sekunder dikompensasi. Range umum trafo distribusi: ±5% dengan 5 step (−5%, −2,5%, 0, +2,5%, +5%) atau ±2 × 2,5%. Jenis: (1) NLTC / Off-load Tap Changer — diubah saat trafo di-de-energize, manual, untuk distribusi PLN 20/0,4 kV; (2) OLTC / On-load Tap Changer — diubah saat operasi, otomatis dengan AVR (Automatic Voltage Regulator), untuk trafo besar GI 150/20 kV. Salah set tap → tegangan konsumen di luar batas (PLN: 220 V ±10%) → peralatan rusak/efisiensi turun." },
+
+  { q: "Relay Buchholz pada trafo besar berisi minyak berfungsi:",
+    opts: ["Pendingin trafo", "Mendeteksi gas hasil dekomposisi minyak akibat fault internal (arching, hot spot) → alarm/trip", "Pengukur arus", "Pengganti grounding"], a: 1,
+    explain: "Buchholz = relay mekanis dipasang di pipa antara tank trafo dan konservator. Cara kerja: kalau ada fault internal (busur, hot spot, dekomposisi insulasi minyak), gas terbentuk → naik ke konservator. Buchholz menangkap gas: (1) ALARM (gas perlahan / minor fault) — fluks gas 100-200 cc memicu pelampung atas → warning; (2) TRIP (gas cepat / major fault) — gelombang minyak deras → flap valve trip CB. Wajib pada trafo ≥630 kVA berisi minyak (IEC 60214). Setelah alarm, gas dianalisis (DGA — Dissolved Gas Analysis) untuk diagnosa: H₂ = arching, CO/CO₂ = paper insulation, C₂H₂ = high-energy fault. Penting untuk preventive maintenance." },
+
+  { q: "Mengapa motor induksi 3-fasa lebih banyak dipakai di industri dibanding motor DC?",
+    opts: ["Motor induksi lebih kuat", "Motor induksi: konstruksi sederhana (tanpa sikat/komutator), tahan banting, perawatan minimal, harga murah, langsung dari supply AC tanpa konverter", "Motor DC dilarang", "Motor induksi gratis"], a: 1,
+    explain: "Keunggulan motor induksi 3-fasa: (1) KONSTRUKSI SEDERHANA — tidak ada sikat karbon/komutator (sumber utama keausan motor DC), rotor 'sangkar tupai' = batang aluminium di-cor; (2) PERAWATAN MINIMAL — tidak butuh ganti sikat berkala; (3) MURAH — produksi massal, kurs umum 1 hp ≈ Rp 1-2 juta untuk industri; (4) RUGGED — tahan debu/lembab/getaran (IP55+); (5) LANGSUNG dari AC — tanpa konverter (motor DC butuh penyearah + kontrol thyristor). Kelemahan motor induksi: kontrol kecepatan rumit (perlu VFD). Untuk aplikasi yang butuh kontrol presisi dulu pakai motor DC, sekarang motor induksi + VFD lebih dominan. Aplikasi: 80% energi industri Indonesia diserap motor induksi (pompa, kipas, kompresor, conveyor)." },
 ];
 
 function renderQuiz(module) {
