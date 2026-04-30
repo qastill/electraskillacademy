@@ -27755,6 +27755,7 @@ const QUIZ_TEMPLATE = [
   { q: "Pengukuran arus 3-fasa yang seimbang menunjukkan:",
     opts: ["Selalu sama persis di semua fasa", "Arus fasa R, S, T mirip dalam toleransi ≤10% — kalau lebih, ada beban tidak balance, fasa hilang, atau short partial", "Hanya fasa R yang penting", "Tidak perlu diukur"], a: 1,
     explain: "Pada sistem 3-fasa seimbang, arus R = S = T (toleransi ≤10% antar fasa). Kalau ketidakseimbangan >15% = masalah. Penyebab: (1) beban 1-fasa terlalu banyak di satu fasa (pencahayaan, stop kontak biasanya unbalance); (2) phase loss / fasa hilang akibat kabel putus / fuse putus 1 fasa; (3) belitan motor short partial; (4) sambungan kendor 1 terminal. Dampak unbalance: motor 3-fasa over-heat, derating sesuai NEMA MG 1: bila unbalance 5%, derating motor 25%. Cara cek: clamp meter di tiap fasa pada panel utama beban → bandingkan. Solusi: redistribusi beban 1-fasa rata di R/S/T. Standar PLN: unbalance tegangan ≤5%, unbalance arus ≤20%. Audit balance termasuk dalam preventive maintenance tahunan." },
+];
 
 function renderQuiz(module) {
   const list = document.getElementById('quiz-list');
