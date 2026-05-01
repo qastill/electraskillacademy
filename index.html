@@ -14066,19 +14066,19 @@ function renderQuiz(module) {
     return { ...q, opts: newOpts, a: newA >= 0 ? newA : q.a };
   };
 
-  // Pool builder:
-  //  - handcrafted ≥25 → pakai handcrafted saja (tema modul terjaga, tidak
-  //    bocor ke soal generik PUIL/Ohm dll yang tidak relevan)
-  //  - handcrafted <25 → top up dengan generic supaya tetap dapat 25 soal
-  //  - tidak ada handcrafted → fallback generic
+  // Pool builder (revised — fokus tema modul):
+  //  - handcrafted ada (1+ soal) → pakai HANDCRAFTED SAJA, tidak campur generic.
+  //    Soal generic QUIZ_TEMPLATE membahas Volt/Ohm/PUIL umum yang tidak relevan
+  //    dengan tema modul spesifik. Pencampuran membuat user dapat soal yang
+  //    keluar tema (mis. modul "Hukum Coulomb" dapat soal "Frekuensi 50 Hz").
+  //  - handcrafted kosong total → barulah fallback ke QUIZ_TEMPLATE generic
+  //    sebagai safety net (lebih baik daripada modul tanpa quiz sama sekali).
   const handcrafted = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : null;
   const generic = (typeof QUIZ_TEMPLATE !== 'undefined') ? QUIZ_TEMPLATE.map(q => ({ ...q, type: q.type || 'pg' })) : [];
 
   let pool;
-  if (handcrafted && handcrafted.length >= 25) {
+  if (handcrafted && handcrafted.length > 0) {
     pool = handcrafted.slice();
-  } else if (handcrafted && handcrafted.length > 0) {
-    pool = handcrafted.concat(generic);
   } else {
     pool = generic.slice();
   }
@@ -14102,12 +14102,13 @@ function renderQuiz(module) {
   }
   if (cleaned.length >= 5) pool = cleaned;
 
-  // Shuffle pool and take 25; pad if pool is small.
+  // Shuffle pool dan ambil sampai 25 soal — JANGAN padding dengan repetisi.
+  // Padding bikin soal sama muncul 2-3× di 1 quiz (UX jelek). Lebih baik
+  // tampilkan apa yang ada (mis. 10 soal kalau pool cuma 10), tetap dalam
+  // tema modul. Solusi jangka panjang: handcraft modul tipis ke 25+ soal.
   const shuffledPool = shuffleArr(pool);
-  let quiz = shuffledPool.slice(0, 25);
-  while (quiz.length < 25 && pool.length > 0) {
-    quiz.push(pool[quiz.length % pool.length]);
-  }
+  const quizSize = Math.min(25, shuffledPool.length);
+  let quiz = shuffledPool.slice(0, quizSize);
   // Now shuffle option positions within each question.
   quiz = quiz.map(shuffleOptions);
 
