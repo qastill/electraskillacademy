@@ -14629,38 +14629,8 @@ function renderQuiz(module) {
   // Stop any old quiz timer before re-rendering
   if (typeof window.esaStopQuizTimer === 'function') window.esaStopQuizTimer();
 
-  // Cooldown gate: kalau modul lagi cooldown, tampilkan layar tunggu, jangan render soal.
-  if (typeof window.esaGetModuleCooldownInfo === 'function' && module && module.code) {
-    const cd = window.esaGetModuleCooldownInfo(module.code);
-    if (cd.active) {
-      list.innerHTML = `
-        <div class="quiz-cooldown-screen" style="text-align:center;padding:80px 24px;background:rgba(220,90,90,0.06);border:1px solid rgba(220,90,90,0.2);border-radius:16px;">
-          <div style="font-size:3rem;margin-bottom:12px;">⏳</div>
-          <h3 style="font-size:1.4rem;font-weight:700;color:var(--rose);margin:0 0 8px;">Quiz Terkunci 1 Jam</h3>
-          <p style="color:var(--ink-mute);max-width:460px;margin:0 auto 18px;line-height:1.6;">
-            Kamu sudah 3× gagal berturut-turut di modul ini. Pelajari ulang Video & Materi (PPT) sebentar — quiz akan terbuka kembali otomatis.
-          </p>
-          <div id="quiz-cd-big" style="font-size:2.2rem;font-weight:700;color:var(--gold-dark);font-variant-numeric:tabular-nums;letter-spacing:0.05em;">${window.esaFormatCooldown(cd.remainingMs)}</div>
-          <div style="font-size:0.78rem;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.12em;margin-top:6px;">Sisa waktu</div>
-        </div>
-      `;
-      const big = document.getElementById('quiz-cd-big');
-      const tick = setInterval(() => {
-        const fresh = window.esaGetModuleCooldownInfo(module.code);
-        if (!fresh.active) {
-          clearInterval(tick);
-          renderQuiz(module);
-          return;
-        }
-        if (big) big.textContent = window.esaFormatCooldown(fresh.remainingMs);
-      }, 1000);
-      const answeredEl = document.getElementById('quiz-answered');
-      if (answeredEl) answeredEl.textContent = '0';
-      answeredCount = 0;
-      answeredQuestions = new Set();
-      return;
-    }
-  }
+  // Cooldown lock dihapus — peserta bebas mengulang quiz tanpa batas/penalty.
+  // Sebelumnya: 3× gagal → terkunci 1 jam. Sekarang akses quiz selalu terbuka.
 
   // Helper shuffle (Fisher-Yates)
   const shuffleArr = (arr) => {
@@ -14720,13 +14690,15 @@ function renderQuiz(module) {
   }
   if (cleaned.length >= 5) pool = cleaned;
 
-  // Shuffle pool dan ambil sampai 25 soal — JANGAN padding dengan repetisi.
-  // Padding bikin soal sama muncul 2-3× di 1 quiz (UX jelek). Lebih baik
-  // tampilkan apa yang ada (mis. 10 soal kalau pool cuma 10), tetap dalam
-  // tema modul. Solusi jangka panjang: handcraft modul tipis ke 25+ soal.
-  const shuffledPool = shuffleArr(pool);
-  const quizSize = Math.min(25, shuffledPool.length);
-  let quiz = shuffledPool.slice(0, quizSize);
+  // Quiz selalu set 25 soal. Kalau pool < 25, pad dengan re-shuffle pool
+  // berulang — soal mungkin terulang tapi posisinya acak. Modul tipis (handcraft
+  // < 25) tetap dapat 25 soal sesuai requirement.
+  const TARGET_QUIZ_SIZE = 25;
+  let shuffledPool = shuffleArr(pool);
+  while (shuffledPool.length < TARGET_QUIZ_SIZE && pool.length > 0) {
+    shuffledPool = shuffledPool.concat(shuffleArr(pool));
+  }
+  let quiz = shuffledPool.slice(0, TARGET_QUIZ_SIZE);
   // Now shuffle option positions within each question.
   quiz = quiz.map(shuffleOptions);
 
@@ -14791,20 +14763,28 @@ function answerQuiz(qIdx, selected, correct) {
   const item = document.getElementById(`quiz-${qIdx}`);
   if (!item) return;
 
+  // Peserta bebas mengubah jawaban — clear styling lama, evaluasi ulang
   const options = item.querySelectorAll('.quiz-option');
   options.forEach((opt, oi) => {
-    opt.disabled = true;
-    opt.style.pointerEvents = 'none';
-    if (oi === correct) opt.classList.add('correct');
-    else if (oi === selected) opt.classList.add('wrong');
+    opt.classList.remove('correct', 'wrong');
+    opt.disabled = false;
+    opt.style.pointerEvents = '';
+    if (oi === selected) {
+      opt.classList.add(oi === correct ? 'correct' : 'wrong');
+    } else if (oi === correct) {
+      // Tampilkan jawaban benar hanya jika pilihan saat ini salah
+      if (selected !== correct) opt.classList.add('correct');
+    }
   });
 
   item.classList.add('answered');
 
+  // Hitung hanya 1× per soal walau jawaban diganti-ganti
   if (!answeredQuestions.has(qIdx)) {
     answeredQuestions.add(qIdx);
     answeredCount++;
-    document.getElementById('quiz-answered').textContent = answeredCount;
+    const ansEl = document.getElementById('quiz-answered');
+    if (ansEl) ansEl.textContent = answeredCount;
   }
 }
 
@@ -15847,10 +15827,8 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const existing = state.modules[code] || { attempts: 0, bestScore: 0, failedAttempts: 0, cooldownUntil: null };
     const prevFailed = existing.failedAttempts || 0;
     const newFailedAttempts = passed ? 0 : (prevFailed + 1);
-    let cooldownUntil = passed ? null : (existing.cooldownUntil || null);
-    if (!passed && newFailedAttempts >= MAX_FAILED_ATTEMPTS) {
-      cooldownUntil = Date.now() + QUIZ_COOLDOWN_MS;
-    }
+    // Cooldown lock dinonaktifkan — selalu null, peserta bebas mengulang.
+    const cooldownUntil = null;
 
     state.modules[code] = {
       code: code,
@@ -15942,22 +15920,15 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
   function startQuizTimer() {
     stopQuizTimer();
-    quizDeadline = Date.now() + QUIZ_TIME_LIMIT_MS;
+    // Timer count-up (stopwatch) — tidak ada deadline, tidak auto-submit.
+    // Peserta bebas mengerjakan soal mana saja, lompat-lompat, ubah jawaban,
+    // dan submit kapan pun siap.
+    const startedAt = Date.now();
     const tick = () => {
       const el = document.getElementById('quiz-timer');
-      const remaining = quizDeadline - Date.now();
-      if (remaining <= 0) {
-        if (el) { el.textContent = '⏱ 00:00'; el.style.color = 'var(--rose)'; }
-        stopQuizTimer();
-        showToast('Waktu Habis', 'Quiz berakhir — sisa soal yang belum terjawab dihitung salah.', '⏰');
-        if (currentQuizModule) showModuleCompletion();
-        return;
-      }
       if (el) {
-        el.textContent = '⏱ ' + formatCooldown(remaining);
-        if (remaining < 60 * 1000) el.style.color = 'var(--rose)';
-        else if (remaining < 5 * 60 * 1000) el.style.color = '#d4823a';
-        else el.style.color = 'var(--gold-dark)';
+        el.textContent = '⏱ ' + formatCooldown(Date.now() - startedAt);
+        el.style.color = 'var(--gold-dark)';
       }
     };
     tick();
