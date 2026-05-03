@@ -7362,6 +7362,13 @@ body {
       </div>
     </div>
 
+    <style>
+      @media (max-width: 768px) {
+        .about-founder-card { grid-template-columns: 1fr !important; padding: 32px 24px !important; gap: 24px !important; text-align: center; }
+        .about-founder-card .founder-photo-wrap > div:first-child { width: 140px !important; height: 140px !important; font-size: 3rem !important; }
+        .about-founder-card .founder-bio { text-align: left; }
+      }
+    </style>
     <section class="about-hero" style="background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 50%, #0d0f1c 100%); padding: 80px 0 60px; min-height: 100vh;">
       <div class="about-inner" style="max-width: 1100px; margin: 0 auto; padding: 0 40px;">
         
@@ -7425,27 +7432,60 @@ body {
           </p>
         </div>
 
-        <!-- Team -->
+        <!-- Founder -->
         <div style="margin-bottom: 64px;">
-          <h2 style="font-size: 1.6rem; font-weight: 700; color: #f5f0e6; text-align: center; margin: 0 0 40px;">Tim Kami</h2>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
-            <div style="text-align: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px 24px;">
-              <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #d4af6a, #8b6914); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">⚡</div>
-              <h3 style="font-size: 1rem; font-weight: 700; color: #f0d080; margin: 0 0 6px;">Ahmad Rizky</h3>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">Co-Founder & CEO</div>
-              <p style="font-size: 0.82rem; color: rgba(245,240,230,0.7); line-height: 1.6; margin: 0;">15 tahun pengalaman di industri kelistrikan PLN. Mantan Senior Engineer Transmisi Jawa-Bali.</p>
+          <div style="text-align:center; margin-bottom: 40px;">
+            <div style="font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:#d4af6a; margin-bottom:12px;">— Founder & CEO —</div>
+            <h2 style="font-size: 1.6rem; font-weight: 700; color: #f5f0e6; margin: 0;">Pendiri Electra Academy</h2>
+          </div>
+
+          <div class="about-founder-card" style="background: linear-gradient(135deg, rgba(212,175,106,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(212,175,106,0.25); border-radius: 20px; padding: 48px; display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start;">
+            <!-- Photo / Avatar -->
+            <div class="founder-photo-wrap" style="text-align:center;">
+              <div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, #d4af6a, #8b6914); margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; font-size: 4.5rem; color: #1a1d2e; font-weight: 800; font-family: Georgia, serif; border: 3px solid rgba(212,175,106,0.4); box-shadow: 0 8px 24px rgba(0,0,0,0.4);">QH</div>
+              <div style="font-size: 0.7rem; color: rgba(245,240,230,0.5); text-transform: uppercase; letter-spacing: 0.12em;">Indramayu, Indonesia</div>
             </div>
-            <div style="text-align: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px 24px;">
-              <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #d4af6a, #8b6914); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🤖</div>
-              <h3 style="font-size: 1rem; font-weight: 700; color: #f0d080; margin: 0 0 6px;">Sari Dewi</h3>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">Co-Founder & CTO</div>
-              <p style="font-size: 0.82rem; color: rgba(245,240,230,0.7); line-height: 1.6; margin: 0;">Spesialis AI & EdTech. Sebelumnya memimpin tim engineering di startup pendidikan terkemuka Asia.</p>
-            </div>
-            <div style="text-align: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px 24px;">
-              <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #d4af6a, #8b6914); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🎓</div>
-              <h3 style="font-size: 1rem; font-weight: 700; color: #f0d080; margin: 0 0 6px;">Budi Santoso</h3>
-              <div style="font-size: 0.78rem; color: rgba(245,240,230,0.55); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">Head of Curriculum</div>
-              <p style="font-size: 0.82rem; color: rgba(245,240,230,0.7); line-height: 1.6; margin: 0;">Mantan instruktur PUSDIKLAT PLN. Perancang kurikulum kelistrikan untuk 3 politeknik negeri.</p>
+
+            <!-- Bio -->
+            <div class="founder-bio">
+              <h3 style="font-size: 1.5rem; font-weight: 700; color: #f0d080; margin: 0 0 6px;">Qashtalani Haramaini, Ph.D.</h3>
+              <div style="font-size: 0.85rem; color: rgba(245,240,230,0.7); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 20px; font-weight: 600;">Founder, Electra Academy</div>
+
+              <p style="color: rgba(245,240,230,0.82); line-height: 1.75; margin: 0 0 16px; font-size: 0.96rem;">
+                Praktisi sektor kelistrikan dengan <strong style="color:#f0d080;">10+ tahun pengalaman di PLN</strong>, saat ini menjabat sebagai <strong style="color:#f0d080;">Energy Transaction Manager</strong> di PLN UP3 Indramayu. Fokus pada efisiensi jaringan distribusi, network reliability, serta penurunan technical &amp; non-technical losses.
+              </p>
+
+              <p style="color: rgba(245,240,230,0.82); line-height: 1.75; margin: 0 0 24px; font-size: 0.96rem;">
+                Lulusan <strong style="color:#f0d080;">S1, S2, dan S3 Teknik Elektro Universitas Indonesia</strong>, dengan minat riset di persimpangan AI, electric vehicles, crypto-energy systems, dan data-driven decision-making untuk transformasi sistem energi berkelanjutan.
+              </p>
+
+              <!-- Achievements -->
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px;">
+                <div style="font-size: 0.75rem; color: #d4af6a; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 14px; font-weight: 700;">Kontribusi &amp; Rekam Jejak</div>
+                <ul style="list-style: none; padding: 0; margin: 0; color: rgba(245,240,230,0.8); font-size: 0.92rem; line-height: 1.8;">
+                  <li style="padding: 6px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: #d4af6a; font-weight: 700;">⚡</span>
+                    <strong style="color:#f0d080;">8+ publikasi ilmiah</strong> di IEEE, IOP, Elsevier, dan JES — mencakup smart metering, solar PV, load forecasting, hingga EnerBit (monetisasi surplus listrik via Bitcoin).
+                  </li>
+                  <li style="padding: 6px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: #d4af6a; font-weight: 700;">⚡</span>
+                    <strong style="color:#f0d080;">Pembicara konferensi internasional:</strong> Kuala Lumpur, Bali, Istanbul, dan Nagoya.
+                  </li>
+                  <li style="padding: 6px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: #d4af6a; font-weight: 700;">⚡</span>
+                    <strong style="color:#f0d080;">Tersertifikasi BNSP/ESDM</strong> sebagai Assistant Manager Distribusi, Energy Transaction Supervisor, dan Electrical Technician.
+                  </li>
+                  <li style="padding: 6px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: #d4af6a; font-weight: 700;">⚡</span>
+                    <strong style="color:#f0d080;">IELTS 6.5</strong> (2025).
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Mission Quote -->
+              <div style="border-left: 3px solid #d4af6a; padding: 8px 0 8px 20px; color: rgba(245,240,230,0.85); line-height: 1.75; font-style: italic; font-size: 0.94rem;">
+                Mendirikan Electra Academy untuk menjembatani kesenjangan antara dunia industri kelistrikan dan generasi engineer berikutnya — memberikan jalur belajar praktis, terstruktur, dan tahan terhadap disrupsi AI.
+              </div>
             </div>
           </div>
         </div>
