@@ -3856,6 +3856,8 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+@keyframes esa-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes esa-fade-in { from { opacity: 0; } to { opacity: 1; } }
 
 .purchase-modal-inner {
   background: white;
@@ -15559,10 +15561,34 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     <!-- NIK kept hidden as backup (optional) -->
     <input type="hidden" id="esa-profile-nik" value="">
 
+    <!-- Referral (opsional) — tracking kode ajakan dari user lain -->
+    <div class="esa-form-group" id="esa-referral-group">
+      <label class="esa-form-label">Email yang Mengajak <span class="opt">(opsional)</span></label>
+      <input type="email" id="esa-profile-referral" class="esa-form-input" placeholder="Email teman yang merekomendasikan">
+    </div>
+
+    <!-- Terms of Service — wajib dicentang sebelum lanjut -->
+    <div id="esa-tos-wrap" style="display:flex;align-items:flex-start;gap:10px;margin:18px 0 12px;padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <input type="checkbox" id="esa-tos-checkbox" style="margin-top:3px;width:18px;height:18px;cursor:pointer;accent-color:#d4af6a;">
+      <label for="esa-tos-checkbox" style="font-size:0.78rem;color:rgba(245,240,230,0.78);line-height:1.55;cursor:pointer;">
+        Saya menyetujui <a href="#" onclick="esaShowTos();return false;" style="color:#d4af6a;text-decoration:underline;">Syarat &amp; Ketentuan</a> dan <a href="#" onclick="esaShowPrivacy();return false;" style="color:#d4af6a;text-decoration:underline;">Kebijakan Privasi</a> Electra Skill Academy. Data saya dipakai untuk: cetak sertifikat, komunikasi pelatihan, dan rekomendasi karir (job matching).
+      </label>
+    </div>
+
     <button class="esa-btn-primary" id="esa-btn-primary" onclick="esaSaveProfile()">Masuk & Mulai Belajar →</button>
 
+    <!-- Magic link login — alternatif kalau user tidak punya akun OAuth -->
+    <div id="esa-magic-link-wrap" style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);">
+      <div style="font-size:0.74rem;color:rgba(245,240,230,0.55);text-align:center;margin-bottom:10px;">— atau login tanpa password —</div>
+      <button type="button" id="esa-magic-link-btn" onclick="esaSendMagicLink()" style="width:100%;padding:11px 16px;background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.5);border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        Kirim Magic Link ke Email
+      </button>
+      <div id="esa-magic-link-msg" style="font-size:0.74rem;text-align:center;margin-top:8px;min-height:1em;"></div>
+    </div>
+
     <div class="esa-modal-footer-note">
-      Data peserta disimpan di perangkat Anda. Bisa diganti via menu "Ganti Peserta".
+      Data peserta disimpan di perangkat Anda &amp; Supabase. Bisa diganti via menu "Ganti Peserta".
     </div>
   </div>
 </div>
@@ -15633,13 +15659,27 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
 
   // Member status: aktif kalau (a) sudah bayar atau (b) pakai promo code valid
-  // Dipakai global oleh profile modal, gate akses modul, badge di nav, dll.
+  // — DAN subscription belum expired. Banned otomatis non-aktif.
   function isMemberActive() {
     if (!state.profile) return false;
+    if (state.profile.isBanned === true) return false;
+    // Cek expiry — kalau ada subscription_expires_at dan sudah lewat, expired.
+    if (state.profile.subscriptionExpiresAt) {
+      const exp = new Date(state.profile.subscriptionExpiresAt);
+      if (!isNaN(exp.getTime()) && exp < new Date()) return false;
+    }
     if (state.profile.isPaid === true) return true;
     return hasFullAccess();
   }
   window.esaIsMemberActive = isMemberActive;
+  // Sisa hari subscription (null kalau no expiry / sudah expired / not active)
+  window.esaSubscriptionDaysLeft = function() {
+    if (!state.profile || !state.profile.subscriptionExpiresAt) return null;
+    const exp = new Date(state.profile.subscriptionExpiresAt);
+    if (isNaN(exp.getTime())) return null;
+    const days = Math.floor((exp - new Date()) / (24*60*60*1000));
+    return days < 0 ? 0 : days;
+  };
   window.esaActivationMethod = function() {
     if (!state.profile) return null;
     if (state.profile.isPaid) return 'payment';
@@ -15647,21 +15687,72 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     return null;
   };
 
-  // Aktivasi via promo code dari modal "Belum Aktif". Return boolean sukses.
-  function activateWithPromo(rawCode) {
+  // Aktivasi via promo code — call server /api/redeem-promo (atomic + quota
+  // check). Fallback ke client-only kalau endpoint belum ready / belum di-set
+  // env vars di Vercel.
+  async function activateWithPromo(rawCode) {
     const norm = normalizePromoCode(rawCode);
-    if (!norm || !VALID_PROMO_CODES[norm]) {
-      return { ok: false, error: `Kode "${rawCode}" tidak valid.` };
+    if (!norm) return { ok: false, error: 'Masukkan kode aktivasi.' };
+    const email = state.profile && state.profile.email;
+    if (!email) return { ok: false, error: 'Login dulu sebelum redeem kode.' };
+
+    // Coba server-side redeem dulu (atomic)
+    try {
+      const r = await fetch('/api/redeem-promo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: norm, email: email })
+      });
+      const data = await r.json();
+      if (r.ok && data.ok) {
+        // Server sukses redeem — update state lokal sesuai response
+        state.promoCode = data.code;
+        if (!state.profile) state.profile = {};
+        state.profile.activatedAt = new Date().toISOString();
+        state.profile.activationMethod = 'promo:' + data.code;
+        if (data.expires_at) state.profile.subscriptionExpiresAt = data.expires_at;
+        saveData(state);
+        // Sync ulang participant — server sudah update tapi local profile
+        // mungkin punya field lain yg perlu di-flush.
+        if (typeof window.esaSyncParticipant === 'function') {
+          window.esaSyncParticipant(state.profile, state.promoCode);
+        }
+        return {
+          ok: true,
+          label: data.label,
+          remaining_quota: data.remaining_quota,
+          expires_at: data.expires_at
+        };
+      }
+      // Server return error spesifik
+      if (data.error) {
+        const errorMsgs = {
+          'not_found': 'Kode tidak valid atau sudah dinonaktifkan.',
+          'expired': data.message || 'Kode sudah expired.',
+          'quota_exceeded': data.message || 'Kuota kode sudah habis.',
+          'domain_restricted': data.message || 'Email tidak sesuai dengan restriksi kode.',
+          'already_redeemed': 'Anda sudah pernah pakai kode ini sebelumnya.'
+        };
+        return { ok: false, error: errorMsgs[data.error] || data.message || 'Aktivasi gagal.' };
+      }
+      // Server unreachable / not configured → fallback ke client-only
+      throw new Error(data.error || 'server_unreachable');
+    } catch(e) {
+      console.warn('[ESA] /api/redeem-promo gagal, fallback client-only:', e.message);
+      // Fallback: validasi client-side dgn VALID_PROMO_CODES (legacy behavior)
+      if (!VALID_PROMO_CODES[norm]) {
+        return { ok: false, error: `Kode "${rawCode}" tidak valid.` };
+      }
+      state.promoCode = norm;
+      if (!state.profile) state.profile = {};
+      state.profile.activatedAt = new Date().toISOString();
+      state.profile.activationMethod = 'promo:' + norm;
+      saveData(state);
+      if (typeof window.esaSyncParticipant === 'function') {
+        window.esaSyncParticipant(state.profile, state.promoCode);
+      }
+      return { ok: true, label: VALID_PROMO_CODES[norm].label, fallback: true };
     }
-    state.promoCode = norm;
-    if (!state.profile) state.profile = {};
-    state.profile.activatedAt = new Date().toISOString();
-    state.profile.activationMethod = 'promo:' + norm;
-    saveData(state);
-    if (typeof window.esaSyncParticipant === 'function') {
-      window.esaSyncParticipant(state.profile, state.promoCode);
-    }
-    return { ok: true, label: VALID_PROMO_CODES[norm].label };
   }
   window.esaActivateWithPromo = activateWithPromo;
 
@@ -15720,6 +15811,90 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   function needsOnboarding() {
     return !state.profile || !state.profile.name;
   }
+
+  // ---------- ToS / Privacy / Magic Link helpers ----------
+  function showInfoModal(title, html) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,24,0.92);z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);';
+    wrap.onclick = (e) => { if (e.target === wrap) wrap.remove(); };
+    wrap.innerHTML = '<div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:16px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:32px 28px;color:#f5f0e6;position:relative;">'+
+      '<button onclick="this.parentElement.parentElement.remove()" style="position:absolute;top:14px;right:18px;background:none;border:none;color:#6b7280;font-size:22px;cursor:pointer;">×</button>'+
+      '<h2 style="font-size:1.2rem;font-weight:700;margin:0 0 14px;color:#f0d080;">'+title+'</h2>'+
+      '<div style="font-size:0.88rem;line-height:1.7;color:rgba(245,240,230,0.85);">'+html+'</div>'+
+      '</div>';
+    document.body.appendChild(wrap);
+  }
+  window.esaShowTos = function(){
+    showInfoModal('Syarat &amp; Ketentuan',
+      '<p><strong>1. Penerimaan Layanan.</strong> Dengan mendaftar, Anda menyetujui pemakaian layanan Electra Skill Academy untuk kepentingan pelatihan kelistrikan profesional.</p>'+
+      '<p><strong>2. Akun &amp; Akses.</strong> Akses modul berbayar (semua level dari L1 hingga L6) memerlukan aktivasi via pembayaran atau kode promo yang valid. Akun bisa dibatalkan jika ditemukan pelanggaran (sharing kredensial, copy-paste sertifikat tanpa hak, dll).</p>'+
+      '<p><strong>3. Sertifikat.</strong> Sertifikat hanya diterbitkan atas nama yang sesuai dengan profil akun. Anda bertanggung jawab atas keakuratan data yang diisi.</p>'+
+      '<p><strong>4. Pembayaran &amp; Refund.</strong> Pembayaran tidak dapat di-refund kecuali ada kesalahan sistem. Promo code memiliki expiry &amp; quota.</p>'+
+      '<p><strong>5. AI Tutor.</strong> Setiap user memiliki kuota 50 pertanyaan AI Tutor. Hubungi admin untuk perpanjangan.</p>'+
+      '<p><strong>6. Konten.</strong> Materi belajar, video, slide, dan quiz adalah hak cipta Electra Skill Academy. Dilarang redistribusi tanpa izin tertulis.</p>'+
+      '<p><strong>7. Perubahan.</strong> Syarat dapat berubah sewaktu-waktu. Pemberitahuan via email akan dikirim untuk perubahan material.</p>'+
+      '<p style="font-size:0.78rem;color:rgba(245,240,230,0.55);margin-top:18px;">Terakhir diperbarui: '+new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+'. Hubungi admin@electraacademy.com untuk pertanyaan.</p>'
+    );
+  };
+  window.esaShowPrivacy = function(){
+    showInfoModal('Kebijakan Privasi',
+      '<p><strong>Data yang Kami Kumpulkan.</strong> Email, nama lengkap, nomor HP/WhatsApp, kota (opsional), provider login (Google/LinkedIn/GitHub), progres modul &amp; quiz score, IP &amp; user-agent saat login (untuk audit keamanan).</p>'+
+      '<p><strong>Pemakaian Data.</strong> Data dipakai untuk: (a) cetak sertifikat atas nama Anda, (b) komunikasi pelatihan via email/WA, (c) job matching ke mitra industri (opt-in), (d) audit keamanan &amp; pencegahan penyalahgunaan.</p>'+
+      '<p><strong>Penyimpanan.</strong> Data disimpan di Supabase (server di Singapore) dengan enkripsi at-rest. Backup harian. Data lokal Anda di browser dapat dihapus kapan saja via menu "Ganti Peserta".</p>'+
+      '<p><strong>Pihak Ketiga.</strong> Kami pakai: Google/LinkedIn/GitHub OAuth (otentikasi), Supabase (database), DeepSeek/Groq (AI Tutor — query Anda di-anonim sebelum dikirim), Vercel (hosting). Tidak ada data dijual ke pihak ketiga.</p>'+
+      '<p><strong>Hak Anda.</strong> Anda dapat: (a) minta export semua data Anda, (b) minta penghapusan akun, (c) opt-out dari job matching. Email admin@electraacademy.com untuk request.</p>'+
+      '<p><strong>Cookies/localStorage.</strong> Kami pakai localStorage untuk menyimpan: profil, progres modul, sertifikat, kuota AI. Tidak dipakai untuk tracking lintas-situs.</p>'+
+      '<p style="font-size:0.78rem;color:rgba(245,240,230,0.55);margin-top:18px;">Sesuai UU PDP No. 27/2022. Update terakhir: '+new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+'.</p>'
+    );
+  };
+
+  // Magic-link login via Supabase Auth OTP — alternatif kalau user tidak
+  // mau pakai OAuth provider. Email diisi di field email manual.
+  window.esaSendMagicLink = async function(){
+    const emailInput = document.getElementById('esa-profile-email');
+    const msgEl = document.getElementById('esa-magic-link-msg');
+    const btn = document.getElementById('esa-magic-link-btn');
+    if (!emailInput || !msgEl || !btn) return;
+    const email = emailInput.value.trim();
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      msgEl.textContent = '✗ Isi field email dulu di atas, lalu klik tombol ini.';
+      msgEl.style.color = '#ef9090';
+      emailInput.focus();
+      return;
+    }
+    if (!window.__esaSb) {
+      msgEl.textContent = '✗ Supabase belum ter-init. Refresh halaman.';
+      msgEl.style.color = '#ef9090';
+      return;
+    }
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" style="animation:esa-spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="40 60"/></svg> Mengirim…';
+    msgEl.textContent = '';
+    try {
+      const r = await window.__esaSb.auth.signInWithOtp({
+        email: email,
+        options: {
+          emailRedirectTo: window.location.origin + window.location.pathname,
+          shouldCreateUser: true
+        }
+      });
+      if (r.error) throw r.error;
+      msgEl.innerHTML = '✓ Cek email Anda — link login dikirim ke <strong>'+email+'</strong>. Klik link → otomatis login.';
+      msgEl.style.color = '#86efac';
+      btn.style.display = 'none';
+      // Audit
+      if (typeof window.esaLogEvent === 'function') {
+        window.esaLogEvent('login_success', { email: email, provider: 'magic_link', metadata: { stage: 'requested' } });
+      }
+    } catch(e) {
+      msgEl.textContent = '✗ Gagal kirim: ' + (e.message || 'unknown error');
+      msgEl.style.color = '#ef9090';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> Kirim Magic Link ke Email';
+    }
+  };
 
   function showOnboardingModal() {
     const modal = document.getElementById('esa-onboarding-modal');
@@ -15815,6 +15990,27 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       return;
     }
 
+    // Wajib centang ToS
+    const tosBox = document.getElementById('esa-tos-checkbox');
+    if (tosBox && !tosBox.checked) {
+      alert('Silakan centang persetujuan Syarat & Ketentuan terlebih dahulu.');
+      tosBox.focus();
+      return;
+    }
+
+    // Referral (opsional, validate email)
+    const referralEl = document.getElementById('esa-profile-referral');
+    let referralEmail = referralEl ? referralEl.value.trim() : '';
+    if (referralEmail && (!referralEmail.includes('@') || !referralEmail.includes('.'))) {
+      alert('Email referral tidak valid. Kosongkan kalau tidak punya.');
+      referralEl.focus();
+      return;
+    }
+    if (referralEmail && referralEmail.toLowerCase() === email.toLowerCase()) {
+      alert('Email referral tidak boleh sama dengan email Anda sendiri.');
+      return;
+    }
+
     // Validate promo code if entered
     const promoNorm = normalizePromoCode(promoRaw);
     if (promoRaw && !VALID_PROMO_CODES[promoNorm]) {
@@ -15832,9 +16028,17 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       phone: phone,
       nik: nik.trim() || '-',
       city: city || '-',
-      joinDate: new Date().toISOString(),
+      joinDate: state.profile && state.profile.joinDate ? state.profile.joinDate : new Date().toISOString(),
       avatarInitials: name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase(),
-      authMethod: state.profile && state.profile.authMethod === 'google' ? 'google' : 'manual'
+      // Preserve provider info dari OAuth flow (handleCred / Supabase OAuth)
+      authMethod: (state.profile && state.profile.authMethod) || 'manual',
+      googleSub: state.profile && state.profile.googleSub,
+      picture: state.profile && state.profile.picture,
+      activatedAt: state.profile && state.profile.activatedAt,
+      activationMethod: state.profile && state.profile.activationMethod,
+      // ToS & referral
+      tosAcceptedAt: new Date().toISOString(),
+      referredByEmail: referralEmail.toLowerCase() || null
     };
 
     // Apply promo code if valid
@@ -15946,10 +16150,35 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   window.esaCloseLoginModal = closeLoginModal;
 
   // Logout / Ganti Peserta
+  // Logout — HANYA hapus auth token, biarkan progress + sertifikat
+  // (state.modules, state.levels, state.xp). Saat user login lagi nanti,
+  // progress lokal masih ada + akan re-sync ke server.
   function logout() {
-    if (!confirm('Yakin ingin keluar & ganti peserta?\n\nSemua progres dan sertifikat yang tersimpan di perangkat ini akan terhapus.')) return;
-    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-    try { localStorage.removeItem(POOL_KEY); } catch(e) {}
+    if (!confirm('Keluar dari akun?\n\nProgres & sertifikat tetap aman tersimpan di perangkat ini.')) return;
+    // Audit log (best-effort, fire-and-forget)
+    if (typeof window.esaLogEvent === 'function' && state.profile && state.profile.email) {
+      window.esaLogEvent('logout', { email: state.profile.email });
+    }
+    // HAPUS: cuma kredensial auth, BUKAN progress
+    try { localStorage.removeItem('esa_logged_in_user'); } catch(e) {}
+    try {
+      // Jangan reset state.profile sampai habis — cukup hapus sensitive auth fields
+      // supaya progress + xp + sertifikat tetap utuh saat login ulang.
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      if (data.profile) {
+        delete data.profile.googleSub;
+        delete data.profile.picture;
+        // authMethod biarkan supaya UI tahu provider terakhir
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch(e) {}
+    // Sign-out Supabase Auth (LinkedIn/GitHub session)
+    try {
+      const sb = window.__esaSb;
+      if (sb && sb.auth && typeof sb.auth.signOut === 'function') {
+        sb.auth.signOut().catch(()=>{});
+      }
+    } catch(e) {}
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
       try { google.accounts.id.disableAutoSelect(); } catch(e) {}
     }
@@ -17365,13 +17594,13 @@ function buildModal(){
   var linkedinBtn=document.createElement("button");
   linkedinBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="#fff"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43c-1.14 0-2.06-.93-2.06-2.06S4.2 3.3 5.34 3.3s2.06.93 2.06 2.07c0 1.13-.92 2.06-2.06 2.06zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.99 0 1.78-.77 1.78-1.72V1.72C24 .77 23.21 0 22.22 0z"/></svg>Masuk dengan LinkedIn';
   styleOAuthBtn(linkedinBtn,'#0a66c2','#fff');
-  linkedinBtn.onclick=function(){triggerSupabaseOAuth('linkedin_oidc','LinkedIn');};
+  linkedinBtn.onclick=function(e){triggerSupabaseOAuth('linkedin_oidc','LinkedIn',e);};
 
   // ---- GitHub (Supabase OAuth — provider 'github') ----
   var githubBtn=document.createElement("button");
   githubBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="#fff"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.55v-2.16c-3.2.7-3.87-1.36-3.87-1.36-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.24 3.34.95.1-.74.4-1.24.73-1.53-2.55-.29-5.23-1.27-5.23-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.16 1.17a11 11 0 0 1 5.74 0c2.2-1.48 3.16-1.17 3.16-1.17.62 1.57.23 2.73.11 3.02.73.8 1.18 1.82 1.18 3.07 0 4.39-2.69 5.36-5.25 5.64.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>Masuk dengan GitHub';
   styleOAuthBtn(githubBtn,'#24292f','#fff');
-  githubBtn.onclick=function(){triggerSupabaseOAuth('github','GitHub');};
+  githubBtn.onclick=function(e){triggerSupabaseOAuth('github','GitHub',e);};
 
   var gsiDiv=document.createElement("div");gsiDiv.id="esa-auth-gsi-btn";gsiDiv.style.marginBottom="12px";gsiDiv.style.display="none";
 
@@ -17421,25 +17650,63 @@ function getSb(){
   return window.__esaSb;
 }
 
-function triggerSupabaseOAuth(provider, label){
+function triggerSupabaseOAuth(provider, label, evt){
   var sb=getSb();
   if(!sb){
     alert('Supabase belum dikonfigurasi. Login '+label+' butuh Supabase URL/anon key di supabase-config.js.');
     return;
   }
-  // Redirect kembali ke halaman sekarang — Supabase akan attach #access_token=
-  // di URL setelah user authorize, lalu detectSessionInUrl ambil & simpan
-  // session di localStorage. handleSupabaseSession() akan auto-process.
+
+  // Loading state — disable semua tombol login + spinner di tombol yg di-klik
+  var modal = document.getElementById('esa-auth-modal');
+  if(modal){
+    var btns = modal.querySelectorAll('button');
+    btns.forEach(function(b){
+      if(!b.dataset.origText) b.dataset.origText = b.innerHTML;
+      b.disabled = true;
+      b.style.opacity = '0.55';
+      b.style.cursor = 'wait';
+    });
+    var clicked = (evt && evt.currentTarget) || (window.event && window.event.currentTarget) || null;
+    if(clicked){
+      clicked.innerHTML = '<span style="display:inline-block;animation:esa-spin 1s linear infinite;margin-right:10px;">⏳</span> Mengarahkan ke '+label+'...';
+      clicked.style.opacity = '1';
+    }
+  }
+
+  // Audit log — capture intent
+  if(typeof window.esaLogEvent==='function'){
+    window.esaLogEvent('login_success', { provider: provider, metadata: { stage: 'redirect_initiated' } });
+  }
+
   sb.auth.signInWithOAuth({
     provider: provider,
     options: { redirectTo: window.location.origin + window.location.pathname }
   }).then(function(r){
     if(r.error){
+      // Restore tombol
+      if(modal){
+        modal.querySelectorAll('button').forEach(function(b){
+          b.disabled = false;
+          b.style.opacity = '1';
+          b.style.cursor = 'pointer';
+          if(b.dataset.origText) b.innerHTML = b.dataset.origText;
+        });
+      }
+      if(typeof window.esaLogEvent==='function'){
+        window.esaLogEvent('login_failed', { provider: provider, metadata: { error: r.error.message } });
+      }
       alert('Login '+label+' gagal: '+r.error.message+'\n\nPastikan provider "'+provider+'" sudah enabled di Supabase Dashboard → Authentication → Providers.');
     }
-    // Sukses: browser akan redirect ke provider, jadi kode di bawah ini
-    // tidak pernah dieksekusi (page navigation).
   }).catch(function(e){
+    if(modal){
+      modal.querySelectorAll('button').forEach(function(b){
+        b.disabled = false;
+        b.style.opacity = '1';
+        b.style.cursor = 'pointer';
+        if(b.dataset.origText) b.innerHTML = b.dataset.origText;
+      });
+    }
     alert('Login '+label+' error: '+e.message);
   });
 }
@@ -17455,7 +17722,12 @@ function handleCred(resp){
     var name=pl.name||pl.email;
     var email=pl.email;
     var picture=pl.picture||"";
-    saveUser({name:name,email:email,picture:picture,loggedAt:Date.now()});
+    saveUser({name:name,email:email,picture:picture,loggedAt:Date.now(),provider:'google'});
+
+    // Audit log — login Google berhasil
+    if(typeof window.esaLogEvent==='function'){
+      window.esaLogEvent('login_success', { email: email, provider: 'google', metadata: { stage: 'jwt_verified' } });
+    }
 
     // Persist juga ke state utama (esa_data_v1) supaya user dianggap logged-in
     // di seluruh aplikasi (gates, sertifikat, progress) tanpa harus isi
@@ -17531,11 +17803,19 @@ function updateNavUser(){
 
 function doLogout(){
   var u=getUser();
-  if(confirm("Keluar dari "+(u&&u.name?u.name:"akun")+"?")){
-    localStorage.removeItem(K);
-    if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
-    location.reload();
+  if(!confirm("Keluar dari "+(u&&u.name?u.name:"akun")+"?\n\nProgres & sertifikat tetap aman."))return;
+  // Audit log
+  if(typeof window.esaLogEvent==='function'&&u&&u.email){
+    window.esaLogEvent('logout',{email:u.email});
   }
+  localStorage.removeItem(K);
+  // Sign-out Supabase OAuth session juga
+  try{
+    var sb=window.__esaSb;
+    if(sb&&sb.auth&&typeof sb.auth.signOut==='function'){sb.auth.signOut().catch(function(){});}
+  }catch(e){}
+  if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
+  location.reload();
 }
 
 // ========== PROFILE MODAL ==========
@@ -17665,16 +17945,49 @@ function showProfileModal(){
   // Member status badge — aktif (sudah bayar / pakai promo) vs belum aktif
   var isActive = (typeof window.esaIsMemberActive==='function') ? window.esaIsMemberActive() : false;
   var actMethod = (typeof window.esaActivationMethod==='function') ? window.esaActivationMethod() : null;
+
+  // Subscription expiry — tampilkan sisa hari kalau aktif & ada expiry
+  var expiryHTML = '';
+  if (isActive && p.subscriptionExpiresAt) {
+    var expDate = new Date(p.subscriptionExpiresAt);
+    var now = new Date();
+    var daysLeft = Math.floor((expDate - now) / (24*60*60*1000));
+    if (daysLeft < 0) {
+      // Sudah expired — override badge
+      isActive = false;
+    } else {
+      var color = daysLeft <= 30 ? '#fbbf24' : '#86efac';
+      var formatted = expDate.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+      expiryHTML = '<div style="font-size:0.7rem;color:'+color+';margin-top:4px;font-weight:600;">⏱ '+
+        (daysLeft <= 30 ? 'Expire dalam '+daysLeft+' hari · ' : 'Berlaku sampai ')+formatted+'</div>';
+    }
+  }
+
+  var bannedBadge = '';
+  if (p.isBanned || p.is_banned) {
+    bannedBadge = '<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(239,68,68,0.25);border:1px solid rgba(239,68,68,0.6);color:#fca5a5;font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-top:6px;">⛔ Akun Disuspend</div>';
+  }
+
   var statusBadge = isActive
     ? '<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);color:#86efac;font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-top:6px;">'+
         '<span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.6);"></span>'+
         'Member Aktif'+
         (actMethod && actMethod.indexOf('promo:')===0 ? ' · '+actMethod.slice(6) : (actMethod==='payment' ? ' · Berbayar' : ''))+
-      '</div>'
+      '</div>'+expiryHTML
     : '<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(239,107,107,0.15);border:1px solid rgba(239,107,107,0.4);color:#ef9090;font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-top:6px;cursor:pointer;" onclick="esaCloseProfileModal&&esaCloseProfileModal();esaShowActivationModal&&esaShowActivationModal();" title="Klik untuk aktivasi">'+
         '<span style="width:8px;height:8px;border-radius:50%;background:#ef6b6b;"></span>'+
         'Belum Aktif · Klik untuk aktivasi'+
       '</div>';
+  statusBadge = bannedBadge + statusBadge;
+
+  // Verified Admin badge — kalau email Anda di-mark admin di Supabase
+  var verifiedAdmin = (p.isAdmin || (u.email && u.email.endsWith('@electraacademy.com')));
+  var adminBadge = verifiedAdmin
+    ? '<div style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;background:rgba(59,130,246,0.18);border:1px solid rgba(59,130,246,0.4);color:#93c5fd;font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-top:4px;margin-left:6px;" title="Verified Admin">'+
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/></svg>'+
+        'Admin'+
+      '</div>'
+    : '';
 
   overlay.innerHTML='<div onclick="event.stopPropagation()" style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:16px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;color:#f5f0e6;box-shadow:0 30px 80px rgba(0,0,0,0.5);">'+
     // Header
@@ -17682,7 +17995,7 @@ function showProfileModal(){
       avatarHTML+
       '<div style="flex:1;min-width:0;">'+
         '<div style="font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:#c9a96e;font-weight:700;margin-bottom:4px;">Profil Peserta</div>'+
-        '<div style="font-size:1.2rem;font-weight:700;color:#f5f0e6;line-height:1.3;margin-bottom:2px;">'+escapeHtmlEsa(u.name||p.name||'-')+'</div>'+
+        '<div style="font-size:1.2rem;font-weight:700;color:#f5f0e6;line-height:1.3;margin-bottom:2px;">'+escapeHtmlEsa(u.name||p.name||'-')+adminBadge+'</div>'+
         '<div style="font-size:0.78rem;color:rgba(245,240,230,0.6);">'+escapeHtmlEsa(u.email||p.email||'-')+'</div>'+
         statusBadge+
       '</div>'+
@@ -17869,22 +18182,46 @@ function closeActivationModal(){
   var m=document.getElementById("esa-activation-modal");
   if(m){m.remove();}
 }
-function submitActivation(){
+async function submitActivation(){
   var input=document.getElementById('esa-activate-code');
   var msg=document.getElementById('esa-activate-msg');
+  var btn=document.querySelector('#esa-activation-modal button[onclick*="esaSubmitActivation"]');
   if(!input||!msg)return;
   var code=input.value.trim();
   if(!code){msg.textContent='Masukkan kode aktivasi terlebih dahulu.';msg.style.color='#ef9090';return;}
   if(typeof window.esaActivateWithPromo!=='function'){msg.textContent='Sistem belum siap, refresh halaman.';return;}
-  var r=window.esaActivateWithPromo(code);
-  if(!r.ok){msg.textContent=r.error;msg.style.color='#ef9090';return;}
-  msg.textContent='✓ Berhasil! '+r.label;msg.style.color='#86efac';
-  setTimeout(function(){
-    closeActivationModal();
-    if(typeof window.esaToast==='function'){window.esaToast('Member Aktif','Selamat! Akses penuh terbuka 🔓','🎉');}
-    // Resume pending view kalau ada
-    if(window._esaPending&&window._origSV){var v=window._esaPending;window._esaPending=null;window._origSV(v);}
-  },800);
+
+  // Loading state — disable button + spinner
+  var originalText='';
+  if(btn){
+    originalText=btn.textContent;
+    btn.disabled=true;
+    btn.style.opacity='0.6';
+    btn.innerHTML='<span style="display:inline-block;animation:esa-spin 1s linear infinite;">⏳</span> Memverifikasi...';
+  }
+  msg.textContent='Cek kode di server...';
+  msg.style.color='rgba(245,240,230,0.5)';
+
+  try{
+    var r=await window.esaActivateWithPromo(code);
+    if(!r.ok){
+      msg.textContent=r.error;msg.style.color='#ef9090';
+      if(btn){btn.disabled=false;btn.style.opacity='1';btn.textContent=originalText||'Aktivasi Sekarang';}
+      return;
+    }
+    var quotaInfo=r.remaining_quota!=null?' Sisa kuota: '+r.remaining_quota:'';
+    var expiryInfo=r.expires_at?'<br><small style="opacity:0.7">Berlaku sampai: '+new Date(r.expires_at).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+'</small>':'';
+    msg.innerHTML='✓ Berhasil! '+r.label+'.'+quotaInfo+expiryInfo;msg.style.color='#86efac';
+    setTimeout(function(){
+      closeActivationModal();
+      if(typeof window.esaToast==='function'){window.esaToast('Member Aktif','Selamat! Akses penuh terbuka 🔓','🎉');}
+      // Resume pending view kalau ada
+      if(window._esaPending&&window._origSV){var v=window._esaPending;window._esaPending=null;window._origSV(v);}
+    },1200);
+  }catch(e){
+    msg.textContent='Error: '+(e.message||e);msg.style.color='#ef9090';
+    if(btn){btn.disabled=false;btn.style.opacity='1';btn.textContent=originalText||'Aktivasi Sekarang';}
+  }
 }
 window.esaShowActivationModal=buildActivationModal;
 window.esaCloseActivationModal=closeActivationModal;
@@ -17906,13 +18243,18 @@ function handleSupabaseAuthEvent(event, session){
 
   saveUser({name:name,email:email,picture:picture,loggedAt:Date.now(),provider:providerId});
 
+  // Audit log — login berhasil (dgn IP server-side)
+  if(typeof window.esaLogEvent==='function'){
+    window.esaLogEvent('login_success', { email: email, provider: providerId, metadata: { stage: 'session_received' } });
+  }
+
   try{
     var data=readESAData();
     data.profile=data.profile||{};
     data.profile.name=name;
     data.profile.email=email;
     data.profile.picture=picture;
-    data.profile.authMethod=providerId;          // 'linkedin_oidc' | 'github' | 'google' | dst
+    data.profile.authMethod=providerId;          // 'linkedin_oidc' | 'github' | 'google' | 'email' (magic link) | dst
     data.profile.phone=data.profile.phone||'-';
     data.profile.nik=data.profile.nik||'-';
     data.profile.city=data.profile.city||'-';
@@ -18048,6 +18390,107 @@ else{setTimeout(init,200);}
 </script>
 
 <!-- ================================================================
+     ESA UTILITY LAYER — audit log + sync retry queue
+     ================================================================ -->
+<script>
+(function(){
+  'use strict';
+
+  // ---------- AUDIT LOG ----------
+  // Kirim event ke /api/log-event (server capture IP/UA, append ke
+  // public.auth_events). Fail-soft: gagal logging tidak ganggu UX.
+  window.esaLogEvent = function(eventType, payload){
+    payload = payload || {};
+    var body = {
+      event_type: eventType,
+      email: payload.email || (function(){
+        try{ var u=JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); return u&&u.email; }catch(e){return null;}
+      })(),
+      provider: payload.provider || null,
+      metadata: payload.metadata || null
+    };
+    try{
+      fetch('/api/log-event', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(body),
+        keepalive: true
+      }).catch(function(){});
+    }catch(e){}
+  };
+
+  // ---------- SYNC RETRY QUEUE ----------
+  // Simpan operasi sync yg gagal di localStorage, retry on next page load
+  // & on online event. Cegah data loss saat Supabase down.
+  var QUEUE_KEY = 'esa_sync_queue_v1';
+  var MAX_QUEUE = 50; // batas memori
+
+  function readQueue(){
+    try{ return JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]'); }catch(e){return [];}
+  }
+  function writeQueue(q){
+    try{ localStorage.setItem(QUEUE_KEY, JSON.stringify(q.slice(-MAX_QUEUE))); }catch(e){}
+  }
+  // Public API: enqueue {type, args}. type: 'participant'|'module'|'level'.
+  window.esaSyncEnqueue = function(type, args){
+    var q = readQueue();
+    q.push({ type: type, args: args, ts: Date.now(), retries: 0 });
+    writeQueue(q);
+  };
+  // Flush queue: retry semua op yg masih ada. Dipanggil saat page load
+  // (setelah sb client siap) + saat 'online' event browser.
+  window.esaSyncFlush = async function(){
+    var q = readQueue();
+    if(!q.length) return;
+    var remaining = [];
+    for(var i=0; i<q.length; i++){
+      var op = q[i];
+      try{
+        var ok = false;
+        if(op.type === 'participant' && typeof window.esaSyncParticipant === 'function'){
+          await window.esaSyncParticipant(op.args.profile, op.args.promoCode);
+          ok = true;
+        } else if(op.type === 'module' && typeof window.esaSyncModuleAttempt === 'function'){
+          await window.esaSyncModuleAttempt(op.args.rec, op.args.profile);
+          ok = true;
+        } else if(op.type === 'level' && typeof window.esaSyncLevelCompletion === 'function'){
+          await window.esaSyncLevelCompletion(op.args.levelRec, op.args.profile);
+          ok = true;
+        }
+        if(!ok && (op.retries||0) < 3){
+          op.retries = (op.retries||0) + 1;
+          remaining.push(op);
+        }
+      }catch(e){
+        if((op.retries||0) < 3){
+          op.retries = (op.retries||0) + 1;
+          remaining.push(op);
+        }
+        console.warn('[ESA-Sync] retry queue err:', e);
+      }
+    }
+    writeQueue(remaining);
+    if(remaining.length){
+      console.info('[ESA-Sync] retry queue: '+remaining.length+' op masih pending');
+    } else if(q.length){
+      console.info('[ESA-Sync] retry queue cleared ('+q.length+' op selesai)');
+    }
+  };
+  // Auto-flush
+  if(typeof window !== 'undefined'){
+    window.addEventListener('online', function(){
+      console.info('[ESA-Sync] kembali online, flush queue');
+      if(typeof window.esaSyncFlush === 'function') window.esaSyncFlush();
+    });
+    // Page load — delay 3s biar Supabase client + login state stabil dulu
+    setTimeout(function(){
+      if(typeof window.esaSyncFlush === 'function') window.esaSyncFlush();
+    }, 3000);
+  }
+})();
+</script>
+
+<!-- ================================================================
      SUPABASE SYNC LAYER
      Fire-and-forget: gagal sync tidak boleh ganggu UX. Kalau
      supabase-config.js belum diisi, semua call ini diam saja.
@@ -18079,7 +18522,14 @@ else{setTimeout(init,200);}
   // saja (tetap simpan pendaftar baru, profil update di-skip silently).
   window.esaSyncParticipant = async function (profile, promoCode) {
     const sb = getClient();
-    if (!sb) { console.info('[ESA-Sync] Supabase belum dikonfigurasi — skip participant sync'); return; }
+    if (!sb) {
+      console.info('[ESA-Sync] Supabase belum dikonfigurasi — enqueue participant');
+      // Enqueue untuk retry nanti (saat config tersedia)
+      if (typeof window.esaSyncEnqueue === 'function' && profile && profile.email) {
+        window.esaSyncEnqueue('participant', { profile: profile, promoCode: promoCode });
+      }
+      return;
+    }
     if (!profile || !profile.email) { console.warn('[ESA-Sync] participant tanpa email — skip'); return; }
     const phone = (profile.phone && profile.phone.trim()) ? profile.phone.trim() : '-';
     const isActive = (typeof window.esaIsMemberActive === 'function') ? window.esaIsMemberActive() : !!promoCode;
@@ -18092,15 +18542,17 @@ else{setTimeout(init,200);}
       promo_code: promoCode || null,
       auth_method: profile.authMethod || 'manual',
       join_date: profile.joinDate || new Date().toISOString(),
-      // Member status fields (butuh migration-002 — kalau belum run, kolom
-      // tidak ada → upsert error → fallback INSERT tanpa fields ini akan
-      // dicoba di catch di bawah).
+      // Member status fields (butuh migration-002)
       is_active: isActive,
       activated_at: isActive ? (profile.activatedAt || new Date().toISOString()) : null,
-      activation_method: profile.activationMethod || (promoCode ? 'promo:'+promoCode : null)
+      activation_method: profile.activationMethod || (promoCode ? 'promo:'+promoCode : null),
+      // Migration-003 fields
+      tos_accepted_at: profile.tosAcceptedAt || null,
+      referred_by_email: profile.referredByEmail || null,
+      subscription_expires_at: profile.subscriptionExpiresAt || null
     };
-    // Subset minimal — dipakai sebagai fallback kalau migration-002 belum run
-    // (kolom is_active/activated_at/activation_method belum ada).
+    // Subset minimal — dipakai sebagai fallback kalau migration belum run
+    // (kolom is_active / tos_accepted_at / dst belum ada).
     const rowMin = {
       email: row.email, name: row.name, phone: row.phone, nik: row.nik, city: row.city,
       promo_code: row.promo_code, auth_method: row.auth_method, join_date: row.join_date
