@@ -17243,7 +17243,38 @@ function closeModal(){
 function handleCred(resp){
   var pl=pJwt(resp.credential);
   if(pl&&pl.email){
-    saveUser({name:pl.name||pl.email,email:pl.email,picture:pl.picture||"",loggedAt:Date.now()});
+    var name=pl.name||pl.email;
+    var email=pl.email;
+    var picture=pl.picture||"";
+    saveUser({name:name,email:email,picture:picture,loggedAt:Date.now()});
+
+    // Persist juga ke state utama (esa_data_v1) supaya user dianggap logged-in
+    // di seluruh aplikasi (gates, sertifikat, progress) tanpa harus isi
+    // onboarding lagi. Phone diset placeholder '-' karena Google tidak
+    // memberikan no. HP — user bisa lengkapi nanti via Edit Profile.
+    try{
+      var data=readESAData();
+      data.profile=data.profile||{};
+      data.profile.name=name;
+      data.profile.email=email;
+      data.profile.picture=picture;
+      data.profile.googleSub=pl.sub||data.profile.googleSub||'';
+      data.profile.authMethod='google';
+      data.profile.phone=data.profile.phone||'-';
+      data.profile.nik=data.profile.nik||'-';
+      data.profile.city=data.profile.city||'-';
+      data.profile.joinDate=data.profile.joinDate||new Date().toISOString();
+      data.profile.avatarInitials=name.split(' ').map(function(n){return n[0];}).slice(0,2).join('').toUpperCase();
+      writeESAData(data);
+
+      // Sync ke Supabase — email tercatat di tabel `participants` segera
+      // setelah login Google. INSERT dgn unique(email) → dupes otomatis
+      // di-skip server-side (kode 23505).
+      if(typeof window.esaSyncParticipant==='function'){
+        window.esaSyncParticipant(data.profile, data.promoCode||null);
+      }
+    }catch(e){console.warn('[ESA] gagal sync profile Google login:',e);}
+
     closeModal();
     updateNavUser();
     if(window._esaPending&&window._origSV){var v=window._esaPending;window._esaPending=null;window._origSV(v);}
@@ -17672,22 +17703,32 @@ else{setTimeout(init,200);}
   }
 
   // Insert participant; on email conflict, do nothing (write-once).
+  // Phone disimpan apa adanya ('-' = placeholder dari login Google sebelum
+  // user lengkapi nomor HP). Schema: phone NOT NULL, jadi '-' tetap valid.
   window.esaSyncParticipant = async function (profile, promoCode) {
     const sb = getClient();
-    if (!sb || !profile || !profile.email) return;
+    if (!sb) { console.info('[ESA-Sync] Supabase belum dikonfigurasi — skip participant sync'); return; }
+    if (!profile || !profile.email) { console.warn('[ESA-Sync] participant tanpa email — skip'); return; }
     try {
+      const phone = (profile.phone && profile.phone.trim()) ? profile.phone.trim() : '-';
       const { error } = await sb.from('participants').insert({
         email: profile.email,
-        name: profile.name,
-        phone: profile.phone || '',
+        name: profile.name || profile.email,
+        phone: phone,
         nik: profile.nik && profile.nik !== '-' ? profile.nik : null,
         city: profile.city && profile.city !== '-' ? profile.city : null,
         promo_code: promoCode || null,
         auth_method: profile.authMethod || 'manual',
         join_date: profile.joinDate || new Date().toISOString()
       });
-      // 23505 = unique violation → email sudah pernah daftar, normal
-      if (error && error.code !== '23505') logSyncError('insert participant', error);
+      if (!error) {
+        console.info('[ESA-Sync] participant tercatat:', profile.email);
+      } else if (error.code === '23505') {
+        // 23505 = unique violation → email sudah pernah daftar, normal
+        console.info('[ESA-Sync] participant sudah ada (skip):', profile.email);
+      } else {
+        logSyncError('insert participant', error);
+      }
     } catch (e) { logSyncError('insert participant', e); }
   };
 
