@@ -17471,8 +17471,10 @@ window.esaShowProfile=showProfileModal;
 function hookSV(){
   if(typeof window.showView==="function"&&!window.__esaGateOn){
     window._origSV=window.showView;
+    // View publik (tidak butuh login): home, about (Tentang Kami), talent (Our Talent)
+    var PUBLIC_VIEWS={home:1,about:1,talent:1};
     window.showView=function(v){
-      if(v==="home")return window._origSV.apply(this,arguments);
+      if(PUBLIC_VIEWS[v])return window._origSV.apply(this,arguments);
       if(!getUser()){window._esaPending=v;buildModal();return;}
       return window._origSV.apply(this,arguments);
     };
