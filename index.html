@@ -7776,6 +7776,7 @@ body {
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l12-6-4 14-2-6-6-2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
           </button>
         </div>
+        <div id="ai-quota-hint" style="font-size:0.72rem;color:rgba(245,240,230,0.55);margin-top:8px;text-align:right;letter-spacing:0.04em;">Sisa kuota AI Tutor: 50/50</div>
       </aside>
     </div>
   </section>
@@ -11370,6 +11371,8 @@ function openModul(code, trackId, levelId) {
       Halo! 👋 Saya AI Tutor untuk modul <strong>${module.title}</strong>. Ada yang mau kamu tanyakan soal materi ini? Bisa konsep, rumus, contoh aplikasi, atau minta saya jelaskan ulang bagian tertentu.
     </div>
   `;
+  // Sinkronkan label kuota AI tutor di sidebar
+  if (typeof updateAIQuotaHint === 'function') updateAIQuotaHint();
 
   // Navigation between modules
   setupModulNavigation(trackId, levelId, code);
@@ -14845,8 +14848,56 @@ function answerQuiz(qIdx, selected, correct) {
 }
 
 // ================================================
-// AI TUTOR
+// AI TUTOR — quota 50 pertanyaan / akun (hemat token)
 // ================================================
+const AI_LIMIT_PER_USER = 50;
+
+function getAIUserId() {
+  // 1) Akun Google / login modal (auth-gate)
+  try {
+    const u = JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null');
+    if (u && u.email) return 'email:' + String(u.email).toLowerCase();
+  } catch (e) {}
+  // 2) Profil onboarding manual
+  if (typeof state !== 'undefined' && state && state.profile && state.profile.email) {
+    return 'email:' + String(state.profile.email).toLowerCase();
+  }
+  // 3) Tamu (per-device fallback)
+  let gid = localStorage.getItem('esa_ai_guest_id');
+  if (!gid) {
+    gid = 'guest:' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    localStorage.setItem('esa_ai_guest_id', gid);
+  }
+  return gid;
+}
+
+function getAICount() {
+  const n = parseInt(localStorage.getItem('esa_ai_count_' + getAIUserId()) || '0', 10);
+  return isNaN(n) ? 0 : n;
+}
+
+function incAICount() {
+  const id = getAIUserId();
+  const n = getAICount() + 1;
+  localStorage.setItem('esa_ai_count_' + id, String(n));
+  updateAIQuotaHint();
+  return n;
+}
+
+function aiQuotaRemaining() {
+  return Math.max(0, AI_LIMIT_PER_USER - getAICount());
+}
+
+function updateAIQuotaHint() {
+  const el = document.getElementById('ai-quota-hint');
+  if (!el) return;
+  const left = aiQuotaRemaining();
+  el.textContent = left > 0
+    ? `Sisa kuota AI Tutor: ${left}/${AI_LIMIT_PER_USER}`
+    : `Kuota AI Tutor habis (0/${AI_LIMIT_PER_USER})`;
+  el.style.color = left <= 5 ? '#ef9090' : 'rgba(245,240,230,0.55)';
+}
+
 function askAI(question) {
   document.getElementById('ai-input').value = question;
   sendAI();
@@ -14868,6 +14919,20 @@ function sendAI() {
   input.value = '';
   messages.scrollTop = messages.scrollHeight;
 
+  // Cek kuota — block kalau sudah 50 pertanyaan untuk user ini
+  if (getAICount() >= AI_LIMIT_PER_USER) {
+    const limitMsg = document.createElement('div');
+    limitMsg.className = 'ai-msg bot';
+    limitMsg.innerHTML = `Maaf, kuota <strong>${AI_LIMIT_PER_USER} pertanyaan AI Tutor</strong> untuk akun ini sudah habis. ` +
+      `Untuk hemat biaya token API, setiap user dibatasi ${AI_LIMIT_PER_USER} pertanyaan. ` +
+      `Hubungi admin (<a href="mailto:admin@electraacademy.com" style="color:#d4af6a">admin@electraacademy.com</a>) ` +
+      `untuk menambah kuota, atau pelajari materi modul (Video / PPT / Quiz) yang sudah tersedia.`;
+    messages.appendChild(limitMsg);
+    messages.scrollTop = messages.scrollHeight;
+    updateAIQuotaHint();
+    return;
+  }
+
   // Loading bubble — diganti isinya begitu jawaban siap
   const botMsg = document.createElement('div');
   botMsg.className = 'ai-msg bot';
@@ -14883,9 +14948,10 @@ function sendAI() {
     moduleCode: m && m.code ? m.code : ''
   };
 
-  // Coba Vercel function dulu (Groq via /api/ai-tutor). Kalau gagal/down,
+  // Coba Vercel function dulu (DeepSeek via /api/ai-tutor). Kalau gagal/down,
   // fallback ke pattern-matching lokal generateAIResponse(). Site tetap jalan
-  // walaupun env var GROQ_API_KEY belum di-set.
+  // walaupun env var DEEPSEEK_API_KEY belum di-set. Counter bertambah untuk
+  // setiap pertanyaan (sukses ATAU fallback) supaya kuota tetap terkontrol.
   fetch('/api/ai-tutor', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -14897,11 +14963,13 @@ function sendAI() {
         throw new Error(data && data.error ? data.error : 'API tidak respons');
       }
       botMsg.innerHTML = data.answer;
+      incAICount();
       messages.scrollTop = messages.scrollHeight;
     })
     .catch(err => {
       console.warn('[AI Tutor] fallback ke local response:', err.message);
       botMsg.innerHTML = generateAIResponse(q);
+      incAICount();
       messages.scrollTop = messages.scrollHeight;
     });
 }
