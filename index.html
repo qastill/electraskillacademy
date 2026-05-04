@@ -15508,13 +15508,13 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
         </svg>
       </div>
-      <div class="esa-modal-eyebrow">Login · Daftar Peserta</div>
-      <div class="esa-modal-title">Masuk ke Akademi</div>
-      <div class="esa-modal-subtitle">Data peserta akan tercetak di sertifikat kelulusan nantinya.</div>
+      <div class="esa-modal-eyebrow" id="esa-modal-eyebrow">Login · Daftar Peserta</div>
+      <div class="esa-modal-title" id="esa-modal-title">Masuk ke Akademi</div>
+      <div class="esa-modal-subtitle" id="esa-modal-subtitle">Data peserta akan tercetak di sertifikat kelulusan nantinya.</div>
     </div>
 
     <!-- Google Sign-In button -->
-    <div class="esa-google-signin-wrap">
+    <div class="esa-google-signin-wrap" id="esa-google-signin-wrap">
       <div id="esa-google-btn"></div>
       <button type="button" class="esa-google-fallback-btn" id="esa-google-fallback-btn" onclick="esaGoogleFallback()">
         <svg width="20" height="20" viewBox="0 0 48 48">
@@ -15527,7 +15527,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       </button>
     </div>
 
-    <div class="esa-divider"><span>atau isi manual</span></div>
+    <div class="esa-divider" id="esa-divider"><span>atau isi manual</span></div>
 
     <!-- Manual registration form -->
     <div class="esa-form-group">
@@ -15559,7 +15559,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     <!-- NIK kept hidden as backup (optional) -->
     <input type="hidden" id="esa-profile-nik" value="">
 
-    <button class="esa-btn-primary" onclick="esaSaveProfile()">Masuk & Mulai Belajar →</button>
+    <button class="esa-btn-primary" id="esa-btn-primary" onclick="esaSaveProfile()">Masuk & Mulai Belajar →</button>
 
     <div class="esa-modal-footer-note">
       Data peserta disimpan di perangkat Anda. Bisa diganti via menu "Ganti Peserta".
@@ -15690,12 +15690,61 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
   function showOnboardingModal() {
     const modal = document.getElementById('esa-onboarding-modal');
-    if (modal) {
-      modal.classList.add('active');
-      // Initialize Google Sign-In button when modal first opens
-      setTimeout(initGoogleSignIn, 100);
-    }
+    if (!modal) return;
+    // Reset ke mode "Login" — tampilkan Google btn + divider
+    const eb = document.getElementById('esa-modal-eyebrow');
+    const tt = document.getElementById('esa-modal-title');
+    const st = document.getElementById('esa-modal-subtitle');
+    const gw = document.getElementById('esa-google-signin-wrap');
+    const dv = document.getElementById('esa-divider');
+    const bt = document.getElementById('esa-btn-primary');
+    const emailEl = document.getElementById('esa-profile-email');
+    if (eb) eb.textContent = 'Login · Daftar Peserta';
+    if (tt) tt.textContent = 'Masuk ke Akademi';
+    if (st) st.textContent = 'Data peserta akan tercetak di sertifikat kelulusan nantinya.';
+    if (gw) gw.style.display = '';
+    if (dv) dv.style.display = '';
+    if (bt) bt.textContent = 'Masuk & Mulai Belajar →';
+    if (emailEl) { emailEl.readOnly = false; emailEl.style.opacity = ''; }
+    modal.classList.add('active');
+    setTimeout(initGoogleSignIn, 100);
   }
+
+  // Mode "lengkapi profil" — dipakai setelah login Google auth-gate.
+  // User sudah punya name+email dari Google JWT; cuma minta phone/city
+  // (Google tidak return data ini). Sembunyikan Google button + divider.
+  function showProfileCompletionModal() {
+    const modal = document.getElementById('esa-onboarding-modal');
+    if (!modal) return;
+    const eb = document.getElementById('esa-modal-eyebrow');
+    const tt = document.getElementById('esa-modal-title');
+    const st = document.getElementById('esa-modal-subtitle');
+    const gw = document.getElementById('esa-google-signin-wrap');
+    const dv = document.getElementById('esa-divider');
+    const bt = document.getElementById('esa-btn-primary');
+
+    // Pre-fill dari state.profile (sudah diisi dari JWT Google di handleCred)
+    const p = state.profile || {};
+    const nameEl = document.getElementById('esa-profile-name');
+    const emailEl = document.getElementById('esa-profile-email');
+    const phoneEl = document.getElementById('esa-profile-phone');
+    const cityEl = document.getElementById('esa-profile-city');
+    if (nameEl) nameEl.value = p.name || '';
+    if (emailEl) { emailEl.value = p.email || ''; emailEl.readOnly = true; emailEl.style.opacity = '0.7'; }
+    // Phone='-' = placeholder dari handleCred → kosongkan supaya user isi
+    if (phoneEl) phoneEl.value = (p.phone && p.phone !== '-') ? p.phone : '';
+    if (cityEl) cityEl.value = (p.city && p.city !== '-') ? p.city : '';
+
+    if (eb) eb.textContent = 'Lengkapi Profil';
+    if (tt) tt.textContent = `Halo, ${(p.name || 'Peserta').split(' ')[0]}!`;
+    if (st) st.textContent = 'Login berhasil. Lengkapi nomor HP/WhatsApp untuk akses penuh & terima sertifikat.';
+    if (gw) gw.style.display = 'none';
+    if (dv) dv.style.display = 'none';
+    if (bt) bt.textContent = 'Simpan & Lanjutkan →';
+    modal.classList.add('active');
+    setTimeout(() => { if (phoneEl) phoneEl.focus(); }, 200);
+  }
+  window.esaShowProfileCompletion = showProfileCompletionModal;
 
   function saveProfile() {
     const name = document.getElementById('esa-profile-name').value.trim();
@@ -15765,6 +15814,14 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     pendingAction = null;
     if (typeof pending === 'function') {
       setTimeout(pending, 400);
+    }
+    // Auth-gate punya pending VIEW yang berbeda (mis. user klik 'Job
+    // Opportunity' → tertahan modal login). Setelah profile lengkap, lanjut
+    // ke view yg dimaksud.
+    if (window._esaPending && window._origSV) {
+      const v = window._esaPending;
+      window._esaPending = null;
+      setTimeout(function(){ window._origSV(v); }, 400);
     }
   }
   window.esaSaveProfile = saveProfile;
@@ -17277,7 +17334,15 @@ function handleCred(resp){
 
     closeModal();
     updateNavUser();
-    if(window._esaPending&&window._origSV){var v=window._esaPending;window._esaPending=null;window._origSV(v);}
+
+    // Lengkapi profil — Google tidak return phone/city, jadi kalau masih
+    // placeholder '-' setelah login, langsung prompt user untuk isi.
+    var needPhone = !data || !data.profile || !data.profile.phone || data.profile.phone === '-';
+    if (needPhone && typeof window.esaShowProfileCompletion === 'function') {
+      setTimeout(window.esaShowProfileCompletion, 250);
+    } else if(window._esaPending&&window._origSV){
+      var v=window._esaPending;window._esaPending=null;window._origSV(v);
+    }
   }
 }
 
@@ -17702,34 +17767,42 @@ else{setTimeout(init,200);}
     if (err) console.warn('[ESA-Sync] ' + label + ':', err.message || err);
   }
 
-  // Insert participant; on email conflict, do nothing (write-once).
-  // Phone disimpan apa adanya ('-' = placeholder dari login Google sebelum
-  // user lengkapi nomor HP). Schema: phone NOT NULL, jadi '-' tetap valid.
+  // UPSERT participant by email. Pertama coba UPSERT (insert + update kalau
+  // konflik email) — ini mengurus update profil setelah user lengkapi
+  // nomor HP. Kalau RLS belum allow UPDATE untuk anon, fall-back ke INSERT
+  // saja (tetap simpan pendaftar baru, profil update di-skip silently).
   window.esaSyncParticipant = async function (profile, promoCode) {
     const sb = getClient();
     if (!sb) { console.info('[ESA-Sync] Supabase belum dikonfigurasi — skip participant sync'); return; }
     if (!profile || !profile.email) { console.warn('[ESA-Sync] participant tanpa email — skip'); return; }
+    const phone = (profile.phone && profile.phone.trim()) ? profile.phone.trim() : '-';
+    const row = {
+      email: profile.email,
+      name: profile.name || profile.email,
+      phone: phone,
+      nik: profile.nik && profile.nik !== '-' ? profile.nik : null,
+      city: profile.city && profile.city !== '-' ? profile.city : null,
+      promo_code: promoCode || null,
+      auth_method: profile.authMethod || 'manual',
+      join_date: profile.joinDate || new Date().toISOString()
+    };
     try {
-      const phone = (profile.phone && profile.phone.trim()) ? profile.phone.trim() : '-';
-      const { error } = await sb.from('participants').insert({
-        email: profile.email,
-        name: profile.name || profile.email,
-        phone: phone,
-        nik: profile.nik && profile.nik !== '-' ? profile.nik : null,
-        city: profile.city && profile.city !== '-' ? profile.city : null,
-        promo_code: promoCode || null,
-        auth_method: profile.authMethod || 'manual',
-        join_date: profile.joinDate || new Date().toISOString()
-      });
-      if (!error) {
-        console.info('[ESA-Sync] participant tercatat:', profile.email);
-      } else if (error.code === '23505') {
-        // 23505 = unique violation → email sudah pernah daftar, normal
-        console.info('[ESA-Sync] participant sudah ada (skip):', profile.email);
-      } else {
-        logSyncError('insert participant', error);
+      const { error: upsertErr } = await sb.from('participants')
+        .upsert(row, { onConflict: 'email' });
+      if (!upsertErr) {
+        console.info('[ESA-Sync] participant upserted:', profile.email);
+        return;
       }
-    } catch (e) { logSyncError('insert participant', e); }
+      // Fallback: kalau policy UPDATE belum ada (42501 / 401), tetap coba INSERT.
+      const { error: insErr } = await sb.from('participants').insert(row);
+      if (!insErr) {
+        console.info('[ESA-Sync] participant tercatat (insert):', profile.email);
+      } else if (insErr.code === '23505') {
+        console.info('[ESA-Sync] participant sudah ada — UPDATE policy belum aktif, profil di DB tidak ter-update:', profile.email);
+      } else {
+        logSyncError('upsert/insert participant', insErr);
+      }
+    } catch (e) { logSyncError('upsert participant', e); }
   };
 
   // Append exam attempt + upsert module_progress
