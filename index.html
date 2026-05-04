@@ -17494,6 +17494,14 @@ else{setTimeout(init,200);}
 
 <script>
 (function(){
+  // Public navigation: panggil showView yang ORIGINAL (pre-gate) supaya
+  // visitor tanpa login tetap bisa membuka view publik (about, talent,
+  // home) bahkan kalau auth-gate hook belum siap atau salah urutan.
+  function publicShow(view){
+    var fn = window._origSV || window.showView;
+    if(typeof fn==='function') fn.call(window,view);
+  }
+
   function applyNav(){
     var navGroup=document.querySelector('.nav-right-group');
     if(!navGroup)return;
@@ -17509,20 +17517,20 @@ else{setTimeout(init,200);}
     if(sert)sert.textContent='Certification';
     if(sert)sert.onclick=function(e){e.preventDefault();showView('sertifikasi');};
 
-    // About Us link
+    // About Us link — public, bypass auth gate
     var aboutUs=document.createElement('a');
     aboutUs.className='nav-right';aboutUs.href='#';aboutUs.textContent='About Us';
-    aboutUs.onclick=function(e){e.preventDefault();showView('about');};
+    aboutUs.onclick=function(e){e.preventDefault();publicShow('about');};
 
     // Replace the previous "Talent Pool ▾" dropdown with two simple
     // top-level links so the click flow can never be intercepted by
-    // hover-timer / dropdown race conditions.
+    // hover-timer / dropdown race conditions. Our Talent juga public.
     var ourTalentLink=document.createElement('a');
     ourTalentLink.className='nav-right';
     ourTalentLink.href='#';
     ourTalentLink.textContent='Our Talent';
     ourTalentLink.style.cursor='pointer';
-    ourTalentLink.onclick=function(e){e.preventDefault();showView('talent');};
+    ourTalentLink.onclick=function(e){e.preventDefault();publicShow('talent');};
 
     var jobLink=document.createElement('a');
     jobLink.className='nav-right';
