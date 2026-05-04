@@ -14,7 +14,10 @@
 -- =============================================================
 
 -- 1. Allow anon UPDATE on participants (untuk profile completion)
-create policy if not exists "anon_update_participants"
+-- Postgres tidak support 'CREATE POLICY IF NOT EXISTS', jadi pakai
+-- DROP-then-CREATE — idempotent, aman dijalankan berulang.
+drop policy if exists "anon_update_participants" on public.participants;
+create policy "anon_update_participants"
   on public.participants
   for update
   to anon
