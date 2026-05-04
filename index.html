@@ -17261,28 +17261,40 @@ function buildModal(){
   h2.style.fontWeight="700";h2.style.margin="0 0 6px";
 
   var p1=document.createElement("p");
-  p1.textContent="Masuk dengan akun Google untuk mengakses fitur Electra Skill Academy.";
+  p1.textContent="Pilih cara masuk yang paling nyaman buatmu.";
   p1.style.color="#9ca3af";p1.style.fontSize="13px";p1.style.margin="0 0 28px";p1.style.lineHeight="1.6";
 
+  // ---- Google (Google Identity Services / JWT in-page) ----
   var googleBtn=document.createElement("button");
   googleBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Masuk dengan Google';
-  googleBtn.style.width="100%";googleBtn.style.display="flex";googleBtn.style.alignItems="center";
-  googleBtn.style.justifyContent="center";googleBtn.style.background="#fff";googleBtn.style.color="#1a1a1a";
-  googleBtn.style.border="none";googleBtn.style.borderRadius="12px";googleBtn.style.padding="14px 20px";
-  googleBtn.style.fontSize="14px";googleBtn.style.fontWeight="600";googleBtn.style.cursor="pointer";
-  googleBtn.style.marginBottom="12px";
-  googleBtn.addEventListener("mouseenter",function(){this.style.boxShadow="0 4px 20px rgba(201,169,110,0.35)";});
-  googleBtn.addEventListener("mouseleave",function(){this.style.boxShadow="none";});
+  styleOAuthBtn(googleBtn,'#fff','#1a1a1a');
   googleBtn.onclick=triggerGoogleLogin;
 
-  var gsiDiv=document.createElement("div");gsiDiv.id="esa-auth-gsi-btn";gsiDiv.style.marginBottom="12px";
+  // ---- LinkedIn (Supabase OAuth — provider 'linkedin_oidc') ----
+  var linkedinBtn=document.createElement("button");
+  linkedinBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="#fff"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43c-1.14 0-2.06-.93-2.06-2.06S4.2 3.3 5.34 3.3s2.06.93 2.06 2.07c0 1.13-.92 2.06-2.06 2.06zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.99 0 1.78-.77 1.78-1.72V1.72C24 .77 23.21 0 22.22 0z"/></svg>Masuk dengan LinkedIn';
+  styleOAuthBtn(linkedinBtn,'#0a66c2','#fff');
+  linkedinBtn.onclick=function(){triggerSupabaseOAuth('linkedin_oidc','LinkedIn');};
+
+  // ---- GitHub (Supabase OAuth — provider 'github') ----
+  var githubBtn=document.createElement("button");
+  githubBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="#fff"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.55v-2.16c-3.2.7-3.87-1.36-3.87-1.36-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.24 3.34.95.1-.74.4-1.24.73-1.53-2.55-.29-5.23-1.27-5.23-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.16 1.17a11 11 0 0 1 5.74 0c2.2-1.48 3.16-1.17 3.16-1.17.62 1.57.23 2.73.11 3.02.73.8 1.18 1.82 1.18 3.07 0 4.39-2.69 5.36-5.25 5.64.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>Masuk dengan GitHub';
+  styleOAuthBtn(githubBtn,'#24292f','#fff');
+  githubBtn.onclick=function(){triggerSupabaseOAuth('github','GitHub');};
+
+  var gsiDiv=document.createElement("div");gsiDiv.id="esa-auth-gsi-btn";gsiDiv.style.marginBottom="12px";gsiDiv.style.display="none";
 
   var p2=document.createElement("p");
   p2.textContent="Dengan mendaftar, Anda menyetujui syarat & ketentuan Electra Skill Academy";
   p2.style.color="#6b7280";p2.style.fontSize="11px";p2.style.margin="16px 0 0";
 
   box.appendChild(closeBtn);box.appendChild(iconDiv);box.appendChild(h2);
-  box.appendChild(p1);box.appendChild(googleBtn);box.appendChild(gsiDiv);box.appendChild(p2);
+  box.appendChild(p1);
+  box.appendChild(googleBtn);
+  box.appendChild(linkedinBtn);
+  box.appendChild(githubBtn);
+  box.appendChild(gsiDiv);
+  box.appendChild(p2);
   overlay.appendChild(box);
   document.body.appendChild(overlay);
 
@@ -17290,6 +17302,55 @@ function buildModal(){
     google.accounts.id.initialize({client_id:CID,callback:handleCred,auto_select:false});
     google.accounts.id.renderButton(gsiDiv,{theme:"outline",size:"large",width:340});
   }
+}
+
+// Style helper untuk semua tombol OAuth (konsisten ukuran & hover)
+function styleOAuthBtn(btn, bg, color){
+  btn.style.width="100%";btn.style.display="flex";btn.style.alignItems="center";
+  btn.style.justifyContent="center";btn.style.background=bg;btn.style.color=color;
+  btn.style.border="none";btn.style.borderRadius="12px";btn.style.padding="14px 20px";
+  btn.style.fontSize="14px";btn.style.fontWeight="600";btn.style.cursor="pointer";
+  btn.style.marginBottom="10px";btn.style.transition="box-shadow 0.2s, transform 0.05s";
+  btn.addEventListener("mouseenter",function(){this.style.boxShadow="0 4px 20px rgba(201,169,110,0.35)";});
+  btn.addEventListener("mouseleave",function(){this.style.boxShadow="none";});
+  btn.addEventListener("mousedown",function(){this.style.transform="scale(0.98)";});
+  btn.addEventListener("mouseup",function(){this.style.transform="scale(1)";});
+}
+
+// Get / create Supabase client (re-use yg dibuat sync layer kalau ada)
+function getSb(){
+  if(window.__esaSb)return window.__esaSb;
+  if(!window.supabase||!window.ESA_SUPABASE||!window.ESA_SUPABASE.isConfigured||!window.ESA_SUPABASE.isConfigured())return null;
+  // Persist session — beda dari sync layer (yg pakai persistSession:false).
+  // Auth-gate butuh persistSession=true supaya redirect callback dari OAuth
+  // (LinkedIn / GitHub) terdeteksi pas user kembali ke halaman.
+  window.__esaSb=window.supabase.createClient(window.ESA_SUPABASE.url,window.ESA_SUPABASE.anonKey,{
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}
+  });
+  return window.__esaSb;
+}
+
+function triggerSupabaseOAuth(provider, label){
+  var sb=getSb();
+  if(!sb){
+    alert('Supabase belum dikonfigurasi. Login '+label+' butuh Supabase URL/anon key di supabase-config.js.');
+    return;
+  }
+  // Redirect kembali ke halaman sekarang — Supabase akan attach #access_token=
+  // di URL setelah user authorize, lalu detectSessionInUrl ambil & simpan
+  // session di localStorage. handleSupabaseSession() akan auto-process.
+  sb.auth.signInWithOAuth({
+    provider: provider,
+    options: { redirectTo: window.location.origin + window.location.pathname }
+  }).then(function(r){
+    if(r.error){
+      alert('Login '+label+' gagal: '+r.error.message+'\n\nPastikan provider "'+provider+'" sudah enabled di Supabase Dashboard → Authentication → Providers.');
+    }
+    // Sukses: browser akan redirect ke provider, jadi kode di bawah ini
+    // tidak pernah dieksekusi (page navigation).
+  }).catch(function(e){
+    alert('Login '+label+' error: '+e.message);
+  });
 }
 
 function closeModal(){
@@ -17649,7 +17710,70 @@ function hookSV(){
 window.esaShowAuthModal=buildModal;
 window.esaCloseAuthModal=closeModal;
 
-function init(){hookSV();var u=getUser();if(u)updateNavUser();}
+// Setelah redirect kembali dari LinkedIn / GitHub, Supabase JS auto-detect
+// access_token di URL hash (detectSessionInUrl:true), simpan session, lalu
+// fire event 'SIGNED_IN'. Kita process di sini: convert ke profile lokal +
+// sync participants (mirror handleCred yang Google).
+function handleSupabaseAuthEvent(event, session){
+  if(event!=='SIGNED_IN'||!session||!session.user)return;
+  var u=session.user;
+  var meta=u.user_metadata||{};
+  var name=meta.full_name||meta.name||meta.preferred_username||u.email||'Peserta';
+  var email=u.email||meta.email||'';
+  var picture=meta.avatar_url||meta.picture||'';
+  var providerId=u.app_metadata&&u.app_metadata.provider?u.app_metadata.provider:'oauth';
+  if(!email){console.warn('[ESA-Auth] OAuth session tanpa email — skip');return;}
+
+  saveUser({name:name,email:email,picture:picture,loggedAt:Date.now(),provider:providerId});
+
+  try{
+    var data=readESAData();
+    data.profile=data.profile||{};
+    data.profile.name=name;
+    data.profile.email=email;
+    data.profile.picture=picture;
+    data.profile.authMethod=providerId;          // 'linkedin_oidc' | 'github' | 'google' | dst
+    data.profile.phone=data.profile.phone||'-';
+    data.profile.nik=data.profile.nik||'-';
+    data.profile.city=data.profile.city||'-';
+    data.profile.joinDate=data.profile.joinDate||new Date().toISOString();
+    data.profile.avatarInitials=name.split(' ').map(function(n){return n[0];}).slice(0,2).join('').toUpperCase();
+    writeESAData(data);
+
+    if(typeof window.esaSyncParticipant==='function'){
+      window.esaSyncParticipant(data.profile, data.promoCode||null);
+    }
+
+    var m=document.getElementById('esa-auth-modal');if(m){closeModal();}
+    updateNavUser();
+
+    var needPhone=!data.profile.phone||data.profile.phone==='-';
+    if(needPhone&&typeof window.esaShowProfileCompletion==='function'){
+      setTimeout(window.esaShowProfileCompletion,300);
+    } else if(window._esaPending&&window._origSV){
+      var v=window._esaPending;window._esaPending=null;window._origSV(v);
+    }
+  }catch(e){console.warn('[ESA-Auth] gagal proses OAuth session:',e);}
+}
+
+function setupSupabaseAuthListener(){
+  var sb=getSb();if(!sb)return;
+  // Subscribe sekali saja
+  if(window.__esaAuthListenerAttached)return;
+  window.__esaAuthListenerAttached=true;
+  try{
+    sb.auth.onAuthStateChange(handleSupabaseAuthEvent);
+    // Trigger sekali manual untuk session yang sudah ada (mis. user balik
+    // ke site setelah tab di-close — session masih valid di localStorage).
+    sb.auth.getSession().then(function(r){
+      if(r.data&&r.data.session&&!getUser()){
+        handleSupabaseAuthEvent('SIGNED_IN',r.data.session);
+      }
+    });
+  }catch(e){console.warn('[ESA-Auth] listener setup gagal:',e);}
+}
+
+function init(){hookSV();setupSupabaseAuthListener();var u=getUser();if(u)updateNavUser();}
 
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){setTimeout(init,200);});}
 else{setTimeout(init,200);}
@@ -17756,8 +17880,10 @@ else{setTimeout(init,200);}
     if (!window.ESA_SUPABASE || !window.ESA_SUPABASE.isConfigured || !window.ESA_SUPABASE.isConfigured()) return null;
     if (!window.supabase || typeof window.supabase.createClient !== 'function') return null;
     if (!window.__esaSb) {
+      // persistSession:true diperlukan oleh auth-gate (LinkedIn / GitHub OAuth)
+      // supaya callback redirect terdeteksi. Sync layer reuse client yg sama.
       window.__esaSb = window.supabase.createClient(window.ESA_SUPABASE.url, window.ESA_SUPABASE.anonKey, {
-        auth: { persistSession: false }
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' }
       });
     }
     return window.__esaSb;
