@@ -1,67 +1,28 @@
-// Vercel Serverless Function — proxy ke AI provider (DeepSeek atau Groq).
-// API key dibaca dari env var (Settings → Environment Variables di Vercel).
-// JANGAN paste key di file ini.
+// Vercel Serverless Function — proxy ke AI provider.
+// PRIMARY: DeepSeek (lebih murah, kualitas tinggi)
+// FALLBACK: Groq (otomatis dipakai kalau DeepSeek error/rate-limit)
 //
-// Provider auto-detect:
-//   - DEEPSEEK_API_KEY tersedia → pakai DeepSeek (default, lebih murah)
-//   - GROQ_API_KEY tersedia → pakai Groq (fallback, lebih cepat)
-//   - Keduanya kosong → error
-// Override manual via env var AI_PROVIDER=deepseek | groq
+// API key di Vercel Environment Variables:
+//   - DEEPSEEK_API_KEY (wajib untuk primary)
+//   - GROQ_API_KEY (opsional untuk fallback otomatis)
+// Override manual via AI_PROVIDER=deepseek | groq (skip auto-fallback)
 
 const PROVIDERS = {
   deepseek: {
     url: 'https://api.deepseek.com/v1/chat/completions',
     model: 'deepseek-chat',
-    keyEnv: 'DEEPSEEK_API_KEY'
+    keyEnv: 'DEEPSEEK_API_KEY',
+    label: 'DeepSeek'
   },
   groq: {
     url: 'https://api.groq.com/openai/v1/chat/completions',
     model: 'llama-3.3-70b-versatile',
-    keyEnv: 'GROQ_API_KEY'
+    keyEnv: 'GROQ_API_KEY',
+    label: 'Groq'
   }
 };
 
-function pickProvider() {
-  const forced = String(process.env.AI_PROVIDER || '').toLowerCase();
-  if (forced && PROVIDERS[forced] && process.env[PROVIDERS[forced].keyEnv]) {
-    return forced;
-  }
-  if (process.env.DEEPSEEK_API_KEY) return 'deepseek';
-  if (process.env.GROQ_API_KEY) return 'groq';
-  return null;
-}
-
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
-
-  const providerName = pickProvider();
-  if (!providerName) {
-    return res.status(500).json({
-      error: 'API key belum di-set. Set DEEPSEEK_API_KEY atau GROQ_API_KEY di Vercel Environment Variables.'
-    });
-  }
-  const provider = PROVIDERS[providerName];
-  const apiKey = process.env[provider.keyEnv];
-
-  let body;
-  try {
-    body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-  } catch (e) {
-    return res.status(400).json({ error: 'Body harus JSON valid' });
-  }
-
-  const question = String(body.question || '').trim();
-  if (!question) return res.status(400).json({ error: 'Pertanyaan kosong' });
-  if (question.length > 1500) return res.status(400).json({ error: 'Pertanyaan terlalu panjang (max 1500 karakter)' });
-
-  const moduleTitle = String(body.moduleTitle || '').slice(0, 200);
-  const moduleCode = String(body.moduleCode || '').slice(0, 20);
-
-  const systemPrompt = `Kamu adalah AI Tutor di Electra Skill Academy — akademi pelatihan kelistrikan profesional Indonesia.
+const SYSTEM_PROMPT_TEMPLATE = (moduleTitle, moduleCode) => `Kamu adalah AI Tutor di Electra Skill Academy — akademi pelatihan kelistrikan profesional Indonesia.
 
 PERAN
 - Jawab pertanyaan teknis kelistrikan dalam Bahasa Indonesia santai tapi akurat
@@ -84,8 +45,19 @@ BATASAN
 KONTEKS USER SAAT INI
 ${moduleTitle ? `Sedang membuka modul "${moduleTitle}"${moduleCode ? ` (kode ${moduleCode})` : ''}. Prioritaskan jawaban yang relevan dengan modul ini.` : 'Belum memilih modul tertentu.'}`;
 
+async function callProvider(providerName, systemPrompt, question) {
+  const provider = PROVIDERS[providerName];
+  const apiKey = process.env[provider.keyEnv];
+  if (!apiKey) {
+    return { ok: false, status: 0, error: `${provider.label}: ${provider.keyEnv} belum di-set` };
+  }
+
+  // 25 detik timeout — Vercel free tier max 30 detik
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 25000);
+
   try {
-    const aiRes = await fetch(provider.url, {
+    const r = await fetch(provider.url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -100,22 +72,82 @@ ${moduleTitle ? `Sedang membuka modul "${moduleTitle}"${moduleCode ? ` (kode ${m
         temperature: 0.4,
         max_tokens: 700,
         top_p: 0.9
-      })
+      }),
+      signal: ctrl.signal
     });
+    clearTimeout(timer);
 
-    if (!aiRes.ok) {
-      const errText = await aiRes.text();
-      return res.status(502).json({
-        error: `${providerName} API error`,
-        status: aiRes.status,
-        detail: errText.slice(0, 400)
-      });
+    if (!r.ok) {
+      const detail = await r.text();
+      return { ok: false, status: r.status, error: `${provider.label} HTTP ${r.status}`, detail: detail.slice(0, 300) };
     }
 
-    const data = await aiRes.json();
-    const answer = data?.choices?.[0]?.message?.content || 'Maaf, tidak ada jawaban.';
-    return res.status(200).json({ answer, provider: providerName });
+    const data = await r.json();
+    const answer = data?.choices?.[0]?.message?.content;
+    if (!answer) {
+      return { ok: false, status: 502, error: `${provider.label}: response kosong` };
+    }
+    return { ok: true, answer, provider: providerName };
   } catch (e) {
-    return res.status(500).json({ error: `Fetch ke ${providerName} gagal`, detail: String(e).slice(0, 400) });
+    clearTimeout(timer);
+    return { ok: false, status: 0, error: `${provider.label} fetch error`, detail: String(e).slice(0, 300) };
   }
+}
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
+
+  let body;
+  try {
+    body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+  } catch (e) {
+    return res.status(400).json({ error: 'Body harus JSON valid' });
+  }
+
+  const question = String(body.question || '').trim();
+  if (!question) return res.status(400).json({ error: 'Pertanyaan kosong' });
+  if (question.length > 1500) return res.status(400).json({ error: 'Pertanyaan terlalu panjang (max 1500 karakter)' });
+
+  const moduleTitle = String(body.moduleTitle || '').slice(0, 200);
+  const moduleCode = String(body.moduleCode || '').slice(0, 20);
+  const systemPrompt = SYSTEM_PROMPT_TEMPLATE(moduleTitle, moduleCode);
+
+  // Override manual via env var (skip fallback)
+  const forced = String(process.env.AI_PROVIDER || '').toLowerCase();
+  if (forced && PROVIDERS[forced]) {
+    const r = await callProvider(forced, systemPrompt, question);
+    if (r.ok) return res.status(200).json({ answer: r.answer, provider: r.provider });
+    return res.status(502).json({ error: r.error, detail: r.detail || '' });
+  }
+
+  // Default flow: DeepSeek dulu, fallback Groq otomatis
+  const primary = await callProvider('deepseek', systemPrompt, question);
+  if (primary.ok) {
+    return res.status(200).json({ answer: primary.answer, provider: primary.provider });
+  }
+
+  // DeepSeek gagal — coba Groq
+  console.warn('[ai-tutor] DeepSeek gagal, fallback ke Groq:', primary.error, primary.detail || '');
+  const fallback = await callProvider('groq', systemPrompt, question);
+  if (fallback.ok) {
+    return res.status(200).json({
+      answer: fallback.answer,
+      provider: fallback.provider,
+      fallback_from: 'deepseek',
+      primary_error: primary.error
+    });
+  }
+
+  // Kedua provider gagal
+  return res.status(502).json({
+    error: 'Kedua AI provider gagal. Pastikan DEEPSEEK_API_KEY dan GROQ_API_KEY valid di Vercel.',
+    deepseek_error: primary.error,
+    deepseek_detail: primary.detail || '',
+    groq_error: fallback.error,
+    groq_detail: fallback.detail || ''
+  });
 }
