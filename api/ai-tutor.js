@@ -1,6 +1,35 @@
-// Vercel Serverless Function — proxy ke Groq API.
-// API key dibaca dari env var GROQ_API_KEY (Settings → Environment Variables di Vercel).
+// Vercel Serverless Function — proxy ke AI provider (DeepSeek atau Groq).
+// API key dibaca dari env var (Settings → Environment Variables di Vercel).
 // JANGAN paste key di file ini.
+//
+// Provider auto-detect:
+//   - DEEPSEEK_API_KEY tersedia → pakai DeepSeek (default, lebih murah)
+//   - GROQ_API_KEY tersedia → pakai Groq (fallback, lebih cepat)
+//   - Keduanya kosong → error
+// Override manual via env var AI_PROVIDER=deepseek | groq
+
+const PROVIDERS = {
+  deepseek: {
+    url: 'https://api.deepseek.com/v1/chat/completions',
+    model: 'deepseek-chat',
+    keyEnv: 'DEEPSEEK_API_KEY'
+  },
+  groq: {
+    url: 'https://api.groq.com/openai/v1/chat/completions',
+    model: 'llama-3.3-70b-versatile',
+    keyEnv: 'GROQ_API_KEY'
+  }
+};
+
+function pickProvider() {
+  const forced = String(process.env.AI_PROVIDER || '').toLowerCase();
+  if (forced && PROVIDERS[forced] && process.env[PROVIDERS[forced].keyEnv]) {
+    return forced;
+  }
+  if (process.env.DEEPSEEK_API_KEY) return 'deepseek';
+  if (process.env.GROQ_API_KEY) return 'groq';
+  return null;
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -9,12 +38,14 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
+  const providerName = pickProvider();
+  if (!providerName) {
     return res.status(500).json({
-      error: 'GROQ_API_KEY belum di-set di Vercel Environment Variables.'
+      error: 'API key belum di-set. Set DEEPSEEK_API_KEY atau GROQ_API_KEY di Vercel Environment Variables.'
     });
   }
+  const provider = PROVIDERS[providerName];
+  const apiKey = process.env[provider.keyEnv];
 
   let body;
   try {
@@ -54,14 +85,14 @@ KONTEKS USER SAAT INI
 ${moduleTitle ? `Sedang membuka modul "${moduleTitle}"${moduleCode ? ` (kode ${moduleCode})` : ''}. Prioritaskan jawaban yang relevan dengan modul ini.` : 'Belum memilih modul tertentu.'}`;
 
   try {
-    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const aiRes = await fetch(provider.url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: provider.model,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: question }
@@ -72,19 +103,19 @@ ${moduleTitle ? `Sedang membuka modul "${moduleTitle}"${moduleCode ? ` (kode ${m
       })
     });
 
-    if (!groqRes.ok) {
-      const errText = await groqRes.text();
+    if (!aiRes.ok) {
+      const errText = await aiRes.text();
       return res.status(502).json({
-        error: 'Groq API error',
-        status: groqRes.status,
+        error: `${providerName} API error`,
+        status: aiRes.status,
         detail: errText.slice(0, 400)
       });
     }
 
-    const data = await groqRes.json();
+    const data = await aiRes.json();
     const answer = data?.choices?.[0]?.message?.content || 'Maaf, tidak ada jawaban.';
-    return res.status(200).json({ answer });
+    return res.status(200).json({ answer, provider: providerName });
   } catch (e) {
-    return res.status(500).json({ error: 'Fetch ke Groq gagal', detail: String(e).slice(0, 400) });
+    return res.status(500).json({ error: `Fetch ke ${providerName} gagal`, detail: String(e).slice(0, 400) });
   }
 }
