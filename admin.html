@@ -246,7 +246,7 @@
     const panel = document.getElementById('panel-participants');
     panel.innerHTML = '<div class="empty">Memuat...</div>';
     const { data, error } = await sb.from('participants')
-      .select('email,name,phone,city,promo_code,auth_method,join_date')
+      .select('email,name,phone,city,promo_code,auth_method,join_date,is_active,is_banned,banned_reason,subscription_expires_at,activation_method')
       .order('join_date', { ascending: false })
       .limit(1000);
     if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
@@ -258,26 +258,62 @@
       '  <span class="count" id="ps-count">' + data.length + ' pendaftar</span>' +
       '</div>' +
       '<div class="table-wrap"><table>' +
-      '<thead><tr><th>Tanggal</th><th>Nama</th><th>Email</th><th>HP</th><th>Kota</th><th>Promo</th><th>Auth</th></tr></thead>' +
+      '<thead><tr><th>Tanggal</th><th>Nama</th><th>Email</th><th>HP</th><th>Status</th><th>Promo</th><th>Expire</th><th>Auth</th><th>Aksi</th></tr></thead>' +
       '<tbody id="ps-tbody"></tbody></table></div>';
 
     const render = (rows) => {
       const tb = document.getElementById('ps-tbody');
       document.getElementById('ps-count').textContent = rows.length + ' pendaftar';
-      if (!rows.length) { tb.innerHTML = '<tr><td colspan="7" class="empty">Tidak ada hasil.</td></tr>'; return; }
-      tb.innerHTML = rows.map(r =>
-        '<tr>' +
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="9" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      tb.innerHTML = rows.map(r => {
+        const statusPill = r.is_banned
+          ? '<span class="pill fail" title="' + esc(r.banned_reason||'') + '">Banned</span>'
+          : (r.is_active
+            ? '<span class="pill ok">Aktif</span>'
+            : '<span class="pill warn">Belum Aktif</span>');
+        const expDisplay = r.subscription_expires_at
+          ? fmtDate(r.subscription_expires_at)
+          : '–';
+        const banBtn = r.is_banned
+          ? '<button onclick="esaUnbanUser(\'' + esc(r.email).replace(/'/g, "\\'") + '\')" style="background:transparent;color:#5fd482;border:1px solid #5fd482;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Unban</button>'
+          : '<button onclick="esaBanUser(\'' + esc(r.email).replace(/'/g, "\\'") + '\')" style="background:transparent;color:#ef9090;border:1px solid #ef6b6b;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Ban</button>';
+        return '<tr>' +
         '<td>' + esc(fmtDate(r.join_date)) + '</td>' +
         '<td>' + esc(r.name || '–') + '</td>' +
         '<td class="mono">' + esc(r.email) + '</td>' +
         '<td class="mono">' + esc(r.phone || '–') + '</td>' +
-        '<td>' + esc(r.city || '–') + '</td>' +
+        '<td>' + statusPill + '</td>' +
         '<td>' + (r.promo_code ? '<span class="pill warn">' + esc(r.promo_code) + '</span>' : '–') + '</td>' +
+        '<td class="mono">' + esc(expDisplay) + '</td>' +
         '<td>' + esc(r.auth_method || '–') + '</td>' +
-        '</tr>'
-      ).join('');
+        '<td>' + banBtn + '</td>' +
+        '</tr>';
+      }).join('');
     };
     render(data);
+
+    // === ADMIN ACTIONS ===
+    window.esaBanUser = async function(email){
+      const reason = prompt('Alasan suspend untuk '+email+':', 'Pelanggaran ToS');
+      if(reason === null) return;
+      const sb = window.__esaAdminSb;
+      const { error } = await sb.from('participants')
+        .update({ is_banned: true, banned_at: new Date().toISOString(), banned_reason: reason || 'No reason given' })
+        .eq('email', email);
+      if (error) { alert('Gagal: ' + error.message); return; }
+      alert('User '+email+' berhasil di-suspend.');
+      window.esaLoadTabParticipants();
+    };
+    window.esaUnbanUser = async function(email){
+      if(!confirm('Aktifkan kembali akun '+email+'?')) return;
+      const sb = window.__esaAdminSb;
+      const { error } = await sb.from('participants')
+        .update({ is_banned: false, banned_at: null, banned_reason: null })
+        .eq('email', email);
+      if (error) { alert('Gagal: ' + error.message); return; }
+      alert('User '+email+' diaktifkan kembali.');
+      window.esaLoadTabParticipants();
+    };
 
     document.getElementById('ps-search').addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase().trim();

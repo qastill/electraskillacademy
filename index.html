@@ -17735,6 +17735,23 @@ function handleCred(resp){
     // memberikan no. HP — user bisa lengkapi nanti via Edit Profile.
     try{
       var data=readESAData();
+
+      // ACCOUNT MERGE check — sama seperti Supabase OAuth flow
+      if(data.profile && data.profile.email && data.profile.email.toLowerCase() !== email.toLowerCase()){
+        var prevEmail = data.profile.email;
+        var ok = confirm(
+          'Profil di perangkat ini sebelumnya milik:\n  '+prevEmail+'\n\n'+
+          'Sekarang login dengan:\n  '+email+'\n\n'+
+          'OK = lanjut & overwrite. Cancel = batal login.'
+        );
+        if(!ok){
+          localStorage.removeItem(K);
+          return;
+        }
+        data.modules={}; data.levels={}; data.xp=0; data.streak=null;
+        console.info('[ESA-Auth] account merge: switch dari '+prevEmail+' ke '+email);
+      }
+
       data.profile=data.profile||{};
       data.profile.name=name;
       data.profile.email=email;
@@ -18232,6 +18249,27 @@ window.esaSubmitActivation=submitActivation;
 // fire event 'SIGNED_IN'. Kita process di sini: convert ke profile lokal +
 // sync participants (mirror handleCred yang Google).
 function handleSupabaseAuthEvent(event, session){
+  // Handle SIGNED_OUT — Supabase JWT expired / user logout di tab lain
+  if(event==='SIGNED_OUT'){
+    var hadUser = !!getUser();
+    if(hadUser){
+      console.info('[ESA-Auth] session berakhir/expired — clear local auth');
+      localStorage.removeItem(K);
+      if(typeof window.esaLogEvent==='function'){
+        window.esaLogEvent('session_expired',{ metadata:{reason:'supabase_signed_out'} });
+      }
+      // Optional: alert user
+      if(typeof window.esaToast==='function'){
+        window.esaToast('Sesi Berakhir','Silakan login lagi untuk melanjutkan.','⏱');
+      }
+    }
+    return;
+  }
+  // Handle TOKEN_REFRESHED — auto-refresh sukses, no UI action needed
+  if(event==='TOKEN_REFRESHED'){
+    console.info('[ESA-Auth] token auto-refreshed');
+    return;
+  }
   if(event!=='SIGNED_IN'||!session||!session.user)return;
   var u=session.user;
   var meta=u.user_metadata||{};
@@ -18250,6 +18288,34 @@ function handleSupabaseAuthEvent(event, session){
 
   try{
     var data=readESAData();
+
+    // ACCOUNT MERGE — kalau localStorage punya email berbeda dari yg
+    // baru login, peringatkan user. Ini mencegah accident: misal user
+    // pinjam laptop temennya, lalu temennya login dgn email beda — data
+    // user pertama tidak di-overwrite tanpa konfirmasi.
+    if(data.profile && data.profile.email && data.profile.email.toLowerCase() !== email.toLowerCase()){
+      var prevEmail = data.profile.email;
+      var ok = confirm(
+        'Profil di perangkat ini sebelumnya milik:\n  '+prevEmail+'\n\n'+
+        'Sekarang login dengan:\n  '+email+'\n\n'+
+        'OK = lanjut & overwrite (progres lokal akan jadi milik akun baru, tapi data lama tetap aman di server kalau sudah pernah sync).\n'+
+        'Cancel = batal login.'
+      );
+      if(!ok){
+        // Cancel login — clear auth + session
+        localStorage.removeItem(K);
+        try{ var sb=window.__esaSb; if(sb&&sb.auth&&sb.auth.signOut) sb.auth.signOut().catch(function(){}); }catch(e){}
+        return;
+      }
+      // User confirm overwrite — reset modules/levels supaya tidak nyangkut
+      // ke akun baru. Progress lama tetap aman di Supabase utk akun lama.
+      data.modules = {};
+      data.levels = {};
+      data.xp = 0;
+      data.streak = null;
+      console.info('[ESA-Auth] account merge: switch dari '+prevEmail+' ke '+email);
+    }
+
     data.profile=data.profile||{};
     data.profile.name=name;
     data.profile.email=email;
