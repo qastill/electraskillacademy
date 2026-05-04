@@ -17076,10 +17076,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     };
   }
 
-  // Helper: free levels (saat ini cuma L1 yg open trial; sesuaikan kalau ada
-  // tier lain). Dipakai gate isMemberActive supaya L1 tetap bisa dicoba.
+  // Helper: free levels — saat ini SEMUA level berbayar / butuh aktivasi.
+  // Tidak ada free trial. Member tanpa aktivasi tidak bisa akses level apapun.
   function isLevelFree(levelId) {
-    return levelId === 'L1';
+    return false;
   }
 
   // ========== RENDER LEVELS PATCH (add lock indicators) ==========
