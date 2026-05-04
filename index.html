@@ -15632,6 +15632,39 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     return promo && promo.benefits && promo.benefits.indexOf('full_access') >= 0;
   }
 
+  // Member status: aktif kalau (a) sudah bayar atau (b) pakai promo code valid
+  // Dipakai global oleh profile modal, gate akses modul, badge di nav, dll.
+  function isMemberActive() {
+    if (!state.profile) return false;
+    if (state.profile.isPaid === true) return true;
+    return hasFullAccess();
+  }
+  window.esaIsMemberActive = isMemberActive;
+  window.esaActivationMethod = function() {
+    if (!state.profile) return null;
+    if (state.profile.isPaid) return 'payment';
+    if (hasFullAccess()) return 'promo:' + state.promoCode;
+    return null;
+  };
+
+  // Aktivasi via promo code dari modal "Belum Aktif". Return boolean sukses.
+  function activateWithPromo(rawCode) {
+    const norm = normalizePromoCode(rawCode);
+    if (!norm || !VALID_PROMO_CODES[norm]) {
+      return { ok: false, error: `Kode "${rawCode}" tidak valid.` };
+    }
+    state.promoCode = norm;
+    if (!state.profile) state.profile = {};
+    state.profile.activatedAt = new Date().toISOString();
+    state.profile.activationMethod = 'promo:' + norm;
+    saveData(state);
+    if (typeof window.esaSyncParticipant === 'function') {
+      window.esaSyncParticipant(state.profile, state.promoCode);
+    }
+    return { ok: true, label: VALID_PROMO_CODES[norm].label };
+  }
+  window.esaActivateWithPromo = activateWithPromo;
+
   function loadData() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -15691,7 +15724,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   function showOnboardingModal() {
     const modal = document.getElementById('esa-onboarding-modal');
     if (!modal) return;
-    // Reset ke mode "Login" — tampilkan Google btn + divider
+    // Reset ke mode "Login" — tampilkan Google btn + divider, restore X button
     const eb = document.getElementById('esa-modal-eyebrow');
     const tt = document.getElementById('esa-modal-title');
     const st = document.getElementById('esa-modal-subtitle');
@@ -15699,6 +15732,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const dv = document.getElementById('esa-divider');
     const bt = document.getElementById('esa-btn-primary');
     const emailEl = document.getElementById('esa-profile-email');
+    const closeBtn = modal.querySelector('.esa-modal-close');
     if (eb) eb.textContent = 'Login · Daftar Peserta';
     if (tt) tt.textContent = 'Masuk ke Akademi';
     if (st) st.textContent = 'Data peserta akan tercetak di sertifikat kelulusan nantinya.';
@@ -15706,13 +15740,17 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (dv) dv.style.display = '';
     if (bt) bt.textContent = 'Masuk & Mulai Belajar →';
     if (emailEl) { emailEl.readOnly = false; emailEl.style.opacity = ''; }
+    if (closeBtn) closeBtn.style.display = '';
+    delete modal.dataset.required;
     modal.classList.add('active');
     setTimeout(initGoogleSignIn, 100);
   }
 
-  // Mode "lengkapi profil" — dipakai setelah login Google auth-gate.
-  // User sudah punya name+email dari Google JWT; cuma minta phone/city
-  // (Google tidak return data ini). Sembunyikan Google button + divider.
+  // Mode "lengkapi profil" — dipakai setelah login Google/OAuth.
+  // User sudah punya name+email dari provider; cuma minta phone/city
+  // (provider tidak return data ini). WAJIB diisi — close button +
+  // backdrop click di-disable. Tanpa profile lengkap, user tidak bisa
+  // akses modul/jalur (gate di hookSV mem-block & re-trigger modal ini).
   function showProfileCompletionModal() {
     const modal = document.getElementById('esa-onboarding-modal');
     if (!modal) return;
@@ -15722,8 +15760,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const gw = document.getElementById('esa-google-signin-wrap');
     const dv = document.getElementById('esa-divider');
     const bt = document.getElementById('esa-btn-primary');
+    const closeBtn = modal.querySelector('.esa-modal-close');
 
-    // Pre-fill dari state.profile (sudah diisi dari JWT Google di handleCred)
+    // Pre-fill dari state.profile (sudah diisi dari JWT Google/OAuth)
     const p = state.profile || {};
     const nameEl = document.getElementById('esa-profile-name');
     const emailEl = document.getElementById('esa-profile-email');
@@ -15731,20 +15770,29 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const cityEl = document.getElementById('esa-profile-city');
     if (nameEl) nameEl.value = p.name || '';
     if (emailEl) { emailEl.value = p.email || ''; emailEl.readOnly = true; emailEl.style.opacity = '0.7'; }
-    // Phone='-' = placeholder dari handleCred → kosongkan supaya user isi
     if (phoneEl) phoneEl.value = (p.phone && p.phone !== '-') ? p.phone : '';
     if (cityEl) cityEl.value = (p.city && p.city !== '-') ? p.city : '';
 
-    if (eb) eb.textContent = 'Lengkapi Profil';
+    if (eb) eb.textContent = 'Lengkapi Profil — WAJIB';
     if (tt) tt.textContent = `Halo, ${(p.name || 'Peserta').split(' ')[0]}!`;
-    if (st) st.textContent = 'Login berhasil. Lengkapi nomor HP/WhatsApp untuk akses penuh & terima sertifikat.';
+    if (st) st.innerHTML = 'Login berhasil. <strong style="color:#f0d080">Lengkapi nomor HP/WhatsApp untuk lanjut.</strong> Modal ini tidak bisa ditutup sampai profil lengkap — data dipakai untuk komunikasi & cetak sertifikat.';
     if (gw) gw.style.display = 'none';
     if (dv) dv.style.display = 'none';
     if (bt) bt.textContent = 'Simpan & Lanjutkan →';
+    if (closeBtn) closeBtn.style.display = 'none'; // hide X — wajib lengkapi
+
+    // Mark modal sebagai "wajib" — closeLoginModal akan refuse close
+    modal.dataset.required = 'true';
     modal.classList.add('active');
     setTimeout(() => { if (phoneEl) phoneEl.focus(); }, 200);
   }
   window.esaShowProfileCompletion = showProfileCompletionModal;
+
+  // Helper global: cek apakah profile lengkap (login full + phone real).
+  window.esaProfileComplete = function() {
+    const p = (typeof state !== 'undefined' && state) ? state.profile : null;
+    return !!(p && p.name && p.email && p.phone && p.phone !== '-' && p.phone.trim().length >= 8);
+  };
 
   function saveProfile() {
     const name = document.getElementById('esa-profile-name').value.trim();
@@ -15798,7 +15846,14 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (typeof window.esaSyncParticipant === 'function') {
       window.esaSyncParticipant(state.profile, state.promoCode);
     }
-    document.getElementById('esa-onboarding-modal').classList.remove('active');
+    const modalEl = document.getElementById('esa-onboarding-modal');
+    if (modalEl) {
+      delete modalEl.dataset.required; // clear "wajib" lock
+      modalEl.classList.remove('active');
+      // Restore close btn (kalau dimatikan oleh completion mode sebelumnya)
+      const cb = modalEl.querySelector('.esa-modal-close');
+      if (cb) cb.style.display = '';
+    }
     updateHomeProgress();
 
     const firstName = name.split(' ')[0];
@@ -15871,9 +15926,21 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
   window.esaRedeemPromoCode = redeemPromoCode;
 
-  // Close login modal (X button)
+  // Close login modal (X button) — refuse close kalau modal mode "wajib"
   function closeLoginModal() {
-    document.getElementById('esa-onboarding-modal').classList.remove('active');
+    const modal = document.getElementById('esa-onboarding-modal');
+    if (!modal) return;
+    if (modal.dataset.required === 'true') {
+      // Profile completion mode — tidak bisa di-close. Beri visual hint.
+      const phoneEl = document.getElementById('esa-profile-phone');
+      if (phoneEl) {
+        phoneEl.style.borderColor = '#ef6b6b';
+        phoneEl.focus();
+        setTimeout(()=>{ phoneEl.style.borderColor=''; }, 1500);
+      }
+      return;
+    }
+    modal.classList.remove('active');
     pendingAction = null;
   }
   window.esaCloseLoginModal = closeLoginModal;
@@ -16947,7 +17014,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (typeof window.openModul !== 'function') return;
     const original = window.openModul;
     window.openModul = function(code, trackId, levelId) {
-      // Check access
+      // Check access (level lock berdasarkan progress)
       if (!isLevelUnlocked(levelId, trackId)) {
         const msg = getLockMessage(levelId, trackId);
         if (msg) {
@@ -16955,13 +17022,23 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           return;
         }
       }
-      // Require profile before opening any module
+      // Require login + profile lengkap
       if (!state.profile || !state.profile.name) {
         pendingAction = () => {
           resetQuizStats(code, levelId, trackId);
           original(code, trackId, levelId);
         };
         showOnboardingModal();
+        return;
+      }
+      if (!window.esaProfileComplete || !window.esaProfileComplete()) {
+        pendingAction = () => original(code, trackId, levelId);
+        if (typeof window.esaShowProfileCompletion === 'function') window.esaShowProfileCompletion();
+        return;
+      }
+      // Member status — gate akses ke modul yg butuh aktivasi (semua kecuali L1 free)
+      if (!isMemberActive() && !(typeof isLevelFree === 'function' && isLevelFree(levelId))) {
+        if (typeof window.esaShowActivationModal === 'function') window.esaShowActivationModal();
         return;
       }
       stopQuizTimer();
@@ -16981,14 +17058,28 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           return;
         }
       }
-      // Require profile before starting any level
       if (!state.profile || !state.profile.name) {
         pendingAction = () => original(levelId, trackId);
         showOnboardingModal();
         return;
       }
+      if (!window.esaProfileComplete || !window.esaProfileComplete()) {
+        pendingAction = () => original(levelId, trackId);
+        if (typeof window.esaShowProfileCompletion === 'function') window.esaShowProfileCompletion();
+        return;
+      }
+      if (!isMemberActive() && !(typeof isLevelFree === 'function' && isLevelFree(levelId))) {
+        if (typeof window.esaShowActivationModal === 'function') window.esaShowActivationModal();
+        return;
+      }
       return original(levelId, trackId);
     };
+  }
+
+  // Helper: free levels (saat ini cuma L1 yg open trial; sesuaikan kalau ada
+  // tier lain). Dipakai gate isMemberActive supaya L1 tetap bisa dicoba.
+  function isLevelFree(levelId) {
+    return levelId === 'L1';
   }
 
   // ========== RENDER LEVELS PATCH (add lock indicators) ==========
@@ -17571,6 +17662,20 @@ function showProfileModal(){
       '</select>';
   }
 
+  // Member status badge — aktif (sudah bayar / pakai promo) vs belum aktif
+  var isActive = (typeof window.esaIsMemberActive==='function') ? window.esaIsMemberActive() : false;
+  var actMethod = (typeof window.esaActivationMethod==='function') ? window.esaActivationMethod() : null;
+  var statusBadge = isActive
+    ? '<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);color:#86efac;font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-top:6px;">'+
+        '<span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.6);"></span>'+
+        'Member Aktif'+
+        (actMethod && actMethod.indexOf('promo:')===0 ? ' · '+actMethod.slice(6) : (actMethod==='payment' ? ' · Berbayar' : ''))+
+      '</div>'
+    : '<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(239,107,107,0.15);border:1px solid rgba(239,107,107,0.4);color:#ef9090;font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-top:6px;cursor:pointer;" onclick="esaCloseProfileModal&&esaCloseProfileModal();esaShowActivationModal&&esaShowActivationModal();" title="Klik untuk aktivasi">'+
+        '<span style="width:8px;height:8px;border-radius:50%;background:#ef6b6b;"></span>'+
+        'Belum Aktif · Klik untuk aktivasi'+
+      '</div>';
+
   overlay.innerHTML='<div onclick="event.stopPropagation()" style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:16px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;color:#f5f0e6;box-shadow:0 30px 80px rgba(0,0,0,0.5);">'+
     // Header
     '<div style="padding:24px 28px 18px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:18px;">'+
@@ -17579,6 +17684,7 @@ function showProfileModal(){
         '<div style="font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:#c9a96e;font-weight:700;margin-bottom:4px;">Profil Peserta</div>'+
         '<div style="font-size:1.2rem;font-weight:700;color:#f5f0e6;line-height:1.3;margin-bottom:2px;">'+escapeHtmlEsa(u.name||p.name||'-')+'</div>'+
         '<div style="font-size:0.78rem;color:rgba(245,240,230,0.6);">'+escapeHtmlEsa(u.email||p.email||'-')+'</div>'+
+        statusBadge+
       '</div>'+
       '<button id="esa-profile-close" style="background:transparent;border:none;color:rgba(245,240,230,0.5);font-size:1.5rem;cursor:pointer;padding:0;width:32px;height:32px;line-height:1;">×</button>'+
     '</div>'+
@@ -17653,6 +17759,8 @@ function showProfileModal(){
 
   document.body.appendChild(overlay);
 
+  // Expose close untuk dipanggil dari onclick inline (mis. badge "Belum Aktif")
+  window.esaCloseProfileModal = function(){ if(overlay&&overlay.parentNode) overlay.remove(); };
   document.getElementById("esa-profile-close").onclick=function(){overlay.remove();};
   document.getElementById("esa-profile-cancel").onclick=function(){overlay.remove();};
   document.getElementById("esa-profile-logout").onclick=function(){overlay.remove();doLogout();};
@@ -17701,6 +17809,16 @@ function hookSV(){
     window.showView=function(v){
       if(PUBLIC_VIEWS[v])return window._origSV.apply(this,arguments);
       if(!getUser()){window._esaPending=v;buildModal();return;}
+      // Logged-in tapi profile belum lengkap (no HP masih '-' / kosong)
+      // → re-trigger modal lengkapi profil. View yg dimaksud disimpan di
+      // _esaPending dan akan dibuka otomatis setelah save.
+      if(typeof window.esaProfileComplete==='function' && !window.esaProfileComplete()){
+        window._esaPending=v;
+        if(typeof window.esaShowProfileCompletion==='function'){
+          window.esaShowProfileCompletion();
+        }
+        return;
+      }
       return window._origSV.apply(this,arguments);
     };
     window.__esaGateOn=true;
@@ -17709,6 +17827,68 @@ function hookSV(){
 
 window.esaShowAuthModal=buildModal;
 window.esaCloseAuthModal=closeModal;
+
+// =================== AKTIVASI MEMBER ===================
+// Modal untuk user yg sudah login + profile lengkap, tapi member-nya
+// belum aktif (belum bayar & belum pakai promo). Tampilkan 2 opsi:
+//   1) Masukkan kode aktivasi (mis. ELECTRA2026)
+//   2) Bayar (lihat halaman pricing)
+function buildActivationModal(){
+  if(document.getElementById("esa-activation-modal"))return;
+  var overlay=document.createElement("div");
+  overlay.id="esa-activation-modal";
+  overlay.style.cssText="position:fixed;inset:0;background:rgba(10,12,24,0.92);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);font-family:Inter,sans-serif;";
+  overlay.onclick=function(e){if(e.target===overlay)closeActivationModal();};
+
+  var box=document.createElement("div");
+  box.style.cssText="background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:20px;padding:40px 36px;max-width:440px;width:100%;text-align:center;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.7);";
+  box.onclick=function(e){e.stopPropagation();};
+
+  box.innerHTML=
+    '<button onclick="esaCloseActivationModal()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#6b7280;font-size:22px;cursor:pointer;line-height:1;">&times;</button>'+
+    '<div style="width:64px;height:64px;margin:0 auto 18px;background:linear-gradient(135deg,#d4af6a,#a07840);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;">🔒</div>'+
+    '<h2 style="color:#f5f0e6;font-size:1.3rem;font-weight:700;margin:0 0 8px;">Member Belum Aktif</h2>'+
+    '<p style="color:rgba(245,240,230,0.7);font-size:0.9rem;line-height:1.6;margin:0 0 22px;">Akses penuh ke semua modul, kuis, dan sertifikat butuh aktivasi. Pilih salah satu:</p>'+
+    '<div style="text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.2);border-radius:12px;padding:18px 18px 20px;margin-bottom:14px;">'+
+      '<div style="font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:#d4af6a;font-weight:700;margin-bottom:10px;">Opsi 1 · Kode Aktivasi</div>'+
+      '<input id="esa-activate-code" type="text" placeholder="Mis. ELECTRA2026" autocomplete="off" style="width:100%;padding:12px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.95rem;font-family:inherit;text-transform:uppercase;letter-spacing:0.04em;outline:none;margin-bottom:10px;">'+
+      '<div id="esa-activate-msg" style="font-size:0.78rem;min-height:1em;margin-bottom:10px;color:#ef9090;"></div>'+
+      '<button onclick="esaSubmitActivation()" style="width:100%;padding:12px 16px;background:#d4af6a;color:#0d0f1c;font-weight:700;border:none;border-radius:8px;font-size:0.92rem;cursor:pointer;letter-spacing:0.04em;">Aktivasi Sekarang</button>'+
+    '</div>'+
+    '<div style="text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:18px;">'+
+      '<div style="font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,230,0.55);font-weight:700;margin-bottom:8px;">Opsi 2 · Pembayaran</div>'+
+      '<p style="color:rgba(245,240,230,0.65);font-size:0.82rem;line-height:1.55;margin:0 0 12px;">Belum punya kode? Buka halaman harga untuk lihat paket berlangganan.</p>'+
+      '<button onclick="esaCloseActivationModal();if(typeof showView===\'function\')window._origSV?window._origSV(\'home\'):showView(\'home\');setTimeout(function(){var p=document.querySelector(\'.academy-pricing\');if(p)p.scrollIntoView({behavior:\'smooth\'});},300);" style="width:100%;padding:11px 16px;background:transparent;color:#d4af6a;border:1px solid #d4af6a;border-radius:8px;font-size:0.9rem;cursor:pointer;font-weight:600;">Lihat Pilihan Bayar →</button>'+
+    '</div>';
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  setTimeout(function(){var i=document.getElementById('esa-activate-code');if(i)i.focus();},150);
+}
+function closeActivationModal(){
+  var m=document.getElementById("esa-activation-modal");
+  if(m){m.remove();}
+}
+function submitActivation(){
+  var input=document.getElementById('esa-activate-code');
+  var msg=document.getElementById('esa-activate-msg');
+  if(!input||!msg)return;
+  var code=input.value.trim();
+  if(!code){msg.textContent='Masukkan kode aktivasi terlebih dahulu.';msg.style.color='#ef9090';return;}
+  if(typeof window.esaActivateWithPromo!=='function'){msg.textContent='Sistem belum siap, refresh halaman.';return;}
+  var r=window.esaActivateWithPromo(code);
+  if(!r.ok){msg.textContent=r.error;msg.style.color='#ef9090';return;}
+  msg.textContent='✓ Berhasil! '+r.label;msg.style.color='#86efac';
+  setTimeout(function(){
+    closeActivationModal();
+    if(typeof window.esaToast==='function'){window.esaToast('Member Aktif','Selamat! Akses penuh terbuka 🔓','🎉');}
+    // Resume pending view kalau ada
+    if(window._esaPending&&window._origSV){var v=window._esaPending;window._esaPending=null;window._origSV(v);}
+  },800);
+}
+window.esaShowActivationModal=buildActivationModal;
+window.esaCloseActivationModal=closeActivationModal;
+window.esaSubmitActivation=submitActivation;
 
 // Setelah redirect kembali dari LinkedIn / GitHub, Supabase JS auto-detect
 // access_token di URL hash (detectSessionInUrl:true), simpan session, lalu
@@ -17902,6 +18082,7 @@ else{setTimeout(init,200);}
     if (!sb) { console.info('[ESA-Sync] Supabase belum dikonfigurasi — skip participant sync'); return; }
     if (!profile || !profile.email) { console.warn('[ESA-Sync] participant tanpa email — skip'); return; }
     const phone = (profile.phone && profile.phone.trim()) ? profile.phone.trim() : '-';
+    const isActive = (typeof window.esaIsMemberActive === 'function') ? window.esaIsMemberActive() : !!promoCode;
     const row = {
       email: profile.email,
       name: profile.name || profile.email,
@@ -17910,21 +18091,40 @@ else{setTimeout(init,200);}
       city: profile.city && profile.city !== '-' ? profile.city : null,
       promo_code: promoCode || null,
       auth_method: profile.authMethod || 'manual',
-      join_date: profile.joinDate || new Date().toISOString()
+      join_date: profile.joinDate || new Date().toISOString(),
+      // Member status fields (butuh migration-002 — kalau belum run, kolom
+      // tidak ada → upsert error → fallback INSERT tanpa fields ini akan
+      // dicoba di catch di bawah).
+      is_active: isActive,
+      activated_at: isActive ? (profile.activatedAt || new Date().toISOString()) : null,
+      activation_method: profile.activationMethod || (promoCode ? 'promo:'+promoCode : null)
+    };
+    // Subset minimal — dipakai sebagai fallback kalau migration-002 belum run
+    // (kolom is_active/activated_at/activation_method belum ada).
+    const rowMin = {
+      email: row.email, name: row.name, phone: row.phone, nik: row.nik, city: row.city,
+      promo_code: row.promo_code, auth_method: row.auth_method, join_date: row.join_date
     };
     try {
-      const { error: upsertErr } = await sb.from('participants')
+      let { error: upsertErr } = await sb.from('participants')
         .upsert(row, { onConflict: 'email' });
+      // Fallback 1: kolom member-status belum ada (migration-002 belum run).
+      // Detect via PGRST204 / "Could not find the X column" error.
+      if (upsertErr && /column|schema cache/i.test(upsertErr.message || '')) {
+        console.warn('[ESA-Sync] kolom is_active belum ada — jalankan migration-002. Upsert tanpa fields tsb.');
+        const r2 = await sb.from('participants').upsert(rowMin, { onConflict: 'email' });
+        upsertErr = r2.error;
+      }
       if (!upsertErr) {
-        console.info('[ESA-Sync] participant upserted:', profile.email);
+        console.info('[ESA-Sync] participant upserted:', profile.email, 'active=' + isActive);
         return;
       }
-      // Fallback: kalau policy UPDATE belum ada (42501 / 401), tetap coba INSERT.
-      const { error: insErr } = await sb.from('participants').insert(row);
+      // Fallback 2: kalau UPDATE policy belum ada (42501/401), coba INSERT min.
+      const { error: insErr } = await sb.from('participants').insert(rowMin);
       if (!insErr) {
-        console.info('[ESA-Sync] participant tercatat (insert):', profile.email);
+        console.info('[ESA-Sync] participant tercatat (insert min):', profile.email);
       } else if (insErr.code === '23505') {
-        console.info('[ESA-Sync] participant sudah ada — UPDATE policy belum aktif, profil di DB tidak ter-update:', profile.email);
+        console.info('[ESA-Sync] participant sudah ada — UPDATE policy belum aktif (lihat migration-001):', profile.email);
       } else {
         logSyncError('upsert/insert participant', insErr);
       }
@@ -17934,7 +18134,9 @@ else{setTimeout(init,200);}
   // Append exam attempt + upsert module_progress
   window.esaSyncModuleAttempt = async function (rec, profile) {
     const sb = getClient();
-    if (!sb || !profile || !profile.email || !rec) return;
+    if (!sb) { console.info('[ESA-Sync] module attempt: Supabase belum dikonfigurasi'); return; }
+    if (!profile || !profile.email) { console.warn('[ESA-Sync] module attempt: profile.email kosong — kuis tidak ter-sync'); return; }
+    if (!rec) return;
     const email = profile.email;
     try {
       sb.from('exam_attempts').insert({
@@ -17946,7 +18148,10 @@ else{setTimeout(init,200);}
         total: rec.total,
         score_pct: rec.scorePct,
         passed: !!rec.lastAttemptPassed
-      }).then(function (r) { if (r.error) logSyncError('insert exam_attempt', r.error); });
+      }).then(function (r) {
+        if (r.error) logSyncError('insert exam_attempt', r.error);
+        else console.info('[ESA-Sync] exam_attempt tercatat:', email, rec.code, rec.scorePct+'%');
+      });
 
       sb.from('module_progress').upsert({
         participant_email: email,
@@ -17958,14 +18163,19 @@ else{setTimeout(init,200);}
         passed: !!rec.passed,
         last_attempt_at: rec.lastDate || new Date().toISOString()
       }, { onConflict: 'participant_email,module_code' })
-        .then(function (r) { if (r.error) logSyncError('upsert module_progress', r.error); });
+        .then(function (r) {
+          if (r.error) logSyncError('upsert module_progress', r.error);
+          else console.info('[ESA-Sync] module_progress upserted:', email, rec.code, 'best='+rec.bestScore);
+        });
     } catch (e) { logSyncError('module attempt', e); }
   };
 
   // Insert level completion (sertifikat baru)
   window.esaSyncLevelCompletion = async function (levelRec, profile) {
     const sb = getClient();
-    if (!sb || !profile || !profile.email || !levelRec) return;
+    if (!sb) { console.info('[ESA-Sync] level completion: Supabase belum dikonfigurasi'); return; }
+    if (!profile || !profile.email) { console.warn('[ESA-Sync] level completion: profile.email kosong'); return; }
+    if (!levelRec) return;
     try {
       const { error } = await sb.from('level_completions').insert({
         participant_email: profile.email,
@@ -17976,7 +18186,13 @@ else{setTimeout(init,200);}
         module_count: levelRec.moduleCount,
         completed_at: levelRec.completedDate || new Date().toISOString()
       });
-      if (error && error.code !== '23505') logSyncError('insert level_completion', error);
+      if (!error) {
+        console.info('[ESA-Sync] level_completion tercatat:', profile.email, levelRec.levelId, levelRec.certId);
+      } else if (error.code === '23505') {
+        console.info('[ESA-Sync] level_completion sudah ada (skip):', profile.email, levelRec.levelId);
+      } else {
+        logSyncError('insert level_completion', error);
+      }
     } catch (e) { logSyncError('insert level_completion', e); }
   };
 })();
