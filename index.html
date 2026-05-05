@@ -18457,21 +18457,35 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       <div class="esa-modal-subtitle" id="esa-modal-subtitle">Data peserta akan tercetak di sertifikat kelulusan nantinya.</div>
     </div>
 
-    <!-- Google Sign-In button -->
-    <div class="esa-google-signin-wrap" id="esa-google-signin-wrap">
-      <div id="esa-google-btn"></div>
-      <button type="button" class="esa-google-fallback-btn" id="esa-google-fallback-btn" onclick="esaGoogleFallback()">
-        <svg width="20" height="20" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        <span>Masuk dengan Akun Google</span>
-      </button>
+    <!-- Mode toggle: Email vs No-Email registration -->
+    <div id="esa-mode-toggle" style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:4px;margin-bottom:18px;gap:4px;">
+      <button type="button" id="esa-mode-email-btn" onclick="esaSetOnboardMode('email')" style="flex:1;padding:10px 8px;border:none;background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border-radius:7px;font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.04em;transition:background 0.2s, color 0.2s;">Pakai Email</button>
+      <button type="button" id="esa-mode-phone-btn" onclick="esaSetOnboardMode('phone')" style="flex:1;padding:10px 8px;border:none;background:transparent;color:rgba(245,240,230,0.6);border-radius:7px;font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.04em;transition:background 0.2s, color 0.2s;">Tanpa Email</button>
     </div>
 
-    <div class="esa-divider" id="esa-divider"><span>atau isi manual</span></div>
+    <!-- Notice ditampilkan saat mode "Tanpa Email" -->
+    <div id="esa-phone-mode-notice" style="display:none;background:rgba(212,175,106,0.08);border:1px solid rgba(212,175,106,0.25);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:0.78rem;color:rgba(245,240,230,0.85);line-height:1.55;">
+      ℹ️ <strong>Mode Tanpa Email</strong> — cukup isi data diri lengkap (nama, NIK, no HP, kota). Akun diidentifikasi via no HP &amp; NIK. Sertifikat tetap diterbitkan atas nama kamu.
+    </div>
+
+    <!-- Email-only top section: Google + divider (hidden in phone mode) -->
+    <div id="esa-email-only-top">
+      <!-- Google Sign-In button -->
+      <div class="esa-google-signin-wrap" id="esa-google-signin-wrap">
+        <div id="esa-google-btn"></div>
+        <button type="button" class="esa-google-fallback-btn" id="esa-google-fallback-btn" onclick="esaGoogleFallback()">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span>Masuk dengan Akun Google</span>
+        </button>
+      </div>
+
+      <div class="esa-divider" id="esa-divider"><span>atau isi manual</span></div>
+    </div>
 
     <!-- Manual registration form -->
     <div class="esa-form-group">
@@ -18479,7 +18493,8 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       <input type="text" id="esa-profile-name" class="esa-form-input" placeholder="Sesuai KTP — akan tercetak di sertifikat" autocomplete="name">
     </div>
 
-    <div class="esa-form-group">
+    <!-- Email field — hidden saat mode "Tanpa Email" -->
+    <div class="esa-form-group" id="esa-email-field-group">
       <label class="esa-form-label">Email <span class="req">*</span></label>
       <input type="email" id="esa-profile-email" class="esa-form-input" placeholder="nama@contoh.com" autocomplete="email">
     </div>
@@ -18489,8 +18504,20 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       <input type="tel" id="esa-profile-phone" class="esa-form-input" placeholder="08xxxxxxxxxx" autocomplete="tel">
     </div>
 
-    <div class="esa-form-group">
-      <label class="esa-form-label">Kota / Instansi <span class="opt">(opsional)</span></label>
+    <!-- NIK field — opsional saat mode email, WAJIB saat mode "Tanpa Email" -->
+    <div class="esa-form-group" id="esa-nik-field-group">
+      <label class="esa-form-label">NIK (KTP)
+        <span class="req" id="esa-nik-req-label" style="display:none;">*</span>
+        <span class="opt" id="esa-nik-opt-label">(opsional)</span>
+      </label>
+      <input type="text" id="esa-profile-nik" class="esa-form-input" placeholder="16 digit NIK KTP" autocomplete="off" inputmode="numeric" maxlength="16">
+    </div>
+
+    <div class="esa-form-group" id="esa-city-field-group">
+      <label class="esa-form-label">Kota / Instansi
+        <span class="req" id="esa-city-req-label" style="display:none;">*</span>
+        <span class="opt" id="esa-city-opt-label">(opsional)</span>
+      </label>
       <input type="text" id="esa-profile-city" class="esa-form-input" placeholder="Contoh: PT PLN Indramayu">
     </div>
 
@@ -18499,9 +18526,6 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       <input type="text" id="esa-profile-promo" class="esa-form-input esa-promo-input" placeholder="Masukkan kode promo jika ada" autocomplete="off" style="text-transform:uppercase;" oninput="esaCheckPromoCode()">
       <div class="esa-promo-status" id="esa-promo-status"></div>
     </div>
-
-    <!-- NIK kept hidden as backup (optional) -->
-    <input type="hidden" id="esa-profile-nik" value="">
 
     <!-- Referral (opsional) — tracking kode ajakan dari user lain -->
     <div class="esa-form-group" id="esa-referral-group">
@@ -18519,8 +18543,8 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
     <button class="esa-btn-primary" id="esa-btn-primary" onclick="esaSaveProfile()">Masuk & Mulai Belajar →</button>
 
-    <!-- Magic link login — alternatif kalau user tidak punya akun OAuth -->
-    <div id="esa-magic-link-wrap" style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);">
+    <!-- Magic link login — alternatif kalau user tidak punya akun OAuth (hanya untuk mode email) -->
+    <div id="esa-magic-link-wrap" style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);" data-email-only="1">
       <div style="font-size:0.74rem;color:rgba(245,240,230,0.55);text-align:center;margin-bottom:10px;">— atau login tanpa password —</div>
       <button type="button" id="esa-magic-link-btn" onclick="esaSendMagicLink()" style="width:100%;padding:11px 16px;background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.5);border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -18982,30 +19006,76 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     }
   };
 
-  function showOnboardingModal() {
+  function showOnboardingModal(opts) {
     const modal = document.getElementById('esa-onboarding-modal');
     if (!modal) return;
+    opts = opts || {};
     // Reset ke mode "Login" — tampilkan Google btn + divider, restore X button
     const eb = document.getElementById('esa-modal-eyebrow');
     const tt = document.getElementById('esa-modal-title');
     const st = document.getElementById('esa-modal-subtitle');
-    const gw = document.getElementById('esa-google-signin-wrap');
-    const dv = document.getElementById('esa-divider');
     const bt = document.getElementById('esa-btn-primary');
     const emailEl = document.getElementById('esa-profile-email');
     const closeBtn = modal.querySelector('.esa-modal-close');
+    const toggle = document.getElementById('esa-mode-toggle');
     if (eb) eb.textContent = 'Login · Daftar Peserta';
     if (tt) tt.textContent = 'Masuk ke Akademi';
     if (st) st.textContent = 'Data peserta akan tercetak di sertifikat kelulusan nantinya.';
-    if (gw) gw.style.display = '';
-    if (dv) dv.style.display = '';
     if (bt) bt.textContent = 'Masuk & Mulai Belajar →';
     if (emailEl) { emailEl.readOnly = false; emailEl.style.opacity = ''; }
     if (closeBtn) closeBtn.style.display = '';
+    if (toggle) toggle.style.display = '';
     delete modal.dataset.required;
     modal.classList.add('active');
+    // Default ke mode email kecuali caller minta phone
+    setOnboardMode(opts.mode === 'phone' ? 'phone' : 'email');
     setTimeout(initGoogleSignIn, 100);
   }
+
+  // Toggle antara mode "Email" dan "Tanpa Email" pada onboarding modal.
+  // Mode 'phone': sembunyikan email field + Google + magic link, wajibkan NIK + city.
+  function setOnboardMode(mode) {
+    const modal = document.getElementById('esa-onboarding-modal');
+    if (!modal) return;
+    if (mode !== 'phone') mode = 'email';
+    modal.dataset.mode = mode;
+
+    const isPhone = (mode === 'phone');
+    const show = (id, vis) => { const el = document.getElementById(id); if (el) el.style.display = vis ? '' : 'none'; };
+
+    // Hide Google + divider + email field + magic link bila phone mode
+    show('esa-email-only-top', !isPhone);
+    show('esa-email-field-group', !isPhone);
+    show('esa-magic-link-wrap', !isPhone);
+    show('esa-phone-mode-notice', isPhone);
+
+    // NIK & city: required di phone mode, optional di email mode
+    show('esa-nik-req-label', isPhone);
+    show('esa-nik-opt-label', !isPhone);
+    show('esa-city-req-label', isPhone);
+    show('esa-city-opt-label', !isPhone);
+
+    // Toggle button styling
+    const emailBtn = document.getElementById('esa-mode-email-btn');
+    const phoneBtn = document.getElementById('esa-mode-phone-btn');
+    if (emailBtn && phoneBtn) {
+      const activeStyle = 'background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;';
+      const inactiveStyle = 'background:transparent;color:rgba(245,240,230,0.6);';
+      const apply = (btn, active) => {
+        btn.style.background = active ? 'linear-gradient(135deg,#c9a96e,#a07840)' : 'transparent';
+        btn.style.color = active ? '#1a1d2e' : 'rgba(245,240,230,0.6)';
+      };
+      apply(emailBtn, !isPhone);
+      apply(phoneBtn, isPhone);
+    }
+
+    // Update CTA button label sesuai mode
+    const bt = document.getElementById('esa-btn-primary');
+    if (bt && !modal.dataset.required) {
+      bt.textContent = isPhone ? 'Daftar dengan Data Diri →' : 'Masuk & Mulai Belajar →';
+    }
+  }
+  window.esaSetOnboardMode = setOnboardMode;
 
   // Mode "lengkapi profil" — dipakai setelah login Google/OAuth.
   // User sudah punya name+email dari provider; cuma minta phone/city
@@ -19022,6 +19092,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const dv = document.getElementById('esa-divider');
     const bt = document.getElementById('esa-btn-primary');
     const closeBtn = modal.querySelector('.esa-modal-close');
+    const toggle = document.getElementById('esa-mode-toggle');
+    const emailTop = document.getElementById('esa-email-only-top');
+    const magicWrap = document.getElementById('esa-magic-link-wrap');
+    const phoneNotice = document.getElementById('esa-phone-mode-notice');
 
     // Pre-fill dari state.profile (sudah diisi dari JWT Google/OAuth)
     const p = state.profile || {};
@@ -19037,8 +19111,15 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (eb) eb.textContent = 'Lengkapi Profil — WAJIB';
     if (tt) tt.textContent = `Halo, ${(p.name || 'Peserta').split(' ')[0]}!`;
     if (st) st.innerHTML = 'Login berhasil. <strong style="color:#f0d080">Lengkapi nomor HP/WhatsApp untuk lanjut.</strong> Modal ini tidak bisa ditutup sampai profil lengkap — data dipakai untuk komunikasi & cetak sertifikat.';
+    // Mode toggle tidak relevan karena user sudah punya email dari OAuth
+    if (toggle) toggle.style.display = 'none';
+    if (emailTop) emailTop.style.display = 'none';
     if (gw) gw.style.display = 'none';
     if (dv) dv.style.display = 'none';
+    if (magicWrap) magicWrap.style.display = 'none';
+    if (phoneNotice) phoneNotice.style.display = 'none';
+    // Force email mode flags
+    modal.dataset.mode = 'email';
     if (bt) bt.textContent = 'Simpan & Lanjutkan →';
     // X button TETAP visible — user bisa skip kalau mau lengkapi nanti.
     // Real "completion required" bisa di-enforce di dashboard / saat
@@ -19051,6 +19132,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     setTimeout(() => { if (phoneEl) phoneEl.focus(); }, 200);
   }
   window.esaShowProfileCompletion = showProfileCompletionModal;
+  window.esaShowOnboardingModal = showOnboardingModal;
 
   // Helper global: cek apakah profile lengkap (login full + phone real).
   window.esaProfileComplete = function() {
@@ -19059,8 +19141,11 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   };
 
   function saveProfile() {
+    const modal = document.getElementById('esa-onboarding-modal');
+    const mode = (modal && modal.dataset.mode === 'phone') ? 'phone' : 'email';
+
     const name = document.getElementById('esa-profile-name').value.trim();
-    const email = document.getElementById('esa-profile-email').value.trim();
+    const emailRaw = document.getElementById('esa-profile-email').value.trim();
     const phone = document.getElementById('esa-profile-phone').value.trim();
     const nik = (document.getElementById('esa-profile-nik') || {}).value || '';
     const city = document.getElementById('esa-profile-city').value.trim();
@@ -19070,13 +19155,39 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       alert('Nama lengkap minimal 3 karakter');
       return;
     }
-    if (!email || !email.includes('@') || !email.includes('.')) {
-      alert('Format email tidak valid');
-      return;
-    }
-    if (!phone || phone.replace(/\D/g, '').length < 8) {
+    const cleanPhoneDigits = phone.replace(/\D/g, '');
+    if (!phone || cleanPhoneDigits.length < 8) {
       alert('No. HP/WhatsApp wajib diisi (minimal 8 digit)');
       return;
+    }
+
+    // Mode-specific validation
+    let email;
+    const nikDigits = nik.replace(/\D/g, '').trim();
+    if (mode === 'phone') {
+      // Tanpa Email — wajib NIK 16 digit + city
+      if (nikDigits.length !== 16) {
+        alert('NIK wajib diisi 16 digit (sesuai KTP) untuk pendaftaran tanpa email.');
+        const nikEl = document.getElementById('esa-profile-nik');
+        if (nikEl) nikEl.focus();
+        return;
+      }
+      if (!city) {
+        alert('Kota / Instansi wajib diisi untuk pendaftaran tanpa email.');
+        const cityEl = document.getElementById('esa-profile-city');
+        if (cityEl) cityEl.focus();
+        return;
+      }
+      // Generate synthetic email — deterministik per NIK supaya re-register
+      // dari device lain dengan NIK yg sama akan match record yg sudah ada.
+      email = 'nik-' + nikDigits + '@noemail.electraacademy.local';
+    } else {
+      // Mode email — validate email format
+      if (!emailRaw || !emailRaw.includes('@') || !emailRaw.includes('.')) {
+        alert('Format email tidak valid');
+        return;
+      }
+      email = emailRaw;
     }
 
     // Wajib centang ToS
@@ -19115,12 +19226,13 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       name: name,
       email: email,
       phone: phone,
-      nik: nik.trim() || '-',
+      nik: nikDigits || '-',
       city: city || '-',
       joinDate: state.profile && state.profile.joinDate ? state.profile.joinDate : new Date().toISOString(),
       avatarInitials: name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase(),
-      // Preserve provider info dari OAuth flow (handleCred / Supabase OAuth)
-      authMethod: (state.profile && state.profile.authMethod) || 'manual',
+      // Mode 'phone' = registrasi tanpa email; preserve OAuth provider kalau ada.
+      authMethod: mode === 'phone' ? 'phone' : ((state.profile && state.profile.authMethod) || 'manual'),
+      noEmail: mode === 'phone' ? true : false,
       googleSub: state.profile && state.profile.googleSub,
       picture: state.profile && state.profile.picture,
       activatedAt: state.profile && state.profile.activatedAt,
@@ -19136,6 +19248,23 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     }
 
     saveData(state);
+
+    // Sync ke auth-gate session juga supaya nav button & view-gate konsisten
+    // (auth-gate IIFE pakai key esa_logged_in_user — terpisah dari esa_data_v1).
+    try {
+      const authUser = {
+        name: state.profile.name,
+        email: state.profile.email,
+        picture: state.profile.picture || '',
+        loggedAt: Date.now(),
+        provider: state.profile.authMethod || 'manual'
+      };
+      localStorage.setItem('esa_logged_in_user', JSON.stringify(authUser));
+    } catch (e) {}
+    if (typeof window.esaUpdateNavUser === 'function') {
+      try { window.esaUpdateNavUser(); } catch (e) {}
+    }
+
     if (typeof window.esaSyncParticipant === 'function') {
       window.esaSyncParticipant(state.profile, state.promoCode);
     }
@@ -20850,6 +20979,38 @@ function buildModal(){
 
   var gsiDiv=document.createElement("div");gsiDiv.id="esa-auth-gsi-btn";gsiDiv.style.marginBottom="12px";gsiDiv.style.display="none";
 
+  // ---- Divider antara OAuth dan manual options ----
+  var divider=document.createElement("div");
+  divider.style.cssText="display:flex;align-items:center;gap:10px;margin:14px 0 12px;color:rgba(245,240,230,0.4);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;";
+  divider.innerHTML='<span style="flex:1;height:1px;background:rgba(255,255,255,0.08);"></span><span>atau</span><span style="flex:1;height:1px;background:rgba(255,255,255,0.08);"></span>';
+
+  // ---- Daftar Manual dengan Email ----
+  var emailBtn=document.createElement("button");
+  emailBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="none" stroke="#1a1d2e" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Daftar Manual dengan Email';
+  styleOAuthBtn(emailBtn,'linear-gradient(135deg,#c9a96e,#a07840)','#1a1d2e');
+  emailBtn.onclick=function(){
+    closeModal();
+    setTimeout(function(){
+      if(typeof window.esaShowOnboardingModal==='function'){
+        window.esaShowOnboardingModal({mode:'email'});
+      }
+    },180);
+  };
+
+  // ---- Daftar Tanpa Email (pakai data diri lengkap) ----
+  var noEmailBtn=document.createElement("button");
+  noEmailBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A18 18 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Daftar Tanpa Email (Pakai No HP &amp; NIK)';
+  styleOAuthBtn(noEmailBtn,'transparent','#c9a96e');
+  noEmailBtn.style.border='1px solid rgba(201,169,110,0.6)';
+  noEmailBtn.onclick=function(){
+    closeModal();
+    setTimeout(function(){
+      if(typeof window.esaShowOnboardingModal==='function'){
+        window.esaShowOnboardingModal({mode:'phone'});
+      }
+    },180);
+  };
+
   var p2=document.createElement("p");
   p2.textContent="Dengan mendaftar, Anda menyetujui syarat & ketentuan Electra Skill Academy";
   p2.style.color="#6b7280";p2.style.fontSize="11px";p2.style.margin="16px 0 0";
@@ -20860,6 +21021,9 @@ function buildModal(){
   box.appendChild(linkedinBtn);
   box.appendChild(githubBtn);
   box.appendChild(gsiDiv);
+  box.appendChild(divider);
+  box.appendChild(emailBtn);
+  box.appendChild(noEmailBtn);
   box.appendChild(p2);
   overlay.appendChild(box);
   document.body.appendChild(overlay);
@@ -21403,6 +21567,7 @@ function hookSV(){
 
 window.esaShowAuthModal=buildModal;
 window.esaCloseAuthModal=closeModal;
+window.esaUpdateNavUser=updateNavUser;
 
 // =================== AKTIVASI MEMBER ===================
 // Modal untuk user yg sudah login + profile lengkap, tapi member-nya
