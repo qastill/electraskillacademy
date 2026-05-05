@@ -3887,6 +3887,12 @@ body {
 }
 @keyframes esa-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes esa-fade-in { from { opacity: 0; } to { opacity: 1; } }
+/* Live Class Schedule responsive */
+@media (max-width: 640px) {
+  #liveclass-schedule-list > div { grid-template-columns: 1fr !important; gap: 12px !important; padding: 16px !important; }
+  #liveclass-schedule-list > div > div:first-child { border-right: none !important; padding-right: 0 !important; padding-bottom: 12px; border-bottom: 1px solid rgba(212,175,106,0.2); display: flex; gap: 14px; align-items: center; justify-content: flex-start; text-align: left !important; }
+  #liveclass-schedule-list > div > div:first-child > div { margin: 0 !important; }
+}
 
 .purchase-modal-inner {
   background: white;
@@ -8099,6 +8105,78 @@ body {
 </div>
 
 <!-- ========================================================== -->
+<!-- VIEW: LIVE CLASS SCHEDULE                                  -->
+<!-- ========================================================== -->
+<div class="view" id="view-liveclass-schedule">
+  <div class="detail-nav">
+    <a class="detail-nav-logo" onclick="showView('home')" style="cursor:pointer;">
+      <div class="detail-nav-logo-mark">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+          <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+          <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+        </svg>
+      </div>
+      <div class="detail-nav-logo-text">
+        Electra<br>
+        <span class="line-2">Skill Academy</span>
+      </div>
+    </a>
+    <div class="detail-nav-center">Jadwal Live Class</div>
+    <div class="detail-nav-right">
+      <button class="detail-nav-back" onclick="showView('home')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kembali
+      </button>
+    </div>
+  </div>
+
+  <section style="background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 50%, #0d0f1c 100%); padding: 60px 0 80px; min-height: 100vh;">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 0 40px;">
+
+      <!-- Header -->
+      <div style="text-align:center; margin-bottom: 48px;">
+        <div style="font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:#d4af6a; margin-bottom:14px;">— Live Class Mingguan —</div>
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 600; color: #f5f0e6; margin: 0 0 18px; letter-spacing: 0.005em;">
+          Jadwal <span style="font-style: italic; color: #d4af6a;">Live Class</span>
+        </h1>
+        <p style="font-size: 1.05rem; color: rgba(245,240,230,0.75); max-width: 640px; margin: 0 auto; line-height: 1.7;">
+          Sesi tatap muka virtual dengan pemateri ahli. <strong style="color:#f0d080">Mulai 1 Juli 2026</strong>, sesi diadakan setiap <strong style="color:#f0d080">3 hari sekali</strong> dengan urutan modul terstruktur.
+        </p>
+      </div>
+
+      <!-- Filter bar -->
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 36px;">
+        <button onclick="filterLiveClass('upcoming')" id="lc-filter-upcoming" class="lc-filter-btn active" style="background:#d4af6a;color:#0d0f1c;border:none;border-radius:20px;padding:9px 20px;font-size:0.82rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">📅 Akan Datang</button>
+        <button onclick="filterLiveClass('today')" id="lc-filter-today" class="lc-filter-btn" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.5);border-radius:20px;padding:9px 20px;font-size:0.82rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">🔴 Hari Ini</button>
+        <button onclick="filterLiveClass('week')" id="lc-filter-week" class="lc-filter-btn" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.5);border-radius:20px;padding:9px 20px;font-size:0.82rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">⚡ Minggu Ini</button>
+        <button onclick="filterLiveClass('past')" id="lc-filter-past" class="lc-filter-btn" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.5);border-radius:20px;padding:9px 20px;font-size:0.82rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">🎬 Rekaman Lalu</button>
+        <button onclick="filterLiveClass('all')" id="lc-filter-all" class="lc-filter-btn" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.5);border-radius:20px;padding:9px 20px;font-size:0.82rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">Semua</button>
+      </div>
+
+      <!-- Schedule list -->
+      <div id="liveclass-schedule-list" style="display: grid; grid-template-columns: 1fr; gap: 14px;">
+        <div style="text-align:center;color:rgba(245,240,230,0.5);padding:40px;">Memuat jadwal...</div>
+      </div>
+
+      <!-- CTA -->
+      <div style="background: linear-gradient(135deg, rgba(212,175,106,0.12), rgba(212,175,106,0.04)); border: 1px solid rgba(212,175,106,0.25); border-radius: 16px; padding: 36px 32px; text-align: center; margin-top: 40px;">
+        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.7rem; font-weight: 600; color: #f5f0e6; margin: 0 0 10px;">Tidak Mau Lewatkan Sesi Live?</h2>
+        <p style="color: rgba(245,240,230,0.7); max-width: 520px; margin: 0 auto 20px; line-height: 1.65; font-size: 0.95rem;">
+          Daftar via WhatsApp untuk dapat reminder H-1 + link Zoom otomatis. Akses live class GRATIS untuk member aktif.
+        </p>
+        <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20daftar%20notifikasi%20Live%20Class%20Electra%20Academy" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:13px 26px;font-weight:700;font-size:0.92rem;box-shadow:0 6px 20px rgba(37,211,102,0.3);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
+          Daftar Notifikasi WA
+        </a>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ========================================================== -->
 <!-- VIEW: JOB OPPORTUNITY                                      -->
 <!-- ========================================================== -->
 <div class="view" id="view-jobs">
@@ -11541,18 +11619,141 @@ function renderLiveClassPanel(module, levelId, trackId, instructor) {
 function computeAllModulesOrdered() {
   const out = [];
   const seen = new Set();
+  const moduleTrackMap = {};
   ['L1','L2'].forEach(lv => {
     (CURRICULUM[lv] || []).forEach(m => {
-      if (!seen.has(m.code)) { out.push(m); seen.add(m.code); }
+      if (!seen.has(m.code)) {
+        out.push({ ...m, _trackId: lv, _levelId: lv });
+        seen.add(m.code);
+      }
     });
   });
   ['S1','S2','S3','S4','S5','S6','S7','S8'].forEach(track => {
     (CURRICULUM[track] || []).forEach(m => {
-      if (!seen.has(m.code)) { out.push(m); seen.add(m.code); }
+      if (!seen.has(m.code)) {
+        out.push({ ...m, _trackId: track, _levelId: m.level || 'L3' });
+        seen.add(m.code);
+      }
     });
   });
   return out;
 }
+
+// =================== LIVE CLASS SCHEDULE PAGE ===================
+let _lcCurrentFilter = 'upcoming';
+
+function getLiveClassSchedule() {
+  // Return array dgn { code, title, track, level, liveDate, liveDateStr,
+  //   timeStr, instructor, status, hasRecording, daysUntil }
+  const all = computeAllModulesOrdered();
+  const start = new Date('2026-07-01T19:00:00+07:00');
+  const now = new Date();
+  return all.map((m, idx) => {
+    const liveDate = new Date(start.getTime() + idx * 3 * 86400000);
+    const daysUntil = Math.floor((liveDate - now) / (24*60*60*1000));
+    const isToday = daysUntil === 0;
+    const isPast = daysUntil < 0;
+    const isThisWeek = daysUntil > 0 && daysUntil <= 7;
+    const trackId = m._trackId;
+    const levelId = m._levelId;
+    const instructor = (typeof getModuleInstructor === 'function') ? getModuleInstructor(trackId, levelId) : { name: 'Dr Qashtalani Haramaini', initials: 'QH', role: 'Founder' };
+    const media = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[m.code]) ? MODULE_MEDIA[m.code] : {};
+    const hasRecording = !!media.liveClassUrl;
+    let status = 'upcoming';
+    if (isPast) status = hasRecording ? 'recording' : 'past_no_rec';
+    else if (isToday) status = 'today';
+    else if (isThisWeek) status = 'this_week';
+    return {
+      code: m.code,
+      title: m.title,
+      trackId, levelId,
+      liveDate, daysUntil,
+      liveDateStr: liveDate.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }),
+      timeStr: liveDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
+      instructor,
+      hasRecording,
+      status
+    };
+  });
+}
+
+function renderLiveClassSchedulePage(filter) {
+  filter = filter || _lcCurrentFilter || 'upcoming';
+  _lcCurrentFilter = filter;
+
+  // Update filter btn active state
+  document.querySelectorAll('.lc-filter-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = 'transparent';
+    b.style.color = '#d4af6a';
+    b.style.border = '1px solid rgba(212,175,106,0.5)';
+  });
+  const activeBtn = document.getElementById('lc-filter-' + filter);
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+    activeBtn.style.background = '#d4af6a';
+    activeBtn.style.color = '#0d0f1c';
+    activeBtn.style.border = 'none';
+  }
+
+  let schedule = getLiveClassSchedule();
+  if (filter === 'today') schedule = schedule.filter(s => s.status === 'today');
+  else if (filter === 'week') schedule = schedule.filter(s => s.status === 'today' || s.status === 'this_week');
+  else if (filter === 'past') schedule = schedule.filter(s => s.status === 'recording' || s.status === 'past_no_rec');
+  else if (filter === 'upcoming') schedule = schedule.filter(s => s.daysUntil >= 0);
+  // 'all' = no filter
+
+  // Limit display untuk avoid 600+ row
+  const limited = schedule.slice(0, 100);
+
+  const list = document.getElementById('liveclass-schedule-list');
+  if (!list) return;
+  if (!limited.length) {
+    list.innerHTML = '<div style="text-align:center;color:rgba(245,240,230,0.5);padding:60px 20px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px dashed rgba(255,255,255,0.1);">Tidak ada sesi pada filter ini.</div>';
+    return;
+  }
+
+  list.innerHTML = limited.map(s => {
+    let badge = '';
+    let bgGradient = 'background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);';
+    let dateColor = 'color: #f5f0e6;';
+    if (s.status === 'today') {
+      badge = '<span style="background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;padding:3px 10px;border-radius:99px;font-size:0.7rem;font-weight:700;letter-spacing:0.05em;">🔴 LIVE HARI INI</span>';
+      bgGradient = 'background: linear-gradient(135deg,rgba(239,68,68,0.08),rgba(255,255,255,0.04)); border: 1px solid rgba(239,68,68,0.3);';
+    } else if (s.status === 'this_week') {
+      badge = '<span style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);color:#fcd34d;padding:3px 10px;border-radius:99px;font-size:0.7rem;font-weight:700;letter-spacing:0.05em;">⚡ DALAM ' + s.daysUntil + ' HARI</span>';
+      bgGradient = 'background: linear-gradient(135deg,rgba(251,191,36,0.06),rgba(255,255,255,0.04)); border: 1px solid rgba(251,191,36,0.25);';
+    } else if (s.status === 'upcoming') {
+      badge = '<span style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);color:#93c5fd;padding:3px 10px;border-radius:99px;font-size:0.7rem;font-weight:700;letter-spacing:0.05em;">📅 ' + s.daysUntil + ' hari lagi</span>';
+    } else if (s.status === 'recording') {
+      badge = '<span style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);color:#86efac;padding:3px 10px;border-radius:99px;font-size:0.7rem;font-weight:700;letter-spacing:0.05em;">🎬 REKAMAN ADA</span>';
+    } else if (s.status === 'past_no_rec') {
+      badge = '<span style="background:rgba(107,114,128,0.18);border:1px solid rgba(107,114,128,0.4);color:#9ca3af;padding:3px 10px;border-radius:99px;font-size:0.7rem;font-weight:700;letter-spacing:0.05em;">● TELAH BERLALU</span>';
+      dateColor = 'color: rgba(245,240,230,0.5);';
+    }
+    return '<div style="' + bgGradient + ' border-radius:12px;padding:18px 20px;display:grid;grid-template-columns: 130px 1fr auto;gap:18px;align-items:center;transition:transform 0.15s;" onmouseover="this.style.transform=\'translateX(4px)\'" onmouseout="this.style.transform=\'translateX(0)\'">'+
+      '<div style="text-align:center;border-right:1px solid rgba(212,175,106,0.2);padding-right:16px;">'+
+        '<div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#d4af6a;font-weight:700;margin-bottom:2px;">'+s.liveDateStr.split(',')[0]+'</div>'+
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.6rem;font-weight:600;'+dateColor+';line-height:1;">'+(s.liveDateStr.split(',')[1]||'').trim().split(' ')[0]+'</div>'+
+        '<div style="font-size:0.74rem;color:rgba(245,240,230,0.55);margin-top:2px;">'+(s.liveDateStr.split(',')[1]||'').trim().split(' ').slice(1).join(' ')+'</div>'+
+        '<div style="font-size:0.74rem;color:#d4af6a;margin-top:6px;font-weight:600;">'+s.timeStr+'</div>'+
+      '</div>'+
+      '<div style="min-width:0;">'+
+        '<div style="margin-bottom:6px;">'+badge+'</div>'+
+        '<div style="font-weight:700;color:#f5f0e6;font-size:1.02rem;line-height:1.4;margin-bottom:4px;">'+escapeHtmlEsa(s.title)+'</div>'+
+        '<div style="font-size:0.78rem;color:rgba(245,240,230,0.65);">'+
+          '<span style="background:rgba(212,175,106,0.12);color:#d4af6a;padding:2px 8px;border-radius:4px;font-weight:600;letter-spacing:0.04em;">'+s.trackId+'</span> '+
+          '<span style="color:rgba(245,240,230,0.55);">'+escapeHtmlEsa(s.code)+'</span> · '+
+          '<span style="color:rgba(245,240,230,0.7);">👨‍🏫 '+escapeHtmlEsa(s.instructor.name)+'</span>'+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">'+
+        '<button onclick="openModul(\''+s.code+'\',\''+s.trackId+'\',\''+s.levelId+'\');setTimeout(()=>switchTab(\'liveclass\'),300);" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.5);border-radius:6px;padding:6px 12px;font-size:0.74rem;cursor:pointer;font-weight:600;white-space:nowrap;">Lihat Modul →</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+window.filterLiveClass = function(f) { renderLiveClassSchedulePage(f); };
 
 function openModul(code, trackId, levelId) {
   currentModuleCode = code;
@@ -18049,6 +18250,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         updateUserHUD();
         if (view === 'home') updateHomeProgress();
         if (view === 'talent' && typeof renderTalents === 'function') renderTalents();
+        if (view === 'liveclass-schedule' && typeof renderLiveClassSchedulePage === 'function') renderLiveClassSchedulePage();
       }, 100);
     };
   }
@@ -18712,7 +18914,7 @@ function hookSV(){
   if(typeof window.showView==="function"&&!window.__esaGateOn){
     window._origSV=window.showView;
     // View publik (tidak butuh login): home, about (Tentang Kami), talent (Our Talent)
-    var PUBLIC_VIEWS={home:1,about:1,talent:1};
+    var PUBLIC_VIEWS={home:1,about:1,talent:1,'liveclass-schedule':1};
     window.showView=function(v){
       if(PUBLIC_VIEWS[v])return window._origSV.apply(this,arguments);
       if(!getUser()){window._esaPending=v;buildModal();return;}
@@ -19010,9 +19212,18 @@ else{setTimeout(init,200);}
     leaderboardLink.style.cursor='pointer';
     leaderboardLink.onclick=function(e){e.preventDefault(); if(typeof window.esaShowLeaderboard==='function') window.esaShowLeaderboard();};
 
+    // Live Class schedule link — public, lihat jadwal sesi live
+    var liveClassLink=document.createElement('a');
+    liveClassLink.className='nav-right';
+    liveClassLink.href='#';
+    liveClassLink.textContent='🎥 Live Class';
+    liveClassLink.style.cursor='pointer';
+    liveClassLink.onclick=function(e){e.preventDefault(); publicShow('liveclass-schedule');};
+
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
     navGroup.appendChild(ourTalentLink);
+    navGroup.appendChild(liveClassLink);
     navGroup.appendChild(jobLink);
     if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
