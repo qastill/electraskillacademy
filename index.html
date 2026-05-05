@@ -11393,11 +11393,11 @@ function renderLevels(trackId) {
                   ? `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,0.12);color:#16a34a;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-left:8px;vertical-align:middle;">✓ Done · ${fmtDate(rec.lastDate)} · ${rec.bestScore}%</span>`
                   : '';
                 return `
-                <button class="module-card ${isLocked ? 'locked' : ''}" onclick="${isLocked ? 'openPurchaseModal()' : `openModul('${m.code}', '${trackId}', '${lvl.id}')`}">
+                <button class="module-card ${isLocked ? 'locked' : ''}" data-module-code="${m.code}" onclick="${isLocked ? 'openPurchaseModal()' : `openModul('${m.code}', '${trackId}', '${lvl.id}')`}">
                   <span class="module-code">${m.code}</span>
                   <div>
                     <div class="module-title">${m.title}${isLocked ? ' <span class="module-lock-icon">🔒</span>' : ''}${moduleDoneBadge}</div>
-                    <div class="module-meta">${m.jp || 4} JP · ${m.mode || 'T'} · ${m.category || 'Umum'}</div>
+                    <div class="module-meta">${m.jp || 4} JP · ${m.mode || 'T'} · ${m.category || 'Umum'}<span class="esa-mod-rating" data-rating-code="${m.code}"></span></div>
                   </div>
                   <div class="module-arrow">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -19974,6 +19974,59 @@ else{setTimeout(init,200);}
     });
     const target = document.getElementById('view-modul');
     if(target) observer.observe(target, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  // ---------- AGGREGATE RATING DISPLAY pada module cards ----------
+  // Pre-fetch v_module_rating_stats sekali, cache, decorate semua card.
+  let _ratingsCache = null;
+  let _ratingsFetchPromise = null;
+
+  async function fetchAllModuleRatings(){
+    if(_ratingsCache) return _ratingsCache;
+    if(_ratingsFetchPromise) return _ratingsFetchPromise;
+    const sb = window.__esaSb;
+    if(!sb){ _ratingsCache = {}; return {}; }
+    _ratingsFetchPromise = (async () => {
+      try{
+        const r = await sb.from('v_module_rating_stats').select('*');
+        if(r.error) throw r.error;
+        const map = {};
+        (r.data || []).forEach(row => { map[row.module_code] = row; });
+        _ratingsCache = map;
+        return map;
+      }catch(e){
+        console.warn('[ESA-Rating] fetch gagal:', e.message);
+        _ratingsCache = {};
+        return {};
+      }
+    })();
+    return _ratingsFetchPromise;
+  }
+
+  async function decorateModuleRatings(){
+    const els = document.querySelectorAll('.esa-mod-rating[data-rating-code]:not(.esa-mod-rating-done)');
+    if(!els.length) return;
+    const ratings = await fetchAllModuleRatings();
+    els.forEach(el => {
+      const code = el.dataset.ratingCode;
+      const r = ratings[code];
+      if(r && r.total_ratings > 0){
+        el.innerHTML = ' · <span style="color:#d4af6a;font-weight:600;">⭐ '+r.avg_rating+'</span> <span style="color:rgba(0,0,0,0.4);font-size:0.9em;">('+r.total_ratings+')</span>';
+      }
+      el.classList.add('esa-mod-rating-done');
+    });
+  }
+  window.esaDecorateModuleRatings = decorateModuleRatings;
+
+  // Auto-decorate saat jalur view dibuka
+  document.addEventListener('DOMContentLoaded', function(){
+    // Watch view-jalur untuk render ratings setelah modules muncul
+    const target = document.getElementById('view-jalur');
+    if(target){
+      new MutationObserver(function(){
+        setTimeout(decorateModuleRatings, 200);
+      }).observe(target, { childList: true, subtree: true });
+    }
   });
 })();
 </script>
