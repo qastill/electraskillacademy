@@ -7936,6 +7936,427 @@ button:active:not(:disabled),
   .home-faq-answer { padding: 0 18px 20px; padding-top: 16px; font-size: 0.9rem; }
   .home-faq-cta-btn { width: 100%; justify-content: center; }
 }
+
+/* ================================================================
+   GAMIFIED HOME PROGRESS — RPG-style profile with avatar, XP bar, quest
+   ================================================================ */
+
+/* Override grid layout — pakai single column flow, lebih elegant */
+.esa-home-progress {
+  display: block !important;
+  padding: 36px 40px !important;
+  background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 100%) !important;
+  border: 1px solid rgba(201,169,110,0.25) !important;
+  border-radius: 16px !important;
+  position: relative;
+}
+@media (max-width: 768px) {
+  .esa-home-progress { padding: 24px 18px !important; margin: 20px 14px !important; }
+}
+
+/* HERO: Avatar + Identity + XP bar */
+.esa-game-hero {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.esa-game-avatar-wrap { position: relative; }
+.esa-game-avatar {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a1d2e, #0d0f1c);
+  border: 3px solid #c9a96e;
+  position: relative;
+  overflow: visible;
+  box-shadow: 0 8px 20px rgba(201,169,110,0.25);
+}
+.esa-game-avatar img {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.esa-home-avatar-fallback {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c9a96e, #a07840);
+  color: #0d0f1c;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.2rem; font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.esa-game-avatar-rank {
+  position: absolute;
+  bottom: -2px; right: -4px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #0d0f1c;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 2px solid #0d0f1c;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.esa-game-identity { min-width: 0; }
+.esa-game-greeting {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245,240,230,0.55);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.esa-game-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 500;
+  color: #f5f0e6;
+  line-height: 1.1;
+  letter-spacing: 0.005em;
+  margin-bottom: 8px;
+}
+.esa-game-tier {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.esa-game-tier-rank {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.esa-game-tier-name {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+}
+.esa-game-tier-active {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  padding: 3px 9px;
+  background: rgba(34,197,94,0.18);
+  border: 1px solid rgba(34,197,94,0.4);
+  color: #86efac;
+  border-radius: 99px;
+  margin-left: 4px;
+}
+
+/* XP BAR — game progress */
+.esa-game-xpbar { width: 100%; max-width: 540px; }
+.esa-game-xpbar-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  margin-bottom: 6px;
+  color: rgba(245,240,230,0.6);
+}
+.esa-game-xpbar-current {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f0d080;
+  font-variant-numeric: tabular-nums;
+}
+.esa-game-xpbar-next {
+  letter-spacing: 0.02em;
+}
+.esa-game-xpbar-track {
+  height: 10px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.esa-game-xpbar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 0 12px rgba(212,175,106,0.4);
+}
+.esa-game-xpbar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 24px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+}
+.esa-game-xpbar-hint {
+  font-size: 0.7rem;
+  color: rgba(245,240,230,0.55);
+  margin-top: 6px;
+  letter-spacing: 0.02em;
+}
+
+/* Encouragement banner */
+.esa-game-encourage {
+  background: rgba(212,175,106,0.06);
+  border-left: 2px solid #c9a96e;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  border-radius: 0 8px 8px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.esa-game-encourage-quote {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.8rem;
+  color: #c9a96e;
+  line-height: 0.6;
+  margin-top: 6px;
+}
+.esa-game-encourage-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  color: rgba(245,240,230,0.85);
+  font-size: 1.02rem;
+  line-height: 1.5;
+  flex: 1;
+}
+.esa-game-encourage-text strong {
+  color: #f0d080;
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Quest Card — RPG quest log */
+.esa-game-quest-card {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(212,175,106,0.10), rgba(212,175,106,0.03));
+  border: 1px solid rgba(212,175,106,0.32);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.esa-game-quest-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #f0d080, #c9a96e);
+}
+.esa-game-quest-side {
+  text-align: center;
+  border-right: 1px solid rgba(212,175,106,0.2);
+  padding-right: 14px;
+}
+.esa-game-quest-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.esa-game-quest-num {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #f0d080;
+  line-height: 1;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+.esa-game-quest-reward {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: #86efac;
+  font-weight: 700;
+}
+.esa-game-quest-body { min-width: 0; }
+.esa-game-quest-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f5f0e6;
+  margin-bottom: 4px;
+  letter-spacing: 0.005em;
+}
+.esa-game-quest-desc {
+  font-size: 0.88rem;
+  color: rgba(245,240,230,0.75);
+  line-height: 1.5;
+}
+.esa-game-quest-desc strong {
+  color: #f0d080;
+  font-weight: 600;
+}
+.esa-game-quest-btn {
+  background: #c9a96e;
+  color: #0d0f1c;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 22px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.esa-game-quest-btn:hover {
+  background: #d4b878;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(201,169,110,0.32);
+}
+
+/* Career Goal */
+.esa-game-goal {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 22px;
+}
+.esa-game-goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.esa-game-goal-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,240,230,0.5);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.esa-game-goal-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #f5f0e6;
+  line-height: 1.2;
+  letter-spacing: 0.005em;
+  margin-bottom: 2px;
+}
+.esa-game-goal-org {
+  font-size: 0.78rem;
+  color: rgba(245,240,230,0.55);
+  letter-spacing: 0.02em;
+}
+.esa-game-goal-pct {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #c9a96e;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.esa-game-goal-track {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.esa-game-goal-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a96e, #f0d080);
+  transition: width 0.8s ease;
+  border-radius: 99px;
+}
+.esa-game-goal-meta {
+  font-size: 0.72rem;
+  color: rgba(245,240,230,0.55);
+  font-style: italic;
+}
+
+/* Stats bar — 4 columns */
+.esa-game-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 20px 0;
+  margin-bottom: 18px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.esa-game-stat { text-align: center; }
+.esa-game-stat-num {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #f0d080;
+  line-height: 1;
+  letter-spacing: 0.005em;
+}
+.esa-game-stat-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245,240,230,0.5);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* Quick links */
+.esa-game-quicklinks {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.esa-game-quick-btn {
+  background: transparent;
+  color: rgba(245,240,230,0.7);
+  border: 1px solid rgba(212,175,106,0.25);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.74rem;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+}
+.esa-game-quick-btn:hover {
+  color: #f0d080;
+  border-color: rgba(212,175,106,0.6);
+  background: rgba(212,175,106,0.06);
+  transform: translateY(-1px);
+}
+
+/* Mobile gamified */
+@media (max-width: 768px) {
+  .esa-game-hero { grid-template-columns: 80px 1fr; gap: 16px; }
+  .esa-game-avatar { width: 80px; height: 80px; }
+  .esa-game-avatar-rank { width: 28px; height: 28px; font-size: 0.74rem; }
+  .esa-game-quest-card { grid-template-columns: 1fr; gap: 12px; padding: 16px 18px; }
+  .esa-game-quest-side { border-right: none; padding-right: 0; padding-bottom: 12px; border-bottom: 1px solid rgba(212,175,106,0.18); display: flex; align-items: center; gap: 14px; justify-content: flex-start; text-align: left; }
+  .esa-game-quest-side > div { margin: 0 !important; }
+  .esa-game-quest-btn { width: 100%; justify-content: center; }
+  .esa-game-goal-header { flex-direction: column; }
+  .esa-game-goal-pct { font-size: 1.6rem; }
+  .esa-game-stats { grid-template-columns: repeat(2, 1fr); gap: 12px 8px; }
+  .esa-game-stat-num { font-size: 1.7rem; }
+  .esa-game-quick-btn { flex: 1; min-width: calc(50% - 4px); text-align: center; }
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -19809,6 +20230,52 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
 
   // ========== HOME PROGRESS PANEL ==========
+  // ===== XP TIERS — gamification ranks =====
+  // Setiap modul lulus dapat ~25 XP (rata-rata). Tier scale di-tune untuk
+  // memberikan progression milestone setiap 4-8 modul.
+  const XP_TIERS = [
+    { id:'pemula',     min:0,    max:99,    rank:'Pemula',     icon:'I',   color:'#8b7355' },
+    { id:'praktisi',   min:100,  max:299,   rank:'Praktisi',   icon:'II',  color:'#a07840' },
+    { id:'spesialis',  min:300,  max:699,   rank:'Spesialis',  icon:'III', color:'#c9a96e' },
+    { id:'ahli',       min:700,  max:1499,  rank:'Ahli',       icon:'IV',  color:'#d4af6a' },
+    { id:'master',     min:1500, max:2999,  rank:'Master',     icon:'V',   color:'#e5c07b' },
+    { id:'grandmaster',min:3000, max:99999, rank:'Grandmaster',icon:'VI',  color:'#f0d080' }
+  ];
+  function getCurrentXpTier(xp) {
+    return XP_TIERS.find(t => xp >= t.min && xp <= t.max) || XP_TIERS[0];
+  }
+  function getNextXpTier(xp) {
+    const cur = getCurrentXpTier(xp);
+    const idx = XP_TIERS.indexOf(cur);
+    return idx < XP_TIERS.length - 1 ? XP_TIERS[idx+1] : null;
+  }
+
+  // ===== CAREER GOALS — personifikasi tujuan per jalur =====
+  const CAREER_GOALS = {
+    'S1': { title:'Senior Building Electrician', org:'Konsultan MEP / Kontraktor Instalasi' },
+    'S2': { title:'Industrial Electrical Specialist', org:'Manufaktur, Oil & Gas, Pabrik' },
+    'S3': { title:'Senior Distribution Engineer', org:'PLN UP3 / ULP / Vendor Utility' },
+    'S4': { title:'HV Transmission Specialist', org:'PLN UPT / UID / GITET' },
+    'S5': { title:'Energy Data Analyst', org:'PLN, IPP, Konsultan Energy' },
+    'S6': { title:'Certified Energy Auditor', org:'BNSP / HAKE — Konsultan Energi' },
+    'S7': { title:'Renewable Energy Engineer', org:'IPP EBT, Developer PLTS / Wind' },
+    'S8': { title:'Ahli K3 Listrik (AK3L)', org:'PLN, Manufaktur Besar, Migas' },
+    'L1': { title:'Teknisi Listrik Bersertifikat', org:'Pondasi untuk semua jalur karir' },
+    'L2': { title:'Engineer Muda Multi-Disiplin', org:'Siap pilih spesialisasi karir' }
+  };
+  function detectActiveTrack() {
+    // Cari jalur dgn modul-attempted terbanyak
+    const counts = {};
+    Object.values(state.modules).forEach(m => {
+      if (m.trackId && m.trackId.startsWith('S')) {
+        counts[m.trackId] = (counts[m.trackId]||0) + 1;
+      }
+    });
+    let best = null, bestN = 0;
+    for (const k in counts) if (counts[k] > bestN) { best = k; bestN = counts[k]; }
+    return best;
+  }
+
   function updateHomeProgress() {
     if (!state.profile) return;
     let panel = document.getElementById('esa-home-progress-panel');
@@ -19817,8 +20284,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const certs = state.certificates.length;
     const modulesPassed = Object.values(state.modules).filter(m => m.passed).length;
     const modulesAttempted = Object.values(state.modules).filter(m => (m.attempts||0) > 0).length;
+    const xp = state.xp || 0;
 
-    // Tier tertinggi
+    // Tier tertinggi (level-based, untuk badge UI lama)
     let highestLevel = 'L1';
     for (const lv of LEVEL_ORDER) {
       if (lv === 'L1' || lv === 'L2') {
@@ -19828,19 +20296,18 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         if (hasAnyTrack) highestLevel = lv;
       }
     }
-    const tier = TIER[highestLevel];
-    const tierClass = tier.slug;
 
-    const earnedLevels = {};
-    LEVEL_ORDER.forEach(lv => {
-      if (lv === 'L1' || lv === 'L2') {
-        earnedLevels[lv] = getLevelProgress(lv, null).complete;
-      } else {
-        earnedLevels[lv] = Object.keys(state.levels).some(k => k.startsWith(lv + '_') && state.levels[k].certIssued);
-      }
-    });
+    // ===== XP-BASED GAMIFICATION =====
+    const xpTier = getCurrentXpTier(xp);
+    const nextXpTier = getNextXpTier(xp);
+    const xpInTier = xp - xpTier.min;
+    const xpToNext = nextXpTier ? (nextXpTier.min - xp) : 0;
+    const tierRange = (xpTier.max - xpTier.min + 1);
+    const xpProgressPct = nextXpTier
+      ? Math.min(100, Math.round((xpInTier / tierRange) * 100))
+      : 100;
 
-    // ===== TIME-BASED GREETING =====
+    // ===== TIME GREETING =====
     const hour = new Date().getHours();
     const greeting =
       hour < 5 ? 'Selamat Malam' :
@@ -19849,142 +20316,189 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       hour < 19 ? 'Selamat Sore' : 'Selamat Malam';
     const firstName = (state.profile.name || '').split(' ')[0];
 
-    // ===== NEXT ACTION SUGGESTION =====
-    // Cari modul L1/L2 yg belum lulus + lanjutan logical
+    // ===== AVATAR (foto Google atau initials) =====
+    const profilePic = state.profile.picture || '';
+    const initials = (state.profile.avatarInitials || (state.profile.name||'?').split(' ').map(s=>s[0]).slice(0,2).join('')).toUpperCase();
+    const avatarHtml = profilePic
+      ? `<img src="${escapeHtml(profilePic)}" alt="${escapeHtml(firstName)}" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+         <div class="esa-home-avatar-fallback" style="display:none;">${escapeHtml(initials)}</div>`
+      : `<div class="esa-home-avatar-fallback">${escapeHtml(initials)}</div>`;
+
+    // ===== ACTIVE QUEST (modul aktif) =====
     const currentLevelArr = (CURRICULUM[highestLevel === 'L1' || highestLevel === 'L2' ? highestLevel : 'L1']) || [];
     let nextModule = null;
     for (const m of currentLevelArr) {
       const rec = state.modules[m.code];
-      if (!rec || !rec.passed) {
-        nextModule = m;
-        break;
-      }
+      if (!rec || !rec.passed) { nextModule = m; break; }
     }
-    // Kalau L1 sudah selesai, suggest L2; kalau L2 selesai, suggest jalur S1+
-    let actionTitle = '🚀 Mulai Belajar';
-    let actionDesc = '';
-    let actionBtnText = 'Mulai Modul Pertama';
-    let actionBtnFn = '';
+    let questTitle = 'Quest Baru';
+    let questDesc = '';
+    let questCta = 'Mulai';
+    let questFn = '';
+    let questXp = '+25 XP';
+    let questModuleNum = '';
     if (modulesAttempted === 0) {
       const firstMod = (CURRICULUM['L1'] || [])[0];
-      actionTitle = '🚀 Yuk Mulai Belajar!';
-      actionDesc = firstMod ? `Mulai dengan modul pertama: <strong>${escapeHtml(firstMod.title)}</strong>` : 'Mulai dari Level 1 — Esensial.';
-      actionBtnText = 'Mulai Modul Pertama →';
-      actionBtnFn = firstMod ? `openModul('${firstMod.code}','L1','L1')` : `showView('jalur')`;
+      questTitle = 'Quest Perdana';
+      questDesc = firstMod ? `Mulai petualangan dari modul pertama: <strong>${escapeHtml(firstMod.title)}</strong>` : 'Pilih modul untuk memulai.';
+      questCta = 'Mulai Quest';
+      questFn = firstMod ? `openModul('${firstMod.code}','L1','L1')` : `showView('jalur')`;
+      questModuleNum = firstMod ? firstMod.code : '';
     } else if (nextModule) {
       const recNext = state.modules[nextModule.code];
       const isResume = recNext && (recNext.attempts||0) > 0 && !recNext.passed;
-      actionTitle = isResume ? '📖 Lanjutkan Belajar' : '➡ Modul Berikutnya';
-      actionDesc = isResume
-        ? `Sedang mengerjakan: <strong>${escapeHtml(nextModule.title)}</strong> — yuk diselesaikan!`
-        : `Modul berikutnya: <strong>${escapeHtml(nextModule.title)}</strong>`;
-      actionBtnText = (isResume ? 'Lanjut →' : 'Buka Modul →');
+      questTitle = isResume ? 'Lanjutkan Quest' : 'Quest Berikutnya';
+      questDesc = isResume
+        ? `Sedikit lagi! Lanjutkan: <strong>${escapeHtml(nextModule.title)}</strong>`
+        : `Quest berikutnya menanti: <strong>${escapeHtml(nextModule.title)}</strong>`;
+      questCta = isResume ? 'Lanjut Belajar' : 'Buka Quest';
       const lvForOpen = nextModule.level || (highestLevel === 'L1' || highestLevel === 'L2' ? highestLevel : 'L1');
-      actionBtnFn = `openModul('${nextModule.code}','${lvForOpen}','${lvForOpen}')`;
+      questFn = `openModul('${nextModule.code}','${lvForOpen}','${lvForOpen}')`;
+      questModuleNum = nextModule.code;
     } else if (highestLevel === 'L2') {
-      actionTitle = '🎯 Pilih Jalur Karir';
-      actionDesc = 'Level Fundamental selesai! Saatnya pilih jalur spesialisasi (Distribusi, Industri, Energy Analyst, dll).';
-      actionBtnText = 'Lihat 8 Jalur Karir →';
-      actionBtnFn = `showView('jalur')`;
+      questTitle = 'Pilih Jalur Karir';
+      questDesc = 'Pondasi sudah kuat! Saatnya pilih spesialisasi (Distribusi, Industri, dll).';
+      questCta = 'Lihat 8 Jalur';
+      questFn = `showView('jalur')`;
+      questXp = '+100 XP per modul L3';
     } else {
-      actionTitle = '🏆 Lanjut ke Level Berikutnya';
-      actionDesc = `Selamat! Anda sudah di tier ${tier.name}. Lanjut ke level berikutnya untuk naik tier.`;
-      actionBtnText = 'Lihat Level →';
-      actionBtnFn = `showView('jalur')`;
+      questTitle = 'Tier Up!';
+      questDesc = `Lanjutkan ke level berikutnya untuk naik tier.`;
+      questCta = 'Lihat Level';
+      questFn = `showView('jalur')`;
     }
 
-    // ===== PROGRESS BAR Level Esensial / Fundamental =====
-    const totalL1 = (CURRICULUM['L1'] || []).length;
-    const passedL1 = (CURRICULUM['L1'] || []).filter(m => state.modules[m.code] && state.modules[m.code].passed).length;
-    const pctL1 = totalL1 > 0 ? Math.round((passedL1 / totalL1) * 100) : 0;
-    const totalL2 = (CURRICULUM['L2'] || []).length;
-    const passedL2 = (CURRICULUM['L2'] || []).filter(m => state.modules[m.code] && state.modules[m.code].passed).length;
-    const pctL2 = totalL2 > 0 ? Math.round((passedL2 / totalL2) * 100) : 0;
+    // ===== CAREER GOAL (personifikasi tujuan) =====
+    const activeTrack = detectActiveTrack();
+    const goalKey = activeTrack || (highestLevel === 'L2' ? 'L2' : 'L1');
+    const goal = CAREER_GOALS[goalKey];
 
-    // ===== STREAK MOTIVATION =====
+    // Total modul di jalur tujuan (untuk overall progress)
+    const totalGoalModules = activeTrack
+      ? (CURRICULUM[activeTrack] || []).length + (CURRICULUM['L1'] || []).length + (CURRICULUM['L2'] || []).length
+      : (CURRICULUM['L1'] || []).length + (CURRICULUM['L2'] || []).length;
+    const passedGoalModules = activeTrack
+      ? (CURRICULUM[activeTrack] || []).filter(m => state.modules[m.code] && state.modules[m.code].passed).length
+        + (CURRICULUM['L1'] || []).filter(m => state.modules[m.code] && state.modules[m.code].passed).length
+        + (CURRICULUM['L2'] || []).filter(m => state.modules[m.code] && state.modules[m.code].passed).length
+      : modulesPassed;
+    const goalPct = totalGoalModules > 0 ? Math.round((passedGoalModules / totalGoalModules) * 100) : 0;
+
+    // ===== ENCOURAGEMENT MESSAGE =====
+    let encouragement = '';
+    if (modulesAttempted === 0) encouragement = 'Setiap expert pernah jadi pemula. Hari ini saatnya kamu mulai.';
+    else if (xpProgressPct >= 80 && nextXpTier) encouragement = `Sedikit lagi naik ke tier <strong>${nextXpTier.rank}</strong>! Cuma <strong>${xpToNext} XP</strong> lagi.`;
+    else if (modulesPassed >= 1 && modulesPassed < 5) encouragement = 'Momentum bagus — terus konsisten setiap hari, sertifikat menanti.';
+    else if (modulesPassed >= 5 && modulesPassed < 15) encouragement = 'Kamu sudah serius — gak banyak yg nyampe sini. Lanjutkan!';
+    else if (modulesPassed >= 15) encouragement = 'Kamu di jalur expert. Konsistensi adalah kunci jadi top 10% di industri.';
+    else encouragement = 'Setiap modul yang kamu kerjakan = satu langkah lebih dekat ke karir profesional.';
+
+    // ===== STREAK =====
     const streakDays = state.streak.current || 0;
-    const streakIcon = streakDays >= 7 ? '🔥🔥🔥' : streakDays >= 3 ? '🔥🔥' : streakDays >= 1 ? '🔥' : '⚡';
     const streakMsg = streakDays === 0 ? 'Mulai streak hari ini!' :
-                      streakDays === 1 ? 'Hari pertama — terus!' :
-                      streakDays < 7 ? 'Konsisten!' :
-                      streakDays < 30 ? 'Hebat!' : 'Legendaris!';
+                      streakDays === 1 ? 'Hari pertama — keep going!' :
+                      streakDays < 7 ? 'Konsisten setiap hari!' :
+                      streakDays < 30 ? 'Disiplin level expert!' : 'Legendaris!';
 
     panel.innerHTML = `
       <button class="esa-logout-link" onclick="esaLogout()" title="Keluar & ganti peserta">Ganti Peserta</button>
 
-      <div class="esa-home-progress-left">
-        <div class="esa-home-progress-welcome">${greeting},</div>
-        <div class="esa-home-progress-name">${escapeHtml(firstName)} 👋</div>
-        <div class="esa-home-progress-tier-label">Current Tier</div>
-        <div class="esa-badge tier-${tierClass}" style="margin-top: 4px;">✦ ${tier.name} — ${tier.label}</div>
-        ${hasFullAccess() ? `
-          <div class="esa-full-access-badge">🔓 Akses Penuh Aktif</div>
-        ` : `
-          <button class="esa-redeem-promo-link" onclick="esaShowActivationModal && esaShowActivationModal()" title="Aktivasi akses penuh">Aktivasi Akses</button>
-        `}
-        <div class="esa-home-progress-level-badges">
-          ${LEVEL_ORDER.map(lv => `
-            <span class="esa-level-mini-badge ${earnedLevels[lv] ? 'earned' : ''}" title="${lv === highestLevel ? 'Tier saat ini' : earnedLevels[lv] ? 'Sudah lulus' : 'Belum lulus'}">${lv}</span>
-          `).join('')}
+      <!-- ===== HERO: AVATAR + IDENTITY + XP BAR ===== -->
+      <div class="esa-game-hero">
+        <div class="esa-game-avatar-wrap">
+          <div class="esa-game-avatar">
+            ${avatarHtml}
+            <div class="esa-game-avatar-rank" style="background:${xpTier.color};" title="Tier ${xpTier.rank}">${xpTier.icon}</div>
+          </div>
+        </div>
+        <div class="esa-game-identity">
+          <div class="esa-game-greeting">${greeting},</div>
+          <div class="esa-game-name">${escapeHtml(firstName)}</div>
+          <div class="esa-game-tier" style="color:${xpTier.color};">
+            <span class="esa-game-tier-rank">Tier ${xpTier.icon}</span>
+            <span class="esa-game-tier-name">${xpTier.rank}</span>
+            ${hasFullAccess() ? '<span class="esa-game-tier-active">● AKSES PENUH</span>' : ''}
+          </div>
+          <!-- XP Bar: gauge horizontal -->
+          <div class="esa-game-xpbar">
+            <div class="esa-game-xpbar-meta">
+              <span class="esa-game-xpbar-current">${xp} XP</span>
+              ${nextXpTier ? `<span class="esa-game-xpbar-next">${nextXpTier.min} XP → <strong style="color:${nextXpTier.color};">${nextXpTier.rank}</strong></span>` : '<span class="esa-game-xpbar-next">Tier tertinggi tercapai</span>'}
+            </div>
+            <div class="esa-game-xpbar-track">
+              <div class="esa-game-xpbar-fill" style="width:${xpProgressPct}%; background:linear-gradient(90deg, ${xpTier.color}, ${nextXpTier?nextXpTier.color:xpTier.color});"></div>
+            </div>
+            ${nextXpTier ? `<div class="esa-game-xpbar-hint">Sisa <strong>${xpToNext} XP</strong> menuju ${nextXpTier.rank}</div>` : ''}
+          </div>
         </div>
       </div>
 
-      <div class="esa-home-progress-right">
-        <!-- Action card -->
-        <div class="esa-home-action-card">
-          <div class="esa-home-action-text">
-            <div class="esa-home-action-eyebrow">${actionTitle.replace(/^[^a-zA-Z]+/, '')}</div>
-            <div class="esa-home-action-desc">${actionDesc}</div>
-          </div>
-          ${actionBtnFn ? `<button class="esa-home-action-btn" onclick="${actionBtnFn}">${actionBtnText.replace(/[→]/g,'').trim()} <span aria-hidden="true">→</span></button>` : ''}
-        </div>
+      <!-- ===== ENCOURAGEMENT BANNER ===== -->
+      <div class="esa-game-encourage">
+        <span class="esa-game-encourage-quote">&ldquo;</span>
+        <span class="esa-game-encourage-text">${encouragement}</span>
+      </div>
 
-        <!-- Progress bar -->
-        ${totalL1 > 0 && pctL1 < 100 ? `
-        <div class="esa-home-progress-bar-wrap">
-          <div class="esa-home-progress-bar-meta">
-            <span class="esa-home-progress-bar-label">Level 1 — Esensial</span>
-            <span class="esa-home-progress-bar-value">${passedL1} / ${totalL1} modul · ${pctL1}%</span>
-          </div>
-          <div class="esa-home-progress-bar-track"><div class="esa-home-progress-bar-fill" style="width:${pctL1}%"></div></div>
-        </div>` : ''}
-        ${totalL1 > 0 && pctL1 >= 100 && totalL2 > 0 && pctL2 < 100 ? `
-        <div class="esa-home-progress-bar-wrap">
-          <div class="esa-home-progress-bar-meta">
-            <span class="esa-home-progress-bar-label">Level 2 — Fundamental</span>
-            <span class="esa-home-progress-bar-value">${passedL2} / ${totalL2} modul · ${pctL2}%</span>
-          </div>
-          <div class="esa-home-progress-bar-track"><div class="esa-home-progress-bar-fill" style="width:${pctL2}%"></div></div>
-        </div>` : ''}
+      <!-- ===== ACTIVE QUEST CARD ===== -->
+      <div class="esa-game-quest-card">
+        <div class="esa-game-quest-side">
+          <div class="esa-game-quest-label">Quest Aktif</div>
+          ${questModuleNum ? `<div class="esa-game-quest-num">${escapeHtml(questModuleNum)}</div>` : ''}
+          <div class="esa-game-quest-reward">${escapeHtml(questXp)}</div>
+        </div>
+        <div class="esa-game-quest-body">
+          <div class="esa-game-quest-title">${escapeHtml(questTitle)}</div>
+          <div class="esa-game-quest-desc">${questDesc}</div>
+        </div>
+        ${questFn ? `<button class="esa-game-quest-btn" onclick="${questFn}">
+          ${escapeHtml(questCta)} <span aria-hidden="true">→</span>
+        </button>` : ''}
+      </div>
 
-        <!-- Stats grid 4 kolom -->
-        <div class="esa-home-progress-stat">
-          <div class="esa-home-progress-stat-num">${state.xp}</div>
-          <div class="esa-home-progress-stat-label">Total XP</div>
+      <!-- ===== CAREER GOAL ===== -->
+      ${goal ? `
+      <div class="esa-game-goal">
+        <div class="esa-game-goal-header">
+          <div>
+            <div class="esa-game-goal-label">Tujuan Karir</div>
+            <div class="esa-game-goal-title">Calon ${escapeHtml(goal.title)}</div>
+            <div class="esa-game-goal-org">${escapeHtml(goal.org)}</div>
+          </div>
+          <div class="esa-game-goal-pct">${goalPct}%</div>
         </div>
-        <div class="esa-home-progress-stat">
-          <div class="esa-home-progress-stat-num">${modulesPassed}</div>
-          <div class="esa-home-progress-stat-label">Modul Lulus</div>
-        </div>
-        <div class="esa-home-progress-stat">
-          <div class="esa-home-progress-stat-num">${certs}</div>
-          <div class="esa-home-progress-stat-label">Sertifikat</div>
-        </div>
-        <div class="esa-home-progress-stat" title="${streakMsg}">
-          <div class="esa-home-progress-stat-num">${streakDays}</div>
-          <div class="esa-home-progress-stat-label">Hari Beruntun</div>
-        </div>
+        <div class="esa-game-goal-track"><div class="esa-game-goal-fill" style="width:${goalPct}%;"></div></div>
+        <div class="esa-game-goal-meta">${passedGoalModules} dari ${totalGoalModules} modul · ${goalPct < 25 ? 'Baru mulai perjalanan' : goalPct < 50 ? 'Sudah quarter way' : goalPct < 75 ? 'Lebih dari setengah' : goalPct < 100 ? 'Hampir sampai!' : 'Tujuan tercapai 🏆'}</div>
+      </div>` : ''}
 
-        <!-- Quick links -->
-        <div class="esa-home-quick-links">
-          <button class="esa-home-quick-btn" onclick="showView('jalur')">Semua Jalur</button>
-          <button class="esa-home-quick-btn" onclick="showView('sertifikasi')">Sertifikasi BNSP</button>
-          <button class="esa-home-quick-btn" onclick="esaShowLeaderboard && esaShowLeaderboard()">Leaderboard</button>
-          <button class="esa-home-quick-btn" onclick="esaShowProfile && esaShowProfile()">Profil Saya</button>
+      <!-- ===== STATS BAR ===== -->
+      <div class="esa-game-stats">
+        <div class="esa-game-stat" title="Total XP yang sudah dikumpulkan">
+          <div class="esa-game-stat-num">${xp}</div>
+          <div class="esa-game-stat-label">Total XP</div>
         </div>
+        <div class="esa-game-stat" title="Modul yang sudah lulus quiz 70%+">
+          <div class="esa-game-stat-num">${modulesPassed}</div>
+          <div class="esa-game-stat-label">Modul Lulus</div>
+        </div>
+        <div class="esa-game-stat" title="Sertifikat tercetak">
+          <div class="esa-game-stat-num">${certs}</div>
+          <div class="esa-game-stat-label">Sertifikat</div>
+        </div>
+        <div class="esa-game-stat" title="${streakMsg}">
+          <div class="esa-game-stat-num">${streakDays}</div>
+          <div class="esa-game-stat-label">Hari Beruntun</div>
+        </div>
+      </div>
+
+      <!-- ===== QUICK LINKS ===== -->
+      <div class="esa-game-quicklinks">
+        <button class="esa-game-quick-btn" onclick="showView('jalur')">Semua Jalur</button>
+        <button class="esa-game-quick-btn" onclick="showView('sertifikasi')">Sertifikasi BNSP</button>
+        <button class="esa-game-quick-btn" onclick="esaShowLeaderboard && esaShowLeaderboard()">Leaderboard</button>
+        <button class="esa-game-quick-btn" onclick="esaShowProfile && esaShowProfile()">Profil Saya</button>
       </div>
     `;
-    panel.style.display = 'grid';
+    panel.style.display = 'block';
   }
 
   // ========== UTILITIES ==========
