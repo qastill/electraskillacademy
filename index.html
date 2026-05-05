@@ -16811,10 +16811,13 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (gw) gw.style.display = 'none';
     if (dv) dv.style.display = 'none';
     if (bt) bt.textContent = 'Simpan & Lanjutkan →';
-    if (closeBtn) closeBtn.style.display = 'none'; // hide X — wajib lengkapi
+    // X button TETAP visible — user bisa skip kalau mau lengkapi nanti.
+    // Real "completion required" bisa di-enforce di dashboard / saat
+    // generate sertifikat saja, tidak block navigation.
+    if (closeBtn) closeBtn.style.display = '';
 
-    // Mark modal sebagai "wajib" — closeLoginModal akan refuse close
-    modal.dataset.required = 'true';
+    // Tidak pakai dataset.required — modal selalu boleh di-close
+    delete modal.dataset.required;
     modal.classList.add('active');
     setTimeout(() => { if (phoneEl) phoneEl.focus(); }, 200);
   }
@@ -18833,9 +18836,11 @@ function handleCred(resp){
     closeModal();
     updateNavUser();
 
-    // Lengkapi profil — Google tidak return phone/city, jadi kalau masih
-    // placeholder '-' setelah login, langsung prompt user untuk isi.
-    var needPhone = !data || !data.profile || !data.profile.phone || data.profile.phone === '-';
+    // Lengkapi profil — Google tidak return phone/city. Admin email auto-skip
+    // (founder tidak perlu isi HP, akses langsung). User non-admin tetap
+    // diminta lengkapi profil.
+    var isAdmin = (typeof window.esaIsAdminEmail === 'function') && window.esaIsAdminEmail(email);
+    var needPhone = !isAdmin && (!data || !data.profile || !data.profile.phone || data.profile.phone === '-');
     if (needPhone && typeof window.esaShowProfileCompletion === 'function') {
       setTimeout(window.esaShowProfileCompletion, 250);
     } else if(window._esaPending&&window._origSV){
@@ -19392,7 +19397,8 @@ function handleSupabaseAuthEvent(event, session){
     var m=document.getElementById('esa-auth-modal');if(m){closeModal();}
     updateNavUser();
 
-    var needPhone=!data.profile.phone||data.profile.phone==='-';
+    var isAdmin=(typeof window.esaIsAdminEmail==='function') && window.esaIsAdminEmail(email);
+    var needPhone=!isAdmin && (!data.profile.phone||data.profile.phone==='-');
     if(needPhone&&typeof window.esaShowProfileCompletion==='function'){
       setTimeout(window.esaShowProfileCompletion,300);
     } else if(window._esaPending&&window._origSV){
