@@ -17608,6 +17608,41 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     return state.levels[levelKey];
   }
 
+  // Render QR code untuk verifikasi sertifikat — load qrcodejs lib
+  // sekali, lalu populate semua <div data-cert-qr-target="..."> dgn QR
+  // berisi URL verifikasi /verify.html?id=<cert-id>.
+  function renderCertQRCodes(container) {
+    const targets = container.querySelectorAll('[data-cert-qr-target]');
+    if (!targets.length) return;
+    const doRender = () => {
+      targets.forEach(target => {
+        const certId = target.dataset.certQrTarget;
+        if (!certId || target.dataset.qrDone) return;
+        const verifyUrl = `${location.protocol}//${location.host}/verify.html?id=${certId}`;
+        target.innerHTML = '';
+        try {
+          if (window.QRCode) {
+            new window.QRCode(target, {
+              text: verifyUrl,
+              width: 78, height: 78,
+              colorDark: '#0d0f1c', colorLight: '#ffffff',
+              correctLevel: window.QRCode.CorrectLevel.M
+            });
+          } else {
+            target.innerHTML = '<div style="font-size:9px;color:#0d0f1c;text-align:center;line-height:1.3;padding:18px 4px;">Verifikasi:<br><strong>' + verifyUrl.replace('https://','') + '</strong></div>';
+          }
+          target.dataset.qrDone = '1';
+        } catch (e) { console.warn('[Cert-QR] gagal render:', e); }
+      });
+    };
+    if (window.QRCode) { doRender(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
+    s.onload = doRender;
+    s.onerror = doRender; // fallback to text
+    document.head.appendChild(s);
+  }
+
   function buildCertHTML(levelKey) {
     const rec = getCertRecord(levelKey);
     if (!rec || !state.profile) return null;
@@ -17711,41 +17746,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
             <br>
             <small style="opacity:0.7">Verifikasi di ${location.host}/verify.html?id=${rec.certId}</small>
           </div>
-          <div id="esa-cert-qr-${rec.certId}" style="width:90px;height:90px;background:#fff;padding:6px;border-radius:6px;flex-shrink:0;"></div>
+          <div id="esa-cert-qr-${rec.certId}" data-cert-qr-target="${rec.certId}" style="width:90px;height:90px;background:#fff;padding:6px;border-radius:6px;flex-shrink:0;"></div>
         </div>
       </div>
-      <script>
-        // Inject QR code (lazy-load library kalau belum ada)
-        (function(){
-          const targetId = 'esa-cert-qr-${rec.certId}';
-          const verifyUrl = '${location.protocol}//${location.host}/verify.html?id=${rec.certId}';
-          function renderQr(){
-            const target = document.getElementById(targetId);
-            if(!target || !window.QRCode) return;
-            target.innerHTML = '';
-            try{
-              new window.QRCode(target, {
-                text: verifyUrl,
-                width: 78, height: 78,
-                colorDark: '#0d0f1c', colorLight: '#ffffff',
-                correctLevel: window.QRCode.CorrectLevel.M
-              });
-            }catch(e){console.warn('[Cert-QR] gagal render:',e);}
-          }
-          if(window.QRCode) {
-            renderQr();
-          } else {
-            const s = document.createElement('script');
-            s.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
-            s.onload = renderQr;
-            s.onerror = function(){
-              const t = document.getElementById(targetId);
-              if(t) t.innerHTML = '<div style="font-size:9px;color:#0d0f1c;text-align:center;line-height:1.3;padding:18px 4px;">Verifikasi:<br><strong>' + verifyUrl.replace('https://','') + '</strong></div>';
-            };
-            document.head.appendChild(s);
-          }
-        })();
-      </script>
 
       <!-- PAGE 2: MODULE LIST -->
       <div class="esa-cert-page esa-cert-page-2" id="esa-cert-page-2">
@@ -17829,6 +17832,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       return div;
     })();
     container.innerHTML = buildCertHTML(levelKey);
+
+    // Render QR code untuk verifikasi sertifikat (after innerHTML)
+    renderCertQRCodes(container);
 
     showToast('Generating PDF', 'Sedang membuat sertifikat PDF...', '📄');
 
