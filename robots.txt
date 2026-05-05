@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /verify.html
+Disallow: /admin.html
+Disallow: /api/
+
+Sitemap: https://electraacademy.com/sitemap.xml

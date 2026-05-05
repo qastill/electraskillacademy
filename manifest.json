@@ -1,0 +1,39 @@
+{
+  "name": "Electra Skill Academy",
+  "short_name": "ESA",
+  "description": "Akademi pelatihan kelistrikan profesional Indonesia — 8 jalur karir, 600+ modul, AI Tutor, sertifikasi BNSP.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d0f1c",
+  "theme_color": "#c9a96e",
+  "scope": "/",
+  "lang": "id",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/og-image.svg",
+      "sizes": "1200x630",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Beranda",
+      "url": "/",
+      "description": "Halaman utama Electra Skill Academy"
+    },
+    {
+      "name": "Verifikasi Sertifikat",
+      "url": "/verify.html",
+      "description": "Cek keaslian sertifikat"
+    }
+  ]
+}

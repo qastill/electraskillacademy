@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index, follow">
+<meta name="description" content="Verifikasi keaslian sertifikat Electra Skill Academy. Scan QR atau masukkan ID sertifikat.">
+<title>Verifikasi Sertifikat — Electra Skill Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0d0f1c; color: #f5f0e6; min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+  a { color: #d4af6a; }
+
+  .nav { padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.2); }
+  .nav-logo { display: flex; align-items: center; gap: 12px; cursor: pointer; text-decoration: none; color: inherit; }
+  .nav-logo svg { flex-shrink: 0; }
+  .nav-logo .text { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; line-height: 1.1; }
+  .nav-logo .text small { display: block; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.7; font-weight: 500; }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 60px 24px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 600; margin-bottom: 6px; color: #f0d080; }
+  .sub { color: rgba(245,240,230,0.7); margin-bottom: 36px; font-size: 0.95rem; }
+
+  .form-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 28px; margin-bottom: 24px; }
+  label { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(245,240,230,0.6); margin-bottom: 8px; }
+  input[type=text] { width: 100%; padding: 14px 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #f5f0e6; font-size: 1rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.02em; outline: none; }
+  input[type=text]:focus { border-color: #d4af6a; }
+  button { padding: 12px 22px; background: #d4af6a; color: #0d0f1c; border: none; border-radius: 8px; font-weight: 700; font-family: inherit; font-size: 0.95rem; cursor: pointer; margin-top: 14px; transition: all 0.15s; }
+  button:hover { background: #e0bf7a; transform: translateY(-1px); }
+  button:disabled { opacity: 0.5; cursor: wait; }
+
+  .result { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 32px; margin-top: 24px; display: none; }
+  .result.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .result.valid { border-color: rgba(34,197,94,0.4); background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(255,255,255,0.04)); }
+  .result.invalid { border-color: rgba(239,68,68,0.4); background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(255,255,255,0.04)); }
+  .result.revoked { border-color: rgba(251,191,36,0.4); background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(255,255,255,0.04)); }
+
+  .badge-status { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 18px; }
+  .badge-status.valid { background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.45); color: #86efac; }
+  .badge-status.invalid { background: rgba(239,68,68,0.18); border: 1px solid rgba(239,68,68,0.45); color: #fca5a5; }
+  .badge-status.revoked { background: rgba(251,191,36,0.18); border: 1px solid rgba(251,191,36,0.45); color: #fcd34d; }
+
+  .row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.92rem; }
+  .row:last-child { border-bottom: none; }
+  .row .key { font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(245,240,230,0.55); padding-top: 2px; }
+  .row .val { color: #f5f0e6; font-weight: 500; }
+  .row .val.mono { font-family: ui-monospace, monospace; font-size: 0.86rem; }
+
+  .err-msg { color: #fca5a5; padding: 14px; background: rgba(239,68,68,0.08); border-radius: 8px; margin-top: 12px; font-size: 0.88rem; }
+
+  .info-box { background: rgba(212,175,106,0.08); border: 1px solid rgba(212,175,106,0.2); border-radius: 10px; padding: 16px; margin-top: 24px; font-size: 0.84rem; line-height: 1.65; color: rgba(245,240,230,0.78); }
+  .info-box strong { color: #d4af6a; }
+
+  @media (max-width: 600px) {
+    .container { padding: 32px 18px; }
+    h1 { font-size: 1.8rem; }
+    .row { grid-template-columns: 1fr; gap: 4px; }
+    .row .key { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <svg width="36" height="36" viewBox="0 0 44 44" fill="none">
+      <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+      <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+      <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+      <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+    </svg>
+    <div class="text">Electra<small>Skill Academy</small></div>
+  </a>
+</nav>
+
+<div class="container">
+  <h1>Verifikasi Sertifikat</h1>
+  <p class="sub">Cek keaslian sertifikat Electra Skill Academy. Masukkan ID sertifikat (tertulis di pojok kanan-bawah PDF) atau scan QR code.</p>
+
+  <div class="form-card">
+    <label for="cert-id">ID Sertifikat</label>
+    <input type="text" id="cert-id" placeholder="Contoh: ESA-L3-DIST-A1B2C3D4" autocomplete="off" autocapitalize="characters" autocorrect="off">
+    <button id="btn-verify" onclick="verifyCert()">Verifikasi Sertifikat</button>
+  </div>
+
+  <div id="result" class="result"></div>
+
+  <div class="info-box">
+    <strong>ℹ Cara verifikasi sertifikat:</strong>
+    <ol style="margin: 8px 0 0 18px; padding: 0;">
+      <li>Buka file PDF sertifikat dari pemegang.</li>
+      <li>ID sertifikat tercantum di pojok kanan-bawah (format <code>ESA-LX-XXX-XXXXXXXX</code>).</li>
+      <li>Atau scan QR code yang tertera di sertifikat dengan smartphone — akan otomatis arahkan ke halaman ini dengan ID terisi.</li>
+      <li>Klik <strong>Verifikasi</strong>. Hasil tampil real-time dari database resmi Electra Skill Academy.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+  // Auto-fill dari URL ?id=<cert>
+  (function(){
+    const params = new URLSearchParams(window.location.search);
+    const cert = params.get('id');
+    if (cert) {
+      document.getElementById('cert-id').value = cert;
+      setTimeout(verifyCert, 300);
+    }
+  })();
+
+  async function verifyCert() {
+    const input = document.getElementById('cert-id');
+    const btn = document.getElementById('btn-verify');
+    const resultEl = document.getElementById('result');
+    const certId = input.value.trim().toUpperCase();
+    if (!certId) {
+      input.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Memverifikasi...';
+    resultEl.className = 'result';
+
+    try {
+      const r = await fetch('/api/verify-cert?id=' + encodeURIComponent(certId));
+      const data = await r.json();
+
+      if (data.valid === true) {
+        resultEl.className = 'result valid active';
+        resultEl.innerHTML =
+          '<div class="badge-status valid">✓ Sertifikat Asli &amp; Berlaku</div>' +
+          '<div class="row"><div class="key">ID Sertifikat</div><div class="val mono">' + esc(data.cert_id) + '</div></div>' +
+          '<div class="row"><div class="key">Nama Pemegang</div><div class="val">' + esc(data.name || '-') + '</div></div>' +
+          '<div class="row"><div class="key">Level</div><div class="val">' + esc(data.level_id || '-') + ' — ' + esc(data.track_id || '-') + '</div></div>' +
+          '<div class="row"><div class="key">Skor Rata-rata</div><div class="val">' + esc(data.avg_score || '-') + '%</div></div>' +
+          '<div class="row"><div class="key">Modul Selesai</div><div class="val">' + esc(data.module_count || '-') + ' modul</div></div>' +
+          '<div class="row"><div class="key">Tanggal Terbit</div><div class="val">' + (data.completed_at ? new Date(data.completed_at).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}) : '-') + '</div></div>' +
+          '<div class="row"><div class="key">Penerbit</div><div class="val">' + esc(data.issuer) + '</div></div>';
+      } else if (data.revoked) {
+        resultEl.className = 'result revoked active';
+        resultEl.innerHTML =
+          '<div class="badge-status revoked">⚠ Sertifikat Telah Dicabut</div>' +
+          '<div class="row"><div class="key">ID Sertifikat</div><div class="val mono">' + esc(data.cert_id) + '</div></div>' +
+          '<div class="row"><div class="key">Alasan</div><div class="val">' + esc(data.revoked_reason || 'Tidak disebutkan') + '</div></div>' +
+          '<p style="margin-top: 14px; font-size:0.88rem; color:rgba(245,240,230,0.7);">' + esc(data.message) + '</p>';
+      } else {
+        resultEl.className = 'result invalid active';
+        resultEl.innerHTML =
+          '<div class="badge-status invalid">✗ Sertifikat Tidak Ditemukan</div>' +
+          '<div class="row"><div class="key">ID Dicek</div><div class="val mono">' + esc(certId) + '</div></div>' +
+          '<p style="margin-top: 14px; font-size:0.88rem; color:rgba(245,240,230,0.7);">' + esc(data.message || 'Pastikan ID benar — case-sensitive (huruf besar). Kalau tetap tidak ditemukan, kemungkinan sertifikat palsu atau ID salah ketik.') + '</p>';
+      }
+    } catch (e) {
+      resultEl.className = 'result invalid active';
+      resultEl.innerHTML = '<div class="err-msg">Gagal cek sertifikat: ' + esc(e.message || 'unknown error') + '. Coba lagi nanti.</div>';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Verifikasi Sertifikat';
+    }
+  }
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+</script>
+
+</body>
+</html>
