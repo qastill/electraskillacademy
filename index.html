@@ -6958,7 +6958,15 @@ body {
 .esa-home-progress-right {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 14px 20px;
+  align-content: start;
+}
+@media (max-width: 768px) {
+  .esa-home-progress { grid-template-columns: 1fr !important; gap: 18px !important; padding: 24px 18px !important; margin: 24px 16px !important; }
+  .esa-home-progress-left { padding-right: 0 !important; border-right: none !important; padding-bottom: 18px; border-bottom: 1px solid rgba(201, 169, 110, 0.3); }
+  .esa-home-progress-right { grid-template-columns: repeat(2, 1fr) !important; }
+  .esa-home-action-card { flex-direction: column; align-items: stretch !important; }
+  .esa-home-action-card button { width: 100%; }
 }
 
 .esa-home-progress-stat { text-align: center; }
@@ -17534,7 +17542,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
     const certs = state.certificates.length;
     const modulesPassed = Object.values(state.modules).filter(m => m.passed).length;
+    const modulesAttempted = Object.values(state.modules).filter(m => (m.attempts||0) > 0).length;
 
+    // Tier tertinggi
     let highestLevel = 'L1';
     for (const lv of LEVEL_ORDER) {
       if (lv === 'L1' || lv === 'L2') {
@@ -17544,7 +17554,6 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         if (hasAnyTrack) highestLevel = lv;
       }
     }
-
     const tier = TIER[highestLevel];
     const tierClass = tier.slug;
 
@@ -17557,40 +17566,151 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       }
     });
 
+    // ===== TIME-BASED GREETING =====
+    const hour = new Date().getHours();
+    const greeting =
+      hour < 5 ? 'Selamat Malam' :
+      hour < 11 ? 'Selamat Pagi' :
+      hour < 15 ? 'Selamat Siang' :
+      hour < 19 ? 'Selamat Sore' : 'Selamat Malam';
+    const firstName = (state.profile.name || '').split(' ')[0];
+
+    // ===== NEXT ACTION SUGGESTION =====
+    // Cari modul L1/L2 yg belum lulus + lanjutan logical
+    const currentLevelArr = (CURRICULUM[highestLevel === 'L1' || highestLevel === 'L2' ? highestLevel : 'L1']) || [];
+    let nextModule = null;
+    for (const m of currentLevelArr) {
+      const rec = state.modules[m.code];
+      if (!rec || !rec.passed) {
+        nextModule = m;
+        break;
+      }
+    }
+    // Kalau L1 sudah selesai, suggest L2; kalau L2 selesai, suggest jalur S1+
+    let actionTitle = '🚀 Mulai Belajar';
+    let actionDesc = '';
+    let actionBtnText = 'Mulai Modul Pertama';
+    let actionBtnFn = '';
+    if (modulesAttempted === 0) {
+      const firstMod = (CURRICULUM['L1'] || [])[0];
+      actionTitle = '🚀 Yuk Mulai Belajar!';
+      actionDesc = firstMod ? `Mulai dengan modul pertama: <strong>${escapeHtml(firstMod.title)}</strong>` : 'Mulai dari Level 1 — Esensial.';
+      actionBtnText = 'Mulai Modul Pertama →';
+      actionBtnFn = firstMod ? `openModul('${firstMod.code}','L1','L1')` : `showView('jalur')`;
+    } else if (nextModule) {
+      const recNext = state.modules[nextModule.code];
+      const isResume = recNext && (recNext.attempts||0) > 0 && !recNext.passed;
+      actionTitle = isResume ? '📖 Lanjutkan Belajar' : '➡ Modul Berikutnya';
+      actionDesc = isResume
+        ? `Sedang mengerjakan: <strong>${escapeHtml(nextModule.title)}</strong> — yuk diselesaikan!`
+        : `Modul berikutnya: <strong>${escapeHtml(nextModule.title)}</strong>`;
+      actionBtnText = (isResume ? 'Lanjut →' : 'Buka Modul →');
+      const lvForOpen = nextModule.level || (highestLevel === 'L1' || highestLevel === 'L2' ? highestLevel : 'L1');
+      actionBtnFn = `openModul('${nextModule.code}','${lvForOpen}','${lvForOpen}')`;
+    } else if (highestLevel === 'L2') {
+      actionTitle = '🎯 Pilih Jalur Karir';
+      actionDesc = 'Level Fundamental selesai! Saatnya pilih jalur spesialisasi (Distribusi, Industri, Energy Analyst, dll).';
+      actionBtnText = 'Lihat 8 Jalur Karir →';
+      actionBtnFn = `showView('jalur')`;
+    } else {
+      actionTitle = '🏆 Lanjut ke Level Berikutnya';
+      actionDesc = `Selamat! Anda sudah di tier ${tier.name}. Lanjut ke level berikutnya untuk naik tier.`;
+      actionBtnText = 'Lihat Level →';
+      actionBtnFn = `showView('jalur')`;
+    }
+
+    // ===== PROGRESS BAR Level Esensial / Fundamental =====
+    const totalL1 = (CURRICULUM['L1'] || []).length;
+    const passedL1 = (CURRICULUM['L1'] || []).filter(m => state.modules[m.code] && state.modules[m.code].passed).length;
+    const pctL1 = totalL1 > 0 ? Math.round((passedL1 / totalL1) * 100) : 0;
+    const totalL2 = (CURRICULUM['L2'] || []).length;
+    const passedL2 = (CURRICULUM['L2'] || []).filter(m => state.modules[m.code] && state.modules[m.code].passed).length;
+    const pctL2 = totalL2 > 0 ? Math.round((passedL2 / totalL2) * 100) : 0;
+
+    // ===== STREAK MOTIVATION =====
+    const streakDays = state.streak.current || 0;
+    const streakIcon = streakDays >= 7 ? '🔥🔥🔥' : streakDays >= 3 ? '🔥🔥' : streakDays >= 1 ? '🔥' : '⚡';
+    const streakMsg = streakDays === 0 ? 'Mulai streak hari ini!' :
+                      streakDays === 1 ? 'Hari pertama — terus!' :
+                      streakDays < 7 ? 'Konsisten!' :
+                      streakDays < 30 ? 'Hebat!' : 'Legendaris!';
+
     panel.innerHTML = `
       <button class="esa-logout-link" onclick="esaLogout()" title="Keluar & ganti peserta">Ganti Peserta</button>
+
       <div class="esa-home-progress-left">
-        <div class="esa-home-progress-welcome">Selamat Datang,</div>
-        <div class="esa-home-progress-name">${escapeHtml(state.profile.name)}</div>
+        <div class="esa-home-progress-welcome">${greeting},</div>
+        <div class="esa-home-progress-name">${escapeHtml(firstName)} 👋</div>
         <div class="esa-home-progress-tier-label">Current Tier</div>
         <div class="esa-badge tier-${tierClass}" style="margin-top: 4px;">✦ ${tier.name} — ${tier.label}</div>
         ${hasFullAccess() ? `
-          <div class="esa-full-access-badge">Full Access Aktif</div>
+          <div class="esa-full-access-badge">🔓 Akses Penuh Aktif</div>
         ` : `
-          <button class="esa-redeem-promo-link" onclick="esaRedeemPromoCode()" title="Punya kode promo? Klik untuk redeem">+ Redeem Kode Promo</button>
+          <button class="esa-redeem-promo-link" onclick="esaShowActivationModal && esaShowActivationModal()" title="Aktivasi akses penuh">🔒 Aktivasi Akses</button>
         `}
         <div class="esa-home-progress-level-badges">
           ${LEVEL_ORDER.map(lv => `
-            <span class="esa-level-mini-badge ${earnedLevels[lv] ? 'earned' : ''}">${lv}</span>
+            <span class="esa-level-mini-badge ${earnedLevels[lv] ? 'earned' : ''}" title="${lv === highestLevel ? 'Tier saat ini' : earnedLevels[lv] ? 'Sudah lulus' : 'Belum lulus'}">${earnedLevels[lv] ? '✓' : ''}${lv}</span>
           `).join('')}
         </div>
       </div>
+
       <div class="esa-home-progress-right">
+        <!-- Action card paling atas — paling penting -->
+        <div class="esa-home-action-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(212,175,106,0.12), rgba(212,175,106,0.04)); border: 1px solid rgba(212,175,106,0.35); border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 240px;">
+            <div style="font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: #d4af6a; font-weight: 700; margin-bottom: 4px;">${actionTitle}</div>
+            <div style="font-size: 0.92rem; color: rgba(245,240,230,0.85); line-height: 1.5;">${actionDesc}</div>
+          </div>
+          ${actionBtnFn ? `<button onclick="${actionBtnFn}" style="background: #d4af6a; color: #0d0f1c; border: none; border-radius: 8px; padding: 11px 22px; font-weight: 700; font-size: 0.88rem; cursor: pointer; letter-spacing: 0.04em; white-space: nowrap; transition: all 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">${actionBtnText}</button>` : ''}
+        </div>
+
+        <!-- Progress bar Level 1 -->
+        ${totalL1 > 0 && pctL1 < 100 ? `
+        <div style="grid-column: 1 / -1; margin-bottom: 14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:rgba(245,240,230,0.7);margin-bottom:6px;">
+            <span><strong style="color:#f0d080;">Progress Level 1 — Esensial</strong></span>
+            <span>${passedL1}/${totalL1} modul · <strong style="color:#d4af6a;">${pctL1}%</strong></span>
+          </div>
+          <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;">
+            <div style="height:100%;width:${pctL1}%;background:linear-gradient(90deg,#c9a96e,#f0d080);transition:width 0.6s ease;"></div>
+          </div>
+        </div>` : ''}
+        ${totalL1 > 0 && pctL1 >= 100 && totalL2 > 0 && pctL2 < 100 ? `
+        <div style="grid-column: 1 / -1; margin-bottom: 14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:rgba(245,240,230,0.7);margin-bottom:6px;">
+            <span><strong style="color:#f0d080;">Progress Level 2 — Fundamental</strong></span>
+            <span>${passedL2}/${totalL2} modul · <strong style="color:#d4af6a;">${pctL2}%</strong></span>
+          </div>
+          <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;">
+            <div style="height:100%;width:${pctL2}%;background:linear-gradient(90deg,#c9a96e,#f0d080);transition:width 0.6s ease;"></div>
+          </div>
+        </div>` : ''}
+
+        <!-- Stats grid 4 kolom -->
         <div class="esa-home-progress-stat">
           <div class="esa-home-progress-stat-num">${state.xp}</div>
-          <div class="esa-home-progress-stat-label">Total XP</div>
+          <div class="esa-home-progress-stat-label">⭐ Total XP</div>
         </div>
         <div class="esa-home-progress-stat">
           <div class="esa-home-progress-stat-num">${modulesPassed}</div>
-          <div class="esa-home-progress-stat-label">Modul Lulus</div>
+          <div class="esa-home-progress-stat-label">✓ Modul Lulus</div>
         </div>
         <div class="esa-home-progress-stat">
           <div class="esa-home-progress-stat-num">${certs}</div>
-          <div class="esa-home-progress-stat-label">Sertifikat</div>
+          <div class="esa-home-progress-stat-label">🏆 Sertifikat</div>
         </div>
-        <div class="esa-home-progress-stat">
-          <div class="esa-home-progress-stat-num">${state.streak.current}</div>
-          <div class="esa-home-progress-stat-label">Day Streak</div>
+        <div class="esa-home-progress-stat" title="${streakMsg}">
+          <div class="esa-home-progress-stat-num">${streakIcon} ${streakDays}</div>
+          <div class="esa-home-progress-stat-label">🔥 Hari Beruntun</div>
+        </div>
+
+        <!-- Quick links -->
+        <div style="grid-column: 1 / -1; margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+          <button onclick="showView('jalur')" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.4);border-radius:6px;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-weight:600;">📚 Semua Jalur</button>
+          <button onclick="showView('sertifikasi')" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.4);border-radius:6px;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-weight:600;">🏆 Sertifikasi BNSP</button>
+          <button onclick="esaShowLeaderboard && esaShowLeaderboard()" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.4);border-radius:6px;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-weight:600;">🏅 Leaderboard</button>
+          <button onclick="esaShowProfile && esaShowProfile()" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.4);border-radius:6px;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-weight:600;">👤 Profil Saya</button>
         </div>
       </div>
     `;
