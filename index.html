@@ -7087,6 +7087,236 @@ body {
   .nav-dropdown-menu a { padding: 14px 20px !important; font-size: 0.9rem !important; }
 }
 
+/* ================================================================
+   POLISH LAYER — UX/UI improvements (Nov 2026)
+   Override inline styles via CSS for consistency & mobile responsive.
+   ================================================================ */
+
+/* 1. Touch target minimum 44px untuk mobile (WCAG AAA) */
+@media (max-width: 768px) {
+  button, .esa-btn-primary, .nav-daftar-btn,
+  .academy-pricing-cta, .talent-card button {
+    min-height: 44px;
+  }
+  .lc-filter-btn { min-height: 40px !important; padding: 10px 18px !important; }
+}
+
+/* 2. Hero & nav padding responsive */
+@media (max-width: 1024px) {
+  .nav { padding: 24px clamp(16px, 4vw, 40px) !important; }
+  .hero-content { padding: 0 clamp(20px, 4vw, 80px) clamp(40px, 6vw, 80px) !important; }
+}
+
+/* 3. Hero CTA mobile padding */
+@media (max-width: 640px) {
+  .hero-cta { padding: 16px 28px !important; font-size: 0.85rem !important; letter-spacing: 0.12em !important; }
+  .hero-daftar-btn { padding: 16px 28px !important; font-size: 0.82rem !important; margin-left: 0 !important; margin-top: 12px !important; }
+}
+
+/* 4. Footer mobile stack */
+@media (max-width: 640px) {
+  .footer-inner { flex-direction: column !important; gap: 16px !important; text-align: center !important; padding: 32px 18px !important; }
+  .footer-inner > div { justify-content: center !important; }
+  .footer-socials { gap: 14px !important; flex-wrap: wrap; justify-content: center; }
+}
+
+/* 5. Quiz timer flex layout */
+.quiz-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.quiz-progress { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+@media (max-width: 640px) {
+  .quiz-header { flex-direction: column; align-items: stretch !important; }
+  #quiz-timer { display: inline-block; margin-left: 0 !important; }
+}
+
+/* 6. Smooth hover transitions universal */
+.module-card,
+.level-card,
+.talent-card,
+.academy-pricing-card,
+.practice-card,
+.modul-tab,
+.modul-footer-nav-btn,
+.detail-nav-back,
+.esa-fab-wa {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease !important;
+}
+
+/* 7. Hover lift untuk card-card utama */
+.module-card:hover,
+.level-card:hover,
+.practice-card:hover,
+.academy-pricing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13, 15, 28, 0.12);
+}
+
+/* 8. Modal mobile fit */
+@media (max-width: 640px) {
+  #esa-auth-modal > div,
+  #esa-activation-modal > div,
+  #esa-profile-modal > div,
+  #esa-onboarding-modal .esa-modal {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 12px !important;
+    max-height: calc(100vh - 24px) !important;
+    overflow-y: auto !important;
+  }
+}
+
+/* 9. Standardize border-radius */
+.module-card,
+.level-card,
+.practice-card,
+.academy-pricing-card,
+.talent-card { border-radius: 12px !important; }
+
+/* 10. Form input focus state — accessibility */
+.esa-form-input:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #c9a96e !important;
+  outline-offset: 2px;
+  border-color: #c9a96e !important;
+}
+
+/* 11. Disabled button state */
+button:disabled,
+button[disabled] {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+/* 12. Floating WA button — di bawah modal */
+.esa-fab-wa { z-index: 998 !important; }
+.esa-modal-overlay,
+#esa-auth-modal,
+#esa-activation-modal,
+#esa-profile-modal { z-index: 10000 !important; }
+
+/* 13. Welcome strip stats alignment */
+.esa-home-progress-stat-num { line-height: 1.1 !important; }
+.esa-home-progress-stat-label { line-height: 1.3; }
+
+/* 14. Quick links di welcome strip — touch friendly */
+.esa-home-progress-right button[onclick] {
+  min-height: 36px;
+  padding: 8px 14px !important;
+}
+
+/* 15. Live class filter buttons — CSS hover */
+.lc-filter-btn:hover:not(.active) {
+  background: rgba(212, 175, 106, 0.1) !important;
+  border-color: rgba(212, 175, 106, 0.7) !important;
+}
+
+/* 16. Talent card buttons hover */
+.talent-card button:hover {
+  background: rgba(212, 175, 106, 0.18) !important;
+}
+
+/* 17. Practice grid responsive */
+@media (max-width: 900px) and (min-width: 641px) {
+  .practices-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 18px !important; }
+}
+@media (max-width: 640px) {
+  .practices-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+}
+
+/* 18. Profile modal form fields stack on mobile */
+@media (max-width: 640px) {
+  .esa-profile-grid-2col { grid-template-columns: 1fr !important; gap: 12px !important; }
+}
+
+/* 19. Footer link row wrap */
+@media (max-width: 480px) {
+  .footer-inner > div > div:first-child {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: center;
+  }
+}
+
+/* 20. Module list mobile — hide arrow (declutter) */
+@media (max-width: 480px) {
+  .module-card .module-arrow { display: none; }
+  .module-card { padding: 14px 16px !important; }
+}
+
+/* 21. Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* 22. Selection color brand */
+::selection { background: rgba(212, 175, 106, 0.35); color: inherit; }
+
+/* 23. Image responsive */
+img { max-width: 100%; height: auto; }
+
+/* 24. AI Tutor sidebar mobile collapse */
+@media (max-width: 768px) {
+  .ai-tutor-sidebar {
+    position: relative !important;
+    top: auto !important;
+    max-height: 480px !important;
+    margin-top: 24px;
+    width: 100% !important;
+  }
+  .modul-main-inner { display: block !important; }
+}
+
+/* 25. Modul tabs scrollable on mobile */
+@media (max-width: 640px) {
+  .modul-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .modul-tab { white-space: nowrap; flex-shrink: 0; }
+}
+
+/* 26. Detail nav responsive — kompakt di mobile */
+@media (max-width: 640px) {
+  .detail-nav { padding: 14px 16px !important; }
+  .detail-nav-center { font-size: 0.95rem !important; }
+  .detail-nav-back { padding: 8px 12px !important; font-size: 0.78rem !important; }
+}
+
+/* 27. About founder card mobile padding */
+@media (max-width: 640px) {
+  .about-founder-card { padding: 28px 18px !important; gap: 18px !important; }
+}
+
+/* 28. Talent grid mobile */
+@media (max-width: 768px) {
+  #talent-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important; gap: 16px !important; }
+}
+@media (max-width: 480px) {
+  #talent-grid { grid-template-columns: 1fr !important; }
+}
+
+/* 29. Pricing card on mobile — full width, less padding */
+@media (max-width: 640px) {
+  .academy-pricing-card { padding: 32px 22px !important; }
+}
+
+/* 30. Improve tap feedback — active state for buttons */
+button:active:not(:disabled),
+.module-card:active,
+.level-card:active {
+  transform: translateY(0px) scale(0.98);
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
