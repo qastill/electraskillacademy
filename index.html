@@ -7673,6 +7673,195 @@ button:active:not(:disabled),
   .esa-book-card { padding: 22px 20px; }
   .esa-book-card-title { font-size: 1.3rem; }
 }
+
+/* ================================================================
+   HOME FAQ SECTION — di halaman utama setelah testimonial
+   ================================================================ */
+.home-faq {
+  padding: 120px 80px;
+  background: var(--cream-soft, #f5f0e6);
+  position: relative;
+}
+.home-faq-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.home-faq-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.home-faq-header .section-eyebrow {
+  display: inline-block;
+  margin-bottom: 18px;
+}
+.home-faq-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 600;
+  color: var(--navy-deep, #0d0f1c);
+  margin: 0 0 18px;
+  letter-spacing: 0.005em;
+  line-height: 1.15;
+}
+.home-faq-accent {
+  font-style: italic;
+  color: var(--gold, #c9a96e);
+}
+.home-faq-subtitle {
+  font-size: 1.02rem;
+  color: rgba(13,15,28,0.65);
+  line-height: 1.65;
+  max-width: 620px;
+  margin: 0 auto;
+}
+.home-faq-wa {
+  color: var(--gold, #c9a96e);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.home-faq-wa:hover { color: var(--gold-dark, #a07840); }
+
+.home-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 48px;
+}
+@media (min-width: 900px) {
+  .home-faq-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+}
+
+.home-faq-item {
+  background: #fff;
+  border: 1px solid rgba(13,15,28,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.home-faq-item[open] {
+  border-color: rgba(201,169,110,0.45);
+  box-shadow: 0 8px 24px rgba(13,15,28,0.06);
+}
+.home-faq-item summary {
+  padding: 22px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-weight: 600;
+  color: var(--navy-deep, #0d0f1c);
+  font-size: 1rem;
+  list-style: none;
+  line-height: 1.45;
+  transition: color 0.2s;
+}
+.home-faq-item summary::-webkit-details-marker { display: none; }
+.home-faq-item summary:hover { color: var(--gold-dark, #a07840); }
+.home-faq-item summary > span:first-child { flex: 1; }
+
+.home-faq-chevron {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(201,169,110,0.12);
+  color: var(--gold-dark, #a07840);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 400;
+  transition: transform 0.25s ease, background 0.2s;
+}
+.home-faq-item[open] .home-faq-chevron {
+  transform: rotate(45deg);
+  background: var(--gold, #c9a96e);
+  color: #fff;
+}
+
+.home-faq-answer {
+  padding: 0 24px 24px;
+  border-top: 1px solid rgba(13,15,28,0.05);
+  padding-top: 18px;
+  color: rgba(13,15,28,0.78);
+  font-size: 0.94rem;
+  line-height: 1.75;
+  animation: esa-fade-in 0.25s ease;
+}
+.home-faq-answer p { margin: 0 0 12px; }
+.home-faq-answer p:last-child { margin-bottom: 0; }
+.home-faq-answer strong { color: var(--navy-deep, #0d0f1c); font-weight: 600; }
+.home-faq-answer em { color: var(--gold-dark, #a07840); font-style: italic; }
+.home-faq-answer ul {
+  margin: 12px 0;
+  padding-left: 20px;
+  color: rgba(13,15,28,0.7);
+}
+.home-faq-answer li {
+  padding: 4px 0;
+  position: relative;
+  list-style: none;
+  padding-left: 18px;
+}
+.home-faq-answer li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--gold-dark, #a07840);
+}
+.home-faq-answer a {
+  color: var(--gold-dark, #a07840);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-faq-answer a:hover { color: var(--navy-deep, #0d0f1c); }
+
+.home-faq-cta {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.home-faq-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--gold, #c9a96e);
+  color: var(--navy-deep, #0d0f1c);
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.home-faq-cta-btn:hover {
+  background: var(--gold-hover, #d4b878);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(201,169,110,0.25);
+}
+.home-faq-cta-secondary {
+  background: transparent;
+  color: var(--gold-dark, #a07840);
+  border: 1px solid var(--gold, #c9a96e);
+}
+.home-faq-cta-secondary:hover {
+  background: rgba(201,169,110,0.08);
+  color: var(--navy-deep, #0d0f1c);
+}
+
+/* Mobile FAQ home */
+@media (max-width: 768px) {
+  .home-faq { padding: 80px 24px; }
+  .home-faq-item summary { padding: 18px 18px; font-size: 0.94rem; }
+  .home-faq-answer { padding: 0 18px 20px; padding-top: 16px; font-size: 0.9rem; }
+  .home-faq-cta-btn { width: 100%; justify-content: center; }
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -8091,6 +8280,139 @@ button:active:not(:disabled),
       </div>
       <div class="testimonial-photo reveal">
         <img src="https://lh3.googleusercontent.com/d/1EI8kJwdIJ6TDDkwCPpzbgI2o_qXEaLjA=w800-h1000" alt="Alumni ESA" id="testimonial-img">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ HOME SECTION ===== -->
+  <section class="home-faq">
+    <div class="home-faq-inner">
+      <div class="home-faq-header reveal">
+        <div class="section-eyebrow">— Pertanyaan Umum —</div>
+        <h2 class="home-faq-title">Yang Sering <span class="home-faq-accent">Ditanyakan</span></h2>
+        <p class="home-faq-subtitle">Jawaban cepat untuk pertanyaan paling umum tentang program Electra Skill Academy. Tidak ketemu? <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20program%20Electra%20Academy" target="_blank" rel="noopener" class="home-faq-wa">Chat Admin via WA</a>.</p>
+      </div>
+
+      <div class="home-faq-grid reveal">
+        <details class="home-faq-item">
+          <summary>
+            <span>Saya pemula tanpa background teknik listrik. Bisa ikut?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p><strong>Sangat bisa.</strong> Program kami dimulai dari <em>Level 1 — Esensial</em>: konsep dasar arus, tegangan, hambatan, daya. Tidak butuh background teknik sebelumnya. Banyak alumni kami fresh graduate SMA/SMK non-listrik yang sekarang kerja di PLN, vendor industri, dan kontraktor. Kuncinya: konsisten kerjakan modul + quiz, manfaatkan asisten modul untuk tanya hal yang belum jelas.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Berapa lama waktu yang dibutuhkan untuk menyelesaikan program?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p>Tergantung kecepatan belajar dan target Anda. <strong>Estimasi rata-rata:</strong></p>
+            <ul>
+              <li>Level 1 Esensial (25 modul) — 4-6 minggu (1-2 jam/hari)</li>
+              <li>Level 2 Fundamental (23 modul) — 4-5 minggu</li>
+              <li>Per jalur spesialisasi L3-L6 (60-80 modul) — 3-5 bulan</li>
+              <li>Sampai sertifikat tertinggi (Level 6 Consultant) — 8-12 bulan</li>
+            </ul>
+            <p>Belajar self-paced — Anda bisa percepat atau perlambat sesuai jadwal kerja.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Apa bedanya sertifikat Electra Academy dengan sertifikat BNSP?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p><strong>Sertifikat ESA</strong> adalah sertifikat penyelesaian (knowledge competency) — bukti Anda menguasai materi dengan minimum skor 70%. Bisa di-share ke LinkedIn, di-attach di CV, dan diverifikasi via QR code di <a href="/verify.html" target="_blank">/verify.html</a>.</p>
+            <p><strong>Sertifikat BNSP</strong> adalah sertifikat resmi pemerintah untuk profesi teknik. Materi belajar di ESA dirancang menyelaraskan dengan SKKNI sehingga Anda <strong>siap mengikuti uji kompetensi BNSP</strong>. Detail jalur sertifikasi BNSP ada di menu <em>Certification</em>.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Berapa biaya program Electra Skill Academy?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p>Detail paket berlangganan dapat dilihat di section <strong>Pricing</strong> di halaman utama. Skema saat ini: <strong>sekali bayar untuk akses penuh</strong> ke semua 8 jalur karir, semua level (L1-L6), dan semua 605+ modul.</p>
+            <p>Untuk info promo aktif, paket korporat (perusahaan untuk karyawan), atau cicilan, hubungi admin via WhatsApp <strong>0851-2153-2407</strong>.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Apakah ada Live Class atau hanya video rekaman?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p><strong>Keduanya.</strong> Setiap modul punya video rekaman + materi PPT + quiz 25 soal. Plus <strong>Live Class virtual via Zoom</strong> mulai <strong>1 Juli 2026</strong>, setiap 3 hari sekali, dipandu langsung oleh Founder Dr Qashtalani Haramaini atau Co-Founder Farda Najih (untuk jalur K3, Auditor, Renewable).</p>
+            <p>Live Class GRATIS untuk member aktif — link Zoom dikirim H-1 ke email & WhatsApp. Kalau tidak bisa hadir, rekaman akan ditambahkan ke modul terkait dalam 1-3 hari.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Setelah lulus, dibantu cari kerja?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p><strong>Ya.</strong> Setelah lulus level Profesional (L3) di jalur tertentu, profil Anda otomatis masuk <em>Talent Pool</em> ESA. Mitra rekrutmen industri (PLN, kontraktor utility, konsultan, IPP) bisa menghubungi melalui kami.</p>
+            <p>Lowongan aktif tampil di menu <em>Job Opportunity</em>. Plus akses ke event rekrutmen khusus alumni dan webinar karir bulanan dengan HR perusahaan partner.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Saya bekerja shift, bisa belajar fleksibel?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p>Materi <strong>100% self-paced</strong> — semua video, slide, dan quiz bisa diakses 24/7 dari device manapun (laptop, tablet, HP). Progress disimpan di akun Anda — login di device lain langsung lanjut dari modul terakhir.</p>
+            <p>Asisten modul AI siap menjawab pertanyaan kapan pun (kuota 50 pertanyaan per akun). Live Class direkam jadi tidak masalah kalau jadwal bentrok dengan shift kerja.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Bagaimana cara verifikasi sertifikat oleh perusahaan/recruiter?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p>Setiap sertifikat punya <strong>ID unik + QR code</strong>. Recruiter cukup scan QR code di PDF sertifikat — otomatis arahkan ke <a href="/verify.html" target="_blank">electraacademy.com/verify.html</a> dan menampilkan nama pemegang, level, jalur, skor rata-rata, dan tanggal terbit langsung dari database resmi kami.</p>
+            <p>Sertifikat tidak bisa dipalsukan — verifikasi real-time ke server. Recruiter tidak perlu bertanya ke admin.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Jika tidak puas, bisa refund?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p>Ya, kami beri <strong>jaminan 7 hari</strong>. Refund tersedia dalam 7 hari pertama setelah aktivasi, dengan syarat belum mengakses lebih dari 3 modul. Hubungi admin via WhatsApp untuk klaim — kami tidak akan menahan kalau Anda merasa tidak cocok.</p>
+            <p>Tujuan kami bukan paksa Anda bayar, tapi membantu Anda berkembang. Kalau program ini tidak sesuai harapan, kami support refund tanpa drama.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Apakah materi up-to-date dengan standar terkini?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p><strong>Ya.</strong> Kurikulum disusun berdasarkan: <strong>PUIL 2011 (SNI 0225), SKKNI ketenagalistrikan terbaru, regulasi ESDM/Kemnaker terkini, Permen ESDM 26/2021 (renewable), IEEE 1584 (arc flash), NFPA 70E (electrical safety)</strong>.</p>
+            <p>Pemateri adalah praktisi aktif dengan pengalaman 10+ tahun di sektor distribusi/utility — bukan dosen yang lama tidak turun lapangan. Materi di-update minimal 6 bulan sekali untuk reflect perubahan regulasi & teknologi (mis. smart grid, AI inspeksi, EV charging).</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="home-faq-cta reveal">
+        <a href="#faq" onclick="event.preventDefault();showView('faq');" class="home-faq-cta-btn">Lihat Semua FAQ</a>
+        <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20program%20Electra%20Academy" target="_blank" rel="noopener" class="home-faq-cta-btn home-faq-cta-secondary">Chat Admin Langsung</a>
       </div>
     </div>
   </section>
