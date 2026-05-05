@@ -779,6 +779,17 @@ body {
   transition: transform 0.4s ease;
 }
 .esa-benefit-card:hover .esa-benefit-photo img { transform: scale(1.06); }
+/* Fallback ketika foto gagal load — show emoji icon dari data-fallback-icon */
+.esa-benefit-photo.esa-img-err::before {
+  content: attr(data-fallback-icon);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  color: #d4af6a;
+}
 .esa-benefit-body { min-width: 0; flex: 1; }
 .esa-benefit-title {
   font-family: var(--sans);
@@ -9024,7 +9035,12 @@ button:active:not(:disabled),
         <h2 class="academy-pricing-title">
           Electra <span class="italic">Academy</span>
         </h2>
-        <p style="color:rgba(245,240,230,0.7);font-family:var(--sans);font-size:0.92rem;line-height:1.6;margin:0 0 28px;max-width:560px;">Investasi sekali — akses seumur hidup ke seluruh ekosistem akademi: 600+ modul, AI Tutor, sertifikat, talent pool ke 100+ perusahaan partner, plus event eksklusif.</p>
+        <p style="color:rgba(245,240,230,0.7);font-family:var(--sans);font-size:0.92rem;line-height:1.6;margin:0 0 20px;max-width:560px;">Investasi sekali — akses seumur hidup ke seluruh ekosistem akademi: 600+ modul, AI Tutor, sertifikat, talent pool ke 100+ perusahaan partner, plus event eksklusif.</p>
+
+        <div style="display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg, #ef4444, #dc2626); color:#fff; padding:9px 18px; border-radius:100px; font-size:0.78rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:24px; box-shadow:0 6px 18px rgba(220,38,38,0.4); animation:esa-pulse-glow 2.5s ease-in-out infinite;">
+          <span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:#fff;border-radius:50%;color:#dc2626;font-size:0.7rem;font-weight:900;">!</span>
+          <span>Promo Spesial · Berlaku sampai 31 Juli 2026</span>
+        </div>
 
         <div class="academy-pricing-price-row">
           <div style="display:flex;flex-direction:column;gap:6px;">
@@ -9039,16 +9055,11 @@ button:active:not(:disabled),
           </div>
         </div>
 
-        <div style="display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg, #ef4444, #dc2626); color:#fff; padding:9px 18px; border-radius:100px; font-size:0.78rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-top:18px; box-shadow:0 6px 18px rgba(220,38,38,0.4); animation:esa-pulse-glow 2.5s ease-in-out infinite;">
-          <span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:#fff;border-radius:50%;color:#dc2626;font-size:0.7rem;font-weight:900;">!</span>
-          <span>Promo Spesial · Berlaku sampai 31 Juli 2026</span>
-        </div>
-
         <div class="academy-pricing-section-title">Yang Kamu Dapatkan</div>
 
         <ul class="academy-pricing-list esa-pricing-grid">
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Modul kelistrikan" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="📚"><img loading="lazy" alt="Modul kelistrikan" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">600+ Modul &amp; Video Edukasi HD</div>
               <div class="esa-benefit-desc">Kurikulum 8 jalur karir lengkap (L1–L6), video pembelajaran HD, animasi rangkaian, dan modul PDF. Akses offline tanpa kuota — cocok untuk lapangan.</div>
@@ -9056,7 +9067,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="AI Tutor" src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="🤖"><img loading="lazy" alt="AI Tutor" src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">AI Tutor Personal 24/7</div>
               <div class="esa-benefit-desc">Asisten AI kelistrikan yang paham PUIL, SKKNI, dan regulasi PLN. Tanya kapan saja — jawaban spesifik ke konteks Indonesia, ribuan case study real industri.</div>
@@ -9064,7 +9075,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Sertifikat" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="🎓"><img loading="lazy" alt="Sertifikat digital" src="https://images.unsplash.com/photo-1606159068539-43f36b99d1b2?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Sertifikat Digital + QR Verifikasi</div>
               <div class="esa-benefit-desc">Sertifikat per modul dan per level dengan QR code publik (siap di-share LinkedIn &amp; CV). Selaras SKKNI — siap lanjut uji BNSP.</div>
@@ -9072,7 +9083,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Praktikum bootcamp" src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="🔧"><img loading="lazy" alt="Praktikum bootcamp" src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Praktikum Bootcamp &amp; Portofolio</div>
               <div class="esa-benefit-desc">Proyek-proyek nyata berbasis studi kasus PLN, kontraktor, dan industri manufaktur. Output: portofolio profesional siap pajang untuk melamar kerja.</div>
@@ -9080,7 +9091,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Simulator listrik" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="🖥️"><img loading="lazy" alt="Simulator listrik" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Simulator Wiring &amp; Virtual Lab</div>
               <div class="esa-benefit-desc">Latihan wiring panel, troubleshooting motor, simulasi PLC, dan pengukuran multimeter — semua secara virtual tanpa biaya alat fisik.</div>
@@ -9088,7 +9099,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Bank soal" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="📝"><img loading="lazy" alt="Bank soal" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">15.000+ Bank Soal &amp; Simulasi UKK</div>
               <div class="esa-benefit-desc">Database soal masif: latihan modul, ujian level, simulasi UKK Kemnaker, dan tryout uji BNSP. Sistem cooldown disable — ulang sebanyak yang dibutuhkan.</div>
@@ -9096,7 +9107,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Katalog buku referensi" src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="📖"><img loading="lazy" alt="Katalog buku referensi" src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Katalog Buku &amp; Referensi Eksklusif</div>
               <div class="esa-benefit-desc">Akses 60+ e-book SMK/STM, PUIL 2011, modul kemnaker, IEEE/IEC standard reference, dan handbook industri. Update rutin tiap bulan.</div>
@@ -9104,7 +9115,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Workshop offline" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="🛠️"><img loading="lazy" alt="Workshop offline" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Kesempatan Workshop Offline</div>
               <div class="esa-benefit-desc">Undangan prioritas ke workshop offline di Jabodetabek, Bandung, Surabaya, dan kota-kota besar lainnya. Praktek langsung dengan instruktur PLN &amp; industri.</div>
@@ -9112,7 +9123,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Job posting eksklusif" src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="💼"><img loading="lazy" alt="Job posting eksklusif" src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Job Board Eksklusif Member</div>
               <div class="esa-benefit-desc">Akses lowongan eksklusif yang tidak di-publish ke umum: PLN Group, Pertamina, IPP swasta, EPC kontraktor. Plus referral langsung dari alumni senior.</div>
@@ -9120,7 +9131,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Talent pool" src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="🤝"><img loading="lazy" alt="Talent pool" src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Talent Pool &amp; Job Matchmaking</div>
               <div class="esa-benefit-desc">Profil alumni terhubung ke 100+ recruiter (PLN Group, Pertamina, IPP, kontraktor MEP, vendor industri). Job matchmaking proaktif untuk alumni level Profesional ke atas.</div>
@@ -9128,7 +9139,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Komunitas dan mentor" src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="👥"><img loading="lazy" alt="Komunitas dan mentor" src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Komunitas, Mentor &amp; Live Q&amp;A</div>
               <div class="esa-benefit-desc">Channel komunitas aktif (WhatsApp + Discord) dengan praktisi PLN, kontraktor, MEP. Live Q&amp;A bulanan dengan engineer senior &amp; alumni berpengalaman.</div>
@@ -9136,7 +9147,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="Green job energy terbarukan" src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="🌿"><img loading="lazy" alt="Green job energy terbarukan" src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Materi Green Job &amp; Energi Terbarukan</div>
               <div class="esa-benefit-desc">Kurikulum terbaru: Solar PV system, BESS, EV charging, smart grid, ESG &amp; carbon accounting. Sektor green job paling cepat tumbuh di Indonesia 2026+.</div>
@@ -9144,7 +9155,7 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo"><img loading="lazy" alt="CV Builder dan mock interview" src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=300&q=70"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="🎯"><img loading="lazy" alt="CV Builder dan mock interview" src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">CV Builder, Mock Interview &amp; Update Gratis</div>
               <div class="esa-benefit-desc">Template CV ATS-friendly, simulasi wawancara teknis dengan AI, plus update modul &amp; kurikulum gratis seumur hidup — sekali bayar, akses selamanya.</div>
@@ -9155,8 +9166,8 @@ button:active:not(:disabled),
         <!-- Strong CTA -->
         <div style="margin-top:36px;padding:28px 28px;background:linear-gradient(135deg,rgba(212,175,106,0.16),rgba(160,120,64,0.08));border:1px solid rgba(212,175,106,0.4);border-radius:14px;text-align:center;">
           <div style="font-family:var(--sans);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#f0d080;font-weight:700;margin-bottom:8px;">⏰ Promo Akan Berakhir</div>
-          <div style="font-family:var(--serif);font-size:clamp(20px,2.4vw,26px);font-weight:500;color:#f5f0e6;line-height:1.3;margin-bottom:6px;">Daftar sekarang, kunci harga <span style="color:#f0d080;font-style:italic;">Rp 299.000</span> seumur hidup.</div>
-          <div style="font-family:var(--sans);font-size:0.85rem;color:rgba(245,240,230,0.75);line-height:1.6;margin-bottom:22px;">Setelah 31 Juli 2026, harga balik ke Rp 1.000.000. Kamu rugi Rp 701.000 kalau menunda.</div>
+          <div style="font-family:var(--serif);font-size:clamp(20px,2.4vw,26px);font-weight:500;color:#f5f0e6;line-height:1.3;margin-bottom:8px;">Daftar sekarang, kunci harga <span style="color:#f0d080;font-style:italic;">Rp 299.000</span> seumur hidup.</div>
+          <div style="font-family:var(--sans);font-size:0.85rem;color:rgba(245,240,230,0.75);line-height:1.6;margin-bottom:22px;">Sekali bayar, akses selamanya — termasuk update modul &amp; fitur baru di masa depan.</div>
           <button class="academy-pricing-cta" onclick="openPurchaseModal()" style="background:linear-gradient(135deg,#d4af6a,#c9a96e);box-shadow:0 8px 24px rgba(212,175,106,0.4);font-size:13px;letter-spacing:0.18em;padding:18px 38px;">⚡ Daftar Sekarang — Akses Penuh</button>
           <div style="margin-top:14px;font-size:0.75rem;color:rgba(245,240,230,0.6);letter-spacing:0.04em;">💳 Pembayaran aman · 🔒 Sertifikat terverifikasi · ✅ Garansi akses lifetime</div>
         </div>
