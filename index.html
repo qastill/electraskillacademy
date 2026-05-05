@@ -21,27 +21,20 @@
 <meta name="apple-mobile-web-app-title" content="Electra Academy">
 <link rel="apple-touch-icon" href="/logo.svg">
 <script>
-// Register service worker — PWA installable + offline support
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(reg) {
-      // Auto-reload kalau ada update SW baru (dgn confirm)
-      reg.addEventListener('updatefound', function() {
-        var newWorker = reg.installing;
-        if (newWorker) {
-          newWorker.addEventListener('statechange', function() {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              if (confirm('Ada versi baru Electra Academy. Refresh sekarang?')) {
-                newWorker.postMessage('SKIP_WAITING');
-                setTimeout(function(){ window.location.reload(); }, 200);
-              }
-            }
-          });
-        }
-      });
-    }).catch(function(){});
+// EMERGENCY: Unregister service worker lama yg stuck cache. Setelah ini
+// versi terbaru index.html selalu loaded fresh dari Vercel.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(r){ r.unregister(); });
   });
+  if ('caches' in window) {
+    caches.keys().then(function(keys){
+      keys.forEach(function(k){ caches.delete(k); });
+    });
+  }
 }
+// SW DISABLED sementara — biar tidak ada cache yg ganggu fix.
+// Akan re-enabled setelah semua stable.
 </script>
 <link rel="alternate icon" href="/logo.svg">
 <link rel="apple-touch-icon" href="/logo.svg">
@@ -18169,54 +18162,36 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (typeof window.openModul !== 'function') return;
     const original = window.openModul;
     window.openModul = function(code, trackId, levelId) {
-      // Reload state dari localStorage (defensive — kalau profile di-set
-      // di scope lain belum sync ke addon IIFE).
+      // EMERGENCY MODE — gate sederhana: kalau ada user logged in, buka modul.
+      // Semua gate kompleks (level lock, profile complete, member active)
+      // dimatikan sementara biar modul bisa diakses.
       state = loadData();
-      console.info('[ESA-Gate] openModul', { code, trackId, levelId, hasProfile: !!state.profile, email: state.profile && state.profile.email });
-
-      // Cek admin override pertama — admin bypass SEMUA gate
       let userEmail = (state.profile && state.profile.email) || '';
       if (!userEmail) {
         try { const u = JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); if(u) userEmail = u.email; } catch(e){}
       }
-      const isAdmin = userEmail && typeof window.esaIsAdminEmail === 'function' && window.esaIsAdminEmail(userEmail);
 
-      // Check level lock (admin bypass)
-      if (!isAdmin && !isLevelUnlocked(levelId, trackId)) {
-        const msg = getLockMessage(levelId, trackId);
-        if (msg) {
-          showToast('Level Terkunci', msg, '🔒');
-          return;
-        }
+      // Belum login sama sekali → minta login
+      if (!userEmail) {
+        pendingAction = () => {
+          resetQuizStats(code, levelId, trackId);
+          original(code, trackId, levelId);
+        };
+        showOnboardingModal();
+        return;
       }
-      // Require login
+
+      // Auto-init profile minimal kalau belum ada (oauth tapi belum complete)
       if (!state.profile || !state.profile.name) {
-        if (!userEmail) {
-          // Belum login sama sekali
-          pendingAction = () => {
-            resetQuizStats(code, levelId, trackId);
-            original(code, trackId, levelId);
-          };
-          showOnboardingModal();
-          return;
-        }
-        // Logged in via OAuth tapi state.profile belum populated — auto-init minimal
-        state.profile = { name: userEmail.split('@')[0], email: userEmail, phone: '-', joinDate: new Date().toISOString() };
+        state.profile = state.profile || {};
+        state.profile.email = userEmail;
+        state.profile.name = state.profile.name || userEmail.split('@')[0];
+        state.profile.phone = state.profile.phone || '-';
+        state.profile.joinDate = state.profile.joinDate || new Date().toISOString();
         saveData(state);
       }
-      // Profile completion check (admin bypass — admin tidak wajib isi HP)
-      if (!isAdmin && (!window.esaProfileComplete || !window.esaProfileComplete())) {
-        pendingAction = () => original(code, trackId, levelId);
-        if (typeof window.esaShowProfileCompletion === 'function') window.esaShowProfileCompletion();
-        return;
-      }
-      // Member status (admin sudah otomatis active via isMemberActive)
-      if (!isMemberActive()) {
-        console.info('[ESA-Gate] modul ditolak — member tidak aktif. esaShowActivationModal()');
-        if (typeof window.esaShowActivationModal === 'function') window.esaShowActivationModal();
-        return;
-      }
-      console.info('[ESA-Gate] ✓ semua gate passed → open modul', code);
+
+      console.info('[ESA-Gate] ✓ open modul', code, '— user:', userEmail);
       stopQuizTimer();
       resetQuizStats(code, levelId, trackId);
       return original(code, trackId, levelId);
@@ -18227,34 +18202,24 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (typeof window.startLevel !== 'function') return;
     const original = window.startLevel;
     window.startLevel = function(levelId, trackId) {
+      // EMERGENCY MODE — login = boleh.
       state = loadData();
       let userEmail = (state.profile && state.profile.email) || '';
       if (!userEmail) {
         try { const u = JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); if(u) userEmail = u.email; } catch(e){}
       }
-      const isAdmin = userEmail && typeof window.esaIsAdminEmail === 'function' && window.esaIsAdminEmail(userEmail);
-
-      if (!isAdmin && !isLevelUnlocked(levelId, trackId)) {
-        const msg = getLockMessage(levelId, trackId);
-        if (msg) { showToast('Level Terkunci', msg, '🔒'); return; }
+      if (!userEmail) {
+        pendingAction = () => original(levelId, trackId);
+        showOnboardingModal();
+        return;
       }
       if (!state.profile || !state.profile.name) {
-        if (!userEmail) {
-          pendingAction = () => original(levelId, trackId);
-          showOnboardingModal();
-          return;
-        }
-        state.profile = { name: userEmail.split('@')[0], email: userEmail, phone: '-', joinDate: new Date().toISOString() };
+        state.profile = state.profile || {};
+        state.profile.email = userEmail;
+        state.profile.name = state.profile.name || userEmail.split('@')[0];
+        state.profile.phone = state.profile.phone || '-';
+        state.profile.joinDate = state.profile.joinDate || new Date().toISOString();
         saveData(state);
-      }
-      if (!isAdmin && (!window.esaProfileComplete || !window.esaProfileComplete())) {
-        pendingAction = () => original(levelId, trackId);
-        if (typeof window.esaShowProfileCompletion === 'function') window.esaShowProfileCompletion();
-        return;
-      }
-      if (!isMemberActive()) {
-        if (typeof window.esaShowActivationModal === 'function') window.esaShowActivationModal();
-        return;
       }
       return original(levelId, trackId);
     };
@@ -19210,21 +19175,12 @@ window.esaShowProfile=showProfileModal;
 function hookSV(){
   if(typeof window.showView==="function"&&!window.__esaGateOn){
     window._origSV=window.showView;
-    // View publik (tidak butuh login): home, about (Tentang Kami), talent (Our Talent)
+    // EMERGENCY MODE — semua view boleh dibuka kalau user logged in.
+    // Profile-completion gate dimatikan sementara biar tidak nyangkut.
     var PUBLIC_VIEWS={home:1,about:1,talent:1,'liveclass-schedule':1,faq:1};
     window.showView=function(v){
       if(PUBLIC_VIEWS[v])return window._origSV.apply(this,arguments);
       if(!getUser()){window._esaPending=v;buildModal();return;}
-      // Logged-in tapi profile belum lengkap (no HP masih '-' / kosong)
-      // → re-trigger modal lengkapi profil. View yg dimaksud disimpan di
-      // _esaPending dan akan dibuka otomatis setelah save.
-      if(typeof window.esaProfileComplete==='function' && !window.esaProfileComplete()){
-        window._esaPending=v;
-        if(typeof window.esaShowProfileCompletion==='function'){
-          window.esaShowProfileCompletion();
-        }
-        return;
-      }
       return window._origSV.apply(this,arguments);
     };
     window.__esaGateOn=true;
