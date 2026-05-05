@@ -7700,6 +7700,9 @@ body {
           <button class="modul-tab" onclick="switchTab('quiz')">
             <span class="modul-tab-icon">📝</span> Quiz 25 Soal
           </button>
+          <button class="modul-tab" onclick="switchTab('liveclass')">
+            <span class="modul-tab-icon">🎥</span> Live Class
+          </button>
           <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
             <button id="esa-modul-bookmark-btn" onclick="esaToggleBookmark()" title="Bookmark modul ini" style="background:transparent;border:1px solid rgba(212,175,106,0.4);color:#d4af6a;border-radius:8px;padding:7px 12px;font-size:0.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;">
               <span id="esa-bookmark-icon">☆</span> <span id="esa-bookmark-label">Bookmark</span>
@@ -7729,12 +7732,24 @@ body {
           </div>
           <div class="video-info">
             <h3 id="video-info-title">Video Pembelajaran</h3>
-            <p id="video-info-desc">Video pembelajaran lengkap dengan penjelasan konsep, contoh aplikasi di lapangan, dan demonstrasi visual. Durasi rata-rata 25-40 menit per modul.</p>
-            <div class="video-instructor">
-              <div class="video-instructor-avatar">QH</div>
+            <p id="video-info-desc">Video pembelajaran lengkap dengan penjelasan konsep, contoh aplikasi di lapangan, dan demonstrasi visual.</p>
+
+            <!-- Learning outcomes — auto-generated dari template per modul -->
+            <div id="video-info-outcomes" style="margin-top: 18px; padding: 16px 18px; background: rgba(212,175,106,0.08); border-left: 3px solid #d4af6a; border-radius: 8px;">
+              <div style="font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #d4af6a; font-weight: 700; margin-bottom: 10px;">🎯 Outcome Setelah Modul Ini</div>
+              <ul id="video-info-outcomes-list" style="margin: 0; padding-left: 20px; color: rgba(245,240,230,0.85); font-size: 0.92rem; line-height: 1.7;">
+                <li>Memahami konsep fundamental & rumus inti</li>
+                <li>Mampu mengaplikasikan ke kasus lapangan</li>
+                <li>Tahu standar regulasi yang berlaku (PUIL/SKKNI)</li>
+                <li>Siap kerjakan quiz 25 soal dengan minimum 70%</li>
+              </ul>
+            </div>
+
+            <div class="video-instructor" id="video-instructor-block">
+              <div class="video-instructor-avatar" id="video-instructor-avatar">QH</div>
               <div class="video-instructor-info">
-                <strong>Ir. Qastil Haramaini, Ph.D.</strong>
-                <div class="role">Senior Engineer · PT PLN (Persero)</div>
+                <strong id="video-instructor-name">Dr Qashtalani Haramaini</strong>
+                <div class="role" id="video-instructor-role">Founder · Praktisi Distribusi 10+ tahun</div>
               </div>
             </div>
           </div>
@@ -7785,6 +7800,13 @@ body {
           </div>
           <div class="quiz-list" id="quiz-list">
             <!-- Filled by JS -->
+          </div>
+        </div>
+
+        <!-- Live Class panel -->
+        <div class="modul-panel" id="panel-liveclass">
+          <div id="liveclass-content">
+            <!-- Filled by openModul() — render rekaman atau jadwal upcoming -->
           </div>
         </div>
 
@@ -11291,6 +11313,247 @@ function startLevel(levelId, trackId) {
 // ================================================
 // OPEN MODUL DETAIL
 // ================================================
+// ================================================
+// MODULE INSTRUCTORS & OUTCOMES
+// ================================================
+// Per-track instructor mapping. S6/S7/S8 (Energy Auditor, Pembangkitan
+// Renewable, K3 Listrik) ditangani Co-Founder Farda Najih dgn background
+// K3 + APP + auditor energi. Sisanya (S1-S5 + L1/L2) ditangani Founder
+// Dr Qashtalani Haramaini (distribusi + analytics).
+function getModuleInstructor(trackId, levelId) {
+  const fardaTracks = ['S6', 'S7', 'S8'];
+  if (fardaTracks.includes(trackId)) {
+    return {
+      name: 'Farda Najih, S.T.',
+      initials: 'FN',
+      role: 'Co-Founder · K3L & Auditor Energi (9+ tahun di PLN)',
+      bio: 'Praktisi distribusi PLN dgn 9+ tahun pengalaman. Spesialis K3 listrik, audit energi, dan APP. Sertifikasi: Ahli K3 Umum, Ahli K3 Listrik.'
+    };
+  }
+  return {
+    name: 'Dr Qashtalani Haramaini',
+    initials: 'QH',
+    role: 'Founder · Praktisi Distribusi 10+ tahun · S3 UI',
+    bio: 'Praktisi distribusi tenaga listrik dgn 10+ tahun pengalaman utility-scale. PhD Teknik Elektro Universitas Indonesia. 8+ publikasi IEEE/Elsevier (smart metering, load forecasting, EnerBit).'
+  };
+}
+
+// Outcome learning per modul — adaptif berdasarkan kategori. Generic
+// fallback untuk modul yg belum punya outcome custom.
+function getModuleOutcomes(module, levelId, trackId) {
+  const cat = (module.category || '').toLowerCase();
+  const title = (module.title || '').toLowerCase();
+
+  // Pattern matching untuk outcome relevan
+  if (cat.includes('k3') || title.includes('k3') || title.includes('keselamatan')) {
+    return [
+      'Identifikasi 5+ jenis bahaya listrik di workplace',
+      'Aplikasi prosedur LOTO (Lock Out Tag Out) dengan benar',
+      'Pemilihan & inspeksi APD listrik sesuai SNI/IEC',
+      'Tahu regulasi Kemnaker (Permenaker 12/2015) & UU 1/1970',
+      'Siap ujian Ahli K3 Listrik (AK3L) BNSP'
+    ];
+  }
+  if (cat.includes('fondasi') || title.includes('fisika') || title.includes('hukum ohm') || title.includes('rangkaian')) {
+    return [
+      'Memahami konsep arus, tegangan, hambatan, daya',
+      'Aplikasi Hukum Ohm & Kirchhoff dalam analisis rangkaian',
+      'Hitung daya & energi listrik di sistem real',
+      'Baca rangkaian sederhana DC & AC',
+      'Foundation siap untuk modul aplikasi (instalasi, distribusi, dll)'
+    ];
+  }
+  if (cat.includes('distribusi') || title.includes('20 kv') || title.includes('jaringan') || title.includes('gardu')) {
+    return [
+      'Memahami arsitektur distribusi 20 kV (radial, loop, spindle)',
+      'Operasi gardu distribusi & switching aman',
+      'Pemilihan trafo, kabel SUTM, dan proteksi yang tepat',
+      'Troubleshoot gangguan distribusi (single phasing, hot spot)',
+      'Siap kerja sebagai Yantek/operator UP3 PLN'
+    ];
+  }
+  if (cat.includes('industri') || title.includes('motor') || title.includes('plc') || title.includes('inverter')) {
+    return [
+      'Sizing & commissioning motor listrik 3-fasa di pabrik',
+      'Komisioning Variable Speed Drive (VSD) dengan benar',
+      'Diagnosis motor health (insulation, bearing, alignment)',
+      'Memahami dasar PLC + automation',
+      'Siap kerja sebagai maintenance engineer pabrik'
+    ];
+  }
+  if (cat.includes('transmisi') || title.includes('150 kv') || title.includes('500 kv') || title.includes('gitet')) {
+    return [
+      'Memahami sistem transmisi 150/500 kV Indonesia',
+      'Aplikasi proteksi diferensial, overcurrent, distance',
+      'Operasi GITET & switching tegangan tinggi',
+      'Familiar dengan SCADA & sistem proteksi backbone',
+      'Siap kerja di UPT/UID PLN sektor transmisi'
+    ];
+  }
+  if (cat.includes('analyst') || title.includes('python') || title.includes('forecast') || title.includes('data')) {
+    return [
+      'Aplikasi Python untuk analisis utilitas energi',
+      'Load forecasting dengan ML (regression, ARIMA, LSTM)',
+      'Deteksi NTL (Non-Technical Loss) dengan AI',
+      'Build dashboard energy analytics (Power BI / Streamlit)',
+      'Siap kerja Energy Data Analyst di PLN/IPP/utility'
+    ];
+  }
+  if (cat.includes('audit') || cat.includes('konservasi') || title.includes('audit energi')) {
+    return [
+      'Lakukan audit energi gedung & industri sesuai SNI 6196',
+      'Hitung Intensitas Konsumsi Energi (IKE) building',
+      'Identifikasi peluang penghematan & ROI rekomendasi',
+      'Susun laporan audit energi standar BNSP/HAKE',
+      'Siap ujian sertifikasi Manajer / Auditor Energi'
+    ];
+  }
+  if (cat.includes('renewable') || cat.includes('pembangkit') || title.includes('solar') || title.includes('pv') || title.includes('wind')) {
+    return [
+      'Sizing sistem PLTS rooftop / off-grid hybrid',
+      'Kalkulasi yield tahunan & ROI investasi',
+      'Pemilihan inverter, BESS, dan komponen',
+      'Memahami regulasi PLTS Indonesia (Permen ESDM 26/2021)',
+      'Siap kerja di developer EBT / IPP renewable'
+    ];
+  }
+
+  // Generic fallback
+  return [
+    `Memahami konsep utama modul "${module.title}"`,
+    'Mampu aplikasikan rumus & prinsip ke kasus lapangan',
+    'Tahu standar regulasi yang berlaku (PUIL/SKKNI/SNI)',
+    'Kerjakan quiz 25 soal dengan minimum skor 70%',
+    'Foundation siap untuk modul lanjutan'
+  ];
+}
+
+// Live Class scheduler — kalau MODULE_MEDIA[code].liveClassUrl ada,
+// tampilkan recording. Kalau belum ada, hitung jadwal upcoming
+// berdasarkan urutan modul: mulai 1 Juli 2026, setiap 3 hari.
+function renderLiveClassPanel(module, levelId, trackId, instructor) {
+  const container = document.getElementById('liveclass-content');
+  if (!container) return;
+
+  const media = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[module.code]) ? MODULE_MEDIA[module.code] : {};
+
+  // Kalau ada rekaman live class, render video player
+  if (media.liveClassUrl) {
+    const parsed = (typeof parseVideoEmbed === 'function') ? parseVideoEmbed(media.liveClassUrl) : null;
+    let playerHtml = '';
+    if (parsed) {
+      if (parsed.type === 'video') {
+        playerHtml = `<video src="${parsed.src}" controls controlsList="nodownload" playsinline style="width:100%;aspect-ratio:16/9;border-radius:12px;background:#000;"></video>`;
+      } else {
+        playerHtml = `<div style="position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;"><iframe src="${parsed.src}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe></div>`;
+      }
+    }
+    container.innerHTML = `
+      <div style="padding:24px;background:#fafaf6;border-radius:12px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <span style="background:rgba(34,197,94,0.18);color:#16a34a;padding:4px 12px;border-radius:99px;font-size:0.74rem;font-weight:700;letter-spacing:0.05em;">● REKAMAN TERSEDIA</span>
+          <span style="font-size:0.82rem;color:#666;">Live class sudah selesai · rekaman bisa ditonton kapan saja</span>
+        </div>
+        ${playerHtml}
+        <div style="margin-top:18px;padding:16px;background:rgba(212,175,106,0.08);border-radius:8px;border-left:3px solid #d4af6a;">
+          <div style="font-size:0.74rem;letter-spacing:0.12em;text-transform:uppercase;color:#a07840;font-weight:700;margin-bottom:6px;">Pemateri</div>
+          <div style="font-weight:700;color:#1a1d2e;">${escapeHtml(instructor.name)}</div>
+          <div style="font-size:0.84rem;color:#666;">${escapeHtml(instructor.role)}</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Belum ada rekaman → hitung jadwal upcoming
+  // Urutan: index modul di seluruh CURRICULUM → tanggal start + index*3 hari
+  const allModules = computeAllModulesOrdered();
+  const idx = allModules.findIndex(m => m.code === module.code);
+  const startDate = new Date('2026-07-01T19:00:00+07:00'); // 1 Juli 2026, jam 19:00 WIB
+  const daysOffset = idx >= 0 ? idx * 3 : 0;
+  const liveDate = new Date(startDate.getTime() + daysOffset * 86400000);
+  const liveDateStr = liveDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const liveTimeStr = liveDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+  const now = new Date();
+  const daysToLive = Math.ceil((liveDate - now) / (24*60*60*1000));
+  const isPast = daysToLive < 0;
+  const isToday = daysToLive === 0;
+  const isSoon = daysToLive > 0 && daysToLive <= 7;
+
+  const statusBadge = isPast
+    ? '<span style="background:rgba(107,114,128,0.2);color:#6b7280;padding:5px 14px;border-radius:99px;font-size:0.74rem;font-weight:700;letter-spacing:0.05em;">● TELAH BERLALU · Rekaman menyusul</span>'
+    : isToday
+    ? '<span style="background:rgba(239,68,68,0.18);color:#dc2626;padding:5px 14px;border-radius:99px;font-size:0.74rem;font-weight:700;letter-spacing:0.05em;animation:esa-fab-pulse 2s infinite;">🔴 LIVE HARI INI</span>'
+    : isSoon
+    ? '<span style="background:rgba(251,191,36,0.2);color:#d97706;padding:5px 14px;border-radius:99px;font-size:0.74rem;font-weight:700;letter-spacing:0.05em;">⚡ DALAM ' + daysToLive + ' HARI</span>'
+    : '<span style="background:rgba(59,130,246,0.18);color:#2563eb;padding:5px 14px;border-radius:99px;font-size:0.74rem;font-weight:700;letter-spacing:0.05em;">📅 DIJADWALKAN</span>';
+
+  const waMsg = encodeURIComponent('Halo Admin Electra, saya mau daftar Live Class modul "' + module.title + '" pada ' + liveDateStr + ' jam ' + liveTimeStr);
+
+  container.innerHTML = `
+    <div style="padding:32px 28px;background:linear-gradient(135deg,#fafaf6 0%,#f5f0e6 100%);border-radius:12px;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="width:72px;height:72px;background:linear-gradient(135deg,#c9a96e,#a07840);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:36px;">🎥</div>
+        ${statusBadge}
+        <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;font-weight:600;color:#1a1d2e;margin:14px 0 6px;">Live Class — ${escapeHtml(module.title)}</h3>
+        <p style="color:#666;font-size:0.92rem;line-height:1.6;margin:0;max-width:540px;margin-left:auto;margin-right:auto;">
+          ${isPast ? 'Sesi sudah selesai. Rekaman akan ditambahkan dalam beberapa hari ke depan.' : 'Sesi tatap muka virtual via Zoom. Tanya langsung ke pemateri, diskusi case study, dan dapatkan klarifikasi soal-soal sulit.'}
+        </p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;max-width:520px;margin-left:auto;margin-right:auto;">
+        <div style="background:#fff;border:1px solid rgba(212,175,106,0.25);border-radius:10px;padding:14px 16px;">
+          <div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#a07840;font-weight:700;margin-bottom:4px;">📅 Tanggal</div>
+          <div style="font-weight:600;color:#1a1d2e;">${liveDateStr}</div>
+        </div>
+        <div style="background:#fff;border:1px solid rgba(212,175,106,0.25);border-radius:10px;padding:14px 16px;">
+          <div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#a07840;font-weight:700;margin-bottom:4px;">⏰ Waktu</div>
+          <div style="font-weight:600;color:#1a1d2e;">${liveTimeStr} · 90 menit</div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid rgba(212,175,106,0.25);border-radius:10px;padding:18px 20px;max-width:520px;margin:0 auto 22px;">
+        <div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#a07840;font-weight:700;margin-bottom:6px;">👨‍🏫 Pemateri</div>
+        <div style="font-weight:700;color:#1a1d2e;font-size:1.02rem;">${escapeHtml(instructor.name)}</div>
+        <div style="font-size:0.86rem;color:#666;line-height:1.6;margin-top:4px;">${escapeHtml(instructor.role)}</div>
+        <div style="font-size:0.82rem;color:#666;line-height:1.6;margin-top:8px;font-style:italic;">${escapeHtml(instructor.bio)}</div>
+      </div>
+
+      ${!isPast ? `
+      <div style="text-align:center;">
+        <a href="https://wa.me/6285121532407?text=${waMsg}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;text-decoration:none;border-radius:10px;padding:14px 28px;font-weight:700;font-size:0.95rem;box-shadow:0 6px 20px rgba(37,211,102,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
+          Daftar Live Class via WA
+        </a>
+        <div style="font-size:0.78rem;color:#999;margin-top:14px;">Link Zoom akan dikirim H-1 ke email & WhatsApp.<br>Akses live class GRATIS untuk member aktif.</div>
+      </div>` : `
+      <div style="text-align:center;">
+        <a href="https://wa.me/6285121532407?text=${encodeURIComponent('Halo Admin, kapan rekaman live class modul ' + module.title + ' tersedia?')}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:transparent;color:#a07840;text-decoration:none;border-radius:10px;padding:11px 22px;font-weight:600;font-size:0.88rem;border:1px solid rgba(212,175,106,0.5);">
+          💬 Tanya Admin Soal Rekaman
+        </a>
+      </div>`}
+    </div>
+  `;
+}
+
+// Compute urutan semua modul untuk hitung tanggal jadwal live class.
+// Order: L1 → L2 → S1.L3-L6 → S2.L3-L6 → ... → S8.L3-L6
+function computeAllModulesOrdered() {
+  const out = [];
+  const seen = new Set();
+  ['L1','L2'].forEach(lv => {
+    (CURRICULUM[lv] || []).forEach(m => {
+      if (!seen.has(m.code)) { out.push(m); seen.add(m.code); }
+    });
+  });
+  ['S1','S2','S3','S4','S5','S6','S7','S8'].forEach(track => {
+    (CURRICULUM[track] || []).forEach(m => {
+      if (!seen.has(m.code)) { out.push(m); seen.add(m.code); }
+    });
+  });
+  return out;
+}
+
 function openModul(code, trackId, levelId) {
   currentModuleCode = code;
 
@@ -11340,9 +11603,36 @@ function openModul(code, trackId, levelId) {
   // Back button
   document.getElementById('modul-back-btn').onclick = () => openJalur(trackId);
 
-  // Video info
+  // Video info — title + description + outcomes + instructor (per-track)
   document.getElementById('video-info-title').textContent = module.title;
-  document.getElementById('video-info-desc').textContent = `Video pembelajaran "${module.title}". Kategori: ${module.category || 'Umum'}. Pelajari konsep, aplikasi lapangan, dan studi kasus dari senior engineer PLN & industri.`;
+
+  // Description with explicit learning context
+  const cat = module.category || 'Umum';
+  const lvlName = (LEVELS.find(l => l.id === levelId) || {}).name || levelId;
+  document.getElementById('video-info-desc').innerHTML =
+    `<strong style="color:#f0d080;">${escapeHtml(module.title)}</strong> — kategori ${escapeHtml(cat)}, tier ${escapeHtml(lvlName)} (${levelId}). ` +
+    `Materi disusun praktisi berpengalaman: konsep, formula, contoh aplikasi lapangan PLN & industri, dan studi kasus nyata. ` +
+    `Cocok untuk teknisi, supervisor, engineer muda, dan siapa pun yang ingin upgrade kompetensi kelistrikan.`;
+
+  // Outcome list — adaptif berdasarkan kategori modul
+  const outcomes = getModuleOutcomes(module, levelId, trackId);
+  const outcomesList = document.getElementById('video-info-outcomes-list');
+  if (outcomesList) {
+    outcomesList.innerHTML = outcomes.map(o => `<li>${escapeHtml(o)}</li>`).join('');
+  }
+
+  // Instructor — track S6/S7/S8 = Farda Najih (K3 + Pembangkit + Auditor),
+  // sisanya = Dr Qashtalani Haramaini.
+  const instructor = getModuleInstructor(trackId, levelId);
+  const insAvatar = document.getElementById('video-instructor-avatar');
+  const insName = document.getElementById('video-instructor-name');
+  const insRole = document.getElementById('video-instructor-role');
+  if (insAvatar) insAvatar.textContent = instructor.initials;
+  if (insName) insName.textContent = instructor.name;
+  if (insRole) insRole.textContent = instructor.role;
+
+  // Live Class panel — render rekaman kalau ada, atau jadwal upcoming
+  renderLiveClassPanel(module, levelId, trackId, instructor);
 
   // === Inject VIDEO from MODULE_MEDIA ===
   const media = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[code]) ? MODULE_MEDIA[code] : {};
@@ -11447,7 +11737,12 @@ function switchTab(tab) {
   document.querySelectorAll('.modul-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.modul-panel').forEach(p => p.classList.remove('active'));
 
-  const tabBtn = Array.from(document.querySelectorAll('.modul-tab')).find(t => t.textContent.toLowerCase().includes(tab === 'video' ? 'video' : tab === 'slides' ? 'materi' : 'quiz'));
+  const tabKeyword =
+    tab === 'video' ? 'video' :
+    tab === 'slides' ? 'materi' :
+    tab === 'quiz' ? 'quiz' :
+    tab === 'liveclass' ? 'live class' : tab;
+  const tabBtn = Array.from(document.querySelectorAll('.modul-tab')).find(t => t.textContent.toLowerCase().includes(tabKeyword));
   if (tabBtn) tabBtn.classList.add('active');
   const panel = document.getElementById('panel-' + tab);
   if (panel) panel.classList.add('active');
