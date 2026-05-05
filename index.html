@@ -16518,17 +16518,27 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   // Sync member status dari server saat login. Kalau user sudah aktivasi
   // di session sebelumnya / device lain, status akan ke-load otomatis.
   // Juga auto-aktivasi untuk admin emails.
+  //
+  // IMPORTANT: Reload state dari localStorage dulu sebelum modify, karena
+  // handleCred (di auth-gate IIFE) baru saja write ke localStorage. Tanpa
+  // reload, state in-memory di addon IIFE akan stale dan saveData() akan
+  // overwrite profile yg baru di-set handleCred.
   async function syncMemberStatusFromServer(email) {
     if (!email) return;
+    // Reload state dari localStorage supaya pick up profile yg baru ditulis
+    state = loadData();
     // Admin auto-active
     if (isAdminEmail(email)) {
       state.promoCode = state.promoCode || 'ELECTRA2026';
-      if (!state.profile) state.profile = {};
+      if (!state.profile) state.profile = { name: email, email: email };
+      state.profile.email = state.profile.email || email;
       state.profile.activatedAt = state.profile.activatedAt || new Date().toISOString();
       state.profile.activationMethod = 'admin';
       state.profile.isPaid = true;
       saveData(state);
-      console.info('[ESA] admin auto-activated:', email);
+      console.info('[ESA] admin auto-activated:', email, '— state.promoCode=', state.promoCode);
+      // Refresh home progress UI kalau visible
+      try { updateHomeProgress && updateHomeProgress(); } catch(e) {}
       return;
     }
     // Non-admin: fetch from server
@@ -16541,15 +16551,18 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       if (!r.ok) return;
       const data = await r.json();
       if (!data || !data.ok || !data.exists) return;
+      // Reload lagi (mungkin handleCred lain sudah ubah state lagi)
+      state = loadData();
       if (data.active) {
         // Server says user aktif → populate state lokal
         if (data.promo_code) state.promoCode = data.promo_code;
-        if (!state.profile) state.profile = {};
+        if (!state.profile) state.profile = { name: email, email: email };
         state.profile.activationMethod = data.activation_method || 'server';
         if (data.expires_at) state.profile.subscriptionExpiresAt = data.expires_at;
         if (data.activation_method === 'payment') state.profile.isPaid = true;
         saveData(state);
-        console.info('[ESA] member status synced dari server: AKTIF');
+        console.info('[ESA] member status synced dari server: AKTIF — promoCode:', state.promoCode);
+        try { updateHomeProgress && updateHomeProgress(); } catch(e) {}
       } else {
         console.info('[ESA] member status server: BELUM AKTIF —', data.reason);
       }
@@ -16558,6 +16571,21 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     }
   }
   window.esaSyncMemberStatus = syncMemberStatusFromServer;
+
+  // Helper debug — admin bisa cek status di Console: esaDebugStatus()
+  window.esaDebugStatus = function() {
+    state = loadData();
+    return {
+      email: state.profile && state.profile.email,
+      promoCode: state.promoCode,
+      isPaid: state.profile && state.profile.isPaid,
+      activationMethod: state.profile && state.profile.activationMethod,
+      isAdmin: state.profile && isAdminEmail(state.profile.email),
+      hasFullAccess: hasFullAccess(),
+      isMemberActive: isMemberActive(),
+      profileComplete: window.esaProfileComplete && window.esaProfileComplete()
+    };
+  };
 
   function loadData() {
     try {
