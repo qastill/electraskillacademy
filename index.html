@@ -7692,6 +7692,17 @@ body {
           <button class="modul-tab" onclick="switchTab('quiz')">
             <span class="modul-tab-icon">📝</span> Quiz 25 Soal
           </button>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+            <button id="esa-modul-bookmark-btn" onclick="esaToggleBookmark()" title="Bookmark modul ini" style="background:transparent;border:1px solid rgba(212,175,106,0.4);color:#d4af6a;border-radius:8px;padding:7px 12px;font-size:0.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;">
+              <span id="esa-bookmark-icon">☆</span> <span id="esa-bookmark-label">Bookmark</span>
+            </button>
+            <button onclick="esaShowNotePanel()" title="Catatan pribadi modul ini" style="background:transparent;border:1px solid rgba(212,175,106,0.4);color:#d4af6a;border-radius:8px;padding:7px 12px;font-size:0.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;">
+              📝 Catatan
+            </button>
+            <button onclick="esaShowRatingPanel()" title="Beri rating modul" style="background:transparent;border:1px solid rgba(212,175,106,0.4);color:#d4af6a;border-radius:8px;padding:7px 12px;font-size:0.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;">
+              ⭐ Rating
+            </button>
+          </div>
         </div>
 
         <!-- Video panel -->
@@ -11282,6 +11293,16 @@ function openModul(code, trackId, levelId) {
   else module = (CURRICULUM[trackId] || []).find(m => m.code === code);
 
   if (!module) return;
+
+  // Expose modul aktif ke global supaya bookmark/notes/rating bisa akses
+  window.currentModuleData = {
+    code: module.code,
+    title: module.title,
+    levelId: levelId,
+    trackId: trackId,
+    level: module.level,
+    track: trackId
+  };
 
   const trackMeta = TRACKS_META[trackId] || { name: 'Pondasi' };
   const levelName = LEVELS.find(l => l.id === levelId)?.name || levelId;
@@ -16336,6 +16357,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     // Cooldown lock dinonaktifkan — selalu null, peserta bebas mengulang.
     const cooldownUntil = null;
 
+    const tabSwitches = (typeof window.esaQuizTabSwitchCount === 'function') ? window.esaQuizTabSwitchCount() : 0;
     state.modules[code] = {
       code: code,
       level: level,
@@ -16351,7 +16373,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       failedAttempts: newFailedAttempts,
       cooldownUntil: cooldownUntil,
       bestScore: Math.max(existing.bestScore, Math.round(pct * 100)),
-      lastDate: new Date().toISOString()
+      lastDate: new Date().toISOString(),
+      // Proctoring data — kalau >= 5 tab switch, admin bisa flag untuk audit
+      lastTabSwitches: tabSwitches,
+      flaggedForAudit: tabSwitches >= 5 || (existing.flaggedForAudit === true)
     };
 
     // Award XP only on first pass
@@ -16423,27 +16448,56 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   const QUIZ_TIME_LIMIT_MS = 15 * 60 * 1000;
   let quizTimerInterval = null;
   let quizDeadline = null;
+  let quizTabSwitchHandler = null;
+  let quizTabSwitchCount = 0;
 
   function startQuizTimer() {
     stopQuizTimer();
     // Timer count-up (stopwatch) — tidak ada deadline, tidak auto-submit.
-    // Peserta bebas mengerjakan soal mana saja, lompat-lompat, ubah jawaban,
-    // dan submit kapan pun siap.
     const startedAt = Date.now();
+    quizTabSwitchCount = 0;
     const tick = () => {
       const el = document.getElementById('quiz-timer');
       if (el) {
-        el.textContent = '⏱ ' + formatCooldown(Date.now() - startedAt);
-        el.style.color = 'var(--gold-dark)';
+        el.textContent = '⏱ ' + formatCooldown(Date.now() - startedAt) + (quizTabSwitchCount > 0 ? ' · ⚠ '+quizTabSwitchCount+' tab-switch' : '');
+        el.style.color = quizTabSwitchCount > 0 ? '#ef9090' : 'var(--gold-dark)';
       }
     };
     tick();
     quizTimerInterval = setInterval(tick, 1000);
+
+    // Proctoring: deteksi tab-switch / window blur. User bisa lanjutkan
+    // tapi tab-switch dicatat di rec.tabSwitches dan ditampilkan di hasil
+    // (transparency: kalau user lulus tapi tab-switch banyak, admin bisa
+    // audit). Tidak block UI karena tidak fair untuk multi-monitor users
+    // yg butuh referensi.
+    quizTabSwitchHandler = function() {
+      if (document.hidden) {
+        quizTabSwitchCount++;
+        // Toast peringatan halus
+        if (typeof showToast === 'function' && quizTabSwitchCount === 1) {
+          showToast('Peringatan Proctoring',
+            'Pindah tab/window terdeteksi. Setiap perpindahan dicatat di histori ujian. Untuk fair-play, fokus di tab quiz.', '⚠');
+        } else if (quizTabSwitchCount === 5) {
+          if (typeof showToast === 'function') {
+            showToast('Banyak Tab-Switch',
+              'Anda sudah pindah tab '+quizTabSwitchCount+' kali. Hasil ujian akan ditandai untuk audit.', '🔍');
+          }
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', quizTabSwitchHandler);
   }
   function stopQuizTimer() {
     if (quizTimerInterval) { clearInterval(quizTimerInterval); quizTimerInterval = null; }
+    if (quizTabSwitchHandler) {
+      document.removeEventListener('visibilitychange', quizTabSwitchHandler);
+      quizTabSwitchHandler = null;
+    }
     quizDeadline = null;
   }
+  // Expose count untuk recordModuleResult
+  window.esaQuizTabSwitchCount = function() { return quizTabSwitchCount; };
   window.esaStartQuizTimer = startQuizTimer;
   window.esaStopQuizTimer = stopQuizTimer;
 
@@ -16504,7 +16558,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       avgScore: progress.avgScore,
       moduleCount: progress.total,
       certIssued: true,
-      certId: certId
+      certId: certId,
+      // Snapshot nama saat sertifikat issued — dikirim ke DB sebagai
+      // participant_name untuk display di verify page tanpa join.
+      participantName: state.profile && state.profile.name ? state.profile.name : null
     };
 
     state.certificates.push({
@@ -16954,11 +17011,47 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           </div>
         </div>
 
-        <div class="esa-cert-meta">
-          CERTIFICATE ID: <span class="esa-cert-id">${rec.certId}</span>
-          &nbsp;·&nbsp; Verify at electraskill.academy/verify
+        <div class="esa-cert-meta" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+          <div>
+            CERTIFICATE ID: <span class="esa-cert-id">${rec.certId}</span>
+            <br>
+            <small style="opacity:0.7">Verifikasi di ${location.host}/verify.html?id=${rec.certId}</small>
+          </div>
+          <div id="esa-cert-qr-${rec.certId}" style="width:90px;height:90px;background:#fff;padding:6px;border-radius:6px;flex-shrink:0;"></div>
         </div>
       </div>
+      <script>
+        // Inject QR code (lazy-load library kalau belum ada)
+        (function(){
+          const targetId = 'esa-cert-qr-${rec.certId}';
+          const verifyUrl = '${location.protocol}//${location.host}/verify.html?id=${rec.certId}';
+          function renderQr(){
+            const target = document.getElementById(targetId);
+            if(!target || !window.QRCode) return;
+            target.innerHTML = '';
+            try{
+              new window.QRCode(target, {
+                text: verifyUrl,
+                width: 78, height: 78,
+                colorDark: '#0d0f1c', colorLight: '#ffffff',
+                correctLevel: window.QRCode.CorrectLevel.M
+              });
+            }catch(e){console.warn('[Cert-QR] gagal render:',e);}
+          }
+          if(window.QRCode) {
+            renderQr();
+          } else {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
+            s.onload = renderQr;
+            s.onerror = function(){
+              const t = document.getElementById(targetId);
+              if(t) t.innerHTML = '<div style="font-size:9px;color:#0d0f1c;text-align:center;line-height:1.3;padding:18px 4px;">Verifikasi:<br><strong>' + verifyUrl.replace('https://','') + '</strong></div>';
+            };
+            document.head.appendChild(s);
+          }
+        })();
+      </script>
 
       <!-- PAGE 2: MODULE LIST -->
       <div class="esa-cert-page esa-cert-page-2" id="esa-cert-page-2">
@@ -18451,12 +18544,21 @@ else{setTimeout(init,200);}
     var simLabs=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.includes('Simulator')||a.textContent.includes('Labs');});
     var cert=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.trim()==='Certification'||a.textContent.includes('Sertifikasi');});
 
+    // Leaderboard link — public, anyone can see top users
+    var leaderboardLink=document.createElement('a');
+    leaderboardLink.className='nav-right';
+    leaderboardLink.href='#';
+    leaderboardLink.textContent='🏆 Leaderboard';
+    leaderboardLink.style.cursor='pointer';
+    leaderboardLink.onclick=function(e){e.preventDefault(); if(typeof window.esaShowLeaderboard==='function') window.esaShowLeaderboard();};
+
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
     navGroup.appendChild(ourTalentLink);
     navGroup.appendChild(jobLink);
     if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
+    navGroup.appendChild(leaderboardLink);
     if(daftar)navGroup.appendChild(daftar);
   }
   
@@ -18731,7 +18833,9 @@ else{setTimeout(init,200);}
         cert_id: levelRec.certId,
         avg_score: levelRec.avgScore,
         module_count: levelRec.moduleCount,
-        completed_at: levelRec.completedDate || new Date().toISOString()
+        completed_at: levelRec.completedDate || new Date().toISOString(),
+        // Snapshot nama (tertulis di sertifikat) untuk verifikasi publik
+        participant_name: levelRec.participantName || profile.name || null
       });
       if (!error) {
         console.info('[ESA-Sync] level_completion tercatat:', profile.email, levelRec.levelId, levelRec.certId);
@@ -18744,5 +18848,313 @@ else{setTimeout(init,200);}
   };
 })();
 </script>
+
+<!-- ================================================================
+     MODULE BOOKMARK + NOTES + RATING + LEADERBOARD
+     ================================================================ -->
+<script>
+(function(){
+  'use strict';
+
+  function getSb(){
+    if(window.__esaSb) return window.__esaSb;
+    if(!window.supabase || !window.ESA_SUPABASE || !window.ESA_SUPABASE.isConfigured()) return null;
+    return null;
+  }
+
+  function getCurrentEmail(){
+    try{
+      const d = JSON.parse(localStorage.getItem('esa_data_v1')||'{}');
+      return d.profile && d.profile.email;
+    }catch(e){ return null; }
+  }
+
+  function getCurrentModule(){
+    return window.currentModuleData || null;
+  }
+
+  // ---------- BOOKMARK ----------
+  const BOOKMARK_KEY = 'esa_bookmarks_v1';
+  function readLocalBookmarks(){
+    try{ return JSON.parse(localStorage.getItem(BOOKMARK_KEY)||'{}'); }catch(e){return{};}
+  }
+  function writeLocalBookmarks(b){
+    try{ localStorage.setItem(BOOKMARK_KEY, JSON.stringify(b)); }catch(e){}
+  }
+  function isBookmarked(moduleCode){
+    return !!readLocalBookmarks()[moduleCode];
+  }
+  window.esaIsBookmarked = isBookmarked;
+
+  window.esaToggleBookmark = async function(){
+    const m = getCurrentModule();
+    if(!m){ alert('Modul tidak terdeteksi. Refresh halaman.'); return; }
+    const email = getCurrentEmail();
+    const local = readLocalBookmarks();
+    const wasBookmarked = !!local[m.code];
+
+    if(wasBookmarked){
+      delete local[m.code];
+    } else {
+      local[m.code] = { code: m.code, level: m.levelId || m.level, track: m.trackId || m.track, ts: Date.now() };
+    }
+    writeLocalBookmarks(local);
+    updateBookmarkUI();
+
+    // Sync ke Supabase (best-effort)
+    const sb = window.__esaSb;
+    if(sb && email){
+      try{
+        if(wasBookmarked){
+          await sb.from('module_bookmarks').delete().eq('participant_email', email).eq('module_code', m.code);
+        } else {
+          await sb.from('module_bookmarks').insert({
+            participant_email: email,
+            module_code: m.code,
+            level_id: m.levelId || m.level || null,
+            track_id: m.trackId || m.track || null
+          });
+        }
+      }catch(e){ console.warn('[ESA-Bookmark] sync gagal:', e.message); }
+    }
+
+    if(typeof window.showToast === 'function'){
+      window.showToast(
+        wasBookmarked ? 'Bookmark dihapus' : 'Bookmark tersimpan',
+        wasBookmarked ? '' : 'Akses cepat dari profile → tab Bookmarks',
+        wasBookmarked ? '☆' : '★'
+      );
+    }
+  };
+
+  function updateBookmarkUI(){
+    const m = getCurrentModule();
+    if(!m) return;
+    const icon = document.getElementById('esa-bookmark-icon');
+    const label = document.getElementById('esa-bookmark-label');
+    const bookmarked = isBookmarked(m.code);
+    if(icon) icon.textContent = bookmarked ? '★' : '☆';
+    if(label) label.textContent = bookmarked ? 'Tersimpan' : 'Bookmark';
+  }
+  window.esaUpdateBookmarkUI = updateBookmarkUI;
+
+  // ---------- NOTES ----------
+  const NOTE_KEY = 'esa_notes_v1';
+  function readLocalNotes(){
+    try{ return JSON.parse(localStorage.getItem(NOTE_KEY)||'{}'); }catch(e){return{};}
+  }
+  function writeLocalNotes(n){
+    try{ localStorage.setItem(NOTE_KEY, JSON.stringify(n)); }catch(e){}
+  }
+
+  window.esaShowNotePanel = function(){
+    const m = getCurrentModule();
+    if(!m){ alert('Modul tidak terdeteksi.'); return; }
+    const local = readLocalNotes();
+    const existing = local[m.code] || '';
+
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,24,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);';
+    overlay.onclick = (e) => { if(e.target===overlay) overlay.remove(); };
+    overlay.innerHTML = `
+      <div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:28px;max-width:520px;width:100%;color:#f5f0e6;">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:14px;">
+          <div>
+            <div style="font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:#d4af6a;font-weight:700;">Catatan Pribadi</div>
+            <div style="font-size:1.05rem;font-weight:700;margin-top:4px;">${esc(m.title || m.code)}</div>
+          </div>
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="background:none;border:none;color:#6b7280;font-size:24px;cursor:pointer;">×</button>
+        </div>
+        <textarea id="esa-note-text" placeholder="Tulis catatan, rumus penting, atau hal yg perlu di-review nanti..." style="width:100%;min-height:200px;padding:14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-family:inherit;font-size:0.92rem;resize:vertical;outline:none;">${esc(existing)}</textarea>
+        <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end;">
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="padding:10px 16px;background:transparent;color:rgba(245,240,230,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:8px;cursor:pointer;font-size:0.85rem;">Batal</button>
+          <button onclick="esaSaveNote()" style="padding:10px 16px;background:#d4af6a;color:#0d0f1c;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.85rem;">Simpan</button>
+        </div>
+        <div style="font-size:0.72rem;color:rgba(245,240,230,0.45);margin-top:10px;">Tersimpan lokal di perangkat Anda${getCurrentEmail()&&window.__esaSb ? ' + sync ke akun' : ''}.</div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+  };
+
+  window.esaSaveNote = async function(){
+    const m = getCurrentModule();
+    const text = (document.getElementById('esa-note-text')||{}).value || '';
+    if(!m) return;
+    const local = readLocalNotes();
+    if(text.trim()){
+      local[m.code] = text.trim();
+    } else {
+      delete local[m.code];
+    }
+    writeLocalNotes(local);
+
+    const sb = window.__esaSb;
+    const email = getCurrentEmail();
+    if(sb && email){
+      try{
+        if(text.trim()){
+          await sb.from('module_notes').upsert({
+            participant_email: email,
+            module_code: m.code,
+            note: text.trim(),
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'participant_email,module_code' });
+        } else {
+          await sb.from('module_notes').delete().eq('participant_email', email).eq('module_code', m.code);
+        }
+      }catch(e){ console.warn('[ESA-Note] sync gagal:', e.message); }
+    }
+
+    if(typeof window.showToast==='function') window.showToast('Catatan tersimpan','', '📝');
+    document.querySelectorAll('div[style*="z-index:99999"]').forEach(d => {
+      if(d.querySelector('#esa-note-text')) d.remove();
+    });
+  };
+
+  // ---------- RATING ----------
+  window.esaShowRatingPanel = async function(){
+    const m = getCurrentModule();
+    if(!m){ alert('Modul tidak terdeteksi.'); return; }
+    const sb = window.__esaSb;
+    const email = getCurrentEmail();
+    if(!email){ alert('Login dulu untuk beri rating.'); return; }
+
+    // Load existing rating + aggregate stats
+    let existing = { rating: 0, review: '' };
+    let stats = { avg_rating: 0, total_ratings: 0 };
+    if(sb){
+      try{
+        const [my, agg] = await Promise.all([
+          sb.from('module_ratings').select('rating,review').eq('participant_email', email).eq('module_code', m.code).maybeSingle(),
+          sb.from('v_module_rating_stats').select('*').eq('module_code', m.code).maybeSingle()
+        ]);
+        if(my.data) existing = my.data;
+        if(agg.data) stats = agg.data;
+      }catch(e){}
+    }
+
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,24,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);';
+    overlay.onclick = (e) => { if(e.target===overlay) overlay.remove(); };
+    overlay.innerHTML = `
+      <div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:28px;max-width:480px;width:100%;color:#f5f0e6;">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:14px;">
+          <div>
+            <div style="font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:#d4af6a;font-weight:700;">Rating Modul</div>
+            <div style="font-size:1.05rem;font-weight:700;margin-top:4px;">${esc(m.title || m.code)}</div>
+            ${stats.total_ratings > 0 ? `<div style="font-size:0.82rem;color:rgba(245,240,230,0.6);margin-top:4px;">⭐ ${stats.avg_rating} / 5 dari ${stats.total_ratings} review</div>` : '<div style="font-size:0.78rem;color:rgba(245,240,230,0.45);margin-top:4px;">Jadi yang pertama beri rating</div>'}
+          </div>
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="background:none;border:none;color:#6b7280;font-size:24px;cursor:pointer;">×</button>
+        </div>
+        <div style="text-align:center;margin:18px 0;">
+          ${[1,2,3,4,5].map(n => `<button data-star="${n}" onclick="esaSetRatingStar(${n})" style="background:none;border:none;font-size:36px;cursor:pointer;color:${n<=existing.rating?'#fbbf24':'rgba(255,255,255,0.2)'};transition:all 0.15s;padding:0 4px;">★</button>`).join('')}
+        </div>
+        <textarea id="esa-rating-review" placeholder="Komentar (opsional) — bagian mana yg helpful, bagian mana perlu improve?" style="width:100%;min-height:90px;padding:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-family:inherit;font-size:0.88rem;resize:vertical;outline:none;">${esc(existing.review||'')}</textarea>
+        <input type="hidden" id="esa-rating-value" value="${existing.rating||0}">
+        <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end;">
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="padding:10px 16px;background:transparent;color:rgba(245,240,230,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:8px;cursor:pointer;font-size:0.85rem;">Batal</button>
+          <button onclick="esaSaveRating()" style="padding:10px 16px;background:#d4af6a;color:#0d0f1c;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.85rem;">Kirim Rating</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+  };
+
+  window.esaSetRatingStar = function(n){
+    document.getElementById('esa-rating-value').value = n;
+    document.querySelectorAll('button[data-star]').forEach(b => {
+      const v = parseInt(b.dataset.star);
+      b.style.color = v <= n ? '#fbbf24' : 'rgba(255,255,255,0.2)';
+    });
+  };
+
+  window.esaSaveRating = async function(){
+    const m = getCurrentModule();
+    const rating = parseInt((document.getElementById('esa-rating-value')||{}).value || '0');
+    const review = ((document.getElementById('esa-rating-review')||{}).value || '').trim();
+    if(!rating || rating < 1 || rating > 5){ alert('Pilih bintang 1-5 dulu.'); return; }
+    const sb = window.__esaSb;
+    const email = getCurrentEmail();
+    if(!sb || !email){ alert('Tidak bisa simpan — Supabase belum siap.'); return; }
+    try{
+      await sb.from('module_ratings').upsert({
+        participant_email: email,
+        module_code: m.code,
+        rating: rating,
+        review: review || null,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'participant_email,module_code' });
+      if(typeof window.showToast==='function') window.showToast('Rating tersimpan','Terima kasih atas feedback-nya!','⭐');
+      document.querySelectorAll('div[style*="z-index:99999"]').forEach(d => {
+        if(d.querySelector('#esa-rating-value')) d.remove();
+      });
+    }catch(e){
+      alert('Gagal: '+e.message);
+    }
+  };
+
+  // ---------- LEADERBOARD ----------
+  window.esaShowLeaderboard = async function(){
+    const sb = window.__esaSb;
+    if(!sb){ alert('Supabase belum siap.'); return; }
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,24,0.92);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;backdrop-filter:blur(6px);overflow-y:auto;';
+    overlay.onclick = (e) => { if(e.target===overlay) overlay.remove(); };
+    overlay.innerHTML = `
+      <div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:28px;max-width:680px;width:100%;color:#f5f0e6;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+          <div>
+            <div style="font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:#d4af6a;font-weight:700;">🏆 Leaderboard</div>
+            <div style="font-size:1.4rem;font-family:'Cormorant Garamond',serif;font-weight:600;color:#f0d080;margin-top:4px;">Top 100 Peserta Electra Academy</div>
+          </div>
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="background:none;border:none;color:#6b7280;font-size:24px;cursor:pointer;">×</button>
+        </div>
+        <div id="esa-leaderboard-content" style="font-size:0.88rem;">Memuat...</div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    try{
+      const r = await sb.from('v_leaderboard').select('*').limit(100);
+      const content = document.getElementById('esa-leaderboard-content');
+      if(!content) return;
+      if(r.error){ content.innerHTML = '<div style="color:#ef9090;padding:14px;">Error: '+esc(r.error.message)+'</div>'; return; }
+      const data = r.data || [];
+      if(!data.length){ content.innerHTML = '<div style="color:rgba(245,240,230,0.5);padding:24px;text-align:center;">Belum ada peserta yg lulus modul. Jadi yang pertama!</div>'; return; }
+      const myEmail = getCurrentEmail();
+      content.innerHTML = '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.86rem;">'+
+        '<thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);"><th style="text-align:left;padding:10px;color:rgba(245,240,230,0.55);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-size:0.7rem;">#</th><th style="text-align:left;padding:10px;color:rgba(245,240,230,0.55);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-size:0.7rem;">Nama</th><th style="text-align:right;padding:10px;color:rgba(245,240,230,0.55);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-size:0.7rem;">Modul</th><th style="text-align:right;padding:10px;color:rgba(245,240,230,0.55);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-size:0.7rem;">Sertifikat</th><th style="text-align:right;padding:10px;color:rgba(245,240,230,0.55);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-size:0.7rem;">Score</th></tr></thead>'+
+        '<tbody>'+
+        data.map((r, i) => {
+          const isMe = myEmail && r.email && r.email.toLowerCase() === myEmail.toLowerCase();
+          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#'+(i+1);
+          return '<tr style="border-bottom:1px solid rgba(255,255,255,0.04);'+(isMe?'background:rgba(212,175,106,0.1);':'')+'">'+
+            '<td style="padding:10px;font-weight:'+(i<3?'700':'500')+';font-size:'+(i<3?'1.2rem':'0.86rem')+';">'+medal+'</td>'+
+            '<td style="padding:10px;">'+esc(r.name||'-')+(isMe?' <span style="color:#d4af6a;font-size:0.7rem;letter-spacing:0.05em;">(Anda)</span>':'')+'</td>'+
+            '<td style="padding:10px;text-align:right;font-weight:600;">'+r.modules_passed+'</td>'+
+            '<td style="padding:10px;text-align:right;">'+r.certs_earned+'</td>'+
+            '<td style="padding:10px;text-align:right;font-weight:600;color:#f0d080;">'+r.total_score+'</td>'+
+          '</tr>';
+        }).join('')+
+        '</tbody></table></div>';
+    }catch(e){
+      const content = document.getElementById('esa-leaderboard-content');
+      if(content) content.innerHTML = '<div style="color:#ef9090;padding:14px;">Gagal load: '+esc(e.message)+'</div>';
+    }
+  };
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  // Auto-update bookmark UI saat modul dibuka
+  document.addEventListener('DOMContentLoaded', function(){
+    const observer = new MutationObserver(function(){
+      if(typeof window.esaUpdateBookmarkUI === 'function') window.esaUpdateBookmarkUI();
+    });
+    const target = document.getElementById('view-modul');
+    if(target) observer.observe(target, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+</script>
+
 </body>
 </html>
