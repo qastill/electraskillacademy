@@ -11313,7 +11313,10 @@ function renderLevels(trackId) {
     const badgeClass = lvl.isFree ? 'free' : 'paid';
     const badgeText = lvl.isFree ? 'Gratis' : 'Berbayar';
     const isPaid = !lvl.isFree;
-    const isLocked = isPaid && !hasAccessToLevel(lvl.id, trackId);
+    // EMERGENCY MODE: paksa isLocked = false di renderLevels supaya onclick
+    // SELALU openModul, bukan openPurchaseModal. Real gating dilakukan di
+    // patchOpenModul (yg bisa show login modal kalau belum login).
+    const isLocked = false;
 
     // Compute module-level + level-level "Done" stats
     const passedCount = modules.filter(m => isPassed(m.code)).length;
