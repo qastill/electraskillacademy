@@ -7793,18 +7793,18 @@ body {
         </div>
       </div>
 
-      <!-- AI Tutor Sidebar -->
+      <!-- Asisten Modul Sidebar -->
       <aside class="ai-tutor-sidebar">
         <div class="ai-tutor-header">
-          <div class="ai-tutor-avatar">AI</div>
+          <div class="ai-tutor-avatar">⚡</div>
           <div class="ai-tutor-info">
-            <div class="ai-tutor-name">AI Tutor</div>
-            <div class="ai-tutor-status"><span class="ai-status-dot"></span>Standby untuk bantu</div>
+            <div class="ai-tutor-name">Asisten Modul</div>
+            <div class="ai-tutor-status"><span class="ai-status-dot"></span>Siap bantu</div>
           </div>
         </div>
         <div class="ai-tutor-messages" id="ai-messages">
           <div class="ai-msg bot">
-            Halo! 👋 Saya AI Tutor untuk modul ini. Ada yang mau kamu tanyakan soal materi? Bisa konsep, rumus, contoh aplikasi, atau minta saya jelaskan ulang bagian tertentu.
+            Halo! 👋 Saya asisten modul untuk modul ini. Ada yang mau kamu tanyakan soal materi? Bisa konsep, rumus, contoh aplikasi, atau minta saya jelaskan ulang bagian tertentu.
           </div>
         </div>
         <div class="ai-tutor-suggestions" id="ai-suggestions">
@@ -7818,7 +7818,7 @@ body {
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l12-6-4 14-2-6-6-2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
           </button>
         </div>
-        <div id="ai-quota-hint" style="font-size:0.72rem;color:rgba(245,240,230,0.55);margin-top:8px;text-align:right;letter-spacing:0.04em;">Sisa kuota AI Tutor: 50/50</div>
+        <div id="ai-quota-hint" style="font-size:0.72rem;color:rgba(245,240,230,0.55);margin-top:8px;text-align:right;letter-spacing:0.04em;">Sisa kuota tanya: 50/50</div>
       </aside>
     </div>
   </section>
@@ -11420,7 +11420,7 @@ function openModul(code, trackId, levelId) {
   // Reset AI messages
   document.getElementById('ai-messages').innerHTML = `
     <div class="ai-msg bot">
-      Halo! 👋 Saya AI Tutor untuk modul <strong>${module.title}</strong>. Ada yang mau kamu tanyakan soal materi ini? Bisa konsep, rumus, contoh aplikasi, atau minta saya jelaskan ulang bagian tertentu.
+      Halo! 👋 Saya asisten modul untuk modul <strong>${module.title}</strong>. Ada yang mau kamu tanyakan soal materi ini? Bisa konsep, rumus, contoh aplikasi, atau minta saya jelaskan ulang bagian tertentu.
     </div>
   `;
   // Sinkronkan label kuota AI tutor di sidebar
@@ -14945,8 +14945,8 @@ function updateAIQuotaHint() {
   if (!el) return;
   const left = aiQuotaRemaining();
   el.textContent = left > 0
-    ? `Sisa kuota AI Tutor: ${left}/${AI_LIMIT_PER_USER}`
-    : `Kuota AI Tutor habis (0/${AI_LIMIT_PER_USER})`;
+    ? `Sisa kuota tanya: ${left}/${AI_LIMIT_PER_USER}`
+    : `Kuota tanya habis (0/${AI_LIMIT_PER_USER})`;
   el.style.color = left <= 5 ? '#ef9090' : 'rgba(245,240,230,0.55)';
 }
 
@@ -14975,7 +14975,7 @@ function sendAI() {
   if (getAICount() >= AI_LIMIT_PER_USER) {
     const limitMsg = document.createElement('div');
     limitMsg.className = 'ai-msg bot';
-    limitMsg.innerHTML = `Maaf, kuota <strong>${AI_LIMIT_PER_USER} pertanyaan AI Tutor</strong> untuk akun ini sudah habis. ` +
+    limitMsg.innerHTML = `Maaf, kuota <strong>${AI_LIMIT_PER_USER} pertanyaan asisten</strong> untuk akun ini sudah habis. ` +
       `Untuk hemat biaya token API, setiap user dibatasi ${AI_LIMIT_PER_USER} pertanyaan. ` +
       `Hubungi admin (<a href="https://wa.me/6285121532407?text=${encodeURIComponent('Halo Admin, saya butuh tambahan kuota AI Tutor di akun saya')}" target="_blank" style="color:#d4af6a">💬 Chat WA 0851-2153-2407</a>) ` +
       `untuk menambah kuota, atau pelajari materi modul (Video / PPT / Quiz) yang sudah tersedia.`;
