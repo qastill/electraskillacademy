@@ -15784,10 +15784,23 @@ function savePaymentState(state) {
   try { localStorage.setItem('esa_payment_state', JSON.stringify(state)); } catch {}
 }
 function hasAccess(trackId) {
-  // Skema baru: sekali bayar (tier apapun: 'all' atau 'spesialisasi') buka semua
-  // jalur dan semua level (L1-L6). Sebelumnya L1+L2 gratis dan tier spesialisasi
-  // hanya buka 1 jalur — sekarang disatukan supaya peserta dapat akses penuh
-  // setelah pembayaran Xendit terkonfirmasi.
+  // EMERGENCY MODE: cek tiered access — login + admin email atau pakai
+  // promo code valid → boleh akses. Kalau tidak ada, baru fallback ke
+  // payment state Xendit (legacy).
+  try {
+    // 1. Cek admin email — qastill@gmail.com & founder lain auto-bypass
+    var u = JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null');
+    var email = u && u.email;
+    if (email && typeof window.esaIsAdminEmail === 'function' && window.esaIsAdminEmail(email)) {
+      return true;
+    }
+    // 2. Cek state.profile + promoCode di esa_data_v1
+    var d = JSON.parse(localStorage.getItem('esa_data_v1') || '{}');
+    if (d.promoCode === 'ELECTRA2026') return true;
+    if (d.profile && d.profile.isPaid === true) return true;
+    if (d.profile && d.profile.activationMethod === 'admin') return true;
+  } catch(e) {}
+  // 3. Fallback: payment state Xendit
   const state = getPaymentState();
   return !!(state && state.tier);
 }
