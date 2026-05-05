@@ -16405,9 +16405,26 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   // Member status: aktif kalau (a) sudah bayar atau (b) pakai promo code valid
   // — DAN subscription belum expired. Banned otomatis non-aktif.
   function isMemberActive() {
+    // Always reload state dari localStorage (defensive — handle race condition
+    // di mana profile baru di-set di scope lain belum sync ke addon IIFE).
+    state = loadData();
+
+    // Admin email check langsung — bypass semua flag, tidak perlu wait sync.
+    // Cek baik dari state.profile.email maupun dari esa_logged_in_user.
+    let userEmail = (state.profile && state.profile.email) || '';
+    if (!userEmail) {
+      try {
+        const u = JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null');
+        if (u && u.email) userEmail = u.email;
+      } catch(e) {}
+    }
+    if (userEmail && typeof window.esaIsAdminEmail === 'function' && window.esaIsAdminEmail(userEmail)) {
+      return true; // Admin = always active
+    }
+
     if (!state.profile) return false;
     if (state.profile.isBanned === true) return false;
-    // Cek expiry — kalau ada subscription_expires_at dan sudah lewat, expired.
+    // Cek expiry
     if (state.profile.subscriptionExpiresAt) {
       const exp = new Date(state.profile.subscriptionExpiresAt);
       if (!isNaN(exp.getTime()) && exp < new Date()) return false;
@@ -18152,33 +18169,54 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (typeof window.openModul !== 'function') return;
     const original = window.openModul;
     window.openModul = function(code, trackId, levelId) {
-      // Check access (level lock berdasarkan progress)
-      if (!isLevelUnlocked(levelId, trackId)) {
+      // Reload state dari localStorage (defensive — kalau profile di-set
+      // di scope lain belum sync ke addon IIFE).
+      state = loadData();
+      console.info('[ESA-Gate] openModul', { code, trackId, levelId, hasProfile: !!state.profile, email: state.profile && state.profile.email });
+
+      // Cek admin override pertama — admin bypass SEMUA gate
+      let userEmail = (state.profile && state.profile.email) || '';
+      if (!userEmail) {
+        try { const u = JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); if(u) userEmail = u.email; } catch(e){}
+      }
+      const isAdmin = userEmail && typeof window.esaIsAdminEmail === 'function' && window.esaIsAdminEmail(userEmail);
+
+      // Check level lock (admin bypass)
+      if (!isAdmin && !isLevelUnlocked(levelId, trackId)) {
         const msg = getLockMessage(levelId, trackId);
         if (msg) {
           showToast('Level Terkunci', msg, '🔒');
           return;
         }
       }
-      // Require login + profile lengkap
+      // Require login
       if (!state.profile || !state.profile.name) {
-        pendingAction = () => {
-          resetQuizStats(code, levelId, trackId);
-          original(code, trackId, levelId);
-        };
-        showOnboardingModal();
-        return;
+        if (!userEmail) {
+          // Belum login sama sekali
+          pendingAction = () => {
+            resetQuizStats(code, levelId, trackId);
+            original(code, trackId, levelId);
+          };
+          showOnboardingModal();
+          return;
+        }
+        // Logged in via OAuth tapi state.profile belum populated — auto-init minimal
+        state.profile = { name: userEmail.split('@')[0], email: userEmail, phone: '-', joinDate: new Date().toISOString() };
+        saveData(state);
       }
-      if (!window.esaProfileComplete || !window.esaProfileComplete()) {
+      // Profile completion check (admin bypass — admin tidak wajib isi HP)
+      if (!isAdmin && (!window.esaProfileComplete || !window.esaProfileComplete())) {
         pendingAction = () => original(code, trackId, levelId);
         if (typeof window.esaShowProfileCompletion === 'function') window.esaShowProfileCompletion();
         return;
       }
-      // Member status — gate akses ke modul yg butuh aktivasi (semua kecuali L1 free)
-      if (!isMemberActive() && !(typeof isLevelFree === 'function' && isLevelFree(levelId))) {
+      // Member status (admin sudah otomatis active via isMemberActive)
+      if (!isMemberActive()) {
+        console.info('[ESA-Gate] modul ditolak — member tidak aktif. esaShowActivationModal()');
         if (typeof window.esaShowActivationModal === 'function') window.esaShowActivationModal();
         return;
       }
+      console.info('[ESA-Gate] ✓ semua gate passed → open modul', code);
       stopQuizTimer();
       resetQuizStats(code, levelId, trackId);
       return original(code, trackId, levelId);
@@ -18189,24 +18227,32 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (typeof window.startLevel !== 'function') return;
     const original = window.startLevel;
     window.startLevel = function(levelId, trackId) {
-      if (!isLevelUnlocked(levelId, trackId)) {
+      state = loadData();
+      let userEmail = (state.profile && state.profile.email) || '';
+      if (!userEmail) {
+        try { const u = JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); if(u) userEmail = u.email; } catch(e){}
+      }
+      const isAdmin = userEmail && typeof window.esaIsAdminEmail === 'function' && window.esaIsAdminEmail(userEmail);
+
+      if (!isAdmin && !isLevelUnlocked(levelId, trackId)) {
         const msg = getLockMessage(levelId, trackId);
-        if (msg) {
-          showToast('Level Terkunci', msg, '🔒');
-          return;
-        }
+        if (msg) { showToast('Level Terkunci', msg, '🔒'); return; }
       }
       if (!state.profile || !state.profile.name) {
-        pendingAction = () => original(levelId, trackId);
-        showOnboardingModal();
-        return;
+        if (!userEmail) {
+          pendingAction = () => original(levelId, trackId);
+          showOnboardingModal();
+          return;
+        }
+        state.profile = { name: userEmail.split('@')[0], email: userEmail, phone: '-', joinDate: new Date().toISOString() };
+        saveData(state);
       }
-      if (!window.esaProfileComplete || !window.esaProfileComplete()) {
+      if (!isAdmin && (!window.esaProfileComplete || !window.esaProfileComplete())) {
         pendingAction = () => original(levelId, trackId);
         if (typeof window.esaShowProfileCompletion === 'function') window.esaShowProfileCompletion();
         return;
       }
-      if (!isMemberActive() && !(typeof isLevelFree === 'function' && isLevelFree(levelId))) {
+      if (!isMemberActive()) {
         if (typeof window.esaShowActivationModal === 'function') window.esaShowActivationModal();
         return;
       }

@@ -1,23 +1,21 @@
 // Service Worker — ESA Skill Academy
 // Strategy:
-//   - Static assets (CSS, fonts, images, logo): cache-first
-//   - HTML & API: network-first with offline fallback
+//   - HTML & API & supabase-config: network-only (selalu fresh, no cache)
+//   - Static assets (logo, manifest): cache-first dgn version invalidation
 //   - Background sync (future): retry queue ke Supabase
 //
 // VERSION bumping akan invalidate cache lama. Bump saat deploy major change.
 
-const VERSION = 'esa-v1.0.10';
+const VERSION = 'esa-v1.1.0';
 const STATIC_CACHE = `${VERSION}-static`;
 const DYNAMIC_CACHE = `${VERSION}-dynamic`;
 
+// HANYA cache static assets yg jarang berubah. index.html / verify.html
+// TIDAK di-precache supaya selalu fresh dari network.
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/verify.html',
   '/manifest.json',
   '/logo.svg',
-  '/og-image.svg',
-  '/supabase-config.js'
+  '/og-image.svg'
 ];
 
 self.addEventListener('install', (e) => {
@@ -58,19 +56,17 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // HTML pages → network-first (selalu fresh) dengan cache fallback
-  if (req.destination === 'document' || req.headers.get('accept')?.includes('text/html')) {
+  // HTML pages → NETWORK-ONLY (no cache supaya update langsung muncul).
+  // Fallback ke cached HTML cuma kalau benar-benar offline.
+  if (req.destination === 'document' || (req.headers.get('accept')||'').includes('text/html')) {
     e.respondWith(
-      fetch(req)
-        .then(res => {
-          if (res && res.status === 200) {
-            const cloned = res.clone();
-            caches.open(DYNAMIC_CACHE).then(c => c.put(req, cloned));
-          }
-          return res;
-        })
-        .catch(() => caches.match(req).then(r => r || caches.match('/')))
+      fetch(req).catch(() => caches.match(req).then(r => r || new Response('Offline', { status: 503 })))
     );
+    return;
+  }
+  // supabase-config.js juga selalu fresh
+  if (url.pathname.endsWith('/supabase-config.js')) {
+    e.respondWith(fetch(req).catch(() => caches.match(req)));
     return;
   }
 
