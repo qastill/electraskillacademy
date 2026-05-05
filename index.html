@@ -16500,6 +16500,64 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
   window.esaActivateWithPromo = activateWithPromo;
 
+  // Auto-activate admin/founder emails (tidak perlu redeem promo).
+  // Email yg termasuk admin akan auto-aktif setiap login.
+  const ADMIN_EMAILS = [
+    'qastalanihr@gmail.com',
+    'qashtalani.haramaini@gmail.com',
+    'farda.najih@gmail.com'
+  ];
+  function isAdminEmail(email) {
+    if (!email) return false;
+    const e = String(email).toLowerCase().trim();
+    return ADMIN_EMAILS.includes(e) || e.endsWith('@electraacademy.com');
+  }
+  window.esaIsAdminEmail = isAdminEmail;
+
+  // Sync member status dari server saat login. Kalau user sudah aktivasi
+  // di session sebelumnya / device lain, status akan ke-load otomatis.
+  // Juga auto-aktivasi untuk admin emails.
+  async function syncMemberStatusFromServer(email) {
+    if (!email) return;
+    // Admin auto-active
+    if (isAdminEmail(email)) {
+      state.promoCode = state.promoCode || 'ELECTRA2026';
+      if (!state.profile) state.profile = {};
+      state.profile.activatedAt = state.profile.activatedAt || new Date().toISOString();
+      state.profile.activationMethod = 'admin';
+      state.profile.isPaid = true;
+      saveData(state);
+      console.info('[ESA] admin auto-activated:', email);
+      return;
+    }
+    // Non-admin: fetch from server
+    try {
+      const r = await fetch('/api/check-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      });
+      if (!r.ok) return;
+      const data = await r.json();
+      if (!data || !data.ok || !data.exists) return;
+      if (data.active) {
+        // Server says user aktif → populate state lokal
+        if (data.promo_code) state.promoCode = data.promo_code;
+        if (!state.profile) state.profile = {};
+        state.profile.activationMethod = data.activation_method || 'server';
+        if (data.expires_at) state.profile.subscriptionExpiresAt = data.expires_at;
+        if (data.activation_method === 'payment') state.profile.isPaid = true;
+        saveData(state);
+        console.info('[ESA] member status synced dari server: AKTIF');
+      } else {
+        console.info('[ESA] member status server: BELUM AKTIF —', data.reason);
+      }
+    } catch (e) {
+      console.warn('[ESA] sync member status gagal:', e.message);
+    }
+  }
+  window.esaSyncMemberStatus = syncMemberStatusFromServer;
+
   function loadData() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -18707,6 +18765,13 @@ function handleCred(resp){
       if(typeof window.esaSyncParticipant==='function'){
         window.esaSyncParticipant(data.profile, data.promoCode||null);
       }
+
+      // Sync member status dari server: kalau user sebelumnya sudah
+      // aktivasi (di session/device lain), state.promoCode di-load otomatis.
+      // Admin email auto-aktif tanpa perlu redeem.
+      if(typeof window.esaSyncMemberStatus==='function'){
+        window.esaSyncMemberStatus(email);
+      }
     }catch(e){console.warn('[ESA] gagal sync profile Google login:',e);}
 
     closeModal();
@@ -19117,6 +19182,8 @@ function buildActivationModal(){
     '<p style="color:rgba(245,240,230,0.7);font-size:0.9rem;line-height:1.6;margin:0 0 22px;">Akses penuh ke semua modul, kuis, dan sertifikat butuh aktivasi. Pilih salah satu:</p>'+
     '<div style="text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.2);border-radius:12px;padding:18px 18px 20px;margin-bottom:14px;">'+
       '<div style="font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:#d4af6a;font-weight:700;margin-bottom:10px;">Opsi 1 · Kode Aktivasi</div>'+
+      '<button onclick="document.getElementById(\'esa-activate-code\').value=\'ELECTRA2026\';esaSubmitActivation();" style="width:100%;padding:10px 14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:700;border:none;border-radius:8px;font-size:0.86rem;cursor:pointer;letter-spacing:0.04em;margin-bottom:12px;">⚡ 1-Klik Aktivasi · Pakai ELECTRA2026</button>'+
+      '<div style="text-align:center;font-size:0.72rem;color:rgba(245,240,230,0.4);margin:8px 0;">— atau ketik manual —</div>'+
       '<input id="esa-activate-code" type="text" placeholder="Mis. ELECTRA2026" autocomplete="off" style="width:100%;padding:12px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.95rem;font-family:inherit;text-transform:uppercase;letter-spacing:0.04em;outline:none;margin-bottom:10px;">'+
       '<div id="esa-activate-msg" style="font-size:0.78rem;min-height:1em;margin-bottom:10px;color:#ef9090;"></div>'+
       '<button onclick="esaSubmitActivation()" style="width:100%;padding:12px 16px;background:#d4af6a;color:#0d0f1c;font-weight:700;border:none;border-radius:8px;font-size:0.92rem;cursor:pointer;letter-spacing:0.04em;">Aktivasi Sekarang</button>'+
@@ -19270,6 +19337,10 @@ function handleSupabaseAuthEvent(event, session){
     if(typeof window.esaSyncParticipant==='function'){
       window.esaSyncParticipant(data.profile, data.promoCode||null);
     }
+    // Sync member status dari server + admin auto-aktivasi
+    if(typeof window.esaSyncMemberStatus==='function'){
+      window.esaSyncMemberStatus(email);
+    }
 
     var m=document.getElementById('esa-auth-modal');if(m){closeModal();}
     updateNavUser();
@@ -19300,7 +19371,18 @@ function setupSupabaseAuthListener(){
   }catch(e){console.warn('[ESA-Auth] listener setup gagal:',e);}
 }
 
-function init(){hookSV();setupSupabaseAuthListener();var u=getUser();if(u)updateNavUser();}
+function init(){
+  hookSV();
+  setupSupabaseAuthListener();
+  var u=getUser();
+  if(u){
+    updateNavUser();
+    // Sync member status untuk returning user (sudah login dari session sebelumnya)
+    if(typeof window.esaSyncMemberStatus==='function'){
+      setTimeout(function(){ window.esaSyncMemberStatus(u.email); }, 1500);
+    }
+  }
+}
 
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){setTimeout(init,200);});}
 else{setTimeout(init,200);}
