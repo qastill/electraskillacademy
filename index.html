@@ -11732,6 +11732,17 @@ function startLevel(levelId, trackId) {
 // ================================================
 // MODULE INSTRUCTORS & OUTCOMES
 // ================================================
+// Global helper escapeHtml — harus ada di scope global karena dipakai di
+// openModul, renderLiveClassPanel, dll yg di luar IIFE.
+if (typeof window.escapeHtml !== 'function') {
+  window.escapeHtml = function(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  };
+}
+const escapeHtml = window.escapeHtml;
+
 // Per-track instructor mapping. S6/S7/S8 (Energy Auditor, Pembangkitan
 // Renewable, K3 Listrik) ditangani Co-Founder Farda Najih dgn background
 // K3 + APP + auditor energi. Sisanya (S1-S5 + L1/L2) ditangani Founder
