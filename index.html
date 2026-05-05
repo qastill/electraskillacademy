@@ -18463,70 +18463,16 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
 
   function patchOpenModul() {
-    if (typeof window.openModul !== 'function') return;
-    const original = window.openModul;
-    window.openModul = function(code, trackId, levelId) {
-      // EMERGENCY MODE — gate sederhana: kalau ada user logged in, buka modul.
-      // Semua gate kompleks (level lock, profile complete, member active)
-      // dimatikan sementara biar modul bisa diakses.
-      state = loadData();
-      let userEmail = (state.profile && state.profile.email) || '';
-      if (!userEmail) {
-        try { const u = JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); if(u) userEmail = u.email; } catch(e){}
-      }
-
-      // Belum login sama sekali → minta login
-      if (!userEmail) {
-        pendingAction = () => {
-          resetQuizStats(code, levelId, trackId);
-          original(code, trackId, levelId);
-        };
-        showOnboardingModal();
-        return;
-      }
-
-      // Auto-init profile minimal kalau belum ada (oauth tapi belum complete)
-      if (!state.profile || !state.profile.name) {
-        state.profile = state.profile || {};
-        state.profile.email = userEmail;
-        state.profile.name = state.profile.name || userEmail.split('@')[0];
-        state.profile.phone = state.profile.phone || '-';
-        state.profile.joinDate = state.profile.joinDate || new Date().toISOString();
-        saveData(state);
-      }
-
-      console.info('[ESA-Gate] ✓ open modul', code, '— user:', userEmail);
-      stopQuizTimer();
-      resetQuizStats(code, levelId, trackId);
-      return original(code, trackId, levelId);
-    };
+    // EMERGENCY MODE: NO-OP. Tidak ada wrapping. window.openModul tetap
+    // pure original (line 11904) yg langsung show view-modul tanpa gate.
+    // Ini ngasilkan: klik module card → openModul('code','track','level')
+    // → langsung open modul, no silent return possible.
+    return;
   }
 
   function patchStartLevel() {
-    if (typeof window.startLevel !== 'function') return;
-    const original = window.startLevel;
-    window.startLevel = function(levelId, trackId) {
-      // EMERGENCY MODE — login = boleh.
-      state = loadData();
-      let userEmail = (state.profile && state.profile.email) || '';
-      if (!userEmail) {
-        try { const u = JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); if(u) userEmail = u.email; } catch(e){}
-      }
-      if (!userEmail) {
-        pendingAction = () => original(levelId, trackId);
-        showOnboardingModal();
-        return;
-      }
-      if (!state.profile || !state.profile.name) {
-        state.profile = state.profile || {};
-        state.profile.email = userEmail;
-        state.profile.name = state.profile.name || userEmail.split('@')[0];
-        state.profile.phone = state.profile.phone || '-';
-        state.profile.joinDate = state.profile.joinDate || new Date().toISOString();
-        saveData(state);
-      }
-      return original(levelId, trackId);
-    };
+    // EMERGENCY MODE: NO-OP — sama seperti patchOpenModul.
+    return;
   }
 
   // Helper: free levels — saat ini SEMUA level berbayar / butuh aktivasi.
