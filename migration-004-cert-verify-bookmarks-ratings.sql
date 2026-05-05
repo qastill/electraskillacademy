@@ -101,49 +101,70 @@ grant select on public.v_module_rating_stats to anon, authenticated;
 
 -- ---------- 5. ANALYTICS VIEWS untuk admin dashboard ----------
 
--- DAU/MAU dari auth_events
-create or replace view public.v_active_users as
-  select
-    date_trunc('day', created_at)::date as day,
-    count(distinct email) as dau
-  from public.auth_events
-  where event_type = 'login_success' and created_at >= now() - interval '90 days'
-  group by 1
-  order by 1 desc;
-
-grant select on public.v_active_users to authenticated;
+-- DAU/MAU dari auth_events — HANYA create kalau tabel auth_events ada
+-- (dibuat di migration-003). Kalau belum, skip dgn warning.
+do $$
+begin
+  if exists (select 1 from information_schema.tables
+             where table_schema='public' and table_name='auth_events') then
+    execute 'create or replace view public.v_active_users as
+      select
+        date_trunc(''day'', created_at)::date as day,
+        count(distinct email) as dau
+      from public.auth_events
+      where event_type = ''login_success'' and created_at >= now() - interval ''90 days''
+      group by 1
+      order by 1 desc';
+    execute 'grant select on public.v_active_users to authenticated';
+    raise notice 'v_active_users view created (depends on auth_events from migration-003)';
+  else
+    raise warning 'SKIP v_active_users — tabel auth_events belum ada. Jalankan migration-003 dulu, lalu re-run migration-004 untuk dapat view ini.';
+  end if;
+end $$;
 
 -- Funnel: signup → activate → first_quiz → first_cert
-create or replace view public.v_funnel as
-  select
-    'total_signups' as stage,
-    (select count(*) from public.participants) as count
-  union all
-  select
-    'profile_complete' as stage,
-    (select count(*) from public.participants where phone is not null and phone <> '-' and phone <> '') as count
-  union all
-  select
-    'tos_accepted' as stage,
-    (select count(*) from public.participants where tos_accepted_at is not null) as count
-  union all
-  select
-    'is_active' as stage,
-    (select count(*) from public.participants where is_active is true and (is_banned is not true)) as count
-  union all
-  select
-    'attempted_quiz' as stage,
-    (select count(distinct participant_email) from public.exam_attempts) as count
-  union all
-  select
-    'passed_module' as stage,
-    (select count(distinct participant_email) from public.module_progress where passed is true) as count
-  union all
-  select
-    'earned_cert' as stage,
-    (select count(distinct participant_email) from public.level_completions where is_revoked is not true) as count;
-
-grant select on public.v_funnel to authenticated;
+-- Butuh kolom dari migration-002 (is_active) + migration-003 (tos_accepted_at).
+-- Kalau belum ada, skip dgn warning.
+do $$
+begin
+  if exists (select 1 from information_schema.columns
+             where table_schema='public' and table_name='participants'
+               and column_name='tos_accepted_at')
+     and exists (select 1 from information_schema.columns
+                 where table_schema='public' and table_name='participants'
+                   and column_name='is_active')
+     and exists (select 1 from information_schema.columns
+                 where table_schema='public' and table_name='participants'
+                   and column_name='is_banned')
+  then
+    execute $sql$
+      create or replace view public.v_funnel as
+        select 'total_signups' as stage, (select count(*) from public.participants) as count
+        union all
+        select 'profile_complete' as stage,
+          (select count(*) from public.participants where phone is not null and phone <> '-' and phone <> '') as count
+        union all
+        select 'tos_accepted' as stage,
+          (select count(*) from public.participants where tos_accepted_at is not null) as count
+        union all
+        select 'is_active' as stage,
+          (select count(*) from public.participants where is_active is true and (is_banned is not true)) as count
+        union all
+        select 'attempted_quiz' as stage,
+          (select count(distinct participant_email) from public.exam_attempts) as count
+        union all
+        select 'passed_module' as stage,
+          (select count(distinct participant_email) from public.module_progress where passed is true) as count
+        union all
+        select 'earned_cert' as stage,
+          (select count(distinct participant_email) from public.level_completions where is_revoked is not true) as count
+    $sql$;
+    execute 'grant select on public.v_funnel to authenticated';
+    raise notice 'v_funnel view created';
+  else
+    raise warning 'SKIP v_funnel — kolom is_active/tos_accepted_at/is_banned belum ada. Jalankan migration-002 + migration-003 dulu.';
+  end if;
+end $$;
 
 -- Drop-off: modul mana paling banyak gagal (rata-rata score < 70%)
 create or replace view public.v_difficult_modules as
@@ -161,21 +182,46 @@ create or replace view public.v_difficult_modules as
 
 grant select on public.v_difficult_modules to authenticated;
 
--- Top users by XP / module passed
-create or replace view public.v_leaderboard as
-  select
-    p.email,
-    p.name,
-    count(distinct mp.module_code) filter (where mp.passed is true)::integer as modules_passed,
-    count(distinct lc.cert_id) filter (where lc.is_revoked is not true)::integer as certs_earned,
-    coalesce(sum(case when mp.passed is true then mp.best_score else 0 end), 0)::integer as total_score
-  from public.participants p
-  left join public.module_progress mp on mp.participant_email = p.email
-  left join public.level_completions lc on lc.participant_email = p.email
-  where p.is_banned is not true
-  group by p.email, p.name
-  having count(distinct mp.module_code) filter (where mp.passed is true) > 0
-  order by total_score desc, modules_passed desc
-  limit 100;
-
-grant select on public.v_leaderboard to anon, authenticated;
+-- Top users by XP / module passed — fall-back kalau is_banned belum ada
+do $$
+begin
+  if exists (select 1 from information_schema.columns
+             where table_schema='public' and table_name='participants'
+               and column_name='is_banned')
+  then
+    execute $sql$
+      create or replace view public.v_leaderboard as
+        select
+          p.email, p.name,
+          count(distinct mp.module_code) filter (where mp.passed is true)::integer as modules_passed,
+          count(distinct lc.cert_id) filter (where lc.is_revoked is not true)::integer as certs_earned,
+          coalesce(sum(case when mp.passed is true then mp.best_score else 0 end), 0)::integer as total_score
+        from public.participants p
+        left join public.module_progress mp on mp.participant_email = p.email
+        left join public.level_completions lc on lc.participant_email = p.email
+        where p.is_banned is not true
+        group by p.email, p.name
+        having count(distinct mp.module_code) filter (where mp.passed is true) > 0
+        order by total_score desc, modules_passed desc
+        limit 100
+    $sql$;
+  else
+    -- Fallback tanpa is_banned filter (migration-003 belum di-run)
+    execute $sql$
+      create or replace view public.v_leaderboard as
+        select
+          p.email, p.name,
+          count(distinct mp.module_code) filter (where mp.passed is true)::integer as modules_passed,
+          count(distinct lc.cert_id)::integer as certs_earned,
+          coalesce(sum(case when mp.passed is true then mp.best_score else 0 end), 0)::integer as total_score
+        from public.participants p
+        left join public.module_progress mp on mp.participant_email = p.email
+        left join public.level_completions lc on lc.participant_email = p.email
+        group by p.email, p.name
+        having count(distinct mp.module_code) filter (where mp.passed is true) > 0
+        order by total_score desc, modules_passed desc
+        limit 100
+    $sql$;
+  end if;
+  execute 'grant select on public.v_leaderboard to anon, authenticated';
+end $$;

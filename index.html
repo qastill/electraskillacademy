@@ -7963,7 +7963,7 @@ body {
           <h2 style="font-size: 1.5rem; font-weight: 700; color: #f5f0e6; margin: 0 0 12px;">Rekrut Talent Terbaik Kami</h2>
           <p style="color: rgba(245,240,230,0.7); max-width: 500px; margin: 0 auto 28px; line-height: 1.6;">Dapatkan akses ke database 1000+ alumni bersertifikat. Gratis posting lowongan untuk mitra industri terdaftar.</p>
           <button onclick="showView('jobs')" style="background: #d4af6a; color: #0d0f1c; border: none; border-radius: 8px; padding: 14px 36px; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 12px;">Lihat Job Board</button>
-          <button onclick="alert('Hubungi kami di: partnership@electraacademy.com')" style="background: transparent; color: #d4af6a; border: 1px solid #d4af6a; border-radius: 8px; padding: 14px 36px; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase;">Jadi Mitra Rekrutmen</button>
+          <button onclick="window.open('https://wa.me/6285121532407?text='+encodeURIComponent('Halo Admin Electra Academy, saya tertarik jadi mitra rekrutmen. Mohon info lebih lanjut.'),'_blank','noopener')" style="background: transparent; color: #d4af6a; border: 1px solid #d4af6a; border-radius: 8px; padding: 14px 36px; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase;">💬 Chat WA Admin</button>
         </div>
 
       </div>
@@ -14977,7 +14977,7 @@ function sendAI() {
     limitMsg.className = 'ai-msg bot';
     limitMsg.innerHTML = `Maaf, kuota <strong>${AI_LIMIT_PER_USER} pertanyaan AI Tutor</strong> untuk akun ini sudah habis. ` +
       `Untuk hemat biaya token API, setiap user dibatasi ${AI_LIMIT_PER_USER} pertanyaan. ` +
-      `Hubungi admin (<a href="mailto:admin@electraacademy.com" style="color:#d4af6a">admin@electraacademy.com</a>) ` +
+      `Hubungi admin (<a href="https://wa.me/6285121532407?text=${encodeURIComponent('Halo Admin, saya butuh tambahan kuota AI Tutor di akun saya')}" target="_blank" style="color:#d4af6a">💬 Chat WA 0851-2153-2407</a>) ` +
       `untuk menambah kuota, atau pelajari materi modul (Video / PPT / Quiz) yang sudah tersedia.`;
     messages.appendChild(limitMsg);
     messages.scrollTop = messages.scrollHeight;
@@ -15645,6 +15645,46 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
 <!-- HIDDEN CERTIFICATE RENDER CONTAINER -->
 <div id="esa-cert-container" class="esa-cert-container"></div>
+
+<!-- ===== FLOATING WHATSAPP BUTTON ===== -->
+<style>
+  .esa-fab-wa {
+    position: fixed; right: 20px; bottom: 20px; z-index: 9998;
+    background: #25d366; color: #fff;
+    width: 56px; height: 56px; border-radius: 50%;
+    box-shadow: 0 6px 20px rgba(37,211,102,0.45), 0 2px 6px rgba(0,0,0,0.25);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: none; transition: all 0.25s ease;
+    text-decoration: none;
+  }
+  .esa-fab-wa:hover { transform: scale(1.08) rotate(-4deg); box-shadow: 0 10px 28px rgba(37,211,102,0.55); }
+  .esa-fab-wa:active { transform: scale(0.95); }
+  .esa-fab-wa::before {
+    content: 'Chat Admin'; position: absolute; right: 70px; top: 50%; transform: translateY(-50%);
+    background: rgba(13,15,28,0.92); color: #f5f0e6; padding: 8px 14px; border-radius: 8px;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .esa-fab-wa:hover::before { opacity: 1; }
+  .esa-fab-wa svg { width: 28px; height: 28px; fill: #fff; }
+  /* Pulse animation untuk notice */
+  @keyframes esa-fab-pulse {
+    0%, 100% { box-shadow: 0 6px 20px rgba(37,211,102,0.45), 0 0 0 0 rgba(37,211,102,0.5); }
+    50% { box-shadow: 0 6px 20px rgba(37,211,102,0.45), 0 0 0 16px rgba(37,211,102,0); }
+  }
+  .esa-fab-wa { animation: esa-fab-pulse 2.5s ease-out infinite; }
+  /* Hide on print (sertifikat) */
+  @media print { .esa-fab-wa { display: none !important; } }
+  /* Mobile: smaller, repositioned */
+  @media (max-width: 640px) {
+    .esa-fab-wa { right: 14px; bottom: 14px; width: 50px; height: 50px; }
+    .esa-fab-wa svg { width: 24px; height: 24px; }
+    .esa-fab-wa::before { display: none; }
+  }
+</style>
+<a href="https://wa.me/6285121532407?text=Halo%20Admin%20Electra%20Skill%20Academy%2C%20saya%20mau%20bertanya%20soal..." target="_blank" rel="noopener" class="esa-fab-wa" aria-label="Chat WhatsApp Admin Electra Academy" title="Chat WA Admin">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>
+</a>
 
 
 <script>
@@ -18309,8 +18349,11 @@ function buildActivationModal(){
     '</div>'+
     '<div style="text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:18px;">'+
       '<div style="font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,230,0.55);font-weight:700;margin-bottom:8px;">Opsi 2 · Pembayaran</div>'+
-      '<p style="color:rgba(245,240,230,0.65);font-size:0.82rem;line-height:1.55;margin:0 0 12px;">Belum punya kode? Buka halaman harga untuk lihat paket berlangganan.</p>'+
-      '<button onclick="esaCloseActivationModal();if(typeof showView===\'function\')window._origSV?window._origSV(\'home\'):showView(\'home\');setTimeout(function(){var p=document.querySelector(\'.academy-pricing\');if(p)p.scrollIntoView({behavior:\'smooth\'});},300);" style="width:100%;padding:11px 16px;background:transparent;color:#d4af6a;border:1px solid #d4af6a;border-radius:8px;font-size:0.9rem;cursor:pointer;font-weight:600;">Lihat Pilihan Bayar →</button>'+
+      '<p style="color:rgba(245,240,230,0.65);font-size:0.82rem;line-height:1.55;margin:0 0 12px;">Belum punya kode? Hubungi admin via WhatsApp untuk pembelian akses.</p>'+
+      '<button onclick="esaCloseActivationModal();window.open(\'https://wa.me/6285121532407?text=\'+encodeURIComponent(\'Halo Admin Electra Academy, saya mau aktivasi akses penuh. Mohon info paket & cara pembayaran. Email akun saya: \'+(((window.state||{}).profile||{}).email||\'-\')),\'_blank\',\'noopener\');" style="width:100%;padding:11px 16px;background:#25d366;color:#fff;border:none;border-radius:8px;font-size:0.9rem;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;">'+
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>'+
+        'Chat Admin WA — Beli Akses'+
+      '</button>'+
     '</div>';
 
   overlay.appendChild(box);
@@ -18577,9 +18620,11 @@ else{setTimeout(init,200);}
     });
   };
 
-  // Contact talent function
+  // Contact talent function — langsung redirect ke WA admin
   window.contactTalent=function(talentId){
-    alert('Untuk menghubungi talent ini, silakan login atau daftar sebagai mitra rekrutmen terlebih dahulu.\n\nEmail: recruitment@electraacademy.com');
+    var msg='Halo Admin Electra Academy, saya tertarik untuk menghubungi talent: '+talentId+' (untuk rekrutmen / kerja sama). Mohon info lebih lanjut.';
+    var wa='https://wa.me/6285121532407?text='+encodeURIComponent(msg);
+    window.open(wa,'_blank','noopener');
   };
 
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',applyNav);}else{applyNav();}
