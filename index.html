@@ -7540,138 +7540,212 @@ button:active:not(:disabled),
 }
 
 /* ================================================================
-   REFERENSI BUKU — book category cards
+   REFERENSI — ETALASE BUKU (book covers as showcase)
    ================================================================ */
-.esa-book-card {
-  display: flex;
-  flex-direction: column;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 28px 26px;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-  position: relative;
-  overflow: hidden;
-}
-.esa-book-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(212,175,106,0.06), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.esa-book-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(212,175,106,0.4);
-  background: rgba(255,255,255,0.06);
-  box-shadow: 0 16px 32px rgba(13,15,28,0.2);
-}
-.esa-book-card:hover::before { opacity: 1; }
 
-.esa-book-card-icon {
-  font-size: 2.4rem;
-  line-height: 1;
-  margin-bottom: 18px;
-  display: inline-flex;
-  width: 56px;
-  height: 56px;
-  align-items: center;
-  justify-content: center;
-  background: rgba(212,175,106,0.1);
-  border: 1px solid rgba(212,175,106,0.2);
-  border-radius: 12px;
-}
-.esa-book-card-body { flex: 1; display: flex; flex-direction: column; position: relative; z-index: 1; }
-.esa-book-card-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.45rem;
-  font-weight: 600;
-  color: #f5f0e6;
-  margin-bottom: 10px;
-  line-height: 1.25;
-  letter-spacing: 0.005em;
-}
-.esa-book-card-desc {
-  color: rgba(245,240,230,0.72);
-  font-size: 0.88rem;
-  line-height: 1.65;
-  margin-bottom: 16px;
-}
-.esa-book-card-examples {
-  background: rgba(0,0,0,0.18);
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-}
-.esa-book-card-examples-label {
-  font-size: 0.66rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #d4af6a;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.esa-book-card-examples ul {
-  margin: 0;
-  padding-left: 16px;
-  list-style: none;
-}
-.esa-book-card-examples li {
-  position: relative;
-  padding-left: 12px;
-  font-size: 0.78rem;
-  color: rgba(245,240,230,0.72);
-  line-height: 1.55;
-  margin-bottom: 4px;
-  font-style: italic;
-}
-.esa-book-card-examples li::before {
-  content: '—';
-  position: absolute;
-  left: -2px;
-  color: rgba(212,175,106,0.5);
-  font-style: normal;
-}
-.esa-book-card-tags {
+/* Filter chips */
+.esa-ref-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-.esa-book-card-tag {
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  padding: 3px 9px;
-  background: rgba(212,175,106,0.12);
-  border: 1px solid rgba(212,175,106,0.22);
-  border-radius: 4px;
-  color: #d4af6a;
-  text-transform: uppercase;
-}
-.esa-book-card-cta {
-  margin-top: auto;
-  display: inline-flex;
-  align-items: center;
   gap: 8px;
+  justify-content: center;
+  margin-bottom: 56px;
+  padding: 0 8px;
+}
+.esa-ref-filter {
+  background: transparent;
+  color: rgba(245,240,230,0.7);
+  border: 1px solid rgba(212,175,106,0.25);
+  border-radius: 999px;
+  padding: 8px 18px;
   font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+.esa-ref-filter:hover {
+  color: #f0d080;
+  border-color: rgba(212,175,106,0.6);
+  background: rgba(212,175,106,0.06);
+}
+.esa-ref-filter.active {
+  background: #c9a96e;
+  border-color: #c9a96e;
+  color: #0d0f1c;
+}
+
+/* Grid etalase — uniform book aspect ratio 2:3 */
+.esa-ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 32px 24px;
+  margin-bottom: 56px;
+  padding: 8px 4px 24px;
+}
+
+.esa-book {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.esa-book:hover { transform: translateY(-8px); }
+.esa-book:hover .esa-book-cover {
+  box-shadow:
+    -12px 18px 38px rgba(0,0,0,0.5),
+    0 6px 14px rgba(212,175,106,0.18);
+}
+
+/* Book cover — 2:3 aspect ratio, leather-bound aesthetic */
+.esa-book-cover {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: 4px 8px 8px 4px;
+  padding: 24px 18px 22px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  box-shadow:
+    -8px 12px 24px rgba(0,0,0,0.42),
+    -1px 0 0 rgba(0,0,0,0.25),
+    inset 1px 0 0 rgba(255,255,255,0.06);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Spine effect — left side darker stripe */
+.esa-book-cover-spine {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 8px;
+  background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.15) 60%, rgba(255,255,255,0.04) 100%);
+  pointer-events: none;
+}
+.esa-book-cover::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Color palettes — restrained luxe */
+.esa-book-p1 .esa-book-cover { background: linear-gradient(135deg, #1c2541 0%, #0b132b 100%); }
+.esa-book-p2 .esa-book-cover { background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%); }
+.esa-book-p3 .esa-book-cover { background: linear-gradient(135deg, #233329 0%, #14201a 100%); }
+.esa-book-p4 .esa-book-cover { background: linear-gradient(135deg, #3a1c2c 0%, #21111a 100%); }
+.esa-book-p5 .esa-book-cover { background: linear-gradient(135deg, #1f3a3d 0%, #0e2326 100%); }
+.esa-book-p6 .esa-book-cover { background: linear-gradient(135deg, #4a2e0b 0%, #2a1a07 100%); }
+
+/* Category band — uppercase tracking di top */
+.esa-book-cover-band {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #c9a96e;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  font-weight: 700;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.32);
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 2;
 }
-.esa-book-card:hover .esa-book-card-cta { color: #f0d080; }
 
-@media (max-width: 640px) {
-  #referensi-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
-  .esa-book-card { padding: 22px 20px; }
-  .esa-book-card-title { font-size: 1.3rem; }
+/* Title — embossed serif */
+.esa-book-cover-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f0e6c8;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  margin-bottom: 10px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.esa-book-cover-author {
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: rgba(245, 235, 200, 0.72);
+  line-height: 1.4;
+  font-style: italic;
+  margin-bottom: 6px;
+  position: relative;
+  z-index: 2;
+}
+
+.esa-book-cover-edition {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 110, 0.78);
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+}
+
+/* Foil bottom — ESA · LIBRARY watermark */
+.esa-book-cover-foil {
+  position: absolute;
+  bottom: 12px;
+  left: 28px;
+  right: 18px;
+  font-size: 0.5rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 110, 0.34);
+  font-weight: 700;
+  text-align: right;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Meta below cover (visible) */
+.esa-book-meta {
+  margin-top: 14px;
+  padding: 0 4px;
+}
+.esa-book-meta-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #f5f0e6;
+  line-height: 1.35;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.esa-book-meta-author {
+  font-size: 0.72rem;
+  color: rgba(245, 240, 230, 0.55);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Mobile — tighter grid */
+@media (max-width: 768px) {
+  .esa-ref-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 24px 16px; }
+  .esa-book-cover { padding: 18px 14px 18px 22px; }
+  .esa-book-cover-title { font-size: 0.92rem; }
+  .esa-book-cover-author { font-size: 0.6rem; }
+  .esa-book-cover-edition { font-size: 0.54rem; }
+  .esa-book-cover-band { font-size: 0.54rem; }
+  .esa-book-cover-foil { font-size: 0.46rem; left: 22px; }
+  .esa-book-meta-title { font-size: 0.76rem; }
+}
+@media (max-width: 480px) {
+  .esa-ref-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 14px; }
 }
 
 /* ================================================================
@@ -9377,31 +9451,21 @@ button:active:not(:disabled),
     <div style="max-width: 1180px; margin: 0 auto; padding: 0 32px;">
 
       <!-- Header -->
-      <div style="text-align: center; margin-bottom: 56px;">
+      <div style="text-align: center; margin-bottom: 40px;">
         <div class="section-eyebrow" style="margin-bottom: 18px;">— Perpustakaan Digital —</div>
         <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 600; color: #f5f0e6; margin: 0 0 20px; letter-spacing: 0.005em; line-height: 1.15;">
-          Referensi <span style="font-style: italic; color: #d4af6a;">Buku</span> &amp; Standar
+          Etalase <span style="font-style: italic; color: #d4af6a;">Referensi</span>
         </h1>
-        <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.18rem; color: rgba(245,240,230,0.78); max-width: 660px; margin: 0 auto; line-height: 1.7; font-style: italic; font-weight: 400;">
-          Koleksi referensi pilihan untuk pendalaman materi — text book, standar nasional &amp; internasional, panduan praktis, dan paper akademik. Dikurasi sesuai 8 jalur karir kelistrikan.
+        <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; color: rgba(245,240,230,0.78); max-width: 680px; margin: 0 auto; line-height: 1.7; font-style: italic; font-weight: 400;">
+          Koleksi text book pilihan, standar nasional &amp; internasional, dan panduan praktisi — dikurasi sesuai 8 jalur karir kelistrikan. Klik buku untuk membuka langsung.
         </p>
       </div>
 
-      <!-- Master Drive Folder CTA -->
-      <div style="background: linear-gradient(135deg, rgba(212,175,106,0.12), rgba(212,175,106,0.04)); border: 1px solid rgba(212,175,106,0.3); border-radius: 16px; padding: 32px; margin-bottom: 48px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 280px;">
-          <div style="font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: #d4af6a; font-weight: 700; margin-bottom: 8px;">Master Library</div>
-          <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.6rem; font-weight: 600; color: #f5f0e6; line-height: 1.3; margin-bottom: 6px;">Akses Folder Drive Lengkap</div>
-          <p style="color: rgba(245,240,230,0.72); font-size: 0.92rem; line-height: 1.6; margin: 0;">Ratusan buku, standar PUIL/SNI/IEC, dan referensi profesional dalam satu folder Google Drive — terorganisir per kategori.</p>
-        </div>
-        <a href="https://drive.google.com/drive/folders/0B9EAx-kfFDOpWlNKM2ZORVp4Wms?resourcekey=0-Dbf43TbpGmf_wQt735QGLQ" target="_blank" rel="noopener" style="background: #c9a96e; color: #0d0f1c; text-decoration: none; border-radius: 8px; padding: 14px 28px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px;" onmouseover="this.style.background='#d4b878';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#c9a96e';this.style.transform='translateY(0)'">
-          Buka Folder Drive
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M11 1H15V5M15 1L7 9M9 1H3C1.89543 1 1 1.89543 1 3V13C1 14.1046 1.89543 15 3 15H13C14.1046 15 15 14.1046 15 13V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </a>
-      </div>
+      <!-- Filter chips -->
+      <div id="referensi-filters" class="esa-ref-filters"></div>
 
-      <!-- Kategori Buku Grid -->
-      <div id="referensi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 56px;"></div>
+      <!-- Etalase Buku -->
+      <div id="referensi-grid" class="esa-ref-grid"></div>
 
       <!-- Note -->
       <div style="text-align: center; padding: 32px 24px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px;">
@@ -13242,124 +13306,159 @@ function renderFAQ() {
 }
 window.filterFAQ = function(v) { _faqFilter = v; renderFAQ(); };
 
-// =================== REFERENSI BUKU (perpustakaan digital) ===================
-// Folder Drive parent yang berisi semua buku — tiap kategori membuka folder
-// yang sama (user bisa filter manual via folder Drive). Kalau nanti ada
-// folder per-kategori spesifik, edit driveUrl di tiap entry.
+// =================== REFERENSI BUKU (perpustakaan digital — etalase) ===================
+// Folder Drive parent (fallback driveUrl untuk buku yg belum punya direct file URL).
 const REFERENSI_DRIVE_PARENT = 'https://drive.google.com/drive/folders/0B9EAx-kfFDOpWlNKM2ZORVp4Wms?resourcekey=0-Dbf43TbpGmf_wQt735QGLQ';
 
-const BOOK_CATEGORIES = [
-  {
-    id: 'fondasi', icon: '⚡', title: 'Fondasi Kelistrikan',
-    desc: 'Text book fundamental: rangkaian listrik DC/AC, elektromagnetik, fasor 3-fasa, daya & efisiensi. Cocok untuk L1-L2 + persiapan ujian sertifikasi.',
-    examples: ['Hayt — Engineering Circuit Analysis', 'Boylestad — Electronic Devices', 'Chapman — Electric Machinery Fundamentals'],
-    tags: ['L1', 'L2', 'Pemula'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'instalasi', icon: '🏢', title: 'Instalasi Bangunan',
-    desc: 'PUIL 2011 (SNI 0225), wiring rumah & komersial, panel MDB/SDP, lighting design, fire alarm, BIM electrical. Untuk jalur S1.',
-    examples: ['PUIL 2011 SNI 0225', 'IEC 60364', 'Cadick — Electrical Safety Handbook'],
-    tags: ['S1', 'PUIL', 'Bangunan'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'industri', icon: '🏭', title: 'Industri & Manufaktur',
-    desc: 'Motor listrik 3-fasa, VSD, PLC programming, motor control, drive industri, panel inverter. Untuk teknisi maintenance pabrik (S2).',
-    examples: ['Siemens TIA Portal Manual', 'Schneider Drive Application Guide', 'Bolton — Programmable Logic Controllers'],
-    tags: ['S2', 'PLC', 'VSD', 'Motor'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'distribusi', icon: '🔌', title: 'Distribusi 20 kV',
-    desc: 'SUTM, gardu distribusi, trafo, proteksi, SCADA distribusi, smart grid. Buku referensi PLN UP3/ULP & operator distribusi (S3).',
-    examples: ['Buku Pedoman PLN', 'Short — Electric Power Distribution Handbook', 'Gönen — Electric Power Distribution Engineering'],
-    tags: ['S3', 'PLN', 'Distribusi', 'SUTM'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'transmisi', icon: '🗼', title: 'Transmisi 150/500 kV',
-    desc: 'GITET, sistem proteksi diferensial & distance, SCADA transmisi, stabilitas sistem tenaga. Untuk engineer UPT/UID PLN (S4).',
-    examples: ['Glover — Power System Analysis', 'IEEE 1584 Arc Flash Hazard', 'Bergen & Vittal — Power Systems Analysis'],
-    tags: ['S4', 'Transmisi', 'GITET', 'Proteksi'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'analyst', icon: '📊', title: 'Energy Analyst & Data Science',
-    desc: 'Python untuk utility, load forecasting (ARIMA/LSTM), NTL detection ML, dashboarding (Power BI/Streamlit), time-series analysis (S5).',
-    examples: ['Hyndman — Forecasting Principles & Practice', 'McKinney — Python for Data Analysis', 'Géron — Hands-On ML'],
-    tags: ['S5', 'Python', 'ML', 'Forecasting'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'auditor', icon: '🌱', title: 'Energy Auditor & Konservasi',
-    desc: 'SNI 6196 audit energi gedung, HVAC efficiency, lighting retrofit, cogeneration, ISO 50001, sertifikasi BNSP/HAKE (S6).',
-    examples: ['SNI 6196:2011 Audit Energi', 'Thumann — Handbook of Energy Audits', 'ASHRAE Handbook'],
-    tags: ['S6', 'Audit', 'BNSP', 'HAKE'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'renewable', icon: '☀️', title: 'Pembangkitan & Renewable',
-    desc: 'PLTS rooftop & off-grid, BESS sizing, wind energy, biomass, microgrid. Permen ESDM 26/2021, IEC 61724 (S7).',
-    examples: ['Masters — Renewable & Efficient Electric Power Systems', 'Permen ESDM 26/2021', 'NREL Solar Resource Data'],
-    tags: ['S7', 'PLTS', 'BESS', 'EBT'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'k3', icon: '🦺', title: 'K3 Listrik & Safety',
-    desc: 'Permenaker 12/2015, NFPA 70E, UU 1/1970, prosedur LOTO, arc flash, APD, SMK3 listrik. Untuk Ahli K3 Listrik (S8).',
-    examples: ['NFPA 70E Standard for Electrical Safety', 'Permenaker 12/2015 K3 Listrik', 'IEEE 1584 Arc Flash Calculation'],
-    tags: ['S8', 'K3', 'AK3L', 'NFPA'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'standar', icon: '📋', title: 'Standar &amp; Regulasi Indonesia',
-    desc: 'PUIL 2011, SNI seri kelistrikan, SKKNI ketenagalistrikan, Permen ESDM, UU Ketenagalistrikan 30/2009. Wajib untuk semua jalur.',
-    examples: ['PUIL 2011 lengkap', 'SNI 0225, 6196, 7826', 'SKKNI Distribusi/Transmisi/K3'],
-    tags: ['Regulasi', 'PUIL', 'SNI', 'SKKNI'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'ai', icon: '🤖', title: 'AI &amp; Smart Grid',
-    desc: 'Computer vision untuk inspeksi APD, predictive maintenance, edge AI di gardu, digital twin sistem tenaga. Cutting-edge research.',
-    examples: ['Russell & Norvig — AI Modern Approach', 'Smart Grid Handbook (IEEE)', 'Digital Twin Power Systems papers'],
-    tags: ['AI', 'Smart Grid', 'Innovation'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  },
-  {
-    id: 'manajemen', icon: '💼', title: 'Manajemen Proyek &amp; Karir',
-    desc: 'Project management kelistrikan, contract negotiation, leadership engineer, etika profesi PII, persiapan ujian sertifikasi BNSP.',
-    examples: ['PMBOK 7th Edition', 'IEEE Engineer\'s Career Guide', 'Kode Etik PII'],
-    tags: ['Karir', 'PMBOK', 'PII'],
-    driveUrl: REFERENSI_DRIVE_PARENT
-  }
+// Curated electrical engineering library — etalase buku.
+// Setiap entry:
+//   id: slug unik
+//   title: judul buku
+//   author: penulis
+//   edition: edisi (opsional)
+//   category: untuk filter chip (fondasi/s1-s8/standar/ai/manajemen)
+//   categoryLabel: label tampilan kategori
+//   palette: warna cover (1-6 untuk variasi visual)
+//   driveUrl: link langsung ke file Drive — REPLACE dgn URL file spesifik
+//             setelah upload PDF ke folder Drive Electra Academy.
+//             Format: https://drive.google.com/file/d/<FILE_ID>/view
+const BOOKS = [
+  // === FONDASI KELISTRIKAN ===
+  { id:'hayt',      title:'Engineering Circuit Analysis', author:'William H. Hayt · Jack E. Kemmerly · Steven M. Durbin', edition:'9th Edition', category:'fondasi', categoryLabel:'Fondasi', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'sadiku',    title:'Fundamentals of Electric Circuits', author:'Charles K. Alexander · Matthew N. O. Sadiku', edition:'6th Edition', category:'fondasi', categoryLabel:'Fondasi', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'boylestad', title:'Electronic Devices and Circuit Theory', author:'Robert L. Boylestad · Louis Nashelsky', edition:'11th Edition', category:'fondasi', categoryLabel:'Fondasi', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'chapman',   title:'Electric Machinery Fundamentals', author:'Stephen J. Chapman', edition:'5th Edition', category:'fondasi', categoryLabel:'Fondasi', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'sen',       title:'Principles of Electric Machines and Power Electronics', author:'P. C. Sen', edition:'3rd Edition', category:'fondasi', categoryLabel:'Fondasi', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === INSTALASI BANGUNAN (S1) ===
+  { id:'puil',      title:'PUIL 2011 — SNI 0225', author:'BSN Republik Indonesia', edition:'Persyaratan Umum Instalasi Listrik', category:'s1', categoryLabel:'Instalasi', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'iec60364',  title:'IEC 60364', author:'International Electrotechnical Commission', edition:'Low-Voltage Installations', category:'s1', categoryLabel:'Instalasi', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'cadick',    title:'Electrical Safety Handbook', author:'John Cadick · Mary Capelli-Schellpfeffer · Dennis Neitzel', edition:'4th Edition', category:'s1', categoryLabel:'Instalasi', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'mcpartland',title:'McGraw-Hill Electrical Construction Wiring', author:'Joseph F. McPartland · Brian J. McPartland', edition:'7th Edition', category:'s1', categoryLabel:'Instalasi', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === INDUSTRI & MANUFAKTUR (S2) ===
+  { id:'bolton',    title:'Programmable Logic Controllers', author:'W. Bolton', edition:'6th Edition', category:'s2', categoryLabel:'Industri', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'petruzella',title:'Programmable Logic Controllers', author:'Frank D. Petruzella', edition:'5th Edition', category:'s2', categoryLabel:'Industri', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'rashid',    title:'Power Electronics: Circuits, Devices, and Applications', author:'Muhammad H. Rashid', edition:'4th Edition', category:'s2', categoryLabel:'Industri', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'mohan',     title:'Power Electronics: Converters, Applications, and Design', author:'Ned Mohan · Tore M. Undeland · William P. Robbins', edition:'3rd Edition', category:'s2', categoryLabel:'Industri', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'krause',    title:'Analysis of Electric Machinery and Drive Systems', author:'Paul C. Krause · Oleg Wasynczuk · Scott D. Sudhoff', edition:'3rd Edition', category:'s2', categoryLabel:'Industri', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === DISTRIBUSI (S3) ===
+  { id:'short',     title:'Electric Power Distribution Handbook', author:'T. A. Short', edition:'2nd Edition', category:'s3', categoryLabel:'Distribusi', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'gonen',     title:'Electric Power Distribution Engineering', author:'Turan Gönen', edition:'3rd Edition', category:'s3', categoryLabel:'Distribusi', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'pansini',   title:'Electrical Distribution Engineering', author:'Anthony J. Pansini', edition:'3rd Edition', category:'s3', categoryLabel:'Distribusi', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'pln-pedoman', title:'Buku Pedoman Distribusi PLN', author:'PT PLN (Persero)', edition:'Kompilasi SPLN', category:'s3', categoryLabel:'Distribusi', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === TRANSMISI (S4) ===
+  { id:'glover',    title:'Power System Analysis & Design', author:'J. Duncan Glover · Thomas J. Overbye · Mulukutla S. Sarma', edition:'6th Edition', category:'s4', categoryLabel:'Transmisi', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'bergen',    title:'Power Systems Analysis', author:'Arthur R. Bergen · Vijay Vittal', edition:'2nd Edition', category:'s4', categoryLabel:'Transmisi', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'stevenson', title:'Elements of Power System Analysis', author:'William D. Stevenson Jr.', edition:'4th Edition', category:'s4', categoryLabel:'Transmisi', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'grainger',  title:'Power System Analysis', author:'John J. Grainger · William D. Stevenson Jr.', edition:'1st Edition', category:'s4', categoryLabel:'Transmisi', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'kundur',    title:'Power System Stability and Control', author:'Prabha Kundur', edition:'1st Edition', category:'s4', categoryLabel:'Transmisi', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === ENERGY ANALYST & DATA SCIENCE (S5) ===
+  { id:'hyndman',   title:'Forecasting: Principles and Practice', author:'Rob J. Hyndman · George Athanasopoulos', edition:'3rd Edition', category:'s5', categoryLabel:'Analyst', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'mckinney',  title:'Python for Data Analysis', author:'Wes McKinney', edition:'3rd Edition', category:'s5', categoryLabel:'Analyst', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'geron',     title:'Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow', author:'Aurélien Géron', edition:'3rd Edition', category:'s5', categoryLabel:'Analyst', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'vanderplas',title:'Python Data Science Handbook', author:'Jake VanderPlas', edition:'2nd Edition', category:'s5', categoryLabel:'Analyst', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === ENERGY AUDITOR & KONSERVASI (S6) ===
+  { id:'thumann',   title:'Handbook of Energy Audits', author:'Albert Thumann · Terry Niehus · William J. Younger', edition:'9th Edition', category:'s6', categoryLabel:'Auditor', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'sni-6196',  title:'SNI 6196:2011 — Audit Energi Bangunan Gedung', author:'Badan Standardisasi Nasional', edition:'Edisi 2011', category:'s6', categoryLabel:'Auditor', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'ashrae',    title:'ASHRAE Handbook — Fundamentals', author:'American Society of Heating, Refrigerating and Air-Conditioning Engineers', edition:'2021 Edition', category:'s6', categoryLabel:'Auditor', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'capehart',  title:'Guide to Energy Management', author:'Barney L. Capehart · Wayne C. Turner · William J. Kennedy', edition:'8th Edition', category:'s6', categoryLabel:'Auditor', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === PEMBANGKITAN & RENEWABLE (S7) ===
+  { id:'masters',   title:'Renewable and Efficient Electric Power Systems', author:'Gilbert M. Masters', edition:'2nd Edition', category:'s7', categoryLabel:'Renewable', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'twidell',   title:'Renewable Energy Resources', author:'John Twidell · Tony Weir', edition:'4th Edition', category:'s7', categoryLabel:'Renewable', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'patel',     title:'Wind and Solar Power Systems', author:'Mukund R. Patel', edition:'3rd Edition', category:'s7', categoryLabel:'Renewable', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'permen-26', title:'Permen ESDM 26/2021 — PLTS Atap', author:'Kementerian ESDM Republik Indonesia', edition:'Edisi 2021', category:'s7', categoryLabel:'Renewable', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'boyle',     title:'Renewable Energy: Power for a Sustainable Future', author:'Godfrey Boyle', edition:'3rd Edition', category:'s7', categoryLabel:'Renewable', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === K3 LISTRIK & SAFETY (S8) ===
+  { id:'nfpa70e',   title:'NFPA 70E — Standard for Electrical Safety in the Workplace', author:'National Fire Protection Association', edition:'2024 Edition', category:'s8', categoryLabel:'K3 Listrik', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'permenaker-12', title:'Permenaker 12/2015 — K3 Listrik di Tempat Kerja', author:'Kemnaker Republik Indonesia', edition:'Edisi 2015', category:'s8', categoryLabel:'K3 Listrik', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'ieee1584',  title:'IEEE 1584 — Guide for Performing Arc-Flash Hazard Calculations', author:'IEEE Industry Applications Society', edition:'2018 Edition', category:'s8', categoryLabel:'K3 Listrik', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'palmer',    title:'Electrical Safety Code Manual', author:'Kimberley Keller', edition:'1st Edition', category:'s8', categoryLabel:'K3 Listrik', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === STANDAR & REGULASI ===
+  { id:'sni-0225',  title:'SNI 0225 — Persyaratan Umum Instalasi Listrik', author:'Badan Standardisasi Nasional', edition:'Adopsi PUIL 2011', category:'standar', categoryLabel:'Standar', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'uu-30',     title:'UU 30/2009 — Ketenagalistrikan', author:'Republik Indonesia', edition:'Edisi 2009', category:'standar', categoryLabel:'Standar', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'skkni-distribusi', title:'SKKNI Distribusi Tenaga Listrik', author:'Kemnaker Republik Indonesia', edition:'Edisi terkini', category:'standar', categoryLabel:'Standar', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'iec-61936', title:'IEC 61936 — Power Installations Exceeding 1 kV AC', author:'International Electrotechnical Commission', edition:'2nd Edition', category:'standar', categoryLabel:'Standar', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === AI & SMART GRID ===
+  { id:'russell',   title:'Artificial Intelligence: A Modern Approach', author:'Stuart Russell · Peter Norvig', edition:'4th Edition', category:'ai', categoryLabel:'AI / Smart Grid', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'momoh',     title:'Smart Grid: Fundamentals of Design and Analysis', author:'James Momoh', edition:'1st Edition', category:'ai', categoryLabel:'AI / Smart Grid', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'farhangi',  title:'The Smart Grid: A Pragmatic Approach', author:'Hassan Farhangi', edition:'1st Edition', category:'ai', categoryLabel:'AI / Smart Grid', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+
+  // === MANAJEMEN PROYEK & KARIR ===
+  { id:'pmbok',     title:'PMBOK Guide — A Guide to the Project Management Body of Knowledge', author:'Project Management Institute', edition:'7th Edition', category:'manajemen', categoryLabel:'Manajemen', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'kode-pii',  title:'Kode Etik Insinyur Indonesia', author:'Persatuan Insinyur Indonesia (PII)', edition:'Edisi terkini', category:'manajemen', categoryLabel:'Manajemen', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  { id:'engineers-career', title:'IEEE Engineer\'s Guide to Career Success', author:'Institute of Electrical and Electronics Engineers', edition:'1st Edition', category:'manajemen', categoryLabel:'Manajemen', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
 ];
+
+const REFERENSI_FILTERS = [
+  { id:'all',       label:'Semua' },
+  { id:'fondasi',   label:'Fondasi' },
+  { id:'s1',        label:'Instalasi Bangunan' },
+  { id:'s2',        label:'Industri & Manufaktur' },
+  { id:'s3',        label:'Distribusi' },
+  { id:'s4',        label:'Transmisi' },
+  { id:'s5',        label:'Energy Analyst' },
+  { id:'s6',        label:'Energy Auditor' },
+  { id:'s7',        label:'Renewable' },
+  { id:'s8',        label:'K3 Listrik' },
+  { id:'standar',   label:'Standar & Regulasi' },
+  { id:'ai',        label:'AI & Smart Grid' },
+  { id:'manajemen', label:'Manajemen' },
+];
+
+let _refFilter = 'all';
 
 function renderReferensi() {
   const grid = document.getElementById('referensi-grid');
   if (!grid) return;
-  grid.innerHTML = BOOK_CATEGORIES.map(cat => `
-    <a href="${cat.driveUrl}" target="_blank" rel="noopener" class="esa-book-card">
-      <div class="esa-book-card-icon">${cat.icon}</div>
-      <div class="esa-book-card-body">
-        <div class="esa-book-card-title">${cat.title}</div>
-        <div class="esa-book-card-desc">${cat.desc}</div>
-        <div class="esa-book-card-examples">
-          <div class="esa-book-card-examples-label">Contoh referensi:</div>
-          <ul>${cat.examples.map(e => `<li>${escapeHtml(e)}</li>`).join('')}</ul>
-        </div>
-        <div class="esa-book-card-tags">
-          ${cat.tags.map(t => `<span class="esa-book-card-tag">${escapeHtml(t)}</span>`).join('')}
-        </div>
-        <div class="esa-book-card-cta">
-          Buka di Drive
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M11 1H15V5M15 1L7 9M9 1H3C1.89543 1 1 1.89543 1 3V13C1 14.1046 1.89543 15 3 15H13C14.1046 15 15 14.1046 15 13V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </div>
+  // Render filter chips header (sekali saja, di atas grid via parent injection)
+  const headerHost = document.getElementById('referensi-filters');
+  if (headerHost && !headerHost.dataset.rendered) {
+    headerHost.innerHTML = REFERENSI_FILTERS.map(f =>
+      `<button class="esa-ref-filter ${f.id===_refFilter?'active':''}" data-filter-id="${f.id}" onclick="esaSetRefFilter('${f.id}')">${escapeHtml(f.label)}</button>`
+    ).join('');
+    headerHost.dataset.rendered = '1';
+  }
+  // Filter buku
+  const list = _refFilter === 'all' ? BOOKS : BOOKS.filter(b => b.category === _refFilter);
+  if (!list.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(245,240,230,0.5);">Tidak ada buku di kategori ini.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(b => `
+    <a href="${escapeHtml(b.driveUrl)}" target="_blank" rel="noopener" class="esa-book esa-book-p${b.palette}" title="${escapeHtml(b.title)} — ${escapeHtml(b.author)}">
+      <div class="esa-book-cover">
+        <div class="esa-book-cover-spine"></div>
+        <div class="esa-book-cover-band">${escapeHtml(b.categoryLabel)}</div>
+        <div class="esa-book-cover-title">${escapeHtml(b.title)}</div>
+        <div class="esa-book-cover-author">${escapeHtml(b.author)}</div>
+        <div class="esa-book-cover-edition">${escapeHtml(b.edition)}</div>
+        <div class="esa-book-cover-foil">ESA · LIBRARY</div>
+      </div>
+      <div class="esa-book-meta">
+        <div class="esa-book-meta-title">${escapeHtml(b.title)}</div>
+        <div class="esa-book-meta-author">${escapeHtml(b.author)}</div>
       </div>
     </a>
   `).join('');
 }
 window.esaRenderReferensi = renderReferensi;
+window.esaSetRefFilter = function(id) {
+  _refFilter = id;
+  // Update active state
+  document.querySelectorAll('.esa-ref-filter').forEach(b => {
+    b.classList.toggle('active', b.dataset.filterId === id);
+  });
+  renderReferensi();
+};
 
 function openModul(code, trackId, levelId) {
   currentModuleCode = code;
