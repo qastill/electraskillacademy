@@ -13969,96 +13969,100 @@ const REFERENSI_DRIVE_PARENT = 'https://drive.google.com/drive/folders/0B9EAx-kf
 //   driveUrl: link langsung ke file Drive — REPLACE dgn URL file spesifik
 //             setelah upload PDF ke folder Drive Electra Academy.
 //             Format: https://drive.google.com/file/d/<FILE_ID>/view
+// 60 buku/folder real dari library Electra Academy. Setiap entry punya
+// driveUrl LANGSUNG ke file PDF atau folder Drive — klik kartu = buka
+// resource langsung di tab baru, bukan navigasi folder dulu.
 const BOOKS = [
-  // === FONDASI KELISTRIKAN ===
-  { id:'hayt',      title:'Engineering Circuit Analysis', author:'William H. Hayt · Jack E. Kemmerly · Steven M. Durbin', edition:'9th Edition', category:'fondasi', categoryLabel:'Fondasi', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'sadiku',    title:'Fundamentals of Electric Circuits', author:'Charles K. Alexander · Matthew N. O. Sadiku', edition:'6th Edition', category:'fondasi', categoryLabel:'Fondasi', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'boylestad', title:'Electronic Devices and Circuit Theory', author:'Robert L. Boylestad · Louis Nashelsky', edition:'11th Edition', category:'fondasi', categoryLabel:'Fondasi', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'chapman',   title:'Electric Machinery Fundamentals', author:'Stephen J. Chapman', edition:'5th Edition', category:'fondasi', categoryLabel:'Fondasi', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'sen',       title:'Principles of Electric Machines and Power Electronics', author:'P. C. Sen', edition:'3rd Edition', category:'fondasi', categoryLabel:'Fondasi', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== FONDASI & DASAR KELISTRIKAN =====
+  { id:'k13-pelajaran',          title:'Buku Pelajaran Listrik K13-2016', author:'Kompilasi Kurikulum 2013 SMK', edition:'Folder · Kurikulum SMK', category:'fondasi', categoryLabel:'Fondasi', type:'folder', palette:1, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpM3E2OHhyT2JvTFU' },
+  { id:'dasar-pengukuran',       title:'Dasar dan Pengukuran Listrik', author:'Kementerian Pendidikan & Kebudayaan', edition:'Kelas X', category:'fondasi', categoryLabel:'Fondasi', type:'pdf', palette:2, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpdHFZbnJBenhkaHc/view' },
+  { id:'dasar-listrik-elektronika', title:'Dasar Listrik dan Elektronika', author:'Kemendikbud · Buku Sekolah Elektronik', edition:'Kelas X', category:'fondasi', categoryLabel:'Fondasi', type:'pdf', palette:3, driveUrl:'https://drive.google.com/file/d/1RvG0oQxFQisd9UVUHkThbzy3zKShGen8/view' },
+  { id:'kelistrikan-mesin',      title:'Kelistrikan Mesin', author:'Kemendikbud', edition:'Kelas X · Semester 1', category:'fondasi', categoryLabel:'Fondasi', type:'pdf', palette:4, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpT1IzR1RGUEhlZUk/view' },
+  { id:'pekerjaan-elektromekanik-1', title:'Pekerjaan Dasar Elektromekanik', author:'Kemendikbud', edition:'Kelas X · Semester 1', category:'fondasi', categoryLabel:'Fondasi', type:'pdf', palette:5, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpWnp5QTE1VkFJaE0/view' },
+  { id:'pekerjaan-elektromekanik-2', title:'Pekerjaan Dasar Elektromekanik (C2)', author:'Kemendikbud', edition:'Kelas X · Edisi C2', category:'fondasi', categoryLabel:'Fondasi', type:'pdf', palette:6, driveUrl:'https://drive.google.com/file/d/178wnRlId5tqhho2hOHukC0CRcR4HjW1W/view' },
+  { id:'gambar-teknik',          title:'Gambar Teknik Listrik', author:'Kemendikbud', edition:'Kelas X (C2) · Bab 1-26', category:'fondasi', categoryLabel:'Fondasi', type:'pdf', palette:1, driveUrl:'https://drive.google.com/file/d/14kha7aUtFqfWn-MfDdl8THwbdGNSrldm/view' },
+  { id:'pengembangan-peserta',   title:'Pengembangan Peserta Didik & Analisis Komponen', author:'Bahan Ajar Profesional Guru', edition:'Modul 0A', category:'fondasi', categoryLabel:'Fondasi', type:'pdf', palette:2, driveUrl:'https://drive.google.com/file/d/1IAfFixls9QZVajWs6q7xRQVKdOy5g3g7/view' },
 
-  // === INSTALASI BANGUNAN (S1) ===
-  { id:'puil',      title:'PUIL 2011 — SNI 0225', author:'BSN Republik Indonesia', edition:'Persyaratan Umum Instalasi Listrik', category:'s1', categoryLabel:'Instalasi', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'iec60364',  title:'IEC 60364', author:'International Electrotechnical Commission', edition:'Low-Voltage Installations', category:'s1', categoryLabel:'Instalasi', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'cadick',    title:'Electrical Safety Handbook', author:'John Cadick · Mary Capelli-Schellpfeffer · Dennis Neitzel', edition:'4th Edition', category:'s1', categoryLabel:'Instalasi', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'mcpartland',title:'McGraw-Hill Electrical Construction Wiring', author:'Joseph F. McPartland · Brian J. McPartland', edition:'7th Edition', category:'s1', categoryLabel:'Instalasi', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== INSTALASI & PEMANFAATAN (S1) =====
+  { id:'tek-pemanfaatan-1',      title:'Teknik Pemanfaatan Tenaga Listrik 1', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 1', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'folder', palette:3, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpcWRqTlJ1bWJOOHM' },
+  { id:'tek-pemanfaatan-2',      title:'Teknik Pemanfaatan Tenaga Listrik 2', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 2', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'folder', palette:4, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpQ2Z3UzhmMFdwR3M' },
+  { id:'tek-pemanfaatan-3',      title:'Teknik Pemanfaatan Tenaga Listrik 3', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 3', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'folder', palette:5, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpTlZYa3hqcUlqaXM' },
+  { id:'instalasi-tenaga-xi',    title:'Instalasi Tenaga Listrik (C3)', author:'Kemendikbud', edition:'Kelas XI', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'pdf', palette:6, driveUrl:'https://drive.google.com/file/d/1hvms0goQLy7fDwQUyN0PPXs_Owc7A7io/view' },
+  { id:'instalasi-tenaga-xii',   title:'Instalasi Tenaga Listrik', author:'Kemendikbud', edition:'Kelas XII', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'pdf', palette:1, driveUrl:'https://drive.google.com/file/d/1-Qc0sM-Xvr0J5fVQeWd4Kzs798QjRH5r/view' },
+  { id:'instalasi-penerangan-xi',title:'Instalasi Penerangan Listrik (C3)', author:'Kemendikbud', edition:'Kelas XI', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'pdf', palette:2, driveUrl:'https://drive.google.com/file/d/1x6Qi368Dx8Y1q07feBeSetqFAX5pj3AL/view' },
+  { id:'tek-penerangan',         title:'Teknik Penerangan Listrik', author:'Kemendikbud', edition:'Kelas XI · Semester 3', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'pdf', palette:3, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpMXZsM2hVYXJrT1k/view' },
+  { id:'electrical-installation',title:'Electrical Installation Work', author:'Brian Scaddan', edition:'6th Edition', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'pdf', palette:4, driveUrl:'https://drive.google.com/file/d/1gb_9Mg9E6mCBwPi_tmCw2MBkwNONIVpD/view' },
+  { id:'homeowner-wiring',       title:'The Homeowner\'s DIY Guide to Electrical Wiring', author:'David Herres', edition:'Edisi McGraw-Hill', category:'s1', categoryLabel:'Instalasi & Pemanfaatan', type:'pdf', palette:5, driveUrl:'https://drive.google.com/file/d/1Kw5X1jNXRuiz322ui3BUktLObR2w_Dr1/view' },
 
-  // === INDUSTRI & MANUFAKTUR (S2) ===
-  { id:'bolton',    title:'Programmable Logic Controllers', author:'W. Bolton', edition:'6th Edition', category:'s2', categoryLabel:'Industri', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'petruzella',title:'Programmable Logic Controllers', author:'Frank D. Petruzella', edition:'5th Edition', category:'s2', categoryLabel:'Industri', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'rashid',    title:'Power Electronics: Circuits, Devices, and Applications', author:'Muhammad H. Rashid', edition:'4th Edition', category:'s2', categoryLabel:'Industri', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'mohan',     title:'Power Electronics: Converters, Applications, and Design', author:'Ned Mohan · Tore M. Undeland · William P. Robbins', edition:'3rd Edition', category:'s2', categoryLabel:'Industri', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'krause',    title:'Analysis of Electric Machinery and Drive Systems', author:'Paul C. Krause · Oleg Wasynczuk · Scott D. Sudhoff', edition:'3rd Edition', category:'s2', categoryLabel:'Industri', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== INDUSTRI & MOTOR LISTRIK (S2) =====
+  { id:'tek-industri-1',         title:'Teknik Listrik Industri 1', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 1', category:'s2', categoryLabel:'Industri & Motor', type:'folder', palette:6, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpQU1tTEduVldZTlU' },
+  { id:'tek-industri-2',         title:'Teknik Listrik Industri 2', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 2', category:'s2', categoryLabel:'Industri & Motor', type:'folder', palette:1, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpeExzdFdoSk9pbnc' },
+  { id:'tek-industri-3',         title:'Teknik Listrik Industri 3', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 3', category:'s2', categoryLabel:'Industri & Motor', type:'folder', palette:2, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpaUVtbTdNenIteTA' },
+  { id:'motor-xi-3',             title:'Instalasi Motor Listrik', author:'Kemendikbud', edition:'Kelas XI · Semester 3', category:'s2', categoryLabel:'Industri & Motor', type:'pdf', palette:3, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpZ2FFMGR6Mk5ibTA/view' },
+  { id:'motor-xii-5',            title:'Instalasi Motor Listrik', author:'Kemendikbud', edition:'Kelas XII · Semester 5', category:'s2', categoryLabel:'Industri & Motor', type:'pdf', palette:4, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpZlpLNkVTQW1NS3M/view' },
+  { id:'motor-xii-6',            title:'Instalasi Motor Listrik', author:'Kemendikbud', edition:'Kelas XII · Semester 6', category:'s2', categoryLabel:'Industri & Motor', type:'pdf', palette:5, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpWlNKM2ZORVp4Wms/view' },
+  { id:'motor-c3-xi',            title:'Instalasi Motor Listrik (C3)', author:'Kemendikbud', edition:'Kelas XI · Edisi C3', category:'s2', categoryLabel:'Industri & Motor', type:'pdf', palette:6, driveUrl:'https://drive.google.com/file/d/1TT1TPR91kAA97vSZIsc-BKhGsfQkw7-Z/view' },
+  { id:'motor-c3-xii',           title:'Instalasi Motor Listrik (C3)', author:'Kemendikbud', edition:'Kelas XII · Bab 1-24', category:'s2', categoryLabel:'Industri & Motor', type:'pdf', palette:1, driveUrl:'https://drive.google.com/file/d/1YJagQ6nw9RuG3XAywt1dp8BL2LBVWrDB/view' },
 
-  // === DISTRIBUSI (S3) ===
-  { id:'short',     title:'Electric Power Distribution Handbook', author:'T. A. Short', edition:'2nd Edition', category:'s3', categoryLabel:'Distribusi', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'gonen',     title:'Electric Power Distribution Engineering', author:'Turan Gönen', edition:'3rd Edition', category:'s3', categoryLabel:'Distribusi', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'pansini',   title:'Electrical Distribution Engineering', author:'Anthony J. Pansini', edition:'3rd Edition', category:'s3', categoryLabel:'Distribusi', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'pln-pedoman', title:'Buku Pedoman Distribusi PLN', author:'PT PLN (Persero)', edition:'Kompilasi SPLN', category:'s3', categoryLabel:'Distribusi', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== OTOMASI & SENSOR (S2) =====
+  { id:'tek-otomasi-1',          title:'Teknik Otomasi Industri 1', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 1', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'folder', palette:2, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpUmk5Y3FrbkRhdWs' },
+  { id:'tek-otomasi-2',          title:'Teknik Otomasi Industri 2', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 2', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'folder', palette:3, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpTy0yM1NuajhOY0U' },
+  { id:'tek-otomasi-3',          title:'Teknik Otomasi Industri 3', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 3', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'folder', palette:4, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpRFNtYzdFWDJfU0k' },
+  { id:'sensor-aktuator-1',      title:'Teknik Sensor dan Aktuator I', author:'Kemendikbud', edition:'Modul Pembelajaran', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:5, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpMzd1dFZzeUxQRkk/view' },
+  { id:'sensor-aktuator-xi-1',   title:'Sensor dan Aktuator', author:'Kemendikbud', edition:'Kelas XI · Semester 1', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:6, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpcW5aOXpFZWItZGc/view' },
+  { id:'sensor-aktuator-xi-3',   title:'Sensor dan Aktuator', author:'Kemendikbud', edition:'Kelas XI · Semester 3', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:1, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpRUllSTJoc3RXYTQ/view' },
+  { id:'sensor-aktuator-x-3',    title:'Sensor dan Aktuator', author:'Kemendikbud', edition:'Kelas X · Semester 3', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:2, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpV1VLMjc2NWxSSzA/view' },
+  { id:'pneumatik-handout',      title:'Handout Pneumatik', author:'Universitas Negeri Yogyakarta', edition:'Modul Lab', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:3, driveUrl:'https://drive.google.com/file/d/1YdTXhYVBks6SwstrmeCt949WE4-xw1iw/view' },
+  { id:'pneumatik-hidrolik-xi',  title:'Pneumatik dan Hidrolik', author:'Kemendikbud', edition:'Kelas XI · Semester 1', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:4, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpYTdCZFFDcngybGc/view' },
+  { id:'pneumatik-hidrolik-ptm', title:'Pneumatik dan Hidrolik (PTM305)', author:'Modul Universitas', edition:'Edisi Pembelajaran', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:5, driveUrl:'https://drive.google.com/file/d/1TFpKRfgToB7ehWECFCx4MNrupFXx0TFy/view' },
+  { id:'teknik-kontrol-1',       title:'Teknik Kontrol 1', author:'Kemendikbud', edition:'Edisi Final Revisi', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:6, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpYU9wcks3MUprUHM/view' },
+  { id:'kontrol-refrigerasi-3',  title:'Kontrol Refrigerasi dan Tata Udara', author:'Kemendikbud', edition:'Kelas XI · Semester 3', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:1, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpZmE2akNDVVZVenc/view' },
+  { id:'kontrol-refrigerasi-4',  title:'Kontrol Refrigerasi dan Tata Udara', author:'Kemendikbud', edition:'Kelas XI · Semester 4', category:'otomasi', categoryLabel:'Otomasi & Sensor', type:'pdf', palette:2, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpSXJYUzdzS1lCd0U/view' },
 
-  // === TRANSMISI (S4) ===
-  { id:'glover',    title:'Power System Analysis & Design', author:'J. Duncan Glover · Thomas J. Overbye · Mulukutla S. Sarma', edition:'6th Edition', category:'s4', categoryLabel:'Transmisi', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'bergen',    title:'Power Systems Analysis', author:'Arthur R. Bergen · Vijay Vittal', edition:'2nd Edition', category:'s4', categoryLabel:'Transmisi', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'stevenson', title:'Elements of Power System Analysis', author:'William D. Stevenson Jr.', edition:'4th Edition', category:'s4', categoryLabel:'Transmisi', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'grainger',  title:'Power System Analysis', author:'John J. Grainger · William D. Stevenson Jr.', edition:'1st Edition', category:'s4', categoryLabel:'Transmisi', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'kundur',    title:'Power System Stability and Control', author:'Prabha Kundur', edition:'1st Edition', category:'s4', categoryLabel:'Transmisi', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== PEMBANGKIT (S7) =====
+  { id:'tek-pembangkit-1',       title:'Teknik Pembangkit Tenaga Listrik 1', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 1', category:'s7', categoryLabel:'Pembangkit', type:'folder', palette:3, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpcjdXQ1draDVwMDg' },
+  { id:'tek-pembangkit-2',       title:'Teknik Pembangkit Tenaga Listrik 2', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 2', category:'s7', categoryLabel:'Pembangkit', type:'folder', palette:4, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpbV9JVGg4Y0lHeUU' },
+  { id:'tek-pembangkit-3',       title:'Teknik Pembangkit Tenaga Listrik 3', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 3', category:'s7', categoryLabel:'Pembangkit', type:'folder', palette:5, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpZnp3TWw0QTVBNGs' },
+  { id:'pembangkit-jilid1',      title:'Teknik Pembangkit Tenaga Listrik Jilid 1', author:'Buku Panduan SMK · No. 190', edition:'Edisi Lengkap', category:'s7', categoryLabel:'Pembangkit', type:'pdf', palette:6, driveUrl:'https://drive.google.com/file/d/1qmNoD8Z9oMvE9VfiVWpPDmDanmY4O9N1_PZXYHduQrA/view' },
+  { id:'pembangkit-jilid2',      title:'Teknik Pembangkit Tenaga Listrik Jilid 2', author:'Buku Panduan SMK · No. 191', edition:'Edisi Lengkap', category:'s7', categoryLabel:'Pembangkit', type:'pdf', palette:1, driveUrl:'https://drive.google.com/file/d/1sk7LEGZ2aWflibj_dy-t04Y5C1XeUE75SeaTUg0fjv4/view' },
+  { id:'generator-xi-3',         title:'Generator', author:'Kemendikbud', edition:'Kelas XI · Semester 3', category:'s7', categoryLabel:'Pembangkit', type:'pdf', palette:2, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpQldiQ2hjUGtzWDQ/view' },
 
-  // === ENERGY ANALYST & DATA SCIENCE (S5) ===
-  { id:'hyndman',   title:'Forecasting: Principles and Practice', author:'Rob J. Hyndman · George Athanasopoulos', edition:'3rd Edition', category:'s5', categoryLabel:'Analyst', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'mckinney',  title:'Python for Data Analysis', author:'Wes McKinney', edition:'3rd Edition', category:'s5', categoryLabel:'Analyst', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'geron',     title:'Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow', author:'Aurélien Géron', edition:'3rd Edition', category:'s5', categoryLabel:'Analyst', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'vanderplas',title:'Python Data Science Handbook', author:'Jake VanderPlas', edition:'2nd Edition', category:'s5', categoryLabel:'Analyst', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== TRANSMISI (S4) =====
+  { id:'tek-transmisi-1',        title:'Teknik Transmisi Tenaga Listrik 1', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 1', category:'s4', categoryLabel:'Transmisi', type:'folder', palette:3, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpRld6YldCdlNIRDA' },
+  { id:'tek-transmisi-2',        title:'Teknik Transmisi Tenaga Listrik 2', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 2', category:'s4', categoryLabel:'Transmisi', type:'folder', palette:4, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpanNKOTVzQzEzMkk' },
+  { id:'tek-transmisi-3',        title:'Teknik Transmisi Tenaga Listrik 3', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 3', category:'s4', categoryLabel:'Transmisi', type:'folder', palette:5, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpdmRqTWFEQWZvb0E' },
+  { id:'jaringan-transmisi',     title:'Jaringan Transmisi Tenaga Listrik', author:'Kemendikbud', edition:'Kelas XI · Semester 3', category:'s4', categoryLabel:'Transmisi', type:'pdf', palette:6, driveUrl:'https://drive.google.com/file/d/0B9EAx-kfFDOpSGNyVGN5Q2puWDA/view' },
 
-  // === ENERGY AUDITOR & KONSERVASI (S6) ===
-  { id:'thumann',   title:'Handbook of Energy Audits', author:'Albert Thumann · Terry Niehus · William J. Younger', edition:'9th Edition', category:'s6', categoryLabel:'Auditor', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'sni-6196',  title:'SNI 6196:2011 — Audit Energi Bangunan Gedung', author:'Badan Standardisasi Nasional', edition:'Edisi 2011', category:'s6', categoryLabel:'Auditor', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'ashrae',    title:'ASHRAE Handbook — Fundamentals', author:'American Society of Heating, Refrigerating and Air-Conditioning Engineers', edition:'2021 Edition', category:'s6', categoryLabel:'Auditor', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'capehart',  title:'Guide to Energy Management', author:'Barney L. Capehart · Wayne C. Turner · William J. Kennedy', edition:'8th Edition', category:'s6', categoryLabel:'Auditor', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== PEMELIHARAAN & PERBAIKAN =====
+  { id:'tek-pemeliharaan-1',     title:'Teknik Pemeliharaan & Perbaikan Sistem Elektronika 1', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 1', category:'pemeliharaan', categoryLabel:'Pemeliharaan & Repair', type:'folder', palette:1, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpWEJkemlXZ01XVms' },
+  { id:'tek-pemeliharaan-2',     title:'Teknik Pemeliharaan & Perbaikan Sistem Elektronika 2', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 2', category:'pemeliharaan', categoryLabel:'Pemeliharaan & Repair', type:'folder', palette:2, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpU1ZSOWtWNjFZTms' },
+  { id:'tek-pemeliharaan-3',     title:'Teknik Pemeliharaan & Perbaikan Sistem Elektronika 3', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 3', category:'pemeliharaan', categoryLabel:'Pemeliharaan & Repair', type:'folder', palette:3, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpOWU3X0hqSVRHWnM' },
+  { id:'perbaikan-peralatan',    title:'Perbaikan Peralatan Listrik', author:'Kemendikbud', edition:'Kelas XII', category:'pemeliharaan', categoryLabel:'Pemeliharaan & Repair', type:'pdf', palette:4, driveUrl:'https://drive.google.com/file/d/1pmOX56K0oftO9FpsVVpPO5dkimhbT0jg/view' },
 
-  // === PEMBANGKITAN & RENEWABLE (S7) ===
-  { id:'masters',   title:'Renewable and Efficient Electric Power Systems', author:'Gilbert M. Masters', edition:'2nd Edition', category:'s7', categoryLabel:'Renewable', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'twidell',   title:'Renewable Energy Resources', author:'John Twidell · Tony Weir', edition:'4th Edition', category:'s7', categoryLabel:'Renewable', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'patel',     title:'Wind and Solar Power Systems', author:'Mukund R. Patel', edition:'3rd Edition', category:'s7', categoryLabel:'Renewable', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'permen-26', title:'Permen ESDM 26/2021 — PLTS Atap', author:'Kementerian ESDM Republik Indonesia', edition:'Edisi 2021', category:'s7', categoryLabel:'Renewable', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'boyle',     title:'Renewable Energy: Power for a Sustainable Future', author:'Godfrey Boyle', edition:'3rd Edition', category:'s7', categoryLabel:'Renewable', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== TELEKOMUNIKASI =====
+  { id:'tek-telekomunikasi-1',   title:'Teknik Telekomunikasi 1', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 1', category:'telekomunikasi', categoryLabel:'Telekomunikasi', type:'folder', palette:5, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpSVplNmIxS0xuMEk' },
+  { id:'tek-telekomunikasi-2',   title:'Teknik Telekomunikasi 2', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 2', category:'telekomunikasi', categoryLabel:'Telekomunikasi', type:'folder', palette:6, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpdi1IN2ctYUdkcHc' },
+  { id:'tek-telekomunikasi-3',   title:'Teknik Telekomunikasi 3', author:'Kemendikbud · Seri SMK', edition:'Folder · Jilid 3', category:'telekomunikasi', categoryLabel:'Telekomunikasi', type:'folder', palette:1, driveUrl:'https://drive.google.com/drive/folders/0B9EAx-kfFDOpbnZjVDVxQy1VVjQ' },
+  { id:'simulasi-komunikasi',    title:'Simulasi Komunikasi Digital (C1)', author:'Kemendikbud', edition:'Kelas X · Bab 1-48', category:'telekomunikasi', categoryLabel:'Telekomunikasi', type:'pdf', palette:2, driveUrl:'https://drive.google.com/file/d/1ThIEVKKd-ApzCIGlCYkUnhSxkAvOoGF8/view' },
 
-  // === K3 LISTRIK & SAFETY (S8) ===
-  { id:'nfpa70e',   title:'NFPA 70E — Standard for Electrical Safety in the Workplace', author:'National Fire Protection Association', edition:'2024 Edition', category:'s8', categoryLabel:'K3 Listrik', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'permenaker-12', title:'Permenaker 12/2015 — K3 Listrik di Tempat Kerja', author:'Kemnaker Republik Indonesia', edition:'Edisi 2015', category:'s8', categoryLabel:'K3 Listrik', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'ieee1584',  title:'IEEE 1584 — Guide for Performing Arc-Flash Hazard Calculations', author:'IEEE Industry Applications Society', edition:'2018 Edition', category:'s8', categoryLabel:'K3 Listrik', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'palmer',    title:'Electrical Safety Code Manual', author:'Kimberley Keller', edition:'1st Edition', category:'s8', categoryLabel:'K3 Listrik', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
-
-  // === STANDAR & REGULASI ===
-  { id:'sni-0225',  title:'SNI 0225 — Persyaratan Umum Instalasi Listrik', author:'Badan Standardisasi Nasional', edition:'Adopsi PUIL 2011', category:'standar', categoryLabel:'Standar', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'uu-30',     title:'UU 30/2009 — Ketenagalistrikan', author:'Republik Indonesia', edition:'Edisi 2009', category:'standar', categoryLabel:'Standar', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'skkni-distribusi', title:'SKKNI Distribusi Tenaga Listrik', author:'Kemnaker Republik Indonesia', edition:'Edisi terkini', category:'standar', categoryLabel:'Standar', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'iec-61936', title:'IEC 61936 — Power Installations Exceeding 1 kV AC', author:'International Electrotechnical Commission', edition:'2nd Edition', category:'standar', categoryLabel:'Standar', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
-
-  // === AI & SMART GRID ===
-  { id:'russell',   title:'Artificial Intelligence: A Modern Approach', author:'Stuart Russell · Peter Norvig', edition:'4th Edition', category:'ai', categoryLabel:'AI / Smart Grid', palette:3, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'momoh',     title:'Smart Grid: Fundamentals of Design and Analysis', author:'James Momoh', edition:'1st Edition', category:'ai', categoryLabel:'AI / Smart Grid', palette:4, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'farhangi',  title:'The Smart Grid: A Pragmatic Approach', author:'Hassan Farhangi', edition:'1st Edition', category:'ai', categoryLabel:'AI / Smart Grid', palette:5, driveUrl:REFERENSI_DRIVE_PARENT },
-
-  // === MANAJEMEN PROYEK & KARIR ===
-  { id:'pmbok',     title:'PMBOK Guide — A Guide to the Project Management Body of Knowledge', author:'Project Management Institute', edition:'7th Edition', category:'manajemen', categoryLabel:'Manajemen', palette:6, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'kode-pii',  title:'Kode Etik Insinyur Indonesia', author:'Persatuan Insinyur Indonesia (PII)', edition:'Edisi terkini', category:'manajemen', categoryLabel:'Manajemen', palette:1, driveUrl:REFERENSI_DRIVE_PARENT },
-  { id:'engineers-career', title:'IEEE Engineer\'s Guide to Career Success', author:'Institute of Electrical and Electronics Engineers', edition:'1st Edition', category:'manajemen', categoryLabel:'Manajemen', palette:2, driveUrl:REFERENSI_DRIVE_PARENT },
+  // ===== KARIR & KEWIRAUSAHAAN =====
+  { id:'pkk-xi',                 title:'Produk Kreatif & Kewirausahaan (PKK)', author:'Kemendikbud · Teknik Ketenagalistrikan', edition:'Kelas XI', category:'karir', categoryLabel:'Karir & Kewirausahaan', type:'pdf', palette:3, driveUrl:'https://drive.google.com/file/d/1NH_8mcp0rCMBW7uccVQnigI7gwJ_DAem/view' },
+  { id:'pkk-xii',                title:'Produk Kreatif & Kewirausahaan (PKK)', author:'Kemendikbud · Teknik Ketenagalistrikan', edition:'Kelas XII', category:'karir', categoryLabel:'Karir & Kewirausahaan', type:'pdf', palette:4, driveUrl:'https://drive.google.com/file/d/18g7qvINIPEiEFTZj3zDytqEKlfX9ZugM/view' },
+  { id:'panduan-pandemi',        title:'Panduan Penyelenggaraan Pembelajaran TA Baru', author:'Kemendikbud · Edisi Pandemi', edition:'Juni 2020', category:'karir', categoryLabel:'Karir & Kewirausahaan', type:'pdf', palette:5, driveUrl:'https://drive.google.com/file/d/1iNlxDA86Kvg0Tl4XFLTTfKHDlxPg6Epm/view' },
+  { id:'modul-pendidikan-extra', title:'Bahan Tambahan Pendidikan Listrik', author:'Materi Pelengkap', edition:'Modul Pelengkap', category:'karir', categoryLabel:'Karir & Kewirausahaan', type:'pdf', palette:6, driveUrl:'https://drive.google.com/file/d/1JIdCE1OBJt16NgR-YMqwg1y9sEs2jBVp/view' },
 ];
 
 const REFERENSI_FILTERS = [
-  { id:'all',       label:'Semua' },
-  { id:'fondasi',   label:'Fondasi' },
-  { id:'s1',        label:'Instalasi Bangunan' },
-  { id:'s2',        label:'Industri & Manufaktur' },
-  { id:'s3',        label:'Distribusi' },
-  { id:'s4',        label:'Transmisi' },
-  { id:'s5',        label:'Energy Analyst' },
-  { id:'s6',        label:'Energy Auditor' },
-  { id:'s7',        label:'Renewable' },
-  { id:'s8',        label:'K3 Listrik' },
-  { id:'standar',   label:'Standar & Regulasi' },
-  { id:'ai',        label:'AI & Smart Grid' },
-  { id:'manajemen', label:'Manajemen' },
+  { id:'all',            label:'Semua' },
+  { id:'fondasi',        label:'Fondasi & Dasar' },
+  { id:'s1',             label:'Instalasi & Pemanfaatan' },
+  { id:'s2',             label:'Industri & Motor' },
+  { id:'otomasi',        label:'Otomasi & Sensor' },
+  { id:'s7',             label:'Pembangkit' },
+  { id:'s4',             label:'Transmisi' },
+  { id:'pemeliharaan',   label:'Pemeliharaan & Repair' },
+  { id:'telekomunikasi', label:'Telekomunikasi' },
+  { id:'karir',          label:'Karir & Kewirausahaan' },
 ];
 
 let _refFilter = 'all';
