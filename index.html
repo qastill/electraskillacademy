@@ -7317,6 +7317,227 @@ button:active:not(:disabled),
 .level-card:active {
   transform: translateY(0px) scale(0.98);
 }
+
+/* ================================================================
+   ELEGANT WELCOME STRIP — refined typography & spacing
+   ================================================================ */
+
+/* Action card — clean, no inline styles */
+.esa-home-action-card {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(212,175,106,0.10), rgba(212,175,106,0.02));
+  border: 1px solid rgba(212,175,106,0.28);
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.esa-home-action-text { flex: 1; min-width: 240px; }
+.esa-home-action-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.esa-home-action-desc {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: rgba(245,240,230,0.92);
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+}
+.esa-home-action-desc strong { color: #f0d080; font-weight: 600; }
+.esa-home-action-btn {
+  background: #c9a96e;
+  color: #0d0f1c;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.esa-home-action-btn:hover {
+  background: #d4b878;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(201, 169, 110, 0.28);
+}
+.esa-home-action-btn span { margin-left: 4px; opacity: 0.7; }
+
+/* Progress bar — elegant */
+.esa-home-progress-bar-wrap {
+  grid-column: 1 / -1;
+  margin-bottom: 18px;
+}
+.esa-home-progress-bar-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: rgba(245,240,230,0.62);
+  margin-bottom: 8px;
+}
+.esa-home-progress-bar-label {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(245,240,230,0.88);
+}
+.esa-home-progress-bar-value {
+  color: rgba(245,240,230,0.7);
+  font-variant-numeric: tabular-nums;
+}
+.esa-home-progress-bar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.esa-home-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a96e, #f0d080);
+  transition: width 0.6s ease;
+  border-radius: 99px;
+}
+
+/* Stats grid — refined */
+.esa-home-progress-right .esa-home-progress-stat {
+  text-align: center;
+  padding: 8px 4px;
+}
+.esa-home-progress-right .esa-home-progress-stat-num {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #f0d080;
+  line-height: 1;
+  letter-spacing: 0.005em;
+}
+.esa-home-progress-right .esa-home-progress-stat-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(245,240,230,0.5);
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+/* Quick links — minimal, professional */
+.esa-home-quick-links {
+  grid-column: 1 / -1;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.esa-home-quick-btn {
+  background: transparent;
+  color: rgba(245,240,230,0.7);
+  border: 1px solid rgba(212,175,106,0.25);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all 0.2s ease;
+}
+.esa-home-quick-btn:hover {
+  color: #f0d080;
+  border-color: rgba(212,175,106,0.6);
+  background: rgba(212,175,106,0.06);
+  transform: translateY(-1px);
+}
+
+/* ================================================================
+   PROFESSIONAL TOUCHES — typography, nav, footer refinement
+   ================================================================ */
+
+/* Nav links — refined typography */
+.nav-right {
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  color: rgba(245,240,230,0.78);
+  transition: color 0.2s ease;
+}
+.nav-right:hover { color: #c9a96e; }
+
+/* Welcome name — display font */
+.esa-home-progress-name {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 28px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.005em !important;
+  color: #f5f0e6 !important;
+  line-height: 1.15 !important;
+  margin-bottom: 12px !important;
+}
+
+/* Welcome eyebrow — premium tracking */
+.esa-home-progress-welcome {
+  font-size: 10px !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase;
+  color: rgba(245,240,230,0.55) !important;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* Tier label — refined */
+.esa-home-progress-tier-label {
+  font-size: 9px !important;
+  letter-spacing: 0.2em !important;
+  color: rgba(245,240,230,0.45) !important;
+  text-transform: uppercase;
+  margin-top: 14px !important;
+  margin-bottom: 6px !important;
+  font-weight: 600;
+}
+
+/* Level mini badges — cleaner */
+.esa-level-mini-badge {
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
+  font-weight: 600 !important;
+  padding: 4px 9px !important;
+  border-radius: 6px !important;
+}
+
+/* Footer professional polish */
+.footer { padding: 48px 24px 36px; border-top: 1px solid rgba(245,240,230,0.06); }
+.footer-inner { max-width: 1280px; margin: 0 auto; }
+.footer-copy { letter-spacing: 0.04em; }
+
+/* Section headers — refined */
+.section-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+/* Mobile welcome strip refinement */
+@media (max-width: 768px) {
+  .esa-home-action-card { padding: 18px 18px; flex-direction: column; align-items: stretch; }
+  .esa-home-action-btn { width: 100%; }
+  .esa-home-progress-right .esa-home-progress-stat-num { font-size: 1.8rem; }
+  .esa-home-quick-btn { font-size: 0.74rem; padding: 7px 12px; flex: 1; min-width: calc(50% - 4px); text-align: center; }
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -18957,71 +19178,67 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         ${hasFullAccess() ? `
           <div class="esa-full-access-badge">🔓 Akses Penuh Aktif</div>
         ` : `
-          <button class="esa-redeem-promo-link" onclick="esaShowActivationModal && esaShowActivationModal()" title="Aktivasi akses penuh">🔒 Aktivasi Akses</button>
+          <button class="esa-redeem-promo-link" onclick="esaShowActivationModal && esaShowActivationModal()" title="Aktivasi akses penuh">Aktivasi Akses</button>
         `}
         <div class="esa-home-progress-level-badges">
           ${LEVEL_ORDER.map(lv => `
-            <span class="esa-level-mini-badge ${earnedLevels[lv] ? 'earned' : ''}" title="${lv === highestLevel ? 'Tier saat ini' : earnedLevels[lv] ? 'Sudah lulus' : 'Belum lulus'}">${earnedLevels[lv] ? '✓' : ''}${lv}</span>
+            <span class="esa-level-mini-badge ${earnedLevels[lv] ? 'earned' : ''}" title="${lv === highestLevel ? 'Tier saat ini' : earnedLevels[lv] ? 'Sudah lulus' : 'Belum lulus'}">${lv}</span>
           `).join('')}
         </div>
       </div>
 
       <div class="esa-home-progress-right">
-        <!-- Action card paling atas — paling penting -->
-        <div class="esa-home-action-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(212,175,106,0.12), rgba(212,175,106,0.04)); border: 1px solid rgba(212,175,106,0.35); border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-          <div style="flex: 1; min-width: 240px;">
-            <div style="font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: #d4af6a; font-weight: 700; margin-bottom: 4px;">${actionTitle}</div>
-            <div style="font-size: 0.92rem; color: rgba(245,240,230,0.85); line-height: 1.5;">${actionDesc}</div>
+        <!-- Action card -->
+        <div class="esa-home-action-card">
+          <div class="esa-home-action-text">
+            <div class="esa-home-action-eyebrow">${actionTitle.replace(/^[^a-zA-Z]+/, '')}</div>
+            <div class="esa-home-action-desc">${actionDesc}</div>
           </div>
-          ${actionBtnFn ? `<button onclick="${actionBtnFn}" style="background: #d4af6a; color: #0d0f1c; border: none; border-radius: 8px; padding: 11px 22px; font-weight: 700; font-size: 0.88rem; cursor: pointer; letter-spacing: 0.04em; white-space: nowrap; transition: all 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">${actionBtnText}</button>` : ''}
+          ${actionBtnFn ? `<button class="esa-home-action-btn" onclick="${actionBtnFn}">${actionBtnText.replace(/[→]/g,'').trim()} <span aria-hidden="true">→</span></button>` : ''}
         </div>
 
-        <!-- Progress bar Level 1 -->
+        <!-- Progress bar -->
         ${totalL1 > 0 && pctL1 < 100 ? `
-        <div style="grid-column: 1 / -1; margin-bottom: 14px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:rgba(245,240,230,0.7);margin-bottom:6px;">
-            <span><strong style="color:#f0d080;">Progress Level 1 — Esensial</strong></span>
-            <span>${passedL1}/${totalL1} modul · <strong style="color:#d4af6a;">${pctL1}%</strong></span>
+        <div class="esa-home-progress-bar-wrap">
+          <div class="esa-home-progress-bar-meta">
+            <span class="esa-home-progress-bar-label">Level 1 — Esensial</span>
+            <span class="esa-home-progress-bar-value">${passedL1} / ${totalL1} modul · ${pctL1}%</span>
           </div>
-          <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;">
-            <div style="height:100%;width:${pctL1}%;background:linear-gradient(90deg,#c9a96e,#f0d080);transition:width 0.6s ease;"></div>
-          </div>
+          <div class="esa-home-progress-bar-track"><div class="esa-home-progress-bar-fill" style="width:${pctL1}%"></div></div>
         </div>` : ''}
         ${totalL1 > 0 && pctL1 >= 100 && totalL2 > 0 && pctL2 < 100 ? `
-        <div style="grid-column: 1 / -1; margin-bottom: 14px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:rgba(245,240,230,0.7);margin-bottom:6px;">
-            <span><strong style="color:#f0d080;">Progress Level 2 — Fundamental</strong></span>
-            <span>${passedL2}/${totalL2} modul · <strong style="color:#d4af6a;">${pctL2}%</strong></span>
+        <div class="esa-home-progress-bar-wrap">
+          <div class="esa-home-progress-bar-meta">
+            <span class="esa-home-progress-bar-label">Level 2 — Fundamental</span>
+            <span class="esa-home-progress-bar-value">${passedL2} / ${totalL2} modul · ${pctL2}%</span>
           </div>
-          <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;">
-            <div style="height:100%;width:${pctL2}%;background:linear-gradient(90deg,#c9a96e,#f0d080);transition:width 0.6s ease;"></div>
-          </div>
+          <div class="esa-home-progress-bar-track"><div class="esa-home-progress-bar-fill" style="width:${pctL2}%"></div></div>
         </div>` : ''}
 
         <!-- Stats grid 4 kolom -->
         <div class="esa-home-progress-stat">
           <div class="esa-home-progress-stat-num">${state.xp}</div>
-          <div class="esa-home-progress-stat-label">⭐ Total XP</div>
+          <div class="esa-home-progress-stat-label">Total XP</div>
         </div>
         <div class="esa-home-progress-stat">
           <div class="esa-home-progress-stat-num">${modulesPassed}</div>
-          <div class="esa-home-progress-stat-label">✓ Modul Lulus</div>
+          <div class="esa-home-progress-stat-label">Modul Lulus</div>
         </div>
         <div class="esa-home-progress-stat">
           <div class="esa-home-progress-stat-num">${certs}</div>
-          <div class="esa-home-progress-stat-label">🏆 Sertifikat</div>
+          <div class="esa-home-progress-stat-label">Sertifikat</div>
         </div>
         <div class="esa-home-progress-stat" title="${streakMsg}">
-          <div class="esa-home-progress-stat-num">${streakIcon} ${streakDays}</div>
-          <div class="esa-home-progress-stat-label">🔥 Hari Beruntun</div>
+          <div class="esa-home-progress-stat-num">${streakDays}</div>
+          <div class="esa-home-progress-stat-label">Hari Beruntun</div>
         </div>
 
         <!-- Quick links -->
-        <div style="grid-column: 1 / -1; margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-          <button onclick="showView('jalur')" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.4);border-radius:6px;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-weight:600;">📚 Semua Jalur</button>
-          <button onclick="showView('sertifikasi')" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.4);border-radius:6px;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-weight:600;">🏆 Sertifikasi BNSP</button>
-          <button onclick="esaShowLeaderboard && esaShowLeaderboard()" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.4);border-radius:6px;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-weight:600;">🏅 Leaderboard</button>
-          <button onclick="esaShowProfile && esaShowProfile()" style="background:transparent;color:#d4af6a;border:1px solid rgba(212,175,106,0.4);border-radius:6px;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-weight:600;">👤 Profil Saya</button>
+        <div class="esa-home-quick-links">
+          <button class="esa-home-quick-btn" onclick="showView('jalur')">Semua Jalur</button>
+          <button class="esa-home-quick-btn" onclick="showView('sertifikasi')">Sertifikasi BNSP</button>
+          <button class="esa-home-quick-btn" onclick="esaShowLeaderboard && esaShowLeaderboard()">Leaderboard</button>
+          <button class="esa-home-quick-btn" onclick="esaShowProfile && esaShowProfile()">Profil Saya</button>
         </div>
       </div>
     `;
@@ -20042,22 +20259,16 @@ else{setTimeout(init,200);}
     var leaderboardLink=document.createElement('a');
     leaderboardLink.className='nav-right';
     leaderboardLink.href='#';
-    leaderboardLink.textContent='🏆 Leaderboard';
+    leaderboardLink.textContent='Leaderboard';
     leaderboardLink.style.cursor='pointer';
     leaderboardLink.onclick=function(e){e.preventDefault(); if(typeof window.esaShowLeaderboard==='function') window.esaShowLeaderboard();};
 
-    // Live Class schedule link — public, lihat jadwal sesi live
-    var liveClassLink=document.createElement('a');
-    liveClassLink.className='nav-right';
-    liveClassLink.href='#';
-    liveClassLink.textContent='🎥 Live Class';
-    liveClassLink.style.cursor='pointer';
-    liveClassLink.onclick=function(e){e.preventDefault(); publicShow('liveclass-schedule');};
+    // Live Class link DIHAPUS dari main nav (tetap accessible via tab di
+    // dalam modul + via footer link). Heading menu lebih clean.
 
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
     navGroup.appendChild(ourTalentLink);
-    navGroup.appendChild(liveClassLink);
     navGroup.appendChild(jobLink);
     if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
