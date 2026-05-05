@@ -6,7 +6,7 @@
 //
 // VERSION bumping akan invalidate cache lama. Bump saat deploy major change.
 
-const VERSION = 'esa-v1.0.8';
+const VERSION = 'esa-v1.0.9';
 const STATIC_CACHE = `${VERSION}-static`;
 const DYNAMIC_CACHE = `${VERSION}-dynamic`;
 
