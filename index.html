@@ -949,38 +949,74 @@ body {
 
 .partners-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 40px;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 32px;
   align-items: center;
+  justify-content: center;
+  max-width: 880px;
+  margin: 0 auto;
 }
 
 .partner-logo {
-  height: 70px;
+  height: 130px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 16px;
+  padding: 20px 24px;
   border: 1px solid rgba(26, 29, 46, 0.08);
   background: white;
-  border-radius: 6px;
-  filter: grayscale(60%);
-  opacity: 0.75;
+  border-radius: 10px;
+  filter: grayscale(40%);
+  opacity: 0.85;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .partner-logo:hover {
   filter: grayscale(0%);
   opacity: 1;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(26, 29, 46, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(26, 29, 46, 0.1);
   border-color: var(--gold);
 }
 
-.partner-logo svg {
-  max-height: 40px;
+.partner-logo img {
+  max-height: 90px;
   max-width: 100%;
   width: auto;
   height: auto;
+  object-fit: contain;
+}
+
+.partner-logo svg {
+  max-height: 60px;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+}
+
+.partner-logo-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  text-align: center;
+  line-height: 1.2;
+}
+.partner-logo-fallback .pl-mark {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #1a1d2e;
+}
+.partner-logo-fallback .pl-sub {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  font-weight: 700;
+  margin-top: 4px;
 }
 
 /* ================================================
@@ -5844,7 +5880,7 @@ body {
   .testimonial-inner { grid-template-columns: 1fr; gap: 40px; }
   .testimonial-content { padding-right: 0; }
   .testimonial-photo { max-width: 100%; margin: 0 auto; }
-  .partners-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .partners-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .jalur-hero-inner { grid-template-columns: 1fr; gap: 40px; }
   .module-list { grid-template-columns: 1fr; }
   .modul-main-inner { grid-template-columns: 1fr; }
@@ -5866,7 +5902,7 @@ body {
     padding-left: 20px; padding-right: 20px;
   }
   .practices-grid, .offers-grid { grid-template-columns: 1fr; }
-  .partners-grid { grid-template-columns: repeat(2, 1fr); }
+  .partners-grid { grid-template-columns: 1fr; max-width: 320px; }
   .footer { padding: 40px 20px 30px; }
   .footer-inner { justify-content: center; text-align: center; }
   .detail-nav { padding: 14px 20px; }
@@ -9563,110 +9599,23 @@ button:active:not(:disabled),
       <h2 class="partners-title reveal">Partner Industri Kami</h2>
       <p class="partners-subtitle reveal">Bersama perusahaan terbaik di sektor energi & industri Indonesia.</p>
       <div class="partners-grid reveal">
-        <!-- PLN - Yellow with red -->
+        <!-- PT PLN (Persero) -->
         <div class="partner-logo" title="PT PLN (Persero)">
-          <svg viewBox="0 0 140 55" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="5" width="136" height="45" fill="#FFD400" rx="3"/>
-            <path d="M38 14 L28 30 L36 30 L31 45 L48 28 L40 28 L44 14 Z" fill="#E4002B"/>
-            <text x="82" y="36" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="24" fill="#E4002B" letter-spacing="1">PLN</text>
-          </svg>
+          <img src="Logo_PLN.png" alt="PT PLN (Persero)" loading="lazy">
         </div>
 
-        <!-- Pertamina - Red corporate -->
-        <div class="partner-logo" title="PT Pertamina (Persero)">
-          <svg viewBox="0 0 160 55" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 16 L22 16 L22 42 L12 42 Z M15 22 L22 22 M15 29 L22 29" stroke="#E4181D" stroke-width="3" fill="none"/>
-            <circle cx="22" cy="22" r="4" fill="#0067B1"/>
-            <circle cx="22" cy="35" r="4" fill="#00A651"/>
-            <text x="95" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="18" fill="#E4181D" letter-spacing="0.5">PERTAMINA</text>
-          </svg>
+        <!-- PT Haleyora Power (PLN Group) -->
+        <div class="partner-logo" title="PT Haleyora Power (PLN Group)">
+          <img src="Logo_Haleyora_Power.png" alt="PT Haleyora Power" loading="lazy">
         </div>
 
-        <!-- Schneider Electric - Green -->
-        <div class="partner-logo" title="Schneider Electric">
-          <svg viewBox="0 0 200 55" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="18" width="22" height="22" fill="#3DCD58"/>
-            <path d="M15 29 L21 23 M21 29 L15 35" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <text x="42" y="28" font-family="Arial, sans-serif" font-weight="700" font-size="14" fill="#3DCD58">Schneider</text>
-            <text x="42" y="42" font-family="Arial, sans-serif" font-weight="400" font-size="11" fill="#6B6D7A" letter-spacing="0.5">Electric</text>
-          </svg>
-        </div>
-
-        <!-- Siemens - Teal -->
-        <div class="partner-logo" title="Siemens AG">
-          <svg viewBox="0 0 170 55" xmlns="http://www.w3.org/2000/svg">
-            <text x="85" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="26" fill="#009999" letter-spacing="2">SIEMENS</text>
-          </svg>
-        </div>
-
-        <!-- ABB - Red -->
-        <div class="partner-logo" title="ABB Ltd">
-          <svg viewBox="0 0 120 55" xmlns="http://www.w3.org/2000/svg">
-            <text x="60" y="40" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="36" fill="#FF000F" letter-spacing="-1">ABB</text>
-          </svg>
-        </div>
-
-        <!-- Medco Power - Navy -->
-        <div class="partner-logo" title="Medco Power Indonesia">
-          <svg viewBox="0 0 160 55" xmlns="http://www.w3.org/2000/svg">
-            <text x="80" y="26" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="20" fill="#0D3B66">MEDCO</text>
-            <line x1="30" y1="30" x2="130" y2="30" stroke="#D2232A" stroke-width="1.5"/>
-            <text x="80" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-weight="500" font-size="11" fill="#6B6D7A" letter-spacing="3">POWER</text>
-          </svg>
-        </div>
-
-        <!-- Indonesia Power - Red/Blue -->
-        <div class="partner-logo" title="PT Indonesia Power">
-          <svg viewBox="0 0 180 55" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 15 L28 15 L28 40 L16 40 Z" fill="#D2232A"/>
-            <path d="M22 18 L22 37 M19 28 L25 28" stroke="white" stroke-width="1.5"/>
-            <text x="108" y="26" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="15" fill="#002B54">Indonesia</text>
-            <text x="108" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="15" fill="#D2232A">Power</text>
-          </svg>
-        </div>
-
-        <!-- PJB - Blue -->
-        <div class="partner-logo" title="PT Pembangkitan Jawa-Bali">
-          <svg viewBox="0 0 130 55" xmlns="http://www.w3.org/2000/svg">
-            <rect x="14" y="14" width="32" height="28" fill="#0054A6" rx="2"/>
-            <text x="30" y="36" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="16" fill="#FFD400">PJB</text>
-            <text x="85" y="26" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="10" fill="#0054A6" letter-spacing="0.5">PEMBANGKITAN</text>
-            <text x="85" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-weight="500" font-size="10" fill="#6B6D7A" letter-spacing="0.5">JAWA-BALI</text>
-          </svg>
-        </div>
-
-        <!-- Wika - Red -->
-        <div class="partner-logo" title="PT Wijaya Karya">
-          <svg viewBox="0 0 140 55" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 18 L28 42 L38 18 L48 42 L58 18" stroke="#D2232A" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <text x="100" y="38" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="24" fill="#D2232A" letter-spacing="1">WIKA</text>
-          </svg>
-        </div>
-
-        <!-- Sucofindo - Orange -->
-        <div class="partner-logo" title="PT Sucofindo (Persero)">
-          <svg viewBox="0 0 180 55" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="22" cy="28" r="11" fill="#E85D3A"/>
-            <text x="22" y="32" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="11" fill="white">S</text>
-            <text x="105" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="17" fill="#E85D3A" letter-spacing="1">SUCOFINDO</text>
-          </svg>
-        </div>
-
-        <!-- Bureau Veritas - Navy -->
-        <div class="partner-logo" title="Bureau Veritas">
-          <svg viewBox="0 0 200 55" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 14 L18 40 L26 40 C32 40 36 37 36 32 C36 29 34 27 31 26 C33 25 34 23 34 20 C34 16 30 14 25 14 Z" fill="#ED1C24"/>
-            <text x="120" y="26" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="13" fill="#002B54" letter-spacing="0.5">BUREAU</text>
-            <text x="120" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="13" fill="#002B54" letter-spacing="0.5">VERITAS</text>
-          </svg>
-        </div>
-
-        <!-- SGS - Orange/Dark -->
-        <div class="partner-logo" title="SGS">
-          <svg viewBox="0 0 130 55" xmlns="http://www.w3.org/2000/svg">
-            <rect x="12" y="12" width="106" height="32" fill="#003DA5" rx="2"/>
-            <text x="65" y="36" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="24" fill="white" letter-spacing="3">SGS</text>
-          </svg>
+        <!-- PT Trimulya -->
+        <div class="partner-logo" title="PT Trimulya">
+          <img src="Logo_Trimulya.png" alt="PT Trimulya" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="partner-logo-fallback" style="display:none;">
+            <div class="pl-mark">PT Trimulya</div>
+            <div class="pl-sub">Mitra Industri</div>
+          </div>
         </div>
       </div>
     </div>
