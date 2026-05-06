@@ -2269,6 +2269,249 @@ body {
   gap: 24px;
 }
 
+/* Electrical Design Calculators */
+.calc-section {
+  padding: 100px 80px;
+  background: var(--cream-warm);
+  border-top: 1px solid var(--line-gold);
+}
+.calc-subgroup-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--navy-deep);
+  margin: 0 0 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-gold);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.calc-subgroup-title .calc-count {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(212,175,106,0.1);
+  border: 1px solid var(--line-gold);
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 56px;
+}
+.calc-card {
+  background: white;
+  border: 1px solid var(--line);
+  padding: 24px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 6px;
+}
+.calc-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(26, 29, 46, 0.08);
+}
+.calc-card-thumb {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: linear-gradient(135deg, #1a1d2e 0%, #2d3148 100%);
+  border-radius: 4px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.calc-card-thumb-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: white;
+  color: var(--navy-deep);
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+.calc-card-thumb svg {
+  width: 60%;
+  height: 60%;
+  opacity: 0.85;
+}
+.calc-card h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--navy-deep);
+  line-height: 1.3;
+  margin: 0 0 8px;
+  min-height: 42px;
+}
+.calc-card p {
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+  margin: 0 0 16px;
+  flex: 1;
+}
+.calc-open-btn {
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.calc-open-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(67, 97, 238, 0.35);
+}
+
+/* Calculator modal form */
+.calc-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  margin-bottom: 24px;
+}
+.calc-form .full { grid-column: 1 / -1; }
+.calc-field { display: flex; flex-direction: column; gap: 6px; }
+.calc-field label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.calc-field input,
+.calc-field select {
+  font-family: var(--sans);
+  font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: white;
+  color: var(--navy-deep);
+}
+.calc-field input:focus,
+.calc-field select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212,175,106,0.12);
+}
+.calc-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.calc-btn-primary {
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.calc-btn-secondary {
+  background: transparent;
+  color: var(--navy-deep);
+  border: 1px solid var(--line);
+  padding: 12px 22px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.calc-result {
+  background: var(--cream-soft);
+  border: 1px solid var(--line-gold);
+  border-radius: 6px;
+  padding: 22px 24px;
+  margin-top: 6px;
+}
+.calc-result-title {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.calc-result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+}
+.calc-result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(26,29,46,0.12);
+}
+.calc-result-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.calc-result-value {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--navy-deep);
+}
+.calc-result-value.highlight { color: #1d4ed8; font-size: 22px; }
+.calc-result-value.warn { color: #b91c1c; }
+.calc-result-value.ok { color: #15803d; }
+.calc-note {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(212,175,106,0.08);
+  border-left: 3px solid var(--gold);
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+.calc-note strong { color: var(--navy-deep); }
+@media (max-width: 700px) {
+  .calc-form { grid-template-columns: 1fr; }
+  .calc-result-grid { grid-template-columns: 1fr; }
+  .calc-section { padding: 60px 24px; }
+}
+
 .simulator-card {
   background: white;
   padding: 36px 32px 32px;
@@ -10344,6 +10587,7 @@ button:active:not(:disabled),
       <p class="labs-hero-desc">Jangan cuma hafal rumus. Coba langsung di simulator interaktif, atau ikut kelas praktikum hands-on di fasilitas partner ESA seluruh Indonesia.</p>
       <div class="labs-hero-tabs">
         <button class="labs-tab-btn active" onclick="labsScrollTo('simulator')">Digital Simulator Lab</button>
+        <button class="labs-tab-btn" onclick="labsScrollTo('design-calc')">Design Calculators</button>
         <button class="labs-tab-btn" onclick="labsScrollTo('praktikum')">Kelas Praktikum</button>
       </div>
     </div>
@@ -10358,6 +10602,23 @@ button:active:not(:disabled),
         <p class="lab-section-sub">Eksperimen langsung di browser. Geser slider, ubah parameter, lihat hasilnya real-time. Semua gratis untuk alumni ESA.</p>
       </div>
       <div class="simulator-grid" id="simulator-grid"></div>
+    </div>
+  </section>
+
+  <!-- Electrical Design Calculators Section -->
+  <section class="calc-section" id="lab-design-calc">
+    <div class="lab-section-inner">
+      <div class="lab-section-header">
+        <div class="lab-section-eyebrow">Electrical Design Calculators</div>
+        <h2 class="lab-section-title">Kalkulator <span class="italic">desain kelistrikan</span></h2>
+        <p class="lab-section-sub">Cable sizing per standar internasional, maximum demand, protection coordination, cable pulling, dan arc flash — sesuai AS/NZS, BS, IEC, dan NFPA.</p>
+      </div>
+
+      <h3 class="calc-subgroup-title">Cable Sizing Calculators <span class="calc-count">5 Standar</span></h3>
+      <div class="calc-grid" id="calc-grid-cable"></div>
+
+      <h3 class="calc-subgroup-title">Additional Calculators <span class="calc-count">4 Tools</span></h3>
+      <div class="calc-grid" id="calc-grid-additional"></div>
     </div>
   </section>
 
@@ -13060,6 +13321,443 @@ const SIMULATORS = [
   { id: 'transformer', category: 'Sistem Tenaga', name: 'Transformer Ratio Calc', desc: 'Hitung rasio transformator step-up / step-down: tegangan, arus, dan jumlah lilitan primer-sekunder.', level: 'Fundamental', duration: '~15 menit', icon: SIM_ICONS.trafo, working: false },
   { id: 'pf-correction', category: 'Kualitas Daya', name: 'Power Factor Correction', desc: 'Simulasi koreksi cos φ dengan capacitor bank industri. Input PF existing + target — dapat kapasitas kVAR.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pf, working: false }
 ];
+
+// ================================================
+// ELECTRICAL DESIGN CALCULATORS
+// ================================================
+const CALC_THUMBS = {
+  cable: '<svg viewBox="0 0 80 60" fill="none"><rect x="10" y="22" width="60" height="16" rx="8" fill="#1a1d2e" stroke="#c9a96e" stroke-width="1.2"/><circle cx="20" cy="30" r="4" fill="#c9a96e"/><circle cx="32" cy="30" r="4" fill="#15803d"/><circle cx="44" cy="30" r="4" fill="#3DCD58"/><circle cx="56" cy="30" r="4" fill="#FFD400"/></svg>',
+  pull: '<svg viewBox="0 0 80 60" fill="none"><path d="M5 30 Q20 30 30 20 Q50 5 60 20 Q70 35 75 30" stroke="#c9a96e" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="5" cy="30" r="4" fill="#c9a96e"/><circle cx="75" cy="30" r="4" fill="#c9a96e"/></svg>',
+  arc: '<svg viewBox="0 0 80 60" fill="none"><path d="M20 50 L40 22 L34 22 L42 6 L34 32 L40 32 Z" fill="#FFD400" stroke="#FF6B00" stroke-width="1.5"/><circle cx="40" cy="30" r="22" stroke="#FF6B00" stroke-width="1" stroke-dasharray="2 2" fill="none"/></svg>',
+  demand: '<svg viewBox="0 0 80 60" fill="none"><rect x="10" y="38" width="10" height="14" fill="#c9a96e"/><rect x="24" y="28" width="10" height="24" fill="#c9a96e"/><rect x="38" y="18" width="10" height="34" fill="#FFD400"/><rect x="52" y="32" width="10" height="20" fill="#c9a96e"/><path d="M5 14 L70 14" stroke="#c9a96e" stroke-width="1" stroke-dasharray="3 3"/></svg>',
+  protect: '<svg viewBox="0 0 80 60" fill="none"><path d="M40 8 L60 18 L60 32 Q60 46 40 52 Q20 46 20 32 L20 18 Z" stroke="#c9a96e" stroke-width="1.5" fill="rgba(201,169,110,0.1)"/><path d="M30 28 L38 36 L52 22" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+};
+const CALCULATORS = [
+  // Cable Sizing — 5 standards
+  { id: 'cs-asnzs-3008-1-1', group: 'cable', standard: 'AS/NZS 3008.1.1', name: 'AS/NZS 3008.1.1 Cable Sizing Calculator', desc: 'Complies with Australian Standards.', thumb: CALC_THUMBS.cable, badge: 'AU' },
+  { id: 'cs-bs-7671', group: 'cable', standard: 'BS 7671', name: 'BS 7671 Cable Sizing Calculator', desc: 'Complies with IET Wiring Regulations.', thumb: CALC_THUMBS.cable, badge: 'UK' },
+  { id: 'cs-asnzs-3008-1-2', group: 'cable', standard: 'AS/NZS 3008.1.2', name: 'AS/NZS 3008.1.2 Cable Sizing Calculator', desc: 'Complies with New Zealand Standards.', thumb: CALC_THUMBS.cable, badge: 'NZ' },
+  { id: 'cs-iec-60364', group: 'cable', standard: 'IEC 60364-5-52', name: 'IEC 60364-5-52 Cable Sizing Calculator', desc: 'Complies with International Standards.', thumb: CALC_THUMBS.cable, badge: 'IEC' },
+  { id: 'cs-nec-70', group: 'cable', standard: 'NFPA 70 (NEC)', name: 'NFPA (70) NEC Cable Sizing Calculator', desc: 'Complies with National Electric Code (US).', thumb: CALC_THUMBS.cable, badge: 'US' },
+  // Additional calculators
+  { id: 'cable-pulling', group: 'add', standard: 'IEEE 1185', name: 'Cable Pulling Calculator', desc: 'Avoid Cable Damage during Installation.', thumb: CALC_THUMBS.pull },
+  { id: 'arc-flash', group: 'add', standard: 'IEEE 1584 / NFPA 70E', name: 'AC/DC Arc Flash Calculator', desc: 'Hazard Levels and Required PPE.', thumb: CALC_THUMBS.arc },
+  { id: 'max-demand', group: 'add', standard: 'AS/NZS 3000', name: 'Maximum Demand Calculator', desc: 'Estimate Peak Realistic Electrical Load.', thumb: CALC_THUMBS.demand },
+  { id: 'protection-coord', group: 'add', standard: 'IEC 60255', name: 'Protection Coordination', desc: 'Verify Selective Tripping of Protective Devices.', thumb: CALC_THUMBS.protect }
+];
+
+function renderCalculators() {
+  const cableGrid = document.getElementById('calc-grid-cable');
+  const addGrid = document.getElementById('calc-grid-additional');
+  if (!cableGrid || !addGrid) return;
+  const cardHTML = (c) => `
+    <div class="calc-card">
+      <div class="calc-card-thumb">
+        ${c.badge ? `<div class="calc-card-thumb-badge">${c.badge}</div>` : ''}
+        ${c.thumb}
+      </div>
+      <h4>${c.name}</h4>
+      <p>${c.desc}</p>
+      <button class="calc-open-btn" onclick="openCalculator('${c.id}')">Open</button>
+    </div>`;
+  cableGrid.innerHTML = CALCULATORS.filter(c => c.group === 'cable').map(cardHTML).join('');
+  addGrid.innerHTML = CALCULATORS.filter(c => c.group === 'add').map(cardHTML).join('');
+}
+
+// =================== Calculator core helpers ===================
+// IEC 60364-5-52 simplified ampacity table — Cu PVC 70°C in conduit, ref method B1
+// Source: IEC 60364-5-52 Annex B, Table B.52.4 (single-core PVC, 2 loaded conductors)
+const _CABLE_SIZES = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240, 300];
+const _AMPACITY = {
+  // method: array indexed same as _CABLE_SIZES
+  // Conduit (B1) - Cu PVC 70°C, 2 loaded conductors
+  'cu-pvc-conduit':   [14.5,19.5,26,34,46,61,80,99,119,151,182,210,240,273,321,367],
+  // Conduit Cu XLPE 90°C
+  'cu-xlpe-conduit':  [19,26,35,46,63,85,112,138,168,213,258,299,344,392,461,530],
+  // On tray Cu PVC
+  'cu-pvc-tray':      [17,23,31,40,54,73,95,117,141,179,216,249,285,324,380,435],
+  // On tray Cu XLPE
+  'cu-xlpe-tray':     [22,30,40,52,71,96,127,157,191,242,293,339,390,445,521,599],
+  // Aluminium PVC conduit
+  'al-pvc-conduit':   [0,15,20,26,36,48,63,77,93,118,142,164,189,215,252,289],
+  // Aluminium XLPE conduit
+  'al-xlpe-conduit':  [0,20,27,35,48,64,84,103,125,158,191,221,255,290,341,392]
+};
+// Resistivity (mΩ/m·mm²) for voltage drop @ 70°C — Cu ~22.5, Al ~36
+const _RHO = { cu: 22.5, al: 36.0 };
+// Ambient temp correction factor (IEC 60364-5-52 Table B.52.14, PVC 70°C)
+const _TEMP_K = { 25:1.06, 30:1.0, 35:0.94, 40:0.87, 45:0.79, 50:0.71, 55:0.61 };
+
+function _pickCableSize(currentReq, ampArr) {
+  for (let i = 0; i < ampArr.length; i++) {
+    if (ampArr[i] >= currentReq) return { csa: _CABLE_SIZES[i], iz: ampArr[i] };
+  }
+  return { csa: _CABLE_SIZES[_CABLE_SIZES.length-1], iz: ampArr[ampArr.length-1], oversize: true };
+}
+function _vdropPercent(I, L, csa, rho, phase) {
+  // Vd = (factor × rho × L × I) / (csa × Vline) × 100
+  // 2 for single-phase (return path), √3 for 3-phase (line-to-line)
+  const factor = phase === '3' ? Math.sqrt(3) : 2;
+  // returns absolute volt drop; caller converts to % vs system voltage
+  return (factor * rho * L * I) / csa / 1000; // V (rho in mΩ/m·mm²)
+}
+
+// Shared cable-sizing UI (used by all 5 standards — math is IEC base, label changes)
+function getCableSizingFormHTML(standardLabel, standardCode, refTable) {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">${standardCode}</div>
+      <h2>Cable Sizing <span class="italic">Calculator</span></h2>
+      <p>Sesuai <strong>${standardLabel}</strong>. Hitung CSA minimum berdasarkan ampacity + voltage drop check.</p>
+    </div>
+    <form class="calc-form" onsubmit="event.preventDefault();calcCableSizing('${standardCode}')">
+      <div class="calc-field"><label>Beban (kW)</label><input type="number" id="cs-power" step="0.1" value="10"></div>
+      <div class="calc-field"><label>Tegangan (V)</label><input type="number" id="cs-voltage" value="400"></div>
+      <div class="calc-field"><label>Sistem</label><select id="cs-phase"><option value="1">1 Fasa</option><option value="3" selected>3 Fasa</option></select></div>
+      <div class="calc-field"><label>Power Factor (cos φ)</label><input type="number" id="cs-pf" step="0.01" min="0.5" max="1" value="0.85"></div>
+      <div class="calc-field"><label>Panjang Kabel (m)</label><input type="number" id="cs-length" value="50"></div>
+      <div class="calc-field"><label>Konduktor</label><select id="cs-conductor"><option value="cu" selected>Tembaga (Cu)</option><option value="al">Aluminium (Al)</option></select></div>
+      <div class="calc-field"><label>Insulasi</label><select id="cs-insulation"><option value="pvc" selected>PVC (70°C)</option><option value="xlpe">XLPE (90°C)</option></select></div>
+      <div class="calc-field"><label>Pemasangan</label><select id="cs-method"><option value="conduit" selected>Dalam Konduit</option><option value="tray">Pada Tray</option></select></div>
+      <div class="calc-field"><label>Suhu Ambien (°C)</label><select id="cs-ambient"><option value="25">25</option><option value="30" selected>30</option><option value="35">35</option><option value="40">40</option><option value="45">45</option><option value="50">50</option></select></div>
+      <div class="calc-field"><label>Voltage Drop Max (%)</label><input type="number" id="cs-vdmax" step="0.5" value="3"></div>
+      <div class="full calc-actions">
+        <button type="submit" class="calc-btn-primary">Hitung CSA</button>
+        <button type="button" class="calc-btn-secondary" onclick="closeSimulator()">Tutup</button>
+      </div>
+    </form>
+    <div id="cs-result"></div>
+    <div class="calc-note"><strong>Referensi:</strong> ${refTable}. Hasil adalah estimasi engineering — verifikasi final dengan tabel standar lengkap & site condition.</div>`;
+}
+function calcCableSizing(standardCode) {
+  const P = parseFloat(document.getElementById('cs-power').value);
+  const V = parseFloat(document.getElementById('cs-voltage').value);
+  const phase = document.getElementById('cs-phase').value;
+  const pf = parseFloat(document.getElementById('cs-pf').value);
+  const L = parseFloat(document.getElementById('cs-length').value);
+  const cond = document.getElementById('cs-conductor').value;
+  const ins = document.getElementById('cs-insulation').value;
+  const method = document.getElementById('cs-method').value;
+  const ambient = parseInt(document.getElementById('cs-ambient').value);
+  const vdMax = parseFloat(document.getElementById('cs-vdmax').value);
+  // Compute load current
+  const Ib = phase === '3' ? (P * 1000) / (Math.sqrt(3) * V * pf) : (P * 1000) / (V * pf);
+  // Apply ambient correction
+  const k = _TEMP_K[ambient] || 1.0;
+  const Iz_required = Ib / k;
+  // Lookup ampacity
+  const tableKey = `${cond}-${ins}-${method}`;
+  const ampArr = _AMPACITY[tableKey];
+  if (!ampArr) return;
+  const ampPick = _pickCableSize(Iz_required, ampArr);
+  // Check voltage drop, escalate CSA until within limit
+  const rho = _RHO[cond];
+  let pickIdx = _CABLE_SIZES.indexOf(ampPick.csa);
+  let vdAbs, vdPct;
+  while (pickIdx < _CABLE_SIZES.length) {
+    const csa = _CABLE_SIZES[pickIdx];
+    vdAbs = _vdropPercent(Ib, L, csa, rho, phase);
+    vdPct = (vdAbs / V) * 100;
+    if (vdPct <= vdMax) break;
+    pickIdx++;
+  }
+  const finalCSA = _CABLE_SIZES[Math.min(pickIdx, _CABLE_SIZES.length-1)];
+  const finalIz = ampArr[Math.min(pickIdx, ampArr.length-1)];
+  const limitedBy = (finalCSA > ampPick.csa) ? 'Voltage Drop' : 'Ampacity';
+  document.getElementById('cs-result').innerHTML = `
+    <div class="calc-result">
+      <div class="calc-result-title">Hasil Perhitungan · ${standardCode}</div>
+      <div class="calc-result-grid">
+        <div class="calc-result-item"><span class="calc-result-label">Arus Beban (Ib)</span><span class="calc-result-value">${Ib.toFixed(1)} A</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Iz Required (after derating)</span><span class="calc-result-value">${Iz_required.toFixed(1)} A</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">CSA Minimum (Ampacity)</span><span class="calc-result-value">${ampPick.csa} mm²</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">CSA Final (after Vd check)</span><span class="calc-result-value highlight">${finalCSA} mm²</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Voltage Drop</span><span class="calc-result-value ${vdPct<=vdMax?'ok':'warn'}">${vdPct.toFixed(2)} % (${vdAbs.toFixed(2)} V)</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Cable Ampacity (Iz)</span><span class="calc-result-value">${finalIz} A</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Limited By</span><span class="calc-result-value">${limitedBy}</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Derating (Ambient ${ambient}°C)</span><span class="calc-result-value">${k}</span></div>
+      </div>
+    </div>`;
+}
+
+// =================== Cable Pulling Calculator ===================
+function getCablePullingHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">IEEE 1185 / NEC 300.5</div>
+      <h2>Cable Pulling <span class="italic">Tension Calculator</span></h2>
+      <p>Hitung tension maksimum saat menarik kabel di konduit. Hindari damage karena over-tension.</p>
+    </div>
+    <form class="calc-form" onsubmit="event.preventDefault();calcCablePulling()">
+      <div class="calc-field"><label>Berat Kabel (kg/m)</label><input type="number" id="cp-weight" step="0.1" value="2.5"></div>
+      <div class="calc-field"><label>Panjang Tarikan (m)</label><input type="number" id="cp-length" value="100"></div>
+      <div class="calc-field"><label>Koefisien Friksi (μ)</label><select id="cp-mu"><option value="0.5">0.5 — Konduit kering</option><option value="0.35" selected>0.35 — Dengan lubrikan</option><option value="0.2">0.2 — Lubrikan premium</option></select></div>
+      <div class="calc-field"><label>Jumlah Bend (90°)</label><input type="number" id="cp-bends" min="0" value="2"></div>
+      <div class="calc-field"><label>Tegangan Awal T₀ (N)</label><input type="number" id="cp-t0" value="0"></div>
+      <div class="calc-field"><label>Diameter Kabel (mm)</label><input type="number" id="cp-od" value="25"></div>
+      <div class="full calc-actions">
+        <button type="submit" class="calc-btn-primary">Hitung Tension</button>
+        <button type="button" class="calc-btn-secondary" onclick="closeSimulator()">Tutup</button>
+      </div>
+    </form>
+    <div id="cp-result"></div>
+    <div class="calc-note"><strong>Formula:</strong> T = T₀·e^(μθ) + μ·w·L·g (per bend & straight section). Sidewall pressure = T/r. <strong>Limit:</strong> Max tension biasanya 0.008 × CSA (mm²) × n (kN). Sidewall pressure < 7000 N/m untuk kabel standard.</div>`;
+}
+function calcCablePulling() {
+  const w = parseFloat(document.getElementById('cp-weight').value);
+  const L = parseFloat(document.getElementById('cp-length').value);
+  const mu = parseFloat(document.getElementById('cp-mu').value);
+  const bends = parseInt(document.getElementById('cp-bends').value);
+  const T0 = parseFloat(document.getElementById('cp-t0').value);
+  const od = parseFloat(document.getElementById('cp-od').value);
+  const g = 9.81;
+  // Straight section tension
+  const straightT = mu * w * g * L;
+  // Each 90° bend multiplies tension by e^(μ·π/2)
+  const bendFactor = Math.exp(mu * Math.PI / 2);
+  let T = T0 + straightT;
+  for (let i = 0; i < bends; i++) T = T * bendFactor;
+  // Sidewall pressure (estimate at last bend, R = 12×OD typical bend radius)
+  const R = (12 * od) / 1000; // m
+  const swp = T / R; // N/m
+  const swpOK = swp <= 7000;
+  document.getElementById('cp-result').innerHTML = `
+    <div class="calc-result">
+      <div class="calc-result-title">Hasil Pulling Tension</div>
+      <div class="calc-result-grid">
+        <div class="calc-result-item"><span class="calc-result-label">Tension (Straight)</span><span class="calc-result-value">${straightT.toFixed(0)} N</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Bend Multiplier</span><span class="calc-result-value">${bendFactor.toFixed(3)}× per bend</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Total Pulling Tension</span><span class="calc-result-value highlight">${T.toFixed(0)} N (${(T/9.81).toFixed(1)} kgf)</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Bending Radius (12×OD)</span><span class="calc-result-value">${(R*1000).toFixed(0)} mm</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Sidewall Pressure</span><span class="calc-result-value ${swpOK?'ok':'warn'}">${swp.toFixed(0)} N/m</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Status SWP (Limit 7000)</span><span class="calc-result-value ${swpOK?'ok':'warn'}">${swpOK?'AMAN':'OVER LIMIT'}</span></div>
+      </div>
+    </div>`;
+}
+
+// =================== AC/DC Arc Flash Calculator ===================
+function getArcFlashHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">IEEE 1584 / NFPA 70E</div>
+      <h2>AC/DC Arc Flash <span class="italic">Calculator</span></h2>
+      <p>Estimasi incident energy + arc flash boundary + PPE category sesuai NFPA 70E.</p>
+    </div>
+    <form class="calc-form" onsubmit="event.preventDefault();calcArcFlash()">
+      <div class="calc-field"><label>Sistem</label><select id="af-type"><option value="ac" selected>AC (IEEE 1584)</option><option value="dc">DC (Stokes-Oppenheim)</option></select></div>
+      <div class="calc-field"><label>Tegangan Sistem (V)</label><input type="number" id="af-voltage" value="480"></div>
+      <div class="calc-field"><label>Arus Hubung Singkat (kA)</label><input type="number" id="af-isc" step="0.1" value="25"></div>
+      <div class="calc-field"><label>Clearing Time (s)</label><input type="number" id="af-time" step="0.01" value="0.2"></div>
+      <div class="calc-field"><label>Working Distance (mm)</label><input type="number" id="af-distance" value="455"></div>
+      <div class="calc-field"><label>Gap (mm)</label><input type="number" id="af-gap" value="32"></div>
+      <div class="full calc-actions">
+        <button type="submit" class="calc-btn-primary">Hitung Arc Flash</button>
+        <button type="button" class="calc-btn-secondary" onclick="closeSimulator()">Tutup</button>
+      </div>
+    </form>
+    <div id="af-result"></div>
+    <div class="calc-note"><strong>AC:</strong> IEEE 1584-2018 simplified empirical model. <strong>DC:</strong> Stokes-Oppenheim Vmax² formula. PPE category per NFPA 70E Table 130.7(C)(15)(c).</div>`;
+}
+function _ppeCategory(E) {
+  if (E < 1.2) return { cat: '0', desc: 'No FR clothing required (E < 1.2 cal/cm²)' };
+  if (E < 4)   return { cat: '1', desc: 'Arc-rated 4 cal/cm² FR shirt + pants' };
+  if (E < 8)   return { cat: '2', desc: 'Arc-rated 8 cal/cm² FR clothing + face shield' };
+  if (E < 25)  return { cat: '3', desc: 'Arc-rated 25 cal/cm² flash suit + hood' };
+  if (E < 40)  return { cat: '4', desc: 'Arc-rated 40 cal/cm² flash suit + hood' };
+  return { cat: 'DANGER', desc: 'E > 40 cal/cm² — NO LIVE WORK ALLOWED' };
+}
+function calcArcFlash() {
+  const type = document.getElementById('af-type').value;
+  const V = parseFloat(document.getElementById('af-voltage').value);
+  const Isc = parseFloat(document.getElementById('af-isc').value);
+  const t = parseFloat(document.getElementById('af-time').value);
+  const D = parseFloat(document.getElementById('af-distance').value);
+  const gap = parseFloat(document.getElementById('af-gap').value);
+  let E, Iarc, AFB;
+  if (type === 'ac') {
+    // IEEE 1584-2018 simplified — VCB enclosure, empirical for V<1kV
+    // log(Iarc) = K + 0.662·log(Isc) + 0.0966·V/1000 + 0.000526·G + 0.5588·V/1000·log(Isc) - 0.00304·G·log(Isc)
+    const lgIsc = Math.log10(Isc);
+    const K = -0.153;
+    const lgIarc = K + 0.662*lgIsc + 0.0966*(V/1000) + 0.000526*gap + 0.5588*(V/1000)*lgIsc - 0.00304*gap*lgIsc;
+    Iarc = Math.pow(10, lgIarc);
+    // Normalized energy En (J/cm²) — using simplified VCB box model
+    const lgEn = -0.555 + 1.081*Math.log10(Iarc) + 0.0011*gap;
+    const En = Math.pow(10, lgEn);
+    // Convert to incident energy at distance D, time t (factor 4.184 J=1 cal)
+    // E (cal/cm²) = 4.184·Cf·En·(t/0.2)·(610^x/D^x)/4.184  with x=1.473 for VCB <1kV
+    const x = 1.473;
+    const Cf = 1.5; // V<1kV
+    const E_Jcm2 = Cf * En * (t/0.2) * Math.pow(610/D, x);
+    E = E_Jcm2 / 4.184;
+    // Arc flash boundary — distance where E = 1.2 cal/cm²
+    AFB = 610 * Math.pow((Cf * En * (t/0.2)) / (1.2*4.184), 1/x);
+  } else {
+    // DC — Stokes-Oppenheim simplified: E (cal/cm²) ≈ 0.01 × V² × t / D²  (D in cm)
+    const Dcm = D / 10;
+    Iarc = Isc * 0.5; // estimate arc current ~50% of bolted
+    E = 0.01 * Math.pow(V, 2) * t / Math.pow(Dcm, 2) / 1000;
+    AFB = Math.sqrt(0.01 * Math.pow(V,2) * t / 1.2 / 1000) * 10; // mm
+  }
+  const ppe = _ppeCategory(E);
+  document.getElementById('af-result').innerHTML = `
+    <div class="calc-result">
+      <div class="calc-result-title">Hasil Arc Flash · ${type.toUpperCase()}</div>
+      <div class="calc-result-grid">
+        <div class="calc-result-item"><span class="calc-result-label">Arc Current</span><span class="calc-result-value">${Iarc.toFixed(2)} kA</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Incident Energy</span><span class="calc-result-value highlight">${E.toFixed(2)} cal/cm²</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Arc Flash Boundary</span><span class="calc-result-value">${AFB.toFixed(0)} mm</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">PPE Category</span><span class="calc-result-value ${E>40?'warn':E<1.2?'ok':''}">CAT ${ppe.cat}</span></div>
+        <div class="calc-result-item full" style="grid-column:1/-1;"><span class="calc-result-label">PPE Required</span><span class="calc-result-value" style="font-size:14px;">${ppe.desc}</span></div>
+      </div>
+    </div>`;
+}
+
+// =================== Maximum Demand Calculator ===================
+function getMaxDemandHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">AS/NZS 3000 Tab C1</div>
+      <h2>Maximum Demand <span class="italic">Calculator</span></h2>
+      <p>Estimasi peak demand realistis untuk sizing main switch & supply.</p>
+    </div>
+    <form class="calc-form" onsubmit="event.preventDefault();calcMaxDemand()">
+      <div class="calc-field"><label>Lighting (W)</label><input type="number" id="md-light" value="1500"></div>
+      <div class="calc-field"><label>Jumlah GPO (Stop Kontak)</label><input type="number" id="md-gpo" value="20"></div>
+      <div class="calc-field"><label>AC / Pendingin (kW)</label><input type="number" id="md-ac" step="0.1" value="3.5"></div>
+      <div class="calc-field"><label>Water Heating (kW)</label><input type="number" id="md-wh" step="0.1" value="2.4"></div>
+      <div class="calc-field"><label>Cooking (kW)</label><input type="number" id="md-cook" step="0.1" value="6"></div>
+      <div class="calc-field"><label>Motor / Pump (kW)</label><input type="number" id="md-motor" step="0.1" value="1.5"></div>
+      <div class="calc-field"><label>Tegangan (V)</label><input type="number" id="md-voltage" value="230"></div>
+      <div class="calc-field"><label>Sistem</label><select id="md-phase"><option value="1" selected>1 Fasa</option><option value="3">3 Fasa</option></select></div>
+      <div class="full calc-actions">
+        <button type="submit" class="calc-btn-primary">Hitung Demand</button>
+        <button type="button" class="calc-btn-secondary" onclick="closeSimulator()">Tutup</button>
+      </div>
+    </form>
+    <div id="md-result"></div>
+    <div class="calc-note"><strong>Diversity factors</strong> (AS/NZS 3000 Tab C1, residential): Lighting ×0.75, GPO 100W per outlet ×0.75 first 20 + ×0.5 sisa, AC ×1.0, WH ×0.5 (storage), Cooking 50% first 7.2 kW + 25% sisa, Motor ×1.25 starting.</div>`;
+}
+function calcMaxDemand() {
+  const L = parseFloat(document.getElementById('md-light').value);
+  const gpo = parseInt(document.getElementById('md-gpo').value);
+  const ac = parseFloat(document.getElementById('md-ac').value)*1000;
+  const wh = parseFloat(document.getElementById('md-wh').value)*1000;
+  const cook = parseFloat(document.getElementById('md-cook').value)*1000;
+  const motor = parseFloat(document.getElementById('md-motor').value)*1000;
+  const V = parseFloat(document.getElementById('md-voltage').value);
+  const phase = document.getElementById('md-phase').value;
+  // Apply diversity (AS/NZS 3000 simplified residential)
+  const dL = L * 0.75;
+  const gpoBase = Math.min(gpo,20)*100*0.75 + Math.max(0,gpo-20)*100*0.5;
+  const dAC = ac;
+  const dWH = wh * 0.5;
+  const dCook = cook <= 7200 ? cook*0.5 : (7200*0.5 + (cook-7200)*0.25);
+  const dMotor = motor * 1.25;
+  const totalW = dL + gpoBase + dAC + dWH + dCook + dMotor;
+  const totalKVA = totalW / 1000 / 0.85; // assume PF 0.85
+  const I = phase === '3' ? totalW / (Math.sqrt(3)*V*0.85) : totalW / (V*0.85);
+  // Recommend main switch size (next standard: 32, 50, 63, 80, 100, 125, 160, 200, 250)
+  const ms = [32,50,63,80,100,125,160,200,250,315,400,500,630];
+  const recMS = ms.find(s => s >= I*1.1) || 800;
+  document.getElementById('md-result').innerHTML = `
+    <div class="calc-result">
+      <div class="calc-result-title">Hasil Maximum Demand · AS/NZS 3000</div>
+      <div class="calc-result-grid">
+        <div class="calc-result-item"><span class="calc-result-label">Lighting (after diversity)</span><span class="calc-result-value">${dL.toFixed(0)} W</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">GPO (after diversity)</span><span class="calc-result-value">${gpoBase.toFixed(0)} W</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">AC + Pendingin</span><span class="calc-result-value">${dAC.toFixed(0)} W</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Water Heating (×0.5)</span><span class="calc-result-value">${dWH.toFixed(0)} W</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Cooking (after diversity)</span><span class="calc-result-value">${dCook.toFixed(0)} W</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Motor (×1.25 start)</span><span class="calc-result-value">${dMotor.toFixed(0)} W</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Total Demand</span><span class="calc-result-value highlight">${totalKVA.toFixed(2)} kVA</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Arus Demand</span><span class="calc-result-value">${I.toFixed(1)} A</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Rekomendasi Main Switch</span><span class="calc-result-value ok">${recMS} A</span></div>
+      </div>
+    </div>`;
+}
+
+// =================== Protection Coordination Calculator ===================
+function getProtectionHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">IEC 60255-151 / IEEE C37.112</div>
+      <h2>Protection <span class="italic">Coordination Check</span></h2>
+      <p>Verifikasi selectivity antara dua relay/breaker pada arus gangguan tertentu.</p>
+    </div>
+    <form class="calc-form" onsubmit="event.preventDefault();calcProtection()">
+      <div class="calc-field full"><label style="color:#1d4ed8;font-weight:800;">UPSTREAM (Main)</label></div>
+      <div class="calc-field"><label>Curve Type</label><select id="up-curve"><option value="si" selected>Standard Inverse (SI)</option><option value="vi">Very Inverse (VI)</option><option value="ei">Extremely Inverse (EI)</option></select></div>
+      <div class="calc-field"><label>Pickup Current Is (A)</label><input type="number" id="up-is" value="200"></div>
+      <div class="calc-field"><label>TMS / Time Dial</label><input type="number" id="up-tms" step="0.05" value="0.4"></div>
+      <div class="calc-field"><label>CT Ratio</label><input type="number" id="up-ct" value="200"></div>
+      <div class="calc-field full"><label style="color:#15803d;font-weight:800;">DOWNSTREAM (Feeder)</label></div>
+      <div class="calc-field"><label>Curve Type</label><select id="dn-curve"><option value="si" selected>Standard Inverse (SI)</option><option value="vi">Very Inverse (VI)</option><option value="ei">Extremely Inverse (EI)</option></select></div>
+      <div class="calc-field"><label>Pickup Current Is (A)</label><input type="number" id="dn-is" value="100"></div>
+      <div class="calc-field"><label>TMS / Time Dial</label><input type="number" id="dn-tms" step="0.05" value="0.15"></div>
+      <div class="calc-field"><label>CT Ratio</label><input type="number" id="dn-ct" value="100"></div>
+      <div class="calc-field full"><label>Arus Gangguan If di Downstream (A)</label><input type="number" id="fault-i" value="3000"></div>
+      <div class="full calc-actions">
+        <button type="submit" class="calc-btn-primary">Cek Diskriminasi</button>
+        <button type="button" class="calc-btn-secondary" onclick="closeSimulator()">Tutup</button>
+      </div>
+    </form>
+    <div id="prot-result"></div>
+    <div class="calc-note"><strong>IEC 60255 IDMT:</strong> t = TMS × k / ((I/Is)^α − 1). SI: k=0.14, α=0.02 · VI: k=13.5, α=1 · EI: k=80, α=2. <strong>Grading margin minimum:</strong> 0.3 s untuk relay digital, 0.4 s untuk elektromekanik.</div>`;
+}
+function _idmtTime(I, Is, tms, curve) {
+  const params = { si:{k:0.14,a:0.02}, vi:{k:13.5,a:1}, ei:{k:80,a:2} }[curve];
+  if (I <= Is) return Infinity;
+  return (tms * params.k) / (Math.pow(I/Is, params.a) - 1);
+}
+function calcProtection() {
+  const upC = document.getElementById('up-curve').value;
+  const upIs = parseFloat(document.getElementById('up-is').value);
+  const upT = parseFloat(document.getElementById('up-tms').value);
+  const dnC = document.getElementById('dn-curve').value;
+  const dnIs = parseFloat(document.getElementById('dn-is').value);
+  const dnT = parseFloat(document.getElementById('dn-tms').value);
+  const If = parseFloat(document.getElementById('fault-i').value);
+  const tDn = _idmtTime(If, dnIs, dnT, dnC);
+  const tUp = _idmtTime(If, upIs, upT, upC);
+  const margin = tUp - tDn;
+  const ok = margin >= 0.3;
+  document.getElementById('prot-result').innerHTML = `
+    <div class="calc-result">
+      <div class="calc-result-title">Hasil Coordination @ If = ${If} A</div>
+      <div class="calc-result-grid">
+        <div class="calc-result-item"><span class="calc-result-label">t Downstream</span><span class="calc-result-value">${isFinite(tDn)?tDn.toFixed(3)+' s':'Tidak Trip'}</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">t Upstream</span><span class="calc-result-value">${isFinite(tUp)?tUp.toFixed(3)+' s':'Tidak Trip'}</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Grading Margin</span><span class="calc-result-value ${ok?'ok':'warn'}">${isFinite(margin)?margin.toFixed(3)+' s':'N/A'}</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Status Diskriminasi</span><span class="calc-result-value ${ok?'ok':'warn'}">${ok?'SELEKTIF (≥ 0.3 s)':'TIDAK SELEKTIF'}</span></div>
+        <div class="calc-result-item full" style="grid-column:1/-1;"><span class="calc-result-label">Rekomendasi</span><span class="calc-result-value" style="font-size:13px;">${ok?'Koordinasi OK — downstream trip dulu, upstream backup.':'Naikkan TMS upstream atau turunkan TMS downstream agar margin ≥ 0.3 s.'}</span></div>
+      </div>
+    </div>`;
+}
+
+// Open calculator → reuse sim-modal infrastructure
+function openCalculator(calcId) {
+  const content = document.getElementById('sim-modal-content');
+  const modal = document.getElementById('sim-modal');
+  if (!content || !modal) return;
+  const c = CALCULATORS.find(x => x.id === calcId);
+  if (!c) return;
+  if (c.group === 'cable') {
+    const refMap = {
+      'cs-asnzs-3008-1-1': 'AS/NZS 3008.1.1:2017 Table 3 (Cu) / Table 4 (Al)',
+      'cs-bs-7671':        'BS 7671:2018+A2:2022 Appendix 4 Table 4D1A/4E1A',
+      'cs-asnzs-3008-1-2': 'AS/NZS 3008.1.2:2017 Table 3 (Cu) / Table 4 (Al)',
+      'cs-iec-60364':      'IEC 60364-5-52:2009 Annex B Table B.52.4',
+      'cs-nec-70':         'NFPA 70 NEC 2023 Table 310.16'
+    };
+    content.innerHTML = getCableSizingFormHTML(c.standard, c.standard, refMap[c.id]);
+  } else if (calcId === 'cable-pulling') content.innerHTML = getCablePullingHTML();
+  else if (calcId === 'arc-flash') content.innerHTML = getArcFlashHTML();
+  else if (calcId === 'max-demand') content.innerHTML = getMaxDemandHTML();
+  else if (calcId === 'protection-coord') content.innerHTML = getProtectionHTML();
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 
 const PRAKTIKUM_CLASSES = [
   { jalur: 'S1', jalurName: 'Instalasi Bangunan', name: 'Wiring Instalasi Rumah Tinggal', desc: 'Praktikum workshop: pasang lampu, stop kontak, saklar tukar, MCB box, grounding sesuai PUIL untuk rumah tipe 36-70.', location: 'Jakarta · Bandung · Surabaya', duration: '3 hari · 24 jam', schedule: 'Weekend · tiap bulan', price: 'Rp 1.500.000', includes: 'Toolkit + Material + Sertifikat', photo: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80' },
@@ -18728,6 +19426,7 @@ function observeReveals() {
 renderPractices();
 renderCerts();
 renderSimulators();
+renderCalculators();
 renderPraktikum();
 renderTalents();
 observeReveals();
