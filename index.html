@@ -7815,6 +7815,68 @@ button:active:not(:disabled),
   padding: 8px 4px 24px;
 }
 
+/* Gallery — workshop & training documentation */
+.esa-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+.esa-gallery-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,175,106,0.18);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s;
+}
+.esa-gallery-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212,175,106,0.55);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45), 0 4px 12px rgba(212,175,106,0.12);
+}
+.esa-gallery-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  background-color: #1a1d2e;
+  background-repeat: no-repeat;
+}
+.esa-gallery-meta {
+  padding: 18px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.esa-gallery-batch {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+}
+.esa-gallery-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f5f0e6;
+  line-height: 1.3;
+}
+.esa-gallery-desc {
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  color: rgba(245,240,230,0.7);
+  line-height: 1.55;
+  margin-top: 4px;
+}
+@media (max-width: 600px) {
+  .esa-gallery-grid { grid-template-columns: 1fr; gap: 18px; }
+}
+
 .esa-book {
   display: flex;
   flex-direction: column;
@@ -9627,6 +9689,7 @@ button:active:not(:disabled),
         <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
           <a onclick="showView('about')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Tentang Kami</a>
           <a onclick="showView('referensi')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Referensi Buku</a>
+          <a onclick="showView('gallery')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Gallery</a>
           <a onclick="showView('faq')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">FAQ</a>
           <a onclick="showView('liveclass-schedule')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Live Class</a>
           <a href="/verify.html" style="color:rgba(245,240,230,0.7);text-decoration:none;">Verifikasi Sertifikat</a>
@@ -10549,6 +10612,131 @@ button:active:not(:disabled),
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
           Daftar Notifikasi WA
         </a>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ========================================================== -->
+<!-- VIEW: GALLERY — Dokumentasi Workshop & Training            -->
+<!-- ========================================================== -->
+<div class="view" id="view-gallery">
+  <div class="detail-nav">
+    <a class="detail-nav-logo" onclick="showView('home')" style="cursor:pointer;">
+      <div class="detail-nav-logo-mark">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+          <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+          <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+        </svg>
+      </div>
+      <div class="detail-nav-logo-text">Electra<br><span class="line-2">Skill Academy</span></div>
+    </a>
+    <div class="detail-nav-center">Gallery</div>
+    <div class="detail-nav-right">
+      <button class="detail-nav-back" onclick="showView('home')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kembali
+      </button>
+    </div>
+  </div>
+
+  <section style="background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 50%, #0d0f1c 100%); padding: 72px 0 96px; min-height: 100vh;">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 0 32px;">
+
+      <!-- Header -->
+      <div style="text-align: center; margin-bottom: 56px;">
+        <div class="section-eyebrow" style="margin-bottom: 18px;">— Dokumentasi Kegiatan —</div>
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 600; color: #f5f0e6; margin: 0 0 20px; letter-spacing: 0.005em; line-height: 1.15;">
+          Gallery <span style="font-style: italic; color: #d4af6a;">Workshop &amp; Training</span>
+        </h1>
+        <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; color: rgba(245,240,230,0.78); max-width: 720px; margin: 0 auto; line-height: 1.7; font-style: italic; font-weight: 400;">
+          Jejak kegiatan pelatihan, workshop, dan akademi yang sudah kami selenggarakan bersama praktisi PLN dan komunitas teknisi listrik.
+        </p>
+      </div>
+
+      <!-- Section: P2TL Academy -->
+      <div style="margin-bottom: 56px;">
+        <div style="display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:8px;">
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 600; color: #f5f0e6; margin: 0; letter-spacing: 0.005em;">
+            P2TL <span style="font-style: italic; color: #d4af6a;">Academy</span>
+          </h2>
+          <span style="font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(245,240,230,0.55); font-weight: 600;">3 Batch · Workshop Penertiban Pemakaian Tenaga Listrik</span>
+        </div>
+        <p style="color: rgba(245,240,230,0.7); font-size: 0.95rem; line-height: 1.7; margin: 0 0 24px; max-width: 760px;">
+          Pelatihan praktisi P2TL — pemeriksaan APP, identifikasi pelanggaran, perhitungan tagihan susulan, sampai standar SOP lapangan. Diikuti tim Yantek dan petugas P2TL dari berbagai unit PLN.
+        </p>
+
+        <div class="esa-gallery-grid">
+          <a class="esa-gallery-card" href="p2tl%20academy.jpeg" target="_blank" rel="noopener">
+            <div class="esa-gallery-photo" style="background-image: url('p2tl%20academy.jpeg');"></div>
+            <div class="esa-gallery-meta">
+              <div class="esa-gallery-batch">P2TL Academy · Batch 1</div>
+              <div class="esa-gallery-title">Workshop Dasar P2TL</div>
+              <div class="esa-gallery-desc">Pengenalan regulasi P2TL, alur pemeriksaan, dan teknik investigasi awal.</div>
+            </div>
+          </a>
+
+          <a class="esa-gallery-card" href="p2tl%20academy%202.jpeg" target="_blank" rel="noopener">
+            <div class="esa-gallery-photo" style="background-image: url('p2tl%20academy%202.jpeg');"></div>
+            <div class="esa-gallery-meta">
+              <div class="esa-gallery-batch">P2TL Academy · Batch 2</div>
+              <div class="esa-gallery-title">Praktik Lapangan &amp; Pemeriksaan APP</div>
+              <div class="esa-gallery-desc">Simulasi pemeriksaan kWh meter, segel, dan deteksi penyimpangan instalasi.</div>
+            </div>
+          </a>
+
+          <a class="esa-gallery-card" href="p2tl%20academy%203.jpeg" target="_blank" rel="noopener">
+            <div class="esa-gallery-photo" style="background-image: url('p2tl%20academy%203.jpeg');"></div>
+            <div class="esa-gallery-meta">
+              <div class="esa-gallery-batch">P2TL Academy · Batch 3</div>
+              <div class="esa-gallery-title">Tagihan Susulan &amp; Penyelesaian Kasus</div>
+              <div class="esa-gallery-desc">Studi kasus perhitungan TS, berita acara, dan komunikasi dengan pelanggan.</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Section: Akademi Pelayanan Teknik (Yantek) -->
+      <div style="margin-bottom: 40px;">
+        <div style="display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:8px;">
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 600; color: #f5f0e6; margin: 0; letter-spacing: 0.005em;">
+            Akademi <span style="font-style: italic; color: #d4af6a;">Pelayanan Teknik</span>
+          </h2>
+          <span style="font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(245,240,230,0.55); font-weight: 600;">Yantek · Penanganan Gangguan Distribusi</span>
+        </div>
+        <p style="color: rgba(245,240,230,0.7); font-size: 0.95rem; line-height: 1.7; margin: 0 0 24px; max-width: 760px;">
+          Pelatihan tim Pelayanan Teknik (Yantek) — response time gangguan, K3 pekerjaan tegangan, troubleshooting JTR/JTM, dan standar pelayanan pelanggan di lapangan.
+        </p>
+
+        <div class="esa-gallery-grid">
+          <a class="esa-gallery-card" href="academy%20pelayanan%20teknik.jpeg" target="_blank" rel="noopener">
+            <div class="esa-gallery-photo" style="background-image: url('academy%20pelayanan%20teknik.jpeg');"></div>
+            <div class="esa-gallery-meta">
+              <div class="esa-gallery-batch">Academy Pelayanan Teknik</div>
+              <div class="esa-gallery-title">Workshop Yantek Reguler</div>
+              <div class="esa-gallery-desc">Sesi kelas teori & briefing standar pelayanan teknik untuk petugas lapangan.</div>
+            </div>
+          </a>
+
+          <a class="esa-gallery-card" href="academy%20yantek.jpeg" target="_blank" rel="noopener">
+            <div class="esa-gallery-photo" style="background-image: url('academy%20yantek.jpeg');"></div>
+            <div class="esa-gallery-meta">
+              <div class="esa-gallery-batch">Academy Yantek</div>
+              <div class="esa-gallery-title">Praktik Penanganan Gangguan</div>
+              <div class="esa-gallery-desc">Simulasi penanganan gangguan distribusi dan praktik K3 pekerjaan jaringan.</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align: center; padding: 32px 24px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; margin-top: 32px;">
+        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.3rem; color: #f0d080; margin-bottom: 10px; font-weight: 500;">Mau ikut workshop berikutnya?</div>
+        <p style="color: rgba(245,240,230,0.7); font-size: 0.92rem; line-height: 1.6; margin: 0 0 18px; max-width: 540px; margin-left: auto; margin-right: auto;">Workshop offline P2TL & Yantek dibuka berkala. Daftar via WhatsApp untuk info batch selanjutnya.</p>
+        <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20info%20workshop%20P2TL%20%2F%20Pelayanan%20Teknik" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #d4af6a; border: 1px solid rgba(212,175,106,0.5); border-radius: 8px; padding: 11px 22px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">Chat Admin via WA</a>
       </div>
 
     </div>
@@ -22312,6 +22500,14 @@ else{setTimeout(init,200);}
     referensiLink.style.cursor='pointer';
     referensiLink.onclick=function(e){e.preventDefault(); publicShow('referensi');};
 
+    // Gallery — dokumentasi workshop & training, public access
+    var galleryLink=document.createElement('a');
+    galleryLink.className='nav-right';
+    galleryLink.href='#';
+    galleryLink.textContent='Gallery';
+    galleryLink.style.cursor='pointer';
+    galleryLink.onclick=function(e){e.preventDefault(); publicShow('gallery');};
+
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
     navGroup.appendChild(ourTalentLink);
@@ -22319,6 +22515,7 @@ else{setTimeout(init,200);}
     if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
     navGroup.appendChild(referensiLink);
+    navGroup.appendChild(galleryLink);
     navGroup.appendChild(leaderboardLink);
     if(daftar)navGroup.appendChild(daftar);
   }
