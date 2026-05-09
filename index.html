@@ -8156,6 +8156,396 @@ button:active:not(:disabled),
   .esa-gallery-grid { grid-template-columns: 1fr; gap: 18px; }
 }
 
+/* ============================================
+   CAREER ADVISORY — wizard quiz + result
+============================================ */
+.career-hero {
+  text-align: center;
+  padding: 80px 32px 56px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.career-hero h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 600;
+  color: #f5f0e6;
+  margin: 0 0 18px;
+  line-height: 1.15;
+}
+.career-hero h1 .italic { font-style: italic; color: #d4af6a; }
+.career-hero p {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  color: rgba(245,240,230,0.78);
+  line-height: 1.7;
+  font-style: italic;
+}
+
+.career-progress {
+  max-width: 720px;
+  margin: 0 auto 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.career-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.career-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a96e, #f0d080);
+  border-radius: 100px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.career-progress-text {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.career-question-card {
+  max-width: 760px;
+  margin: 0 auto 40px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,175,106,0.25);
+  border-radius: 14px;
+  padding: 36px 36px 32px;
+}
+.career-q-eyebrow {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.career-q-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: #f5f0e6;
+  line-height: 1.3;
+  margin: 0 0 28px;
+}
+.career-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.career-option {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(212,175,106,0.18);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: rgba(245,240,230,0.92);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.career-option:hover {
+  background: rgba(212,175,106,0.1);
+  border-color: rgba(212,175,106,0.55);
+  transform: translateX(4px);
+}
+.career-option.selected {
+  background: rgba(212,175,106,0.18);
+  border-color: #d4af6a;
+  color: #f5f0e6;
+}
+.career-option-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212,175,106,0.12);
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+.career-nav {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.career-btn {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+.career-btn-primary {
+  background: linear-gradient(135deg, #c9a96e, #a07840);
+  color: #1a1d2e;
+}
+.career-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(212,175,106,0.35); }
+.career-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+.career-btn-secondary {
+  background: transparent;
+  color: #d4af6a;
+  border: 1px solid rgba(212,175,106,0.45);
+}
+.career-btn-secondary:hover { background: rgba(212,175,106,0.08); }
+
+/* RESULT */
+.career-result {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+}
+.career-result-eyebrow {
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.career-result-title {
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  color: #f5f0e6;
+  margin-bottom: 8px;
+}
+.career-result-subtitle {
+  text-align: center;
+  color: rgba(245,240,230,0.7);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+.career-primary-card {
+  background: linear-gradient(135deg, rgba(212,175,106,0.18), rgba(212,175,106,0.06));
+  border: 1px solid rgba(212,175,106,0.5);
+  border-radius: 18px;
+  padding: 36px 36px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.career-primary-card::before {
+  content: 'JALUR REKOMENDASI UTAMA';
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+  color: #d4af6a;
+  background: rgba(26,29,46,0.9);
+  padding: 6px 12px;
+  border-radius: 100px;
+}
+.career-primary-jalur-id {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+}
+.career-primary-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 600;
+  color: #f5f0e6;
+  line-height: 1.2;
+  margin: 8px 0 14px;
+}
+.career-match-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.career-match-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.career-match-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a96e, #f0d080);
+  border-radius: 100px;
+}
+.career-match-pct {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #f0d080;
+  min-width: 60px;
+  text-align: right;
+}
+.career-primary-desc {
+  color: rgba(245,240,230,0.85);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-style: italic;
+}
+.career-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 26px;
+}
+.career-stat {
+  background: rgba(26,29,46,0.55);
+  border: 1px solid rgba(212,175,106,0.18);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.career-stat-label {
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(245,240,230,0.55);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.career-stat-value {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #f5f0e6;
+}
+
+.career-section-title {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.career-skills-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.career-skills-list li {
+  background: rgba(26,29,46,0.6);
+  border-left: 3px solid #c9a96e;
+  border-radius: 6px;
+  padding: 12px 16px;
+  color: rgba(245,240,230,0.92);
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.career-skills-list li strong { color: #f0d080; font-weight: 700; }
+
+.career-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.career-module-card {
+  background: rgba(26,29,46,0.6);
+  border: 1px solid rgba(212,175,106,0.18);
+  border-radius: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.career-module-card:hover {
+  border-color: #d4af6a;
+  background: rgba(212,175,106,0.08);
+  transform: translateY(-2px);
+}
+.career-module-card-code {
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: #d4af6a;
+  margin-bottom: 4px;
+}
+.career-module-card-title {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #f5f0e6;
+  line-height: 1.4;
+}
+
+.career-cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.career-cta-row .career-btn { flex: 1; min-width: 200px; }
+
+.career-secondary-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,175,106,0.18);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.career-secondary-card .career-primary-jalur-id { color: rgba(245,240,230,0.6); }
+.career-secondary-card-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #f5f0e6;
+  margin: 4px 0 6px;
+}
+.career-secondary-card-pct {
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #c9a96e;
+}
+@media (max-width: 600px) {
+  .career-question-card { padding: 24px 20px; }
+  .career-primary-card { padding: 24px 20px; }
+  .career-cta-row .career-btn { min-width: 100%; }
+}
+
 .esa-book {
   display: flex;
   flex-direction: column;
@@ -9880,6 +10270,7 @@ button:active:not(:disabled),
       <div style="display:flex;flex-direction:column;gap:6px;align-items:center;font-size:12px;">
         <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
           <a onclick="showView('about')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Tentang Kami</a>
+          <a onclick="showView('career-advisory')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Career Advisory</a>
           <a onclick="showView('referensi')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Library</a>
           <a onclick="showView('gallery')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Gallery</a>
           <a onclick="showView('faq')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">FAQ</a>
@@ -10950,6 +11341,71 @@ button:active:not(:disabled),
       </div>
 
     </div>
+  </section>
+</div>
+
+<!-- ========================================================== -->
+<!-- VIEW: CAREER ADVISORY — Wizard quiz to recommend jalur     -->
+<!-- ========================================================== -->
+<div class="view" id="view-career-advisory">
+  <div class="detail-nav">
+    <a class="detail-nav-logo" onclick="showView('home')" style="cursor:pointer;">
+      <div class="detail-nav-logo-mark">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+          <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+          <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+        </svg>
+      </div>
+      <div class="detail-nav-logo-text">Electra<br><span class="line-2">Skill Academy</span></div>
+    </a>
+    <div class="detail-nav-center">Career Advisory</div>
+    <div class="detail-nav-right">
+      <button class="detail-nav-back" onclick="showView('home')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kembali
+      </button>
+    </div>
+  </div>
+
+  <section style="background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 50%, #0d0f1c 100%); min-height: 100vh; padding-bottom: 60px;">
+
+    <!-- Intro / hero (shown when quiz not started) -->
+    <div id="career-intro" class="career-hero">
+      <div class="section-eyebrow" style="margin-bottom: 18px;">— AI Career Advisor —</div>
+      <h1>Temukan Jalur <span class="italic">Karir Listrik</span> yang Tepat Untukmu</h1>
+      <p>Jawab 10 pertanyaan singkat tentang bakat, minat, dan target karir kamu. AI Advisor akan analisis dan kasih rekomendasi jalur paling cocok plus modul yang harus kamu kuasai.</p>
+      <div style="margin-top:36px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <button class="career-btn career-btn-primary" onclick="careerStartQuiz()">Mulai Career Quiz · 3 menit</button>
+      </div>
+      <div style="margin-top:32px;display:flex;gap:32px;justify-content:center;flex-wrap:wrap;color:rgba(245,240,230,0.6);font-family:var(--sans);font-size:0.82rem;">
+        <span>✓ 10 pertanyaan</span>
+        <span>✓ 8 jalur karir</span>
+        <span>✓ Rekomendasi modul personal</span>
+      </div>
+    </div>
+
+    <!-- Quiz container (hidden initially) -->
+    <div id="career-quiz" style="display:none;padding-top:60px;">
+      <div class="career-progress">
+        <div class="career-progress-text" id="career-q-counter">Pertanyaan 1 / 10</div>
+        <div class="career-progress-bar"><div class="career-progress-fill" id="career-progress-fill" style="width:10%"></div></div>
+      </div>
+      <div class="career-question-card" id="career-question-card">
+        <!-- injected dynamically -->
+      </div>
+      <div class="career-nav">
+        <button class="career-btn career-btn-secondary" id="career-back-btn" onclick="careerPrevQuestion()" style="visibility:hidden;">← Sebelumnya</button>
+        <button class="career-btn career-btn-primary" id="career-next-btn" onclick="careerNextQuestion()" disabled>Lanjut →</button>
+      </div>
+    </div>
+
+    <!-- Result container (hidden initially) -->
+    <div id="career-result" class="career-result" style="display:none;padding-top:60px;">
+      <!-- injected dynamically -->
+    </div>
+
   </section>
 </div>
 
@@ -14516,6 +14972,477 @@ function initPVSizing() {
 
   [loadEl, sphEl, wattEl, backupEl].forEach(el => el.addEventListener('input', update));
   update();
+}
+
+// ================================================
+// CAREER ADVISORY — Quiz engine + recommendation
+// ================================================
+const CAREER_QUESTIONS = [
+  {
+    eyebrow: 'BAKAT & MINAT',
+    title: 'Lingkungan kerja seperti apa yang paling kamu sukai?',
+    options: [
+      { icon: '🏗️', label: 'Lapangan / outdoor — gardu, GI, jaringan tegangan tinggi', score: { S3: 3, S4: 3, S7: 2 } },
+      { icon: '🏭', label: 'Pabrik / industri — kontrol panel, mesin, automasi', score: { S2: 3, S6: 1 } },
+      { icon: '🏢', label: 'Gedung / proyek bangunan — instalasi MEP', score: { S1: 3, S6: 1 } },
+      { icon: '💻', label: 'Office / lab — analisis data di komputer', score: { S5: 3, S6: 2 } },
+      { icon: '🦺', label: 'Site safety, audit kepatuhan, training', score: { S8: 3, S6: 1 } }
+    ]
+  },
+  {
+    eyebrow: 'SKILL UTAMA',
+    title: 'Skill mana yang paling ingin kamu kuasai?',
+    options: [
+      { icon: '🔧', label: 'Pemasangan, wiring & instalasi listrik', score: { S1: 3, S2: 1 } },
+      { icon: '⚙️', label: 'PLC, motor drive, predictive maintenance industri', score: { S2: 3 } },
+      { icon: '🔌', label: 'Operasi & pemeliharaan jaringan PLN (20kV / 150kV+)', score: { S3: 3, S4: 3 } },
+      { icon: '📊', label: 'Python, SQL, machine learning untuk data energi', score: { S5: 3 } },
+      { icon: '🔋', label: 'Audit energi, ISO 50001, manajemen energi', score: { S6: 3 } },
+      { icon: '☀️', label: 'PLTU, PLTS, BESS, energi terbarukan', score: { S7: 3 } },
+      { icon: '🛡️', label: 'K3 listrik, arc flash, safety officer', score: { S8: 3 } }
+    ]
+  },
+  {
+    eyebrow: 'LATAR PENDIDIKAN',
+    title: 'Latar pendidikan kamu yang paling dekat?',
+    options: [
+      { icon: '🎓', label: 'SMK Listrik / TITL / TIPTL', score: { S1: 2, S2: 2, S3: 2, S8: 2 } },
+      { icon: '🎓', label: 'D3 / S1 Teknik Elektro', score: { S1: 1, S2: 1, S3: 2, S4: 2, S5: 1, S6: 1, S7: 2, S8: 1 } },
+      { icon: '🎓', label: 'D3 / S1 Teknik Industri / Mesin / Sipil', score: { S2: 2, S6: 2, S7: 1, S8: 2 } },
+      { icon: '🎓', label: 'S1 Statistik / Matematika / Informatika', score: { S5: 3, S6: 1 } },
+      { icon: '🎓', label: 'Tidak relevan tapi tertarik', score: { S1: 2, S8: 2, S6: 1 } }
+    ]
+  },
+  {
+    eyebrow: 'TARGET GAJI',
+    title: 'Target gaji entry-level kamu (per bulan)?',
+    options: [
+      { icon: '💵', label: 'Rp 3-5 juta — yang penting cepat kerja', score: { S1: 2, S8: 2, S2: 1 } },
+      { icon: '💵', label: 'Rp 5-8 juta — standar PLN distribusi / pabrik', score: { S2: 2, S3: 3, S6: 2, S7: 1 } },
+      { icon: '💰', label: 'Rp 8-12 juta — engineer transmisi / pembangkitan', score: { S4: 3, S7: 3, S6: 2 } },
+      { icon: '💰', label: 'Rp 10-20 juta — data scientist / consultant', score: { S5: 3, S6: 2 } }
+    ]
+  },
+  {
+    eyebrow: 'TIMELINE',
+    title: 'Berapa lama kamu mau invest belajar sampai siap kerja?',
+    options: [
+      { icon: '🚀', label: '3-6 bulan — mau cepat kerja', score: { S1: 3, S8: 3 } },
+      { icon: '⏱️', label: '6-12 bulan — siap belajar serius', score: { S2: 2, S3: 2, S6: 2, S7: 2 } },
+      { icon: '📚', label: '1-2 tahun — mau jadi expert betulan', score: { S4: 3, S5: 3, S7: 1 } }
+    ]
+  },
+  {
+    eyebrow: 'GAYA KERJA',
+    title: 'Gaya kerja paling cocok untukmu?',
+    options: [
+      { icon: '🛠️', label: 'Hands-on, kerja fisik dengan alat', score: { S1: 3, S2: 2, S3: 2, S7: 2 } },
+      { icon: '🧠', label: 'Problem-solving teknis kompleks', score: { S2: 2, S4: 3, S6: 2, S7: 2 } },
+      { icon: '📈', label: 'Analisis data, pattern, statistik', score: { S5: 3, S6: 2 } },
+      { icon: '🤝', label: 'Komunikasi, koordinasi tim, audit', score: { S6: 3, S8: 3 } }
+    ]
+  },
+  {
+    eyebrow: 'BIDANG MOTIVASI',
+    title: 'Bidang yang paling memotivasi kamu?',
+    options: [
+      { icon: '🏗️', label: 'Konstruksi gedung & infrastruktur', score: { S1: 3 } },
+      { icon: '🏭', label: 'Manufaktur & industri', score: { S2: 3 } },
+      { icon: '⚡', label: 'Utility / kelistrikan negara (PLN)', score: { S3: 3, S4: 3, S7: 2 } },
+      { icon: '🤖', label: 'Teknologi & digital transformation', score: { S5: 3 } },
+      { icon: '🌱', label: 'Sustainability & energi hijau', score: { S6: 2, S7: 3 } },
+      { icon: '🦺', label: 'Safety & well-being pekerja', score: { S8: 3 } }
+    ]
+  },
+  {
+    eyebrow: 'CARA BELAJAR',
+    title: 'Cara belajar favorit kamu?',
+    options: [
+      { icon: '🔧', label: 'Praktik langsung tools & alat', score: { S1: 3, S2: 2, S7: 2 } },
+      { icon: '📖', label: 'Membaca standar/regulasi (PUIL, IEC, NFPA)', score: { S4: 2, S6: 3, S8: 3 } },
+      { icon: '💻', label: 'Coding, dataset, eksperimen', score: { S5: 3 } },
+      { icon: '🎤', label: 'Diskusi, presentasi, training peer', score: { S6: 2, S8: 2 } }
+    ]
+  },
+  {
+    eyebrow: 'CITA-CITA KARIR',
+    title: 'Mimpi kerja kamu jangka panjang?',
+    options: [
+      { icon: '🏢', label: 'Punya bisnis kontraktor MEP / panel sendiri', score: { S1: 3, S2: 2 } },
+      { icon: '⚡', label: 'Engineer di PLN unit / anak perusahaan', score: { S3: 3, S4: 3, S7: 2 } },
+      { icon: '👔', label: 'Konsultan independen / firma', score: { S5: 2, S6: 3, S4: 1 } },
+      { icon: '🌍', label: 'Perusahaan global energi (Shell, BP, IRENA)', score: { S5: 2, S7: 3, S6: 1 } },
+      { icon: '🏛️', label: 'Government / regulator (Kemnaker / ESDM)', score: { S8: 3, S6: 1 } }
+    ]
+  },
+  {
+    eyebrow: 'KOMITMEN',
+    title: 'Berapa lama kamu commit di bidang ini?',
+    options: [
+      { icon: '🔄', label: '< 5 tahun, mungkin pivot ke bidang lain', score: { S5: 2, S6: 2 } },
+      { icon: '⚒️', label: '5-10 tahun — build expertise solid', score: { S2: 2, S3: 2, S4: 2 } },
+      { icon: '🏆', label: '10+ tahun — jadi master / expert', score: { S1: 2, S4: 3, S7: 2, S8: 2 } }
+    ]
+  }
+];
+
+// Jalur knowledge base — output recommendations
+const CAREER_JALUR_INFO = {
+  S1: {
+    name: 'Instalasi Bangunan',
+    role: 'Electrical Installer / MEP Engineer',
+    salary: 'Rp 4-12 juta',
+    timeline: '3-6 bulan',
+    cert: 'BNSP Teknisi Listrik Bangunan',
+    desc: 'Spesialis instalasi listrik gedung, hotel, RS, mall — dari wiring dasar sampai smart building. Permintaan stabil tiap proyek konstruksi.',
+    skills: [
+      '<strong>PUIL 2011 / SNI 0225</strong> — standar instalasi nasional, wajib dikuasai',
+      '<strong>Wiring instalasi & pengaman</strong> — MCB, ELCB, RCBO, grounding sesuai standar',
+      '<strong>Pembacaan gambar listrik</strong> — single line diagram, panel layout, AutoCAD Electrical',
+      '<strong>Estimasi biaya & BoQ</strong> — perhitungan material panel, kabel, fitting',
+      '<strong>Smart building basics</strong> — KNX, BACnet, IoT untuk gedung modern'
+    ],
+    modules: [
+      { code: '3A.01', title: 'Pengantar instalasi listrik bangunan & PUIL 2011' },
+      { code: '3A.02', title: 'Pemilihan kabel & sistem pentanahan PUIL' },
+      { code: '3A.05', title: 'Sistem proteksi: MCB, ELCB, RCBO, fuse' },
+      { code: '3A.07', title: 'Instalasi penerangan & stop kontak rumah-tangga' },
+      { code: '4A.01', title: 'Instalasi listrik bangunan komersial' },
+      { code: '4A.05', title: 'Sistem fire alarm & emergency lighting' }
+    ],
+    target_companies: 'Konsultan MEP, kontraktor proyek (PT Wijaya Karya, Total Bangun, Acset), developer (Sinar Mas Land, Lippo)'
+  },
+  S2: {
+    name: 'Industri & Manufaktur',
+    role: 'Industrial Maintenance Engineer / PLC Specialist',
+    salary: 'Rp 5-12 juta',
+    timeline: '6-12 bulan',
+    cert: 'LSP Industri Teknisi Electrical Industrial Maintenance',
+    desc: 'Maintenance & reliability engineering di pabrik, mining, oil & gas. Spesialis motor 3 fasa, VFD, PLC, dan SCADA industrial.',
+    skills: [
+      '<strong>PLC programming</strong> — OMRON, Siemens S7, Allen-Bradley (ladder + function block)',
+      '<strong>Motor 3 fasa & VFD</strong> — soft starter, ABB ACS, Schneider Altivar, troubleshooting',
+      '<strong>SCADA & HMI</strong> — Wonderware, WinCC, Citect — desain & maintenance',
+      '<strong>Predictive maintenance</strong> — vibration analysis, thermography, oil analysis',
+      '<strong>Power quality</strong> — harmonisa, transient, mitigasi di plant'
+    ],
+    modules: [
+      { code: '3B.01', title: 'Pengantar electrical industrial maintenance' },
+      { code: '3B.03', title: 'Motor listrik 3 fasa: konstruksi, performa & masalah umum' },
+      { code: '3B.05', title: 'Variable speed drive (VFD) & soft starter' },
+      { code: '3B.08', title: 'PLC dasar — ladder diagram OMRON / Siemens' },
+      { code: '4B.01', title: 'Reliability engineering & RCM' },
+      { code: '4B.05', title: 'SCADA & HMI design untuk industrial' }
+    ],
+    target_companies: 'Pertamina, Freeport, Vale, Krakatau Steel, Indofood, Mayora, Gudang Garam, vendor automasi (Schneider, Siemens, ABB Indonesia)'
+  },
+  S3: {
+    name: 'Distribusi',
+    role: 'Distribution Engineer / Junior Manager UP3',
+    salary: 'Rp 5-10 juta',
+    timeline: '6-12 bulan',
+    cert: 'BNSP Teknisi Distribusi Tenaga Listrik',
+    desc: 'Jantung operasional PLN. Operasi & pemeliharaan jaringan 20 kV, gardu distribusi, SCADA, smart grid. Karir stabil long-term di PLN.',
+    skills: [
+      '<strong>Jaringan distribusi 20 kV</strong> — SUTM, SKTM, JTR, transformator distribusi',
+      '<strong>SCADA distribusi</strong> — DMS, FDIR, sectionalizer otomatis',
+      '<strong>Proteksi distribusi</strong> — recloser, sectionalizer, fuse coordination',
+      '<strong>P2TL & rugi-rugi non-teknis</strong> — investigasi pelanggaran, pemeriksaan APP',
+      '<strong>Smart grid & metering</strong> — AMI, smart meter, time-of-use tariff'
+    ],
+    modules: [
+      { code: '3C.01', title: 'Pengantar sistem distribusi tenaga listrik' },
+      { code: '3C.03', title: 'Konstruksi SUTM 20 kV & komponennya' },
+      { code: '3C.05', title: 'Transformator distribusi & gardu' },
+      { code: '3C.10', title: 'Proteksi distribusi: recloser, fuse, sectionalizer' },
+      { code: '3C.15', title: 'P2TL: penertiban pemakaian tenaga listrik' },
+      { code: '4C.01', title: 'SCADA distribusi & DMS' }
+    ],
+    target_companies: 'PLN UP3 / UID, Haleyora Power, ICON+, kontraktor distribusi (Pratama Mitra, Dian Swastatika)'
+  },
+  S4: {
+    name: 'Transmisi',
+    role: 'Transmission Engineer / Substation Specialist',
+    salary: 'Rp 8-15 juta',
+    timeline: '1-2 tahun',
+    cert: 'BNSP Teknisi Transmisi Tegangan Tinggi',
+    desc: 'Tulang punggung sistem tenaga nasional. Saluran 150/500 kV, GITET, sistem proteksi backbone. Karir prestisius dengan jenjang panjang.',
+    skills: [
+      '<strong>SUTET 150/500 kV</strong> — konstruksi tower, ACSR, isolator, sagging-tensioning',
+      '<strong>GITET / GIS</strong> — circuit breaker, disconnector, current/voltage transformer',
+      '<strong>Sistem proteksi transmisi</strong> — distance relay, differential, busbar protection',
+      '<strong>Stability & flow analysis</strong> — load flow, fault analysis, contingency (PSS/E, DigSILENT)',
+      '<strong>HVDC & FACTS</strong> — STATCOM, SVC, dynamic compensation untuk grid modern'
+    ],
+    modules: [
+      { code: '3D.01', title: 'Pengantar sistem transmisi tegangan tinggi' },
+      { code: '3D.03', title: 'Konstruksi SUTET & tower transmisi' },
+      { code: '3D.05', title: 'GITET & gas insulated switchgear' },
+      { code: '4D.01', title: 'Sistem proteksi transmisi: distance relay' },
+      { code: '4D.05', title: 'Differential & busbar protection' },
+      { code: '5D.01', title: 'Power system analysis dengan PSS/E / DigSILENT' }
+    ],
+    target_companies: 'PLN UPT / UIT, PT Pembangkitan Jawa-Bali, IPP swasta (Cirebon Power, Adaro Power), konsultan PT PLN Engineering'
+  },
+  S5: {
+    name: 'Energy Analyst & Data Science',
+    role: 'Energy Data Scientist / Analytics Consultant',
+    salary: 'Rp 10-25 juta',
+    timeline: '1-2 tahun',
+    cert: 'LSP Data Analytics — Indonesia Data Society',
+    desc: 'Specialist analytics utility energi. Python, SQL, ML untuk load forecasting, NTL detection, dashboard. Bidang dengan growth tertinggi & gaji terbaik.',
+    skills: [
+      '<strong>Python & SQL</strong> — pandas, scikit-learn, query data utility besar',
+      '<strong>Load forecasting</strong> — ARIMA, LSTM, Prophet untuk demand prediction',
+      '<strong>NTL (Non-Technical Losses) detection</strong> — anomaly detection ML untuk pencurian listrik',
+      '<strong>Power BI / Tableau</strong> — dashboard operational & executive utility',
+      '<strong>Big data utility</strong> — smart meter data (AMI), IoT sensor stream'
+    ],
+    modules: [
+      { code: '3E.02', title: 'Python untuk data analyst pemula' },
+      { code: '3E.05', title: 'SQL & PostgreSQL untuk analytics' },
+      { code: '3E.10', title: 'Time series & load forecasting dasar' },
+      { code: '4E.01', title: 'Machine learning untuk utility — supervised' },
+      { code: '4E.05', title: 'NTL detection dengan ML' },
+      { code: '5E.01', title: 'Power BI dashboard untuk operasional PLN' }
+    ],
+    target_companies: 'PLN Pusenlis, ICON+, McKinsey Energy Insights, BCG, GE Digital, Schneider EcoStruxure, startup energi (Xurya, Solana, Stockbit Energy)'
+  },
+  S6: {
+    name: 'Energy Auditor',
+    role: 'Certified Energy Auditor / Energy Manager',
+    salary: 'Rp 6-20 juta',
+    timeline: '6-12 bulan',
+    cert: 'BNSP Manajer Energi & Auditor Energi',
+    desc: 'Audit energi industri, ISO 50001, sertifikasi BNSP. Permintaan tinggi karena regulasi efisiensi energi (Permen ESDM) & ESG corporate.',
+    skills: [
+      '<strong>ISO 50001 EnMS</strong> — energy management system, baseline, EnPI',
+      '<strong>Energy audit Level 1-3</strong> — preliminary, general, investment grade',
+      '<strong>Power quality measurement</strong> — Fluke 435, Hioki PW3198, analisa harmonisa',
+      '<strong>Lighting & HVAC retrofit</strong> — LED ROI, chiller efficiency, VRV/VRF',
+      '<strong>Carbon accounting & ESG</strong> — GHG protocol, scope 1/2/3, sustainability report'
+    ],
+    modules: [
+      { code: '3F.01', title: 'Pengantar manajemen & audit energi' },
+      { code: '3F.05', title: 'ISO 50001 EnMS implementation' },
+      { code: '3F.10', title: 'Power quality measurement & analysis' },
+      { code: '4F.01', title: 'Energy audit Level 1: walkthrough audit' },
+      { code: '4F.05', title: 'Lighting & HVAC efficiency retrofit' },
+      { code: '5F.01', title: 'Investment grade audit & business case' }
+    ],
+    target_companies: 'Konsultan audit energi (Energi Management Indonesia, Efficio), corporate energy manager (Astra, Indofood, Pertamina, Telkom), KESDM, EBTKE'
+  },
+  S7: {
+    name: 'Pembangkitan & Renewable',
+    role: 'Generation Engineer / Renewable Project Manager',
+    salary: 'Rp 7-20 juta',
+    timeline: '1-2 tahun',
+    cert: 'BNSP Teknisi Pembangkitan / RE Specialist',
+    desc: 'PLTU, PLTG, PLTA, PLTS, BESS, green hydrogen. Dari fossil ke renewable — bidang dengan transisi energi paling besar.',
+    skills: [
+      '<strong>PLTS rooftop & utility scale</strong> — desain string inverter, monitoring, O&M',
+      '<strong>BESS (battery storage)</strong> — Li-ion, BMS, grid-forming inverter',
+      '<strong>Pembangkit thermal</strong> — PLTU, PLTG, sinkronisasi, governor control',
+      '<strong>Power Purchase Agreement (PPA)</strong> — feed-in tariff, net metering, contract structure',
+      '<strong>Green hydrogen & emerging</strong> — electrolyzer, fuel cell, integrasi grid'
+    ],
+    modules: [
+      { code: '3G.01', title: 'Pengantar sistem pembangkitan tenaga listrik' },
+      { code: '3G.05', title: 'PLTS rooftop: desain & instalasi' },
+      { code: '3G.10', title: 'Pembangkit thermal: PLTU & PLTG dasar' },
+      { code: '4G.01', title: 'BESS — battery energy storage system' },
+      { code: '4G.05', title: 'PPA, feed-in tariff & regulasi PLTS' },
+      { code: '5G.01', title: 'Hybrid renewable plant & microgrid' }
+    ],
+    target_companies: 'PLN Pembangkit / IP / PJB, Pertamina NRE, IPP renewable (TBS Energi, Adaro Green, Medco Power), vendor (Sungrow, Huawei FusionSolar, Trina Solar)'
+  },
+  S8: {
+    name: 'K3 Listrik',
+    role: 'Ahli K3 Listrik / Safety Officer',
+    salary: 'Rp 5-15 juta',
+    timeline: '3-6 bulan',
+    cert: 'BNSP & Kemnaker Ahli K3 Listrik',
+    desc: 'Safety officer industri, oil & gas, konstruksi. Wajib di tiap proyek besar — permintaan stabil dengan barrier-to-entry rendah.',
+    skills: [
+      '<strong>Permenaker No. 12/2015 K3 Listrik</strong> — wajib hafal regulasi & implementation',
+      '<strong>Arc flash analysis & PPE</strong> — IEEE 1584, NFPA 70E, kategori PPE',
+      '<strong>LOTO (Lockout-Tagout)</strong> — prosedur isolasi energi, permit-to-work',
+      '<strong>HIRARC & JSA</strong> — hazard identification, job safety analysis',
+      '<strong>Emergency response</strong> — first aid sengatan listrik, CPR, AED, fire class C'
+    ],
+    modules: [
+      { code: '3H.01', title: 'Pengantar K3 listrik & Permenaker 12/2015' },
+      { code: '3H.05', title: 'Bahaya listrik: sengatan, arc flash, kebakaran' },
+      { code: '3H.10', title: 'APD K3 listrik: pemilihan, inspeksi, penggunaan' },
+      { code: '3H.15', title: 'Prosedur LOTO & permit to work' },
+      { code: '4H.01', title: 'HIRARC & JSA untuk pekerjaan listrik' },
+      { code: '4H.05', title: 'Arc flash analysis & boundary calculation' }
+    ],
+    target_companies: 'Pertamina HSE, Freeport HSE, kontraktor EPC (Tripatra, Wood Mackenzie), konsultan K3 (Sucofindo, SGS, Bureau Veritas), Disnaker provinsi'
+  }
+};
+
+let _careerState = { idx: 0, answers: [], scores: {} };
+
+function careerStartQuiz() {
+  _careerState = { idx: 0, answers: [], scores: { S1:0,S2:0,S3:0,S4:0,S5:0,S6:0,S7:0,S8:0 } };
+  document.getElementById('career-intro').style.display = 'none';
+  document.getElementById('career-result').style.display = 'none';
+  document.getElementById('career-quiz').style.display = 'block';
+  careerRenderQuestion();
+}
+
+function careerRenderQuestion() {
+  const q = CAREER_QUESTIONS[_careerState.idx];
+  const total = CAREER_QUESTIONS.length;
+  const counter = document.getElementById('career-q-counter');
+  const fill = document.getElementById('career-progress-fill');
+  const card = document.getElementById('career-question-card');
+  const backBtn = document.getElementById('career-back-btn');
+  const nextBtn = document.getElementById('career-next-btn');
+  counter.textContent = 'Pertanyaan ' + (_careerState.idx + 1) + ' / ' + total;
+  fill.style.width = ((_careerState.idx + 1) / total * 100) + '%';
+  backBtn.style.visibility = _careerState.idx === 0 ? 'hidden' : 'visible';
+  nextBtn.textContent = _careerState.idx === total - 1 ? 'Lihat Hasil →' : 'Lanjut →';
+  const selectedIdx = _careerState.answers[_careerState.idx];
+  nextBtn.disabled = selectedIdx === undefined;
+  card.innerHTML =
+    '<div class="career-q-eyebrow">' + q.eyebrow + '</div>' +
+    '<h3 class="career-q-title">' + q.title + '</h3>' +
+    '<div class="career-options">' +
+    q.options.map((opt, i) =>
+      '<button class="career-option' + (selectedIdx === i ? ' selected' : '') + '" onclick="careerSelectOption(' + i + ')">' +
+      '<span class="career-option-icon">' + opt.icon + '</span>' +
+      '<span>' + opt.label + '</span>' +
+      '</button>'
+    ).join('') +
+    '</div>';
+}
+
+function careerSelectOption(i) {
+  _careerState.answers[_careerState.idx] = i;
+  careerRenderQuestion();
+}
+
+function careerNextQuestion() {
+  if (_careerState.answers[_careerState.idx] === undefined) return;
+  if (_careerState.idx < CAREER_QUESTIONS.length - 1) {
+    _careerState.idx++;
+    careerRenderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    careerCalculateResult();
+  }
+}
+
+function careerPrevQuestion() {
+  if (_careerState.idx > 0) {
+    _careerState.idx--;
+    careerRenderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function careerCalculateResult() {
+  // Reset & sum scores
+  const scores = { S1:0,S2:0,S3:0,S4:0,S5:0,S6:0,S7:0,S8:0 };
+  _careerState.answers.forEach((ansIdx, qIdx) => {
+    const opt = CAREER_QUESTIONS[qIdx].options[ansIdx];
+    if (!opt) return;
+    Object.keys(opt.score).forEach(k => { scores[k] = (scores[k] || 0) + opt.score[k]; });
+  });
+  const sorted = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+  const top = sorted[0];
+  const second = sorted[1];
+  const max = scores[top];
+  const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+  const topPct = Math.min(99, Math.round((scores[top] / total) * 100 * 2.2)); // boost for visual appeal
+  const secondPct = Math.min(95, Math.round((scores[second] / total) * 100 * 2.2));
+  careerRenderResult(top, second, topPct, secondPct);
+}
+
+function careerRenderResult(topId, secondId, topPct, secondPct) {
+  const t = CAREER_JALUR_INFO[topId];
+  const s = CAREER_JALUR_INFO[secondId];
+  document.getElementById('career-quiz').style.display = 'none';
+  const result = document.getElementById('career-result');
+  result.style.display = 'block';
+  result.innerHTML =
+    '<div class="career-result-eyebrow">— Hasil Career Advisor —</div>' +
+    '<h1 class="career-result-title">Kamu Cocok Jadi <span style="font-style:italic;color:#d4af6a">' + t.role + '</span></h1>' +
+    '<p class="career-result-subtitle">Berdasarkan jawaban kamu, jalur karir ' + t.name + ' (' + topId + ') paling sesuai dengan profilmu.</p>' +
+
+    '<div class="career-primary-card">' +
+      '<div class="career-primary-jalur-id">' + topId + ' · Jalur ' + t.name + '</div>' +
+      '<div class="career-primary-name">' + t.role + '</div>' +
+      '<div class="career-match-bar">' +
+        '<div class="career-match-bar-track"><div class="career-match-bar-fill" style="width:' + topPct + '%"></div></div>' +
+        '<div class="career-match-pct">' + topPct + '% match</div>' +
+      '</div>' +
+      '<p class="career-primary-desc">' + t.desc + '</p>' +
+      '<div class="career-stats">' +
+        '<div class="career-stat"><div class="career-stat-label">Gaji Range</div><div class="career-stat-value">' + t.salary + '</div></div>' +
+        '<div class="career-stat"><div class="career-stat-label">Timeline Belajar</div><div class="career-stat-value">' + t.timeline + '</div></div>' +
+        '<div class="career-stat"><div class="career-stat-label">Sertifikasi Target</div><div class="career-stat-value" style="font-size:0.95rem;line-height:1.3">' + t.cert + '</div></div>' +
+      '</div>' +
+
+      '<div style="margin-bottom:24px;">' +
+        '<div class="career-section-title">🎯 Skill Wajib Dikuasai</div>' +
+        '<ul class="career-skills-list">' +
+          t.skills.map(sk => '<li>' + sk + '</li>').join('') +
+        '</ul>' +
+      '</div>' +
+
+      '<div style="margin-bottom:24px;">' +
+        '<div class="career-section-title">📚 Mulai Belajar Modul Ini Dulu</div>' +
+        '<div class="career-modules-grid">' +
+          t.modules.map(m =>
+            '<div class="career-module-card" onclick="careerOpenModule(\'' + topId + '\', \'' + m.code + '\')">' +
+              '<div class="career-module-card-code">Modul ' + m.code + '</div>' +
+              '<div class="career-module-card-title">' + m.title + '</div>' +
+            '</div>'
+          ).join('') +
+        '</div>' +
+      '</div>' +
+
+      '<div style="margin-bottom:8px;">' +
+        '<div class="career-section-title">🏢 Target Perusahaan</div>' +
+        '<p style="color:rgba(245,240,230,0.8);font-family:var(--sans);font-size:0.92rem;line-height:1.6;margin:0">' + t.target_companies + '</p>' +
+      '</div>' +
+
+      '<div class="career-cta-row">' +
+        '<button class="career-btn career-btn-primary" onclick="openJalur(\'' + topId + '\')">Buka Detail Jalur ' + topId + ' →</button>' +
+        '<button class="career-btn career-btn-secondary" onclick="careerStartQuiz()">↻ Ulangi Quiz</button>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="career-secondary-card">' +
+      '<div>' +
+        '<div class="career-primary-jalur-id">ALTERNATIF · ' + secondId + '</div>' +
+        '<div class="career-secondary-card-name">' + s.name + ' (' + s.role + ')</div>' +
+        '<div class="career-secondary-card-pct">' + secondPct + '% match · ' + s.salary + '</div>' +
+      '</div>' +
+      '<button class="career-btn career-btn-secondary" onclick="openJalur(\'' + secondId + '\')">Lihat Detail →</button>' +
+    '</div>' +
+
+    '<div style="text-align:center;padding:24px;background:rgba(255,255,255,0.03);border-radius:12px;margin-top:20px;">' +
+      '<p style="color:rgba(245,240,230,0.7);font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:1.05rem;margin:0 0 14px;">Belum yakin? Konsultasi langsung dengan mentor career kami via WhatsApp.</p>' +
+      '<a href="https://wa.me/6285121532407?text=' + encodeURIComponent('Halo Admin, saya baru selesai Career Quiz dan rekomendasi saya adalah jalur ' + topId + ' (' + t.name + '). Saya mau konsultasi karir lebih lanjut.') + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:12px 24px;font-weight:700;font-size:0.9rem;">💬 Konsultasi Mentor</a>' +
+    '</div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function careerOpenModule(trackId, code) {
+  // Try to navigate via existing openModul if available
+  if (typeof window.openModul === 'function') {
+    try {
+      const levelId = 'L' + code.charAt(0); // 3F.01 → L3
+      window.openModul(code, trackId, levelId);
+      return;
+    } catch(e){}
+  }
+  // Fallback: open jalur detail
+  if (typeof window.openJalur === 'function') window.openJalur(trackId);
 }
 
 // ================================================
@@ -23305,8 +24232,17 @@ else{setTimeout(init,200);}
     galleryLink.style.cursor='pointer';
     galleryLink.onclick=function(e){e.preventDefault(); publicShow('gallery');};
 
+    // Career Advisory — wizard quiz untuk rekomendasi jalur, public access
+    var careerLink=document.createElement('a');
+    careerLink.className='nav-right';
+    careerLink.href='#';
+    careerLink.textContent='Career Advisory';
+    careerLink.style.cursor='pointer';
+    careerLink.onclick=function(e){e.preventDefault(); publicShow('career-advisory');};
+
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
+    navGroup.appendChild(careerLink);
     navGroup.appendChild(ourTalentLink);
     navGroup.appendChild(jobLink);
     if(simLabs)navGroup.appendChild(simLabs);
