@@ -241,6 +241,124 @@ body {
 
 .nav-right:hover { color: var(--gold); }
 
+/* Career dropdown menu */
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.nav-dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav-dropdown-toggle::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.nav-dropdown.open .nav-dropdown-toggle::after,
+.nav-dropdown:hover .nav-dropdown-toggle::after {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  min-width: 240px;
+  background: rgba(15, 17, 25, 0.97);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s, visibility 0.18s;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+.nav-dropdown.open .nav-dropdown-menu,
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-dropdown-bridge {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 18px;
+}
+.nav-dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-decoration: none;
+  color: rgba(245, 240, 230, 0.9);
+}
+.nav-dropdown-item:hover {
+  background: rgba(201, 169, 110, 0.12);
+  color: #f0d080;
+}
+.nav-dropdown-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201, 169, 110, 0.12);
+  border-radius: 50%;
+  font-size: 0.95rem;
+}
+.nav-dropdown-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-dropdown-title {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.nav-dropdown-desc {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: rgba(245, 240, 230, 0.55);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 400;
+}
+@media (max-width: 720px) {
+  .nav-dropdown-menu {
+    min-width: 220px;
+    left: auto;
+    right: 0;
+    transform: translateY(-4px);
+  }
+  .nav-dropdown.open .nav-dropdown-menu,
+  .nav-dropdown:hover .nav-dropdown-menu {
+    transform: translateY(0);
+  }
+}
+
 .hero-content {
   position: relative;
   z-index: 10;
@@ -24192,29 +24310,61 @@ else{setTimeout(init,200);}
     aboutUs.className='nav-right';aboutUs.href='#';aboutUs.textContent='About Us';
     aboutUs.onclick=function(e){e.preventDefault();publicShow('about');};
 
-    // Replace the previous "Talent Pool ▾" dropdown with two simple
-    // top-level links so the click flow can never be intercepted by
-    // hover-timer / dropdown race conditions. Our Talent juga public.
-    var ourTalentLink=document.createElement('a');
-    ourTalentLink.className='nav-right';
-    ourTalentLink.href='#';
-    ourTalentLink.textContent='Our Talent';
-    ourTalentLink.style.cursor='pointer';
-    ourTalentLink.onclick=function(e){e.preventDefault();publicShow('talent');};
-
-    var jobLink=document.createElement('a');
-    jobLink.className='nav-right';
-    jobLink.href='#';
-    jobLink.textContent='Job Opportunity';
-    jobLink.style.cursor='pointer';
-    jobLink.onclick=function(e){e.preventDefault();showView('jobs');};
-
-    // Remove the original "Job Opportunity" anchor that lived in the
-    // base markup; we'll re-insert our own controlled instance below.
+    // Remove original "Job Opportunity" + the now-deprecated talent link
+    // di base markup — semua di-replace oleh dropdown "Career" below.
     if(jobOpp)jobOpp.remove();
+    if(talentPool)talentPool.remove();
 
     var simLabs=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.includes('Simulator')||a.textContent.includes('Labs');});
     var cert=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.trim()==='Certification'||a.textContent.includes('Sertifikasi');});
+
+    // === CAREER DROPDOWN — gabungkan 3 menu: Career Advisory, Our Talent, Job Opportunity ===
+    var careerDropdown=document.createElement('div');
+    careerDropdown.className='nav-dropdown';
+    var careerToggle=document.createElement('a');
+    careerToggle.className='nav-right nav-dropdown-toggle';
+    careerToggle.href='#';
+    careerToggle.textContent='Career';
+    careerToggle.style.cursor='pointer';
+    // Toggle on click (mobile-friendly), hover handled by CSS
+    careerToggle.onclick=function(e){
+      e.preventDefault();
+      careerDropdown.classList.toggle('open');
+    };
+    var careerBridge=document.createElement('div');
+    careerBridge.className='nav-dropdown-bridge';
+    var careerMenu=document.createElement('div');
+    careerMenu.className='nav-dropdown-menu';
+    var careerOptions=[
+      { icon:'🧭', title:'Career Advisory', desc:'Quiz personal, temukan jalur karirmu', view:'career-advisory', isPublic:true },
+      { icon:'👥', title:'Our Talent', desc:'Showcase alumni & talent pool ESA', view:'talent', isPublic:true },
+      { icon:'💼', title:'Job Opportunity', desc:'Lowongan eksklusif PLN, Pertamina, partner', view:'jobs', isPublic:false }
+    ];
+    careerOptions.forEach(function(opt){
+      var item=document.createElement('a');
+      item.className='nav-dropdown-item';
+      item.href='#';
+      item.innerHTML=
+        '<span class="nav-dropdown-icon">'+opt.icon+'</span>'+
+        '<span class="nav-dropdown-text">'+
+          '<span class="nav-dropdown-title">'+opt.title+'</span>'+
+          '<span class="nav-dropdown-desc">'+opt.desc+'</span>'+
+        '</span>';
+      item.onclick=function(e){
+        e.preventDefault();
+        careerDropdown.classList.remove('open');
+        if(opt.isPublic){ publicShow(opt.view); } else { showView(opt.view); }
+      };
+      careerMenu.appendChild(item);
+    });
+    careerDropdown.appendChild(careerToggle);
+    careerDropdown.appendChild(careerBridge);
+    careerDropdown.appendChild(careerMenu);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e){
+      if(!careerDropdown.contains(e.target)) careerDropdown.classList.remove('open');
+    });
 
     // Library — perpustakaan digital, public access
     var libraryLink=document.createElement('a');
@@ -24232,19 +24382,9 @@ else{setTimeout(init,200);}
     galleryLink.style.cursor='pointer';
     galleryLink.onclick=function(e){e.preventDefault(); publicShow('gallery');};
 
-    // Career Advisory — wizard quiz untuk rekomendasi jalur, public access
-    var careerLink=document.createElement('a');
-    careerLink.className='nav-right';
-    careerLink.href='#';
-    careerLink.textContent='Career Advisory';
-    careerLink.style.cursor='pointer';
-    careerLink.onclick=function(e){e.preventDefault(); publicShow('career-advisory');};
-
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
-    navGroup.appendChild(careerLink);
-    navGroup.appendChild(ourTalentLink);
-    navGroup.appendChild(jobLink);
+    navGroup.appendChild(careerDropdown);
     if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
     navGroup.appendChild(libraryLink);
