@@ -8286,11 +8286,12 @@ button:active:not(:disabled),
   background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
   border: 1px solid rgba(212,175,106,0.25);
   border-radius: 16px;
-  padding: 36px 32px 32px;
+  padding: 0 0 32px;
   text-align: left;
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s, background 0.3s;
 }
 .career-hub-card:hover {
@@ -8299,17 +8300,26 @@ button:active:not(:disabled),
   background: linear-gradient(180deg, rgba(212,175,106,0.1), rgba(212,175,106,0.03));
   box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 6px 16px rgba(212,175,106,0.18);
 }
-.career-hub-icon {
-  width: 64px;
-  height: 64px;
+.career-hub-photo {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  background-color: #1a1d2e;
+  position: relative;
+  margin-bottom: 24px;
+}
+.career-hub-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(13,15,28,0) 50%, rgba(13,15,28,0.85) 100%);
+}
+.career-hub-card-body {
+  padding: 0 32px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  background: rgba(212,175,106,0.14);
-  border: 1px solid rgba(212,175,106,0.35);
-  border-radius: 50%;
-  margin-bottom: 22px;
+  flex-direction: column;
+  flex: 1;
 }
 .career-hub-eyebrow {
   font-family: var(--sans);
@@ -8485,15 +8495,26 @@ button:active:not(:disabled),
   color: #f5f0e6;
 }
 .career-option-icon {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(212,175,106,0.12);
+  border: 1px solid rgba(212,175,106,0.35);
   border-radius: 50%;
-  font-size: 1.2rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #d4af6a;
+  text-transform: uppercase;
+}
+.career-option.selected .career-option-icon {
+  background: #d4af6a;
+  color: #1a1d2e;
+  border-color: #d4af6a;
 }
 .career-nav {
   max-width: 760px;
@@ -11604,42 +11625,48 @@ button:active:not(:disabled),
       <div class="career-hub-grid">
 
         <button class="career-hub-card" onclick="showView('career-advisory')">
-          <div class="career-hub-icon">🧭</div>
-          <div class="career-hub-eyebrow">Step 1 · Discover</div>
-          <h3 class="career-hub-title">Career Advisory</h3>
-          <p class="career-hub-desc">Quiz personal 10 pertanyaan untuk menemukan jalur karir yang paling cocok berdasarkan bakat, minat, dan target gaji kamu. Output: Top 3 jalur + skill wajib + modul prioritas.</p>
-          <ul class="career-hub-bullets">
-            <li>10 pertanyaan multi-select</li>
-            <li>Top 3 rekomendasi jalur (S1–S8)</li>
-            <li>Skill, modul, target perusahaan</li>
-          </ul>
-          <span class="career-hub-cta">Mulai Quiz Karir →</span>
+          <div class="career-hub-photo" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80')"></div>
+          <div class="career-hub-card-body">
+            <div class="career-hub-eyebrow">Step 1 · Discover</div>
+            <h3 class="career-hub-title">Career Advisory</h3>
+            <p class="career-hub-desc">Quiz personal 10 pertanyaan untuk menemukan jalur karir yang paling cocok berdasarkan bakat, minat, dan target gaji kamu. Output: Top 3 jalur + skill wajib + modul prioritas.</p>
+            <ul class="career-hub-bullets">
+              <li>10 pertanyaan multi-select</li>
+              <li>Top 3 rekomendasi jalur (S1–S8)</li>
+              <li>Skill, modul, target perusahaan</li>
+            </ul>
+            <span class="career-hub-cta">Mulai Quiz Karir →</span>
+          </div>
         </button>
 
         <button class="career-hub-card" onclick="showView('talent')">
-          <div class="career-hub-icon">👥</div>
-          <div class="career-hub-eyebrow">Step 2 · Inspire</div>
-          <h3 class="career-hub-title">Our Talent</h3>
-          <p class="career-hub-desc">Showcase alumni Electra yang sudah berkarir di PLN Group, Pertamina, kontraktor MEP, dan vendor industri. Lihat profil, jalur belajar, dan posisi mereka sekarang.</p>
-          <ul class="career-hub-bullets">
-            <li>Profil real alumni bersertifikat</li>
-            <li>Jalur belajar yang ditempuh</li>
-            <li>Filter berdasarkan spesialisasi</li>
-          </ul>
-          <span class="career-hub-cta">Lihat Talent Pool →</span>
+          <div class="career-hub-photo" style="background-image:url('https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=900&q=80')"></div>
+          <div class="career-hub-card-body">
+            <div class="career-hub-eyebrow">Step 2 · Inspire</div>
+            <h3 class="career-hub-title">Our Talent</h3>
+            <p class="career-hub-desc">Showcase alumni Electra yang sudah berkarir di PLN Group, Pertamina, kontraktor MEP, dan vendor industri. Lihat profil, jalur belajar, dan posisi mereka sekarang.</p>
+            <ul class="career-hub-bullets">
+              <li>Profil real alumni bersertifikat</li>
+              <li>Jalur belajar yang ditempuh</li>
+              <li>Filter berdasarkan spesialisasi</li>
+            </ul>
+            <span class="career-hub-cta">Lihat Talent Pool →</span>
+          </div>
         </button>
 
         <button class="career-hub-card" onclick="showView('jobs')">
-          <div class="career-hub-icon">💼</div>
-          <div class="career-hub-eyebrow">Step 3 · Apply</div>
-          <h3 class="career-hub-title">Job Opportunity</h3>
-          <p class="career-hub-desc">Lowongan eksklusif yang tidak dipublish ke umum: PLN Group, Pertamina, IPP swasta, EPC kontraktor, vendor industri. Hanya untuk alumni & member aktif Electra.</p>
-          <ul class="career-hub-bullets">
-            <li>Lowongan eksklusif partner</li>
-            <li>Filter level, lokasi, jalur</li>
-            <li>Apply langsung dengan profil ESA</li>
-          </ul>
-          <span class="career-hub-cta">Buka Job Board →</span>
+          <div class="career-hub-photo" style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=80')"></div>
+          <div class="career-hub-card-body">
+            <div class="career-hub-eyebrow">Step 3 · Apply</div>
+            <h3 class="career-hub-title">Job Opportunity</h3>
+            <p class="career-hub-desc">Lowongan eksklusif yang tidak dipublish ke umum: PLN Group, Pertamina, IPP swasta, EPC kontraktor, vendor industri. Hanya untuk alumni & member aktif Electra.</p>
+            <ul class="career-hub-bullets">
+              <li>Lowongan eksklusif partner</li>
+              <li>Filter level, lokasi, jalur</li>
+              <li>Apply langsung dengan profil ESA</li>
+            </ul>
+            <span class="career-hub-cta">Buka Job Board →</span>
+          </div>
         </button>
 
       </div>
@@ -11648,7 +11675,7 @@ button:active:not(:disabled),
       <div style="text-align:center; margin-top: 56px; padding: 28px 24px; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,106,0.2); border-radius: 14px; max-width: 720px; margin-left:auto; margin-right:auto;">
         <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.4rem; color: #f0d080; margin-bottom: 8px; font-weight: 500;">Belum tahu mau mulai dari mana?</div>
         <p style="color: rgba(245,240,230,0.7); font-size: 0.95rem; line-height: 1.6; margin: 0 0 18px;">Mulai dari <strong style="color:#d4af6a">Career Advisory</strong> dulu — quiz 3 menit untuk peta arah karir kamu.</p>
-        <button class="career-btn career-btn-primary" onclick="showView('career-advisory')">🧭 Mulai Career Advisory</button>
+        <button class="career-btn career-btn-primary" onclick="showView('career-advisory')">Mulai Career Advisory</button>
       </div>
 
     </div>
@@ -15622,11 +15649,11 @@ function careerRenderQuestion() {
   card.innerHTML =
     '<div class="career-q-eyebrow">' + q.eyebrow + '</div>' +
     '<h3 class="career-q-title">' + q.title + '</h3>' +
-    '<div style="font-family:var(--sans);font-size:0.78rem;color:rgba(212,175,106,0.85);margin:-18px 0 18px;letter-spacing:0.04em;">💡 Boleh pilih lebih dari satu</div>' +
+    '<div style="font-family:var(--sans);font-size:0.78rem;color:rgba(212,175,106,0.85);margin:-18px 0 18px;letter-spacing:0.04em;text-transform:uppercase;font-weight:600;">— Boleh pilih lebih dari satu —</div>' +
     '<div class="career-options">' +
     q.options.map((opt, i) =>
       '<button class="career-option' + (selected.indexOf(i) >= 0 ? ' selected' : '') + '" onclick="careerSelectOption(' + i + ')">' +
-      '<span class="career-option-icon">' + opt.icon + '</span>' +
+      '<span class="career-option-icon">' + String.fromCharCode(65 + i) + '</span>' +
       '<span>' + opt.label + '</span>' +
       '</button>'
     ).join('') +
@@ -15695,7 +15722,7 @@ function careerRenderResult(top3) {
   // Helper: render alternative card (jalur 2 & 3)
   const altCard = (item, rank) => {
     const info = CAREER_JALUR_INFO[item.id];
-    const rankBadge = rank === 2 ? '🥈 ALTERNATIF KE-1' : '🥉 ALTERNATIF KE-2';
+    const rankBadge = rank === 2 ? 'PILIHAN #2 · ALTERNATIF UTAMA' : 'PILIHAN #3 · ALTERNATIF KEDUA';
     return '<div class="career-secondary-card">' +
       '<div style="flex:1;min-width:200px;">' +
         '<div class="career-primary-jalur-id">' + rankBadge + ' · ' + item.id + '</div>' +
@@ -15716,7 +15743,7 @@ function careerRenderResult(top3) {
     '<p class="career-result-subtitle">Berikut 3 jalur karir paling sesuai dengan profilmu, diurutkan dari yang paling cocok.</p>' +
 
     '<div class="career-primary-card">' +
-      '<div class="career-primary-jalur-id">🥇 #1 PILIHAN UTAMA · ' + primary.id + ' · Jalur ' + t.name + '</div>' +
+      '<div class="career-primary-jalur-id">PILIHAN #1 · UTAMA · ' + primary.id + ' · Jalur ' + t.name + '</div>' +
       '<div class="career-primary-name">' + t.role + '</div>' +
       '<div class="career-match-bar">' +
         '<div class="career-match-bar-track"><div class="career-match-bar-fill" style="width:' + primary.pct + '%"></div></div>' +
@@ -15730,14 +15757,14 @@ function careerRenderResult(top3) {
       '</div>' +
 
       '<div style="margin-bottom:24px;">' +
-        '<div class="career-section-title">🎯 Skill Wajib Dikuasai</div>' +
+        '<div class="career-section-title">Skill Wajib Dikuasai</div>' +
         '<ul class="career-skills-list">' +
           t.skills.map(sk => '<li>' + sk + '</li>').join('') +
         '</ul>' +
       '</div>' +
 
       '<div style="margin-bottom:24px;">' +
-        '<div class="career-section-title">📚 Mulai Belajar Modul Ini Dulu</div>' +
+        '<div class="career-section-title">Mulai Belajar Modul Ini Dulu</div>' +
         '<div class="career-modules-grid">' +
           t.modules.map(m =>
             '<div class="career-module-card" onclick="careerOpenModule(\'' + primary.id + '\', \'' + m.code + '\')">' +
@@ -15749,13 +15776,13 @@ function careerRenderResult(top3) {
       '</div>' +
 
       '<div style="margin-bottom:8px;">' +
-        '<div class="career-section-title">🏢 Target Perusahaan</div>' +
+        '<div class="career-section-title">Target Perusahaan</div>' +
         '<p style="color:rgba(245,240,230,0.8);font-family:var(--sans);font-size:0.92rem;line-height:1.6;margin:0">' + t.target_companies + '</p>' +
       '</div>' +
 
       '<div class="career-cta-row">' +
         '<button class="career-btn career-btn-primary" onclick="openJalur(\'' + primary.id + '\')">Buka Detail Jalur ' + primary.id + ' →</button>' +
-        '<button class="career-btn career-btn-secondary" onclick="careerStartQuiz()">↻ Ulangi Quiz</button>' +
+        '<button class="career-btn career-btn-secondary" onclick="careerStartQuiz()">Ulangi Quiz</button>' +
       '</div>' +
     '</div>' +
 
@@ -15764,7 +15791,7 @@ function careerRenderResult(top3) {
 
     '<div style="text-align:center;padding:24px;background:rgba(255,255,255,0.03);border-radius:12px;margin-top:20px;">' +
       '<p style="color:rgba(245,240,230,0.7);font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:1.05rem;margin:0 0 14px;">Belum yakin? Konsultasi langsung dengan mentor career kami via WhatsApp.</p>' +
-      '<a href="https://wa.me/6285121532407?text=' + encodeURIComponent('Halo Admin, saya baru selesai Career Quiz. Top 3 jalur saya: ' + primary.id + ' (' + CAREER_JALUR_INFO[primary.id].name + '), ' + second.id + ' (' + CAREER_JALUR_INFO[second.id].name + '), ' + third.id + ' (' + CAREER_JALUR_INFO[third.id].name + '). Saya mau konsultasi karir lebih lanjut.') + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:12px 24px;font-weight:700;font-size:0.9rem;">💬 Konsultasi Mentor</a>' +
+      '<a href="https://wa.me/6285121532407?text=' + encodeURIComponent('Halo Admin, saya baru selesai Career Quiz. Top 3 jalur saya: ' + primary.id + ' (' + CAREER_JALUR_INFO[primary.id].name + '), ' + second.id + ' (' + CAREER_JALUR_INFO[second.id].name + '), ' + third.id + ' (' + CAREER_JALUR_INFO[third.id].name + '). Saya mau konsultasi karir lebih lanjut.') + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:12px 24px;font-weight:700;font-size:0.9rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 22a10 10 0 110-20 10 10 0 010 20z"/></svg> Konsultasi Mentor WhatsApp</a>' +
     '</div>';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
