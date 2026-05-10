@@ -8275,6 +8275,105 @@ button:active:not(:disabled),
 }
 
 /* ============================================
+   CAREER HUB — landing page 3 cards
+============================================ */
+.career-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+.career-hub-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid rgba(212,175,106,0.25);
+  border-radius: 16px;
+  padding: 36px 32px 32px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+.career-hub-card:hover {
+  transform: translateY(-6px);
+  border-color: #d4af6a;
+  background: linear-gradient(180deg, rgba(212,175,106,0.1), rgba(212,175,106,0.03));
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 6px 16px rgba(212,175,106,0.18);
+}
+.career-hub-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  background: rgba(212,175,106,0.14);
+  border: 1px solid rgba(212,175,106,0.35);
+  border-radius: 50%;
+  margin-bottom: 22px;
+}
+.career-hub-eyebrow {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #d4af6a;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.career-hub-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: #f5f0e6;
+  line-height: 1.2;
+  margin: 0 0 14px;
+}
+.career-hub-desc {
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  color: rgba(245,240,230,0.72);
+  line-height: 1.65;
+  margin: 0 0 18px;
+}
+.career-hub-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.career-hub-bullets li {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: rgba(245,240,230,0.78);
+  padding-left: 22px;
+  position: relative;
+  line-height: 1.5;
+}
+.career-hub-bullets li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #d4af6a;
+  font-weight: 700;
+}
+.career-hub-cta {
+  margin-top: auto;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #f0d080;
+  border-top: 1px solid rgba(212,175,106,0.2);
+  padding-top: 16px;
+}
+@media (max-width: 700px) {
+  .career-hub-card { padding: 28px 24px; }
+}
+
+/* ============================================
    CAREER ADVISORY — wizard quiz + result
 ============================================ */
 .career-hero {
@@ -10388,7 +10487,7 @@ button:active:not(:disabled),
       <div style="display:flex;flex-direction:column;gap:6px;align-items:center;font-size:12px;">
         <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
           <a onclick="showView('about')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Tentang Kami</a>
-          <a onclick="showView('career-advisory')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Career Advisory</a>
+          <a onclick="showView('career-hub')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Career</a>
           <a onclick="showView('referensi')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Library</a>
           <a onclick="showView('gallery')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Gallery</a>
           <a onclick="showView('faq')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">FAQ</a>
@@ -11456,6 +11555,100 @@ button:active:not(:disabled),
         <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.3rem; color: #f0d080; margin-bottom: 10px; font-weight: 500;">Mau ikut workshop berikutnya?</div>
         <p style="color: rgba(245,240,230,0.7); font-size: 0.92rem; line-height: 1.6; margin: 0 0 18px; max-width: 540px; margin-left: auto; margin-right: auto;">Workshop offline P2TL & Yantek dibuka berkala. Daftar via WhatsApp untuk info batch selanjutnya.</p>
         <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20info%20workshop%20P2TL%20%2F%20Pelayanan%20Teknik" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #d4af6a; border: 1px solid rgba(212,175,106,0.5); border-radius: 8px; padding: 11px 22px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">Chat Admin via WA</a>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ========================================================== -->
+<!-- VIEW: CAREER HUB — landing page 3 sub-feature              -->
+<!-- ========================================================== -->
+<div class="view" id="view-career-hub">
+  <div class="detail-nav">
+    <a class="detail-nav-logo" onclick="showView('home')" style="cursor:pointer;">
+      <div class="detail-nav-logo-mark">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+          <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+          <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+        </svg>
+      </div>
+      <div class="detail-nav-logo-text">Electra<br><span class="line-2">Skill Academy</span></div>
+    </a>
+    <div class="detail-nav-center">Career Hub</div>
+    <div class="detail-nav-right">
+      <button class="detail-nav-back" onclick="showView('home')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kembali
+      </button>
+    </div>
+  </div>
+
+  <section style="background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 50%, #0d0f1c 100%); min-height: 100vh; padding: 80px 24px 80px;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+
+      <!-- Hero -->
+      <div style="text-align:center; margin-bottom: 64px; max-width: 720px; margin-left:auto; margin-right:auto;">
+        <div class="section-eyebrow" style="margin-bottom: 18px;">— Career Hub —</div>
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 600; color: #f5f0e6; margin: 0 0 18px; line-height: 1.15;">
+          Bangun <span style="font-style: italic; color: #d4af6a;">Karir Listrik</span> Sesuai Mimpimu
+        </h1>
+        <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.2rem; color: rgba(245,240,230,0.78); line-height: 1.7; font-style: italic;">
+          Tiga tools untuk membantumu menemukan, membangun, dan mendapatkan karir kelistrikan yang tepat. Pilih salah satu untuk memulai.
+        </p>
+      </div>
+
+      <!-- 3 cards -->
+      <div class="career-hub-grid">
+
+        <button class="career-hub-card" onclick="showView('career-advisory')">
+          <div class="career-hub-icon">🧭</div>
+          <div class="career-hub-eyebrow">Step 1 · Discover</div>
+          <h3 class="career-hub-title">Career Advisory</h3>
+          <p class="career-hub-desc">Quiz personal 10 pertanyaan untuk menemukan jalur karir yang paling cocok berdasarkan bakat, minat, dan target gaji kamu. Output: Top 3 jalur + skill wajib + modul prioritas.</p>
+          <ul class="career-hub-bullets">
+            <li>10 pertanyaan multi-select</li>
+            <li>Top 3 rekomendasi jalur (S1–S8)</li>
+            <li>Skill, modul, target perusahaan</li>
+          </ul>
+          <span class="career-hub-cta">Mulai Quiz Karir →</span>
+        </button>
+
+        <button class="career-hub-card" onclick="showView('talent')">
+          <div class="career-hub-icon">👥</div>
+          <div class="career-hub-eyebrow">Step 2 · Inspire</div>
+          <h3 class="career-hub-title">Our Talent</h3>
+          <p class="career-hub-desc">Showcase alumni Electra yang sudah berkarir di PLN Group, Pertamina, kontraktor MEP, dan vendor industri. Lihat profil, jalur belajar, dan posisi mereka sekarang.</p>
+          <ul class="career-hub-bullets">
+            <li>Profil real alumni bersertifikat</li>
+            <li>Jalur belajar yang ditempuh</li>
+            <li>Filter berdasarkan spesialisasi</li>
+          </ul>
+          <span class="career-hub-cta">Lihat Talent Pool →</span>
+        </button>
+
+        <button class="career-hub-card" onclick="showView('jobs')">
+          <div class="career-hub-icon">💼</div>
+          <div class="career-hub-eyebrow">Step 3 · Apply</div>
+          <h3 class="career-hub-title">Job Opportunity</h3>
+          <p class="career-hub-desc">Lowongan eksklusif yang tidak dipublish ke umum: PLN Group, Pertamina, IPP swasta, EPC kontraktor, vendor industri. Hanya untuk alumni & member aktif Electra.</p>
+          <ul class="career-hub-bullets">
+            <li>Lowongan eksklusif partner</li>
+            <li>Filter level, lokasi, jalur</li>
+            <li>Apply langsung dengan profil ESA</li>
+          </ul>
+          <span class="career-hub-cta">Buka Job Board →</span>
+        </button>
+
+      </div>
+
+      <!-- Soft CTA -->
+      <div style="text-align:center; margin-top: 56px; padding: 28px 24px; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,106,0.2); border-radius: 14px; max-width: 720px; margin-left:auto; margin-right:auto;">
+        <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.4rem; color: #f0d080; margin-bottom: 8px; font-weight: 500;">Belum tahu mau mulai dari mana?</div>
+        <p style="color: rgba(245,240,230,0.7); font-size: 0.95rem; line-height: 1.6; margin: 0 0 18px;">Mulai dari <strong style="color:#d4af6a">Career Advisory</strong> dulu — quiz 3 menit untuk peta arah karir kamu.</p>
+        <button class="career-btn career-btn-primary" onclick="showView('career-advisory')">🧭 Mulai Career Advisory</button>
       </div>
 
     </div>
@@ -24344,53 +24537,17 @@ else{setTimeout(init,200);}
     var simLabs=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.includes('Simulator')||a.textContent.includes('Labs');});
     var cert=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.trim()==='Certification'||a.textContent.includes('Sertifikasi');});
 
-    // === CAREER DROPDOWN — gabungkan 3 menu: Career Advisory, Our Talent, Job Opportunity ===
-    var careerDropdown=document.createElement('div');
-    careerDropdown.className='nav-dropdown';
-    var careerToggle=document.createElement('a');
-    careerToggle.className='nav-right nav-dropdown-toggle';
-    careerToggle.href='#';
-    careerToggle.textContent='Career';
-    careerToggle.style.cursor='pointer';
-    // Toggle on click (mobile-friendly), hover handled by CSS
-    careerToggle.onclick=function(e){
+    // === CAREER LINK — opens dedicated hub page (no dropdown) ===
+    var careerLink=document.createElement('a');
+    careerLink.className='nav-right';
+    careerLink.href='#';
+    careerLink.textContent='Career';
+    careerLink.style.cursor='pointer';
+    careerLink.onclick=function(e){
       e.preventDefault();
-      careerDropdown.classList.toggle('open');
+      publicShow('career-hub');
     };
-    var careerBridge=document.createElement('div');
-    careerBridge.className='nav-dropdown-bridge';
-    var careerMenu=document.createElement('div');
-    careerMenu.className='nav-dropdown-menu';
-    var careerOptions=[
-      { icon:'🧭', title:'Career Advisory', desc:'Quiz personal, temukan jalur karirmu', view:'career-advisory', isPublic:true },
-      { icon:'👥', title:'Our Talent', desc:'Showcase alumni & talent pool ESA', view:'talent', isPublic:true },
-      { icon:'💼', title:'Job Opportunity', desc:'Lowongan eksklusif PLN, Pertamina, partner', view:'jobs', isPublic:false }
-    ];
-    careerOptions.forEach(function(opt){
-      var item=document.createElement('a');
-      item.className='nav-dropdown-item';
-      item.href='#';
-      item.innerHTML=
-        '<span class="nav-dropdown-icon">'+opt.icon+'</span>'+
-        '<span class="nav-dropdown-text">'+
-          '<span class="nav-dropdown-title">'+opt.title+'</span>'+
-          '<span class="nav-dropdown-desc">'+opt.desc+'</span>'+
-        '</span>';
-      item.onclick=function(e){
-        e.preventDefault();
-        careerDropdown.classList.remove('open');
-        if(opt.isPublic){ publicShow(opt.view); } else { showView(opt.view); }
-      };
-      careerMenu.appendChild(item);
-    });
-    careerDropdown.appendChild(careerToggle);
-    careerDropdown.appendChild(careerBridge);
-    careerDropdown.appendChild(careerMenu);
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e){
-      if(!careerDropdown.contains(e.target)) careerDropdown.classList.remove('open');
-    });
 
     // Library — perpustakaan digital, public access
     var libraryLink=document.createElement('a');
@@ -24410,7 +24567,7 @@ else{setTimeout(init,200);}
 
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
-    navGroup.appendChild(careerDropdown);
+    navGroup.appendChild(careerLink);
     if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
     navGroup.appendChild(libraryLink);
