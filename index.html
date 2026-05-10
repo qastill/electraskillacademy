@@ -15133,12 +15133,13 @@ const CAREER_QUESTIONS = [
   },
   {
     eyebrow: 'TARGET GAJI',
-    title: 'Target gaji entry-level kamu (per bulan)?',
+    title: 'Target gaji yang kamu incar (per bulan)?',
     options: [
       { icon: '💵', label: 'Rp 3-5 juta — yang penting cepat kerja', score: { S1: 2, S8: 2, S2: 1 } },
       { icon: '💵', label: 'Rp 5-8 juta — standar PLN distribusi / pabrik', score: { S2: 2, S3: 3, S6: 2, S7: 1 } },
       { icon: '💰', label: 'Rp 8-12 juta — engineer transmisi / pembangkitan', score: { S4: 3, S7: 3, S6: 2 } },
-      { icon: '💰', label: 'Rp 10-20 juta — data scientist / consultant', score: { S5: 3, S6: 2 } }
+      { icon: '💰', label: 'Rp 10-20 juta — data scientist / consultant senior', score: { S5: 3, S6: 2 } },
+      { icon: '💎', label: 'Rp 15-30 juta — expert / consultant lead / manager', score: { S4: 3, S5: 3, S6: 3, S7: 2 } }
     ]
   },
   {
@@ -15422,14 +15423,16 @@ function careerRenderQuestion() {
   fill.style.width = ((_careerState.idx + 1) / total * 100) + '%';
   backBtn.style.visibility = _careerState.idx === 0 ? 'hidden' : 'visible';
   nextBtn.textContent = _careerState.idx === total - 1 ? 'Lihat Hasil →' : 'Lanjut →';
-  const selectedIdx = _careerState.answers[_careerState.idx];
-  nextBtn.disabled = selectedIdx === undefined;
+  // Answers are arrays of selected indices (multi-select)
+  const selected = _careerState.answers[_careerState.idx] || [];
+  nextBtn.disabled = selected.length === 0;
   card.innerHTML =
     '<div class="career-q-eyebrow">' + q.eyebrow + '</div>' +
     '<h3 class="career-q-title">' + q.title + '</h3>' +
+    '<div style="font-family:var(--sans);font-size:0.78rem;color:rgba(212,175,106,0.85);margin:-18px 0 18px;letter-spacing:0.04em;">💡 Boleh pilih lebih dari satu</div>' +
     '<div class="career-options">' +
     q.options.map((opt, i) =>
-      '<button class="career-option' + (selectedIdx === i ? ' selected' : '') + '" onclick="careerSelectOption(' + i + ')">' +
+      '<button class="career-option' + (selected.indexOf(i) >= 0 ? ' selected' : '') + '" onclick="careerSelectOption(' + i + ')">' +
       '<span class="career-option-icon">' + opt.icon + '</span>' +
       '<span>' + opt.label + '</span>' +
       '</button>'
@@ -15438,12 +15441,18 @@ function careerRenderQuestion() {
 }
 
 function careerSelectOption(i) {
-  _careerState.answers[_careerState.idx] = i;
+  // Multi-select: toggle index in/out of array
+  if (!_careerState.answers[_careerState.idx]) _careerState.answers[_careerState.idx] = [];
+  const arr = _careerState.answers[_careerState.idx];
+  const idx = arr.indexOf(i);
+  if (idx >= 0) arr.splice(idx, 1);
+  else arr.push(i);
   careerRenderQuestion();
 }
 
 function careerNextQuestion() {
-  if (_careerState.answers[_careerState.idx] === undefined) return;
+  const sel = _careerState.answers[_careerState.idx] || [];
+  if (sel.length === 0) return;
   if (_careerState.idx < CAREER_QUESTIONS.length - 1) {
     _careerState.idx++;
     careerRenderQuestion();
@@ -15462,40 +15471,63 @@ function careerPrevQuestion() {
 }
 
 function careerCalculateResult() {
-  // Reset & sum scores
+  // Sum scores across all selected options per question (multi-select)
   const scores = { S1:0,S2:0,S3:0,S4:0,S5:0,S6:0,S7:0,S8:0 };
-  _careerState.answers.forEach((ansIdx, qIdx) => {
-    const opt = CAREER_QUESTIONS[qIdx].options[ansIdx];
-    if (!opt) return;
-    Object.keys(opt.score).forEach(k => { scores[k] = (scores[k] || 0) + opt.score[k]; });
+  _careerState.answers.forEach((selectedArr, qIdx) => {
+    if (!selectedArr || !selectedArr.length) return;
+    selectedArr.forEach(ansIdx => {
+      const opt = CAREER_QUESTIONS[qIdx].options[ansIdx];
+      if (!opt) return;
+      Object.keys(opt.score).forEach(k => { scores[k] = (scores[k] || 0) + opt.score[k]; });
+    });
   });
   const sorted = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
-  const top = sorted[0];
-  const second = sorted[1];
-  const max = scores[top];
   const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-  const topPct = Math.min(99, Math.round((scores[top] / total) * 100 * 2.2)); // boost for visual appeal
-  const secondPct = Math.min(95, Math.round((scores[second] / total) * 100 * 2.2));
-  careerRenderResult(top, second, topPct, secondPct);
+  // Top 3 jalur with match percentages
+  const top3 = sorted.slice(0, 3).map(id => ({
+    id,
+    score: scores[id],
+    pct: Math.min(99, Math.max(35, Math.round((scores[id] / total) * 100 * 2.2)))
+  }));
+  careerRenderResult(top3);
 }
 
-function careerRenderResult(topId, secondId, topPct, secondPct) {
-  const t = CAREER_JALUR_INFO[topId];
-  const s = CAREER_JALUR_INFO[secondId];
+function careerRenderResult(top3) {
+  const [primary, second, third] = top3;
+  const t = CAREER_JALUR_INFO[primary.id];
   document.getElementById('career-quiz').style.display = 'none';
   const result = document.getElementById('career-result');
   result.style.display = 'block';
+
+  // Helper: render alternative card (jalur 2 & 3)
+  const altCard = (item, rank) => {
+    const info = CAREER_JALUR_INFO[item.id];
+    const rankBadge = rank === 2 ? '🥈 ALTERNATIF KE-1' : '🥉 ALTERNATIF KE-2';
+    return '<div class="career-secondary-card">' +
+      '<div style="flex:1;min-width:200px;">' +
+        '<div class="career-primary-jalur-id">' + rankBadge + ' · ' + item.id + '</div>' +
+        '<div class="career-secondary-card-name">' + info.name + ' (' + info.role + ')</div>' +
+        '<div class="career-match-bar" style="margin-top:10px;margin-bottom:6px;">' +
+          '<div class="career-match-bar-track"><div class="career-match-bar-fill" style="width:' + item.pct + '%"></div></div>' +
+          '<div class="career-match-pct">' + item.pct + '%</div>' +
+        '</div>' +
+        '<div style="font-family:var(--sans);font-size:0.8rem;color:rgba(245,240,230,0.6);">' + info.salary + ' · ' + info.timeline + '</div>' +
+      '</div>' +
+      '<button class="career-btn career-btn-secondary" onclick="openJalur(\'' + item.id + '\')">Lihat Detail →</button>' +
+    '</div>';
+  };
+
   result.innerHTML =
-    '<div class="career-result-eyebrow">— Hasil Career Advisor —</div>' +
+    '<div class="career-result-eyebrow">— Hasil Career Advisor · Top 3 Match —</div>' +
     '<h1 class="career-result-title">Kamu Cocok Jadi <span style="font-style:italic;color:#d4af6a">' + t.role + '</span></h1>' +
-    '<p class="career-result-subtitle">Berdasarkan jawaban kamu, jalur karir ' + t.name + ' (' + topId + ') paling sesuai dengan profilmu.</p>' +
+    '<p class="career-result-subtitle">Berikut 3 jalur karir paling sesuai dengan profilmu, diurutkan dari yang paling cocok.</p>' +
 
     '<div class="career-primary-card">' +
-      '<div class="career-primary-jalur-id">' + topId + ' · Jalur ' + t.name + '</div>' +
+      '<div class="career-primary-jalur-id">🥇 #1 PILIHAN UTAMA · ' + primary.id + ' · Jalur ' + t.name + '</div>' +
       '<div class="career-primary-name">' + t.role + '</div>' +
       '<div class="career-match-bar">' +
-        '<div class="career-match-bar-track"><div class="career-match-bar-fill" style="width:' + topPct + '%"></div></div>' +
-        '<div class="career-match-pct">' + topPct + '% match</div>' +
+        '<div class="career-match-bar-track"><div class="career-match-bar-fill" style="width:' + primary.pct + '%"></div></div>' +
+        '<div class="career-match-pct">' + primary.pct + '% match</div>' +
       '</div>' +
       '<p class="career-primary-desc">' + t.desc + '</p>' +
       '<div class="career-stats">' +
@@ -15515,7 +15547,7 @@ function careerRenderResult(topId, secondId, topPct, secondPct) {
         '<div class="career-section-title">📚 Mulai Belajar Modul Ini Dulu</div>' +
         '<div class="career-modules-grid">' +
           t.modules.map(m =>
-            '<div class="career-module-card" onclick="careerOpenModule(\'' + topId + '\', \'' + m.code + '\')">' +
+            '<div class="career-module-card" onclick="careerOpenModule(\'' + primary.id + '\', \'' + m.code + '\')">' +
               '<div class="career-module-card-code">Modul ' + m.code + '</div>' +
               '<div class="career-module-card-title">' + m.title + '</div>' +
             '</div>'
@@ -15529,23 +15561,17 @@ function careerRenderResult(topId, secondId, topPct, secondPct) {
       '</div>' +
 
       '<div class="career-cta-row">' +
-        '<button class="career-btn career-btn-primary" onclick="openJalur(\'' + topId + '\')">Buka Detail Jalur ' + topId + ' →</button>' +
+        '<button class="career-btn career-btn-primary" onclick="openJalur(\'' + primary.id + '\')">Buka Detail Jalur ' + primary.id + ' →</button>' +
         '<button class="career-btn career-btn-secondary" onclick="careerStartQuiz()">↻ Ulangi Quiz</button>' +
       '</div>' +
     '</div>' +
 
-    '<div class="career-secondary-card">' +
-      '<div>' +
-        '<div class="career-primary-jalur-id">ALTERNATIF · ' + secondId + '</div>' +
-        '<div class="career-secondary-card-name">' + s.name + ' (' + s.role + ')</div>' +
-        '<div class="career-secondary-card-pct">' + secondPct + '% match · ' + s.salary + '</div>' +
-      '</div>' +
-      '<button class="career-btn career-btn-secondary" onclick="openJalur(\'' + secondId + '\')">Lihat Detail →</button>' +
-    '</div>' +
+    altCard(second, 2) +
+    altCard(third, 3) +
 
     '<div style="text-align:center;padding:24px;background:rgba(255,255,255,0.03);border-radius:12px;margin-top:20px;">' +
       '<p style="color:rgba(245,240,230,0.7);font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:1.05rem;margin:0 0 14px;">Belum yakin? Konsultasi langsung dengan mentor career kami via WhatsApp.</p>' +
-      '<a href="https://wa.me/6285121532407?text=' + encodeURIComponent('Halo Admin, saya baru selesai Career Quiz dan rekomendasi saya adalah jalur ' + topId + ' (' + t.name + '). Saya mau konsultasi karir lebih lanjut.') + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:12px 24px;font-weight:700;font-size:0.9rem;">💬 Konsultasi Mentor</a>' +
+      '<a href="https://wa.me/6285121532407?text=' + encodeURIComponent('Halo Admin, saya baru selesai Career Quiz. Top 3 jalur saya: ' + primary.id + ' (' + CAREER_JALUR_INFO[primary.id].name + '), ' + second.id + ' (' + CAREER_JALUR_INFO[second.id].name + '), ' + third.id + ' (' + CAREER_JALUR_INFO[third.id].name + '). Saya mau konsultasi karir lebih lanjut.') + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:12px 24px;font-weight:700;font-size:0.9rem;">💬 Konsultasi Mentor</a>' +
     '</div>';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
