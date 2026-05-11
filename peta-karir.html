@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Peta Karir Ketenagalistrikan Indonesia — 380 Okupasi Standar KKNI dengan detail tugas, skill, tanggung jawab, dan wewenang. Dari Buku Resmi Kementerian ESDM.">
+<meta name="author" content="Electra Skill Academy">
+<title>Peta Karir Ketenagalistrikan — Electra Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy-950:#060b1f;--navy-900:#0a1230;--navy-800:#0e1838;--navy-700:#14224a;--gold-100:#f5edc9;--gold-200:#ecd989;--gold-300:#e2c057;--gold-400:#d4a637;--gold-500:#c9a961;--gold-600:#a37728;--gold-700:#825a23;--cream:#f5f1e8}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--navy-950);background-image:radial-gradient(at 0% 0%,rgba(201,169,97,.08) 0,transparent 50%),radial-gradient(at 100% 100%,rgba(28,45,94,.4) 0,transparent 50%);background-attachment:fixed;color:var(--cream);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-track{background:var(--navy-900)}::-webkit-scrollbar-thumb{background:var(--gold-700);border-radius:5px}::-webkit-scrollbar-thumb:hover{background:var(--gold-500)}
+.container{max-width:1280px;margin:0 auto;padding:0 1.5rem}@media(min-width:1024px){.container{padding:0 3rem}}
+.back-bar{position:sticky;top:0;z-index:40;background:rgba(6,11,31,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,169,97,.18)}
+.back-bar-inner{padding:.85rem 0;display:flex;align-items:center;gap:1rem}
+.back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--gold-300);text-decoration:none;font-size:.85rem;font-weight:600;letter-spacing:.04em;padding:.4rem .9rem;border:1px solid rgba(201,169,97,.35);border-radius:8px;transition:all .15s}
+.back-link:hover{background:rgba(201,169,97,.12);color:var(--gold-100);border-color:var(--gold-400)}
+.back-bar-title{font-family:"Cormorant Garamond",serif;font-style:italic;color:rgba(245,241,232,.7);font-size:.95rem}
+.hero{position:relative;overflow:hidden;border-bottom:1px solid rgba(201,169,97,.2)}
+.hero-grid{position:absolute;inset:0;opacity:.03;background-image:linear-gradient(to right,#c9a961 1px,transparent 1px),linear-gradient(to bottom,#c9a961 1px,transparent 1px);background-size:60px 60px}
+.hero-inner{position:relative;padding:4rem 0}@media(min-width:1024px){.hero-inner{padding:6rem 0}}
+.brand-line{display:flex;align-items:center;gap:.75rem;margin-bottom:3rem}
+.brand-line .dash{width:3rem;height:1px;background:rgba(201,169,97,.4)}
+.brand-line span{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-400);font-weight:500}
+.hero h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;line-height:.95;letter-spacing:-.02em;max-width:60rem}
+.hero h1 .line1{display:block;font-size:clamp(3rem,7vw,6rem);color:var(--cream)}
+.hero h1 .line2{display:block;font-size:clamp(3rem,7vw,6rem);font-style:italic;color:var(--gold-500);margin-top:.5rem}
+.hero h1 .line3{display:block;font-size:clamp(2rem,5vw,4rem);color:rgba(245,241,232,.9);margin-top:.75rem}
+.hero-sub{display:flex;align-items:center;gap:1rem;margin-top:2.5rem}.hero-sub .dash{width:4rem;height:1px;background:var(--gold-500)}
+.hero-sub p{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.25rem;color:rgba(236,217,137,.9)}@media(min-width:768px){.hero-sub p{font-size:1.5rem}}
+.hero-desc{margin-top:2rem;font-size:1rem;color:rgba(245,241,232,.7);max-width:48rem;line-height:1.65}
+.hero-desc strong{color:var(--gold-300);font-weight:500}
+.hero-pills{margin-top:2rem;display:flex;flex-wrap:wrap;gap:.5rem;font-size:.75rem}
+.pill{padding:.375rem .75rem;border-radius:9999px;border:1px solid rgba(201,169,97,.3);background:rgba(10,18,48,.5);color:rgba(236,217,137,.8);backdrop-filter:blur(8px)}
+.stats{border-bottom:1px solid rgba(201,169,97,.1);background:rgba(10,18,48,.4)}
+.stats-inner{padding:2rem 0}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}@media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr);gap:2rem}}
+.stat-icon{font-size:2rem;margin-bottom:.5rem}
+.stat-num{font-family:"Cormorant Garamond",serif;font-size:2.5rem;line-height:1;color:var(--gold-400);font-weight:500}@media(min-width:768px){.stat-num{font-size:3rem}}
+.stat-label{margin-top:.5rem;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,241,232,.6)}
+.filter{position:sticky;top:54px;z-index:30;background:rgba(6,11,31,.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(201,169,97,.2);box-shadow:0 10px 25px -10px rgba(6,11,31,.5)}
+.filter-inner{padding:1.25rem 0}
+.search{position:relative;margin-bottom:1rem}
+.search input{width:100%;background:rgba(10,18,48,.6);border:1px solid rgba(201,169,97,.3);border-radius:.5rem;padding:.75rem 3rem;color:var(--cream);font-size:.95rem;font-family:inherit;transition:all .2s}
+.search input::placeholder{color:rgba(245,241,232,.4)}
+.search input:focus{outline:none;border-color:var(--gold-500);box-shadow:0 0 0 1px rgba(201,169,97,.5)}
+.search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);width:1.25rem;height:1.25rem;color:rgba(201,169,97,.6);pointer-events:none}
+.search-clear{position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(245,241,232,.4);cursor:pointer;font-size:1rem;padding:.25rem;display:none}
+.search-clear:hover{color:var(--gold-400)}.search-clear.show{display:block}
+.filters-row{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
+.filter-select{background:rgba(10,18,48,.6);border:1px solid rgba(201,169,97,.3);color:var(--cream);font-size:.875rem;font-family:inherit;padding:.375rem .75rem;border-radius:.375rem;cursor:pointer;transition:all .2s}
+.filter-select:hover{background:rgba(14,24,56,.6)}.filter-select:focus{outline:none;border-color:var(--gold-500)}
+.filter-select option{background:var(--navy-900)}
+.reset-btn{padding:.375rem .75rem;font-size:.75rem;color:var(--gold-400);background:none;border:none;cursor:pointer;display:none}
+.reset-btn:hover{color:var(--gold-200);text-decoration:underline;text-underline-offset:4px}.reset-btn.show{display:block}
+.result-count{margin-left:auto;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:.875rem;color:rgba(226,192,87,.8)}
+.result-count strong{color:var(--gold-300);font-weight:500}
+main{padding:3rem 0}
+.bidang-section{margin-bottom:4rem;animation:fadeIn .5s ease-out}
+.bidang-header{padding-bottom:1.5rem;margin-bottom:2rem;border-bottom:1px solid rgba(201,169,97,.2)}
+.bidang-header .top{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.bidang-header .top .icon{font-size:1.5rem}
+.bidang-header .top .label{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(212,166,55,.8)}
+.bidang-header h2{font-family:"Cormorant Garamond",serif;font-size:2.5rem;color:var(--cream);margin-bottom:.75rem;font-weight:500}@media(min-width:768px){.bidang-header h2{font-size:3rem}}
+.bidang-header p{color:rgba(245,241,232,.6);max-width:48rem;font-size:.95rem;line-height:1.65}
+.level-block{margin-bottom:2.5rem}
+.level-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:1rem}
+.level-head .kkni{font-family:"Cormorant Garamond",serif;font-size:1.5rem;color:var(--gold-500);font-weight:500}
+.level-head .name{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.125rem;color:rgba(245,241,232,.8)}
+.level-head .divider{flex:1;height:1px;background:linear-gradient(to right,rgba(201,169,97,.3),transparent)}
+.level-head .count{font-size:.75rem;color:rgba(245,241,232,.4)}
+.cards{display:grid;grid-template-columns:1fr;gap:.75rem}@media(min-width:768px){.cards{grid-template-columns:repeat(2,1fr)}}@media(min-width:1024px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:rgba(10,18,48,.4);border:1px solid rgba(201,169,97,.1);border-radius:.5rem;padding:1rem;text-align:left;cursor:pointer;transition:all .3s ease;border-left-width:4px;color:inherit;font-family:inherit}
+.card:hover{background:rgba(14,24,56,.6);border-color:rgba(201,169,97,.4);transform:translateY(-2px);box-shadow:0 10px 20px -10px rgba(6,11,31,.5)}
+.card.area-konsultansi{border-left-color:rgba(96,165,250,.6)}.card.area-pembangunan{border-left-color:rgba(251,191,36,.6)}.card.area-pemeriksaan{border-left-color:rgba(192,132,252,.6)}.card.area-pengoperasian{border-left-color:rgba(52,211,153,.6)}.card.area-pemeliharaan{border-left-color:rgba(251,113,133,.6)}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.5rem}
+.card-badge{font-size:.65rem;padding:.125rem .5rem;border-radius:9999px;text-transform:uppercase;letter-spacing:.05em}
+.card-badge.area-konsultansi{background:rgba(96,165,250,.1);color:#93c5fd}.card-badge.area-pembangunan{background:rgba(251,191,36,.1);color:#fcd34d}.card-badge.area-pemeriksaan{background:rgba(192,132,252,.1);color:#d8b4fe}.card-badge.area-pengoperasian{background:rgba(52,211,153,.1);color:#6ee7b7}.card-badge.area-pemeliharaan{background:rgba(251,113,133,.1);color:#fda4af}
+.card-page{font-size:.65rem;color:rgba(245,241,232,.3)}
+.card-name{font-size:.875rem;color:rgba(245,241,232,.9);line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card:hover .card-name{color:var(--cream)}
+.card-arrow{margin-top:.5rem;font-size:.7rem;color:rgba(212,166,55,.6);display:flex;align-items:center;gap:.25rem}
+.card:hover .card-arrow{color:var(--gold-300)}
+.card-arrow .arr{transition:transform .2s}.card:hover .card-arrow .arr{transform:translateX(.25rem)}
+.empty{text-align:center;padding:6rem 0}
+.empty h3{font-family:"Cormorant Garamond",serif;font-size:2rem;font-style:italic;color:rgba(226,192,87,.6);margin-bottom:1rem}
+.empty p{font-size:.875rem;color:rgba(245,241,232,.5)}
+.modal-backdrop{position:fixed;inset:0;z-index:50;display:none;align-items:flex-start;justify-content:center;padding:1rem;background:rgba(6,11,31,.85);backdrop-filter:blur(4px);animation:fadeIn .3s;overflow-y:auto}
+.modal-backdrop.show{display:flex}@media(min-width:768px){.modal-backdrop{padding:2rem;align-items:center}}
+.modal{position:relative;max-width:48rem;width:100%;max-height:90vh;overflow-y:auto;background:linear-gradient(to bottom,var(--navy-900),var(--navy-950));border:1px solid rgba(201,169,97,.4);border-radius:.75rem;box-shadow:0 25px 50px -12px rgba(6,11,31,1);animation:slideUp .4s ease-out;margin:auto}
+.modal::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold-500),transparent)}
+.modal-close{position:absolute;top:1rem;right:1rem;width:2rem;height:2rem;border-radius:9999px;background:rgba(14,24,56,.5);border:none;color:rgba(245,241,232,.6);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;font-size:.875rem;font-family:inherit}
+.modal-close:hover{background:var(--navy-700);color:var(--gold-400)}
+.modal-body{padding:2rem}@media(min-width:768px){.modal-body{padding:2.5rem}}
+.modal-bidang{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.modal-bidang .icon{font-size:1.25rem}
+.modal-bidang .label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-400)}
+.modal-level-badge{display:inline-flex;align-items:center;gap:.75rem;padding:.5rem 1rem;background:rgba(201,169,97,.1);border:1px solid rgba(201,169,97,.3);border-radius:.5rem;margin-bottom:1.5rem}
+.modal-level-badge .kkni{font-family:"Cormorant Garamond",serif;font-size:1.5rem;color:var(--gold-400);font-weight:500}
+.modal-level-badge .sep{width:1px;height:1.5rem;background:rgba(201,169,97,.3)}
+.modal-level-badge .label{font-family:"Cormorant Garamond",serif;font-style:italic;color:rgba(245,241,232,.9)}
+.modal h2{font-family:"Cormorant Garamond",serif;font-size:1.5rem;line-height:1.3;color:var(--cream);margin-bottom:1rem;font-weight:500}@media(min-width:768px){.modal h2{font-size:1.875rem}}
+.modal-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem;font-size:.75rem}
+.modal-meta .chip{padding:.25rem .625rem;background:rgba(10,18,48,.5);border:1px solid rgba(201,169,97,.2);border-radius:9999px;color:rgba(245,241,232,.8)}
+.section{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(201,169,97,.15)}
+.section:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.section-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.875rem}
+.section-head .num{font-family:"Cormorant Garamond",serif;font-size:1.25rem;color:var(--gold-500);font-weight:500;line-height:1}
+.section-head h3{font-family:"Cormorant Garamond",serif;font-size:1.125rem;color:var(--cream);font-weight:600;font-style:italic;letter-spacing:.01em}
+.section-head .icon{font-size:1.125rem}
+.section-content{color:rgba(245,241,232,.85);font-size:.9rem;line-height:1.7}
+.section-content p{margin-bottom:.5rem}
+.section-content ul{list-style:none;padding:0}
+.section-content li{position:relative;padding-left:1.25rem;margin-bottom:.625rem;color:rgba(245,241,232,.85);font-size:.9rem;line-height:1.65}
+.section-content li::before{content:"◆";position:absolute;left:0;top:.1em;color:var(--gold-500);font-size:.7em}
+.skills-grid{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.25rem}
+.skill-tag{padding:.375rem .875rem;background:linear-gradient(135deg,rgba(201,169,97,.1),rgba(201,169,97,.05));border:1px solid rgba(201,169,97,.3);border-radius:9999px;font-size:.8125rem;color:var(--gold-200);font-weight:500;letter-spacing:.01em}
+.no-detail{padding:1rem;background:rgba(14,24,56,.4);border:1px dashed rgba(201,169,97,.2);border-radius:.5rem;color:rgba(245,241,232,.5);font-size:.875rem;font-style:italic;text-align:center}
+.tips-box{background:rgba(14,24,56,.4);border:1px solid rgba(201,169,97,.1);border-radius:.5rem;padding:1.25rem;margin-top:1.5rem}
+.tips-box h3{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold-300);margin-bottom:.75rem;font-weight:500;font-size:1rem}
+.tips-box p{font-size:.875rem;color:rgba(245,241,232,.7);line-height:1.65}
+.tips-box strong{color:var(--cream)}.tips-box em{font-style:italic}
+.tips-note{font-size:.75rem;color:rgba(245,241,232,.4);margin-top:.75rem;font-style:italic}
+.modal-footer{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid rgba(201,169,97,.15);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.modal-footer p{font-size:.75rem;color:rgba(245,241,232,.4)}
+.btn-close{padding:.5rem 1rem;font-size:.875rem;background:rgba(201,169,97,.1);border:1px solid rgba(201,169,97,.4);color:var(--gold-300);border-radius:.375rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-close:hover{background:rgba(201,169,97,.2);color:var(--gold-100)}
+footer{margin-top:6rem;border-top:1px solid rgba(201,169,97,.2);background:rgba(6,11,31,.8)}
+.footer-inner{padding:3rem 0}
+.footer-grid{display:grid;grid-template-columns:1fr;gap:2rem;margin-bottom:2.5rem}@media(min-width:768px){.footer-grid{grid-template-columns:repeat(3,1fr)}}
+.footer-brand .top{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem}
+.footer-brand .top .dash{width:2rem;height:1px;background:var(--gold-500)}
+.footer-brand .top span{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-400)}
+.footer-brand h3{font-family:"Cormorant Garamond",serif;font-size:1.5rem;color:var(--cream);margin-bottom:.5rem;font-weight:500}
+.footer-brand p{font-size:.875rem;color:rgba(245,241,232,.6);line-height:1.65}
+.footer-col h4{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-400);margin-bottom:1rem}
+.footer-col ul{list-style:none}
+.footer-col li{font-size:.875rem;color:rgba(245,241,232,.7);margin-bottom:.5rem}
+.footer-col a{color:inherit;text-decoration:none;transition:color .2s}
+.footer-col a:hover{color:var(--gold-300)}
+.footer-bottom{padding-top:2rem;border-top:1px solid rgba(201,169,97,.1);display:flex;flex-direction:column;gap:1rem;justify-content:space-between;font-size:.75rem;color:rgba(245,241,232,.4)}@media(min-width:768px){.footer-bottom{flex-direction:row}}
+.footer-bottom .italic{font-style:italic}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.spinner{display:inline-block;width:4rem;height:4rem;border:2px solid rgba(201,169,97,.3);border-top-color:var(--gold-500);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center}
+.loading p{color:var(--gold-300);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.25rem;margin-top:1rem}
+</style>
+</head>
+<body>
+<div class="back-bar">
+  <div class="container back-bar-inner">
+    <a href="/" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      Kembali ke Electra Academy
+    </a>
+    <span class="back-bar-title">Peta Karir Ketenagalistrikan</span>
+  </div>
+</div>
+
+<div id="app"><div class="loading"><div><div class="spinner"></div><p>Memuat peta karir...</p></div></div></div>
+
+<script src="peta-karir-data.js"></script>
+<script>
+const DATA = window.__PETA_KARIR_DATA;
+const state = {query:'',bidang:'all',level:'all',area:'all',selected:null};
+const $ = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+const escHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function filterOkupasi() {
+  const q = state.query.toLowerCase();
+  return DATA.okupasi.filter(o => {
+    if (state.bidang !== 'all' && o.bidang !== state.bidang) return false;
+    if (state.level !== 'all' && o.level !== parseInt(state.level)) return false;
+    if (state.area !== 'all' && o.area_fungsi !== state.area) return false;
+    if (q && !o.name.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+function groupOkupasi(list) {
+  const g = {};
+  list.forEach(o => { if (!g[o.bidang]) g[o.bidang] = {}; if (!g[o.bidang][o.level]) g[o.bidang][o.level] = []; g[o.bidang][o.level].push(o); });
+  return g;
+}
+function render() {
+  const filtered = filterOkupasi();
+  const grouped = groupOkupasi(filtered);
+  const bidangOrder = ['pembangkit', 'transmisi', 'distribusi', 'pemanfaatan'];
+  const visibleBidang = bidangOrder.filter(b => grouped[b]);
+  const html = renderHero() + renderStats() + renderFilters(filtered.length) +
+    '<main class="container">' + (filtered.length === 0 ? renderEmpty() : visibleBidang.map(b => renderBidangSection(b, grouped[b])).join('')) + '</main>' +
+    renderFooter() + renderModal();
+  $('#app').innerHTML = html;
+  attachListeners();
+}
+function renderHero(){return `<header class="hero"><div class="hero-grid"></div><div class="container hero-inner"><div class="brand-line"><div class="dash"></div><span>Electra Skill Academy presents</span></div><h1><span class="line1">Peta Karir</span><span class="line2">Ketenagalistrikan</span><span class="line3">Indonesia</span></h1><div class="hero-sub"><div class="dash"></div><p>${escHtml(DATA.metadata.subtitle)}</p></div><p class="hero-desc">Eksplorasi <strong>${DATA.metadata.total_okupasi} okupasi nasional</strong> di sektor ketenagalistrikan Indonesia — lengkap dengan detail tugas, skill wajib, tanggung jawab, dan wewenang. Terstruktur menurut KKNI Level 1 hingga 9.</p><div class="hero-pills"><span class="pill">📘 ${escHtml(DATA.metadata.issuer)}</span><span class="pill">📅 Edisi ${DATA.metadata.year}</span><span class="pill">📑 ${DATA.metadata.source_pages} halaman sumber</span><span class="pill">💼 Klik kartu untuk detail lengkap</span></div></div></header>`;}
+function renderStats(){const e=Object.entries(DATA.bidang).filter(([k])=>k!=='umum');return `<section class="stats"><div class="container stats-inner"><div class="stats-grid">${e.map(([k,m])=>{const c=DATA.stats.by_bidang[k]||0;return `<div><div class="stat-icon">${m.icon}</div><div class="stat-num">${c}</div><div class="stat-label">${escHtml(m.name)}</div></div>`;}).join('')}</div></div></section>`;}
+function renderFilters(resultCount){const hasFilter=state.query||state.bidang!=='all'||state.level!=='all'||state.area!=='all';return `<section class="filter"><div class="container filter-inner"><div class="search"><svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input id="search-input" type="text" placeholder="Cari okupasi..." value="${escHtml(state.query)}"><button class="search-clear ${state.query?'show':''}" id="search-clear">✕</button></div><div class="filters-row"><select class="filter-select" id="filter-bidang"><option value="all">Semua Bidang</option>${Object.entries(DATA.bidang).filter(([k])=>k!=='umum').map(([k,v])=>`<option value="${k}" ${state.bidang===k?'selected':''}>${v.icon} ${escHtml(v.name)}</option>`).join('')}</select><select class="filter-select" id="filter-level"><option value="all">Semua Level</option>${Object.entries(DATA.levels).sort((a,b)=>parseInt(b[0])-parseInt(a[0])).map(([k,v])=>`<option value="${k}" ${state.level===k?'selected':''}>${v.kkni} — ${escHtml(v.label)}</option>`).join('')}</select><select class="filter-select" id="filter-area"><option value="all">Semua Area</option>${Object.entries(DATA.area_fungsi).map(([k,v])=>`<option value="${k}" ${state.area===k?'selected':''}>${escHtml(v)}</option>`).join('')}</select><button class="reset-btn ${hasFilter?'show':''}" id="reset-btn">Reset semua</button><div class="result-count"><strong>${resultCount}</strong> dari ${DATA.metadata.total_okupasi} okupasi</div></div></div></section>`;}
+function renderBidangSection(bk,levels){const b=DATA.bidang[bk];if(!b)return '';const sl=Object.keys(levels).sort((a,c)=>parseInt(c)-parseInt(a));return `<div class="bidang-section"><div class="bidang-header"><div class="top"><span class="icon">${b.icon}</span><span class="label">Bidang</span></div><h2>${escHtml(b.name)}</h2><p>${escHtml(b.description)}</p></div>${sl.map(lk=>{const l=DATA.levels[lk];const i=levels[lk];return `<div class="level-block"><div class="level-head"><div class="kkni">${escHtml(l.kkni)}</div><div class="name">${escHtml(l.label)}</div><div class="divider"></div><div class="count">${i.length} okupasi</div></div><div class="cards">${i.map((o,idx)=>renderCard(o,idx)).join('')}</div></div>`;}).join('')}</div>`;}
+function renderCard(o){const al=DATA.area_fungsi[o.area_fungsi]?.split(' ')[0]||o.area_fungsi;return `<button class="card area-${o.area_fungsi}" data-name="${escHtml(o.name)}"><div class="card-top"><span class="card-badge area-${o.area_fungsi}">${escHtml(al)}</span><span class="card-page">hal. ${o.page}</span></div><p class="card-name">${escHtml(o.name)}</p><div class="card-arrow"><span>Lihat detail</span><span class="arr">→</span></div></button>`;}
+function renderEmpty(){return `<div class="empty"><h3>Tidak ada okupasi ditemukan</h3><p>Coba ubah filter atau kata kunci pencarian.</p></div>`;}
+function renderModal(){if(!state.selected)return '<div class="modal-backdrop" id="modal-backdrop"></div>';const o=state.selected;const b=DATA.bidang[o.bidang];const l=DATA.levels[o.level];const a=DATA.area_fungsi[o.area_fungsi];const d=o.detail||{};const s=[];let n=1;if(d.definisi)s.push(`<div class="section"><div class="section-head"><span class="num">${n++}.</span><span class="icon">📋</span><h3>Definisi Jabatan</h3></div><div class="section-content"><p>${escHtml(d.definisi)}</p></div></div>`);if(d.lingkup)s.push(`<div class="section"><div class="section-head"><span class="num">${n++}.</span><span class="icon">🎯</span><h3>Lingkup Pekerjaan</h3></div><div class="section-content"><p>${escHtml(d.lingkup)}</p></div></div>`);if(d.profil&&d.profil.length)s.push(`<div class="section"><div class="section-head"><span class="num">${n++}.</span><span class="icon">⚡</span><h3>Skill & Profil Wajib</h3></div><div class="section-content"><div class="skills-grid">${d.profil.map(t=>`<span class="skill-tag">${escHtml(t)}</span>`).join('')}</div></div></div>`);if(d.tanggung_jawab&&d.tanggung_jawab.length)s.push(`<div class="section"><div class="section-head"><span class="num">${n++}.</span><span class="icon">🛡️</span><h3>Tanggung Jawab</h3></div><div class="section-content"><ul>${d.tanggung_jawab.map(t=>`<li>${escHtml(t)}</li>`).join('')}</ul></div></div>`);if(d.wewenang&&d.wewenang.length)s.push(`<div class="section"><div class="section-head"><span class="num">${n++}.</span><span class="icon">🔑</span><h3>Wewenang</h3></div><div class="section-content"><ul>${d.wewenang.map(t=>`<li>${escHtml(t)}</li>`).join('')}</ul></div></div>`);if(d.tugas_utama&&d.tugas_utama.length)s.push(`<div class="section"><div class="section-head"><span class="num">${n++}.</span><span class="icon">⚙️</span><h3>Tugas Utama</h3></div><div class="section-content"><ul>${d.tugas_utama.map(t=>`<li>${escHtml(t)}</li>`).join('')}</ul></div></div>`);if(d.tugas_khusus&&d.tugas_khusus.length)s.push(`<div class="section"><div class="section-head"><span class="num">${n++}.</span><span class="icon">📐</span><h3>Tugas Khusus</h3></div><div class="section-content"><ul>${d.tugas_khusus.map(t=>`<li>${escHtml(t)}</li>`).join('')}</ul></div></div>`);if(d.persyaratan&&d.persyaratan.length)s.push(`<div class="section"><div class="section-head"><span class="num">${n++}.</span><span class="icon">🎓</span><h3>Persyaratan / Jenjang Karir</h3></div><div class="section-content"><ul>${d.persyaratan.map(t=>`<li>${escHtml(t)}</li>`).join('')}</ul></div></div>`);const dc=s.length?s.join(''):'<div class="no-detail">Detail lengkap untuk okupasi ini sedang dilengkapi. Silakan rujuk halaman '+o.page+' di Buku Peta Okupasi 2018.</div>';return `<div class="modal-backdrop show" id="modal-backdrop"><div class="modal" onclick="event.stopPropagation()"><button class="modal-close" id="modal-close" aria-label="Tutup">✕</button><div class="modal-body"><div class="modal-bidang"><span class="icon">${b.icon}</span><span class="label">${escHtml(b.name)}</span></div><div class="modal-level-badge"><span class="kkni">${escHtml(l.kkni)}</span><span class="sep"></span><span class="label">${escHtml(l.label)}</span></div><h2>${escHtml(o.name)}</h2><div class="modal-meta"><span class="chip">📁 ${escHtml(a)}</span><span class="chip">📄 Hal. ${o.page}</span></div>${dc}<div class="tips-box"><h3>💡 Jalur Pengembangan</h3><p>Okupasi ini berada pada <strong>${escHtml(l.kkni)}</strong>. Untuk naik ke level berikutnya, biasanya diperlukan: penambahan jam pengalaman lapangan, sertifikasi BNSP/LSP yang relevan dengan area <em>${escHtml(a.toLowerCase())}</em>, dan pendidikan/pelatihan teknis lanjutan.</p><p class="tips-note">* Persyaratan detail tersedia di SKKNI Ketenagalistrikan yang diterbitkan Kemnaker.</p></div><div class="modal-footer"><p>Sumber: Buku Peta Okupasi Nasional Ketenagalistrikan 2018 — Kementerian ESDM</p><button class="btn-close" id="btn-close-modal">Tutup</button></div></div></div></div>`;}
+function renderFooter(){return `<footer><div class="container footer-inner"><div class="footer-grid"><div class="footer-brand"><div class="top"><div class="dash"></div><span>Electra Skill Academy</span></div><h3>Peta Karir Ketenagalistrikan</h3><p>Visualisasi interaktif Buku Peta Okupasi Nasional Sub Sektor Ketenagalistrikan 2018 — lengkap dengan detail jabatan, skill wajib, tugas, dan wewenang.</p></div><div class="footer-col"><h4>Sumber Data</h4><ul><li>Direktorat Jenderal Ketenagalistrikan</li><li>Kementerian ESDM Republik Indonesia</li><li>Edisi Tahun 2018 — 688 halaman</li><li>Standar KKNI Level 1–9</li></ul></div><div class="footer-col"><h4>Hubungi Electra</h4><ul><li><a href="/">electraacademy.com</a></li><li><a href="https://wa.me/6285121532407" target="_blank" rel="noreferrer">WhatsApp: 0851-2153-2407</a></li></ul></div></div><div class="footer-bottom"><p>© ${new Date().getFullYear()} Electra Skill Academy. Data publik dari Kementerian ESDM RI.</p><p class="italic">Built with ♦ for Indonesia's electrical workforce</p></div></div></footer>`;}
+function attachListeners(){const si=$('#search-input');if(si){si.addEventListener('input',e=>{state.query=e.target.value;const cb=$('#search-clear');if(cb)cb.classList.toggle('show',!!state.query);const c=filterOkupasi().length;const rc=$('.result-count');if(rc)rc.innerHTML=`<strong>${c}</strong> dari ${DATA.metadata.total_okupasi} okupasi`;const rb=$('#reset-btn');if(rb){const h=state.query||state.bidang!=='all'||state.level!=='all'||state.area!=='all';rb.classList.toggle('show',h);}renderGridOnly();});}$('#search-clear')?.addEventListener('click',()=>{state.query='';render();});$('#filter-bidang')?.addEventListener('change',e=>{state.bidang=e.target.value;render();});$('#filter-level')?.addEventListener('change',e=>{state.level=e.target.value;render();});$('#filter-area')?.addEventListener('change',e=>{state.area=e.target.value;render();});$('#reset-btn')?.addEventListener('click',()=>{state.query='';state.bidang='all';state.level='all';state.area='all';render();});$('#modal-close')?.addEventListener('click',closeModal);$('#btn-close-modal')?.addEventListener('click',closeModal);$('#modal-backdrop')?.addEventListener('click',closeModal);attachCardListeners();}
+function attachCardListeners(){$$('.card').forEach(c=>{c.addEventListener('click',()=>{const n=c.dataset.name;const f=DATA.okupasi.find(o=>o.name===n);if(f){state.selected=f;render();}});});}
+function renderGridOnly(){const f=filterOkupasi();const g=groupOkupasi(f);const bo=['pembangkit','transmisi','distribusi','pemanfaatan'];const vb=bo.filter(b=>g[b]);const m=$('main');if(m){m.innerHTML=f.length===0?renderEmpty():vb.map(b=>renderBidangSection(b,g[b])).join('');attachCardListeners();}}
+function closeModal(){state.selected=null;document.body.style.overflow='';render();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.selected)closeModal();});
+render();
+</script>
+</body>
+</html>
