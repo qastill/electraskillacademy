@@ -23936,67 +23936,152 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
     const invitedHtml = list.length === 0
-      ? `<div style="text-align:center;padding:18px 12px;color:#9ca3af;font-size:13px;">Belum ada yang join lewat kode kamu. Bagikan kode-mu untuk mulai!</div>`
-      : list.slice(0, 5).map(p => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(201,169,110,0.08);font-size:13px;color:#f5f0e6;">
+      ? `<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:32px 16px;color:#9ca3af;font-size:13px;text-align:center;font-style:italic;">
+          <svg width="36" height="36" viewBox="0 0 44 44" fill="none" opacity="0.4">
+            <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+            <path d="M8 22L36 22" stroke="#c9a96e" stroke-width="1.2"/>
+          </svg>
+          <div>Belum ada yang join lewat kode kamu.<br>Mulai bagikan kode-mu sekarang!</div>
+        </div>`
+      : list.slice(0, 5).map((p, idx) => {
+          const initial = (p.name || 'P').trim().charAt(0).toUpperCase();
+          const badge = p.is_paid
+            ? '<span style="display:inline-flex;align-items:center;gap:4px;color:#e4b04c;font-weight:700;font-size:11px;letter-spacing:0.05em;">★ PAID</span>'
+            : p.is_active
+              ? '<span style="display:inline-flex;align-items:center;gap:4px;color:#c9a96e;font-weight:700;font-size:11px;letter-spacing:0.05em;">● AKTIF</span>'
+              : '<span style="display:inline-flex;align-items:center;gap:4px;color:#6b7280;font-weight:600;font-size:11px;letter-spacing:0.05em;">○ PENDING</span>';
+          return `
+          <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;${idx > 0 ? 'border-top:1px dashed rgba(201,169,110,0.15);' : ''}color:#f5f0e6;">
+            <div style="flex-shrink:0;font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:700;color:#a07840;letter-spacing:0.05em;min-width:22px;">#${idx+1}</div>
+            <div style="flex-shrink:0;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(201,169,110,0.25),rgba(160,120,64,0.15));border:1px solid rgba(201,169,110,0.4);display:flex;align-items:center;justify-content:center;color:#c9a96e;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;">${escapeHtml(initial)}</div>
             <div style="flex:1;min-width:0;">
-              <div style="font-weight:600;">${escapeHtml(p.name || 'Peserta')}</div>
-              <div style="color:#9ca3af;font-size:11px;">${escapeHtml(p.email_masked || '')}</div>
+              <div style="font-weight:600;font-size:13.5px;letter-spacing:0.01em;">${escapeHtml(p.name || 'Peserta')}</div>
+              <div style="color:#9ca3af;font-size:11px;margin-top:3px;">${escapeHtml(p.email_masked || '')}</div>
             </div>
-            <div style="font-size:11px;text-align:right;">
-              ${p.is_paid ? '<span style="color:#e4b04c;font-weight:600;">● Paid</span>' : p.is_active ? '<span style="color:#c9a96e;font-weight:600;">● Aktif</span>' : '<span style="color:#6b7280;">○ Pending</span>'}
-              <div style="color:#6b7280;margin-top:2px;">${new Date(p.joined_at).toLocaleDateString('id-ID',{day:'2-digit',month:'short'})}</div>
+            <div style="font-size:11px;text-align:right;white-space:nowrap;">
+              ${badge}
+              <div style="color:#6b7280;margin-top:4px;letter-spacing:0.04em;font-size:10.5px;">${new Date(p.joined_at).toLocaleDateString('id-ID',{day:'2-digit',month:'short'})}</div>
             </div>
           </div>
-        `).join('');
+          `;
+        }).join('');
+
+    // Ornament: diamond divider (gold lines + diamond center, motif Electra logo)
+    const divider = `
+      <div style="display:flex;align-items:center;gap:10px;margin:18px 0;">
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,169,110,0.5),rgba(201,169,110,0.5));"></div>
+        <svg width="14" height="14" viewBox="0 0 16 16" style="flex-shrink:0;opacity:0.85;">
+          <path d="M8 1L13 8L8 15L3 8L8 1Z" fill="none" stroke="#c9a96e" stroke-width="1.1"/>
+          <circle cx="8" cy="8" r="1.4" fill="#c9a96e"/>
+        </svg>
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(201,169,110,0.5),rgba(201,169,110,0.5),transparent);"></div>
+      </div>`;
+
+    // Corner ornament SVG (untuk sudut frame card utama)
+    const cornerSvg = (rot) => `<svg width="22" height="22" viewBox="0 0 22 22" style="position:absolute;width:22px;height:22px;transform:rotate(${rot}deg);"><path d="M2 8V2H8" stroke="#c9a96e" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="1.4" fill="#c9a96e"/></svg>`;
 
     widget.innerHTML = `
-      <section style="max-width:980px;margin:24px auto;padding:0 16px;">
-        <div style="background:linear-gradient(135deg,rgba(201,169,110,0.08) 0%,rgba(20,22,38,0.95) 60%);border:1px solid rgba(201,169,110,0.22);border-radius:18px;padding:24px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-            <span style="font-size:22px;">🎁</span>
-            <h2 style="margin:0;color:#c9a96e;font-size:16px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;">Program Referral Kamu</h2>
-          </div>
+      <section style="max-width:980px;margin:32px auto;padding:0 16px;">
+        <!-- Frame ornamental — diamond pattern bg + corner brackets + double border -->
+        <div style="position:relative;background:
+              radial-gradient(ellipse at top right,rgba(201,169,110,0.10),transparent 55%),
+              radial-gradient(ellipse at bottom left,rgba(160,120,64,0.08),transparent 55%),
+              linear-gradient(180deg,#161827 0%,#0f1220 100%);
+              border:1px solid rgba(201,169,110,0.32);
+              border-radius:20px;
+              padding:32px 28px 28px;
+              box-shadow:0 18px 48px rgba(0,0,0,0.45),inset 0 0 0 1px rgba(201,169,110,0.06);">
 
-          <div style="display:grid;grid-template-columns:1fr;gap:14px;">
-            <!-- Kode referral + actions -->
-            <div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.25);border-radius:12px;padding:18px;">
-              <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Kode referral kamu</div>
-              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                <div id="esa-ref-code-display" style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:#c9a96e;letter-spacing:0.08em;flex:1;min-width:140px;">${escapeHtml(refCode)}</div>
-                <button onclick="esaCopyReferralCode('${escapeHtml(refCode)}')" style="padding:9px 16px;background:transparent;border:1px solid rgba(201,169,110,0.55);color:#c9a96e;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">📋 Salin Kode</button>
-                <button onclick="esaCopyReferralLink('${escapeHtml(shareUrl)}')" style="padding:9px 16px;background:transparent;border:1px solid rgba(201,169,110,0.55);color:#c9a96e;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">🔗 Salin Link</button>
-                <a href="${escapeHtml(waUrl)}" target="_blank" rel="noopener" style="padding:9px 16px;background:linear-gradient(135deg,#c9a96e,#a07840);border:none;color:#1a1d2e;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;letter-spacing:0.03em;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                  Bagikan WA
-                </button>
-              </div>
-              <div style="margin-top:10px;font-size:11px;color:#6b7280;">Bagikan link ini ke teman: <code style="background:rgba(201,169,110,0.1);padding:2px 6px;border-radius:4px;color:#c9a96e;font-size:11px;">${escapeHtml(shareUrl)}</code></div>
-            </div>
+          <!-- SVG diamond pattern overlay (corak background) -->
+          <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:0.06;border-radius:20px;overflow:hidden;background-image:url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;40&quot; height=&quot;40&quot; viewBox=&quot;0 0 40 40&quot;><path d=&quot;M20 4L36 20L20 36L4 20L20 4Z&quot; stroke=&quot;%23c9a96e&quot; stroke-width=&quot;0.8&quot; fill=&quot;none&quot;/></svg>');background-size:40px 40px;"></div>
 
-            <!-- Stats grid -->
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-              <div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.18);border-radius:12px;padding:14px;text-align:center;">
-                <div style="font-size:28px;font-weight:700;color:#c9a96e;font-family:'Cormorant Garamond',serif;">${total}</div>
-                <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;">Diundang</div>
-              </div>
-              <div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.18);border-radius:12px;padding:14px;text-align:center;">
-                <div style="font-size:28px;font-weight:700;color:#d4b87e;font-family:'Cormorant Garamond',serif;">${active}</div>
-                <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;">Aktif</div>
-              </div>
-              <div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.18);border-radius:12px;padding:14px;text-align:center;">
-                <div style="font-size:28px;font-weight:700;color:#e4b04c;font-family:'Cormorant Garamond',serif;">${paid}</div>
-                <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;">Bayar</div>
+          <!-- 4 corner ornaments -->
+          <div style="position:absolute;top:10px;left:10px;">${cornerSvg(0)}</div>
+          <div style="position:absolute;top:10px;right:10px;">${cornerSvg(90)}</div>
+          <div style="position:absolute;bottom:10px;left:10px;">${cornerSvg(-90)}</div>
+          <div style="position:absolute;bottom:10px;right:10px;">${cornerSvg(180)}</div>
+
+          <!-- Content wrapper (relative supaya di atas overlay) -->
+          <div style="position:relative;">
+
+            <!-- Eyebrow + Title ornamental -->
+            <div style="text-align:center;margin-bottom:8px;">
+              <div style="display:inline-flex;align-items:center;gap:8px;color:#a07840;font-size:10px;font-weight:700;letter-spacing:0.32em;text-transform:uppercase;">
+                <span style="width:24px;height:1px;background:#a07840;"></span>
+                Program Referral
+                <span style="width:24px;height:1px;background:#a07840;"></span>
               </div>
             </div>
+            <h2 style="margin:0;text-align:center;color:#f5f0e6;font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;letter-spacing:0.02em;line-height:1.2;">
+              Ajak Teman, <span style="color:#c9a96e;font-style:italic;">Tumbuh Bersama</span>
+            </h2>
+            <p style="text-align:center;color:#9ca3af;font-size:12.5px;margin:6px auto 0;max-width:480px;line-height:1.55;">
+              Setiap teman yang join lewat kode-mu jadi bagian dari komunitas Electra. Bagikan, ajak belajar, bertumbuh bersama.
+            </p>
 
-            <!-- List 5 invited terbaru -->
-            <div style="background:#1a1d2e;border:1px solid rgba(201,169,110,0.18);border-radius:12px;overflow:hidden;">
-              <div style="padding:12px 16px;background:rgba(201,169,110,0.08);font-size:12px;font-weight:600;color:#c9a96e;text-transform:uppercase;letter-spacing:0.08em;">
-                ${list.length > 5 ? `5 dari ${total} terbaru` : 'Yang sudah join lewat kamu'}
+            ${divider}
+
+            <!-- KODE REFERRAL — focal point dengan corner brackets -->
+            <div style="position:relative;text-align:center;padding:28px 16px 22px;background:linear-gradient(180deg,rgba(201,169,110,0.05),rgba(15,18,32,0.4));border:1px solid rgba(201,169,110,0.2);border-radius:12px;margin-bottom:18px;">
+              <!-- corner brackets seperti sertifikat -->
+              <div style="position:absolute;top:8px;left:8px;width:18px;height:18px;border-top:1.5px solid #c9a96e;border-left:1.5px solid #c9a96e;border-top-left-radius:3px;"></div>
+              <div style="position:absolute;top:8px;right:8px;width:18px;height:18px;border-top:1.5px solid #c9a96e;border-right:1.5px solid #c9a96e;border-top-right-radius:3px;"></div>
+              <div style="position:absolute;bottom:8px;left:8px;width:18px;height:18px;border-bottom:1.5px solid #c9a96e;border-left:1.5px solid #c9a96e;border-bottom-left-radius:3px;"></div>
+              <div style="position:absolute;bottom:8px;right:8px;width:18px;height:18px;border-bottom:1.5px solid #c9a96e;border-right:1.5px solid #c9a96e;border-bottom-right-radius:3px;"></div>
+
+              <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.28em;margin-bottom:10px;">Kode Referral Kamu</div>
+              <div id="esa-ref-code-display" style="font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;color:#c9a96e;letter-spacing:0.18em;line-height:1;text-shadow:0 2px 12px rgba(201,169,110,0.25);">${escapeHtml(refCode)}</div>
+              <div style="font-size:11px;color:#6b7280;margin-top:14px;letter-spacing:0.05em;">
+                Atau bagikan link: <code style="background:rgba(201,169,110,0.1);padding:3px 9px;border-radius:5px;color:#c9a96e;font-size:11px;">${escapeHtml(shareUrl)}</code>
+              </div>
+            </div>
+
+            <!-- Action buttons row -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:8px;">
+              <button onclick="esaCopyReferralCode('${escapeHtml(refCode)}')" style="padding:12px 16px;background:transparent;border:1px solid rgba(201,169,110,0.55);color:#c9a96e;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;" onmouseover="this.style.background='rgba(201,169,110,0.12)';this.style.borderColor='#c9a96e'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(201,169,110,0.55)'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Salin Kode
+              </button>
+              <button onclick="esaCopyReferralLink('${escapeHtml(shareUrl)}')" style="padding:12px 16px;background:transparent;border:1px solid rgba(201,169,110,0.55);color:#c9a96e;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;" onmouseover="this.style.background='rgba(201,169,110,0.12)';this.style.borderColor='#c9a96e'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(201,169,110,0.55)'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                Salin Link
+              </button>
+              <a href="${escapeHtml(waUrl)}" target="_blank" rel="noopener" style="padding:12px 16px;background:linear-gradient(135deg,#c9a96e,#a07840);border:none;color:#1a1d2e;border-radius:10px;font-size:12.5px;font-weight:700;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;box-shadow:0 4px 14px rgba(201,169,110,0.18);" onmouseover="this.style.boxShadow='0 6px 22px rgba(201,169,110,0.45)';this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='0 4px 14px rgba(201,169,110,0.18)';this.style.transform='translateY(0)'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413zM12 22a10 10 0 110-20 10 10 0 010 20z"/></svg>
+                Bagikan WA
+              </a>
+            </div>
+
+            ${divider}
+
+            <!-- Stats grid — 3 kartu emas ornamental -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;">
+              ${[
+                {n: total,  l: 'Diundang', color: '#c9a96e', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0 8 4 4 0 1 0 0-8 M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75'},
+                {n: active, l: 'Aktif',    color: '#d4b87e', icon: 'M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-3'},
+                {n: paid,   l: 'Bayar',    color: '#e4b04c', icon: 'M12 2L15.09 8.26 22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z'}
+              ].map(s => `
+                <div style="position:relative;background:linear-gradient(180deg,rgba(201,169,110,0.04),rgba(15,18,32,0.6));border:1px solid rgba(201,169,110,0.22);border-radius:12px;padding:18px 12px 14px;text-align:center;overflow:hidden;">
+                  <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:40px;height:2px;background:linear-gradient(90deg,transparent,${s.color},transparent);"></div>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${s.color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 6px;display:block;opacity:0.7;"><path d="${s.icon}"/></svg>
+                  <div style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:${s.color};line-height:1;letter-spacing:0.02em;">${s.n}</div>
+                  <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.16em;margin-top:8px;">${s.l}</div>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- LIST INVITEE -->
+            <div style="background:rgba(15,18,32,0.6);border:1px solid rgba(201,169,110,0.2);border-radius:12px;overflow:hidden;">
+              <div style="padding:14px 18px;background:linear-gradient(180deg,rgba(201,169,110,0.08),transparent);border-bottom:1px solid rgba(201,169,110,0.14);display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;color:#c9a96e;text-transform:uppercase;letter-spacing:0.18em;">
+                  <svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 1L13 8L8 15L3 8L8 1Z" fill="none" stroke="#c9a96e" stroke-width="1"/><circle cx="8" cy="8" r="1.2" fill="#c9a96e"/></svg>
+                  ${list.length > 5 ? `5 Invitee Terbaru` : (list.length > 0 ? 'Invitee Kamu' : 'Belum ada invitee')}
+                </div>
+                ${list.length > 5 ? `<div style="font-size:10px;color:#6b7280;letter-spacing:0.04em;">dari ${total} total</div>` : ''}
               </div>
               ${invitedHtml}
             </div>
+
           </div>
         </div>
       </section>
