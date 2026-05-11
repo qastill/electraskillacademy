@@ -24172,6 +24172,24 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     window.addEventListener('resize', esaUpdateStickyMobileCTA);
     // 4. Referral widget (kalau sudah login)
     setTimeout(esaLoadReferralWidget, 800);
+    // 5. Deep-link ?modul=CODE&track=X&level=Y → auto-open modul (dari peta-karir.html)
+    try {
+      const params = new URL(window.location.href).searchParams;
+      const modulCode = params.get('modul');
+      const trackId = params.get('track');
+      const levelId = params.get('level');
+      if (modulCode && typeof window.openModul === 'function') {
+        setTimeout(() => {
+          try { window.openModul(modulCode, trackId || null, levelId || null); } catch(e) { console.warn('[ESA] deep-link openModul failed:', e); }
+          // Bersihkan URL supaya refresh tidak buka ulang
+          if (history.replaceState) {
+            const u = new URL(window.location.href);
+            u.searchParams.delete('modul'); u.searchParams.delete('track'); u.searchParams.delete('level');
+            history.replaceState({}, '', u.toString());
+          }
+        }, 500);
+      }
+    } catch(e) { /* fail-soft */ }
 
     // Hook "Start Journey" CTA → show login modal if not logged in, then scroll
     const startCTAs = document.querySelectorAll('.hero-cta');
