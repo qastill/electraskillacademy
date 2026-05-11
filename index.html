@@ -23936,26 +23936,60 @@ function buildModal(){
   h2.style.fontWeight="700";h2.style.margin="0 0 6px";
 
   var p1=document.createElement("p");
-  p1.textContent="Pilih cara masuk yang paling nyaman buatmu.";
-  p1.style.color="#9ca3af";p1.style.fontSize="13px";p1.style.margin="0 0 28px";p1.style.lineHeight="1.6";
+  p1.textContent="Isi biodata dulu, lalu pilih cara login.";
+  p1.style.color="#9ca3af";p1.style.fontSize="13px";p1.style.margin="0 0 20px";p1.style.lineHeight="1.6";
+
+  // ---- BIODATA REQUIRED (wajib diisi sebelum OAuth) ----
+  var biodataWrap=document.createElement("div");
+  biodataWrap.style.cssText="text-align:left;margin-bottom:22px;padding:14px 14px 12px;background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.18);border-radius:12px;";
+
+  var biodataTitle=document.createElement("div");
+  biodataTitle.innerHTML='<span style="color:#c9a96e;">STEP 1</span> · Biodata Anda';
+  biodataTitle.style.cssText="color:#c9a96e;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;";
+
+  var bioNameInput=document.createElement("input");
+  bioNameInput.type="text";
+  bioNameInput.id="esa-auth-bio-name";
+  bioNameInput.placeholder="Nama lengkap (sesuai KTP) *";
+  bioNameInput.autocomplete="name";
+  bioNameInput.style.cssText="width:100%;padding:11px 13px;background:#0f1220;border:1px solid rgba(201,169,110,0.25);border-radius:9px;color:#fff;font-size:13.5px;margin-bottom:8px;box-sizing:border-box;outline:none;transition:border-color 0.15s;";
+  bioNameInput.addEventListener("focus",function(){this.style.borderColor="#c9a96e";});
+  bioNameInput.addEventListener("blur",function(){this.style.borderColor="rgba(201,169,110,0.25)";});
+
+  var bioPhoneInput=document.createElement("input");
+  bioPhoneInput.type="tel";
+  bioPhoneInput.id="esa-auth-bio-phone";
+  bioPhoneInput.placeholder="No. HP / WhatsApp (08xxx) *";
+  bioPhoneInput.autocomplete="tel";
+  bioPhoneInput.style.cssText="width:100%;padding:11px 13px;background:#0f1220;border:1px solid rgba(201,169,110,0.25);border-radius:9px;color:#fff;font-size:13.5px;margin-bottom:0;box-sizing:border-box;outline:none;transition:border-color 0.15s;";
+  bioPhoneInput.addEventListener("focus",function(){this.style.borderColor="#c9a96e";});
+  bioPhoneInput.addEventListener("blur",function(){this.style.borderColor="rgba(201,169,110,0.25)";});
+
+  biodataWrap.appendChild(biodataTitle);
+  biodataWrap.appendChild(bioNameInput);
+  biodataWrap.appendChild(bioPhoneInput);
+
+  var stepLogin=document.createElement("div");
+  stepLogin.innerHTML='<span style="color:#c9a96e;">STEP 2</span> · Pilih cara login';
+  stepLogin.style.cssText="text-align:left;color:#c9a96e;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;";
 
   // ---- Google (Google Identity Services / JWT in-page) ----
   var googleBtn=document.createElement("button");
   googleBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Masuk dengan Google';
   styleOAuthBtn(googleBtn,'#fff','#1a1a1a');
-  googleBtn.onclick=triggerGoogleLogin;
+  googleBtn.onclick=function(){if(validateBiodataBeforeAuth())triggerGoogleLogin();};
 
   // ---- LinkedIn (Supabase OAuth — provider 'linkedin_oidc') ----
   var linkedinBtn=document.createElement("button");
   linkedinBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="#fff"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43c-1.14 0-2.06-.93-2.06-2.06S4.2 3.3 5.34 3.3s2.06.93 2.06 2.07c0 1.13-.92 2.06-2.06 2.06zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.99 0 1.78-.77 1.78-1.72V1.72C24 .77 23.21 0 22.22 0z"/></svg>Masuk dengan LinkedIn';
   styleOAuthBtn(linkedinBtn,'#0a66c2','#fff');
-  linkedinBtn.onclick=function(e){triggerSupabaseOAuth('linkedin_oidc','LinkedIn',e);};
+  linkedinBtn.onclick=function(e){if(validateBiodataBeforeAuth())triggerSupabaseOAuth('linkedin_oidc','LinkedIn',e);};
 
   // ---- GitHub (Supabase OAuth — provider 'github') ----
   var githubBtn=document.createElement("button");
   githubBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="#fff"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.55v-2.16c-3.2.7-3.87-1.36-3.87-1.36-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.24 3.34.95.1-.74.4-1.24.73-1.53-2.55-.29-5.23-1.27-5.23-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.16 1.17a11 11 0 0 1 5.74 0c2.2-1.48 3.16-1.17 3.16-1.17.62 1.57.23 2.73.11 3.02.73.8 1.18 1.82 1.18 3.07 0 4.39-2.69 5.36-5.25 5.64.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>Masuk dengan GitHub';
   styleOAuthBtn(githubBtn,'#24292f','#fff');
-  githubBtn.onclick=function(e){triggerSupabaseOAuth('github','GitHub',e);};
+  githubBtn.onclick=function(e){if(validateBiodataBeforeAuth())triggerSupabaseOAuth('github','GitHub',e);};
 
   var gsiDiv=document.createElement("div");gsiDiv.id="esa-auth-gsi-btn";gsiDiv.style.marginBottom="12px";gsiDiv.style.display="none";
 
@@ -23997,6 +24031,8 @@ function buildModal(){
 
   box.appendChild(closeBtn);box.appendChild(iconDiv);box.appendChild(h2);
   box.appendChild(p1);
+  box.appendChild(biodataWrap);
+  box.appendChild(stepLogin);
   box.appendChild(googleBtn);
   box.appendChild(linkedinBtn);
   box.appendChild(githubBtn);
@@ -24012,6 +24048,40 @@ function buildModal(){
     google.accounts.id.initialize({client_id:CID,callback:handleCred,auto_select:false});
     google.accounts.id.renderButton(gsiDiv,{theme:"outline",size:"large",width:340});
   }
+}
+
+// Validasi biodata WAJIB sebelum trigger OAuth (Google/LinkedIn/GitHub).
+// User harus isi Nama + No HP di STEP 1 dulu, baru bisa klik OAuth di STEP 2.
+// Setelah valid, data di-stash di window._esaPendingBiodata untuk dimerge
+// di handleCred (Google) atau Supabase OAuth callback.
+function validateBiodataBeforeAuth(){
+  var nameEl=document.getElementById("esa-auth-bio-name");
+  var phoneEl=document.getElementById("esa-auth-bio-phone");
+  var name=(nameEl&&nameEl.value||"").trim();
+  var phone=(phoneEl&&phoneEl.value||"").trim();
+  var phoneDigits=phone.replace(/\D/g,"");
+
+  function shake(el){
+    if(!el)return;
+    el.focus();
+    el.style.borderColor="#ef6b6b";
+    el.style.boxShadow="0 0 0 3px rgba(239,107,107,0.18)";
+    setTimeout(function(){el.style.borderColor="rgba(201,169,110,0.25)";el.style.boxShadow="none";},1800);
+  }
+
+  if(!name||name.length<3){
+    alert("Isi NAMA LENGKAP dulu (minimal 3 karakter) sebelum login.");
+    shake(nameEl);
+    return false;
+  }
+  if(!phone||phoneDigits.length<8){
+    alert("Isi NO. HP / WhatsApp dulu (minimal 8 digit) sebelum login.");
+    shake(phoneEl);
+    return false;
+  }
+
+  window._esaPendingBiodata={name:name,phone:phone,tosAcceptedAt:new Date().toISOString()};
+  return true;
 }
 
 // Style helper untuk semua tombol OAuth (konsisten ukuran & hover)
@@ -24109,7 +24179,10 @@ function closeModal(){
 function handleCred(resp){
   var pl=pJwt(resp.credential);
   if(pl&&pl.email){
-    var name=pl.name||pl.email;
+    // Merge biodata yang user isi DI STEP 1 sebelum klik Google.
+    // User-typed name override Google name (intent eksplisit).
+    var biodata=window._esaPendingBiodata||{};
+    var name=biodata.name||pl.name||pl.email;
     var email=pl.email;
     var picture=pl.picture||"";
     saveUser({name:name,email:email,picture:picture,loggedAt:Date.now(),provider:'google'});
@@ -24148,12 +24221,16 @@ function handleCred(resp){
       data.profile.picture=picture;
       data.profile.googleSub=pl.sub||data.profile.googleSub||'';
       data.profile.authMethod='google';
-      data.profile.phone=data.profile.phone||'-';
+      // Phone dari biodata STEP 1. Fallback ke nilai existing atau '-' kalau kosong.
+      data.profile.phone=(biodata.phone)||(data.profile.phone)||'-';
       data.profile.nik=data.profile.nik||'-';
       data.profile.city=data.profile.city||'-';
       data.profile.joinDate=data.profile.joinDate||new Date().toISOString();
+      data.profile.tosAcceptedAt=biodata.tosAcceptedAt||data.profile.tosAcceptedAt||new Date().toISOString();
       data.profile.avatarInitials=name.split(' ').map(function(n){return n[0];}).slice(0,2).join('').toUpperCase();
       writeESAData(data);
+      // Clear stashed biodata setelah berhasil di-merge
+      try{ delete window._esaPendingBiodata; }catch(e){ window._esaPendingBiodata=null; }
 
       // Sync ke Supabase — email tercatat di tabel `participants` segera
       // setelah login Google. INSERT dgn unique(email) → dupes otomatis
@@ -24734,7 +24811,9 @@ function handleSupabaseAuthEvent(event, session){
   if(event!=='SIGNED_IN'||!session||!session.user)return;
   var u=session.user;
   var meta=u.user_metadata||{};
-  var name=meta.full_name||meta.name||meta.preferred_username||u.email||'Peserta';
+  // Merge biodata STEP 1 — user-typed name override provider name.
+  var biodata=window._esaPendingBiodata||{};
+  var name=biodata.name||meta.full_name||meta.name||meta.preferred_username||u.email||'Peserta';
   var email=u.email||meta.email||'';
   var picture=meta.avatar_url||meta.picture||'';
   var providerId=u.app_metadata&&u.app_metadata.provider?u.app_metadata.provider:'oauth';
@@ -24782,12 +24861,15 @@ function handleSupabaseAuthEvent(event, session){
     data.profile.email=email;
     data.profile.picture=picture;
     data.profile.authMethod=providerId;          // 'linkedin_oidc' | 'github' | 'google' | 'email' (magic link) | dst
-    data.profile.phone=data.profile.phone||'-';
+    // Phone dari biodata STEP 1. Fallback ke existing atau '-'.
+    data.profile.phone=(biodata.phone)||(data.profile.phone)||'-';
     data.profile.nik=data.profile.nik||'-';
     data.profile.city=data.profile.city||'-';
     data.profile.joinDate=data.profile.joinDate||new Date().toISOString();
+    data.profile.tosAcceptedAt=biodata.tosAcceptedAt||data.profile.tosAcceptedAt||new Date().toISOString();
     data.profile.avatarInitials=name.split(' ').map(function(n){return n[0];}).slice(0,2).join('').toUpperCase();
     writeESAData(data);
+    try{ delete window._esaPendingBiodata; }catch(e){ window._esaPendingBiodata=null; }
 
     if(typeof window.esaSyncParticipant==='function'){
       window.esaSyncParticipant(data.profile, data.promoCode||null);
