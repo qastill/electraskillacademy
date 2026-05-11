@@ -17062,6 +17062,15 @@ function openModul(code, trackId, levelId) {
     track: trackId
   };
 
+  // Track engagement: catat user buka modul (sebelum ujian).
+  // Insert-only — kalau sudah pernah ujian/buka, baris tidak diubah.
+  try {
+    const _p = (typeof state !== 'undefined' && state && state.profile) ? state.profile : null;
+    if (_p && _p.email && typeof window.esaSyncModuleView === 'function') {
+      window.esaSyncModuleView(code, levelId, trackId, _p);
+    }
+  } catch (e) { /* fail-soft */ }
+
   const trackMeta = TRACKS_META[trackId] || { name: 'Pondasi' };
   const levelName = LEVELS.find(l => l.id === levelId)?.name || levelId;
 
@@ -22079,13 +22088,16 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     // Force email mode flags
     modal.dataset.mode = 'email';
     if (bt) bt.textContent = 'Simpan & Lanjutkan →';
-    // X button TETAP visible — user bisa skip kalau mau lengkapi nanti.
-    // Real "completion required" bisa di-enforce di dashboard / saat
-    // generate sertifikat saja, tidak block navigation.
-    if (closeBtn) closeBtn.style.display = '';
+    // X button DI-HIDE selama profile belum lengkap — user wajib isi
+    // nomor HP/WhatsApp. Ini penting untuk:
+    //   - Komunikasi pelatihan & broadcast modul baru
+    //   - Cetak sertifikat (wajib ada kontak)
+    //   - Verifikasi kalau ada masalah akses
+    if (closeBtn) closeBtn.style.display = 'none';
 
-    // Tidak pakai dataset.required — modal selalu boleh di-close
-    delete modal.dataset.required;
+    // Tandai modal sebagai required — handler escape/backdrop close
+    // akan refuse close kalau dataset.required = 'true'
+    modal.dataset.required = 'true';
     modal.classList.add('active');
     setTimeout(() => { if (phoneEl) phoneEl.focus(); }, 200);
   }
@@ -22766,18 +22778,28 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
   // ========== MODULE COMPLETION MODAL ==========
   let currentQuizModule = null;
-  let currentQuizStats = { correct: 0, wrong: 0, answered: new Set() };
+  let currentQuizStats = { correct: 0, wrong: 0, answered: new Set(), answers: {} };
 
   function resetQuizStats(moduleCode, levelId, trackId) {
-    currentQuizStats = { correct: 0, wrong: 0, answered: new Set() };
+    currentQuizStats = { correct: 0, wrong: 0, answered: new Set(), answers: {} };
     currentQuizModule = { code: moduleCode, levelId: levelId, trackId: trackId };
   }
   window.esaResetQuizStats = resetQuizStats;
 
   function recordQuizAnswer(qIdx, selected, correct) {
-    if (currentQuizStats.answered.has(qIdx)) return;
+    const isCorrect = (selected === correct);
+    const prev = currentQuizStats.answers[qIdx];
+
+    if (prev !== undefined) {
+      if (prev === true && !isCorrect) { currentQuizStats.correct--; currentQuizStats.wrong++; }
+      else if (prev === false && isCorrect) { currentQuizStats.wrong--; currentQuizStats.correct++; }
+      currentQuizStats.answers[qIdx] = isCorrect;
+      return;
+    }
+
+    currentQuizStats.answers[qIdx] = isCorrect;
     currentQuizStats.answered.add(qIdx);
-    if (selected === correct) currentQuizStats.correct++;
+    if (isCorrect) currentQuizStats.correct++;
     else currentQuizStats.wrong++;
 
     // Check if all 25 answered
@@ -24933,26 +24955,30 @@ else{setTimeout(init,200);}
   'use strict';
 
   // ---------- AUDIT LOG ----------
-  // Kirim event ke /api/log-event (server capture IP/UA, append ke
-  // public.auth_events). Fail-soft: gagal logging tidak ganggu UX.
+  // Insert langsung ke public.auth_events via supabase-js anon
+  // (RLS allow anon insert). Server-side IP enrichment di-skip karena
+  // /api/log-event return 204 ambiguous (sukses vs env-not-set tidak bisa dibedakan).
+  // Fail-soft: gagal logging tidak ganggu UX.
   window.esaLogEvent = function(eventType, payload){
     payload = payload || {};
-    var body = {
-      event_type: eventType,
-      email: payload.email || (function(){
-        try{ var u=JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); return u&&u.email; }catch(e){return null;}
-      })(),
-      provider: payload.provider || null,
-      metadata: payload.metadata || null
-    };
+    var email = payload.email || (function(){
+      try{ var u=JSON.parse(localStorage.getItem('esa_logged_in_user')||'null'); return u&&u.email; }catch(e){return null;}
+    })();
     try{
-      fetch('/api/log-event', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(body),
-        keepalive: true
-      }).catch(function(){});
-    }catch(e){}
+      if (!(window.supabase && window.ESA_SUPABASE && window.ESA_SUPABASE.isConfigured && window.ESA_SUPABASE.isConfigured())) return;
+      var sb = (typeof window.esaSupabaseClient === 'function') ? window.esaSupabaseClient() : null;
+      if (!sb) sb = window.supabase.createClient(window.ESA_SUPABASE.url, window.ESA_SUPABASE.anonKey);
+      if (!sb || !sb.from) return;
+      sb.from('auth_events').insert({
+        event_type: eventType,
+        email: email || null,
+        provider: payload.provider || null,
+        metadata: payload.metadata || null,
+        user_agent: (navigator && navigator.userAgent) ? navigator.userAgent.slice(0, 500) : null
+      }).then(function(r){
+        if (r && r.error) console.warn('[ESA-Sync] auth_events insert err:', r.error.message);
+      });
+    }catch(e){ /* fail-soft */ }
   };
 
   // ---------- SYNC RETRY QUEUE ----------
@@ -25156,6 +25182,28 @@ else{setTimeout(init,200);}
           else console.info('[ESA-Sync] module_progress upserted:', email, rec.code, 'best='+rec.bestScore);
         });
     } catch (e) { logSyncError('module attempt', e); }
+  };
+
+  // Track ketika user buka modul (engagement, sebelum ujian).
+  // Insert-only — kalau row sudah ada (sudah pernah ujian), biarkan.
+  window.esaSyncModuleView = function (code, levelId, trackId, profile) {
+    const sb = getClient();
+    if (!sb) return;
+    if (!profile || !profile.email || !code) return;
+    try {
+      sb.from('module_progress').upsert({
+        participant_email: profile.email,
+        module_code: code,
+        level_id: levelId || null,
+        track_id: trackId || null,
+        best_score: 0,
+        attempts: 0,
+        passed: false
+      }, { onConflict: 'participant_email,module_code', ignoreDuplicates: true })
+        .then(function (r) {
+          if (r.error) logSyncError('module_view', r.error);
+        });
+    } catch (e) { logSyncError('module_view', e); }
   };
 
   // Insert level completion (sertifikat baru)
