@@ -3,7 +3,7 @@
 -- Setiap kode hanya bisa di-redeem oleh 1 user (max_uses = 1).
 -- Akses penuh ke seluruh jalur & level sampai akhir 2026.
 --
--- Jalankan via: https://supabase.com/dashboard/project/jsylculwywvbaxbflske/sql/new
+-- Jalankan via: https://supabase.com/dashboard/project/osjdzroehpquegtvktvt/sql/new
 -- (butuh migration-003-comprehensive.sql sudah jalan dulu)
 -- =============================================================
 

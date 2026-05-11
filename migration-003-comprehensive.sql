@@ -1,7 +1,7 @@
 -- =============================================================
 -- MIGRATION 003 — Comprehensive: promo quota, audit, expiry, ToS
 -- Jalankan SETELAH migration-001 + migration-002.
--- Run via: https://supabase.com/dashboard/project/jsylculwywvbaxbflske/sql/new
+-- Run via: https://supabase.com/dashboard/project/osjdzroehpquegtvktvt/sql/new
 -- =============================================================
 
 -- ---------- 1. PARTICIPANTS — kolom tambahan ----------

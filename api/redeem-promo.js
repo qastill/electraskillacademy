@@ -4,7 +4,7 @@
 // validasi server-side → call RPC redeem_promo_code() → return result.
 //
 // REQUIRED ENV (Vercel Project Settings → Environment Variables):
-//   - SUPABASE_URL          (mis. https://jsylculwywvbaxbflske.supabase.co)
+//   - SUPABASE_URL          (mis. https://osjdzroehpquegtvktvt.supabase.co)
 //   - SUPABASE_SERVICE_ROLE_KEY  (Settings → API di Supabase)
 //
 // Kalau env belum di-set, endpoint return 503 dengan instruksi.
