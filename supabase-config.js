@@ -13,8 +13,11 @@
 // =============================================================
 
 window.ESA_SUPABASE = {
-  url: 'https://jsylculwywvbaxbflske.supabase.co',
-  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzeWxjdWx3eXd2YmF4YmZsc2tlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNTI4MDcsImV4cCI6MjA5MjkyODgwN30.enbGmtZVApcFYimB4Wy5dCO87JNEUlR6aP-7u_-LkgA'
+  // Project Supabase khusus Electra Skill Academy (osjdzroehpquegtvktvt).
+  // Migrasi dari project lama (jsylculwywvbaxbflske) selesai 11 Mei 2026.
+  // PLNlytics tetap project terpisah — tidak tergabung dengan Electra.
+  url: 'https://osjdzroehpquegtvktvt.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zamR6cm9laHBxdWVndHZrdHZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTExMzMsImV4cCI6MjA5NDA2NzEzM30.95fAf2nLtr3i9DgJ8v9pbtkaXT9XbrI8i8zgxF3Lexk'
 };
 
 window.ESA_SUPABASE.isConfigured = function () {

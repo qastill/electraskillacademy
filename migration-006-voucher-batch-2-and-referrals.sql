@@ -10,7 +10,7 @@
 --      - View referral_stats memantau siapa ajak siapa & berapa banyak
 --
 -- Prasyarat: migration-003-comprehensive.sql sudah dijalankan.
--- Jalankan via: https://supabase.com/dashboard/project/jsylculwywvbaxbflske/sql/new
+-- Jalankan via: https://supabase.com/dashboard/project/osjdzroehpquegtvktvt/sql/new
 -- =============================================================
 
 -- ---------- 1. VOUCHER BATCH 2 (10 kode, single-use) ----------
