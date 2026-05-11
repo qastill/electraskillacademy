@@ -11023,6 +11023,14 @@ button:active:not(:disabled),
               </ul>
             </div>
 
+            <!-- SKTTK Support — auto-populated dari peta-karir-okupasi-min.js -->
+            <div id="video-info-skttk" style="display:none; margin-top: 16px; padding: 16px 18px; background: rgba(96,165,250,0.06); border-left: 3px solid #60a5fa; border-radius: 8px;">
+              <div style="font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: #93c5fd; font-weight: 700; margin-bottom: 6px;">🏅 Mendukung Sertifikasi SKTTK</div>
+              <p style="font-size: 0.82rem; color: rgba(245,240,230,0.75); line-height: 1.6; margin: 0 0 12px;">Modul ini menunjang persyaratan kompetensi untuk okupasi berikut (KKNI Kementerian ESDM). Klik untuk lihat detail tugas, wewenang, dan tanggung jawab.</p>
+              <div id="video-info-skttk-list" style="display:flex; flex-direction: column; gap: 6px;"></div>
+              <div id="video-info-skttk-more" style="margin-top:10px; font-size:0.78rem;"></div>
+            </div>
+
             <div class="video-instructor" id="video-instructor-block">
               <div class="video-instructor-avatar" id="video-instructor-avatar">QH</div>
               <div class="video-instructor-info">
@@ -16355,6 +16363,55 @@ function getModuleInstructor(trackId, levelId) {
 
 // Outcome learning per modul — adaptif berdasarkan kategori. Generic
 // fallback untuk modul yg belum punya outcome custom.
+// ============================================================
+// SKTTK reverse mapping — modul → okupasi yang didukung
+// Data: window.__SKTTK_OKUPASI (di-load dari peta-karir-okupasi-min.js)
+// ============================================================
+const TRACK_TO_BIDANG = { S1: 'pemanfaatan', S2: 'pemanfaatan', S3: 'distribusi', S4: 'transmisi', S7: 'pembangkit' };
+const LEVEL_TO_KKNI = { L1: [1,2], L2: [3], L3: [4], L4: [5], L5: [6], L6: [7,8,9] };
+
+function findRelatedSkttk(moduleCode, trackId, levelId) {
+  const all = window.__SKTTK_OKUPASI;
+  if (!Array.isArray(all) || !all.length) return [];
+  const bidang = TRACK_TO_BIDANG[trackId] || null;
+  const kkniList = LEVEL_TO_KKNI[levelId] || [];
+  if (!kkniList.length) return [];
+  // L1/L2 = generic basics → match any bidang dengan KKNI rendah
+  const matches = all.filter(o => {
+    if (!kkniList.includes(o.l)) return false;
+    if (!bidang) return true; // tidak ada track-mapping → cocok untuk semua bidang
+    return o.b === bidang;
+  });
+  return matches;
+}
+
+function renderSkttkSection(moduleCode, trackId, levelId) {
+  const box = document.getElementById('video-info-skttk');
+  const list = document.getElementById('video-info-skttk-list');
+  const more = document.getElementById('video-info-skttk-more');
+  if (!box || !list) return;
+  const matches = findRelatedSkttk(moduleCode, trackId, levelId);
+  if (!matches.length) { box.style.display = 'none'; return; }
+  const top = matches.slice(0, 6);
+  const remaining = matches.length - top.length;
+  const bidangIcon = { pembangkit: '⚡', transmisi: '🔌', distribusi: '🏘️', pemanfaatan: '🏭' };
+  list.innerHTML = top.map(o => {
+    const icon = bidangIcon[o.b] || '◆';
+    return `
+      <a href="/peta-karir.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(20,34,74,0.4);border:1px solid rgba(96,165,250,0.18);border-radius:8px;color:inherit;text-decoration:none;transition:all 0.15s;font-size:0.83rem;line-height:1.4;" onmouseover="this.style.background='rgba(20,34,74,0.7)';this.style.borderColor='rgba(96,165,250,0.45)'" onmouseout="this.style.background='rgba(20,34,74,0.4)';this.style.borderColor='rgba(96,165,250,0.18)'">
+        <span style="flex-shrink:0;font-size:1.05rem;">${icon}</span>
+        <span style="flex:1;color:rgba(245,240,230,0.92);">${(o.n || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</span>
+        <span style="flex-shrink:0;color:#93c5fd;font-size:0.7rem;letter-spacing:0.06em;background:rgba(96,165,250,0.12);padding:3px 8px;border-radius:9999px;">KKNI ${o.l}</span>
+      </a>`;
+  }).join('');
+  if (remaining > 0) {
+    more.innerHTML = `<a href="/peta-karir.html" style="color:#93c5fd;text-decoration:none;font-weight:600;">+${remaining} okupasi lainnya — buka Peta Karir →</a>`;
+  } else {
+    more.innerHTML = `<a href="/peta-karir.html" style="color:#93c5fd;text-decoration:none;font-weight:600;">Buka Peta Karir lengkap →</a>`;
+  }
+  box.style.display = 'block';
+}
+
 function getModuleOutcomes(module, levelId, trackId) {
   const cat = (module.category || '').toLowerCase();
   const title = (module.title || '').toLowerCase();
@@ -17146,6 +17203,9 @@ function openModul(code, trackId, levelId) {
   if (outcomesList) {
     outcomesList.innerHTML = outcomes.map(o => `<li>${escapeHtml(o)}</li>`).join('');
   }
+
+  // SKTTK Support — okupasi yang didukung modul ini (peta-karir reverse lookup)
+  try { renderSkttkSection(code, trackId, levelId); } catch(e) { /* fail-soft */ }
 
   // Instructor — track S6/S7/S8 = Farda Najih (K3 + Pembangkit + Auditor),
   // sisanya = Dr Qashtalani Haramaini.
@@ -25912,6 +25972,9 @@ else{setTimeout(init,200);}
     Daftar Gratis · Mulai Belajar
   </button>
 </div>
+
+<!-- SKTTK data: 380 okupasi (38 KB) — di-load async untuk reverse-link modul → SKTTK -->
+<script src="/peta-karir-okupasi-min.js" defer></script>
 
 </body>
 </html>
