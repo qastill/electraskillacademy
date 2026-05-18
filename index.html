@@ -6500,6 +6500,9 @@ body {
     padding-left: 20px; padding-right: 20px;
   }
   .practices-grid, .offers-grid { grid-template-columns: 1fr; }
+  .esa-ebook-bonus { grid-template-columns: 1fr !important; padding: 24px !important; gap: 20px !important; }
+  .esa-ebook-bonus img { max-width: 280px; margin: 0 auto; }
+  .esa-ebook-bonus ul { grid-template-columns: 1fr !important; }
   .partners-grid { grid-template-columns: 1fr; max-width: 320px; }
   .footer { padding: 40px 20px 30px; }
   .footer-inner { justify-content: center; text-align: center; }
@@ -10598,7 +10601,40 @@ button:active:not(:disabled),
               <div class="esa-benefit-desc">Perpustakaan digital terklasifikasi: koleksi SMK/STM Kemendikbud + <strong>58 e-book S1 Teknik Elektro UI</strong> (Halliday, Kreyszig, Hayt, Boylestad, Haykin, Nise, Ogata, Chapman, Proakis, Balanis, dll) dipetakan per semester, plus standar PUIL/IEC/IEEE. Buka <a onclick="event.preventDefault();showView('referensi');" href="#" style="color:#d4af6a;text-decoration:underline;">Electra Library →</a>.</div>
             </div>
           </li>
+
+          <li class="esa-benefit-card">
+            <div class="esa-benefit-photo" data-fallback-icon="📖"><img loading="lazy" alt="E-book Short Circuit to the Future of Energy" src="ebook-short-circuit.jpeg" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
+            <div class="esa-benefit-body">
+              <div class="esa-benefit-title">E-book Eksklusif · "Short Circuit to the Future of Energy"</div>
+              <div class="esa-benefit-desc">Panduan memulai karir di industri ketenagalistrikan untuk anak SMK &amp; teknisi di era transisi energi — karya <strong>Dr. Qashtalani Haramaini, S.T., M.T.</strong> Bahas mega tren energi global, sektor &amp; jenjang karir, panduan karir praktis, plus data &amp; analisis industri. Harga normal Rp 325.000 — <strong>GRATIS untuk member Electra Academy</strong>.</div>
+            </div>
+          </li>
         </ul>
+
+        <!-- E-book Bonus Poster -->
+        <div class="esa-ebook-bonus" style="margin-top:40px;padding:32px;background:linear-gradient(135deg,rgba(212,175,106,0.1),rgba(160,120,64,0.04));border:1px solid rgba(212,175,106,0.32);border-radius:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:32px;align-items:center;">
+          <div style="position:relative;border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,0.45);">
+            <img src="ebook-short-circuit.jpeg" alt="E-book Short Circuit to the Future of Energy — bonus member Electra Academy" loading="lazy" style="width:100%;height:auto;display:block;">
+          </div>
+          <div>
+            <div style="font-family:var(--sans);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#f0d080;font-weight:700;margin-bottom:10px;">🎁 Bonus Eksklusif Member</div>
+            <h3 style="font-family:var(--serif);font-size:clamp(22px,2.6vw,30px);font-weight:500;color:#f5f0e6;line-height:1.25;margin:0 0 14px;">E-book <span style="font-style:italic;color:#f0d080;">"Short Circuit to the Future of Energy"</span></h3>
+            <p style="font-family:var(--sans);font-size:0.92rem;color:rgba(245,240,230,0.78);line-height:1.65;margin:0 0 18px;">Panduan wajib untuk generasi energi — karya <strong>Dr. Qashtalani Haramaini, S.T., M.T.</strong> Bahas masa depan karir di sektor ketenagalistrikan: mega tren dunia, peluang nyata, dan karir tanpa batas, khusus untuk anak SMK &amp; teknisi yang ingin tumbuh di era transisi.</p>
+            <ul style="list-style:none;padding:0;margin:0 0 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-family:var(--sans);font-size:0.82rem;color:rgba(245,240,230,0.82);">
+              <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Mega tren energi global</li>
+              <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Sektor &amp; jenjang karir</li>
+              <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Panduan karir praktis</li>
+              <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Data &amp; analisis industri</li>
+            </ul>
+            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px;">
+              <span style="font-family:var(--sans);font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,230,0.55);">Harga Normal
+                <span style="text-decoration:line-through;text-decoration-color:rgba(255,107,107,0.75);color:rgba(245,240,230,0.5);font-family:var(--serif);font-size:1.15rem;margin-left:6px;">Rp 325.000</span>
+              </span>
+              <span style="background:linear-gradient(135deg,#d4af6a,#c9a96e);color:#1a1208;font-family:var(--sans);font-size:0.78rem;font-weight:800;letter-spacing:0.1em;padding:6px 12px;border-radius:6px;">GRATIS untuk Member</span>
+            </div>
+            <div style="font-family:var(--sans);font-size:0.82rem;color:rgba(245,240,230,0.7);line-height:1.6;">📥 E-book langsung terbuka di dashboard begitu kamu daftar — bisa dibaca online atau diunduh.</div>
+          </div>
+        </div>
 
         <!-- Strong CTA -->
         <div style="margin-top:36px;padding:28px 28px;background:linear-gradient(135deg,rgba(212,175,106,0.16),rgba(160,120,64,0.08));border:1px solid rgba(212,175,106,0.4);border-radius:14px;text-align:center;">
@@ -10804,6 +10840,17 @@ button:active:not(:disabled),
               <li><strong>Physical Lab Room</strong> — undangan prioritas ke partner training facility ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.</li>
             </ul>
             <p>Akses Lab di menu navigasi atas → <em>Labs</em>, atau langsung dari dashboard member.</p>
+          </div>
+        </details>
+
+        <details class="home-faq-item">
+          <summary>
+            <span>Apakah dapat e-book yang bisa bantu karir electrician saya?</span>
+            <span class="home-faq-chevron">+</span>
+          </summary>
+          <div class="home-faq-answer">
+            <p><strong>Dapat — gratis untuk member.</strong> Setiap member Electra Academy mendapat <strong>e-book eksklusif "Short Circuit to the Future of Energy"</strong> karya Founder kami, Dr. Qashtalani Haramaini, S.T., M.T. — panduan praktis memulai karir di industri ketenagalistrikan untuk anak SMK &amp; teknisi di era transisi energi.</p>
+            <p>Isinya: mega tren energi global, sektor &amp; jenjang karir yang terbentang, panduan karir praktis (dari interview sampai negosiasi gaji), plus data &amp; analisis industri yang dibutuhkan untuk mengambil keputusan karir yang tepat. Harga retail Rp 325.000 — <strong>otomatis terbuka di dashboard begitu kamu jadi member</strong>, bisa dibaca online atau diunduh.</p>
           </div>
         </details>
 
