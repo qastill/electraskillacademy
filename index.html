@@ -12077,54 +12077,36 @@ button:active:not(:disabled),
     <div style="max-width: 1100px; margin: 0 auto; padding: 0 40px;">
 
       <!-- Header -->
-      <div style="text-align:center; margin-bottom: 36px;">
-        <div style="font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:#d4af6a; margin-bottom:14px;">— Live Class Setiap Jumat —</div>
-        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 600; color: #f5f0e6; margin: 0 0 18px; letter-spacing: 0.005em;">
+      <div style="text-align:center; margin-bottom: 32px;">
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 600; color: #f5f0e6; margin: 0 0 12px; letter-spacing: 0.005em;">
           Kelas <span style="font-style: italic; color: #d4af6a;">Expert Workshop</span>
         </h1>
-        <p style="font-size: 1.05rem; color: rgba(245,240,230,0.78); max-width: 680px; margin: 0 auto; line-height: 1.7;">
-          Live class bersama pemateri ahli, diadakan rutin <strong style="color:#f0d080">setiap hari Jumat pukul 13:00 WIB</strong> via Zoom. Lihat kalender &amp; jadwal di bawah, pilih poster workshop minggu yang kamu mau, lalu daftar sebagai peserta. Punya keahlian? Daftar jadi pemateri &amp; tentukan tarif materimu.
+        <p style="font-size: 1rem; color: rgba(245,240,230,0.78); margin: 0;">
+          Live class tiap Jumat · mulai <strong style="color:#f0d080">5 Juni 2026</strong> · 13:00 WIB · via Zoom
         </p>
       </div>
 
       <!-- Dua peran: Pemateri & Peserta -->
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-bottom:48px;" class="ew-role-grid">
-        <div style="background: linear-gradient(135deg, rgba(212,175,106,0.12), rgba(212,175,106,0.03)); border:1px solid rgba(212,175,106,0.3); border-radius:16px; padding:28px 26px; display:flex; flex-direction:column;">
-          <div style="font-size:1.9rem; margin-bottom:8px;">🎤</div>
-          <h3 style="color:#f5f0e6; font-size:1.2rem; font-weight:700; margin:0 0 8px;">Daftar sebagai Pemateri</h3>
-          <p style="color:rgba(245,240,230,0.72); font-size:0.9rem; line-height:1.6; margin:0 0 18px; flex:1;">Bagikan keahlianmu di depan komunitas teknisi listrik. Isi materi yang akan disampaikan dan tentukan tarif/honor kamu sendiri.</p>
-          <button onclick="esaShowWorkshopPresenterForm()" style="width:100%; padding:13px 18px; background:linear-gradient(135deg,#d4af6a,#a07840); color:#1a1d2e; font-weight:700; border:none; border-radius:10px; font-size:0.92rem; cursor:pointer; letter-spacing:0.04em;">Masuk / Daftar Pemateri →</button>
-        </div>
-        <div style="background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:28px 26px; display:flex; flex-direction:column;">
-          <div style="font-size:1.9rem; margin-bottom:8px;">🎟️</div>
-          <h3 style="color:#f5f0e6; font-size:1.2rem; font-weight:700; margin:0 0 8px;">Daftar sebagai Peserta</h3>
-          <p style="color:rgba(245,240,230,0.72); font-size:0.9rem; line-height:1.6; margin:0 0 18px; flex:1;">Ikuti workshop pilihanmu. Pilih materi dari jadwal mingguan di bawah, lalu daftar — link Zoom dikirim H-1 via WhatsApp.</p>
-          <button onclick="esaShowWorkshopParticipantForm()" style="width:100%; padding:13px 18px; background:transparent; color:#d4af6a; font-weight:700; border:1px solid rgba(212,175,106,0.6); border-radius:10px; font-size:0.92rem; cursor:pointer; letter-spacing:0.04em;">Masuk / Daftar Peserta →</button>
-        </div>
+      <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:48px;" class="ew-role-grid">
+        <button onclick="esaShowWorkshopPresenterForm()" style="padding:13px 26px; background:linear-gradient(135deg,#d4af6a,#a07840); color:#1a1d2e; font-weight:700; border:none; border-radius:10px; font-size:0.92rem; cursor:pointer; letter-spacing:0.04em;">🎤 Daftar sebagai Pemateri</button>
+        <button onclick="esaShowWorkshopParticipantForm()" style="padding:13px 26px; background:transparent; color:#d4af6a; font-weight:700; border:1px solid rgba(212,175,106,0.6); border-radius:10px; font-size:0.92rem; cursor:pointer; letter-spacing:0.04em;">🎟️ Daftar sebagai Peserta</button>
       </div>
 
       <!-- Kalender & Jadwal -->
-      <div style="display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:8px;">
+      <div style="display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:20px;">
         <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 600; color: #f5f0e6; margin: 0;">
-          Kalender &amp; <span style="font-style: italic; color: #d4af6a;">Jadwal Workshop</span>
+          Kalender &amp; <span style="font-style: italic; color: #d4af6a;">Jadwal</span>
         </h2>
         <span style="font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(245,240,230,0.55); font-weight: 600;">Tiap Jumat · 13:00 WIB</span>
       </div>
-      <p style="color: rgba(245,240,230,0.7); font-size: 0.95rem; line-height: 1.7; margin: 0 0 24px; max-width: 760px;">
-        Poster workshop dari minggu ke minggu — tinggal pilih satu, lalu klik <em>Pilih &amp; Daftar</em>. Slot bertanda <strong style="color:#f0d080">"Terbuka"</strong> masih menanti pemateri.
-      </p>
 
       <div id="expert-workshop-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:18px;">
         <div style="text-align:center;color:rgba(245,240,230,0.5);padding:40px;grid-column:1/-1;">Memuat jadwal...</div>
       </div>
 
       <!-- CTA -->
-      <div style="background: linear-gradient(135deg, rgba(212,175,106,0.12), rgba(212,175,106,0.04)); border: 1px solid rgba(212,175,106,0.25); border-radius: 16px; padding: 32px; text-align: center; margin-top: 44px;">
-        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.6rem; font-weight: 600; color: #f5f0e6; margin: 0 0 10px;">Ada pertanyaan soal Expert Workshop?</h2>
-        <p style="color: rgba(245,240,230,0.7); max-width: 520px; margin: 0 auto 20px; line-height: 1.65; font-size: 0.95rem;">
-          Hubungi admin untuk info jadwal, kerja sama pemateri, atau pendaftaran kolektif tim/unit.
-        </p>
-        <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20Kelas%20Expert%20Workshop%20Electra%20Academy" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:13px 26px;font-weight:700;font-size:0.92rem;box-shadow:0 6px 20px rgba(37,211,102,0.3);">
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20Kelas%20Expert%20Workshop%20Electra%20Academy" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:12px 24px;font-weight:700;font-size:0.9rem;box-shadow:0 6px 20px rgba(37,211,102,0.3);">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
           Chat Admin via WA
         </a>
@@ -17175,10 +17157,10 @@ const EXPERT_WORKSHOP_TOPICS = [
 
 function getExpertWorkshopSchedule() {
   const now = new Date();
-  // Mulai dari Jumat (getDay()===5) pukul 13:00 yang belum lewat.
-  let d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 13, 0, 0, 0);
-  while (d.getDay() !== 5) d.setDate(d.getDate() + 1);
-  if (d.getTime() < now.getTime()) d.setDate(d.getDate() + 7);
+  // Sesi pertama: Jumat 5 Juni 2026, 13:00 WIB. Maju per minggu; lewati
+  // Jumat yang sudah berlalu supaya yang tampil selalu sesi mendatang.
+  let d = new Date(2026, 5, 5, 13, 0, 0, 0);
+  while (d.getTime() < now.getTime()) d.setDate(d.getDate() + 7);
   return EXPERT_WORKSHOP_TOPICS.map(function (topic, i) {
     const date = new Date(d.getTime() + i * 7 * 86400000);
     const daysUntil = Math.floor((date - now) / 86400000);
@@ -17221,8 +17203,7 @@ function renderExpertWorkshop() {
           '</div>' +
         '</div>' +
         '<div style="padding:16px 18px 18px;display:flex;flex-direction:column;flex:1;">' +
-          '<div style="font-weight:700;color:#f5f0e6;font-size:1rem;line-height:1.35;margin-bottom:8px;">' + escapeHtmlEsa(t.title) + '</div>' +
-          '<div style="font-size:0.8rem;color:rgba(245,240,230,0.65);line-height:1.55;margin-bottom:12px;flex:1;">' + escapeHtmlEsa(t.desc) + '</div>' +
+          '<div style="font-weight:700;color:#f5f0e6;font-size:1rem;line-height:1.35;margin-bottom:12px;flex:1;">' + escapeHtmlEsa(t.title) + '</div>' +
           '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:0.76rem;color:rgba(245,240,230,0.7);margin-bottom:14px;">' +
             '<span>' + presenterLine + '</span>' +
             '<span style="background:rgba(212,175,106,0.12);color:#d4af6a;padding:2px 8px;border-radius:4px;font-weight:600;white-space:nowrap;">' + feeLine + '</span>' +
