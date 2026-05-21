@@ -8512,6 +8512,7 @@ button:active:not(:disabled),
 }
 @media (max-width: 600px) {
   .esa-gallery-grid { grid-template-columns: 1fr; gap: 18px; }
+  .ew-role-grid { grid-template-columns: 1fr !important; }
 }
 
 /* ============================================
@@ -12041,6 +12042,74 @@ button:active:not(:disabled),
         <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.3rem; color: #f0d080; margin-bottom: 10px; font-weight: 500;">Mau ikut workshop berikutnya?</div>
         <p style="color: rgba(245,240,230,0.7); font-size: 0.92rem; line-height: 1.6; margin: 0 0 18px; max-width: 540px; margin-left: auto; margin-right: auto;">Workshop offline P2TL & Yantek dibuka berkala. Daftar via WhatsApp untuk info batch selanjutnya.</p>
         <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20info%20workshop%20P2TL%20%2F%20Pelayanan%20Teknik" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #d4af6a; border: 1px solid rgba(212,175,106,0.5); border-radius: 8px; padding: 11px 22px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">Chat Admin via WA</a>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ========================================================== -->
+<!-- VIEW: EXPERT WORKSHOP — Live Class rutin tiap Jumat 13:00  -->
+<!-- ========================================================== -->
+<div class="view" id="view-expert-workshop">
+  <div class="detail-nav">
+    <a class="detail-nav-logo" onclick="showView('home')" style="cursor:pointer;">
+      <div class="detail-nav-logo-mark">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+          <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+          <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+        </svg>
+      </div>
+      <div class="detail-nav-logo-text">Electra<br><span class="line-2">Skill Academy</span></div>
+    </a>
+    <div class="detail-nav-center">Kelas Expert Workshop</div>
+    <div class="detail-nav-right">
+      <button class="detail-nav-back" onclick="showView('home')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kembali
+      </button>
+    </div>
+  </div>
+
+  <section style="background: linear-gradient(135deg, #0d0f1c 0%, #1a1d2e 50%, #0d0f1c 100%); padding: 60px 0 80px; min-height: 100vh;">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 0 40px;">
+
+      <!-- Header -->
+      <div style="text-align:center; margin-bottom: 32px;">
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 600; color: #f5f0e6; margin: 0 0 12px; letter-spacing: 0.005em;">
+          Kelas <span style="font-style: italic; color: #d4af6a;">Expert Workshop</span>
+        </h1>
+        <p style="font-size: 1rem; color: rgba(245,240,230,0.78); margin: 0;">
+          Live class tiap Jumat · mulai <strong style="color:#f0d080">5 Juni 2026</strong> · 13:00 WIB · via Zoom
+        </p>
+      </div>
+
+      <!-- Dua peran: Pemateri & Peserta -->
+      <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:48px;" class="ew-role-grid">
+        <button onclick="esaShowWorkshopPresenterForm()" style="padding:13px 26px; background:linear-gradient(135deg,#d4af6a,#a07840); color:#1a1d2e; font-weight:700; border:none; border-radius:10px; font-size:0.92rem; cursor:pointer; letter-spacing:0.04em;">🎤 Daftar sebagai Pemateri</button>
+        <button onclick="esaShowWorkshopParticipantForm()" style="padding:13px 26px; background:transparent; color:#d4af6a; font-weight:700; border:1px solid rgba(212,175,106,0.6); border-radius:10px; font-size:0.92rem; cursor:pointer; letter-spacing:0.04em;">🎟️ Daftar sebagai Peserta</button>
+      </div>
+
+      <!-- Kalender & Jadwal -->
+      <div style="display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:20px;">
+        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 600; color: #f5f0e6; margin: 0;">
+          Kalender &amp; <span style="font-style: italic; color: #d4af6a;">Jadwal</span>
+        </h2>
+        <span style="font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(245,240,230,0.55); font-weight: 600;">Tiap Jumat · 13:00 WIB</span>
+      </div>
+
+      <div id="expert-workshop-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:18px;">
+        <div style="text-align:center;color:rgba(245,240,230,0.5);padding:40px;grid-column:1/-1;">Memuat jadwal...</div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20Kelas%20Expert%20Workshop%20Electra%20Academy" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;text-decoration:none;border-radius:8px;padding:12px 24px;font-weight:700;font-size:0.9rem;box-shadow:0 6px 20px rgba(37,211,102,0.3);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
+          Chat Admin via WA
+        </a>
       </div>
 
     </div>
@@ -17062,6 +17131,287 @@ function renderLiveClassSchedulePage(filter) {
   }).join('');
 }
 window.filterLiveClass = function(f) { renderLiveClassSchedulePage(f); };
+
+// =================== EXPERT WORKSHOP (Live Class Jumat 13:00) ===================
+// Jadwal mingguan: tiap topik dipetakan ke satu Jumat berurutan. Slot ber-flag
+// `open:true` = belum ada pemateri (mengundang pendaftaran pemateri).
+
+// escapeHtmlEsa asli berada di dalam IIFE auth-gate sehingga tak terjangkau
+// dari scope global ini. Sediakan fallback global supaya bisa dipakai di sini.
+if (typeof window.escapeHtmlEsa !== 'function') {
+  window.escapeHtmlEsa = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+}
+
+const EXPERT_WORKSHOP_TOPICS = [
+  { title: 'Proteksi & Koordinasi Relay Distribusi 20 kV', presenter: 'Dr. Qashtalani Haramaini', fee: 'Rp 50.000', poster: 'p2tl%20academy.jpeg', desc: 'Setting OCR/GFR, koordinasi proteksi feeder, dan studi kasus gangguan jaringan distribusi.' },
+  { title: 'Troubleshooting Motor Listrik & VFD', presenter: 'Tim Electra Academy', fee: 'Rp 50.000', poster: 'academy%20yantek.jpeg', desc: 'Diagnosa kerusakan motor induksi, setting Variable Frequency Drive, dan praktik pengukuran lapangan.' },
+  { title: 'P2TL: Investigasi & Tagihan Susulan', presenter: 'Tim P2TL Academy', fee: 'Rp 75.000', poster: 'p2tl%20academy%202.jpeg', desc: 'Pemeriksaan APP, identifikasi pelanggaran, dan perhitungan tagihan susulan sesuai SOP.' },
+  { title: 'K3 Ketenagalistrikan & LOTO Lapangan', presenter: 'Tim Pelayanan Teknik', fee: 'GRATIS untuk member', poster: 'academy%20pelayanan%20teknik.jpeg', desc: 'Prosedur Lock-Out Tag-Out, permit to work, dan keselamatan pekerjaan tegangan menengah.' },
+  { title: 'SCADA & Smart Grid Distribusi', presenter: '', fee: '', poster: 'job%20posting.jpeg', desc: 'Slot terbuka — menanti pemateri ahli SCADA/Smart Grid. Daftar sebagai pemateri & isi materi + tarif.', open: true },
+  { title: 'Audit Energi & ISO 50001 Industri', presenter: '', fee: '', poster: 'p2tl%20academy%203.jpeg', desc: 'Slot terbuka — menanti pemateri konservasi energi. Daftar sebagai pemateri untuk membawakan materi ini.', open: true },
+];
+
+function getExpertWorkshopSchedule() {
+  const now = new Date();
+  // Sesi pertama: Jumat 5 Juni 2026, 13:00 WIB. Maju per minggu; lewati
+  // Jumat yang sudah berlalu supaya yang tampil selalu sesi mendatang.
+  let d = new Date(2026, 5, 5, 13, 0, 0, 0);
+  while (d.getTime() < now.getTime()) d.setDate(d.getDate() + 7);
+  return EXPERT_WORKSHOP_TOPICS.map(function (topic, i) {
+    const date = new Date(d.getTime() + i * 7 * 86400000);
+    const daysUntil = Math.floor((date - now) / 86400000);
+    return {
+      id: 'WS' + (i + 1),
+      topic: topic,
+      date: date,
+      daysUntil: daysUntil,
+      dateLong: date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+      dateShort: date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+    };
+  });
+}
+
+function renderExpertWorkshop() {
+  const list = document.getElementById('expert-workshop-list');
+  if (!list) return;
+  const sched = getExpertWorkshopSchedule();
+  list.innerHTML = sched.map(function (s) {
+    const t = s.topic;
+    const open = !!t.open;
+    let badge;
+    if (s.daysUntil <= 7) badge = '<span style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);color:#fcd34d;padding:3px 10px;border-radius:99px;font-size:0.68rem;font-weight:700;letter-spacing:0.05em;">⚡ ' + s.daysUntil + ' HARI LAGI</span>';
+    else badge = '<span style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);color:#93c5fd;padding:3px 10px;border-radius:99px;font-size:0.68rem;font-weight:700;letter-spacing:0.05em;">📅 ' + s.daysUntil + ' HARI LAGI</span>';
+    const presenterLine = open
+      ? '<span style="color:#f0d080;font-weight:600;">Slot pemateri TERBUKA</span>'
+      : '👨‍🏫 ' + escapeHtmlEsa(t.presenter);
+    const feeLine = open ? 'Tarif ditentukan pemateri' : escapeHtmlEsa(t.fee || 'GRATIS untuk member');
+    const btn = open
+      ? '<button onclick="esaShowWorkshopPresenterForm(\'' + s.id + '\')" style="width:100%;padding:11px 14px;background:linear-gradient(135deg,#d4af6a,#a07840);color:#1a1d2e;font-weight:700;border:none;border-radius:8px;font-size:0.84rem;cursor:pointer;letter-spacing:0.03em;">🎤 Daftar Jadi Pemateri</button>'
+      : '<button onclick="esaShowWorkshopParticipantForm(\'' + s.id + '\')" style="width:100%;padding:11px 14px;background:transparent;color:#d4af6a;font-weight:700;border:1px solid rgba(212,175,106,0.6);border-radius:8px;font-size:0.84rem;cursor:pointer;letter-spacing:0.03em;">🎟️ Pilih &amp; Daftar</button>';
+    return '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">' +
+        '<div style="position:relative;height:160px;background-image:url(\'' + t.poster + '\');background-size:cover;background-position:center;">' +
+          '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,15,28,0.1),rgba(13,15,28,0.85));"></div>' +
+          '<div style="position:absolute;top:12px;left:12px;">' + badge + '</div>' +
+          (open ? '<div style="position:absolute;top:12px;right:12px;background:#1a1d2e;color:#f0d080;font-size:0.62rem;letter-spacing:0.14em;font-weight:700;padding:4px 9px;border-radius:100px;border:1px solid rgba(240,208,128,0.5);">TERBUKA</div>' : '') +
+          '<div style="position:absolute;bottom:10px;left:14px;right:14px;">' +
+            '<div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#d4af6a;font-weight:700;">Jumat · ' + s.dateShort + '</div>' +
+            '<div style="font-size:0.72rem;color:rgba(245,240,230,0.85);">13:00 WIB · via Zoom</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="padding:16px 18px 18px;display:flex;flex-direction:column;flex:1;">' +
+          '<div style="font-weight:700;color:#f5f0e6;font-size:1rem;line-height:1.35;margin-bottom:12px;flex:1;">' + escapeHtmlEsa(t.title) + '</div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:0.76rem;color:rgba(245,240,230,0.7);margin-bottom:14px;">' +
+            '<span>' + presenterLine + '</span>' +
+            '<span style="background:rgba(212,175,106,0.12);color:#d4af6a;padding:2px 8px;border-radius:4px;font-weight:600;white-space:nowrap;">' + feeLine + '</span>' +
+          '</div>' +
+          btn +
+        '</div>' +
+      '</div>';
+  }).join('');
+}
+
+// Ambil data user yg sudah login (kalau ada) untuk prefill form.
+function esaWorkshopUser() {
+  const u = {};
+  try { const l = JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null'); if (l) { u.name = l.name; u.email = l.email; } } catch (e) {}
+  try {
+    const d = JSON.parse(localStorage.getItem('esa_data_v1') || 'null');
+    if (d && d.profile) {
+      u.name = u.name || d.profile.name;
+      u.email = u.email || d.profile.email;
+      if (d.profile.phone && d.profile.phone !== '-') u.phone = d.profile.phone;
+    }
+  } catch (e) {}
+  return u;
+}
+
+// Supabase client fail-soft (reuse client utama kalau ada).
+function esaWorkshopSb() {
+  try {
+    if (!(window.supabase && window.ESA_SUPABASE && window.ESA_SUPABASE.isConfigured && window.ESA_SUPABASE.isConfigured())) return null;
+    if (window.__esaSb) return window.__esaSb;
+    return window.supabase.createClient(window.ESA_SUPABASE.url, window.ESA_SUPABASE.anonKey);
+  } catch (e) { return null; }
+}
+
+function esaWorkshopToast(title, msg, icon) {
+  if (typeof window.esaToast === 'function') window.esaToast(title, msg, icon || '✅');
+  else if (typeof showToast === 'function') showToast(title, msg, true);
+}
+
+// Modal builder generik untuk form workshop.
+function esaBuildWorkshopModal(headingHtml, bodyHtml) {
+  const old = document.getElementById('esa-workshop-modal');
+  if (old) old.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'esa-workshop-modal';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,24,0.92);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;backdrop-filter:blur(6px);font-family:Inter,sans-serif;';
+  overlay.onclick = function (e) { if (e.target === overlay) esaCloseWorkshopModal(); };
+  const box = document.createElement('div');
+  box.style.cssText = 'background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:20px;padding:34px 32px;max-width:480px;width:100%;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.7);margin:auto;';
+  box.onclick = function (e) { e.stopPropagation(); };
+  box.innerHTML =
+    '<button onclick="esaCloseWorkshopModal()" aria-label="Tutup" style="position:absolute;top:14px;right:18px;background:none;border:none;color:#6b7280;font-size:24px;cursor:pointer;line-height:1;">&times;</button>' +
+    headingHtml + bodyHtml;
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  return box;
+}
+function esaCloseWorkshopModal() {
+  const m = document.getElementById('esa-workshop-modal');
+  if (m) m.remove();
+}
+window.esaCloseWorkshopModal = esaCloseWorkshopModal;
+
+const _ewInputStyle = 'width:100%;box-sizing:border-box;padding:11px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:#f5f0e6;font-size:0.9rem;font-family:Inter,sans-serif;margin-bottom:14px;';
+const _ewLabelStyle = 'display:block;font-size:0.78rem;color:#d4af6a;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;';
+
+// ---------- FORM: DAFTAR PESERTA ----------
+function esaShowWorkshopParticipantForm(sessionId) {
+  const sched = getExpertWorkshopSchedule();
+  const u = esaWorkshopUser();
+  const options = sched.filter(function (s) { return !s.topic.open; }).map(function (s) {
+    const sel = (s.id === sessionId) ? ' selected' : '';
+    return '<option value="' + s.id + '"' + sel + '>Jumat ' + s.dateShort + ' — ' + escapeHtmlEsa(s.topic.title) + '</option>';
+  }).join('');
+  const heading =
+    '<div style="text-align:center;margin-bottom:20px;">' +
+      '<div style="font-size:1.9rem;margin-bottom:6px;">🎟️</div>' +
+      '<h2 style="color:#f5f0e6;font-size:1.3rem;font-weight:700;margin:0 0 4px;font-family:Georgia,serif;">Daftar Peserta Workshop</h2>' +
+      '<p style="color:rgba(245,240,230,0.7);font-size:0.84rem;margin:0;">Live class tiap Jumat 13:00 WIB · link Zoom dikirim H-1.</p>' +
+    '</div>';
+  const body =
+    '<form id="ew-participant-form" onsubmit="return esaSubmitWorkshopParticipant(event)">' +
+      '<label style="' + _ewLabelStyle + '">Nama Lengkap *</label>' +
+      '<input name="name" required value="' + escapeHtmlEsa(u.name || '') + '" placeholder="Nama kamu" style="' + _ewInputStyle + '">' +
+      '<label style="' + _ewLabelStyle + '">Email *</label>' +
+      '<input name="email" type="email" required value="' + escapeHtmlEsa(u.email || '') + '" placeholder="email@contoh.com" style="' + _ewInputStyle + '">' +
+      '<label style="' + _ewLabelStyle + '">No. WhatsApp *</label>' +
+      '<input name="phone" required value="' + escapeHtmlEsa(u.phone || '') + '" placeholder="08xxxxxxxxxx" style="' + _ewInputStyle + '">' +
+      '<label style="' + _ewLabelStyle + '">Pilih Workshop *</label>' +
+      '<select name="session" required style="' + _ewInputStyle + '">' + options + '</select>' +
+      '<label style="' + _ewLabelStyle + '">Catatan (opsional)</label>' +
+      '<textarea name="note" rows="2" placeholder="Pertanyaan atau ekspektasi materi" style="' + _ewInputStyle + 'resize:vertical;"></textarea>' +
+      '<button type="submit" style="width:100%;padding:13px;background:linear-gradient(135deg,#d4af6a,#a07840);color:#1a1d2e;font-weight:700;border:none;border-radius:10px;font-size:0.94rem;cursor:pointer;letter-spacing:0.04em;margin-top:4px;">Daftar Sekarang →</button>' +
+    '</form>';
+  esaBuildWorkshopModal(heading, body);
+}
+window.esaShowWorkshopParticipantForm = esaShowWorkshopParticipantForm;
+
+function esaSubmitWorkshopParticipant(e) {
+  e.preventDefault();
+  const el = e.target.elements;
+  const sched = getExpertWorkshopSchedule();
+  const session = sched.find(function (s) { return s.id === el['session'].value; });
+  const sessionTitle = session ? session.topic.title : '-';
+  const sessionDate = session ? session.dateLong : '-';
+  const row = {
+    name: el['name'].value.trim(),
+    email: el['email'].value.trim(),
+    phone: el['phone'].value.trim(),
+    session_id: el['session'].value,
+    session_title: sessionTitle,
+    session_date: session ? session.date.toISOString() : null,
+    note: el['note'].value.trim() || null
+  };
+  const sb = esaWorkshopSb();
+  if (sb) {
+    sb.from('workshop_participants').insert(row).then(function (r) {
+      if (r && r.error) console.warn('[ESA] workshop_participants insert:', r.error.message);
+    });
+  }
+  if (typeof window.esaLogEvent === 'function') window.esaLogEvent('workshop_participant_signup', { email: row.email, metadata: { session: sessionTitle } });
+  const msg = 'Halo Admin Electra Academy, saya mau DAFTAR PESERTA Expert Workshop:%0A' +
+    '%0ANama: ' + encodeURIComponent(row.name) +
+    '%0AEmail: ' + encodeURIComponent(row.email) +
+    '%0AWA: ' + encodeURIComponent(row.phone) +
+    '%0AWorkshop: ' + encodeURIComponent(sessionTitle) +
+    '%0AJadwal: ' + encodeURIComponent(sessionDate + ' · 13:00 WIB') +
+    (row.note ? '%0ACatatan: ' + encodeURIComponent(row.note) : '');
+  window.open('https://wa.me/6285121532407?text=' + msg, '_blank', 'noopener');
+  esaCloseWorkshopModal();
+  esaWorkshopToast('Pendaftaran Terkirim', 'Konfirmasi peserta dikirim ke admin via WhatsApp.', '🎟️');
+  return false;
+}
+window.esaSubmitWorkshopParticipant = esaSubmitWorkshopParticipant;
+
+// ---------- FORM: DAFTAR PEMATERI ----------
+function esaShowWorkshopPresenterForm(sessionId) {
+  const sched = getExpertWorkshopSchedule();
+  const u = esaWorkshopUser();
+  const options = '<option value="">— Fleksibel / tentukan bersama admin —</option>' + sched.map(function (s) {
+    const sel = (s.id === sessionId) ? ' selected' : '';
+    return '<option value="' + s.id + '"' + sel + '>Jumat ' + s.dateShort + '</option>';
+  }).join('');
+  const heading =
+    '<div style="text-align:center;margin-bottom:20px;">' +
+      '<div style="font-size:1.9rem;margin-bottom:6px;">🎤</div>' +
+      '<h2 style="color:#f5f0e6;font-size:1.3rem;font-weight:700;margin:0 0 4px;font-family:Georgia,serif;">Daftar Jadi Pemateri</h2>' +
+      '<p style="color:rgba(245,240,230,0.7);font-size:0.84rem;margin:0;">Bawakan materimu di live class Jumat 13:00 WIB. Tentukan tarif sendiri.</p>' +
+    '</div>';
+  const body =
+    '<form id="ew-presenter-form" onsubmit="return esaSubmitWorkshopPresenter(event)">' +
+      '<label style="' + _ewLabelStyle + '">Nama Lengkap *</label>' +
+      '<input name="name" required value="' + escapeHtmlEsa(u.name || '') + '" placeholder="Nama kamu" style="' + _ewInputStyle + '">' +
+      '<label style="' + _ewLabelStyle + '">Email *</label>' +
+      '<input name="email" type="email" required value="' + escapeHtmlEsa(u.email || '') + '" placeholder="email@contoh.com" style="' + _ewInputStyle + '">' +
+      '<label style="' + _ewLabelStyle + '">No. WhatsApp *</label>' +
+      '<input name="phone" required value="' + escapeHtmlEsa(u.phone || '') + '" placeholder="08xxxxxxxxxx" style="' + _ewInputStyle + '">' +
+      '<label style="' + _ewLabelStyle + '">Judul Materi *</label>' +
+      '<input name="topic" required placeholder="cth: Setting Proteksi Relay Distribusi" style="' + _ewInputStyle + '">' +
+      '<label style="' + _ewLabelStyle + '">Deskripsi Materi *</label>' +
+      '<textarea name="material" required rows="3" placeholder="Apa yang akan disampaikan, target peserta, dan poin utama" style="' + _ewInputStyle + 'resize:vertical;"></textarea>' +
+      '<label style="' + _ewLabelStyle + '">Tarif / Honor (Rp) *</label>' +
+      '<input name="fee" required placeholder="cth: 500.000 atau sukarela" style="' + _ewInputStyle + '">' +
+      '<label style="' + _ewLabelStyle + '">Tanggal Jumat yang Diinginkan</label>' +
+      '<select name="session" style="' + _ewInputStyle + '">' + options + '</select>' +
+      '<button type="submit" style="width:100%;padding:13px;background:linear-gradient(135deg,#d4af6a,#a07840);color:#1a1d2e;font-weight:700;border:none;border-radius:10px;font-size:0.94rem;cursor:pointer;letter-spacing:0.04em;margin-top:4px;">Ajukan Sebagai Pemateri →</button>' +
+    '</form>';
+  esaBuildWorkshopModal(heading, body);
+}
+window.esaShowWorkshopPresenterForm = esaShowWorkshopPresenterForm;
+
+function esaSubmitWorkshopPresenter(e) {
+  e.preventDefault();
+  const el = e.target.elements;
+  const sched = getExpertWorkshopSchedule();
+  const session = el['session'].value ? sched.find(function (s) { return s.id === el['session'].value; }) : null;
+  const sessionDate = session ? session.dateLong : 'Fleksibel';
+  const row = {
+    name: el['name'].value.trim(),
+    email: el['email'].value.trim(),
+    phone: el['phone'].value.trim(),
+    topic: el['topic'].value.trim(),
+    material: el['material'].value.trim(),
+    fee: el['fee'].value.trim(),
+    preferred_session_id: el['session'].value || null,
+    preferred_date: session ? session.date.toISOString() : null
+  };
+  const sb = esaWorkshopSb();
+  if (sb) {
+    sb.from('workshop_presenters').insert(row).then(function (r) {
+      if (r && r.error) console.warn('[ESA] workshop_presenters insert:', r.error.message);
+    });
+  }
+  if (typeof window.esaLogEvent === 'function') window.esaLogEvent('workshop_presenter_signup', { email: row.email, metadata: { topic: row.topic } });
+  const msg = 'Halo Admin Electra Academy, saya mau DAFTAR PEMATERI Expert Workshop:%0A' +
+    '%0ANama: ' + encodeURIComponent(row.name) +
+    '%0AEmail: ' + encodeURIComponent(row.email) +
+    '%0AWA: ' + encodeURIComponent(row.phone) +
+    '%0AJudul Materi: ' + encodeURIComponent(row.topic) +
+    '%0ADeskripsi: ' + encodeURIComponent(row.material) +
+    '%0ATarif/Honor: ' + encodeURIComponent('Rp ' + row.fee) +
+    '%0AJadwal diinginkan: ' + encodeURIComponent(sessionDate);
+  window.open('https://wa.me/6285121532407?text=' + msg, '_blank', 'noopener');
+  esaCloseWorkshopModal();
+  esaWorkshopToast('Pengajuan Terkirim', 'Pengajuan pemateri dikirim ke admin via WhatsApp.', '🎤');
+  return false;
+}
+window.esaSubmitWorkshopPresenter = esaSubmitWorkshopPresenter;
 
 // =================== FAQ DATA + RENDER ===================
 const FAQ_DATA = [
@@ -24504,6 +24854,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         }
         if (view === 'talent' && typeof renderTalents === 'function') renderTalents();
         if (view === 'liveclass-schedule' && typeof renderLiveClassSchedulePage === 'function') renderLiveClassSchedulePage();
+        if (view === 'expert-workshop' && typeof renderExpertWorkshop === 'function') renderExpertWorkshop();
         if (view === 'faq' && typeof renderFAQ === 'function') renderFAQ();
         if (view === 'referensi' && typeof renderReferensi === 'function') renderReferensi();
       }, 100);
@@ -25249,7 +25600,7 @@ function hookSV(){
   if(typeof window.showView==="function"&&!window.__esaGateOn){
     window._origSV=window.showView;
     // PUBLIC views (anyone can open without login)
-    var PUBLIC_VIEWS={home:1,about:1,'liveclass-schedule':1,faq:1};
+    var PUBLIC_VIEWS={home:1,about:1,'liveclass-schedule':1,faq:1,'expert-workshop':1};
     // MEMBER-ONLY views (login + active member; non-member → activation prompt)
     var MEMBER_VIEWS={talent:1,jobs:1,labs:1,sertifikasi:1,certification:1,referensi:1};
     window.showView=function(v){
@@ -25631,6 +25982,14 @@ else{setTimeout(init,200);}
     galleryLink.style.cursor='pointer';
     galleryLink.onclick=function(e){e.preventDefault(); publicShow('gallery');};
 
+    // Expert Workshop — live class rutin tiap Jumat, public access
+    var workshopLink=document.createElement('a');
+    workshopLink.className='nav-right';
+    workshopLink.href='#';
+    workshopLink.textContent='Expert Workshop';
+    workshopLink.style.cursor='pointer';
+    workshopLink.onclick=function(e){e.preventDefault(); publicShow('expert-workshop'); if(typeof window.renderExpertWorkshop==='function') window.renderExpertWorkshop();};
+
     navGroup.innerHTML='';
     navGroup.appendChild(aboutUs);
     navGroup.appendChild(careerLink);
@@ -25638,6 +25997,7 @@ else{setTimeout(init,200);}
     if(cert)navGroup.appendChild(cert);
     navGroup.appendChild(libraryLink);
     navGroup.appendChild(galleryLink);
+    navGroup.appendChild(workshopLink);
     if(daftar)navGroup.appendChild(daftar);
   }
   
