@@ -16590,10 +16590,9 @@ function renderLevels(trackId) {
     const badgeClass = lvl.isFree ? 'free' : 'paid';
     const badgeText = lvl.isFree ? 'Gratis' : 'Berbayar';
     const isPaid = !lvl.isFree;
-    // EMERGENCY MODE: paksa isLocked = false di renderLevels supaya onclick
-    // SELALU openModul, bukan openPurchaseModal. Real gating dilakukan di
-    // patchOpenModul (yg bisa show login modal kalau belum login).
-    const isLocked = false;
+    // Level berbayar terkunci untuk member yang belum aktif (belum bayar /
+    // belum punya kode). Member aktif (bayar QRIS / promo / admin) → terbuka.
+    const isLocked = isPaid && !(typeof window.esaIsMemberActive === 'function' && window.esaIsMemberActive());
 
     // Compute module-level + level-level "Done" stats
     const passedCount = modules.filter(m => isPassed(m.code)).length;
@@ -16647,9 +16646,9 @@ function renderLevels(trackId) {
                 </div>
                 <div class="paid-banner-text">
                   <strong>Level ini berbayar</strong>
-                  Subscribe paket untuk akses semua modul di level ${lvl.name}.
+                  Selesaikan pembayaran akses penuh untuk membuka semua modul.
                 </div>
-                <button class="paid-banner-btn" onclick="event.stopPropagation(); openPurchaseModal();">Pilih Paket</button>
+                <button class="paid-banner-btn" onclick="event.stopPropagation(); esaShowActivationModal();">Bayar — Buka Akses</button>
               </div>
             ` : `
               <button class="level-start-btn" onclick="event.stopPropagation(); startLevel('${lvl.id}', '${trackId}')">
@@ -16666,7 +16665,7 @@ function renderLevels(trackId) {
                   ? `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,0.12);color:#16a34a;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-left:8px;vertical-align:middle;">✓ Done · ${fmtDate(rec.lastDate)} · ${rec.bestScore}%</span>`
                   : '';
                 return `
-                <button class="module-card ${isLocked ? 'locked' : ''}" data-module-code="${m.code}" onclick="${isLocked ? 'openPurchaseModal()' : `openModul('${m.code}', '${trackId}', '${lvl.id}')`}">
+                <button class="module-card ${isLocked ? 'locked' : ''}" data-module-code="${m.code}" onclick="${isLocked ? 'esaShowActivationModal()' : `openModul('${m.code}', '${trackId}', '${lvl.id}')`}">
                   <span class="module-code">${m.code}</span>
                   <div>
                     <div class="module-title">${m.title}${isLocked ? ' <span class="module-lock-icon">🔒</span>' : ''}${moduleDoneBadge}</div>
@@ -23035,6 +23034,14 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       window._esaPending = null;
       setTimeout(function(){ window._origSV(v); }, 400);
     }
+
+    // Baru daftar & belum aktif (belum bayar / tanpa kode) → langsung arahkan
+    // ke pendaftaran akses penuh (pembayaran QRIS), karena materi terkunci.
+    try {
+      if (!isMemberActive() && typeof window.esaShowActivationModal === 'function') {
+        setTimeout(function(){ window.esaShowActivationModal(); }, 800);
+      }
+    } catch (e) {}
   }
   window.esaSaveProfile = saveProfile;
 
@@ -24275,11 +24282,26 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
 
   function patchOpenModul() {
-    // EMERGENCY MODE: NO-OP. Tidak ada wrapping. window.openModul tetap
-    // pure original (line 11904) yg langsung show view-modul tanpa gate.
-    // Ini ngasilkan: klik module card → openModul('code','track','level')
-    // → langsung open modul, no silent return possible.
-    return;
+    if (typeof window.openModul !== 'function' || window.__esaOpenModulGated) return;
+    const original = window.openModul;
+    window.openModul = function(code, trackId, levelId) {
+      const active = (typeof window.esaIsMemberActive === 'function') ? window.esaIsMemberActive() : false;
+      if (active) return original.apply(this, arguments);
+      // Belum aktif → blokir akses materi, arahkan ke login / pembayaran.
+      let loggedIn = false;
+      try {
+        loggedIn = !!(JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null')
+          || (JSON.parse(localStorage.getItem('esa_data_v1') || '{}').profile || {}).email);
+      } catch (e) {}
+      if (!loggedIn) {
+        if (typeof window.esaShowAuthModal === 'function') window.esaShowAuthModal();
+      } else {
+        if (typeof window.esaToast === 'function') window.esaToast('Akses Terkunci 🔒', 'Selesaikan pembayaran untuk membuka semua materi.', '🔒');
+        if (typeof window.esaShowActivationModal === 'function') window.esaShowActivationModal();
+      }
+      return;
+    };
+    window.__esaOpenModulGated = true;
   }
 
   function patchStartLevel() {
@@ -26768,6 +26790,13 @@ else{setTimeout(init,200);}
       if (typeof window.esaCloseMemberOnlyModal === 'function') window.esaCloseMemberOnlyModal();
       if (typeof window.esaUpdateNavUser === 'function') window.esaUpdateNavUser();
       if (typeof window.esaToast === 'function') window.esaToast('Akses Terbuka 🎉', 'Pembayaran tercatat. Selamat belajar!', '🔓');
+      // Refresh tampilan kunci level kalau sedang di halaman jalur.
+      try {
+        if (typeof currentTrackId !== 'undefined' && currentTrackId && typeof window.renderLevels === 'function') {
+          window.renderLevels(currentTrackId);
+          if (typeof window.renderJalurProgress === 'function') window.renderJalurProgress(currentTrackId);
+        }
+      } catch (e) {}
       // Resume view yang tadi terkunci (bypass gate via showView original).
       if (window._esaPending && window._origSV) { var v = window._esaPending; window._esaPending = null; window._origSV(v); }
     }, 900);
