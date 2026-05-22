@@ -335,10 +335,12 @@
     window.esaActivateUser = async function(email){
       if(!confirm('Verifikasi pembayaran QRIS & AKTIFKAN akses penuh untuk '+email+'?\n\nLakukan HANYA setelah dana QRIS benar-benar masuk.')) return;
       const sb = window.__esaAdminSb;
-      const { error } = await sb.from('participants')
+      const { data, error } = await sb.from('participants')
         .update({ is_active: true, activation_method: 'payment', activated_at: new Date().toISOString() })
-        .eq('email', email);
+        .eq('email', email)
+        .select('email');
       if (error) { alert('Gagal: ' + error.message); return; }
+      if (!data || !data.length) { alert('Akses TIDAK berubah (0 baris). Pastikan kamu login sebagai admin & email peserta benar.'); return; }
       alert('Akses penuh untuk '+email+' sudah diaktifkan.\nUser perlu login ulang / refresh untuk melihat aksesnya.');
       window.esaLoadTabParticipants();
     };
@@ -515,12 +517,12 @@
     const panel = document.getElementById('panel-payments');
     panel.innerHTML = '<div class="empty">Memuat...</div>';
     const { data, error } = await sb.from('payments')
-      .select('participant_email,amount,currency,description,external_id,invoice_url,status,paid_at,created_at')
+      .select('id,participant_email,amount,currency,description,external_id,invoice_url,status,paid_at,created_at')
       .order('created_at', { ascending: false })
       .limit(1000);
     if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
 
-    const note = '<div class="config-warn" style="margin-bottom:14px;">Xendit belum di-wire-up. Tabel <code>payments</code> akan terisi otomatis setelah Edge Function + webhook Xendit dipasang.</div>';
+    const note = '<div class="config-warn" style="margin-bottom:14px;background:rgba(212,175,106,0.08);border-color:rgba(212,175,106,0.3);color:#e6c48a;">Pembayaran via <strong>QRIS</strong>. Klaim "Saya Sudah Bayar" masuk sebagai <strong>pending</strong>. Cek dana benar-benar masuk di e-wallet/m-banking, lalu klik <strong>"✓ Aktifkan &amp; Lunas"</strong> untuk membuka akses penuh sekaligus menandai pembayaran lunas.</div>';
 
     if (!data || !data.length) { panel.innerHTML = note + emptyMsg('Belum ada transaksi pembayaran.'); return; }
 
@@ -530,19 +532,25 @@
       '  <span class="count" id="pm-count">' + data.length + ' transaksi</span>' +
       '</div>' +
       '<div class="table-wrap"><table>' +
-      '<thead><tr><th>Dibuat</th><th>Email</th><th>Nominal</th><th>Deskripsi</th><th>Invoice ID</th><th>Status</th><th>Dibayar</th></tr></thead>' +
+      '<thead><tr><th>Dibuat</th><th>Email</th><th>Nominal</th><th>Deskripsi</th><th>Invoice ID</th><th>Status</th><th>Dibayar</th><th>Aksi</th></tr></thead>' +
       '<tbody id="pm-tbody"></tbody></table></div>';
 
     const render = (rows) => {
       const tb = document.getElementById('pm-tbody');
       document.getElementById('pm-count').textContent = rows.length + ' transaksi';
-      if (!rows.length) { tb.innerHTML = '<tr><td colspan="7" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="8" class="empty">Tidak ada hasil.</td></tr>'; return; }
       tb.innerHTML = rows.map(r => {
         const cls = r.status === 'paid' ? 'ok' : (r.status === 'pending' ? 'warn' : 'fail');
         const amount = (r.currency || 'IDR') + ' ' + Number(r.amount || 0).toLocaleString('id-ID');
         const inv = r.invoice_url
           ? '<a href="' + esc(r.invoice_url) + '" target="_blank" rel="noopener">' + esc(r.external_id || '–') + '</a>'
           : esc(r.external_id || '–');
+        // Tombol satu-klik: verifikasi QRIS → buka akses penuh + tandai lunas.
+        const emailJs = esc(r.participant_email || '').replace(/'/g, "\\'");
+        const idJs = esc(r.id || '').replace(/'/g, "\\'");
+        const actBtn = (r.status === 'pending')
+          ? '<button onclick="esaActivateAndMarkPaid(\'' + emailJs + '\',\'' + idJs + '\')" style="background:#22c55e;color:#0d0f1c;border:none;border-radius:4px;padding:4px 9px;font-size:0.72rem;cursor:pointer;font-weight:700;">✓ Aktifkan &amp; Lunas</button>'
+          : '<span style="color:rgba(245,240,230,0.4);font-size:0.75rem;">–</span>';
         return '<tr>' +
           '<td>' + esc(fmtDate(r.created_at)) + '</td>' +
           '<td class="mono">' + esc(r.participant_email) + '</td>' +
@@ -551,10 +559,41 @@
           '<td class="mono">' + inv + '</td>' +
           '<td><span class="pill ' + cls + '">' + esc(r.status) + '</span></td>' +
           '<td>' + esc(r.paid_at ? fmtDate(r.paid_at) : '–') + '</td>' +
+          '<td>' + actBtn + '</td>' +
           '</tr>';
       }).join('');
     };
     render(data);
+
+    // Satu klik: verifikasi pembayaran QRIS → buka akses penuh (participants.
+    // is_active=true, activation_method='payment') SEKALIGUS tandai payment lunas
+    // (status='paid', verified=true). Lakukan HANYA setelah dana benar-benar masuk.
+    window.esaActivateAndMarkPaid = async function (email, paymentId) {
+      if (!email) { alert('Email peserta kosong — tidak bisa diaktifkan.'); return; }
+      if (!confirm('Verifikasi pembayaran QRIS & AKTIFKAN akses penuh untuk ' + email + '?\n\nLakukan HANYA setelah dana QRIS benar-benar masuk.')) return;
+      const sb = window.__esaAdminSb;
+      const nowIso = new Date().toISOString();
+      // 1) Buka akses penuh peserta.
+      const up1 = await sb.from('participants')
+        .update({ is_active: true, activation_method: 'payment', activated_at: nowIso })
+        .eq('email', email)
+        .select('email');
+      if (up1.error) { alert('Gagal aktifkan akses: ' + up1.error.message); return; }
+      if (!up1.data || !up1.data.length) {
+        alert('Akses TIDAK berubah (0 baris). Pastikan kamu login sebagai admin & email peserta benar.');
+        return;
+      }
+      // 2) Tandai pembayaran lunas (fail-soft — aktivasi sudah berhasil).
+      if (paymentId) {
+        const up2 = await sb.from('payments')
+          .update({ status: 'paid', paid_at: nowIso, verified: true })
+          .eq('id', paymentId);
+        if (up2.error) console.warn('[admin] tandai lunas gagal:', up2.error.message);
+      }
+      alert('Akses penuh untuk ' + email + ' sudah diaktifkan & pembayaran ditandai lunas.\nUser perlu login ulang / refresh untuk melihat aksesnya.');
+      window.esaLoadTabPayments();
+      if (typeof window.esaLoadDashboard === 'function') window.esaLoadDashboard();
+    };
 
     document.getElementById('pm-search').addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase().trim();
