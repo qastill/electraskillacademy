@@ -17438,10 +17438,10 @@ const FAQ_DATA = [
 
   { cat: 'Pembayaran', q: 'Berapa biaya akses penuh?',
     a: 'Detail paket berlangganan dapat dilihat di section <strong>Pricing</strong> di halaman utama, atau hubungi admin via WA <a href="https://wa.me/6285121532407" target="_blank" style="color:#d4af6a">0851-2153-2407</a> untuk info paket terkini + promo aktif.' },
-  { cat: 'Pembayaran', q: 'Saya punya kode promo. Cara redeem?',
-    a: 'Login dulu, lalu klik tombol <strong>"🔒 Aktivasi Akses"</strong> di profile / dashboard atas. Masukkan kode (mis. <code>ELECTRA2026</code>), klik Aktivasi Sekarang. Akses penuh langsung terbuka.' },
-  { cat: 'Pembayaran', q: 'Cara bayar tanpa kode promo?',
-    a: 'Klik <strong>"Aktivasi Akses"</strong> → pilih <em>Opsi 2 - Pembayaran</em> → tombol <em>"Chat Admin WA"</em> akan buka WhatsApp dengan pesan otomatis. Admin akan kirim info paket + cara transfer (BCA/Mandiri/QRIS).' },
+  { cat: 'Pembayaran', q: 'Bagaimana cara membuka akses penuh?',
+    a: 'Login & lengkapi data diri, lalu klik <strong>"Buka Akses Penuh"</strong> → bayar via <strong>QRIS Rp 299.000</strong> (scan dari e-wallet/m-banking apa pun), klik <em>"Saya Sudah Bayar — Kirim Konfirmasi"</em>. Admin memverifikasi dana masuk lalu mengaktifkan akun kamu (maks 1×24 jam). Akses terbuka setelah aktivasi — silakan login ulang / refresh.' },
+  { cat: 'Pembayaran', q: 'Sudah bayar tapi akses belum terbuka?',
+    a: 'Akses dibuka setelah admin memverifikasi pembayaran (maks 1×24 jam). Kalau sudah lewat, kirim bukti transfer ke admin via WA <a href="https://wa.me/6285121532407" target="_blank" style="color:#d4af6a">0851-2153-2407</a> dengan email akunmu. Setelah diaktifkan, login ulang / refresh untuk melihat akses.' },
   { cat: 'Pembayaran', q: 'Refund kalau tidak puas?',
     a: 'Refund tersedia dalam 7 hari pertama setelah aktivasi, jika belum mengakses lebih dari 3 modul. Hubungi admin untuk klaim — kami tidak akan menahan kalau memang tidak cocok.' },
 
@@ -22351,9 +22351,12 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
 
   function hasFullAccess() {
-    if (!state.promoCode) return false;
-    const promo = VALID_PROMO_CODES[state.promoCode];
-    return promo && promo.benefits && promo.benefits.indexOf('full_access') >= 0;
+    // DINONAKTIFKAN: akses via kode/voucher tidak berlaku lagi. Akses penuh
+    // HANYA setelah pembayaran QRIS diverifikasi & diaktifkan admin (server
+    // set is_active=true → syncMemberStatusFromServer menandai isPaid). Kode
+    // promo lama (mis. ELECTRA2026) yang masih tersimpan di localStorage pun
+    // tidak lagi membuka akses karena fungsi ini selalu false.
+    return false;
   }
 
   // Member status: aktif kalau (a) sudah bayar atau (b) pakai promo code valid
@@ -22395,68 +22398,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   // check). Fallback ke client-only kalau endpoint belum ready / belum di-set
   // env vars di Vercel.
   async function activateWithPromo(rawCode) {
-    const norm = normalizePromoCode(rawCode);
-    if (!norm) return { ok: false, error: 'Masukkan kode aktivasi.' };
-    const email = state.profile && state.profile.email;
-    if (!email) return { ok: false, error: 'Login dulu sebelum redeem kode.' };
-
-    // Coba server-side redeem dulu (atomic)
-    try {
-      const r = await fetch('/api/redeem-promo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: norm, email: email })
-      });
-      const data = await r.json();
-      if (r.ok && data.ok) {
-        // Server sukses redeem — update state lokal sesuai response
-        state.promoCode = data.code;
-        if (!state.profile) state.profile = {};
-        state.profile.activatedAt = new Date().toISOString();
-        state.profile.activationMethod = 'promo:' + data.code;
-        if (data.expires_at) state.profile.subscriptionExpiresAt = data.expires_at;
-        saveData(state);
-        // Sync ulang participant — server sudah update tapi local profile
-        // mungkin punya field lain yg perlu di-flush.
-        if (typeof window.esaSyncParticipant === 'function') {
-          window.esaSyncParticipant(state.profile, state.promoCode);
-        }
-        return {
-          ok: true,
-          label: data.label,
-          remaining_quota: data.remaining_quota,
-          expires_at: data.expires_at
-        };
-      }
-      // Server return error spesifik
-      if (data.error) {
-        const errorMsgs = {
-          'not_found': 'Kode tidak valid atau sudah dinonaktifkan.',
-          'expired': data.message || 'Kode sudah expired.',
-          'quota_exceeded': data.message || 'Kuota kode sudah habis.',
-          'domain_restricted': data.message || 'Email tidak sesuai dengan restriksi kode.',
-          'already_redeemed': 'Anda sudah pernah pakai kode ini sebelumnya.'
-        };
-        return { ok: false, error: errorMsgs[data.error] || data.message || 'Aktivasi gagal.' };
-      }
-      // Server unreachable / not configured → fallback ke client-only
-      throw new Error(data.error || 'server_unreachable');
-    } catch(e) {
-      console.warn('[ESA] /api/redeem-promo gagal, fallback client-only:', e.message);
-      // Fallback: validasi client-side dgn VALID_PROMO_CODES (legacy behavior)
-      if (!VALID_PROMO_CODES[norm]) {
-        return { ok: false, error: `Kode "${rawCode}" tidak valid.` };
-      }
-      state.promoCode = norm;
-      if (!state.profile) state.profile = {};
-      state.profile.activatedAt = new Date().toISOString();
-      state.profile.activationMethod = 'promo:' + norm;
-      saveData(state);
-      if (typeof window.esaSyncParticipant === 'function') {
-        window.esaSyncParticipant(state.profile, state.promoCode);
-      }
-      return { ok: true, label: VALID_PROMO_CODES[norm].label, fallback: true };
-    }
+    // DINONAKTIFKAN: aktivasi via kode/voucher tidak berlaku lagi. Akses penuh
+    // HANYA via pembayaran QRIS yang diverifikasi & diaktifkan admin.
+    return { ok: false, error: 'Aktivasi via kode dinonaktifkan. Akses dibuka setelah pembayaran QRIS diverifikasi admin.' };
   }
   window.esaActivateWithPromo = activateWithPromo;
 
@@ -22618,7 +22562,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   window.esaShowTos = function(){
     showInfoModal('Syarat &amp; Ketentuan',
       '<p><strong>1. Penerimaan Layanan.</strong> Dengan mendaftar, Anda menyetujui pemakaian layanan Electra Skill Academy untuk kepentingan pelatihan kelistrikan profesional.</p>'+
-      '<p><strong>2. Akun &amp; Akses.</strong> Akses modul berbayar (semua level dari L1 hingga L6) memerlukan aktivasi via pembayaran atau kode promo yang valid. Akun bisa dibatalkan jika ditemukan pelanggaran (sharing kredensial, copy-paste sertifikat tanpa hak, dll).</p>'+
+      '<p><strong>2. Akun &amp; Akses.</strong> Akses modul berbayar (semua level dari L1 hingga L6) memerlukan aktivasi via pembayaran QRIS yang telah diverifikasi dan diaktifkan oleh admin. Akun bisa dibatalkan jika ditemukan pelanggaran (sharing kredensial, copy-paste sertifikat tanpa hak, dll).</p>'+
       '<p><strong>3. Sertifikat.</strong> Sertifikat hanya diterbitkan atas nama yang sesuai dengan profil akun. Anda bertanggung jawab atas keakuratan data yang diisi.</p>'+
       '<p><strong>4. Pembayaran &amp; Refund.</strong> Pembayaran tidak dapat di-refund kecuali ada kesalahan sistem. Promo code memiliki expiry &amp; quota.</p>'+
       '<p><strong>5. AI Tutor.</strong> Setiap user memiliki kuota 50 pertanyaan AI Tutor. Hubungi admin untuk perpanjangan.</p>'+
@@ -22775,7 +22719,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const isOpen = content.classList.toggle('open');
     trigger.setAttribute('aria-expanded', String(isOpen));
     const label = trigger.querySelector('span:first-child');
-    if (label) label.textContent = isOpen ? '− Sembunyikan kode promo / referral' : '+ Punya kode promo / kode referral?';
+    if (label) label.textContent = isOpen ? '− Sembunyikan kode referral' : '+ Punya kode referral?';
   }
   window.esaToggleAdvancedFields = toggleAdvancedFields;
 
@@ -22952,10 +22896,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       referredByEmail: referralEmail.toLowerCase() || null
     };
 
-    // Apply promo code if valid
-    if (promoNorm && VALID_PROMO_CODES[promoNorm]) {
-      state.promoCode = promoNorm;
-    }
+    // Kode/voucher DINONAKTIFKAN — pendaftaran tidak pernah membuka akses.
+    // Bersihkan juga kode lama yang mungkin tersimpan supaya tidak menyesatkan.
+    state.promoCode = null;
 
     saveData(state);
 
@@ -22989,12 +22932,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     updateHomeProgress();
 
     const firstName = name.split(' ')[0];
-    if (state.promoCode) {
-      const promo = VALID_PROMO_CODES[state.promoCode];
-      showToast('Login + Kode Aktif', `Halo ${firstName}! ${promo.label} terbuka 🔓`, '🎉');
-    } else {
-      showToast('Login Berhasil', `Halo ${firstName}, selamat belajar!`, '✅');
-    }
+    showToast('Login Berhasil', `Halo ${firstName}, selamat datang!`, '✅');
 
     // If there's a pending action (e.g. startLevel), run it now
     const pending = pendingAction;
@@ -23044,25 +22982,11 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
   window.esaCheckPromoCode = checkPromoCode;
 
-  // Redeem promo code for already-logged-in users
+  // DINONAKTIFKAN: redeem kode/voucher tidak membuka akses lagi. Arahkan user
+  // ke pembayaran QRIS (akses dibuka admin setelah verifikasi).
   function redeemPromoCode() {
-    const input = prompt('Masukkan kode promo:');
-    if (!input) return;
-    const norm = normalizePromoCode(input);
-    if (!VALID_PROMO_CODES[norm]) {
-      alert('Kode promo "' + input + '" tidak valid.');
-      return;
-    }
-    state.promoCode = norm;
-    saveData(state);
-    const promo = VALID_PROMO_CODES[norm];
-    showToast('Kode Berhasil Diterapkan', `${promo.label} sekarang aktif 🔓`, '🎉');
-    updateHomeProgress();
-    // Re-render current levels to remove lock indicators if on jalur view
-    if (typeof window.renderLevels === 'function' && typeof currentTrackId !== 'undefined' && currentTrackId) {
-      try { window.renderLevels(currentTrackId); } catch(e) {}
-      try { if (typeof window.renderJalurProgress === 'function') window.renderJalurProgress(currentTrackId); } catch(e) {}
-    }
+    if (typeof window.esaShowActivationModal === 'function') { window.esaShowActivationModal(); return; }
+    alert('Akses penuh dibuka lewat pembayaran QRIS yang diverifikasi admin.');
   }
   window.esaRedeemPromoCode = redeemPromoCode;
 
@@ -23480,8 +23404,8 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
 
   // ========== LEVEL GATING ==========
   function isLevelUnlocked(levelId, trackId) {
-    // Full Access promo bypasses all level gating
-    if (hasFullAccess()) return true;
+    // Member aktif (akses penuh via pembayaran terverifikasi) lewati gating level
+    if (isMemberActive()) return true;
 
     if (levelId === 'L1') return true;
     if (levelId === 'L2') return getLevelProgress('L1', null).complete;
@@ -24493,7 +24417,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           <div class="esa-home-position">
             <span class="esa-home-pos-label">Sedang di</span>
             <span class="esa-home-pos-value">Level ${currentLevelId.replace('L','')} — ${escapeHtml(currentLevelMeta.name)}</span>
-            ${hasFullAccess() ? '<span class="esa-home-pos-badge">● Akses Penuh</span>' : ''}
+            ${isMemberActive() ? '<span class="esa-home-pos-badge">● Akses Penuh</span>' : ''}
           </div>
         </div>
       </div>
