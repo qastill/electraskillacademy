@@ -25071,20 +25071,6 @@ function buildModal(){
     },180);
   };
 
-  // ---- Daftar Tanpa Email (pakai data diri lengkap) ----
-  var noEmailBtn=document.createElement("button");
-  noEmailBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A18 18 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Daftar Tanpa Email (No HP &amp; NIK)';
-  styleOAuthBtn(noEmailBtn,'transparent','#c9a96e');
-  noEmailBtn.style.border='1px solid rgba(201,169,110,0.6)';
-  noEmailBtn.onclick=function(){
-    closeModal();
-    setTimeout(function(){
-      if(typeof window.esaShowOnboardingModal==='function'){
-        window.esaShowOnboardingModal({mode:'phone'});
-      }
-    },180);
-  };
-
   var p2=document.createElement("p");
   p2.textContent="Dengan mendaftar, Anda menyetujui syarat & ketentuan Electra Skill Academy";
   p2.style.color="#6b7280";p2.style.fontSize="11px";p2.style.margin="16px 0 0";
@@ -25097,7 +25083,6 @@ function buildModal(){
   box.appendChild(gsiDiv);
   box.appendChild(divider);
   box.appendChild(emailBtn);
-  box.appendChild(noEmailBtn);
   box.appendChild(p2);
   overlay.appendChild(box);
   document.body.appendChild(overlay);
