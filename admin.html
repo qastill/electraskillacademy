@@ -110,7 +110,7 @@
       <div class="stat-card"><div class="lbl">Total Pendaftar</div><div class="val" id="stat-participants">–</div></div>
       <div class="stat-card"><div class="lbl">Modul Lulus</div><div class="val" id="stat-modules-passed">–</div><div class="sub">unique module × peserta</div></div>
       <div class="stat-card"><div class="lbl">Sertifikat Terbit</div><div class="val" id="stat-certs">–</div></div>
-      <div class="stat-card"><div class="lbl">Pembayaran Lunas</div><div class="val" id="stat-paid">–</div><div class="sub">total IDR</div></div>
+      <div class="stat-card"><div class="lbl">Total Pendapatan</div><div class="val" id="stat-paid">–</div><div class="sub" id="stat-paid-sub">akun aktif × harga</div></div>
     </div>
 
     <div class="tabs">
@@ -211,19 +211,24 @@
 
     const setStat = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 
-    // Stats: hitung paralel
+    // Stats: hitung paralel. Total pendapatan = JUMLAH AKUN AKTIF × harga akses
+    // (aktif = sudah bayar). Setiap aktivasi juga mencatat baris 'paid' di tab
+    // Pembayaran (esaEnsurePaidPayment), jadi rekap & total konsisten.
+    const ESA_PRICE = 299000;
     try {
-      const [pCount, mPassed, cCount, payments] = await Promise.all([
+      const [pCount, mPassed, cCount, activeCount] = await Promise.all([
         sb.from('participants').select('*', { count: 'exact', head: true }),
         sb.from('module_progress').select('*', { count: 'exact', head: true }).eq('passed', true),
         sb.from('level_completions').select('*', { count: 'exact', head: true }),
-        sb.from('payments').select('amount').eq('status', 'paid')
+        sb.from('participants').select('*', { count: 'exact', head: true }).eq('is_active', true)
       ]);
       setStat('stat-participants', pCount.count != null ? pCount.count : '–');
       setStat('stat-modules-passed', mPassed.count != null ? mPassed.count : '–');
       setStat('stat-certs', cCount.count != null ? cCount.count : '–');
-      const totalPaid = (payments.data || []).reduce((s, r) => s + Number(r.amount || 0), 0);
-      setStat('stat-paid', 'Rp ' + totalPaid.toLocaleString('id-ID'));
+      const nActive = activeCount.count || 0;
+      setStat('stat-paid', 'Rp ' + (nActive * ESA_PRICE).toLocaleString('id-ID'));
+      const subEl = document.getElementById('stat-paid-sub');
+      if (subEl) subEl.textContent = nActive + ' akun aktif × Rp ' + ESA_PRICE.toLocaleString('id-ID');
     } catch (e) { console.warn('[admin] stats error:', e); }
 
     // Load each tab
