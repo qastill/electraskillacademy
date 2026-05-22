@@ -21716,6 +21716,10 @@ function hasAccessToLevel(levelId, trackId) {
 
 // ---- Modal open/close ----
 function openPurchaseModal() {
+  // Satu-satunya jalur pembayaran: QRIS Rp 299.000 dengan VERIFIKASI ADMIN.
+  // Modal paket lama (50k/250k + "success" instan tanpa verifikasi) sudah
+  // tidak dipakai karena bisa membuka akses tanpa pembayaran sungguhan.
+  if (typeof window.esaShowQrisPayment === 'function') { window.esaShowQrisPayment(); return; }
   const modal = document.getElementById('purchase-modal');
   if (modal) {
     showPurchaseStep('tier');
@@ -22103,8 +22107,8 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
   <div class="esa-toast-content">
-    <div class="esa-toast-title" id="toast-title">Pembayaran Berhasil</div>
-    <div class="esa-toast-msg" id="toast-msg">Konten profesional sekarang terbuka.</div>
+    <div class="esa-toast-title" id="toast-title"></div>
+    <div class="esa-toast-msg" id="toast-msg"></div>
   </div>
 </div>
 
@@ -26656,11 +26660,11 @@ else{setTimeout(init,200);}
       '<div style="text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:0.8rem;color:rgba(245,240,230,0.78);line-height:1.7;">' +
         '<div><strong style="color:#d4af6a;">1.</strong> Scan QRIS pakai e-wallet / m-banking (GoPay, OVO, DANA, BCA, dll).</div>' +
         '<div><strong style="color:#d4af6a;">2.</strong> Nominal sudah otomatis <strong style="color:#f0d080;">Rp 299.000</strong> — tinggal konfirmasi bayar.</div>' +
-        '<div><strong style="color:#d4af6a;">3.</strong> Klik tombol di bawah — akses langsung terbuka.</div>' +
+        '<div><strong style="color:#d4af6a;">3.</strong> Klik tombol di bawah untuk kirim konfirmasi. Admin verifikasi dana masuk, lalu akses dibuka (maks 1×24 jam).</div>' +
       '</div>' +
       '<input id="esa-qris-ref" type="text" placeholder="No. Referensi / RRN (opsional)" autocomplete="off" style="width:100%;box-sizing:border-box;padding:11px 13px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;margin-bottom:12px;outline:none;">' +
       '<div id="esa-qris-msg" style="font-size:0.78rem;min-height:1em;margin-bottom:10px;color:#ef9090;"></div>' +
-      '<button id="esa-qris-confirm" onclick="esaConfirmQrisPayment()" style="width:100%;padding:13px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:700;border:none;border-radius:10px;font-size:0.95rem;cursor:pointer;letter-spacing:0.03em;">✅ Saya Sudah Bayar — Buka Akses</button>' +
+      '<button id="esa-qris-confirm" onclick="esaConfirmQrisPayment()" style="width:100%;padding:13px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:700;border:none;border-radius:10px;font-size:0.95rem;cursor:pointer;letter-spacing:0.03em;">✅ Saya Sudah Bayar — Kirim Konfirmasi</button>' +
       '<a href="https://wa.me/6285121532407?text=' + encodeURIComponent('Halo Admin, saya sudah bayar via QRIS untuk akses penuh. Email: ' + (u.email || '-')) + '" target="_blank" rel="noopener" style="display:block;margin-top:12px;font-size:0.76rem;color:rgba(245,240,230,0.55);text-decoration:none;">Kendala pembayaran? Chat admin via WA</a>';
     overlay.appendChild(box);
     document.body.appendChild(overlay);
@@ -26672,64 +26676,62 @@ else{setTimeout(init,200);}
     var ref = (document.getElementById('esa-qris-ref') || {}).value || '';
     var u = getUserInfo();
     if (!u.email) {
-      if (msg) { msg.style.color = '#ef9090'; msg.textContent = 'Login dulu supaya akses bisa dibuka di akunmu.'; }
+      if (msg) { msg.style.color = '#ef9090'; msg.textContent = 'Login dulu supaya konfirmasi tercatat di akunmu.'; }
       setTimeout(function(){ close(); if (typeof window.esaShowAuthModal === 'function') window.esaShowAuthModal(); }, 1400);
       return;
     }
-    if (btn) { btn.disabled = true; btn.style.opacity = '0.65'; btn.innerHTML = '<span style="display:inline-block;animation:esa-spin 1s linear infinite;">⏳</span> Membuka akses...'; }
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.65'; btn.innerHTML = '<span style="display:inline-block;animation:esa-spin 1s linear infinite;">⏳</span> Mengirim konfirmasi...'; }
 
-    // 1) Tandai akun aktif (instant unlock) di localStorage.
+    // 1) Simpan profil — TANPA membuka akses. Akses HANYA terbuka setelah admin
+    //    memverifikasi dana QRIS benar-benar masuk (set is_active=true di
+    //    admin.html). Klik tombol ini = klaim "sudah bayar", BUKAN unlock.
     var data;
     try { data = JSON.parse(localStorage.getItem('esa_data_v1') || '{}'); } catch(e){ data = {}; }
     data.profile = data.profile || {};
     data.profile.email = data.profile.email || u.email;
     data.profile.name = data.profile.name || u.name || u.email;
-    // Penuhi syarat skema (loadData me-null-kan profil tanpa phone / schema lama)
-    // supaya status bayar tidak ke-reset di reload berikutnya.
     data.profile.phone = data.profile.phone || '-';
     data.profile.joinDate = data.profile.joinDate || new Date().toISOString();
     if (!data.schemaVersion || data.schemaVersion < 2) data.schemaVersion = 2;
-    data.profile.isPaid = true;
-    data.profile.activatedAt = new Date().toISOString();
-    data.profile.activationMethod = 'payment';
-    data.profile.paymentMethod = 'qris';
+    // CATATAN: TIDAK set isPaid / activationMethod='payment' di sini — itu yang
+    // dulu bikin akses kebuka tanpa pembayaran sungguhan. Admin yang membuka.
     try { localStorage.setItem('esa_data_v1', JSON.stringify(data)); } catch(e){}
 
-    // 2) Catat klaim ke Supabase (fail-soft; butuh policy anon insert — migration-009).
+    // 2) Catat klaim ke Supabase sebagai PENDING (fail-soft; butuh policy anon
+    //    insert — migration-009). status='pending' supaya admin verifikasi dulu.
     var sb = sbClient();
     if (sb) {
       sb.from('payments').insert({
         participant_email: u.email,
         amount: AMOUNT,
         currency: 'IDR',
-        description: 'Akses Penuh — QRIS (self-claim)',
+        description: 'Akses Penuh — QRIS (klaim, menunggu verifikasi admin)',
         external_id: 'QRIS-' + u.email + '-' + Date.now(),
-        status: 'paid',
-        paid_at: new Date().toISOString(),
-        metadata: { method: 'qris', self_claimed: true, ref: ref || null }
+        status: 'pending',
+        metadata: { method: 'qris', self_claimed: true, verified: false, ref: ref || null }
       }).then(function(r){ if (r && r.error) console.warn('[ESA] payments insert:', r.error.message); });
     }
 
-    // 3) Sinkron status member ke server (set participants.is_active=true via upsert).
+    // 3) Sinkron participant (is_active TETAP false — belum aktif sampai admin
+    //    verifikasi). Catat juga event klaim untuk audit admin.
     if (typeof window.esaSyncParticipant === 'function') window.esaSyncParticipant(data.profile, data.promoCode || null);
-    if (typeof window.esaLogEvent === 'function') window.esaLogEvent('payment_self_claim', { email: u.email, metadata: { method: 'qris', amount: AMOUNT, ref: ref || null } });
+    if (typeof window.esaLogEvent === 'function') window.esaLogEvent('payment_claim_pending', { email: u.email, metadata: { method: 'qris', amount: AMOUNT, ref: ref || null } });
 
+    // 4) Tampilkan state "menunggu verifikasi" — JANGAN buka akses / resume view.
     setTimeout(function(){
-      close();
-      if (typeof window.esaCloseActivationModal === 'function') window.esaCloseActivationModal();
-      if (typeof window.esaCloseMemberOnlyModal === 'function') window.esaCloseMemberOnlyModal();
-      if (typeof window.esaUpdateNavUser === 'function') window.esaUpdateNavUser();
-      if (typeof window.esaToast === 'function') window.esaToast('Akses Terbuka 🎉', 'Pembayaran tercatat. Selamat belajar!', '🔓');
-      // Refresh tampilan kunci level kalau sedang di halaman jalur.
-      try {
-        if (typeof currentTrackId !== 'undefined' && currentTrackId && typeof window.renderLevels === 'function') {
-          window.renderLevels(currentTrackId);
-          if (typeof window.renderJalurProgress === 'function') window.renderJalurProgress(currentTrackId);
-        }
-      } catch (e) {}
-      // Resume view yang tadi terkunci (bypass gate via showView original).
-      if (window._esaPending && window._origSV) { var v = window._esaPending; window._esaPending = null; window._origSV(v); }
-    }, 900);
+      var box = document.querySelector('#esa-qris-modal > div');
+      if (box) {
+        box.innerHTML =
+          '<button onclick="esaCloseQrisPayment()" aria-label="Tutup" style="position:absolute;top:12px;right:16px;background:none;border:none;color:#6b7280;font-size:24px;cursor:pointer;line-height:1;">&times;</button>' +
+          '<div style="width:64px;height:64px;margin:6px auto 16px;background:rgba(212,175,106,0.14);border:1px solid rgba(212,175,106,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;">⏳</div>' +
+          '<div style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:#d4af6a;font-weight:700;margin-bottom:6px;">Konfirmasi Terkirim</div>' +
+          '<h2 style="color:#f5f0e6;font-size:1.2rem;font-weight:700;margin:0 0 10px;font-family:Georgia,serif;">Menunggu Verifikasi Admin</h2>' +
+          '<p style="color:rgba(245,240,230,0.78);font-size:0.9rem;line-height:1.65;margin:0 0 16px;">Pembayaran QRIS kamu sedang dicek. <strong style="color:#f0d080;">Akses belum terbuka</strong> — akan aktif otomatis setelah admin memverifikasi dana masuk (maks 1×24 jam). Silakan <strong>login ulang / refresh</strong> setelah dapat konfirmasi.</p>' +
+          '<a href="https://wa.me/6285121532407?text=' + encodeURIComponent('Halo Admin, saya sudah bayar QRIS Rp 299.000 untuk Akses Penuh. Email: ' + (u.email || '-') + (ref ? ' — Ref: ' + ref : '') + '. Mohon verifikasi & buka akses. Bukti transfer saya lampirkan.') + '" target="_blank" rel="noopener" style="display:block;padding:12px;background:#22c55e;color:#fff;font-weight:700;border-radius:10px;text-decoration:none;font-size:0.9rem;margin-bottom:10px;">Kirim Bukti Bayar ke Admin (WhatsApp)</a>' +
+          '<button onclick="esaCloseQrisPayment()" style="width:100%;padding:11px;background:transparent;color:rgba(245,240,230,0.7);border:1px solid rgba(255,255,255,0.18);border-radius:10px;font-size:0.85rem;cursor:pointer;font-weight:600;">Tutup</button>';
+      }
+      if (typeof window.esaToast === 'function') window.esaToast('Konfirmasi Terkirim ⏳', 'Pembayaran sedang diverifikasi admin. Akses dibuka setelah dikonfirmasi.', '⏳');
+    }, 700);
   };
 })();
 </script>
