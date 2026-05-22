@@ -249,6 +249,42 @@
   }
   function emptyMsg(msg) { return '<div class="empty">' + esc(msg) + '</div>'; }
 
+  // Pastikan ada baris pembayaran "paid" untuk email yang baru diaktifkan, supaya
+  // peserta muncul di tab Pembayaran sebagai lunas. Idempotent:
+  //  - sudah ada baris 'paid' → tidak melakukan apa-apa
+  //  - ada klaim 'pending'    → ditandai lunas (verified)
+  //  - belum ada baris sama sekali → buat baris 'paid' (aktivasi manual)
+  window.esaEnsurePaidPayment = async function (email) {
+    const sb = window.__esaAdminSb;
+    if (!sb || !email) return;
+    const nowIso = new Date().toISOString();
+    const { data: rows, error } = await sb.from('payments')
+      .select('id,status').eq('participant_email', email);
+    if (error) { console.warn('[admin] cek payments gagal:', error.message); return; }
+    if ((rows || []).some(r => r.status === 'paid')) return;
+    const pending = (rows || []).find(r => r.status === 'pending');
+    if (pending) {
+      const u = await sb.from('payments')
+        .update({ status: 'paid', paid_at: nowIso, verified: true })
+        .eq('id', pending.id);
+      if (u.error) console.warn('[admin] tandai lunas gagal:', u.error.message);
+      return;
+    }
+    const ins = await sb.from('payments').insert({
+      participant_email: email,
+      amount: 299000,
+      currency: 'IDR',
+      description: 'Akses Penuh — aktivasi manual (QRIS diverifikasi admin)',
+      external_id: 'MANUAL-' + email + '-' + Date.now(),
+      status: 'paid',
+      paid_at: nowIso,
+      method: 'qris',
+      verified: true,
+      metadata: { manual_activation: true }
+    });
+    if (ins.error) console.warn('[admin] insert payment gagal:', ins.error.message);
+  };
+
   // ===== Tab: PENDAFTAR =====
   window.esaLoadTabParticipants = async function () {
     const sb = window.__esaAdminSb;
@@ -341,7 +377,9 @@
         .select('email');
       if (error) { alert('Gagal: ' + error.message); return; }
       if (!data || !data.length) { alert('Akses TIDAK berubah (0 baris). Pastikan kamu login sebagai admin & email peserta benar.'); return; }
-      alert('Akses penuh untuk '+email+' sudah diaktifkan.\nUser perlu login ulang / refresh untuk melihat aksesnya.');
+      // Catat/lengkapi baris pembayaran 'paid' agar muncul di tab Pembayaran.
+      await window.esaEnsurePaidPayment(email);
+      alert('Akses penuh untuk '+email+' sudah diaktifkan & tercatat lunas di tab Pembayaran.\nUser perlu login ulang / refresh untuk melihat aksesnya.');
       window.esaLoadTabParticipants();
     };
 
