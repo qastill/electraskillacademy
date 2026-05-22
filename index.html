@@ -25723,8 +25723,9 @@ function buildActivationModal(){
       '<button onclick="esaSubmitActivation()" style="width:100%;padding:12px 16px;background:#d4af6a;color:#0d0f1c;font-weight:700;border:none;border-radius:8px;font-size:0.92rem;cursor:pointer;letter-spacing:0.04em;">Aktivasi Sekarang</button>'+
     '</div>'+
     '<div style="text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:18px;">'+
-      '<div style="font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,230,0.55);font-weight:700;margin-bottom:8px;">Opsi 2 · Pembayaran</div>'+
-      '<p style="color:rgba(245,240,230,0.65);font-size:0.82rem;line-height:1.55;margin:0 0 12px;">Belum punya kode? Hubungi admin via WhatsApp untuk pembelian akses.</p>'+
+      '<div style="font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,230,0.55);font-weight:700;margin-bottom:8px;">Opsi 2 · Bayar via QRIS</div>'+
+      '<p style="color:rgba(245,240,230,0.65);font-size:0.82rem;line-height:1.55;margin:0 0 12px;">Akses penuh selamanya — <strong style="color:#f0d080;">Rp 299.000</strong>. Bayar pakai QRIS (semua e-wallet &amp; m-banking), akses langsung terbuka.</p>'+
+      '<button onclick="esaCloseActivationModal();esaShowQrisPayment();" style="width:100%;padding:12px 16px;background:linear-gradient(135deg,#d4af6a,#a07840);color:#1a1d2e;border:none;border-radius:8px;font-size:0.92rem;cursor:pointer;font-weight:700;margin-bottom:10px;letter-spacing:0.03em;">💳 Bayar via QRIS — Buka Akses</button>'+
       '<button onclick="esaCloseActivationModal();window.open(\'https://wa.me/6285121532407?text=\'+encodeURIComponent(\'Halo Admin Electra Academy, saya mau aktivasi akses penuh. Mohon info paket & cara pembayaran. Email akun saya: \'+(((window.state||{}).profile||{}).email||\'-\')),\'_blank\',\'noopener\');" style="width:100%;padding:11px 16px;background:#25d366;color:#fff;border:none;border-radius:8px;font-size:0.9rem;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;">'+
         '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>'+
         'Chat Admin WA — Beli Akses'+
@@ -26654,6 +26655,123 @@ else{setTimeout(init,200);}
 
 <!-- SKTTK data: 380 okupasi (38 KB) — di-load async untuk reverse-link modul → SKTTK -->
 <script src="/peta-karir-okupasi-min.js" defer></script>
+
+<!-- ================================================================
+     QRIS PAYMENT — bayar via QRIS statis, buka akses instan (trust-based)
+     Klaim pembayaran dicatat ke tabel payments (self_claimed) untuk admin.
+     ================================================================ -->
+<script>
+(function(){
+  'use strict';
+  var AMOUNT = 299000;
+
+  function getUserInfo(){
+    var info = {};
+    try { var d = JSON.parse(localStorage.getItem('esa_data_v1') || '{}'); if (d && d.profile) { info.email = d.profile.email; info.name = d.profile.name; } } catch(e){}
+    if (!info.email) { try { var l = JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null'); if (l) { info.email = info.email || l.email; info.name = info.name || l.name; } } catch(e){} }
+    return info;
+  }
+  function sbClient(){
+    try {
+      if (!(window.supabase && window.ESA_SUPABASE && window.ESA_SUPABASE.isConfigured && window.ESA_SUPABASE.isConfigured())) return null;
+      if (window.__esaSb) return window.__esaSb;
+      return window.supabase.createClient(window.ESA_SUPABASE.url, window.ESA_SUPABASE.anonKey);
+    } catch(e){ return null; }
+  }
+  function close(){ var m = document.getElementById('esa-qris-modal'); if (m) m.remove(); }
+  window.esaCloseQrisPayment = close;
+
+  window.esaShowQrisPayment = function(){
+    close();
+    var u = getUserInfo();
+    var overlay = document.createElement('div');
+    overlay.id = 'esa-qris-modal';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,24,0.93);z-index:100000;display:flex;align-items:flex-start;justify-content:center;padding:32px 18px;overflow-y:auto;backdrop-filter:blur(6px);font-family:Inter,sans-serif;';
+    overlay.onclick = function(e){ if (e.target === overlay) close(); };
+    var box = document.createElement('div');
+    box.style.cssText = 'background:#1a1d2e;border:1px solid rgba(201,169,110,0.3);border-radius:20px;padding:28px 26px;max-width:400px;width:100%;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.7);margin:auto;text-align:center;';
+    box.onclick = function(e){ e.stopPropagation(); };
+    box.innerHTML =
+      '<button onclick="esaCloseQrisPayment()" aria-label="Tutup" style="position:absolute;top:12px;right:16px;background:none;border:none;color:#6b7280;font-size:24px;cursor:pointer;line-height:1;">&times;</button>' +
+      '<div style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:#d4af6a;font-weight:700;margin-bottom:6px;">Pembayaran QRIS</div>' +
+      '<h2 style="color:#f5f0e6;font-size:1.25rem;font-weight:700;margin:0 0 4px;font-family:Georgia,serif;">Akses Penuh Selamanya</h2>' +
+      '<div style="color:#f0d080;font-size:1.5rem;font-weight:800;margin:0 0 14px;">Rp 299.000</div>' +
+      '<div style="background:#fff;border-radius:14px;padding:10px;margin:0 auto 14px;max-width:280px;">' +
+        '<img src="qris.jpeg" alt="QRIS Electra Academy" style="width:100%;height:auto;display:block;border-radius:8px;">' +
+      '</div>' +
+      '<div style="text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:0.8rem;color:rgba(245,240,230,0.78);line-height:1.7;">' +
+        '<div><strong style="color:#d4af6a;">1.</strong> Scan QRIS pakai e-wallet / m-banking (GoPay, OVO, DANA, BCA, dll).</div>' +
+        '<div><strong style="color:#d4af6a;">2.</strong> Bayar sejumlah <strong style="color:#f0d080;">Rp 299.000</strong>.</div>' +
+        '<div><strong style="color:#d4af6a;">3.</strong> Klik tombol di bawah — akses langsung terbuka.</div>' +
+      '</div>' +
+      '<input id="esa-qris-ref" type="text" placeholder="No. Referensi / RRN (opsional)" autocomplete="off" style="width:100%;box-sizing:border-box;padding:11px 13px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;margin-bottom:12px;outline:none;">' +
+      '<div id="esa-qris-msg" style="font-size:0.78rem;min-height:1em;margin-bottom:10px;color:#ef9090;"></div>' +
+      '<button id="esa-qris-confirm" onclick="esaConfirmQrisPayment()" style="width:100%;padding:13px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:700;border:none;border-radius:10px;font-size:0.95rem;cursor:pointer;letter-spacing:0.03em;">✅ Saya Sudah Bayar — Buka Akses</button>' +
+      '<a href="https://wa.me/6285121532407?text=' + encodeURIComponent('Halo Admin, saya sudah bayar via QRIS untuk akses penuh. Email: ' + (u.email || '-')) + '" target="_blank" rel="noopener" style="display:block;margin-top:12px;font-size:0.76rem;color:rgba(245,240,230,0.55);text-decoration:none;">Kendala pembayaran? Chat admin via WA</a>';
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+  };
+
+  window.esaConfirmQrisPayment = function(){
+    var msg = document.getElementById('esa-qris-msg');
+    var btn = document.getElementById('esa-qris-confirm');
+    var ref = (document.getElementById('esa-qris-ref') || {}).value || '';
+    var u = getUserInfo();
+    if (!u.email) {
+      if (msg) { msg.style.color = '#ef9090'; msg.textContent = 'Login dulu supaya akses bisa dibuka di akunmu.'; }
+      setTimeout(function(){ close(); if (typeof window.esaShowAuthModal === 'function') window.esaShowAuthModal(); }, 1400);
+      return;
+    }
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.65'; btn.innerHTML = '<span style="display:inline-block;animation:esa-spin 1s linear infinite;">⏳</span> Membuka akses...'; }
+
+    // 1) Tandai akun aktif (instant unlock) di localStorage.
+    var data;
+    try { data = JSON.parse(localStorage.getItem('esa_data_v1') || '{}'); } catch(e){ data = {}; }
+    data.profile = data.profile || {};
+    data.profile.email = data.profile.email || u.email;
+    data.profile.name = data.profile.name || u.name || u.email;
+    // Penuhi syarat skema (loadData me-null-kan profil tanpa phone / schema lama)
+    // supaya status bayar tidak ke-reset di reload berikutnya.
+    data.profile.phone = data.profile.phone || '-';
+    data.profile.joinDate = data.profile.joinDate || new Date().toISOString();
+    if (!data.schemaVersion || data.schemaVersion < 2) data.schemaVersion = 2;
+    data.profile.isPaid = true;
+    data.profile.activatedAt = new Date().toISOString();
+    data.profile.activationMethod = 'payment';
+    data.profile.paymentMethod = 'qris';
+    try { localStorage.setItem('esa_data_v1', JSON.stringify(data)); } catch(e){}
+
+    // 2) Catat klaim ke Supabase (fail-soft; butuh policy anon insert — migration-009).
+    var sb = sbClient();
+    if (sb) {
+      sb.from('payments').insert({
+        participant_email: u.email,
+        amount: AMOUNT,
+        currency: 'IDR',
+        description: 'Akses Penuh — QRIS (self-claim)',
+        external_id: 'QRIS-' + u.email + '-' + Date.now(),
+        status: 'paid',
+        paid_at: new Date().toISOString(),
+        metadata: { method: 'qris', self_claimed: true, ref: ref || null }
+      }).then(function(r){ if (r && r.error) console.warn('[ESA] payments insert:', r.error.message); });
+    }
+
+    // 3) Sinkron status member ke server (set participants.is_active=true via upsert).
+    if (typeof window.esaSyncParticipant === 'function') window.esaSyncParticipant(data.profile, data.promoCode || null);
+    if (typeof window.esaLogEvent === 'function') window.esaLogEvent('payment_self_claim', { email: u.email, metadata: { method: 'qris', amount: AMOUNT, ref: ref || null } });
+
+    setTimeout(function(){
+      close();
+      if (typeof window.esaCloseActivationModal === 'function') window.esaCloseActivationModal();
+      if (typeof window.esaCloseMemberOnlyModal === 'function') window.esaCloseMemberOnlyModal();
+      if (typeof window.esaUpdateNavUser === 'function') window.esaUpdateNavUser();
+      if (typeof window.esaToast === 'function') window.esaToast('Akses Terbuka 🎉', 'Pembayaran tercatat. Selamat belajar!', '🔓');
+      // Resume view yang tadi terkunci (bypass gate via showView original).
+      if (window._esaPending && window._origSV) { var v = window._esaPending; window._esaPending = null; window._origSV(v); }
+    }, 900);
+  };
+})();
+</script>
 
 </body>
 </html>
