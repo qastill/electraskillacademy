@@ -25930,13 +25930,15 @@ else{setTimeout(init,200);}
     };
 
 
-    // Library — perpustakaan digital, public access
+    // Library — perpustakaan digital, MEMBER-ONLY (butuh akses penuh).
+    // Lewat showView (gated) — bukan publicShow — supaya non-member diarahkan
+    // ke modal aktivasi/pembayaran, bukan langsung dibuka.
     var libraryLink=document.createElement('a');
     libraryLink.className='nav-right';
     libraryLink.href='#';
     libraryLink.textContent='Library';
     libraryLink.style.cursor='pointer';
-    libraryLink.onclick=function(e){e.preventDefault(); publicShow('referensi');};
+    libraryLink.onclick=function(e){e.preventDefault(); showView('referensi');};
 
     // Gallery — dokumentasi workshop & training, public access
     var galleryLink=document.createElement('a');
