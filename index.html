@@ -22511,6 +22511,19 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         console.info('[ESA] member status synced dari server: AKTIF — promoCode:', state.promoCode);
         try { updateHomeProgress && updateHomeProgress(); } catch(e) {}
       } else {
+        // Server bilang BELUM AKTIF. Kalau localStorage masih menyimpan isPaid
+        // (mis. dari tombol "Saya Sudah Bayar" lama sebelum verifikasi admin),
+        // revoke akses lokal — server jadi sumber kebenaran. Akses HANYA terbuka
+        // setelah admin set is_active=true. Promo (state.promoCode) tidak disentuh.
+        if (state.profile && state.profile.isPaid === true) {
+          state.profile.isPaid = false;
+          if (state.profile.activationMethod === 'payment') state.profile.activationMethod = null;
+          if (state.profile.paymentMethod) state.profile.paymentMethod = null;
+          saveData(state);
+          console.info('[ESA] akses lokal di-revoke — server BELUM AKTIF (menunggu verifikasi admin)');
+          try { updateHomeProgress && updateHomeProgress(); } catch(e) {}
+          try { if (typeof currentTrackId !== 'undefined' && currentTrackId && typeof window.renderLevels === 'function') window.renderLevels(currentTrackId); } catch(e) {}
+        }
         console.info('[ESA] member status server: BELUM AKTIF —', data.reason);
       }
     } catch (e) {
