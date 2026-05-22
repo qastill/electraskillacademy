@@ -283,9 +283,15 @@
         const expDisplay = r.subscription_expires_at
           ? fmtDate(r.subscription_expires_at)
           : '–';
+        const emailJs = esc(r.email).replace(/'/g, "\\'");
         const banBtn = r.is_banned
-          ? '<button onclick="esaUnbanUser(\'' + esc(r.email).replace(/'/g, "\\'") + '\')" style="background:transparent;color:#5fd482;border:1px solid #5fd482;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Unban</button>'
-          : '<button onclick="esaBanUser(\'' + esc(r.email).replace(/'/g, "\\'") + '\')" style="background:transparent;color:#ef9090;border:1px solid #ef6b6b;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Ban</button>';
+          ? '<button onclick="esaUnbanUser(\'' + emailJs + '\')" style="background:transparent;color:#5fd482;border:1px solid #5fd482;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Unban</button>'
+          : '<button onclick="esaBanUser(\'' + emailJs + '\')" style="background:transparent;color:#ef9090;border:1px solid #ef6b6b;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Ban</button>';
+        // Verifikasi pembayaran QRIS: buka akses penuh HANYA untuk yang belum
+        // aktif & tidak banned. Klik = konfirmasi dana QRIS masuk → is_active=true.
+        const actBtn = (!r.is_banned && !r.is_active)
+          ? '<button onclick="esaActivateUser(\'' + emailJs + '\')" style="background:#d4af6a;color:#10131f;border:none;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;font-weight:700;margin-right:6px;">✓ Aktifkan</button>'
+          : '';
         return '<tr>' +
         '<td>' + esc(fmtDate(r.join_date)) + '</td>' +
         '<td>' + esc(r.name || '–') + '</td>' +
@@ -295,7 +301,7 @@
         '<td>' + (r.promo_code ? '<span class="pill warn">' + esc(r.promo_code) + '</span>' : '–') + '</td>' +
         '<td class="mono">' + esc(expDisplay) + '</td>' +
         '<td>' + esc(r.auth_method || '–') + '</td>' +
-        '<td>' + banBtn + '</td>' +
+        '<td>' + actBtn + banBtn + '</td>' +
         '</tr>';
       }).join('');
     };
@@ -321,6 +327,19 @@
         .eq('email', email);
       if (error) { alert('Gagal: ' + error.message); return; }
       alert('User '+email+' diaktifkan kembali.');
+      window.esaLoadTabParticipants();
+    };
+    // Verifikasi pembayaran QRIS → buka akses penuh. Lakukan HANYA setelah dana
+    // benar-benar masuk (cek mutasi e-wallet/bank). Set activation_method=
+    // 'payment' supaya frontend (syncMemberStatusFromServer) menandai isPaid.
+    window.esaActivateUser = async function(email){
+      if(!confirm('Verifikasi pembayaran QRIS & AKTIFKAN akses penuh untuk '+email+'?\n\nLakukan HANYA setelah dana QRIS benar-benar masuk.')) return;
+      const sb = window.__esaAdminSb;
+      const { error } = await sb.from('participants')
+        .update({ is_active: true, activation_method: 'payment', activated_at: new Date().toISOString() })
+        .eq('email', email);
+      if (error) { alert('Gagal: ' + error.message); return; }
+      alert('Akses penuh untuk '+email+' sudah diaktifkan.\nUser perlu login ulang / refresh untuk melihat aksesnya.');
       window.esaLoadTabParticipants();
     };
 
