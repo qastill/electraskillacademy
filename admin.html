@@ -110,7 +110,7 @@
       <div class="stat-card"><div class="lbl">Total Pendaftar</div><div class="val" id="stat-participants">–</div></div>
       <div class="stat-card"><div class="lbl">Modul Lulus</div><div class="val" id="stat-modules-passed">–</div><div class="sub">unique module × peserta</div></div>
       <div class="stat-card"><div class="lbl">Sertifikat Terbit</div><div class="val" id="stat-certs">–</div></div>
-      <div class="stat-card"><div class="lbl">Pembayaran Lunas</div><div class="val" id="stat-paid">–</div><div class="sub">total IDR</div></div>
+      <div class="stat-card"><div class="lbl">Total Pendapatan</div><div class="val" id="stat-paid">–</div><div class="sub" id="stat-paid-sub">akun aktif × harga</div></div>
     </div>
 
     <div class="tabs">
@@ -211,19 +211,24 @@
 
     const setStat = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 
-    // Stats: hitung paralel
+    // Stats: hitung paralel. Total pendapatan = JUMLAH AKUN AKTIF × harga akses
+    // (aktif = sudah bayar). Setiap aktivasi juga mencatat baris 'paid' di tab
+    // Pembayaran (esaEnsurePaidPayment), jadi rekap & total konsisten.
+    const ESA_PRICE = 299000;
     try {
-      const [pCount, mPassed, cCount, payments] = await Promise.all([
+      const [pCount, mPassed, cCount, activeCount] = await Promise.all([
         sb.from('participants').select('*', { count: 'exact', head: true }),
         sb.from('module_progress').select('*', { count: 'exact', head: true }).eq('passed', true),
         sb.from('level_completions').select('*', { count: 'exact', head: true }),
-        sb.from('payments').select('amount').eq('status', 'paid')
+        sb.from('participants').select('*', { count: 'exact', head: true }).eq('is_active', true)
       ]);
       setStat('stat-participants', pCount.count != null ? pCount.count : '–');
       setStat('stat-modules-passed', mPassed.count != null ? mPassed.count : '–');
       setStat('stat-certs', cCount.count != null ? cCount.count : '–');
-      const totalPaid = (payments.data || []).reduce((s, r) => s + Number(r.amount || 0), 0);
-      setStat('stat-paid', 'Rp ' + totalPaid.toLocaleString('id-ID'));
+      const nActive = activeCount.count || 0;
+      setStat('stat-paid', 'Rp ' + (nActive * ESA_PRICE).toLocaleString('id-ID'));
+      const subEl = document.getElementById('stat-paid-sub');
+      if (subEl) subEl.textContent = nActive + ' akun aktif × Rp ' + ESA_PRICE.toLocaleString('id-ID');
     } catch (e) { console.warn('[admin] stats error:', e); }
 
     // Load each tab
@@ -249,6 +254,42 @@
   }
   function emptyMsg(msg) { return '<div class="empty">' + esc(msg) + '</div>'; }
 
+  // Pastikan ada baris pembayaran "paid" untuk email yang baru diaktifkan, supaya
+  // peserta muncul di tab Pembayaran sebagai lunas. Idempotent:
+  //  - sudah ada baris 'paid' → tidak melakukan apa-apa
+  //  - ada klaim 'pending'    → ditandai lunas (verified)
+  //  - belum ada baris sama sekali → buat baris 'paid' (aktivasi manual)
+  window.esaEnsurePaidPayment = async function (email) {
+    const sb = window.__esaAdminSb;
+    if (!sb || !email) return;
+    const nowIso = new Date().toISOString();
+    const { data: rows, error } = await sb.from('payments')
+      .select('id,status').eq('participant_email', email);
+    if (error) { console.warn('[admin] cek payments gagal:', error.message); return; }
+    if ((rows || []).some(r => r.status === 'paid')) return;
+    const pending = (rows || []).find(r => r.status === 'pending');
+    if (pending) {
+      const u = await sb.from('payments')
+        .update({ status: 'paid', paid_at: nowIso, verified: true })
+        .eq('id', pending.id);
+      if (u.error) console.warn('[admin] tandai lunas gagal:', u.error.message);
+      return;
+    }
+    const ins = await sb.from('payments').insert({
+      participant_email: email,
+      amount: 299000,
+      currency: 'IDR',
+      description: 'Akses Penuh — aktivasi manual (QRIS diverifikasi admin)',
+      external_id: 'MANUAL-' + email + '-' + Date.now(),
+      status: 'paid',
+      paid_at: nowIso,
+      method: 'qris',
+      verified: true,
+      metadata: { manual_activation: true }
+    });
+    if (ins.error) console.warn('[admin] insert payment gagal:', ins.error.message);
+  };
+
   // ===== Tab: PENDAFTAR =====
   window.esaLoadTabParticipants = async function () {
     const sb = window.__esaAdminSb;
@@ -260,6 +301,11 @@
       .limit(1000);
     if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
     if (!data || !data.length) { panel.innerHTML = emptyMsg('Belum ada pendaftar.'); return; }
+
+    // Akun AKTIF (dan tidak banned) naik ke atas; sisanya urut tanggal terbaru.
+    const _rank = (r) => (r.is_active && !r.is_banned) ? 0 : 1;
+    data.sort((a, b) => _rank(a) - _rank(b) ||
+      (new Date(b.join_date || 0) - new Date(a.join_date || 0)));
 
     panel.innerHTML =
       '<div class="toolbar">' +
@@ -284,13 +330,14 @@
           ? fmtDate(r.subscription_expires_at)
           : '–';
         const emailJs = esc(r.email).replace(/'/g, "\\'");
+        const btnBase = 'width:100%;box-sizing:border-box;padding:5px 10px;font-size:0.72rem;border-radius:6px;cursor:pointer;white-space:nowrap;font-weight:600;text-align:center;';
         const banBtn = r.is_banned
-          ? '<button onclick="esaUnbanUser(\'' + emailJs + '\')" style="background:transparent;color:#5fd482;border:1px solid #5fd482;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Unban</button>'
-          : '<button onclick="esaBanUser(\'' + emailJs + '\')" style="background:transparent;color:#ef9090;border:1px solid #ef6b6b;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Ban</button>';
+          ? '<button onclick="esaUnbanUser(\'' + emailJs + '\')" style="' + btnBase + 'background:transparent;color:#5fd482;border:1px solid #5fd482;">Unban</button>'
+          : '<button onclick="esaBanUser(\'' + emailJs + '\')" style="' + btnBase + 'background:transparent;color:#ef9090;border:1px solid #ef6b6b;">Ban</button>';
         // Verifikasi pembayaran QRIS: buka akses penuh HANYA untuk yang belum
         // aktif & tidak banned. Klik = konfirmasi dana QRIS masuk → is_active=true.
         const actBtn = (!r.is_banned && !r.is_active)
-          ? '<button onclick="esaActivateUser(\'' + emailJs + '\')" style="background:#d4af6a;color:#10131f;border:none;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;font-weight:700;margin-right:6px;">✓ Aktifkan</button>'
+          ? '<button onclick="esaActivateUser(\'' + emailJs + '\')" style="' + btnBase + 'background:#d4af6a;color:#10131f;border:1px solid #d4af6a;font-weight:700;">✓ Aktifkan</button>'
           : '';
         return '<tr>' +
         '<td>' + esc(fmtDate(r.join_date)) + '</td>' +
@@ -301,7 +348,7 @@
         '<td>' + (r.promo_code ? '<span class="pill warn">' + esc(r.promo_code) + '</span>' : '–') + '</td>' +
         '<td class="mono">' + esc(expDisplay) + '</td>' +
         '<td>' + esc(r.auth_method || '–') + '</td>' +
-        '<td>' + actBtn + banBtn + '</td>' +
+        '<td><div style="display:flex;flex-direction:column;gap:5px;align-items:stretch;width:92px;">' + actBtn + banBtn + '</div></td>' +
         '</tr>';
       }).join('');
     };
@@ -335,11 +382,15 @@
     window.esaActivateUser = async function(email){
       if(!confirm('Verifikasi pembayaran QRIS & AKTIFKAN akses penuh untuk '+email+'?\n\nLakukan HANYA setelah dana QRIS benar-benar masuk.')) return;
       const sb = window.__esaAdminSb;
-      const { error } = await sb.from('participants')
+      const { data, error } = await sb.from('participants')
         .update({ is_active: true, activation_method: 'payment', activated_at: new Date().toISOString() })
-        .eq('email', email);
+        .eq('email', email)
+        .select('email');
       if (error) { alert('Gagal: ' + error.message); return; }
-      alert('Akses penuh untuk '+email+' sudah diaktifkan.\nUser perlu login ulang / refresh untuk melihat aksesnya.');
+      if (!data || !data.length) { alert('Akses TIDAK berubah (0 baris). Pastikan kamu login sebagai admin & email peserta benar.'); return; }
+      // Catat/lengkapi baris pembayaran 'paid' agar muncul di tab Pembayaran.
+      await window.esaEnsurePaidPayment(email);
+      alert('Akses penuh untuk '+email+' sudah diaktifkan & tercatat lunas di tab Pembayaran.\nUser perlu login ulang / refresh untuk melihat aksesnya.');
       window.esaLoadTabParticipants();
     };
 
@@ -515,12 +566,12 @@
     const panel = document.getElementById('panel-payments');
     panel.innerHTML = '<div class="empty">Memuat...</div>';
     const { data, error } = await sb.from('payments')
-      .select('participant_email,amount,currency,description,external_id,invoice_url,status,paid_at,created_at')
+      .select('id,participant_email,amount,currency,description,external_id,invoice_url,status,paid_at,created_at')
       .order('created_at', { ascending: false })
       .limit(1000);
     if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
 
-    const note = '<div class="config-warn" style="margin-bottom:14px;">Xendit belum di-wire-up. Tabel <code>payments</code> akan terisi otomatis setelah Edge Function + webhook Xendit dipasang.</div>';
+    const note = '<div class="config-warn" style="margin-bottom:14px;background:rgba(212,175,106,0.08);border-color:rgba(212,175,106,0.3);color:#e6c48a;">Pembayaran via <strong>QRIS</strong>. Klaim "Saya Sudah Bayar" masuk sebagai <strong>pending</strong>. Cek dana benar-benar masuk di e-wallet/m-banking, lalu klik <strong>"✓ Aktifkan &amp; Lunas"</strong> untuk membuka akses penuh sekaligus menandai pembayaran lunas.</div>';
 
     if (!data || !data.length) { panel.innerHTML = note + emptyMsg('Belum ada transaksi pembayaran.'); return; }
 
@@ -530,19 +581,25 @@
       '  <span class="count" id="pm-count">' + data.length + ' transaksi</span>' +
       '</div>' +
       '<div class="table-wrap"><table>' +
-      '<thead><tr><th>Dibuat</th><th>Email</th><th>Nominal</th><th>Deskripsi</th><th>Invoice ID</th><th>Status</th><th>Dibayar</th></tr></thead>' +
+      '<thead><tr><th>Dibuat</th><th>Email</th><th>Nominal</th><th>Deskripsi</th><th>Invoice ID</th><th>Status</th><th>Dibayar</th><th>Aksi</th></tr></thead>' +
       '<tbody id="pm-tbody"></tbody></table></div>';
 
     const render = (rows) => {
       const tb = document.getElementById('pm-tbody');
       document.getElementById('pm-count').textContent = rows.length + ' transaksi';
-      if (!rows.length) { tb.innerHTML = '<tr><td colspan="7" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="8" class="empty">Tidak ada hasil.</td></tr>'; return; }
       tb.innerHTML = rows.map(r => {
         const cls = r.status === 'paid' ? 'ok' : (r.status === 'pending' ? 'warn' : 'fail');
         const amount = (r.currency || 'IDR') + ' ' + Number(r.amount || 0).toLocaleString('id-ID');
         const inv = r.invoice_url
           ? '<a href="' + esc(r.invoice_url) + '" target="_blank" rel="noopener">' + esc(r.external_id || '–') + '</a>'
           : esc(r.external_id || '–');
+        // Tombol satu-klik: verifikasi QRIS → buka akses penuh + tandai lunas.
+        const emailJs = esc(r.participant_email || '').replace(/'/g, "\\'");
+        const idJs = esc(r.id || '').replace(/'/g, "\\'");
+        const actBtn = (r.status === 'pending')
+          ? '<button onclick="esaActivateAndMarkPaid(\'' + emailJs + '\',\'' + idJs + '\')" style="background:#22c55e;color:#0d0f1c;border:none;border-radius:6px;padding:5px 11px;font-size:0.72rem;cursor:pointer;font-weight:700;white-space:nowrap;">✓ Aktifkan &amp; Lunas</button>'
+          : '<span style="color:rgba(245,240,230,0.4);font-size:0.75rem;">–</span>';
         return '<tr>' +
           '<td>' + esc(fmtDate(r.created_at)) + '</td>' +
           '<td class="mono">' + esc(r.participant_email) + '</td>' +
@@ -551,10 +608,41 @@
           '<td class="mono">' + inv + '</td>' +
           '<td><span class="pill ' + cls + '">' + esc(r.status) + '</span></td>' +
           '<td>' + esc(r.paid_at ? fmtDate(r.paid_at) : '–') + '</td>' +
+          '<td>' + actBtn + '</td>' +
           '</tr>';
       }).join('');
     };
     render(data);
+
+    // Satu klik: verifikasi pembayaran QRIS → buka akses penuh (participants.
+    // is_active=true, activation_method='payment') SEKALIGUS tandai payment lunas
+    // (status='paid', verified=true). Lakukan HANYA setelah dana benar-benar masuk.
+    window.esaActivateAndMarkPaid = async function (email, paymentId) {
+      if (!email) { alert('Email peserta kosong — tidak bisa diaktifkan.'); return; }
+      if (!confirm('Verifikasi pembayaran QRIS & AKTIFKAN akses penuh untuk ' + email + '?\n\nLakukan HANYA setelah dana QRIS benar-benar masuk.')) return;
+      const sb = window.__esaAdminSb;
+      const nowIso = new Date().toISOString();
+      // 1) Buka akses penuh peserta.
+      const up1 = await sb.from('participants')
+        .update({ is_active: true, activation_method: 'payment', activated_at: nowIso })
+        .eq('email', email)
+        .select('email');
+      if (up1.error) { alert('Gagal aktifkan akses: ' + up1.error.message); return; }
+      if (!up1.data || !up1.data.length) {
+        alert('Akses TIDAK berubah (0 baris). Pastikan kamu login sebagai admin & email peserta benar.');
+        return;
+      }
+      // 2) Tandai pembayaran lunas (fail-soft — aktivasi sudah berhasil).
+      if (paymentId) {
+        const up2 = await sb.from('payments')
+          .update({ status: 'paid', paid_at: nowIso, verified: true })
+          .eq('id', paymentId);
+        if (up2.error) console.warn('[admin] tandai lunas gagal:', up2.error.message);
+      }
+      alert('Akses penuh untuk ' + email + ' sudah diaktifkan & pembayaran ditandai lunas.\nUser perlu login ulang / refresh untuk melihat aksesnya.');
+      window.esaLoadTabPayments();
+      if (typeof window.esaLoadDashboard === 'function') window.esaLoadDashboard();
+    };
 
     document.getElementById('pm-search').addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase().trim();
