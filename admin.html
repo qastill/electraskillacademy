@@ -302,6 +302,11 @@
     if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
     if (!data || !data.length) { panel.innerHTML = emptyMsg('Belum ada pendaftar.'); return; }
 
+    // Akun AKTIF (dan tidak banned) naik ke atas; sisanya urut tanggal terbaru.
+    const _rank = (r) => (r.is_active && !r.is_banned) ? 0 : 1;
+    data.sort((a, b) => _rank(a) - _rank(b) ||
+      (new Date(b.join_date || 0) - new Date(a.join_date || 0)));
+
     panel.innerHTML =
       '<div class="toolbar">' +
       '  <input type="search" id="ps-search" placeholder="Cari nama / email / kota...">' +
@@ -325,13 +330,14 @@
           ? fmtDate(r.subscription_expires_at)
           : '–';
         const emailJs = esc(r.email).replace(/'/g, "\\'");
+        const btnBase = 'width:100%;box-sizing:border-box;padding:5px 10px;font-size:0.72rem;border-radius:6px;cursor:pointer;white-space:nowrap;font-weight:600;text-align:center;';
         const banBtn = r.is_banned
-          ? '<button onclick="esaUnbanUser(\'' + emailJs + '\')" style="background:transparent;color:#5fd482;border:1px solid #5fd482;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Unban</button>'
-          : '<button onclick="esaBanUser(\'' + emailJs + '\')" style="background:transparent;color:#ef9090;border:1px solid #ef6b6b;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Ban</button>';
+          ? '<button onclick="esaUnbanUser(\'' + emailJs + '\')" style="' + btnBase + 'background:transparent;color:#5fd482;border:1px solid #5fd482;">Unban</button>'
+          : '<button onclick="esaBanUser(\'' + emailJs + '\')" style="' + btnBase + 'background:transparent;color:#ef9090;border:1px solid #ef6b6b;">Ban</button>';
         // Verifikasi pembayaran QRIS: buka akses penuh HANYA untuk yang belum
         // aktif & tidak banned. Klik = konfirmasi dana QRIS masuk → is_active=true.
         const actBtn = (!r.is_banned && !r.is_active)
-          ? '<button onclick="esaActivateUser(\'' + emailJs + '\')" style="background:#d4af6a;color:#10131f;border:none;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;font-weight:700;margin-right:6px;">✓ Aktifkan</button>'
+          ? '<button onclick="esaActivateUser(\'' + emailJs + '\')" style="' + btnBase + 'background:#d4af6a;color:#10131f;border:1px solid #d4af6a;font-weight:700;">✓ Aktifkan</button>'
           : '';
         return '<tr>' +
         '<td>' + esc(fmtDate(r.join_date)) + '</td>' +
@@ -342,7 +348,7 @@
         '<td>' + (r.promo_code ? '<span class="pill warn">' + esc(r.promo_code) + '</span>' : '–') + '</td>' +
         '<td class="mono">' + esc(expDisplay) + '</td>' +
         '<td>' + esc(r.auth_method || '–') + '</td>' +
-        '<td>' + actBtn + banBtn + '</td>' +
+        '<td><div style="display:flex;flex-direction:column;gap:5px;align-items:stretch;width:92px;">' + actBtn + banBtn + '</div></td>' +
         '</tr>';
       }).join('');
     };
@@ -592,7 +598,7 @@
         const emailJs = esc(r.participant_email || '').replace(/'/g, "\\'");
         const idJs = esc(r.id || '').replace(/'/g, "\\'");
         const actBtn = (r.status === 'pending')
-          ? '<button onclick="esaActivateAndMarkPaid(\'' + emailJs + '\',\'' + idJs + '\')" style="background:#22c55e;color:#0d0f1c;border:none;border-radius:4px;padding:4px 9px;font-size:0.72rem;cursor:pointer;font-weight:700;">✓ Aktifkan &amp; Lunas</button>'
+          ? '<button onclick="esaActivateAndMarkPaid(\'' + emailJs + '\',\'' + idJs + '\')" style="background:#22c55e;color:#0d0f1c;border:none;border-radius:6px;padding:5px 11px;font-size:0.72rem;cursor:pointer;font-weight:700;white-space:nowrap;">✓ Aktifkan &amp; Lunas</button>'
           : '<span style="color:rgba(245,240,230,0.4);font-size:0.75rem;">–</span>';
         return '<tr>' +
           '<td>' + esc(fmtDate(r.created_at)) + '</td>' +
