@@ -23019,8 +23019,12 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (typeof window.esaLogEvent === 'function' && state.profile && state.profile.email) {
       window.esaLogEvent('logout', { email: state.profile.email });
     }
+    // Tandai load berikutnya sebagai hasil Logout → cegah auto-login balik.
+    try { sessionStorage.setItem('esa_logged_out','1'); } catch(e) {}
     // HAPUS: cuma kredensial auth, BUKAN progress
     try { localStorage.removeItem('esa_logged_in_user'); } catch(e) {}
+    // Hapus token sesi Supabase yang tersimpan supaya tidak auto-resume saat reload.
+    try { Object.keys(localStorage).forEach(function(k){ if(/^sb-.*-auth-token$/.test(k)) localStorage.removeItem(k); }); } catch(e) {}
     try {
       // Jangan reset state.profile sampai habis — cukup hapus sensitive auth fields
       // supaya progress + xp + sertifikat tetap utuh saat login ulang.
@@ -23032,11 +23036,12 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch(e) {}
-    // Sign-out Supabase Auth (LinkedIn/GitHub session)
+    // Sign-out Supabase Auth (LinkedIn/GitHub session) — scope local: hapus
+    // sesi lokal langsung tanpa menunggu network (cegah resume saat reload).
     try {
       const sb = window.__esaSb;
       if (sb && sb.auth && typeof sb.auth.signOut === 'function') {
-        sb.auth.signOut().catch(()=>{});
+        sb.auth.signOut({ scope: 'local' }).catch(()=>{});
       }
     } catch(e) {}
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
@@ -25210,11 +25215,15 @@ function doLogout(){
   if(typeof window.esaLogEvent==='function'&&u&&u.email){
     window.esaLogEvent('logout',{email:u.email});
   }
+  // Tandai load berikutnya sebagai hasil Logout → cegah auto-login balik.
+  try{ sessionStorage.setItem('esa_logged_out','1'); }catch(e){}
   localStorage.removeItem(K);
-  // Sign-out Supabase OAuth session juga
+  // Hapus token sesi Supabase yang tersimpan supaya tidak auto-resume saat reload.
+  try{ Object.keys(localStorage).forEach(function(k){ if(/^sb-.*-auth-token$/.test(k)) localStorage.removeItem(k); }); }catch(e){}
+  // Sign-out Supabase OAuth session (scope local: hapus sesi lokal tanpa nunggu network).
   try{
     var sb=window.__esaSb;
-    if(sb&&sb.auth&&typeof sb.auth.signOut==='function'){sb.auth.signOut().catch(function(){});}
+    if(sb&&sb.auth&&typeof sb.auth.signOut==='function'){sb.auth.signOut({scope:'local'}).catch(function(){});}
   }catch(e){}
   if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
   location.reload();
@@ -25703,6 +25712,11 @@ function handleSupabaseAuthEvent(event, session){
     return;
   }
   if(event!=='SIGNED_IN'||!session||!session.user)return;
+  // Jangan auto-login tepat setelah user menekan Logout (cegah masuk lagi otomatis).
+  if(window.__esaJustLoggedOut){
+    try{ var _s=getSb(); if(_s) _s.auth.signOut({scope:'local'}).catch(function(){}); }catch(e){}
+    return;
+  }
   var u=session.user;
   var meta=u.user_metadata||{};
   // Merge biodata STEP 1 — user-typed name override provider name.
@@ -25791,11 +25805,26 @@ function setupSupabaseAuthListener(){
   // Subscribe sekali saja
   if(window.__esaAuthListenerAttached)return;
   window.__esaAuthListenerAttached=true;
+  // Deteksi load yang terjadi TEPAT setelah user klik Logout. Flag di-set di
+  // logout()/doLogout() lalu reload — dibaca sekali di sini supaya sesi yang
+  // mungkin masih tersimpan tidak otomatis me-login ulang.
+  try{
+    if(sessionStorage.getItem('esa_logged_out')){
+      window.__esaJustLoggedOut=true;
+      sessionStorage.removeItem('esa_logged_out');
+    }
+  }catch(e){}
   try{
     sb.auth.onAuthStateChange(handleSupabaseAuthEvent);
     // Trigger sekali manual untuk session yang sudah ada (mis. user balik
     // ke site setelah tab di-close — session masih valid di localStorage).
     sb.auth.getSession().then(function(r){
+      if(window.__esaJustLoggedOut){
+        // Baru saja logout — JANGAN resume; pastikan sesi benar-benar dihapus.
+        try{ sb.auth.signOut({scope:'local'}).catch(function(){}); }catch(e){}
+        window.__esaJustLoggedOut=false;
+        return;
+      }
       if(r.data&&r.data.session&&!getUser()){
         handleSupabaseAuthEvent('SIGNED_IN',r.data.session);
       }
