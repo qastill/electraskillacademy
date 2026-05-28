@@ -8181,6 +8181,46 @@ img { max-width: 100%; height: auto; }
   .nav-right-group .nav-dropdown, .nav-right-group .nav-dropdown-wrapper { width: 100%; }
 }
 
+/* 26. MOBILE POLISH v2 — kompaksi banner/hero/section, CTA stack, tipografi pas HP */
+@media (max-width: 640px) {
+  /* Promo banner: kompak supaya tidak makan satu layar */
+  #esa-promo-banner { font-size: 11px !important; padding: 9px 38px !important; line-height: 1.4 !important; }
+
+  /* Hero: tipografi pas + CTA stack vertikal full-width */
+  .hero-headline { font-size: clamp(1.85rem, 9vw, 2.6rem) !important; line-height: 1.12 !important; margin-bottom: 24px !important; letter-spacing: 0 !important; }
+  .hero-inner { display: flex !important; flex-direction: column; align-items: stretch; gap: 12px; }
+  .hero-cta, .hero-daftar-btn {
+    width: 100% !important; margin: 0 !important; box-sizing: border-box;
+    display: inline-flex !important; justify-content: center; align-items: center; text-align: center;
+    padding: 15px 20px !important; font-size: 0.85rem !important; letter-spacing: 0.12em !important;
+  }
+  .hero-content { padding: 0 20px 28px !important; }
+  .hero { min-height: auto !important; }
+
+  /* Heading section — clamp() supaya tidak meluap di HP */
+  .practices-title, .academy-pricing-title { font-size: clamp(1.6rem, 7vw, 2.2rem) !important; line-height: 1.18 !important; }
+
+  /* Section padding lebih kompak di HP */
+  .practices-section, .offers, .testimonial, .partners { padding-top: 56px !important; padding-bottom: 56px !important; }
+  .practices-inner, .offers-inner { padding-left: 20px !important; padding-right: 20px !important; }
+
+  /* View sections (about/jalur/modul/dll.) yang dipasangi min-height:100vh inline — pangkas */
+  .view > section[style*="min-height: 100vh"] { min-height: auto !important; padding-top: 56px !important; padding-bottom: 64px !important; }
+}
+
+/* 27. Modul detail panels: PPT iframe lebih ringkas di HP kecil */
+@media (max-width: 520px) {
+  .slides-wrap iframe { min-height: 320px !important; }
+}
+
+/* 28. Floating tombol kanan-bawah jangan overlap sticky CTA mobile */
+@media (max-width: 768px) {
+  .esa-fab-wa { bottom: 84px !important; }
+}
+
+/* 29. Cegah horizontal scroll diam-diam akibat elemen inline meluap */
+html, body { overflow-x: hidden; }
+
 /* 25. Modul tabs scrollable on mobile */
 @media (max-width: 640px) {
   .modul-tabs {
