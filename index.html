@@ -8221,6 +8221,29 @@ img { max-width: 100%; height: auto; }
 /* 29. Cegah horizontal scroll diam-diam akibat elemen inline meluap */
 html, body { overflow-x: hidden; }
 
+/* 30. EMBED ACTIONS BAR — toolbar di bawah video & PPT (Layar Penuh + Buka di Tab Baru) */
+.embed-actions {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 12px 16px; background: rgba(245,240,230,0.04);
+  border: 1px solid rgba(201,169,110,0.18); border-top: none;
+  font-size: 12px; color: rgba(245,240,230,0.7); flex-wrap: wrap;
+}
+.embed-actions > span:first-child { font-weight: 600; }
+.embed-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: 1px solid #c9a96e; color: #d4af6a;
+  padding: 8px 14px; border-radius: 7px; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+  cursor: pointer; min-height: 38px; white-space: nowrap; font-family: inherit;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.embed-btn:hover { background: rgba(201,169,110,0.14); color: #f0d080; border-color: #f0d080; }
+@media (max-width: 520px) {
+  .embed-actions { padding: 10px 12px; font-size: 11px; }
+  .embed-actions > span:first-child { width: 100%; margin-bottom: 4px; }
+  .embed-btn { padding: 9px 12px; font-size: 10.5px; flex: 1; justify-content: center; }
+}
+
 /* 25. Modul tabs scrollable on mobile */
 @media (max-width: 640px) {
   .modul-tabs {
@@ -17979,12 +18002,26 @@ function openModul(code, trackId, levelId) {
   const videoWrap = document.getElementById('video-player-wrap');
   if (videoWrap) {
     const parsed = parseVideoEmbed(media.videoUrl);
+    // Bersihkan toolbar dari pembukaan modul sebelumnya
+    const oldActs = videoWrap.parentElement.querySelector('.embed-actions[data-embed="video"]');
+    if (oldActs) oldActs.remove();
     if (parsed) {
       if (parsed.type === 'video') {
         videoWrap.innerHTML = `<video src="${parsed.src}" controls controlsList="nodownload" playsinline></video>`;
       } else {
         videoWrap.innerHTML = `<iframe src="${parsed.src}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
       }
+      // Toolbar di bawah video — Fullscreen + Open in Drive (penting di HP).
+      const acts = document.createElement('div');
+      acts.className = 'embed-actions';
+      acts.dataset.embed = 'video';
+      acts.innerHTML = `
+        <span>Video · ${(module && module.title) ? module.title : 'Modul'}</span>
+        <span style="display:inline-flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="embed-btn" onclick="esaFullscreenEmbed(this)" title="Layar penuh">⛶ Layar Penuh</button>
+          <a class="embed-btn" href="${media.videoUrl}" target="_blank" rel="noopener">Buka di Tab Baru ↗</a>
+        </span>`;
+      videoWrap.parentElement.insertBefore(acts, videoWrap.nextSibling);
     } else {
       videoWrap.innerHTML = `
         <div class="video-player video-placeholder" style="position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,var(--navy-deep),var(--navy));display:flex;align-items:center;justify-content:center;overflow:hidden;">
@@ -18006,12 +18043,12 @@ function openModul(code, trackId, levelId) {
       const downloadHref = media.slideUrl;
       slidesWrap.innerHTML = `
         <iframe src="${parsedSlide.src}" allowfullscreen></iframe>
-        <div class="slides-iframe-actions">
+        <div class="embed-actions" data-embed="slides">
           <span>Materi PPT · ${module.title}</span>
-          <a href="${downloadHref}" target="_blank" rel="noopener">
-            Buka di Tab Baru
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 2h8v8M14 2L6 10M4 4h2M4 4v10h10v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </a>
+          <span style="display:inline-flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="embed-btn" onclick="esaFullscreenEmbed(this)" title="Layar penuh">⛶ Layar Penuh</button>
+            <a class="embed-btn" href="${downloadHref}" target="_blank" rel="noopener">Buka di Tab Baru ↗</a>
+          </span>
         </div>
       `;
     } else {
@@ -26055,6 +26092,17 @@ else{setTimeout(init,200);}
     var open = nav.classList.toggle('nav-open');
     var b = document.getElementById('navBurger');
     if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+  // Layar penuh untuk video / PPT iframe. Tombol berada di .embed-actions
+  // bersebelahan dengan media; kita cari iframe/video di .modul-panel induknya.
+  window.esaFullscreenEmbed = function(btn){
+    try {
+      var panel = btn && btn.closest ? (btn.closest('.modul-panel') || document) : document;
+      var el = panel.querySelector('iframe, video');
+      if (!el) return;
+      var fn = el.requestFullscreen || el.webkitRequestFullscreen || el.webkitEnterFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+      if (fn) fn.call(el);
+    } catch(e) { console.warn('[ESA] fullscreen:', e); }
   };
   // Tutup menu saat klik link/tombol di dalamnya, klik di luar nav, atau tekan Esc.
   document.addEventListener('click', function(e){
