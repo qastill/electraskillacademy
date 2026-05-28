@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Panduan pendaftar baru Electra Skill Academy — cara daftar, bayar via QRIS Rp 299.000, dan mengaktifkan akses penuh.">
+<title>Panduan Pendaftar Baru — Electra Skill Academy</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0d0f1c; color: #f5f0e6; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: #d4af6a; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 64px; }
+
+  /* Header */
+  .topbar { border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.25); }
+  .topbar-in { max-width: 760px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: 0.04em; font-size: 0.92rem; color: #d4af6a; text-transform: uppercase; }
+  .brand img { width: 26px; height: 26px; }
+  .back-link { font-size: 0.82rem; color: rgba(245,240,230,0.7); }
+  .back-link:hover { color: #f5f0e6; }
+
+  /* Hero */
+  .hero { text-align: center; padding: 44px 0 28px; }
+  .hero .eyebrow { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: #d4af6a; font-weight: 700; margin-bottom: 12px; }
+  .hero h1 { font-size: 1.9rem; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
+  .hero p { color: rgba(245,240,230,0.72); font-size: 1rem; max-width: 560px; margin: 0 auto; }
+  .price-tag { display: inline-block; margin-top: 18px; padding: 8px 18px; background: rgba(212,175,106,0.12); border: 1px solid rgba(212,175,106,0.4); border-radius: 999px; color: #f0d080; font-weight: 700; font-size: 0.95rem; }
+
+  /* Sections */
+  h2 { font-size: 1.25rem; font-weight: 700; margin: 38px 0 16px; color: #f5f0e6; display: flex; align-items: center; gap: 10px; }
+  h2 .ic { font-size: 1.1rem; }
+
+  /* Steps */
+  .steps { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 14px; }
+  .step { position: relative; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px 20px 18px 64px; }
+  .step::before { counter-increment: step; content: counter(step); position: absolute; left: 16px; top: 16px; width: 34px; height: 34px; border-radius: 50%; background: #d4af6a; color: #10131f; font-weight: 800; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+  .step h3 { font-size: 1.02rem; font-weight: 700; margin-bottom: 4px; }
+  .step p { color: rgba(245,240,230,0.74); font-size: 0.92rem; }
+  .step .hint { display: inline-block; margin-top: 8px; font-size: 0.82rem; color: #f0d080; background: rgba(212,175,106,0.10); border-radius: 8px; padding: 4px 10px; }
+
+  /* QRIS card */
+  .qris-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 22px; display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+  .qris-img { background: #fff; border-radius: 12px; padding: 12px; flex: 0 0 200px; max-width: 220px; }
+  .qris-img img { width: 100%; height: auto; display: block; }
+  .qris-img .merchant { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.04em; color: #1a1d2e; text-align: center; margin-bottom: 6px; }
+  .qris-steps { flex: 1; min-width: 240px; }
+  .qris-steps ol { margin-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 0.92rem; color: rgba(245,240,230,0.82); }
+  .qris-steps b { color: #f0d080; }
+
+  /* Callout */
+  .callout { border-radius: 12px; padding: 16px 18px; font-size: 0.92rem; margin-top: 14px; }
+  .callout.gold { background: rgba(212,175,106,0.10); border: 1px solid rgba(212,175,106,0.35); color: #f0d080; }
+  .callout.green { background: rgba(34,197,94,0.10); border: 1px solid rgba(34,197,94,0.35); color: #86efac; }
+  .callout strong { font-weight: 700; }
+
+  /* FAQ */
+  details { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 4px 18px; margin-bottom: 10px; }
+  details summary { cursor: pointer; padding: 14px 0; font-weight: 600; font-size: 0.96rem; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: '+'; color: #d4af6a; font-size: 1.4rem; font-weight: 700; line-height: 1; }
+  details[open] summary::after { content: '\2212'; }
+  details .ans { padding: 0 0 16px; color: rgba(245,240,230,0.76); font-size: 0.92rem; }
+
+  /* Troubleshooting list */
+  .tlist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .tlist li { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 12px 16px; font-size: 0.92rem; color: rgba(245,240,230,0.8); }
+  .tlist b { color: #f5f0e6; }
+
+  /* WA / CTA */
+  .cta { text-align: center; margin-top: 40px; padding: 28px 22px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; }
+  .cta h2 { justify-content: center; margin-top: 0; }
+  .cta p { color: rgba(245,240,230,0.72); font-size: 0.92rem; margin-bottom: 18px; }
+  .btn-wa { display: inline-flex; align-items: center; gap: 9px; padding: 13px 24px; background: #22c55e; color: #06240f; font-weight: 700; border-radius: 10px; text-decoration: none; font-size: 0.96rem; }
+  .btn-wa:hover { background: #2fd36b; }
+  .btn-home { display: inline-block; margin-top: 16px; font-size: 0.86rem; color: rgba(245,240,230,0.7); }
+
+  footer { text-align: center; padding: 32px 20px; color: rgba(245,240,230,0.4); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 48px; }
+
+  @media (max-width: 520px) {
+    .hero h1 { font-size: 1.55rem; }
+    .qris-img { flex: 0 0 100%; max-width: 260px; margin: 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <span class="brand"><img src="logo.svg" alt="">Electra Skill Academy</span>
+    <a class="back-link" href="index.html">&larr; Kembali ke beranda</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Panduan Pendaftar Baru</div>
+    <h1>Cara Daftar &amp; Membuka Akses Penuh</h1>
+    <p>Ikuti 6 langkah singkat di bawah ini untuk mendaftar, membayar via QRIS, dan mengaktifkan akses penuh ke seluruh materi Electra Skill Academy.</p>
+    <span class="price-tag">Akses Penuh Selamanya &middot; Rp 299.000</span>
+  </div>
+
+  <h2><span class="ic">🪜</span> Langkah Pendaftaran</h2>
+  <ol class="steps">
+    <li class="step">
+      <h3>Buka website &amp; daftar / masuk</h3>
+      <p>Buka halaman utama, klik <b>Masuk / Daftar</b>, lalu daftar dengan email kamu (atau login Google bila tersedia).</p>
+    </li>
+    <li class="step">
+      <h3>Lengkapi data diri</h3>
+      <p>Isi nama, nomor HP/WhatsApp aktif, dan kota. Data ini dipakai admin untuk verifikasi pembayaran dan penerbitan sertifikat.</p>
+      <span class="hint">Pakai email &amp; nomor WA yang benar — dipakai saat verifikasi.</span>
+    </li>
+    <li class="step">
+      <h3>Klik "Buka Akses Penuh"</h3>
+      <p>Pada banner atau menu, pilih <b>Buka Akses Penuh</b> &rarr; <b>Bayar via QRIS</b>. Akan muncul kode QR pembayaran Rp 299.000.</p>
+    </li>
+    <li class="step">
+      <h3>Bayar Rp 299.000 via QRIS</h3>
+      <p>Scan QR dengan e-wallet / m-banking apa pun. Nominal sudah otomatis terisi <b>Rp 299.000</b> — tinggal konfirmasi bayar.</p>
+    </li>
+    <li class="step">
+      <h3>Klik "Saya Sudah Bayar — Kirim Konfirmasi"</h3>
+      <p>Setelah transfer berhasil, klik tombol konfirmasi. Boleh isi nomor referensi/RRN (opsional). Status kamu menjadi <b>menunggu verifikasi admin</b>.</p>
+      <span class="hint">Penting: akses belum terbuka di langkah ini — admin harus verifikasi dulu.</span>
+    </li>
+    <li class="step">
+      <h3>Tunggu aktivasi &amp; login ulang</h3>
+      <p>Admin mengecek dana benar-benar masuk lalu mengaktifkan akun kamu (maks <b>1&times;24 jam</b>). Setelah aktif, <b>login ulang / refresh</b> — seluruh materi terbuka.</p>
+    </li>
+  </ol>
+
+  <h2><span class="ic">📱</span> Cara Bayar QRIS (Detail)</h2>
+  <div class="qris-card">
+    <div class="qris-img">
+      <div class="merchant">ELECTRA ACADEMY &middot; QRIS</div>
+      <img src="qris-nominal.png" alt="QRIS Electra Academy — Rp 299.000">
+    </div>
+    <div class="qris-steps">
+      <ol>
+        <li>Buka aplikasi <b>GoPay / OVO / DANA / ShopeePay</b> atau <b>m-banking</b> (BCA, Mandiri, BRI, BNI, dll).</li>
+        <li>Pilih menu <b>Scan QR / QRIS / Bayar</b>.</li>
+        <li>Scan kode QR di samping. Nominal otomatis <b>Rp 299.000</b>.</li>
+        <li>Pastikan nama merchant <b>Electra Academy</b>, lalu konfirmasi bayar.</li>
+        <li>Simpan bukti transfer untuk berjaga-jaga bila diminta admin.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="callout gold">Nominal sudah dikunci Rp 299.000 — kamu tidak perlu mengetik jumlah manual. Bayar <strong>sekali</strong> untuk akses penuh selamanya.</div>
+
+  <h2><span class="ic">❓</span> Pertanyaan Umum (FAQ)</h2>
+
+  <details>
+    <summary>Berapa lama proses aktivasi setelah saya bayar?</summary>
+    <div class="ans">Maksimal 1&times;24 jam setelah kamu klik "Saya Sudah Bayar". Biasanya jauh lebih cepat pada jam kerja. Setelah aktif, login ulang / refresh untuk melihat akses.</div>
+  </details>
+  <details>
+    <summary>Saya sudah bayar tapi akses belum terbuka, kenapa?</summary>
+    <div class="ans">Akses terbuka setelah admin memverifikasi dana benar-benar masuk — bukan otomatis saat klik tombol. Jika sudah lewat 1&times;24 jam, kirim bukti transfer ke admin via WhatsApp (tombol di bawah) dengan menyebutkan email akunmu.</div>
+  </details>
+  <details>
+    <summary>Apakah pembayaran ini sekali bayar atau langganan?</summary>
+    <div class="ans">Sekali bayar Rp 299.000 untuk <b>akses penuh selamanya</b> — tidak ada biaya bulanan.</div>
+  </details>
+  <details>
+    <summary>Saya lupa / tidak bisa login ke akun saya.</summary>
+    <div class="ans">Gunakan email yang sama saat mendaftar. Jika memakai login email-password, pakai fitur reset password. Bila tetap kendala, hubungi admin via WhatsApp dengan menyebutkan email pendaftaran.</div>
+  </details>
+  <details>
+    <summary>Nominal di QRIS saya tidak otomatis terisi.</summary>
+    <div class="ans">Pastikan kamu scan QR dari halaman pembayaran resmi (Rp 299.000) dan aplikasi pembayaranmu mendukung QRIS nominal. Jika diminta mengisi manual, masukkan tepat <b>Rp 299.000</b>.</div>
+  </details>
+
+  <h2><span class="ic">🔧</span> Akses Belum Terbuka? Coba Ini</h2>
+  <ul class="tlist">
+    <li><b>Login ulang.</b> Keluar (logout) lalu masuk kembali dengan email yang sama — status keanggotaan disinkronkan dari server saat login.</li>
+    <li><b>Refresh halaman.</b> Muat ulang website (tarik ke bawah di HP, atau tekan F5 di komputer).</li>
+    <li><b>Pastikan email sama.</b> Akses menempel pada email pendaftaran. Login dengan email berbeda tidak akan menampilkan akses.</li>
+    <li><b>Bersihkan cache / coba browser lain.</b> Jika masih terkunci, buka di mode incognito atau browser lain untuk memastikan bukan masalah cache.</li>
+    <li><b>Tunggu konfirmasi admin.</b> Jika kamu baru saja klik "Saya Sudah Bayar", akun masih menunggu verifikasi (maks 1&times;24 jam).</li>
+  </ul>
+
+  <div class="cta">
+    <h2><span class="ic">💬</span> Masih Ada Kendala?</h2>
+    <p>Hubungi admin via WhatsApp. Sebutkan <b>email pendaftaran</b> dan lampirkan <b>bukti pembayaran</b> agar verifikasi lebih cepat.</p>
+    <a class="btn-wa" href="https://wa.me/6285121532407?text=Halo%20Admin%20Electra%20Skill%20Academy%2C%20saya%20butuh%20bantuan%20terkait%20pendaftaran%2Fpembayaran.%20Email%20saya%3A%20" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.511 5.26l-.999 3.648 3.477-.911zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+      Chat Admin via WhatsApp
+    </a>
+    <br><a class="btn-home" href="index.html">&larr; Kembali ke beranda &amp; mulai belajar</a>
+  </div>
+
+</div>
+
+<footer>
+  &copy; Electra Skill Academy &middot; Panduan pendaftar baru
+</footer>
+
+</body>
+</html>
