@@ -295,31 +295,51 @@
     const sb = window.__esaAdminSb;
     const panel = document.getElementById('panel-participants');
     panel.innerHTML = '<div class="empty">Memuat...</div>';
-    const { data, error } = await sb.from('participants')
-      .select('email,name,phone,city,promo_code,auth_method,join_date,is_active,is_banned,banned_reason,subscription_expires_at,activation_method')
-      .order('join_date', { ascending: false })
-      .limit(1000);
+    // Ambil pendaftar + klaim pembayaran paralel, supaya bisa menandai siapa yang
+    // sudah klik "Saya Sudah Bayar" (pending) tapi belum diaktifkan.
+    const [pRes, payRes] = await Promise.all([
+      sb.from('participants')
+        .select('email,name,phone,city,promo_code,auth_method,join_date,is_active,is_banned,banned_reason,subscription_expires_at,activation_method')
+        .order('join_date', { ascending: false })
+        .limit(1000),
+      sb.from('payments').select('participant_email,status').limit(5000)
+    ]);
+    const { data, error } = pRes;
     if (error) { panel.innerHTML = emptyMsg('Gagal load: ' + error.message); return; }
     if (!data || !data.length) { panel.innerHTML = emptyMsg('Belum ada pendaftar.'); return; }
 
-    // Akun AKTIF (dan tidak banned) naik ke atas; sisanya urut tanggal terbaru.
-    const _rank = (r) => (r.is_active && !r.is_banned) ? 0 : 1;
+    // Ringkas status klaim pembayaran per email (paid menang atas pending).
+    const payMap = {};
+    (payRes.data || []).forEach(p => {
+      const k = (p.participant_email || '').trim().toLowerCase();
+      if (!k) return;
+      const rank = p.status === 'paid' ? 2 : (p.status === 'pending' ? 1 : 0);
+      if (!payMap[k] || rank > payMap[k].rank) payMap[k] = { status: p.status, rank: rank };
+    });
+    const payOf = (r) => payMap[(r.email || '').trim().toLowerCase()] || null;
+    // Butuh aksi admin: sudah klaim bayar (pending) tapi belum aktif & tidak banned.
+    const needsAction = (r) => { const p = payOf(r); return !r.is_active && !r.is_banned && !!p && p.status === 'pending'; };
+
+    // Urutan: butuh-aktivasi paling atas → akun aktif → sisanya (terbaru dulu).
+    const _rank = (r) => needsAction(r) ? 0 : ((r.is_active && !r.is_banned) ? 1 : 2);
     data.sort((a, b) => _rank(a) - _rank(b) ||
       (new Date(b.join_date || 0) - new Date(a.join_date || 0)));
+    const nWaiting = data.filter(needsAction).length;
 
     panel.innerHTML =
+      (nWaiting ? '<div class="config-warn" style="margin-bottom:12px;background:rgba(212,175,106,0.10);border-color:rgba(212,175,106,0.4);color:#f0d080;"><strong>' + nWaiting + ' pendaftar</strong> sudah klaim bayar (QRIS) &amp; menunggu aktivasi — tampil di paling atas, ditandai <span class="pill warn">⏳ Klaim Bayar</span>. Cek dana masuk lalu klik <strong>✓ Aktifkan</strong>.</div>' : '') +
       '<div class="toolbar">' +
       '  <input type="search" id="ps-search" placeholder="Cari nama / email / kota...">' +
       '  <span class="count" id="ps-count">' + data.length + ' pendaftar</span>' +
       '</div>' +
       '<div class="table-wrap"><table>' +
-      '<thead><tr><th>Tanggal</th><th>Nama</th><th>Email</th><th>HP</th><th>Status</th><th>Promo</th><th>Expire</th><th>Auth</th><th>Aksi</th></tr></thead>' +
+      '<thead><tr><th>Tanggal</th><th>Nama</th><th>Email</th><th>HP</th><th>Status</th><th>Bayar</th><th>Promo</th><th>Expire</th><th>Auth</th><th>Aksi</th></tr></thead>' +
       '<tbody id="ps-tbody"></tbody></table></div>';
 
     const render = (rows) => {
       const tb = document.getElementById('ps-tbody');
       document.getElementById('ps-count').textContent = rows.length + ' pendaftar';
-      if (!rows.length) { tb.innerHTML = '<tr><td colspan="9" class="empty">Tidak ada hasil.</td></tr>'; return; }
+      if (!rows.length) { tb.innerHTML = '<tr><td colspan="10" class="empty">Tidak ada hasil.</td></tr>'; return; }
       tb.innerHTML = rows.map(r => {
         const statusPill = r.is_banned
           ? '<span class="pill fail" title="' + esc(r.banned_reason||'') + '">Banned</span>'
@@ -339,12 +359,22 @@
         const actBtn = (!r.is_banned && !r.is_active)
           ? '<button onclick="esaActivateUser(\'' + emailJs + '\')" style="' + btnBase + 'background:#d4af6a;color:#10131f;border:1px solid #d4af6a;font-weight:700;">✓ Aktifkan</button>'
           : '';
-        return '<tr>' +
+        const _pay = payOf(r);
+        const payPill = _pay
+          ? (_pay.status === 'paid'
+              ? '<span class="pill ok">Lunas</span>'
+              : (_pay.status === 'pending'
+                  ? '<span class="pill warn">⏳ Klaim Bayar</span>'
+                  : '<span class="pill warn">' + esc(_pay.status) + '</span>'))
+          : '<span style="color:rgba(245,240,230,0.35);">–</span>';
+        const trStyle = needsAction(r) ? ' style="background:rgba(212,175,106,0.10);"' : '';
+        return '<tr' + trStyle + '>' +
         '<td>' + esc(fmtDate(r.join_date)) + '</td>' +
         '<td>' + esc(r.name || '–') + '</td>' +
         '<td class="mono">' + esc(r.email) + '</td>' +
         '<td class="mono">' + esc(r.phone || '–') + '</td>' +
         '<td>' + statusPill + '</td>' +
+        '<td>' + payPill + '</td>' +
         '<td>' + (r.promo_code ? '<span class="pill warn">' + esc(r.promo_code) + '</span>' : '–') + '</td>' +
         '<td class="mono">' + esc(expDisplay) + '</td>' +
         '<td>' + esc(r.auth_method || '–') + '</td>' +
