@@ -15123,6 +15123,14 @@ const SIM_GROUPS = [
   { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Payback, PF, chiller HVAC, retrofit LED & M&V.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
   { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS, BESS, genset, turbin angin & PLTA.', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, pembumian, hubung singkat, LOTO & step-touch.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
+  { key: 'S9',  num: '09', label: 'Sales & Technical Marketing', desc: 'TCO, margin tender & ROI pelanggan.', grad: 'linear-gradient(135deg,#b8732e,#8a4f1c)', photo: _trackArtURI('S9') },
+  { key: 'S10', num: '10', label: 'PV & Solar Engineer', desc: 'String sizing, rasio inverter & yield PLTS.', grad: 'linear-gradient(135deg,#f0a93a,#c97e1a)', photo: _trackArtURI('S10') },
+  { key: 'S11', num: '11', label: 'Sustainability & Carbon', desc: 'Jejak karbon, RE100 & carbon credit.', grad: 'linear-gradient(135deg,#2e9e6b,#19794d)', photo: _trackArtURI('S11') },
+  { key: 'S12', num: '12', label: 'EV & EV Charging', desc: 'Sizing charger, waktu isi & manajemen beban.', grad: 'linear-gradient(135deg,#3a86c8,#22618f)', photo: _trackArtURI('S12') },
+  { key: 'S13', num: '13', label: 'Waste to Energy', desc: 'Nilai kalor sampah, daya & biogas.', grad: 'linear-gradient(135deg,#7a8a3a,#566020)', photo: _trackArtURI('S13') },
+  { key: 'S14', num: '14', label: 'Hydrogen Energy', desc: 'Elektroliser, produksi H₂ & fuel cell.', grad: 'linear-gradient(135deg,#3aa0c8,#226f8f)', photo: _trackArtURI('S14') },
+  { key: 'S15', num: '15', label: 'Baterai & BESS', desc: 'C-rate, peak shaving & degradasi baterai.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _trackArtURI('S15') },
+  { key: 'S16', num: '16', label: 'Kontrol & Otomasi', desc: 'Tuning PID, scaling sensor & scan PLC.', grad: 'linear-gradient(135deg,#6a6f7e,#3a3f4e)', photo: _trackArtURI('S16') },
   { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
 ];
 
@@ -15190,7 +15198,14 @@ const SIMULATORS = [
 
   // ===== Lab Dasar & Tools (bonus, lintas jurusan) =====
   { id: 'cable-sizing', jalur: 'Fondasi', category: 'Tools · Kabel', name: 'Cable Sizing Calculator', desc: 'Hitung luas penampang kabel sesuai PUIL 2011 / IEC. Input beban, tegangan, panjang — output ukuran + voltage drop.', level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.cable, working: true },
-  { id: 'inst-mcb', jalur: 'Fondasi', category: 'Tools · Proteksi', name: 'MCB & Cable Coordination', desc: 'Tentukan rating MCB & ukuran kabel minimum dengan aturan koordinasi Ib ≤ In ≤ Iz (PUIL/IEC 60364). Termasuk faktor derating.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.mcb, working: true }
+  { id: 'inst-mcb', jalur: 'Fondasi', category: 'Tools · Proteksi', name: 'MCB & Cable Coordination', desc: 'Tentukan rating MCB & ukuran kabel minimum dengan aturan koordinasi Ib ≤ In ≤ Iz (PUIL/IEC 60364). Termasuk faktor derating.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.mcb, working: true },
+
+  // ===== S9 · Sales & Technical Marketing =====
+  { id: 'tco-compare', jalur: 'S9', category: 'Sales · Value Selling', name: 'Total Cost of Ownership (TCO)', desc: 'Bandingkan produk murah vs premium atas total biaya kepemilikan (beli + energi + perawatan) — senjata value selling.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'tender-margin', jalur: 'S9', category: 'Sales · Tender', name: 'Tender Margin & Win Price', desc: 'Susun harga penawaran (pokok+overhead+margin+PPN), bandingkan vs HPS untuk peluang menang sambil jaga laba.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pf, working: true },
+  { id: 'roi-pitch', jalur: 'S9', category: 'Sales · Business Case', name: 'Customer ROI & Payback Pitch', desc: 'Bangun business case pelanggan: payback, ROI, NPV dengan grafik arus kas kumulatif untuk closing.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.data, working: true },
+  { id: 'discount-volume', jalur: 'S9', category: 'Sales · Pricing', name: 'Discount vs Volume Guard', desc: 'Hitung kenaikan volume minimum agar diskon tidak menggerus laba total; jaga margin saat negosiasi harga.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'sales-funnel', jalur: 'S9', category: 'Sales · Pipeline', name: 'Sales Funnel & Target', desc: 'Konversi lead → qualified → proposal → menang menentukan deal & revenue; cek pipeline vs target bulanan.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.data, working: true }
 ];
 
 // ================================================
@@ -18300,6 +18315,182 @@ const SIM_BUILDERS = {
       for(let i=0;i<7;i++){ const x=70+i*42; s+='<line x1="'+x+'" y1="152" x2="'+x+'" y2="225" stroke="'+(ok?'#9a7f4f':col)+'" stroke-width="2"/>'; }
       for(let j=0;j<3;j++){ const y=170+j*22; s+='<line x1="70" y1="'+y+'" x2="322" y2="'+y+'" stroke="'+(ok?'#9a7f4f':col)+'" stroke-width="1.5" opacity="0.6"/>'; }
       g.innerHTML=s;
+    })
+  },
+
+  // ============ S9: TCO Comparison (Sales) ============
+  'tco-compare': {
+    html: () => _labShell({
+      eyebrow: 'Sales · Value Selling', title: 'Total Cost of', italic: 'Ownership (TCO)',
+      desc: 'Jual nilai, bukan harga. Bandingkan produk murah (boros) vs premium (efisien) atas total biaya kepemilikan: harga beli + energi + perawatan selama umur pakai.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">TCO selama umur pakai (juta Rp)</text>
+        <line x1="60" y1="220" x2="360" y2="220" stroke="#1a1d2e" stroke-width="1.5"/>
+        <g id="tco-bars"></g>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="tco-verdict">—</text>`,
+      controls: _labSld('tco-life','Umur pakai (tahun)',3,25,10,1)
+        + _labSld('tco-pa','Harga beli A (jt)',1,500,50,1)
+        + _labSld('tco-ea','Energi A (jt/th)',0,200,30,1)
+        + _labSld('tco-pb','Harga beli B premium (jt)',1,500,90,1)
+        + _labSld('tco-eb','Energi B (jt/th)',0,200,16,1),
+      outputs: _labOut('tco-a','TCO Produk A','jt') + _labOut('tco-b','TCO Produk B','jt') + _labOut('tco-win','Lebih Hemat','') ,
+      formula: `TCO = harga beli + (biaya energi + perawatan) × umur pakai<br>Pitch: produk premium menang bila penghematan energi > selisih harga beli.`
+    }),
+    init: () => _labBind(['tco-life','tco-pa','tco-ea','tco-pb','tco-eb'], () => {
+      const L=_labV('tco-life'), pa=_labV('tco-pa'), ea=_labV('tco-ea'), pb=_labV('tco-pb'), eb=_labV('tco-eb');
+      _labSetv('tco-life',L.toFixed(0)+' th'); _labSetv('tco-pa',pa.toFixed(0)+' jt'); _labSetv('tco-ea',ea.toFixed(0)+' jt/th'); _labSetv('tco-pb',pb.toFixed(0)+' jt'); _labSetv('tco-eb',eb.toFixed(0)+' jt/th');
+      const A=pa+ea*L, B=pb+eb*L, win=A<B?'A':'B', diff=Math.abs(A-B);
+      _labSet('tco-a',A.toFixed(0)); _labSet('tco-b',B.toFixed(0)); _labSet('tco-win','Produk '+win);
+      const col=_GREEN;
+      _labSet('tco-verdict','Produk '+win+' lebih hemat Rp '+diff.toFixed(0)+' jt selama '+L.toFixed(0)+' th'); _labAttr('tco-verdict','fill',col);
+      const g=document.getElementById('tco-bars'); const maxv=Math.max(A,B,1)*1.1, H=160, base=220, sc=H/maxv;
+      const draw=(x,buy,en,lbl,c)=>{ const hb=buy*sc, he=en*L*sc; let o='';
+        o+='<rect x="'+x+'" y="'+(base-hb).toFixed(1)+'" width="70" height="'+hb.toFixed(1)+'" fill="#9a7f4f"/>';
+        o+='<rect x="'+x+'" y="'+(base-hb-he).toFixed(1)+'" width="70" height="'+he.toFixed(1)+'" fill="'+c+'"/>';
+        o+='<text x="'+(x+35)+'" y="'+(base-hb-he-6).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a1d2e">'+(buy+en*L).toFixed(0)+'</text>';
+        o+='<text x="'+(x+35)+'" y="236" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">'+lbl+'</text>'; return o; };
+      g.innerHTML = draw(110,pa,ea,'A (murah)','#c0392b') + draw(240,pb,eb,'B (premium)','#15803d')
+        + '<text x="60" y="120" font-family="Georgia" font-size="9" fill="#6b6d7a" transform="rotate(-90 60 120)">beli+energi</text>';
+    })
+  },
+
+  // ============ S9: Tender Margin & Win-Price ============
+  'tender-margin': {
+    html: () => _labShell({
+      eyebrow: 'Sales · Tender', title: 'Tender Margin', italic: '& Win Price',
+      desc: 'Susun harga penawaran tender: biaya pokok + overhead + margin + pajak. Lihat harga jual, margin bersih, dan posisi vs HPS (owner estimate) untuk peluang menang.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Struktur harga penawaran (jt Rp)</text>
+        <g id="tm-stack"></g>
+        <line id="tm-hps" x1="60" y1="0" x2="360" y2="0" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="364" y="0" id="tm-hps-lbl" font-family="Georgia" font-size="9" fill="#c0392b">HPS</text>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="tm-verdict">—</text>`,
+      controls: _labSld('tm-cost','Biaya pokok (jt)',10,2000,300,10)
+        + _labSld('tm-oh','Overhead (%)',5,30,12,1)
+        + _labSld('tm-margin','Margin (%)',2,40,15,1)
+        + _labSld('tm-tax','PPN (%)',0,12,11,1)
+        + _labSld('tm-hpsv','HPS / owner estimate (jt)',10,3000,450,10),
+      outputs: _labOut('tm-sell','Harga Penawaran','jt') + _labOut('tm-profit','Laba Bersih','jt') + _labOut('tm-pos','vs HPS','%'),
+      formula: `Jual = pokok×(1+OH%)×(1+margin%)×(1+PPN%) · Menang bila Jual ≤ HPS<br>Posisi = Jual/HPS × 100% (≤100% kompetitif, terlalu rendah = rugi/curiga).`
+    }),
+    init: () => _labBind(['tm-cost','tm-oh','tm-margin','tm-tax','tm-hpsv'], () => {
+      const cost=_labV('tm-cost'), oh=_labV('tm-oh')/100, mg=_labV('tm-margin')/100, tax=_labV('tm-tax')/100, hps=_labV('tm-hpsv');
+      _labSetv('tm-cost',cost.toFixed(0)+' jt'); _labSetv('tm-oh',(oh*100).toFixed(0)+' %'); _labSetv('tm-margin',(mg*100).toFixed(0)+' %'); _labSetv('tm-tax',(tax*100).toFixed(0)+' %'); _labSetv('tm-hpsv',hps.toFixed(0)+' jt');
+      const withOH=cost*(1+oh), preTax=withOH*(1+mg), sell=preTax*(1+tax), profit=preTax-withOH, pos=sell/hps*100;
+      _labSet('tm-sell',sell.toFixed(0)); _labSet('tm-profit',profit.toFixed(0)); _labSet('tm-pos',pos.toFixed(0));
+      const win=sell<=hps, col=win?(pos>80?_GREEN:_GOLD):_RED;
+      _labSet('tm-verdict', win?(pos>80?'✓ Kompetitif & menang ('+pos.toFixed(0)+'% HPS)':'⚠ Menang tapi sangat rendah — cek risiko rugi'):'✗ Di atas HPS — kemungkinan kalah tender'); _labAttr('tm-verdict','fill',col);
+      // stacked bar
+      const g=document.getElementById('tm-stack'); const maxv=Math.max(sell,hps,1)*1.12, H=170, base=235, sc=H/maxv, x=150,w=90;
+      const segs=[[cost,'#9a7f4f','pokok'],[withOH-cost,'#c9a96e','OH'],[preTax-withOH,'#15803d','margin'],[sell-preTax,'#3a5fb0','PPN']];
+      let y=base, o='';
+      segs.forEach(seg=>{ const h=seg[0]*sc; o+='<rect x="'+x+'" y="'+(y-h).toFixed(1)+'" width="'+w+'" height="'+h.toFixed(1)+'" fill="'+seg[1]+'"/>'; y-=h; });
+      o+='<text x="'+(x+w/2)+'" y="'+(y-6).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a1d2e">'+sell.toFixed(0)+' jt</text>';
+      o+='<text x="'+(x+w/2)+'" y="250" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">penawaran</text>';
+      g.innerHTML=o;
+      const hy=base-hps*sc; _labAttr('tm-hps','y1',hy); _labAttr('tm-hps','y2',hy); _labAttr('tm-hps-lbl','y',hy+3);
+    })
+  },
+
+  // ============ S9: Customer ROI / Payback Pitch ============
+  'roi-pitch': {
+    html: () => _labShell({
+      eyebrow: 'Sales · Business Case', title: 'Customer ROI', italic: '& Payback Pitch',
+      desc: 'Bangun business case untuk pelanggan: investasi solusi vs penghematan tahunan. Hitung payback, ROI, dan NPV sederhana sebagai senjata closing.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Arus kas kumulatif (jt)</text>
+        <line x1="52" y1="44" x2="52" y2="220" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line id="rp-zero" x1="52" y1="150" x2="372" y2="150" stroke="#1a1d2e" stroke-width="1" opacity="0.5"/>
+        <polyline id="rp-cf" fill="none" stroke="#15803d" stroke-width="2.5" points=""/>
+        <circle id="rp-bep" r="5" fill="#c0392b"/>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="rp-info">—</text>`,
+      controls: _labSld('rp-inv','Investasi solusi (jt)',10,2000,200,10)
+        + _labSld('rp-save','Penghematan (jt/th)',5,800,60,5)
+        + _labSld('rp-life','Horizon (tahun)',1,20,8,1)
+        + _labSld('rp-disc','Diskon rate (%)',0,15,8,1),
+      outputs: _labOut('rp-pb','Payback','th') + _labOut('rp-roi','ROI','%') + _labOut('rp-npv','NPV','jt'),
+      formula: `Payback = investasi/penghematan · ROI = (Σhemat−inv)/inv×100%<br>NPV = Σ hemat/(1+r)ᵗ − investasi (positif = layak).`
+    }),
+    init: () => _labBind(['rp-inv','rp-save','rp-life','rp-disc'], () => {
+      const inv=_labV('rp-inv'), save=_labV('rp-save'), L=_labV('rp-life'), r=_labV('rp-disc')/100;
+      _labSetv('rp-inv',inv.toFixed(0)+' jt'); _labSetv('rp-save',save.toFixed(0)+' jt/th'); _labSetv('rp-life',L.toFixed(0)+' th'); _labSetv('rp-disc',(r*100).toFixed(0)+' %');
+      const pb=save>0?inv/save:Infinity, roi=(save*L-inv)/inv*100;
+      let npv=-inv; for(let t=1;t<=L;t++) npv+=save/Math.pow(1+r,t);
+      _labSet('rp-pb',isFinite(pb)?pb.toFixed(1):'—'); _labSet('rp-roi',roi.toFixed(0)); _labSet('rp-npv',npv.toFixed(0));
+      const col=npv>0?_GREEN:_RED;
+      _labSet('rp-info', npv>0?('✓ Layak — payback '+pb.toFixed(1)+' th, NPV +'+npv.toFixed(0)+' jt'):('✗ Belum layak pada horizon ini (NPV '+npv.toFixed(0)+' jt)')); _labAttr('rp-info','fill',col);
+      // cumulative cashflow chart
+      const cf=[-inv]; for(let t=1;t<=L;t++) cf.push(cf[t-1]+save);
+      const maxAbs=Math.max(...cf.map(Math.abs),1), X=t=>52+t/L*320, midY=132, Y=v=>midY-(v/maxAbs)*88;
+      _labAttr('rp-zero','y1',midY); _labAttr('rp-zero','y2',midY);
+      _labAttr('rp-cf','points',cf.map((v,t)=>X(t).toFixed(1)+','+Y(v).toFixed(1)).join(' '));
+      if(isFinite(pb)&&pb<=L){ _labAttr('rp-bep','cx',X(pb)); _labAttr('rp-bep','cy',midY); }
+      else { _labAttr('rp-bep','cx',-10); _labAttr('rp-bep','cy',-10); }
+    })
+  },
+
+  // ============ S9: Discount vs Volume (margin guard) ============
+  'discount-volume': {
+    html: () => _labShell({
+      eyebrow: 'Sales · Pricing', title: 'Discount vs', italic: 'Volume Guard',
+      desc: 'Beri diskon = margin per unit turun, jadi perlu volume lebih besar agar laba total tetap. Hitung kenaikan volume minimum untuk menutup diskon.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Laba total: sebelum vs sesudah diskon</text>
+        <line x1="60" y1="220" x2="360" y2="220" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="110" y="220" width="70" height="0" rx="3" fill="#9a7f4f" id="dv-bar-now"/>
+        <rect x="240" y="220" width="70" height="0" rx="3" fill="#15803d" id="dv-bar-new"/>
+        <text x="145" y="236" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">sebelum</text>
+        <text x="275" y="236" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">sesudah diskon</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="dv-verdict">—</text>`,
+      controls: _labSld('dv-price','Harga jual / unit (jt)',1,200,20,1)
+        + _labSld('dv-cost','Biaya pokok / unit (jt)',1,200,14,1)
+        + _labSld('dv-qty','Volume saat ini (unit)',1,500,50,1)
+        + _labSld('dv-disc','Diskon ditawarkan (%)',0,40,10,1),
+      outputs: _labOut('dv-m0','Margin Awal / unit','jt') + _labOut('dv-m1','Margin Baru / unit','jt') + _labOut('dv-need','Volume Min','unit'),
+      formula: `Margin = harga − pokok · diskon menurunkan harga · Laba = margin × volume<br>Volume minimum = laba_awal / margin_baru (agar laba tidak turun).`
+    }),
+    init: () => _labBind(['dv-price','dv-cost','dv-qty','dv-disc'], () => {
+      const price=_labV('dv-price'), cost=_labV('dv-cost'), qty=_labV('dv-qty'), disc=_labV('dv-disc')/100;
+      _labSetv('dv-price',price.toFixed(0)+' jt'); _labSetv('dv-cost',cost.toFixed(0)+' jt'); _labSetv('dv-qty',qty.toFixed(0)+' unit'); _labSetv('dv-disc',(disc*100).toFixed(0)+' %');
+      const m0=price-cost, newPrice=price*(1-disc), m1=newPrice-cost;
+      const profit0=m0*qty, need=m1>0?profit0/m1:Infinity;
+      _labSet('dv-m0',m0.toFixed(1)); _labSet('dv-m1',m1.toFixed(1)); _labSet('dv-need',isFinite(need)?Math.ceil(need):'∞');
+      const col=m1<=0?_RED:(need>qty*1.5?_GOLD:_GREEN);
+      _labSet('dv-verdict', m1<=0?'✗ Diskon menembus biaya pokok — RUGI per unit':('Perlu '+Math.ceil(need)+' unit (naik '+((need/qty-1)*100).toFixed(0)+'%) agar laba tetap')); _labAttr('dv-verdict','fill',col);
+      const maxv=Math.max(profit0,m1*Math.max(need,qty),1)*0; // keep simple: compare profit0 vs m1*qty
+      const pNow=profit0, pNew=m1*qty, mx=Math.max(pNow,pNew,1)*1.15, H=160, base=220, sc=H/mx;
+      _labAttr('dv-bar-now','height',Math.max(0,pNow*sc)); _labAttr('dv-bar-now','y',base-Math.max(0,pNow*sc));
+      _labAttr('dv-bar-new','height',Math.max(0,pNew*sc)); _labAttr('dv-bar-new','y',base-Math.max(0,pNew*sc)); _labAttr('dv-bar-new','fill',pNew<pNow?_RED:_GREEN);
+    })
+  },
+
+  // ============ S9: Sales Funnel & Target ============
+  'sales-funnel': {
+    html: () => _labShell({
+      eyebrow: 'Sales · Pipeline', title: 'Sales Funnel', italic: '& Target',
+      desc: 'Dari jumlah lead, konversi tiap tahap (qualified → proposal → menang) menentukan jumlah deal & revenue. Cek apakah pipeline cukup untuk capai target.',
+      svg: `<g id="sf2-funnel"></g>
+        <text x="200" y="272" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="sf2-verdict">—</text>`,
+      controls: _labSld('sf2-leads','Jumlah lead / bulan',10,1000,200,10)
+        + _labSld('sf2-q','Lead → Qualified (%)',10,90,40,1)
+        + _labSld('sf2-p','Qualified → Proposal (%)',20,90,50,1)
+        + _labSld('sf2-w','Proposal → Menang (%)',10,80,30,1)
+        + _labSld('sf2-val','Nilai rata-rata deal (jt)',10,2000,150,10)
+        + _labSld('sf2-target','Target revenue (jt/bln)',100,20000,2000,100),
+      outputs: _labOut('sf2-deals','Deal / bulan','') + _labOut('sf2-rev','Revenue','jt/bln') + _labOut('sf2-gap','vs Target','%'),
+      formula: `Deal = lead × q% × p% × w% · Revenue = deal × nilai rata-rata<br>Bila revenue < target: perbanyak lead atau naikkan konversi/nilai deal.`
+    }),
+    init: () => _labBind(['sf2-leads','sf2-q','sf2-p','sf2-w','sf2-val','sf2-target'], () => {
+      const leads=_labV('sf2-leads'), q=_labV('sf2-q')/100, p=_labV('sf2-p')/100, w=_labV('sf2-w')/100, val=_labV('sf2-val'), target=_labV('sf2-target');
+      _labSetv('sf2-leads',leads.toFixed(0)); _labSetv('sf2-q',(q*100).toFixed(0)+' %'); _labSetv('sf2-p',(p*100).toFixed(0)+' %'); _labSetv('sf2-w',(w*100).toFixed(0)+' %'); _labSetv('sf2-val',val.toFixed(0)+' jt'); _labSetv('sf2-target',target.toFixed(0)+' jt');
+      const qn=leads*q, pn=qn*p, deals=pn*w, rev=deals*val, gap=rev/target*100;
+      _labSet('sf2-deals',deals.toFixed(1)); _labSet('sf2-rev',rev.toFixed(0)); _labSet('sf2-gap',gap.toFixed(0));
+      const col=gap>=100?_GREEN:(gap>=70?_GOLD:_RED);
+      _labSet('sf2-verdict', gap>=100?('✓ Target tercapai ('+gap.toFixed(0)+'%) — '+deals.toFixed(1)+' deal/bln'):('✗ Kurang '+(100-gap).toFixed(0)+'% — perlu lebih banyak lead/konversi')); _labAttr('sf2-verdict','fill',col);
+      // funnel
+      const g=document.getElementById('sf2-funnel'); const stages=[['Lead',leads],['Qualified',qn],['Proposal',pn],['Menang',deals]];
+      const maxw=260, cx=200, y0=44, h=44; let o='';
+      stages.forEach((st,i)=>{ const wd=maxw*(st[1]/leads); const y=y0+i*h; const c=['#9a7f4f','#c9a96e','#3a5fb0','#15803d'][i];
+        o+='<rect x="'+(cx-wd/2).toFixed(1)+'" y="'+y+'" width="'+wd.toFixed(1)+'" height="'+(h-8)+'" rx="3" fill="'+c+'"/>';
+        o+='<text x="'+cx+'" y="'+(y+(h-8)/2+4)+'" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#fff">'+st[0]+': '+st[1].toFixed(0)+'</text>';
+      });
+      g.innerHTML=o;
     })
   }
 };
