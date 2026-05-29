@@ -15121,7 +15121,7 @@ const SIM_GROUPS = [
   { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag, isolasi, arester petir, korona EHV & aliran daya.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting, regresi, deteksi anomali & PLTS.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
   { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Payback, PF, chiller HVAC, retrofit LED & M&V.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
-  { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS rooftop & sizing baterai (BESS).', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
+  { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS, BESS, genset, turbin angin & PLTA.', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, APD & sistem pembumian.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
   { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
 ];
@@ -15177,6 +15177,9 @@ const SIMULATORS = [
   // ===== S7 · Pembangkitan & Renewable =====
   { id: 'pv-sizing', jalur: 'S7', category: 'Renewable · PLTS', name: 'PV System Designer', desc: 'Rancang sistem PLTS atap: jumlah panel, ukuran inverter, kapasitas baterai backup, dan luas atap yang dibutuhkan.', level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.pv, working: true },
   { id: 'bess-sizing', jalur: 'S7', category: 'Renewable · Storage', name: 'BESS Sizing', desc: 'Tentukan kapasitas baterai (kWh) & inverter (kW) untuk backup/peak-shaving dengan target DoD & autonomy.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'genset-sizing', jalur: 'S7', category: 'Pembangkitan · Genset', name: 'Genset Sizing & Fuel', desc: 'Pilih rating genset untuk beban + kejut start motor, cek loading optimal, konsumsi BBM & biaya per kWh.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.motor, working: true },
+  { id: 'wind-power', jalur: 'S7', category: 'Renewable · Angin', name: 'Wind Turbine Power Curve', desc: 'Kurva daya turbin angin (cut-in, rated, cut-out), daya saat ini & capacity factor terhadap kecepatan angin.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.grid, working: true },
+  { id: 'hydro-power', jalur: 'S7', category: 'Renewable · PLTA', name: 'Hydro Power & Penstock', desc: 'Daya hidro P=ρgQHη, rugi head friksi penstock (Darcy), head efektif & energi tahunan dari debit & tinggi jatuh.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: true },
 
   // ===== S8 · K3 Listrik =====
   { id: 'arc-flash-ppe', jalur: 'S8', category: 'K3 · Arc Flash', name: 'Arc Flash & PPE Selector', desc: 'Estimasi incident energy (cal/cm²) & kategori APD (PPE) sesuai NFPA 70E dari arus gangguan & jarak kerja.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
@@ -17981,6 +17984,115 @@ const SIM_BUILDERS = {
       _labSet('bs-kwh-lbl',batt.toFixed(0)+' kWh'); _labSet('bs-inv-lbl',nmod+' × '+mod+' kWh · inv '+inv.toFixed(0)+' kW');
       const fillH=Math.min(dod,1)*180; _labAttr('bs-fill','height',fillH); _labAttr('bs-fill','y',240-fillH);
       _labSet('bsf-b',batt.toFixed(1)); _labSet('bsf-n',nmod); _labSet('bsf-c',crate.toFixed(2));
+    })
+  },
+
+  // ============ S7: Genset Sizing & Fuel ============
+  'genset-sizing': {
+    html: () => _labShell({
+      eyebrow: 'Pembangkitan · Genset', title: 'Genset Sizing', italic: '& Fuel',
+      desc: 'Tentukan rating genset (kVA) untuk beban + lonjakan start motor, cek loading optimal (60–80%), konsumsi BBM & biaya per kWh.',
+      svg: `<rect x="150" y="50" width="100" height="180" rx="8" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+        <rect x="150" y="230" width="100" height="0" id="gs-fill" class="lab-glow" fill="#15803d"/>
+        <line x1="140" y1="86" x2="260" y2="86" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4 3"/><text x="266" y="90" font-family="Georgia" font-size="9" fill="#c0392b">100%</text>
+        <line x1="140" y1="122" x2="260" y2="122" stroke="#9a7f4f" stroke-width="1.5" stroke-dasharray="4 3"/><text x="266" y="126" font-family="Georgia" font-size="9" fill="#9a7f4f">80%</text>
+        <text x="200" y="150" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" id="gs-pct">—</text>
+        <text x="200" y="252" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="gs-rating">—</text>
+        <text x="200" y="274" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="gs-verdict">—</text>`,
+      controls: _labSld('gs-load','Beban kontinu (kW)',10,2000,400,10)
+        + _labSld('gs-pf','Power factor',0.7,1,0.8,0.01)
+        + _labSld('gs-motor','Motor terbesar start (kW)',0,500,75,5)
+        + _labSel('gs-rating-sel','Rating genset (kVA)','<option value="250">250</option><option value="400">400</option><option value="500">500</option><option value="630" selected>630</option><option value="800">800</option><option value="1000">1000</option>')
+        + _labSld('gs-tar','Harga solar (Rp/L)',8000,20000,13000,250),
+      outputs: _labOut('gs-kva','Beban kVA','kVA') + _labOut('gs-fuel','Konsumsi BBM','L/jam') + _labOut('gs-cost','Biaya Energi','Rp/kWh'),
+      formula: `kVA beban = kW/PF + kejut start (≈ motor×3/PF saat start) · loading = kVA/rating<br>BBM ≈ 0.25 L/kWh pada beban tipikal · biaya = (L/jam×harga)/kW`
+    }),
+    init: () => _labBind(['gs-load','gs-pf','gs-motor','gs-rating-sel','gs-tar'], () => {
+      const kw=_labV('gs-load'), pf=_labV('gs-pf'), motor=_labV('gs-motor'), rating=_labV('gs-rating-sel'), tar=_labV('gs-tar');
+      _labSetv('gs-load',kw.toFixed(0)+' kW'); _labSetv('gs-pf',pf.toFixed(2)); _labSetv('gs-motor',motor.toFixed(0)+' kW'); _labSetv('gs-tar','Rp '+tar.toFixed(0));
+      const kvaRun=kw/pf, kvaStart=kvaRun + motor*2/pf; // kejut start motor
+      const pct=kvaRun/rating*100, pctStart=kvaStart/rating*100;
+      const Lph=0.25*kw, cost=kw>0?(Lph*tar)/kw:0;
+      _labSet('gs-kva',kvaRun.toFixed(0)); _labSet('gs-fuel',Lph.toFixed(1)); _labSet('gs-cost','Rp '+cost.toFixed(0));
+      _labSet('gs-pct',pct.toFixed(0)+'%'); _labSet('gs-rating',rating+' kVA · start '+pctStart.toFixed(0)+'%');
+      const col = pct>90||pctStart>100?_RED:(pct<40?_GOLD:_GREEN);
+      let msg = pctStart>100?'✗ Kejut start > rating — perbesar genset':(pct>90?'✗ Overload kontinu':(pct<40?'⚠ Under-loaded (<40%, boros & wet stacking)':'✓ Loading optimal (40–80%)'));
+      _labSet('gs-verdict',msg); _labAttr('gs-verdict','fill',col); _labAttr('gs-pct','fill',col);
+      const H=180, base=230, h=Math.min(pct/110,1)*H;
+      _labAttr('gs-fill','height',h); _labAttr('gs-fill','y',base-h); _labAttr('gs-fill','fill',col);
+    })
+  },
+
+  // ============ S7: Wind Turbine Power Curve ============
+  'wind-power': {
+    html: () => _labShell({
+      eyebrow: 'Renewable · Angin', title: 'Wind Turbine', italic: 'Power Curve',
+      desc: 'Daya angin ∝ kecepatan³ (P = ½·ρ·A·v³·Cp). Lihat kurva daya turbin (cut-in, rated, cut-out), daya saat ini, & capacity factor pada kecepatan rata-rata.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">P (kW)</text>
+        <text x="372" y="250" text-anchor="end" font-family="Georgia" font-size="10" fill="#6b6d7a">v angin (m/s)</text>
+        <line x1="52" y1="44" x2="52" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="232" x2="372" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="wp-curve" fill="none" stroke="#16a085" stroke-width="2.5" points=""/>
+        <line id="wp-vline" x1="0" y1="44" x2="0" y2="232" stroke="#1a1d2e" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+        <circle id="wp-op" r="6" fill="#15803d" class="lab-glow"/>
+        <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#16a085" id="wp-info">—</text>`,
+      controls: _labSld('wp-rated','Daya rated turbin (kW)',100,5000,2000,50)
+        + _labSld('wp-cutin','Cut-in (m/s)',2,5,3,0.5)
+        + _labSld('wp-ratedv','Rated wind (m/s)',10,16,12,0.5)
+        + _labSld('wp-cutout','Cut-out (m/s)',20,30,25,1)
+        + _labSld('wp-v','Kecepatan angin saat ini (m/s)',0,30,8,0.5),
+      outputs: _labOut('wp-p','Daya Saat Ini','kW') + _labOut('wp-cf','Capacity Factor','%') + _labOut('wp-state','Status',''),
+      formula: `P = 0 (v<cut-in atau v>cut-out) · P = rated·((v³−vin³)/(vr³−vin³)) di antara cut-in & rated · P = rated (vr..cut-out)<br>CF estimasi ≈ daya pada v rata-rata / rated × 100%`
+    }),
+    init: () => _labBind(['wp-rated','wp-cutin','wp-ratedv','wp-cutout','wp-v'], () => {
+      const rated=_labV('wp-rated'), vin=_labV('wp-cutin'), vr=_labV('wp-ratedv'), vout=_labV('wp-cutout'), v=_labV('wp-v');
+      _labSetv('wp-rated',rated.toFixed(0)+' kW'); _labSetv('wp-cutin',vin.toFixed(1)); _labSetv('wp-ratedv',vr.toFixed(1)); _labSetv('wp-cutout',vout.toFixed(0)); _labSetv('wp-v',v.toFixed(1)+' m/s');
+      const Pof = vv => { if(vv<vin||vv>vout) return 0; if(vv>=vr) return rated; return rated*(Math.pow(vv,3)-Math.pow(vin,3))/(Math.pow(vr,3)-Math.pow(vin,3)); };
+      const P=Pof(v), cf=P/rated*100;
+      let state,col; if(v<vin){state='Idle (di bawah cut-in)';col=_GOLD;} else if(v>vout){state='Shutdown (di atas cut-out!)';col=_RED;} else if(v>=vr){state='Rated (daya penuh)';col=_GREEN;} else {state='Partial (kawasan v³)';col=_GREEN;}
+      _labSet('wp-p',P.toFixed(0)); _labSet('wp-cf',cf.toFixed(0)); _labSet('wp-state',state);
+      _labSet('wp-info','P = '+P.toFixed(0)+' kW ('+cf.toFixed(0)+'% rated) · '+state); _labAttr('wp-info','fill',col);
+      const X=vv=>52+vv/30*320, Y=p=>232-p/rated*188;
+      let pts=''; for(let vv=0;vv<=30;vv+=0.5) pts+=X(vv).toFixed(1)+','+Y(Pof(vv)).toFixed(1)+' ';
+      _labAttr('wp-curve','points',pts.trim());
+      const vx=X(v); _labAttr('wp-vline','x1',vx); _labAttr('wp-vline','x2',vx);
+      _labAttr('wp-op','cx',vx); _labAttr('wp-op','cy',Y(P));
+    })
+  },
+
+  // ============ S7: Hydro Power & Penstock ============
+  'hydro-power': {
+    html: () => _labShell({
+      eyebrow: 'Renewable · PLTA', title: 'Hydro Power', italic: '& Penstock',
+      desc: 'Daya hidro P = ρ·g·Q·H·η. Hitung daya terbangkit, rugi head friksi pada penstock, head efektif, & energi tahunan dari debit & tinggi jatuh.',
+      svg: `<path d="M40 60 L40 130 L140 130" fill="none" stroke="#3a5fb0" stroke-width="6"/>
+        <rect x="36" y="40" width="50" height="22" rx="3" fill="#3a5fb0" opacity="0.4"/><text x="61" y="55" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1a1d2e">reservoir</text>
+        <line id="hy-pen" x1="40" y1="130" x2="300" y2="210" stroke="#9a7f4f" stroke-width="5"/>
+        <circle cx="318" cy="212" r="18" fill="none" stroke="#1a1d2e" stroke-width="2.5" class="lab-flow" stroke-dasharray="6 4"/><text x="318" y="217" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700">G</text>
+        <line x1="40" y1="60" x2="40" y2="130" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="22" y="98" font-family="Georgia" font-size="10" fill="#c0392b" id="hy-hlbl">H</text>
+        <text x="200" y="120" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" fill="#15803d" id="hy-power">—</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="hy-info">—</text>`,
+      controls: _labSld('hy-q','Debit Q (m³/s)',0.5,100,10,0.5)
+        + _labSld('hy-h','Tinggi jatuh kotor H (m)',5,500,100,5)
+        + _labSld('hy-len','Panjang penstock (m)',50,2000,400,10)
+        + _labSld('hy-d','Diameter penstock (m)',0.5,5,2,0.1)
+        + _labSld('hy-eff','Efisiensi turbin-generator',0.7,0.95,0.88,0.01),
+      outputs: _labOut('hy-p','Daya Terbangkit','kW') + _labOut('hy-hloss','Rugi Head','m') + _labOut('hy-energy','Energi Tahunan','MWh'),
+      formula: `P = ρ·g·Q·H_eff·η · H_eff = H − h_friksi · h_f = f·(L/D)·v²/2g (Darcy)<br>v = Q/A · energi = P × 8760 × CF (CF≈0.5)`
+    }),
+    init: () => _labBind(['hy-q','hy-h','hy-len','hy-d','hy-eff'], () => {
+      const Q=_labV('hy-q'), H=_labV('hy-h'), L=_labV('hy-len'), D=_labV('hy-d'), eff=_labV('hy-eff');
+      _labSetv('hy-q',Q.toFixed(1)+' m³/s'); _labSetv('hy-h',H.toFixed(0)+' m'); _labSetv('hy-len',L.toFixed(0)+' m'); _labSetv('hy-d',D.toFixed(1)+' m'); _labSetv('hy-eff',eff.toFixed(2));
+      const A=Math.PI/4*D*D, v=Q/A, f=0.02, g=9.81;
+      const hf=f*(L/D)*v*v/(2*g), Heff=Math.max(0,H-hf);
+      const P=1000*g*Q*Heff*eff/1000; // kW
+      const energy=P*8760*0.5/1000; // MWh
+      _labSet('hy-p',P.toFixed(0)); _labSet('hy-hloss',hf.toFixed(1)); _labSet('hy-energy',energy.toFixed(0));
+      _labSet('hy-power',P>=1000?(P/1000).toFixed(1)+' MW':P.toFixed(0)+' kW');
+      const lossPct=H>0?hf/H*100:0, col=lossPct>10?_RED:(lossPct>5?_GOLD:_GREEN);
+      _labSet('hy-info','H efektif '+Heff.toFixed(0)+' m · rugi '+lossPct.toFixed(1)+'% · v '+v.toFixed(1)+' m/s'); _labAttr('hy-info','fill',col);
+      _labAttr('hy-pen','stroke',col===_GREEN?'#9a7f4f':col);
     })
   },
 
