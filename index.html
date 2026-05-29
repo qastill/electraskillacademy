@@ -2686,6 +2686,12 @@ body {
 .sim-banner-cat { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: #f0d080; font-weight: 800; }
 .sim-banner-title { font-family: var(--serif, Georgia, serif); font-size: 1.5rem; font-weight: 600; color: #fff; line-height: 1.15; }
 
+/* Animasi simulator (aliran arus & glow) */
+@keyframes labFlow { to { stroke-dashoffset: -36; } }
+.lab-flow { stroke-dasharray: 11 8; animation: labFlow 0.8s linear infinite; }
+@keyframes labGlow { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
+.lab-glow { animation: labGlow 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
 /* Electrical Design Calculators */
 .calc-section {
   padding: 100px 80px;
@@ -16230,136 +16236,157 @@ function getLightingHTML() {
     <div class="sim-modal-header">
       <div class="sim-modal-eyebrow">Instalasi Bangunan · Pencahayaan</div>
       <h2>Lighting Design <span class="italic">— Lumen Method</span></h2>
-      <p>Metode lumen (SNI 6197). Jumlah armatur N = (E × A) / (Φ × CU × LLF). Geser parameter, tata letak & lux aktual dihitung otomatis.</p>
+      <p>Metode lumen (SNI 6197). CU otomatis dihitung dari Room Index (geometri ruang). Output: jumlah armatur, lux aktual, daya total &amp; kepadatan daya.</p>
     </div>
     <div class="sim-workspace">
       <div class="sim-visual">
         <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-          <rect x="40" y="40" width="320" height="210" rx="6" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+          <defs><radialGradient id="lampGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFE57A"/><stop offset="100%" stop-color="#FFD400"/></radialGradient></defs>
+          <rect x="40" y="34" width="320" height="206" rx="6" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
           <g id="light-fixtures"></g>
-          <text x="200" y="272" text-anchor="middle" font-family="Georgia" font-size="13" fill="#1a1d2e" font-weight="600" id="light-room-label">8 m × 6 m</text>
-          <text x="200" y="290" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9a7f4f" id="light-grid-label">— armatur</text>
+          <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" fill="#1a1d2e" font-weight="600" id="light-room-label">8 × 6 m</text>
+          <text x="200" y="280" text-anchor="middle" font-family="Georgia" font-size="11" fill="#9a7f4f" id="light-grid-label">— armatur</text>
+          <text x="200" y="296" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a" id="light-pd-label">—</text>
         </svg>
       </div>
       <div class="sim-controls">
         <div class="sim-control-group">
+          <div class="sim-control"><label>Jenis ruang (target lux)</label>
+            <select id="light-room"><option value="100">Koridor / gudang ringan (100 lx)</option><option value="200">Lobi / area umum (200 lx)</option><option value="300" selected>Ruang kelas (300 lx)</option><option value="350">Kantor / office (350 lx)</option><option value="500">Ritel / lab (500 lx)</option><option value="750">Industri presisi (750 lx)</option></select></div>
           <div class="sim-control"><label>Panjang ruang <span class="sim-value" id="light-L-val">8.0 m</span></label><input type="range" id="light-L" min="2" max="30" value="8" step="0.5"></div>
           <div class="sim-control"><label>Lebar ruang <span class="sim-value" id="light-W-val">6.0 m</span></label><input type="range" id="light-W" min="2" max="30" value="6" step="0.5"></div>
-          <div class="sim-control"><label>Target iluminasi (lux) <span class="sim-value" id="light-lux-val">300 lx</span></label><input type="range" id="light-lux" min="50" max="1000" value="300" step="25"></div>
-          <div class="sim-control"><label>Lumen per armatur <span class="sim-value" id="light-lm-val">3600 lm</span></label><input type="range" id="light-lm" min="500" max="8000" value="3600" step="100"></div>
-          <div class="sim-control"><label>Coefficient of Utilization (CU) <span class="sim-value" id="light-cu-val">0.60</span></label><input type="range" id="light-cu" min="0.3" max="0.9" value="0.6" step="0.05"></div>
-          <div class="sim-control"><label>Light Loss Factor (LLF) <span class="sim-value" id="light-llf-val">0.80</span></label><input type="range" id="light-llf" min="0.5" max="0.95" value="0.8" step="0.05"></div>
+          <div class="sim-control"><label>Tinggi plafon <span class="sim-value" id="light-H-val">3.5 m</span></label><input type="range" id="light-H" min="2.5" max="8" value="3.5" step="0.1"></div>
+          <div class="sim-control"><label>Tipe armatur</label>
+            <select id="light-lamp"><option value="3600|36">LED Panel 36W · 3600 lm</option><option value="4800|48" selected>LED Panel 48W · 4800 lm</option><option value="1100|12">LED Downlight 12W · 1100 lm</option><option value="5000|72">TL 2×36W · 5000 lm</option><option value="19500|150">LED Highbay 150W · 19500 lm</option></select></div>
+          <div class="sim-control"><label>Kondisi/perawatan (LLF)</label>
+            <select id="light-llf"><option value="0.8" selected>Bersih (0.80)</option><option value="0.7">Normal (0.70)</option><option value="0.6">Berdebu (0.60)</option></select></div>
         </div>
         <div class="sim-outputs">
           <div class="sim-output"><div class="sim-output-label">Jumlah Armatur</div><div class="sim-output-value"><span id="light-n">—</span><span class="unit">unit</span></div></div>
           <div class="sim-output"><div class="sim-output-label">Lux Aktual</div><div class="sim-output-value"><span id="light-actual">—</span><span class="unit">lx</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Daya Total</div><div class="sim-output-value"><span id="light-power">—</span><span class="unit">W</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Kepadatan Daya</div><div class="sim-output-value"><span id="light-pd">—</span><span class="unit">W/m²</span></div></div>
         </div>
         <div class="sim-formula">
-          A = L × W = <span id="light-area">48.0</span> m² · N = (E × A)/(Φ × CU × LLF)<br>
-          N = (<span id="lf-e">300</span> × <span id="lf-a">48.0</span>) / (<span id="lf-lm">3600</span> × <span id="lf-cu">0.60</span> × <span id="lf-llf">0.80</span>) = <span id="lf-n">8.3</span> → <span id="lf-nc">9</span> unit
+          K = (L×W)/(Hm×(L+W)) = <span id="lf-k">—</span> · CU(K) = <span id="lf-cu">—</span> · A = <span id="lf-a">48</span> m²<br>
+          N = (E × A)/(Φ × CU × LLF) = (<span id="lf-e">300</span>×<span id="lf-a2">48</span>)/(<span id="lf-lm">4800</span>×<span id="lf-cu2">—</span>×<span id="lf-llf">0.80</span>) = <span id="lf-n">—</span> → <span id="lf-nc">—</span> unit
         </div>
       </div>
     </div>
   `;
 }
 function initLighting() {
-  const ids = ['light-L','light-W','light-lux','light-lm','light-cu','light-llf'];
+  const ids = ['light-room','light-L','light-W','light-H','light-lamp','light-llf'];
   const els = ids.map(i => document.getElementById(i));
   if (els.some(e => !e)) return;
-  const [Lel, Wel, luxEl, lmEl, cuEl, llfEl] = els;
+  const [roomEl, Lel, Wel, Hel, lampEl, llfEl] = els;
+  const HW = 0.75; // tinggi bidang kerja (m)
 
   const update = () => {
-    const L = parseFloat(Lel.value), W = parseFloat(Wel.value);
-    const E = parseFloat(luxEl.value), lm = parseFloat(lmEl.value);
-    const cu = parseFloat(cuEl.value), llf = parseFloat(llfEl.value);
+    const E = parseFloat(roomEl.value);
+    const L = parseFloat(Lel.value), W = parseFloat(Wel.value), H = parseFloat(Hel.value);
+    const [lm, watt] = lampEl.value.split('|').map(parseFloat);
+    const llf = parseFloat(llfEl.value);
     const A = L * W;
-    const nExact = (E * A) / (lm * cu * llf);
+    const Hm = Math.max(0.5, H - HW); // mounting height di atas bidang kerja
+    const K = (L * W) / (Hm * (L + W)); // Room Index
+    const CU = Math.min(0.85, Math.max(0.3, 0.33 + 0.34 * Math.log(K + 1)));
+    const nExact = (E * A) / (lm * CU * llf);
     const N = Math.max(1, Math.ceil(nExact));
-    const actual = (N * lm * cu * llf) / A;
+    const actual = (N * lm * CU * llf) / A;
+    const totalW = N * watt;
+    const pd = totalW / A; // W/m²
 
-    // layout grid: cols proporsional terhadap rasio ruang
     let cols = Math.max(1, Math.round(Math.sqrt(N * (L / W))));
     let rows = Math.ceil(N / cols);
     while ((rows - 1) * cols >= N && rows > 1) rows--;
 
-    // value labels
     document.getElementById('light-L-val').textContent = L.toFixed(1) + ' m';
     document.getElementById('light-W-val').textContent = W.toFixed(1) + ' m';
-    document.getElementById('light-lux-val').textContent = E.toFixed(0) + ' lx';
-    document.getElementById('light-lm-val').textContent = lm.toFixed(0) + ' lm';
-    document.getElementById('light-cu-val').textContent = cu.toFixed(2);
-    document.getElementById('light-llf-val').textContent = llf.toFixed(2);
+    document.getElementById('light-H-val').textContent = H.toFixed(1) + ' m';
 
     document.getElementById('light-n').textContent = N;
     document.getElementById('light-actual').textContent = actual.toFixed(0);
-    document.getElementById('light-room-label').textContent = L.toFixed(1) + ' m × ' + W.toFixed(1) + ' m';
-    document.getElementById('light-grid-label').textContent = N + ' armatur (' + cols + ' × ' + rows + ')';
+    document.getElementById('light-power').textContent = totalW.toFixed(0);
+    const pdEl = document.getElementById('light-pd');
+    pdEl.textContent = pd.toFixed(1);
+    pdEl.style.color = pd > 15 ? '#c0392b' : (pd > 10 ? '#9a7f4f' : '#15803d');
 
-    document.getElementById('light-area').textContent = A.toFixed(1);
+    document.getElementById('light-room-label').textContent = L.toFixed(1) + ' × ' + W.toFixed(1) + ' m';
+    document.getElementById('light-grid-label').textContent = N + ' armatur (' + cols + ' × ' + rows + ') · ' + actual.toFixed(0) + ' lx';
+    document.getElementById('light-pd-label').textContent = 'Daya ' + totalW.toFixed(0) + ' W · ' + pd.toFixed(1) + ' W/m²';
+
+    document.getElementById('lf-k').textContent = K.toFixed(2);
+    document.getElementById('lf-cu').textContent = CU.toFixed(2);
+    document.getElementById('lf-cu2').textContent = CU.toFixed(2);
+    document.getElementById('lf-a').textContent = A.toFixed(0);
+    document.getElementById('lf-a2').textContent = A.toFixed(0);
     document.getElementById('lf-e').textContent = E.toFixed(0);
-    document.getElementById('lf-a').textContent = A.toFixed(1);
     document.getElementById('lf-lm').textContent = lm.toFixed(0);
-    document.getElementById('lf-cu').textContent = cu.toFixed(2);
     document.getElementById('lf-llf').textContent = llf.toFixed(2);
     document.getElementById('lf-n').textContent = nExact.toFixed(1);
     document.getElementById('lf-nc').textContent = N;
 
-    // draw fixtures
+    // gambar armatur + glow beranimasi
     const g = document.getElementById('light-fixtures');
-    const x0 = 40, y0 = 40, w = 320, h = 210;
-    let dots = '';
+    const x0 = 40, y0 = 34, w = 320, h = 206;
+    let out = '';
     let placed = 0;
     for (let r = 0; r < rows && placed < N; r++) {
       const cy = y0 + h * (r + 1) / (rows + 1);
       for (let c = 0; c < cols && placed < N; c++) {
         const cx = x0 + w * (c + 1) / (cols + 1);
-        dots += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="7" fill="#FFD400" stroke="#9a7f4f" stroke-width="1.2"/>'
-              + '<line x1="' + (cx-4).toFixed(1) + '" y1="' + cy.toFixed(1) + '" x2="' + (cx+4).toFixed(1) + '" y2="' + cy.toFixed(1) + '" stroke="#9a7f4f" stroke-width="1.2"/>';
+        out += '<circle class="lab-glow" cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="15" fill="#FFD400" opacity="0.5" style="animation-delay:' + (placed * 0.12).toFixed(2) + 's"/>';
+        out += '<rect x="' + (cx - 9).toFixed(1) + '" y="' + (cy - 5).toFixed(1) + '" width="18" height="10" rx="2" fill="url(#lampGrad)" stroke="#9a7f4f" stroke-width="1"/>';
         placed++;
       }
     }
-    g.innerHTML = dots;
+    g.innerHTML = out;
   };
 
   els.forEach(e => e.addEventListener('input', update));
+  els.forEach(e => e.addEventListener('change', update));
   update();
 }
 
 // =================== S1 LAB 2: Voltage Drop Checker (PUIL) ===================
 const _VD_RHO = { cu: 0.0225, al: 0.036 }; // Ω·mm²/m @ ~70°C
+const _VD_X = 0.00008; // reaktansi kabel ~0.08 Ω/km (LV)
 function getVoltageDropHTML() {
   return `
     <div class="sim-modal-header">
       <div class="sim-modal-eyebrow">Instalasi Bangunan · Drop Tegangan</div>
-      <h2>Voltage Drop <span class="italic">Checker (PUIL)</span></h2>
-      <p>Vd = k × ρ × L × I / A (k = 2 untuk 1 fasa, √3 untuk 3 fasa). Bandingkan %drop terhadap batas PUIL (umumnya ≤ 5%).</p>
+      <h2>Voltage Drop <span class="italic">Checker (PUIL/IEC)</span></h2>
+      <p>Vd = k × I × L × (R·cosφ + X·sinφ). Memperhitungkan faktor daya &amp; reaktansi kabel. Lihat tegangan di beban, rugi daya, &amp; status PUIL.</p>
     </div>
     <div class="sim-workspace">
       <div class="sim-visual">
         <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-          <rect x="20" y="95" width="56" height="50" rx="4" fill="#1a1d2e"/>
-          <text x="48" y="125" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">APP</text>
-          <line x1="76" y1="120" x2="324" y2="120" stroke="#9a7f4f" stroke-width="5" id="vd-cable"/>
-          <rect x="324" y="95" width="56" height="50" rx="4" fill="#1a1d2e" id="vd-loadbox"/>
-          <text x="352" y="118" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">Beban</text>
-          <text x="352" y="135" text-anchor="middle" font-family="Georgia" font-size="11" fill="#FFD400" id="vd-vload">—</text>
-          <text x="200" y="105" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e" id="vd-len-label">30 m</text>
-          <!-- bar -->
-          <text x="40" y="185" font-family="Georgia" font-size="11" fill="#1a1d2e">Drop Tegangan</text>
-          <rect x="40" y="195" width="320" height="20" rx="4" fill="#e5e5e5"/>
-          <rect x="40" y="195" width="0" height="20" rx="4" fill="#15803d" id="vd-bar"/>
-          <line x1="200" y1="190" x2="200" y2="220" stroke="#1a1d2e" stroke-width="1.5" stroke-dasharray="3 3" id="vd-limit-marker"/>
-          <text x="200" y="234" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e" id="vd-limit-label">batas 5%</text>
-          <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="20" fill="#15803d" font-weight="700" id="vd-pct">—</text>
-          <text x="200" y="282" text-anchor="middle" font-family="Georgia" font-size="13" fill="#15803d" font-weight="700" id="vd-verdict">—</text>
+          <rect x="18" y="92" width="58" height="52" rx="4" fill="#1a1d2e"/>
+          <text x="47" y="115" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">APP</text>
+          <text x="47" y="132" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f0d080" id="vd-vsrc">400 V</text>
+          <line x1="76" y1="118" x2="324" y2="118" stroke="#cfd3da" stroke-width="6"/>
+          <line x1="76" y1="118" x2="324" y2="118" stroke="#9a7f4f" stroke-width="4" class="lab-flow" id="vd-cable"/>
+          <rect x="324" y="92" width="60" height="52" rx="4" fill="#1a1d2e" id="vd-loadbox"/>
+          <text x="354" y="113" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">Beban</text>
+          <text x="354" y="131" text-anchor="middle" font-family="Georgia" font-size="12" fill="#FFD400" font-weight="700" id="vd-vload">—</text>
+          <text x="200" y="106" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e" id="vd-len-label">30 m</text>
+          <text x="40" y="178" font-family="Georgia" font-size="11" fill="#1a1d2e">% Drop Tegangan</text>
+          <rect x="40" y="188" width="320" height="20" rx="4" fill="#e5e5e5"/>
+          <rect x="40" y="188" width="0" height="20" rx="4" fill="#15803d" id="vd-bar"/>
+          <line x1="200" y1="183" x2="200" y2="213" stroke="#1a1d2e" stroke-width="1.5" stroke-dasharray="3 3" id="vd-limit-marker"/>
+          <text x="200" y="227" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e" id="vd-limit-label">batas 5%</text>
+          <text x="200" y="256" text-anchor="middle" font-family="Georgia" font-size="20" fill="#15803d" font-weight="700" id="vd-pct">—</text>
+          <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="12.5" fill="#15803d" font-weight="700" id="vd-verdict">—</text>
         </svg>
       </div>
       <div class="sim-controls">
         <div class="sim-control-group">
-          <div class="sim-control"><label>Arus beban (I) <span class="sim-value" id="vd-I-val">16 A</span></label><input type="range" id="vd-I" min="1" max="100" value="16" step="1"></div>
-          <div class="sim-control"><label>Panjang kabel (L) <span class="sim-value" id="vd-len-val">30 m</span></label><input type="range" id="vd-len" min="1" max="200" value="30" step="1"></div>
+          <div class="sim-control"><label>Arus beban (I) <span class="sim-value" id="vd-I-val">16 A</span></label><input type="range" id="vd-I" min="1" max="160" value="16" step="1"></div>
+          <div class="sim-control"><label>Panjang kabel (L) <span class="sim-value" id="vd-len-val">30 m</span></label><input type="range" id="vd-len" min="1" max="250" value="30" step="1"></div>
+          <div class="sim-control"><label>Faktor daya (cos φ) <span class="sim-value" id="vd-pf-val">0.90</span></label><input type="range" id="vd-pf" min="0.6" max="1" value="0.9" step="0.01"></div>
           <div class="sim-control"><label>Luas penampang (A)</label>
-            <select id="vd-csa"><option>1.5</option><option>2.5</option><option selected>4</option><option>6</option><option>10</option><option>16</option><option>25</option><option>35</option><option>50</option></select></div>
+            <select id="vd-csa"><option>1.5</option><option>2.5</option><option selected>4</option><option>6</option><option>10</option><option>16</option><option>25</option><option>35</option><option>50</option><option>70</option><option>95</option></select></div>
           <div class="sim-control"><label>Sistem</label>
             <select id="vd-sys"><option value="1">1 Fasa (230 V)</option><option value="3" selected>3 Fasa (400 V)</option></select></div>
           <div class="sim-control"><label>Konduktor</label>
@@ -16369,10 +16396,12 @@ function getVoltageDropHTML() {
         <div class="sim-outputs">
           <div class="sim-output"><div class="sim-output-label">Drop Tegangan</div><div class="sim-output-value"><span id="vd-volt">—</span><span class="unit">V</span></div></div>
           <div class="sim-output"><div class="sim-output-label">Persen Drop</div><div class="sim-output-value"><span id="vd-percent">—</span><span class="unit">%</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Tegangan di Beban</div><div class="sim-output-value"><span id="vd-vl">—</span><span class="unit">V</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Rugi Daya Kabel</div><div class="sim-output-value"><span id="vd-loss">—</span><span class="unit">W</span></div></div>
         </div>
         <div class="sim-formula">
-          Vd = k × ρ × L × I / A<br>
-          Vd = <span id="vf-k">1.73</span> × <span id="vf-rho">0.0225</span> × <span id="vf-l">30</span> × <span id="vf-i">16</span> / <span id="vf-a">4</span> = <span id="vf-vd">—</span> V (<span id="vf-pct">—</span> % dari <span id="vf-vsys">400</span> V)
+          R = ρL/A · Vd = k × I × (R·cosφ + X·sinφ) · k = <span id="vf-k">1.73</span><br>
+          Vd = <span id="vf-vd">—</span> V = <span id="vf-pct">—</span> % dari <span id="vf-vsys">400</span> V · Rugi = n·I²·R = <span id="vf-loss">—</span> W
         </div>
       </div>
     </div>
@@ -16381,6 +16410,7 @@ function getVoltageDropHTML() {
 function initVoltageDrop() {
   const Iel = document.getElementById('vd-I');
   const Lel = document.getElementById('vd-len');
+  const pfEl = document.getElementById('vd-pf');
   const csaEl = document.getElementById('vd-csa');
   const sysEl = document.getElementById('vd-sys');
   const condEl = document.getElementById('vd-cond');
@@ -16388,35 +16418,42 @@ function initVoltageDrop() {
   if (!Iel) return;
 
   const update = () => {
-    const I = parseFloat(Iel.value), L = parseFloat(Lel.value);
+    const I = parseFloat(Iel.value), L = parseFloat(Lel.value), pf = parseFloat(pfEl.value);
     const A = parseFloat(csaEl.value);
     const phase = sysEl.value;
     const rho = _VD_RHO[condEl.value];
     const limit = parseFloat(limEl.value);
     const k = phase === '3' ? Math.sqrt(3) : 2;
+    const n = phase === '3' ? 3 : 2;
     const Vsys = phase === '3' ? 400 : 230;
-
-    const Vd = k * rho * L * I / A;
+    const sinp = Math.sqrt(Math.max(0, 1 - pf * pf));
+    const Rpl = rho / A;            // Ω/m per konduktor
+    const Vd = k * I * L * (Rpl * pf + _VD_X * sinp);
     const pct = Vd / Vsys * 100;
+    const Vload = Vsys - Vd;
+    const loss = n * I * I * (Rpl * L); // W
     const ok = pct <= limit;
     const color = ok ? '#15803d' : '#c0392b';
 
     document.getElementById('vd-I-val').textContent = I.toFixed(0) + ' A';
     document.getElementById('vd-len-val').textContent = L.toFixed(0) + ' m';
+    document.getElementById('vd-pf-val').textContent = pf.toFixed(2);
     document.getElementById('vd-lim-val').textContent = limit.toFixed(1) + ' %';
 
     document.getElementById('vd-volt').textContent = Vd.toFixed(2);
     document.getElementById('vd-percent').textContent = pct.toFixed(2);
+    document.getElementById('vd-vl').textContent = Vload.toFixed(0);
+    document.getElementById('vd-loss').textContent = loss.toFixed(0);
 
+    document.getElementById('vd-vsrc').textContent = Vsys + ' V';
     document.getElementById('vd-len-label').textContent = L.toFixed(0) + ' m';
-    document.getElementById('vd-vload').textContent = (Vsys - Vd).toFixed(0) + ' V';
+    document.getElementById('vd-vload').textContent = Vload.toFixed(0) + ' V';
     document.getElementById('vd-pct').textContent = pct.toFixed(2) + ' %';
     document.getElementById('vd-pct').setAttribute('fill', color);
     document.getElementById('vd-verdict').textContent = ok ? '✓ LULUS (≤ ' + limit.toFixed(1) + '%)' : '✗ GAGAL — perbesar kabel';
     document.getElementById('vd-verdict').setAttribute('fill', color);
     document.getElementById('vd-cable').setAttribute('stroke', ok ? '#9a7f4f' : '#c0392b');
 
-    // bar: skala 0..10%; marker batas
     const scaleMax = 10;
     document.getElementById('vd-bar').setAttribute('width', Math.min(pct / scaleMax, 1) * 320);
     document.getElementById('vd-bar').setAttribute('fill', color);
@@ -16427,16 +16464,13 @@ function initVoltageDrop() {
     document.getElementById('vd-limit-label').textContent = 'batas ' + limit.toFixed(1) + '%';
 
     document.getElementById('vf-k').textContent = phase === '3' ? '1.73' : '2';
-    document.getElementById('vf-rho').textContent = rho.toFixed(4);
-    document.getElementById('vf-l').textContent = L.toFixed(0);
-    document.getElementById('vf-i').textContent = I.toFixed(0);
-    document.getElementById('vf-a').textContent = A;
     document.getElementById('vf-vd').textContent = Vd.toFixed(2);
     document.getElementById('vf-pct').textContent = pct.toFixed(2);
     document.getElementById('vf-vsys').textContent = Vsys;
+    document.getElementById('vf-loss').textContent = loss.toFixed(0);
   };
 
-  [Iel, Lel, csaEl, sysEl, condEl, limEl].forEach(e => e.addEventListener('input', update));
+  [Iel, Lel, pfEl, csaEl, sysEl, condEl, limEl].forEach(e => { e.addEventListener('input', update); e.addEventListener('change', update); });
   update();
 }
 
