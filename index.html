@@ -15205,7 +15205,14 @@ const SIMULATORS = [
   { id: 'tender-margin', jalur: 'S9', category: 'Sales · Tender', name: 'Tender Margin & Win Price', desc: 'Susun harga penawaran (pokok+overhead+margin+PPN), bandingkan vs HPS untuk peluang menang sambil jaga laba.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pf, working: true },
   { id: 'roi-pitch', jalur: 'S9', category: 'Sales · Business Case', name: 'Customer ROI & Payback Pitch', desc: 'Bangun business case pelanggan: payback, ROI, NPV dengan grafik arus kas kumulatif untuk closing.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.data, working: true },
   { id: 'discount-volume', jalur: 'S9', category: 'Sales · Pricing', name: 'Discount vs Volume Guard', desc: 'Hitung kenaikan volume minimum agar diskon tidak menggerus laba total; jaga margin saat negosiasi harga.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.audit, working: true },
-  { id: 'sales-funnel', jalur: 'S9', category: 'Sales · Pipeline', name: 'Sales Funnel & Target', desc: 'Konversi lead → qualified → proposal → menang menentukan deal & revenue; cek pipeline vs target bulanan.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.data, working: true }
+  { id: 'sales-funnel', jalur: 'S9', category: 'Sales · Pipeline', name: 'Sales Funnel & Target', desc: 'Konversi lead → qualified → proposal → menang menentukan deal & revenue; cek pipeline vs target bulanan.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.data, working: true },
+
+  // ===== S10 · PV & Solar Engineer =====
+  { id: 'pv-string', jalur: 'S10', category: 'Solar · Desain Array', name: 'PV String Sizing (MPPT)', desc: 'Jumlah modul per string: Voc dingin ≤ Vmax inverter & Vmpp panas dalam rentang MPPT. Cek batas tegangan string.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.pv, working: true },
+  { id: 'pv-dcac', jalur: 'S10', category: 'Solar · Inverter', name: 'DC/AC Ratio & Clipping', desc: 'Oversizing array vs inverter: cari rasio optimal & lihat rugi clipping puncak pada profil produksi harian.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
+  { id: 'pv-yield', jalur: 'S10', category: 'Solar · Energi', name: 'Solar Yield & Performance Ratio', desc: 'Energi tahunan E=kWp×PSH×365×PR; dampak rugi suhu/soiling/kabel pada PR & yield spesifik (waterfall).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
+  { id: 'pv-tilt', jalur: 'S10', category: 'Solar · Tata Letak', name: 'Tilt & Inter-row Shading', desc: 'Sudut tilt optimal & jarak antar-baris agar tak saling membayangi saat matahari rendah; GCR & visual baris.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
+  { id: 'pv-lcoe', jalur: 'S10', category: 'Solar · Ekonomi', name: 'LCOE Solar', desc: 'Levelized Cost of Energy PLTS vs tarif listrik (grid parity) dari CAPEX, OPEX, yield, umur & degradasi.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true }
 ];
 
 // ================================================
@@ -18491,6 +18498,204 @@ const SIM_BUILDERS = {
         o+='<text x="'+cx+'" y="'+(y+(h-8)/2+4)+'" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#fff">'+st[0]+': '+st[1].toFixed(0)+'</text>';
       });
       g.innerHTML=o;
+    })
+  },
+
+  // ============ S10: PV String Sizing (Voc/Vmpp vs MPPT) ============
+  'pv-string': {
+    html: () => _labShell({
+      eyebrow: 'Solar · Desain Array', title: 'PV String', italic: 'Sizing (MPPT)',
+      desc: 'Tentukan jumlah modul per string. Voc dingin (Tmin) tidak boleh melebihi Vmax inverter; Vmpp panas (Tmax) harus dalam rentang MPPT. Cek batas string.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Jendela tegangan inverter (V)</text>
+        <rect x="120" y="50" width="160" height="170" rx="4" fill="rgba(58,95,176,0.08)" stroke="#3a5fb0" stroke-width="1.5"/>
+        <text x="200" y="44" text-anchor="middle" font-family="Georgia" font-size="9" fill="#3a5fb0" id="ps-vmax-lbl">Vmax</text>
+        <rect x="140" y="0" width="50" height="0" id="ps-bar-voc" fill="#c0392b"/>
+        <rect x="210" y="0" width="50" height="0" id="ps-bar-vmpp" fill="#15803d"/>
+        <text x="165" y="234" text-anchor="middle" font-family="Georgia" font-size="9" fill="#c0392b">Voc (dingin)</text>
+        <text x="235" y="234" text-anchor="middle" font-family="Georgia" font-size="9" fill="#15803d">Vmpp (panas)</text>
+        <text x="200" y="258" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="ps-verdict">—</text>`,
+      controls: _labSld('ps-n','Modul per string',4,30,18,1)
+        + _labSld('ps-voc','Voc modul STC (V)',30,55,41,0.5)
+        + _labSld('ps-vmpp','Vmpp modul STC (V)',25,46,34,0.5)
+        + _labSel('ps-inv','Inverter (Vmax / MPPT)','<option value="1000|200|800" selected>1000V / MPPT 200–800</option><option value="1100|250|900">1100V / MPPT 250–900</option><option value="600|125|500">600V / MPPT 125–500</option>'),
+      outputs: _labOut('ps-vocc','Voc @ Tmin','V') + _labOut('ps-vmppc','Vmpp @ Tmax','V') + _labOut('ps-stat','Status',''),
+      formula: `Voc(Tmin) = Voc·(1+βΔT⁻) · Vmpp(Tmax) = Vmpp·(1+βΔT⁺) · β≈−0.3%/°C<br>Syarat: Voc dingin ≤ Vmax inverter & Vmpp panas dalam rentang MPPT.`
+    }),
+    init: () => _labBind(['ps-n','ps-voc','ps-vmpp','ps-inv'], () => {
+      const n=_labV('ps-n'), voc=_labV('ps-voc'), vmpp=_labV('ps-vmpp');
+      const inv=_labRaw('ps-inv').split('|').map(parseFloat), Vmax=inv[0], mpptLo=inv[1], mpptHi=inv[2];
+      _labSetv('ps-n',n.toFixed(0)); _labSetv('ps-voc',voc.toFixed(1)+' V'); _labSetv('ps-vmpp',vmpp.toFixed(1)+' V');
+      const beta=-0.003, Tmin=-5, Tmax=70, STC=25;
+      const vocCold=n*voc*(1+beta*(Tmin-STC)), vmppHot=n*vmpp*(1+beta*(Tmax-STC));
+      _labSet('ps-vocc',vocCold.toFixed(0)); _labSet('ps-vmppc',vmppHot.toFixed(0));
+      const overV=vocCold>Vmax, underMppt=vmppHot<mpptLo, overMppt=vmppHot>mpptHi;
+      const ok=!overV&&!underMppt&&!overMppt, col=overV?_RED:(ok?_GREEN:_GOLD);
+      _labSet('ps-stat', overV?'OVERVOLT':(ok?'OK':'MPPT?'));
+      _labSet('ps-verdict', overV?('✗ Voc dingin '+vocCold.toFixed(0)+'V > Vmax '+Vmax+'V — kurangi modul'):(underMppt?'⚠ Vmpp panas di bawah MPPT — tambah modul':(overMppt?'⚠ Vmpp di atas MPPT':'✓ String valid — dalam jendela inverter')));
+      _labAttr('ps-verdict','fill',col);
+      _labSet('ps-vmax-lbl','Vmax '+Vmax+'V · MPPT '+mpptLo+'–'+mpptHi);
+      const scaleMax=Vmax*1.15, H=170, base=220, sc=H/scaleMax;
+      _labAttr('ps-bar-voc','height',vocCold*sc); _labAttr('ps-bar-voc','y',base-vocCold*sc); _labAttr('ps-bar-voc','fill',overV?_RED:'#c0392b');
+      _labAttr('ps-bar-vmpp','height',vmppHot*sc); _labAttr('ps-bar-vmpp','y',base-vmppHot*sc);
+    })
+  },
+
+  // ============ S10: DC/AC Ratio & Clipping ============
+  'pv-dcac': {
+    html: () => _labShell({
+      eyebrow: 'Solar · Inverter', title: 'DC/AC Ratio', italic: '& Clipping',
+      desc: 'Oversizing array terhadap inverter (DC/AC > 1) menaikkan produksi pagi/sore tapi memotong (clipping) puncak. Cari rasio optimal vs rugi clipping.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Daya AC (kW)</text>
+        <line x1="52" y1="44" x2="52" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="210" x2="372" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <path id="pd2-area" fill="rgba(201,169,110,0.18)" d=""/>
+        <polyline id="pd2-dc" fill="none" stroke="#e0863a" stroke-width="2" stroke-dasharray="4 3" points=""/>
+        <line id="pd2-cap" x1="52" y1="0" x2="372" y2="0" stroke="#c0392b" stroke-width="2"/>
+        <g id="pd2-clip"></g>
+        <text x="300" y="58" font-family="Georgia" font-size="9.5" fill="#c0392b">— kapasitas AC</text>
+        <text x="216" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="pd2-info">—</text>`,
+      controls: _labSld('pd2-dc','Kapasitas DC array (kWp)',5,1000,120,5)
+        + _labSld('pd2-ac','Kapasitas AC inverter (kW)',5,1000,100,5),
+      outputs: _labOut('pd2-ratio','DC/AC Ratio','') + _labOut('pd2-clip-o','Rugi Clipping','%') + _labOut('pd2-yield','Indeks Yield','') ,
+      formula: `Profil harian ≈ kurva sin · clipping = energi DC di atas kapasitas AC<br>Rasio optimal umumnya 1.1–1.3 (sedikit clipping ditukar produksi pagi/sore lebih tinggi).`
+    }),
+    init: () => _labBind(['pd2-dc','pd2-ac'], () => {
+      const dc=_labV('pd2-dc'), ac=_labV('pd2-ac');
+      _labSetv('pd2-dc',dc.toFixed(0)+' kWp'); _labSetv('pd2-ac',ac.toFixed(0)+' kW');
+      const ratio=dc/ac;
+      // simulate day: DC power = dc*sin profile (peak=dc*0.85)
+      const N=48; let edc=0,eac=0,clipMax=0;
+      const prof=[];
+      for(let i=0;i<=N;i++){ const t=i/N; const s=Math.max(0,Math.sin(Math.PI*t)); const p=dc*0.92*s; prof.push(p); const pac=Math.min(p,ac); edc+=p; eac+=pac; if(p>ac)clipMax=Math.max(clipMax,p); }
+      const clip=edc>0?(edc-eac)/edc*100:0, yieldIdx=eac/ac; // jam ekuivalen
+      _labSet('pd2-ratio',ratio.toFixed(2)); _labSet('pd2-clip-o',clip.toFixed(1)); _labSet('pd2-yield',yieldIdx.toFixed(1));
+      const col=ratio<=1.35?(clip<=5?_GREEN:_GOLD):(_RED);
+      _labSet('pd2-info', ratio<1.05?'Inverter under-utilized — boleh tambah panel':(ratio<=1.3?('✓ Rasio '+ratio.toFixed(2)+' baik · clipping '+clip.toFixed(1)+'%'):('⚠ Over-sized '+ratio.toFixed(2)+' · clipping '+clip.toFixed(1)+'%')));
+      _labAttr('pd2-info','fill',col);
+      const peak=dc*0.92, scaleMax=Math.max(peak,ac)*1.1, X=i=>52+i/N*320, Y=p=>210-p/scaleMax*166;
+      let dcp='', area='M '+X(0)+' '+Y(0)+' '; const clipBoxes=[];
+      prof.forEach((p,i)=>{ dcp+=X(i).toFixed(1)+','+Y(p).toFixed(1)+' '; const pac=Math.min(p,ac); area+='L '+X(i).toFixed(1)+' '+Y(pac).toFixed(1)+' '; });
+      area+='L '+X(N)+' '+Y(0)+' Z';
+      _labAttr('pd2-dc','points',dcp.trim()); _labAttr('pd2-area','d',area);
+      const cy=Y(ac); _labAttr('pd2-cap','y1',cy); _labAttr('pd2-cap','y2',cy);
+      // clip region shading (above cap)
+      let cl=''; prof.forEach((p,i)=>{ if(p>ac){ cl+='<line x1="'+X(i).toFixed(1)+'" y1="'+Y(ac).toFixed(1)+'" x2="'+X(i).toFixed(1)+'" y2="'+Y(p).toFixed(1)+'" stroke="#c0392b" stroke-width="1.5" opacity="0.4"/>'; } });
+      document.getElementById('pd2-clip').innerHTML=cl;
+    })
+  },
+
+  // ============ S10: Solar Yield & Performance Ratio ============
+  'pv-yield': {
+    html: () => _labShell({
+      eyebrow: 'Solar · Energi', title: 'Solar Yield', italic: '& Performance Ratio',
+      desc: 'Estimasi energi tahunan PLTS: E = kWp × PSH × 365 × PR. Lihat dampak rugi (suhu, kotor, kabel, inverter) pada Performance Ratio & yield spesifik.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Rugi sistem → Performance Ratio</text>
+        <g id="py-waterfall"></g>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#e0863a" id="py-info">—</text>`,
+      controls: _labSld('py-kwp','Kapasitas (kWp)',1,5000,500,5)
+        + _labSld('py-psh','Peak Sun Hours (kWh/m²/hari)',3,6,4.8,0.1)
+        + _labSld('py-temp','Rugi suhu (%)',2,15,8,1)
+        + _labSld('py-soil','Rugi kotor/soiling (%)',0,10,3,1)
+        + _labSld('py-other','Rugi kabel+inverter (%)',2,12,6,1),
+      outputs: _labOut('py-pr','Performance Ratio','%') + _labOut('py-energy','Energi Tahunan','MWh') + _labOut('py-spec','Yield Spesifik','kWh/kWp'),
+      formula: `PR = (1−rugi_suhu)(1−soiling)(1−lain) · E = kWp × PSH × 365 × PR<br>Yield spesifik = E/kWp (kWh/kWp/th); PR baik ≈ 75–85%.`
+    }),
+    init: () => _labBind(['py-kwp','py-psh','py-temp','py-soil','py-other'], () => {
+      const kwp=_labV('py-kwp'), psh=_labV('py-psh'), lt=_labV('py-temp')/100, ls=_labV('py-soil')/100, lo=_labV('py-other')/100;
+      _labSetv('py-kwp',kwp.toFixed(0)+' kWp'); _labSetv('py-psh',psh.toFixed(1)); _labSetv('py-temp',(lt*100).toFixed(0)+' %'); _labSetv('py-soil',(ls*100).toFixed(0)+' %'); _labSetv('py-other',(lo*100).toFixed(0)+' %');
+      const PR=(1-lt)*(1-ls)*(1-lo), E=kwp*psh*365*PR/1000, spec=E*1000/kwp;
+      _labSet('py-pr',(PR*100).toFixed(0)); _labSet('py-energy',E.toFixed(0)); _labSet('py-spec',spec.toFixed(0));
+      const col=PR>=0.8?_GREEN:(PR>=0.72?_GOLD:_RED);
+      _labSet('py-info','PR '+(PR*100).toFixed(0)+'% · '+E.toFixed(0)+' MWh/th · yield '+spec.toFixed(0)+' kWh/kWp'); _labAttr('py-info','fill',col);
+      // waterfall: 100% -> after temp -> after soil -> after other
+      const g=document.getElementById('py-waterfall'); const steps=[['Ideal',1,'#9a7f4f'],['−suhu',(1-lt),'#e0863a'],['−soiling',(1-lt)*(1-ls),'#d99a2b'],['PR final',PR,col]];
+      const base=230, H=150, x0=70, bw=60, gap=18; let o='';
+      steps.forEach((st,i)=>{ const h=st[1]*H, x=x0+i*(bw+gap);
+        o+='<rect x="'+x+'" y="'+(base-h).toFixed(1)+'" width="'+bw+'" height="'+h.toFixed(1)+'" rx="2" fill="'+st[2]+'"/>';
+        o+='<text x="'+(x+bw/2)+'" y="'+(base-h-6).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="10" font-weight="700" fill="#1a1d2e">'+(st[1]*100).toFixed(0)+'%</text>';
+        o+='<text x="'+(x+bw/2)+'" y="246" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#1a1d2e">'+st[0]+'</text>';
+      });
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S10: Tilt & Inter-row Shading ============
+  'pv-tilt': {
+    html: () => _labShell({
+      eyebrow: 'Solar · Tata Letak', title: 'Tilt & Inter-row', italic: 'Shading',
+      desc: 'Sudut kemiringan optimal ≈ lintang lokasi. Jarak antar-baris (pitch) harus cukup agar baris depan tak membayangi baris belakang saat matahari rendah (jam 9 / 15).',
+      svg: `<line x1="40" y1="220" x2="380" y2="220" stroke="#1a1d2e" stroke-width="1.5"/>
+        <g id="pt-rows"></g>
+        <line id="pt-sun" x1="0" y1="0" x2="0" y2="0" stroke="#e0863a" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="210" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="pt-info">—</text>`,
+      controls: _labSld('pt-lat','Lintang lokasi (°)',-11,11,-6,1)
+        + _labSld('pt-tilt','Sudut tilt panel (°)',0,40,15,1)
+        + _labSld('pt-h','Tinggi modul miring (m)',1,3,2,0.1)
+        + _labSld('pt-pitch','Jarak antar-baris / pitch (m)',2,10,4.5,0.1),
+      outputs: _labOut('pt-opt','Tilt Optimal','°') + _labOut('pt-gcr','Ground Cover Ratio','') + _labOut('pt-shade','Status Bayangan',''),
+      formula: `Tilt optimal ≈ |lintang| + 5° · panjang bayangan = h·cos(tilt)/tan(α_matahari)<br>Cek jam 09:00 (α≈25°): bayangan tak boleh kena baris belakang.`
+    }),
+    init: () => _labBind(['pt-lat','pt-tilt','pt-h','pt-pitch'], () => {
+      const lat=_labV('pt-lat'), tilt=_labV('pt-tilt'), h=_labV('pt-h'), pitch=_labV('pt-pitch');
+      _labSetv('pt-lat',lat.toFixed(0)+'°'); _labSetv('pt-tilt',tilt.toFixed(0)+'°'); _labSetv('pt-h',h.toFixed(1)+' m'); _labSetv('pt-pitch',pitch.toFixed(1)+' m');
+      const optTilt=Math.abs(lat)+5;
+      const tiltRad=tilt*Math.PI/180, modProj=h*Math.cos(tiltRad), modVert=h*Math.sin(tiltRad);
+      const sunAlt=25*Math.PI/180; // jam 9
+      const shadow=modVert/Math.tan(sunAlt); // panjang bayangan horizontal dari puncak modul
+      const baseToNext=pitch-modProj; // ruang bersih ke baris berikut
+      const gcr=modProj/pitch;
+      const ok=shadow<=baseToNext, col=ok?_GREEN:_RED;
+      _labSet('pt-opt',optTilt.toFixed(0)); _labSet('pt-gcr',gcr.toFixed(2)); _labSet('pt-shade', ok?'Bebas':'Terbayang');
+      _labSet('pt-info', ok?('✓ Tidak saling membayangi (GCR '+gcr.toFixed(2)+')'):('✗ Baris belakang terbayang jam 9 — perlebar pitch')); _labAttr('pt-info','fill',col);
+      // draw 3 rows
+      const g=document.getElementById('pt-rows'); const scale=28, x0=60, baseY=220; let o='';
+      for(let i=0;i<3;i++){ const x=x0+i*pitch*scale; const topx=x+modProj*scale, topy=baseY-modVert*scale;
+        o+='<line x1="'+x.toFixed(1)+'" y1="'+baseY+'" x2="'+topx.toFixed(1)+'" y2="'+topy.toFixed(1)+'" stroke="#3a5fb0" stroke-width="4"/>';
+      }
+      // shadow ray from first row top
+      const sx=x0+modProj*scale, sy=baseY-modVert*scale, ex=sx+shadow*scale;
+      _labAttr('pt-sun','x1',sx.toFixed(1)); _labAttr('pt-sun','y1',sy.toFixed(1)); _labAttr('pt-sun','x2',ex.toFixed(1)); _labAttr('pt-sun','y2',baseY);
+      _labAttr('pt-sun','stroke',col);
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S10: LCOE Solar ============
+  'pv-lcoe': {
+    html: () => _labShell({
+      eyebrow: 'Solar · Ekonomi', title: 'LCOE', italic: 'Solar',
+      desc: 'Levelized Cost of Energy: biaya rata-rata listrik PLTS sepanjang umur proyek. Bandingkan dengan tarif PLN untuk menilai kelayakan (grid parity).',
+      svg: `<text x="200" y="26" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">LCOE PLTS vs tarif listrik</text>
+        <line x1="60" y1="220" x2="360" y2="220" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="110" y="220" width="70" height="0" rx="3" fill="#e0863a" id="pl-bar-lcoe"/>
+        <rect x="240" y="220" width="70" height="0" rx="3" fill="#3a5fb0" id="pl-bar-grid"/>
+        <text x="145" y="236" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">LCOE PLTS</text>
+        <text x="275" y="236" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Tarif PLN</text>
+        <text x="145" y="212" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#e0863a" id="pl-lcoe-top">—</text>
+        <text x="275" y="212" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#3a5fb0" id="pl-grid-top">—</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="pl-verdict">—</text>`,
+      controls: _labSld('pl-capex','CAPEX (juta Rp/kWp)',7,20,11,0.5)
+        + _labSld('pl-opex','OPEX (% capex/th)',0.5,3,1.5,0.1)
+        + _labSld('pl-yield','Yield (kWh/kWp/th)',1000,1800,1450,10)
+        + _labSld('pl-life','Umur proyek (th)',15,30,25,1)
+        + _labSld('pl-tar','Tarif listrik (Rp/kWh)',900,2500,1450,50),
+      outputs: _labOut('pl-lcoe','LCOE','Rp/kWh') + _labOut('pl-vs','vs Tarif','%') + _labOut('pl-status','Grid Parity',''),
+      formula: `LCOE = (CAPEX + Σ OPEX) / (Σ energi) selama umur (degradasi 0.7%/th)<br>Layak / grid parity bila LCOE ≤ tarif listrik.`
+    }),
+    init: () => _labBind(['pl-capex','pl-opex','pl-yield','pl-life','pl-tar'], () => {
+      const capex=_labV('pl-capex')*1e6, opexPct=_labV('pl-opex')/100, yld=_labV('pl-yield'), life=_labV('pl-life'), tar=_labV('pl-tar');
+      _labSetv('pl-capex',_labV('pl-capex').toFixed(1)+' jt'); _labSetv('pl-opex',(opexPct*100).toFixed(1)+' %'); _labSetv('pl-yield',yld.toFixed(0)); _labSetv('pl-life',life.toFixed(0)+' th'); _labSetv('pl-tar','Rp '+tar.toFixed(0));
+      // per kWp basis
+      let totCost=capex, totE=0;
+      for(let t=1;t<=life;t++){ totCost+=capex*opexPct; totE+=yld*Math.pow(0.993,t-1); }
+      const lcoe=totCost/totE;
+      _labSet('pl-lcoe',lcoe.toFixed(0)); _labSet('pl-vs',(lcoe/tar*100).toFixed(0)); _labSet('pl-status', lcoe<=tar?'TERCAPAI':'Belum');
+      const col=lcoe<=tar?_GREEN:_RED;
+      _labSet('pl-verdict', lcoe<=tar?('✓ Grid parity — LCOE Rp'+lcoe.toFixed(0)+' ≤ tarif Rp'+tar.toFixed(0)):('✗ LCOE Rp'+lcoe.toFixed(0)+' > tarif — belum ekonomis')); _labAttr('pl-verdict','fill',col);
+      const maxv=Math.max(lcoe,tar,1)*1.15, H=160, base=220, sc=H/maxv;
+      _labAttr('pl-bar-lcoe','height',lcoe*sc); _labAttr('pl-bar-lcoe','y',base-lcoe*sc); _labAttr('pl-bar-lcoe','fill',col===_RED?_RED:'#e0863a');
+      _labAttr('pl-bar-grid','height',tar*sc); _labAttr('pl-bar-grid','y',base-tar*sc);
+      _labSet('pl-lcoe-top','Rp'+lcoe.toFixed(0)); _labSet('pl-grid-top','Rp'+tar.toFixed(0));
     })
   }
 };
