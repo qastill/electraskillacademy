@@ -15118,7 +15118,7 @@ const SIM_GROUPS = [
   { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan, drop tegangan, konduit, panel 3φ & pembumian.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)', photo: _U('1621905251918-48416bd8575a') },
   { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor, VFD, KHA kabel, harmonik & pompa.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
   { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo, feeder 20kV, proteksi, kapasitor & restorasi SCADA.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
-  { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag-tension & koordinasi isolasi SUTET.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
+  { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag, isolasi, arester petir, korona EHV & aliran daya.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
   { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Audit, payback & koreksi faktor daya.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
   { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS rooftop & sizing baterai (BESS).', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
@@ -15156,6 +15156,9 @@ const SIMULATORS = [
   // ===== S4 · Transmisi =====
   { id: 'line-sag', jalur: 'S4', category: 'Transmisi · Mekanik', name: 'Transmission Line Sag & Tension', desc: 'Hitung andongan (sag) & tegangan tarik konduktor SUTT/SUTET terhadap span, suhu, dan beban.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: true },
   { id: 'insulation-coord', jalur: 'S4', category: 'Transmisi · Isolasi', name: 'Insulation Coordination (BIL)', desc: 'Pilih BIL & jumlah isolator string untuk tegangan sistem tertentu, plus jarak rambat (creepage).', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
+  { id: 'surge-arrester', jalur: 'S4', category: 'Transmisi · Proteksi Petir', name: 'Surge Arrester & Protective Margin', desc: 'Cek margin proteksi arester terhadap BIL peralatan & kesesuaian MCOV; visual perbandingan surja-Vpr-BIL.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
+  { id: 'corona-loss', jalur: 'S4', category: 'Transmisi · EHV', name: 'Corona Loss & Bundle Conductor', desc: 'Hitung gradien permukaan konduktor vs gradien kritis Peek; lihat efek bundling 1–4 sub-konduktor pada korona.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: true },
+  { id: 'line-power-flow', jalur: 'S4', category: 'Transmisi · Aliran Daya', name: 'Line Power Transfer & SIL', desc: 'Kurva daya-sudut P=Pmax·sinδ, batas stabilitas, SIL, dan margin terhadap beban transfer saluran.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: true },
 
   // ===== S5 · Energy Analyst & Data Science =====
   { id: 'load-forecast', jalur: 'S5', category: 'Data · Forecasting', name: 'Load Forecasting (Moving Average)', desc: 'Prediksi beban harian dengan moving average & lihat error (MAPE) terhadap data aktual.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
@@ -17390,6 +17393,132 @@ const SIM_BUILDERS = {
       for(let i=0;i<shown;i++){ const y=y0+i*step; g+=`<ellipse class="lab-glow" style="animation-delay:${(i*0.1).toFixed(2)}s" cx="200" cy="${(y+step/2).toFixed(0)}" rx="16" ry="${(step*0.32).toFixed(1)}" fill="#cdd3dc" stroke="#1a1d2e" stroke-width="1"/>`; }
       if(discs>12) g+=`<text x="200" y="${(y0+shown*step+12).toFixed(0)}" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">+${discs-12} lagi</text>`;
       document.getElementById('ic-discs').innerHTML=g;
+    })
+  },
+
+  // ============ S4: Surge Arrester & Protective Margin ============
+  'surge-arrester': {
+    html: () => _labShell({
+      eyebrow: 'Transmisi · Proteksi Petir', title: 'Surge Arrester', italic: '& Protective Margin',
+      desc: 'Arester membatasi tegangan surja agar di bawah BIL peralatan. Margin proteksi = (BIL/Vpr − 1)×100%, harus ≥ 20%. Geser MCOV, surja, & BIL.',
+      svg: `<line x1="60" y1="235" x2="360" y2="235" stroke="#1a1d2e" stroke-width="1.5"/>
+        <line x1="90" y1="235" x2="90" y2="55" stroke="#9aa0ad" stroke-width="1" stroke-dasharray="3 3"/>
+        <rect x="70" y="55" width="40" height="180" fill="none"/>
+        <rect x="78" y="0" width="24" height="0" id="sa-bar-bil" fill="#15803d"/>
+        <rect x="158" y="0" width="24" height="0" id="sa-bar-vpr" fill="#9a7f4f"/>
+        <rect x="238" y="0" width="24" height="0" id="sa-bar-surge" fill="#c0392b" class="lab-glow"/>
+        <text x="90" y="250" text-anchor="middle" font-family="Georgia" font-size="10" fill="#15803d" font-weight="700">BIL</text>
+        <text x="170" y="250" text-anchor="middle" font-family="Georgia" font-size="10" fill="#9a7f4f" font-weight="700">Vpr arester</text>
+        <text x="250" y="250" text-anchor="middle" font-family="Georgia" font-size="10" fill="#c0392b" font-weight="700">Surja datang</text>
+        <text x="200" y="276" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="sa-verdict">—</text>`,
+      controls: _labSel('sa-v','Tegangan sistem','<option value="24">24 kV</option><option value="72">72.5 kV</option><option value="145" selected>145 kV</option><option value="245">245 kV</option><option value="420">420 kV</option>')
+        + _labSld('sa-mcov','MCOV arester (kV)',10,400,88,1)
+        + _labSld('sa-vpr','Tegangan lindung Vpr (kV)',50,1200,380,5)
+        + _labSld('sa-bil','BIL peralatan (kV)',95,1800,650,5)
+        + _labSld('sa-surge','Surja datang (kV)',100,2500,900,10),
+      outputs: _labOut('sa-margin','Margin Proteksi','%') + _labOut('sa-clamp','Tegangan ke Trafo','kV') + _labOut('sa-mcovchk','MCOV vs Vsys',''),
+      formula: `Margin = (BIL/Vpr − 1)×100% (syarat ≥ 20%) · arester clamp surja ke ≈ Vpr<br>MCOV ≥ V_fasa-tanah (= Vsys/√3) agar arester tak overheat.`
+    }),
+    init: () => _labBind(['sa-v','sa-mcov','sa-vpr','sa-bil','sa-surge'], () => {
+      const Vsys=_labV('sa-v'), mcov=_labV('sa-mcov'), vpr=_labV('sa-vpr'), bil=_labV('sa-bil'), surge=_labV('sa-surge');
+      _labSetv('sa-mcov',mcov.toFixed(0)+' kV'); _labSetv('sa-vpr',vpr.toFixed(0)+' kV'); _labSetv('sa-bil',bil.toFixed(0)+' kV'); _labSetv('sa-surge',surge.toFixed(0)+' kV');
+      const margin=(bil/vpr-1)*100, clamp=Math.min(surge,vpr), Vph=Vsys/Math.sqrt(3), mcovOk=mcov>=Vph;
+      const ok=margin>=20, col=ok?_GREEN:(margin>=0?_GOLD:_RED);
+      _labSet('sa-margin',margin.toFixed(0)); _labSet('sa-clamp',clamp.toFixed(0));
+      _labSet('sa-mcovchk', mcovOk?'✓ '+mcov+'≥'+Vph.toFixed(0):'✗ '+mcov+'<'+Vph.toFixed(0));
+      _labSet('sa-verdict', ok?('✓ Margin '+margin.toFixed(0)+'% — trafo terlindung'):(margin>=0?('⚠ Margin '+margin.toFixed(0)+'% < 20% — kurang aman'):'✗ Vpr > BIL — peralatan TIDAK terlindung'));
+      _labAttr('sa-verdict','fill',col);
+      const maxV=Math.max(bil,vpr,surge,1)*1.1, H=175, base=235, sc=H/maxV;
+      const set=(id,v,c)=>{ const h=v*sc; _labAttr(id,'height',h); _labAttr(id,'y',base-h); if(c)_labAttr(id,'fill',c); };
+      set('sa-bar-bil',bil); set('sa-bar-vpr',vpr); set('sa-bar-surge',surge, surge>bil?_RED:'#c0392b');
+    })
+  },
+
+  // ============ S4: Corona Loss & Bundle Conductor ============
+  'corona-loss': {
+    html: () => _labShell({
+      eyebrow: 'Transmisi · EHV', title: 'Corona Loss', italic: '& Bundle Conductor',
+      desc: 'Pada EHV, gradien permukaan konduktor yang tinggi memicu korona (rugi daya, derau, RI). Bundling (2–4 sub-konduktor) menurunkan gradien. Cek gradien vs kritis Peek.',
+      svg: `<text x="200" y="26" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Susunan bundle per fasa</text>
+        <g id="co-bundle"></g>
+        <line x1="60" y1="235" x2="360" y2="235" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="110" y="235" width="60" height="0" id="co-bar-g" fill="#c0392b"/>
+        <rect x="240" y="235" width="60" height="0" id="co-bar-c" fill="#15803d"/>
+        <text x="140" y="250" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">gradien</text>
+        <text x="270" y="250" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">kritis</text>
+        <text x="200" y="272" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="co-verdict">—</text>`,
+      controls: _labSel('co-v','Tegangan (L-L)','<option value="150">150 kV</option><option value="275">275 kV</option><option value="500" selected>500 kV</option><option value="765">765 kV</option>')
+        + _labSel('co-n','Sub-konduktor / bundle','<option value="1">1 (single)</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option>')
+        + _labSld('co-d','Diameter konduktor (mm)',15,45,30,1)
+        + _labSld('co-s','Jarak sub-konduktor (cm)',20,60,40,1)
+        + _labSld('co-m','Faktor permukaan m',0.7,1,0.85,0.01),
+      outputs: _labOut('co-grad','Gradien Permukaan','kV/cm') + _labOut('co-crit','Gradien Kritis','kV/cm') + _labOut('co-ratio','Rasio g/E₀',''),
+      formula: `E₀ = 21.1·m·δ·(1+0.301/√r) kV/cm (Peek) · gradien ≈ V_fasa/(n·r·ln(GMD/Req))<br>Korona mulai bila gradien ≥ E₀. Bundle besar ⇒ gradien turun.`
+    }),
+    init: () => _labBind(['co-v','co-n','co-d','co-s','co-m'], () => {
+      const Vll=_labV('co-v'), n=_labV('co-n'), dmm=_labV('co-d'), scm=_labV('co-s'), m=_labV('co-m');
+      const r=dmm/20; // jari-jari cm
+      const Vph=Vll/Math.sqrt(3);
+      const s=scm; const Req = n===1? r : r*Math.pow(n*Math.pow(s/ (2*Math.sin(Math.PI/n||1)) /r, n-1),1/n); // approx eq radius
+      const GMD=900; // cm antar fasa (asумsi)
+      const grad = Vph/(n*r*Math.log(GMD/Math.max(Req,r)));
+      const delta=1; const E0=21.1*m*delta*(1+0.301/Math.sqrt(r));
+      _labSetv('co-d',dmm.toFixed(0)+' mm'); _labSetv('co-s',scm.toFixed(0)+' cm'); _labSetv('co-m',m.toFixed(2));
+      const ratio=grad/E0, ok=ratio<1, col=ok?_GREEN:_RED;
+      _labSet('co-grad',grad.toFixed(1)); _labSet('co-crit',E0.toFixed(1)); _labSet('co-ratio',ratio.toFixed(2));
+      _labSet('co-verdict', ok?('✓ Aman korona (g < E₀, rasio '+ratio.toFixed(2)+')'):('✗ KORONA (g ≥ E₀) — tambah sub-konduktor / perbesar Ø'));
+      _labAttr('co-verdict','fill',col);
+      const maxv=Math.max(grad,E0,1)*1.15, H=160, base=235, sc=H/maxv;
+      _labAttr('co-bar-g','height',grad*sc); _labAttr('co-bar-g','y',base-grad*sc); _labAttr('co-bar-g','fill',col);
+      _labAttr('co-bar-c','height',E0*sc); _labAttr('co-bar-c','y',base-E0*sc);
+      // draw bundle
+      const g=document.getElementById('co-bundle'); const cx=200, cy=110, R=28;
+      let out='<circle cx="'+cx+'" cy="'+cy+'" r="'+(R+18)+'" fill="rgba(201,169,110,0.08)"/>';
+      for(let i=0;i<n;i++){ const a=-Math.PI/2 + i*2*Math.PI/n; const px=cx+(n>1?R:0)*Math.cos(a), py=cy+(n>1?R:0)*Math.sin(a);
+        out+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="9" fill="#9a7f4f" stroke="#1a1d2e" stroke-width="1.5"/>'; }
+      out+='<text x="'+cx+'" y="'+(cy+R+38)+'" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">'+n+'× Ø'+dmm+'mm</text>';
+      g.innerHTML=out;
+    })
+  },
+
+  // ============ S4: Power Transfer & SIL ============
+  'line-power-flow': {
+    html: () => _labShell({
+      eyebrow: 'Transmisi · Aliran Daya', title: 'Line Power', italic: 'Transfer & SIL',
+      desc: 'Daya yang dapat ditransfer saluran: P = (V_s·V_r/X)·sin δ. Lihat kurva daya-sudut, batas stabilitas, SIL, dan margin terhadap beban.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">P (MW)</text>
+        <text x="372" y="250" text-anchor="end" font-family="Georgia" font-size="10" fill="#6b6d7a">δ (derajat)</text>
+        <line x1="52" y1="42" x2="52" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="232" x2="372" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="lp-curve" fill="none" stroke="#c9a96e" stroke-width="2.5" points=""/>
+        <line id="lp-load" x1="52" y1="0" x2="372" y2="0" stroke="#3a5fb0" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <circle id="lp-op" r="6" fill="#15803d" class="lab-glow"/>
+        <text x="305" y="58" font-family="Georgia" font-size="10" fill="#c9a96e" font-weight="700">P(δ)=Pmax·sinδ</text>
+        <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="lp-verdict">—</text>`,
+      controls: _labSel('lp-v','Tegangan saluran','<option value="150">150 kV</option><option value="275">275 kV</option><option value="500" selected>500 kV</option>')
+        + _labSld('lp-len','Panjang saluran (km)',50,600,300,10)
+        + _labSld('lp-x','Reaktansi X (Ω/km)',0.25,0.45,0.32,0.01)
+        + _labSld('lp-load','Beban transfer (MW)',50,3000,1000,50),
+      outputs: _labOut('lp-pmax','Pmax (δ=90°)','MW') + _labOut('lp-sil','SIL','MW') + _labOut('lp-delta','Sudut Kerja δ','°'),
+      formula: `Pmax = V_s·V_r/X · P = Pmax·sinδ · SIL = V²/Zc (Zc≈400Ω)<br>Stabil bila δ < 90° dan beban < Pmax (margin aman δ ≤ ~30–45°).`
+    }),
+    init: () => _labBind(['lp-v','lp-len','lp-x','lp-load'], () => {
+      const V=_labV('lp-v'), L=_labV('lp-len'), x=_labV('lp-x'), load=_labV('lp-load');
+      _labSetv('lp-len',L.toFixed(0)+' km'); _labSetv('lp-x',x.toFixed(2)+' Ω/km'); _labSetv('lp-load',load.toFixed(0)+' MW');
+      const X=x*L, Pmax=V*V/X, Zc=400, SIL=V*V/Zc;
+      const ratio=Math.min(load/Pmax,1.2), delta=load<=Pmax?Math.asin(load/Pmax)*180/Math.PI:95;
+      _labSet('lp-pmax',Pmax.toFixed(0)); _labSet('lp-sil',SIL.toFixed(0)); _labSet('lp-delta',load<=Pmax?delta.toFixed(0):'>90');
+      const ok=load<=Pmax&&delta<=45, warn=load<=Pmax&&delta<=70, col=ok?_GREEN:(warn?_GOLD:_RED);
+      _labSet('lp-verdict', ok?('✓ Stabil — δ '+delta.toFixed(0)+'° (margin baik)'):(warn?('⚠ δ '+delta.toFixed(0)+'° tinggi — margin tipis'):'✗ Melebihi Pmax / δ>90° — tidak stabil'));
+      _labAttr('lp-verdict','fill',col);
+      // chart δ 0..180, P 0..Pmax*1.05
+      const Pscale=Pmax*1.1, X0=52,X1=372,Y0=42,Y1=232;
+      const PX=d=>X0+(d/180)*(X1-X0), PY=p=>Y1-(p/Pscale)*(Y1-Y0);
+      let pts=''; for(let d=0;d<=180;d+=5) pts+=PX(d).toFixed(1)+','+PY(Pmax*Math.sin(d*Math.PI/180)).toFixed(1)+' ';
+      _labAttr('lp-curve','points',pts.trim());
+      const ly=PY(Math.min(load,Pscale)); _labAttr('lp-load','y1',ly); _labAttr('lp-load','y2',ly);
+      if(load<=Pmax){ _labAttr('lp-op','cx',PX(delta)); _labAttr('lp-op','cy',PY(load)); }
+      else { _labAttr('lp-op','cx',PX(90)); _labAttr('lp-op','cy',PY(Pmax)); }
     })
   },
 
