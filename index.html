@@ -10600,7 +10600,7 @@ button:active:not(:disabled),
         <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
         <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
-        <a class="nav-right" onclick="showView('sertifikasi')" style="cursor:pointer;">Ambil Sertifikasi</a>
+      <a class="nav-forkids-btn" href="for-kids.html" title="Kelas listrik seru untuk anak SD" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#ff6b9d 0%,#ffa53e 50%,#5bc8ff 100%);color:#fff;text-decoration:none;border-radius:999px;padding:8px 18px;font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;box-shadow:0 4px 14px rgba(255,107,157,0.4);transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 22px rgba(255,107,157,0.55)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(255,107,157,0.4)'">🧒 For Kids</a>
       <button class="nav-daftar-btn" onclick="esaShowAuthModal()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:8px;padding:9px 22px;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Daftar</button>
       </div>
       <button class="nav-burger" id="navBurger" type="button" aria-label="Buka menu" aria-expanded="false" onclick="esaToggleNav()"><span></span><span></span><span></span></button>
@@ -10964,7 +10964,7 @@ button:active:not(:disabled),
           </summary>
           <div class="home-faq-answer">
             <p><strong>Sertifikat ESA</strong> adalah sertifikat penyelesaian (knowledge competency) — bukti Anda menguasai materi dengan minimum skor 70%. Bisa di-share ke LinkedIn, di-attach di CV, dan diverifikasi via QR code di <a href="/verify.html" target="_blank">/verify.html</a>.</p>
-            <p><strong>Sertifikat BNSP</strong> adalah sertifikat resmi pemerintah untuk profesi teknik. Materi belajar di ESA dirancang menyelaraskan dengan SKKNI sehingga Anda <strong>siap mengikuti uji kompetensi BNSP</strong>. Detail jalur sertifikasi BNSP ada di menu <em>Certification</em>.</p>
+            <p><strong>Sertifikat BNSP</strong> adalah sertifikat resmi pemerintah untuk profesi teknik. ESA <strong>bukan lembaga sertifikasi</strong> — materi belajar kami dirancang menyelaraskan dengan SKKNI sehingga Anda <strong>lebih siap mengikuti uji kompetensi BNSP</strong> di LSP resmi.</p>
           </div>
         </details>
 
@@ -27050,6 +27050,7 @@ else{setTimeout(init,200);}
     var talentPool=links.find(function(a){return a.textContent.trim()==='Talent Pool';});
     var sert=links.find(function(a){return a.textContent.trim()==='Ambil Sertifikasi';});
     var daftar=navGroup.querySelector('button.nav-daftar-btn');
+    var forKids=navGroup.querySelector('a.nav-forkids-btn');
     if(!talentPool)return;
     if(labs)labs.textContent='Labs';
     if(labs)labs.onclick=function(e){e.preventDefault();showView('labs');};
@@ -27115,6 +27116,7 @@ else{setTimeout(init,200);}
     navGroup.appendChild(libraryLink);
     navGroup.appendChild(galleryLink);
     navGroup.appendChild(workshopLink);
+    if(forKids)navGroup.appendChild(forKids);
     if(daftar)navGroup.appendChild(daftar);
   }
   
