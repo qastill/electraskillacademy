@@ -15116,7 +15116,7 @@ const SIM_ICONS = {
 const _U = (id) => 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=600&q=70';
 const SIM_GROUPS = [
   { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan, drop tegangan, konduit, panel 3φ & pembumian.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)', photo: _U('1621905251918-48416bd8575a') },
-  { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor starting & efisiensi VFD.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
+  { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor, VFD, KHA kabel, harmonik & pompa.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
   { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo distribusi & penyulang 20 kV.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
   { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag-tension & koordinasi isolasi SUTET.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
@@ -15142,6 +15142,9 @@ const SIMULATORS = [
   // ===== S2 · Industri & Manufaktur =====
   { id: 'motor-starting', jalur: 'S2', category: 'Industri · Motor', name: 'Motor Starting (DOL vs Star-Delta)', desc: 'Bandingkan arus & torsi start motor induksi 3 fasa: Direct-On-Line vs Star-Delta. Lihat penurunan inrush current.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.motor, working: true },
   { id: 'vfd-saving', jalur: 'S2', category: 'Industri · Efisiensi', name: 'VFD Energy Saving', desc: 'Estimasi penghematan energi pompa/fan saat dipasang VFD (affinity law: daya ∝ kecepatan³).', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.motor, working: true },
+  { id: 'cable-ampacity', jalur: 'S2', category: 'Industri · Kabel', name: 'Cable Ampacity & Derating', desc: 'Hitung kapasitas hantar arus (KHA) kabel setelah derating suhu & pengelompokan; cek Ib ≤ Iz dengan grafik perbandingan.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.cable, working: true },
+  { id: 'harmonics-thd', jalur: 'S2', category: 'Industri · Kualitas Daya', name: 'Harmonics & THD Analyzer', desc: 'Aktifkan harmonik orde-3/5/7/11 (klik), lihat gelombang terdistorsi, spektrum, THD & crest factor, status vs IEEE 519.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.pf, working: true },
+  { id: 'pump-duty', jalur: 'S2', category: 'Industri · Pompa & Fan', name: 'Pump Duty Point & Affinity', desc: 'Cari titik kerja pompa (perpotongan kurva pompa & sistem), geser kecepatan (affinity law), lihat debit-head-daya bergeser.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.motor, working: true },
 
   // ===== S3 · Distribusi =====
   { id: 'trafo-loading', jalur: 'S3', category: 'Distribusi · Trafo', name: 'Distribution Transformer Loading', desc: 'Hitung pembebanan trafo distribusi (kVA), %loading, dan rugi-rugi. Cek apakah trafo overload.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.trafo, working: true },
@@ -16727,6 +16730,39 @@ function _psRender(){
   g.innerHTML=s;
 }
 
+// --- Harmonics & THD (interaktif toggle orde) ---
+let _hmActive = {3:true,5:false,7:false,11:false};
+function _hmToggle(h){ _hmActive[h]=!_hmActive[h]; _hmSync(); _hmRender(); }
+function _hmSync(){ [3,5,7,11].forEach(h=>{ const b=document.getElementById('hm-btn-'+h); if(b){ const on=_hmActive[h]; b.style.background=on?'#c9a96e':'rgba(201,169,110,0.14)'; b.style.color=on?'#14162a':'#1a1d2e'; }}); }
+function _hmRender(){
+  if (!document.getElementById('hm-wave')) return;
+  const amp={3:_labV('hm-a3')/100,5:_labV('hm-a5')/100,7:_labV('hm-a7')/100,11:_labV('hm-a11')/100};
+  _labSetv('hm-a3',_labV('hm-a3').toFixed(0)+' %'); _labSetv('hm-a5',_labV('hm-a5').toFixed(0)+' %'); _labSetv('hm-a7',_labV('hm-a7').toFixed(0)+' %'); _labSetv('hm-a11',_labV('hm-a11').toFixed(0)+' %');
+  let sumSq=0; const used={};
+  [3,5,7,11].forEach(h=>{ const a=_hmActive[h]?amp[h]:0; used[h]=a; sumSq+=a*a; });
+  const thd=Math.sqrt(sumSq)*100;
+  // waveform
+  const X0=40,X1=380,Y0=120,A=58; let pts='', peak=0;
+  for(let i=0;i<=140;i++){ const t=i/140; const wt=t*2*Math.PI; let y=Math.sin(wt); [3,5,7,11].forEach(h=>{ y+=used[h]*Math.sin(h*wt); }); peak=Math.max(peak,Math.abs(y)); }
+  for(let i=0;i<=140;i++){ const t=i/140; const wt=t*2*Math.PI; let y=Math.sin(wt); [3,5,7,11].forEach(h=>{ y+=used[h]*Math.sin(h*wt); }); pts+=(X0+(X1-X0)*t).toFixed(1)+','+(Y0-A*y/Math.max(peak,1.2)).toFixed(1)+' '; }
+  _labAttr('hm-wave','points',pts.trim());
+  const rms=Math.sqrt(0.5*(1+sumSq)); const crest=peak/rms;
+  // spectrum bars
+  const g=document.getElementById('hm-spec'); let s='';
+  const orders=[1,3,5,7,11], vals={1:1,3:used[3],5:used[5],7:used[7],11:used[11]};
+  const base=232, maxH=70, xs=[80,140,200,260,320];
+  orders.forEach((h,i)=>{ const v=vals[h]; const ht=Math.min(v,1)*maxH; const on=h===1||_hmActive[h];
+    s+='<rect x="'+(xs[i]-16)+'" y="'+(base-ht).toFixed(1)+'" width="32" height="'+ht.toFixed(1)+'" rx="2" fill="'+(h===1?'#3a5fb0':(on?'#c9a96e':'#cfd3da'))+'"/>';
+    s+='<text x="'+xs[i]+'" y="246" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">h'+h+'</text>';
+    s+='<text x="'+xs[i]+'" y="'+(base-ht-4).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1a1d2e">'+(v*100).toFixed(0)+'</text>';
+  });
+  g.innerHTML=s;
+  const ok=thd<=5, col=ok?_GREEN:(thd<=8?_GOLD:_RED);
+  _labSet('hm-thd',thd.toFixed(1)); _labSet('hm-crest',crest.toFixed(2)); _labSet('hm-status', ok?'LULUS':(thd<=8?'BATAS':'GAGAL'));
+  _labSet('hm-verdict', ok?'✓ THD '+thd.toFixed(1)+'% — LULUS IEEE 519':(thd<=8?'⚠ THD '+thd.toFixed(1)+'% — perlu filter':'✗ THD '+thd.toFixed(1)+'% — pasang filter harmonik')); _labAttr('hm-verdict','fill',col);
+  _labAttr('hm-wave','stroke',col);
+}
+
 const SIM_BUILDERS = {
   // ============ S1: Conduit Fill (interaktif) ============
   'conduit-fill': {
@@ -16929,6 +16965,105 @@ const SIM_BUILDERS = {
       const mx=X(n); _labAttr('vf-vline','x1',mx); _labAttr('vf-vline','x2',mx);
       _labAttr('vf-mk-thr','cx',mx); _labAttr('vf-mk-thr','cy',Y(pt));
       _labAttr('vf-mk-vfd','cx',mx); _labAttr('vf-mk-vfd','cy',Y(pv));
+    })
+  },
+
+  // ============ S2: Cable Ampacity & Derating ============
+  'cable-ampacity': {
+    html: () => _labShell({
+      eyebrow: 'Industri · Kabel', title: 'Cable Ampacity', italic: '& Derating (IEC)',
+      desc: 'Ampacity efektif = ampacity dasar × faktor suhu × faktor pengelompokan. Cek apakah kabel mampu memikul arus beban setelah derating.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Arus (A): beban vs kapasitas kabel</text>
+        <line x1="60" y1="210" x2="360" y2="210" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="95" y="210" width="70" height="0" rx="3" fill="#2d7d46" id="ca-bar-iz"/>
+        <rect x="235" y="210" width="70" height="0" rx="3" fill="#c0392b" class="lab-glow" id="ca-bar-ib"/>
+        <text x="130" y="226" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="600" fill="#1a1d2e">Iz kabel</text>
+        <text x="270" y="226" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="600" fill="#1a1d2e">Ib beban</text>
+        <text x="130" y="202" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" fill="#2d7d46" id="ca-iz-top">—</text>
+        <text x="270" y="202" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" fill="#c0392b" id="ca-ib-top">—</text>
+        <text x="200" y="258" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="ca-verdict">—</text>
+        <text x="200" y="280" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="ca-detail">—</text>`,
+      controls: _labSld('ca-ib','Arus beban Ib (A)',5,250,80,1)
+        + _labSel('ca-csa','Penampang kabel','<option value="16">4 mm² (≈32A)</option><option value="32" selected>6 mm² (≈41A→pakai 10)</option><option value="57">16 mm² (≈76A)</option><option value="76">25 mm² (≈101A)</option><option value="101">35 mm² (≈125A)</option><option value="125">50 mm² (≈151A)</option>')
+        + _labSel('ca-temp','Suhu ambient','<option value="1.22">20°C (1.22)</option><option value="1.0" selected>30°C (1.00)</option><option value="0.87">40°C (0.87)</option><option value="0.71">50°C (0.71)</option>')
+        + _labSel('ca-group','Jumlah sirkit berdempet','<option value="1.0" selected>1 (1.00)</option><option value="0.8">2 (0.80)</option><option value="0.7">3 (0.70)</option><option value="0.54">6 (0.54)</option>'),
+      outputs: _labOut('ca-iz0','Ampacity Dasar','A') + _labOut('ca-iz','Ampacity Efektif','A') + _labOut('ca-margin','Margin','%'),
+      formula: `Iz = Iz₀ × k_suhu × k_grup · syarat Ib ≤ Iz<br>Iz = <span id="caf-iz0">—</span> × <span id="caf-kt">—</span> × <span id="caf-kg">—</span> = <span id="caf-iz">—</span> A`
+    }),
+    init: () => _labBind(['ca-ib','ca-csa','ca-temp','ca-group'], () => {
+      const Ib=_labV('ca-ib'), iz0=_labV('ca-csa'), kt=_labV('ca-temp'), kg=_labV('ca-group');
+      const iz=iz0*kt*kg, ok=Ib<=iz, margin=(iz-Ib)/Ib*100, col=ok?_GREEN:_RED;
+      _labSetv('ca-ib',Ib.toFixed(0)+' A');
+      _labSet('ca-iz0',iz0.toFixed(0)); _labSet('ca-iz',iz.toFixed(0)); _labSet('ca-margin',margin.toFixed(0));
+      _labSet('caf-iz0',iz0.toFixed(0)); _labSet('caf-kt',kt.toFixed(2)); _labSet('caf-kg',kg.toFixed(2)); _labSet('caf-iz',iz.toFixed(0));
+      _labSet('ca-verdict', ok?'✓ AMAN — Ib ≤ Iz':'✗ KELEBIHAN — perbesar kabel'); _labAttr('ca-verdict','fill',col);
+      _labSet('ca-detail','Iz efektif '+iz.toFixed(0)+' A vs beban '+Ib.toFixed(0)+' A (margin '+margin.toFixed(0)+'%)');
+      const maxA=Math.max(iz,Ib,1)*1.15, H=150;
+      _labAttr('ca-bar-iz','height',iz/maxA*H); _labAttr('ca-bar-iz','y',210-iz/maxA*H);
+      _labAttr('ca-bar-ib','height',Ib/maxA*H); _labAttr('ca-bar-ib','y',210-Ib/maxA*H); _labAttr('ca-bar-ib','fill',col);
+      _labSet('ca-iz-top',iz.toFixed(0)+'A'); _labSet('ca-ib-top',Ib.toFixed(0)+'A');
+    })
+  },
+
+  // ============ S2: Harmonics & THD (interaktif) ============
+  'harmonics-thd': {
+    html: () => _labShell({
+      eyebrow: 'Industri · Kualitas Daya', title: 'Harmonics', italic: '& THD Analyzer',
+      desc: 'Nyalakan harmonik orde-3/5/7/11 (klik) & atur amplitudonya. Lihat gelombang arus terdistorsi, spektrum, THD, dan status vs IEEE 519 (≤5%).',
+      svg: `<line x1="40" y1="120" x2="380" y2="120" stroke="#1a1d2e" stroke-width="1" opacity="0.3"/>
+        <polyline id="hm-wave" fill="none" stroke="#c9a96e" stroke-width="2.5" points=""/>
+        <text x="44" y="150" font-family="Georgia" font-size="10" fill="#6b6d7a">Spektrum harmonik</text>
+        <g id="hm-spec"></g>
+        <text x="200" y="284" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="hm-verdict">—</text>`,
+      controls: `<div class="sim-control"><label>Aktifkan orde harmonik</label><div style="display:flex;flex-wrap:wrap;gap:6px">`
+          + [3,5,7,11].map(h=>`<button type="button" id="hm-btn-${h}" onclick="_hmToggle(${h})" style="${_BTN}">orde ${h}</button>`).join('') + `</div></div>`
+        + _labSld('hm-a3','Amplitudo orde-3 (%)',0,40,30,1)
+        + _labSld('hm-a5','Amplitudo orde-5 (%)',0,40,0,1)
+        + _labSld('hm-a7','Amplitudo orde-7 (%)',0,30,0,1)
+        + _labSld('hm-a11','Amplitudo orde-11 (%)',0,20,0,1),
+      outputs: _labOut('hm-thd','THD Arus','%') + _labOut('hm-crest','Crest Factor','') + _labOut('hm-status','IEEE 519',''),
+      formula: `THD = √(ΣVₙ²)/V₁ × 100% · hanya orde aktif yang dihitung<br>Batas distorsi arus IEEE 519 umumnya ≤ 5% (≤8% untuk beban kecil).`
+    }),
+    init: () => { _hmActive={3:true,5:false,7:false,11:false}; _hmSync(); _labBind(['hm-a3','hm-a5','hm-a7','hm-a11'], _hmRender); _hmRender(); }
+  },
+
+  // ============ S2: Pump Duty Point (affinity) ============
+  'pump-duty': {
+    html: () => _labShell({
+      eyebrow: 'Industri · Pompa & Fan', title: 'Pump Duty Point', italic: '& Affinity',
+      desc: 'Titik kerja = perpotongan kurva pompa (head) dengan kurva sistem (H = Hstat + k·Q²). Ubah kecepatan (affinity law) & lihat titik kerja, daya, efisiensi bergeser.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Head (m)</text>
+        <text x="372" y="250" text-anchor="end" font-family="Georgia" font-size="10" fill="#6b6d7a">Debit Q (m³/h)</text>
+        <line x1="52" y1="44" x2="52" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="232" x2="372" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="pd-sys" fill="none" stroke="#3a5fb0" stroke-width="2.5" points=""/>
+        <polyline id="pd-pump" fill="none" stroke="#c0392b" stroke-width="2.5" points=""/>
+        <circle id="pd-pt" r="6" fill="#15803d" class="lab-glow"/>
+        <text x="300" y="58" font-family="Georgia" font-size="10" fill="#c0392b" font-weight="700">Pompa</text>
+        <text x="300" y="74" font-family="Georgia" font-size="10" fill="#3a5fb0" font-weight="700">Sistem</text>
+        <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" fill="#15803d" id="pd-bep">—</text>`,
+      controls: _labSld('pd-spd','Kecepatan pompa (%)',40,110,100,1)
+        + _labSld('pd-hstat','Head statis (m)',0,40,10,1)
+        + _labSld('pd-k','Resistansi sistem k',0.005,0.05,0.02,0.001),
+      outputs: _labOut('pd-q','Debit Kerja','m³/h') + _labOut('pd-h','Head Kerja','m') + _labOut('pd-p','Daya Poros','kW'),
+      formula: `Pompa: H = H₀(n)² − c·Q² · Affinity: Q∝n, H∝n² · Sistem: H = Hstat + k·Q²<br>P = ρ·g·Q·H/(3.6e6·η), η≈0.7 · titik kerja = perpotongan kedua kurva`
+    }),
+    init: () => _labBind(['pd-spd','pd-hstat','pd-k'], () => {
+      const n=_labV('pd-spd')/100, Hstat=_labV('pd-hstat'), k=_labV('pd-k');
+      const H0=50*n*n, c=0.006;           // kurva pompa: H = H0 - c*Q^2 (Q dlm m3/h)
+      _labSetv('pd-spd',_labV('pd-spd').toFixed(0)+' %'); _labSetv('pd-hstat',Hstat.toFixed(0)+' m'); _labSetv('pd-k',k.toFixed(3));
+      // intersection: H0 - c*Q^2 = Hstat + k*Q^2  -> Q^2 = (H0-Hstat)/(c+k)
+      let Q=0,H=Hstat;
+      if (H0>Hstat){ Q=Math.sqrt((H0-Hstat)/(c+k)); H=Hstat+k*Q*Q; }
+      const eta=0.7, P=1000*9.81*(Q/3600)*H/(1000*eta);
+      _labSet('pd-q',Q.toFixed(1)); _labSet('pd-h',H.toFixed(1)); _labSet('pd-p',P.toFixed(2));
+      _labSet('pd-bep', Q>0?('Titik kerja: '+Q.toFixed(0)+' m³/h @ '+H.toFixed(0)+' m'):'Head statis > head pompa — tak mengalir');
+      // chart: x 0..Qmax, y 0..Hmax
+      const Qmax=90, Hmax=60, X=q=>52+(q/Qmax)*320, Yv=h=>232-(h/Hmax)*188;
+      let pump='',sys='';
+      for(let q=0;q<=Qmax;q+=5){ const hp=H0-c*q*q; if(hp>=0) pump+=X(q).toFixed(0)+','+Yv(hp).toFixed(0)+' '; sys+=X(q).toFixed(0)+','+Yv(Hstat+k*q*q).toFixed(0)+' '; }
+      _labAttr('pd-pump','points',pump.trim()); _labAttr('pd-sys','points',sys.trim());
+      _labAttr('pd-pt','cx',X(Q)); _labAttr('pd-pt','cy',Yv(H));
     })
   },
 
