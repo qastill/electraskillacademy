@@ -2624,6 +2624,54 @@ body {
   gap: 24px;
 }
 
+/* Grouped simulator layout (per spesialisasi) */
+#simulator-grid { display: block; }
+.sim-group { margin-bottom: 48px; }
+.sim-group:last-child { margin-bottom: 0; }
+.sim-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line-gold);
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+}
+.sim-group-title {
+  font-family: var(--serif, Georgia, serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--navy-deep, #1a1d2e);
+  margin: 0;
+}
+.sim-group-count {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-dark, #c9a96e);
+  background: rgba(201,169,110,0.12);
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-weight: 700;
+}
+.sim-group-desc {
+  font-size: 0.9rem;
+  color: var(--ink-mute, rgba(245,240,230,0.6));
+  margin: 0 0 20px;
+}
+.sim-group-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 920px) {
+  .sim-group-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .sim-group-grid { grid-template-columns: 1fr; }
+}
+
 /* Electrical Design Calculators */
 .calc-section {
   padding: 100px 80px;
@@ -10734,7 +10782,7 @@ button:active:not(:disabled),
             <div class="esa-benefit-photo" data-fallback-icon="🧪"><img loading="lazy" alt="Lab simulator room hands-on" src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Lab &amp; Simulator Room</div>
-              <div class="esa-benefit-desc">Akses penuh ke 6 Digital Simulator (wiring panel, motor control, PLC, pengukuran, proteksi, distribusi) + 9 Design Calculator (cable sizing, arc flash, maximum demand) — plus undangan ke Physical Lab Room mitra ESA di Jabodetabek &amp; Bandung.</div>
+              <div class="esa-benefit-desc">Akses penuh ke 16 Simulator Lab per spesialisasi (pencahayaan, drop tegangan, MCB, motor starting, trafo, sag transmisi, arc flash, pembumian, dll) + 9 Design Calculator (cable sizing, arc flash, maximum demand) — plus undangan ke Physical Lab Room mitra ESA di Jabodetabek &amp; Bandung.</div>
             </div>
           </li>
 
@@ -10747,22 +10795,30 @@ button:active:not(:disabled),
           </li>
 
           <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="📖"><img loading="lazy" alt="E-book Short Circuit to the Future of Energy" src="ebook-short-circuit.jpeg" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
+            <div class="esa-benefit-photo" data-fallback-icon="📖"><img loading="lazy" alt="E-book Kang Listrik" src="kang-listrik-cover.jpeg" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
-              <div class="esa-benefit-title">E-book Eksklusif · "Short Circuit to the Future of Energy"</div>
-              <div class="esa-benefit-desc">Panduan memulai karir di industri ketenagalistrikan untuk anak SMK &amp; teknisi di era transisi energi — karya <strong>Dr. Qashtalani Haramaini, S.T., M.T.</strong> Bahas mega tren energi global, sektor &amp; jenjang karir, panduan karir praktis, plus data &amp; analisis industri. Harga normal Rp 325.000 — <strong>GRATIS untuk member Electra Academy</strong>.</div>
+              <div class="esa-benefit-title">E-book Eksklusif · "Kang Listrik 5.0"</div>
+              <div class="esa-benefit-desc">Panduan memulai karir ketenagalistrikan di era AI untuk anak SMK &amp; teknisi — karya <strong>Dr. Qashtalani Haramaini, S.T., M.T.</strong> Bahas mega tren energi global, sektor &amp; jenjang karir, panduan karir praktis, plus data &amp; analisis industri. Harga normal Rp 325.000 — <strong>GRATIS untuk member Electra Academy</strong>.</div>
             </div>
           </li>
         </ul>
 
         <!-- E-book Bonus Poster -->
         <div class="esa-ebook-bonus" style="margin-top:40px;padding:32px;background:linear-gradient(135deg,rgba(212,175,106,0.1),rgba(160,120,64,0.04));border:1px solid rgba(212,175,106,0.32);border-radius:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:32px;align-items:center;">
-          <div style="position:relative;border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,0.45);">
-            <img src="ebook-short-circuit.jpeg" alt="E-book Short Circuit to the Future of Energy — bonus member Electra Academy" loading="lazy" style="width:100%;height:auto;display:block;">
+          <div style="position:relative;border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,0.45);aspect-ratio:5/8;background:linear-gradient(150deg,#1a2740,#0d1626 55%,#08101c);display:flex;flex-direction:column;justify-content:space-between;padding:26px 24px;">
+            <img src="kang-listrik-cover.jpeg" alt="E-book Kang Listrik 5.0 — Dr. Qashtalani Haramaini" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;" onerror="this.remove();">
+            <div style="font-family:var(--sans);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#f0d080;font-weight:700;">E-book Eksklusif</div>
+            <div style="text-align:center;">
+              <div style="font-size:46px;line-height:1;margin-bottom:14px;">⚡</div>
+              <div style="font-family:var(--serif);font-size:clamp(30px,4vw,44px);font-weight:600;color:#f5f0e6;line-height:1.05;letter-spacing:0.01em;">Kang<br>Listrik <span style="color:#f0d080;">5.0</span></div>
+              <div style="margin:16px auto 0;width:48px;height:2px;background:linear-gradient(90deg,transparent,#d4af6a,transparent);"></div>
+              <div style="font-family:var(--sans);font-size:0.72rem;color:rgba(245,240,230,0.7);margin-top:14px;line-height:1.5;">Panduan Memulai Karir<br>Ketenagalistrikan di era AI</div>
+            </div>
+            <div style="font-family:var(--sans);font-size:0.7rem;letter-spacing:0.08em;color:rgba(245,240,230,0.6);text-align:center;">Dr. Qashtalani Haramaini, S.T., M.T.</div>
           </div>
           <div>
             <div style="font-family:var(--sans);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#f0d080;font-weight:700;margin-bottom:10px;">🎁 Bonus Eksklusif Member</div>
-            <h3 style="font-family:var(--serif);font-size:clamp(22px,2.6vw,30px);font-weight:500;color:#f5f0e6;line-height:1.25;margin:0 0 14px;">E-book <span style="font-style:italic;color:#f0d080;">"Short Circuit to the Future of Energy"</span></h3>
+            <h3 style="font-family:var(--serif);font-size:clamp(22px,2.6vw,30px);font-weight:500;color:#f5f0e6;line-height:1.25;margin:0 0 14px;">E-book <span style="font-style:italic;color:#f0d080;">"Kang Listrik 5.0"</span></h3>
             <p style="font-family:var(--sans);font-size:0.92rem;color:rgba(245,240,230,0.78);line-height:1.65;margin:0 0 18px;">Panduan wajib untuk generasi energi — karya <strong>Dr. Qashtalani Haramaini, S.T., M.T.</strong> Bahas masa depan karir di sektor ketenagalistrikan: mega tren dunia, peluang nyata, dan karir tanpa batas, khusus untuk anak SMK &amp; teknisi yang ingin tumbuh di era transisi.</p>
             <ul style="list-style:none;padding:0;margin:0 0 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-family:var(--sans);font-size:0.82rem;color:rgba(245,240,230,0.82);">
               <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Mega tren energi global</li>
@@ -10776,7 +10832,8 @@ button:active:not(:disabled),
               </span>
               <span style="background:linear-gradient(135deg,#d4af6a,#c9a96e);color:#1a1208;font-family:var(--sans);font-size:0.78rem;font-weight:800;letter-spacing:0.1em;padding:6px 12px;border-radius:6px;">GRATIS untuk Member</span>
             </div>
-            <div style="font-family:var(--sans);font-size:0.82rem;color:rgba(245,240,230,0.7);line-height:1.6;">📥 E-book langsung terbuka di dashboard begitu kamu daftar — bisa dibaca online atau diunduh.</div>
+            <a href="KANG_LISTRIK_5.pdf" download="E-book Kang Listrik 5.0 - Electra Skill Academy.pdf" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#d4af6a,#c9a96e);color:#1a1208;font-family:var(--sans);font-size:0.92rem;font-weight:800;letter-spacing:0.04em;text-decoration:none;padding:14px 28px;border-radius:10px;box-shadow:0 8px 24px rgba(212,175,106,0.4);transition:transform .15s ease,box-shadow .15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 30px rgba(212,175,106,0.55)';" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 24px rgba(212,175,106,0.4)';">📥 Unduh E-book (PDF)</a>
+            <div style="font-family:var(--sans);font-size:0.8rem;color:rgba(245,240,230,0.7);line-height:1.6;margin-top:14px;">Gratis untuk member — klik tombol di atas untuk langsung mengunduh file PDF-nya.</div>
           </div>
         </div>
 
@@ -10979,7 +11036,7 @@ button:active:not(:disabled),
           <div class="home-faq-answer">
             <p><strong>Lab &amp; Simulator Room</strong> adalah ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta:</p>
             <ul>
-              <li><strong>6 Digital Simulator</strong> — wiring panel, motor control 3-fase, PLC ladder, pengukuran (Megger/Earth tester), proteksi grading, distribusi 20 kV. Buka di menu <em>Labs</em>, gratis untuk member.</li>
+              <li><strong>16 Simulator Lab per spesialisasi</strong> — tiap jalur karir punya lab spesifik (Lighting/Voltage Drop/MCB untuk Instalasi, Motor Starting & VFD untuk Industri, Trafo & Feeder 20 kV untuk Distribusi, Sag & BIL untuk Transmisi, Load Forecasting & NTL untuk Data Science, Audit & PF untuk Auditor, PV & BESS untuk Renewable, Arc Flash & Pembumian untuk K3). Buka di menu <em>Labs</em>, gratis untuk member.</li>
               <li><strong>9 Design Calculator</strong> — cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling tension, protection coordination.</li>
               <li><strong>Physical Lab Room</strong> — undangan prioritas ke partner training facility ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.</li>
             </ul>
@@ -10993,8 +11050,8 @@ button:active:not(:disabled),
             <span class="home-faq-chevron">+</span>
           </summary>
           <div class="home-faq-answer">
-            <p><strong>Dapat — gratis untuk member.</strong> Setiap member Electra Academy mendapat <strong>e-book eksklusif "Short Circuit to the Future of Energy"</strong> karya Founder kami, Dr. Qashtalani Haramaini, S.T., M.T. — panduan praktis memulai karir di industri ketenagalistrikan untuk anak SMK &amp; teknisi di era transisi energi.</p>
-            <p>Isinya: mega tren energi global, sektor &amp; jenjang karir yang terbentang, panduan karir praktis (dari interview sampai negosiasi gaji), plus data &amp; analisis industri yang dibutuhkan untuk mengambil keputusan karir yang tepat. Harga retail Rp 325.000 — <strong>otomatis terbuka di dashboard begitu kamu jadi member</strong>, bisa dibaca online atau diunduh.</p>
+            <p><strong>Dapat — gratis untuk member.</strong> Setiap member Electra Academy mendapat <strong>e-book eksklusif "Kang Listrik 5.0"</strong> karya Founder kami, Dr. Qashtalani Haramaini, S.T., M.T. — panduan praktis memulai karir di industri ketenagalistrikan untuk anak SMK &amp; teknisi di era transisi energi.</p>
+            <p>Isinya: mega tren energi global, sektor &amp; jenjang karir yang terbentang, panduan karir praktis (dari interview sampai negosiasi gaji), plus data &amp; analisis industri yang dibutuhkan untuk mengambil keputusan karir yang tepat. Harga retail Rp 325.000 — <strong>bisa langsung diunduh sebagai file PDF</strong> lewat tombol unduh di section bonus member.</p>
           </div>
         </details>
 
@@ -11074,6 +11131,7 @@ button:active:not(:disabled),
           <a onclick="showView('gallery')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Gallery</a>
           <a onclick="showView('faq')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">FAQ</a>
           <a onclick="showView('liveclass-schedule')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Live Class</a>
+          <a href="manual-book.html" style="color:rgba(245,240,230,0.7);text-decoration:none;">Cara Belajar</a>
           <a href="/verify.html" style="color:rgba(245,240,230,0.7);text-decoration:none;">Verifikasi Sertifikat</a>
           <a href="https://wa.me/6285121532407" target="_blank" rel="noopener" style="color:rgba(245,240,230,0.7);text-decoration:none;">WA Admin</a>
         </div>
@@ -11394,6 +11452,9 @@ button:active:not(:disabled),
     </a>
     <div class="detail-nav-center" id="modul-nav-title">Modul</div>
     <div class="detail-nav-right">
+      <a class="detail-nav-back" href="manual-book.html" target="_blank" rel="noopener" title="Manual Book — cara belajar Video, PPT &amp; Quiz" style="text-decoration:none;">
+        📖 Cara Belajar
+      </a>
       <button class="detail-nav-back" id="modul-back-btn">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Kembali ke Jalur
@@ -11796,8 +11857,8 @@ button:active:not(:disabled),
     <div class="lab-section-inner">
       <div class="lab-section-header">
         <div class="lab-section-eyebrow">Digital Simulator Lab</div>
-        <h2 class="lab-section-title">Enam simulator <span class="italic">interaktif</span></h2>
-        <p class="lab-section-sub">Eksperimen langsung di browser. Geser slider, ubah parameter, lihat hasilnya real-time. Semua gratis untuk alumni ESA.</p>
+        <h2 class="lab-section-title">Simulator lab <span class="italic">per spesialisasi</span></h2>
+        <p class="lab-section-sub">Tiap jalur karir punya lab spesifik sendiri — total 16 simulator yang sedang kami kembangkan bertahap. Eksperimen langsung di browser: geser slider, ubah parameter, lihat hasilnya real-time. Gratis untuk member ESA.</p>
       </div>
       <div class="simulator-grid" id="simulator-grid"></div>
     </div>
@@ -14988,16 +15049,71 @@ const SIM_ICONS = {
   cable: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-3 2 6 2-6 2 6 2-3h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   pv: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M12 2v1M12 11v1M17 7h-1M8 7H7M15.5 3.5l-.7.7M9.2 10.8l-.7.7M15.5 10.5l-.7-.7M9.2 3.2l-.7-.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="4" y="14" width="16" height="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 14v7M12 14v7M16 14v7M4 17.5h16" stroke="currentColor" stroke-width="1"/></svg>',
   trafo: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="15" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9v6M21 9v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-  pf: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 20L12 4l8 16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 14l4-2 4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+  pf: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 20L12 4l8 16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 14l4-2 4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  bulb: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.7.8 1 1.5 1 2.5h6c0-1 .3-1.7 1-2.5A6 6 0 0012 3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  vdrop: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 6h3l4 12 4-9 3 6h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 3"/></svg>',
+  mcb: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-2M15 21v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  motor: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="12" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 15v-6l2.5 4 2.5-4v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 9h3M18 15h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  grid: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3l-5 18M12 3l5 18M7 21h10M9 9h6M8 14h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  audit: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M9 8h6M9 12h6M9 16h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  battery: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M21 10v4M10 9l-2 3h3l-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  shield: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M11 7l-2 5h3l-1 4 4-6h-3l1-3z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  earth: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3v8M5 11h14M7.5 15h9M10 19h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  data: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
 
+// Urutan & label grup spesialisasi (selaras 8 jalur karir + grup Fondasi lintas-jurusan)
+const SIM_GROUPS = [
+  { key: 'Fondasi', label: 'Fondasi · Lintas Jurusan', desc: 'Konsep dasar yang dipakai semua spesialisasi.' },
+  { key: 'S1', label: 'S1 · Instalasi Bangunan', desc: 'MEP gedung: pencahayaan, drop tegangan, proteksi & koordinasi kabel.' },
+  { key: 'S2', label: 'S2 · Industri & Manufaktur', desc: 'Motor, drive, dan efisiensi pabrik.' },
+  { key: 'S3', label: 'S3 · Distribusi', desc: 'Jaringan 20 kV, gardu distribusi, dan trafo.' },
+  { key: 'S4', label: 'S4 · Transmisi', desc: 'Saluran 150/500 kV, sag-tension, koordinasi isolasi.' },
+  { key: 'S5', label: 'S5 · Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.' },
+  { key: 'S6', label: 'S6 · Energy Auditor', desc: 'Audit energi, payback, dan koreksi faktor daya.' },
+  { key: 'S7', label: 'S7 · Pembangkitan & Renewable', desc: 'PLTS, BESS, dan energi terbarukan.' },
+  { key: 'S8', label: 'S8 · K3 Listrik', desc: 'Arc flash, APD, dan sistem pembumian.' }
+];
+
 const SIMULATORS = [
-  { id: 'ohm-law', category: 'Fisika Listrik', name: 'Ohm\'s Law Simulator', desc: 'Visualisasi interaktif hukum Ohm (V = I × R) + perhitungan daya. Ganti variabel, lihat hasilnya langsung.', level: 'Esensial', duration: '~15 menit', icon: SIM_ICONS.ohm, working: true },
-  { id: 'three-phase', category: 'Sistem Tenaga', name: '3-Phase Power Triangle', desc: 'Hitung daya aktif (P), reaktif (Q), dan semu (S) dari sistem 3 fasa. Visualisasi diagram segitiga daya real-time.', level: 'Fundamental', duration: '~20 menit', icon: SIM_ICONS.phase, working: true },
-  { id: 'cable-sizing', category: 'Instalasi', name: 'Cable Sizing Calculator', desc: 'Hitung luas penampang kabel sesuai PUIL 2011 / SNI. Input beban, tegangan, panjang — output ukuran + voltage drop.', level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.cable, working: true },
-  { id: 'pv-sizing', category: 'Renewable', name: 'PV System Designer', desc: 'Rancang sistem PLTS atap: jumlah panel, ukuran inverter, kapasitas baterai backup, dan luas atap yang dibutuhkan.', level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.pv, working: true },
-  { id: 'transformer', category: 'Sistem Tenaga', name: 'Transformer Ratio Calc', desc: 'Hitung rasio transformator step-up / step-down: tegangan, arus, dan jumlah lilitan primer-sekunder.', level: 'Fundamental', duration: '~15 menit', icon: SIM_ICONS.trafo, working: false },
-  { id: 'pf-correction', category: 'Kualitas Daya', name: 'Power Factor Correction', desc: 'Simulasi koreksi cos φ dengan capacitor bank industri. Input PF existing + target — dapat kapasitas kVAR.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pf, working: false }
+  // ===== Fondasi (lintas jurusan) =====
+  { id: 'ohm-law', jalur: 'Fondasi', category: 'Fisika Listrik', name: 'Ohm\'s Law Simulator', desc: 'Visualisasi interaktif hukum Ohm (V = I × R) + perhitungan daya. Ganti variabel, lihat hasilnya langsung.', level: 'Esensial', duration: '~15 menit', icon: SIM_ICONS.ohm, working: true },
+  { id: 'three-phase', jalur: 'Fondasi', category: 'Sistem Tenaga', name: '3-Phase Power Triangle', desc: 'Hitung daya aktif (P), reaktif (Q), dan semu (S) dari sistem 3 fasa. Visualisasi diagram segitiga daya real-time.', level: 'Fundamental', duration: '~20 menit', icon: SIM_ICONS.phase, working: true },
+  { id: 'transformer', jalur: 'Fondasi', category: 'Sistem Tenaga', name: 'Transformer Ratio Calc', desc: 'Hitung rasio transformator step-up / step-down: tegangan, arus, dan jumlah lilitan primer-sekunder.', level: 'Fundamental', duration: '~15 menit', icon: SIM_ICONS.trafo, working: true },
+
+  // ===== S1 · Instalasi Bangunan (3 lab baru + cable sizing) =====
+  { id: 'inst-lighting', jalur: 'S1', category: 'Instalasi · Pencahayaan', name: 'Lighting Design (Lumen Method)', desc: 'Hitung jumlah armatur/lampu sesuai target lux ruangan (metode lumen, SNI 6197). Input dimensi ruang, target iluminasi, lumen lampu.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.bulb, working: true },
+  { id: 'inst-vdrop', jalur: 'S1', category: 'Instalasi · Drop Tegangan', name: 'Voltage Drop Checker (PUIL)', desc: 'Cek persen drop tegangan pada feeder instalasi & status LULUS/GAGAL vs batas PUIL (≤5%). Geser arus, panjang, dan ukuran kabel.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.vdrop, working: true },
+  { id: 'inst-mcb', jalur: 'S1', category: 'Instalasi · Proteksi', name: 'MCB & Cable Coordination', desc: 'Tentukan rating MCB & ukuran kabel minimum dengan aturan koordinasi Ib ≤ In ≤ Iz (PUIL/IEC 60364). Termasuk faktor derating.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.mcb, working: true },
+  { id: 'cable-sizing', jalur: 'S1', category: 'Instalasi · Kabel', name: 'Cable Sizing Calculator', desc: 'Hitung luas penampang kabel sesuai PUIL 2011 / IEC. Input beban, tegangan, panjang — output ukuran + voltage drop.', level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.cable, working: true },
+
+  // ===== S2 · Industri & Manufaktur =====
+  { id: 'motor-starting', jalur: 'S2', category: 'Industri · Motor', name: 'Motor Starting (DOL vs Star-Delta)', desc: 'Bandingkan arus & torsi start motor induksi 3 fasa: Direct-On-Line vs Star-Delta. Lihat penurunan inrush current.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.motor, working: true },
+  { id: 'vfd-saving', jalur: 'S2', category: 'Industri · Efisiensi', name: 'VFD Energy Saving', desc: 'Estimasi penghematan energi pompa/fan saat dipasang VFD (affinity law: daya ∝ kecepatan³).', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.motor, working: true },
+
+  // ===== S3 · Distribusi =====
+  { id: 'trafo-loading', jalur: 'S3', category: 'Distribusi · Trafo', name: 'Distribution Transformer Loading', desc: 'Hitung pembebanan trafo distribusi (kVA), %loading, dan rugi-rugi. Cek apakah trafo overload.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.trafo, working: true },
+  { id: 'feeder-vd-20kv', jalur: 'S3', category: 'Distribusi · Feeder', name: 'Feeder Drop & Losses 20 kV', desc: 'Simulasi drop tegangan & rugi daya pada penyulang 20 kV terhadap jarak dan beban.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: true },
+
+  // ===== S4 · Transmisi =====
+  { id: 'line-sag', jalur: 'S4', category: 'Transmisi · Mekanik', name: 'Transmission Line Sag & Tension', desc: 'Hitung andongan (sag) & tegangan tarik konduktor SUTT/SUTET terhadap span, suhu, dan beban.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: true },
+  { id: 'insulation-coord', jalur: 'S4', category: 'Transmisi · Isolasi', name: 'Insulation Coordination (BIL)', desc: 'Pilih BIL & jumlah isolator string untuk tegangan sistem tertentu, plus jarak rambat (creepage).', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
+
+  // ===== S5 · Energy Analyst & Data Science =====
+  { id: 'load-forecast', jalur: 'S5', category: 'Data · Forecasting', name: 'Load Forecasting (Moving Average)', desc: 'Prediksi beban harian dengan moving average & lihat error (MAPE) terhadap data aktual.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
+  { id: 'ntl-detect', jalur: 'S5', category: 'Data · Losses', name: 'NTL / Loss Detection', desc: 'Deteksi anomali pemakaian (non-technical loss) dari profil konsumsi pelanggan.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
+
+  // ===== S6 · Energy Auditor =====
+  { id: 'energy-payback', jalur: 'S6', category: 'Audit · Ekonomi', name: 'Energy Audit & Payback', desc: 'Hitung penghematan kWh, rupiah/tahun, dan payback period dari retrofit (mis. ganti LED / motor efisien).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'pf-correction', jalur: 'S6', category: 'Audit · Kualitas Daya', name: 'Power Factor Correction', desc: 'Simulasi koreksi cos φ dengan capacitor bank. Input PF existing + target — dapat kapasitas kVAR & penghematan denda.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pf, working: true },
+
+  // ===== S7 · Pembangkitan & Renewable =====
+  { id: 'pv-sizing', jalur: 'S7', category: 'Renewable · PLTS', name: 'PV System Designer', desc: 'Rancang sistem PLTS atap: jumlah panel, ukuran inverter, kapasitas baterai backup, dan luas atap yang dibutuhkan.', level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.pv, working: true },
+  { id: 'bess-sizing', jalur: 'S7', category: 'Renewable · Storage', name: 'BESS Sizing', desc: 'Tentukan kapasitas baterai (kWh) & inverter (kW) untuk backup/peak-shaving dengan target DoD & autonomy.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.battery, working: true },
+
+  // ===== S8 · K3 Listrik =====
+  { id: 'arc-flash-ppe', jalur: 'S8', category: 'K3 · Arc Flash', name: 'Arc Flash & PPE Selector', desc: 'Estimasi incident energy (cal/cm²) & kategori APD (PPE) sesuai NFPA 70E dari arus gangguan & jarak kerja.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
+  { id: 'earthing-touch', jalur: 'S8', category: 'K3 · Pembumian', name: 'Earthing & Touch Voltage', desc: 'Hitung resistansi pembumian batang elektroda & tegangan sentuh terhadap resistivitas tanah.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.earth, working: true }
 ];
 
 // ================================================
@@ -15451,7 +15567,8 @@ const PRAKTIKUM_CLASSES = [
 function renderSimulators() {
   const grid = document.getElementById('simulator-grid');
   if (!grid) return;
-  grid.innerHTML = SIMULATORS.map(s => `
+
+  const cardHTML = (s) => `
     <div class="simulator-card ${s.working ? '' : 'soon'}">
       ${!s.working ? '<div class="sim-card-badge-soon">Coming Soon</div>' : ''}
       <div class="sim-card-icon">${s.icon}</div>
@@ -15466,8 +15583,23 @@ function renderSimulators() {
         ${s.working ? 'Buka Simulator' : 'Segera Hadir'}
         ${s.working ? '<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
       </button>
-    </div>
-  `).join('');
+    </div>`;
+
+  // Render dikelompokkan per spesialisasi (SIM_GROUPS), hanya grup yang punya lab.
+  grid.innerHTML = SIM_GROUPS.map(g => {
+    const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);
+    if (!sims.length) return '';
+    const ready = sims.filter(s => s.working).length;
+    return `
+      <div class="sim-group">
+        <div class="sim-group-head">
+          <h3 class="sim-group-title">${g.label}</h3>
+          <span class="sim-group-count">${ready}/${sims.length} aktif</span>
+        </div>
+        <p class="sim-group-desc">${g.desc}</p>
+        <div class="sim-group-grid">${sims.map(cardHTML).join('')}</div>
+      </div>`;
+  }).join('');
 }
 
 function renderPraktikum() {
@@ -15521,6 +15653,10 @@ function openSimulator(simId) {
   else if (simId === 'three-phase') content.innerHTML = getThreePhaseHTML();
   else if (simId === 'cable-sizing') content.innerHTML = getCableSizingHTML();
   else if (simId === 'pv-sizing') content.innerHTML = getPVSizingHTML();
+  else if (simId === 'inst-lighting') content.innerHTML = getLightingHTML();
+  else if (simId === 'inst-vdrop') content.innerHTML = getVoltageDropHTML();
+  else if (simId === 'inst-mcb') content.innerHTML = getMCBCoordHTML();
+  else if (SIM_BUILDERS[simId]) content.innerHTML = SIM_BUILDERS[simId].html();
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -15531,6 +15667,10 @@ function openSimulator(simId) {
     else if (simId === 'three-phase') initThreePhase();
     else if (simId === 'cable-sizing') initCableSizing();
     else if (simId === 'pv-sizing') initPVSizing();
+    else if (simId === 'inst-lighting') initLighting();
+    else if (simId === 'inst-vdrop') initVoltageDrop();
+    else if (simId === 'inst-mcb') initMCBCoord();
+    else if (SIM_BUILDERS[simId]) SIM_BUILDERS[simId].init();
   }, 50);
 }
 
@@ -16048,6 +16188,835 @@ function initPVSizing() {
   [loadEl, sphEl, wattEl, backupEl].forEach(el => el.addEventListener('input', update));
   update();
 }
+
+// =================== S1 LAB 1: Lighting Design (Lumen Method) ===================
+function getLightingHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">Instalasi Bangunan · Pencahayaan</div>
+      <h2>Lighting Design <span class="italic">— Lumen Method</span></h2>
+      <p>Metode lumen (SNI 6197). Jumlah armatur N = (E × A) / (Φ × CU × LLF). Geser parameter, tata letak & lux aktual dihitung otomatis.</p>
+    </div>
+    <div class="sim-workspace">
+      <div class="sim-visual">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="40" width="320" height="210" rx="6" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+          <g id="light-fixtures"></g>
+          <text x="200" y="272" text-anchor="middle" font-family="Georgia" font-size="13" fill="#1a1d2e" font-weight="600" id="light-room-label">8 m × 6 m</text>
+          <text x="200" y="290" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9a7f4f" id="light-grid-label">— armatur</text>
+        </svg>
+      </div>
+      <div class="sim-controls">
+        <div class="sim-control-group">
+          <div class="sim-control"><label>Panjang ruang <span class="sim-value" id="light-L-val">8.0 m</span></label><input type="range" id="light-L" min="2" max="30" value="8" step="0.5"></div>
+          <div class="sim-control"><label>Lebar ruang <span class="sim-value" id="light-W-val">6.0 m</span></label><input type="range" id="light-W" min="2" max="30" value="6" step="0.5"></div>
+          <div class="sim-control"><label>Target iluminasi (lux) <span class="sim-value" id="light-lux-val">300 lx</span></label><input type="range" id="light-lux" min="50" max="1000" value="300" step="25"></div>
+          <div class="sim-control"><label>Lumen per armatur <span class="sim-value" id="light-lm-val">3600 lm</span></label><input type="range" id="light-lm" min="500" max="8000" value="3600" step="100"></div>
+          <div class="sim-control"><label>Coefficient of Utilization (CU) <span class="sim-value" id="light-cu-val">0.60</span></label><input type="range" id="light-cu" min="0.3" max="0.9" value="0.6" step="0.05"></div>
+          <div class="sim-control"><label>Light Loss Factor (LLF) <span class="sim-value" id="light-llf-val">0.80</span></label><input type="range" id="light-llf" min="0.5" max="0.95" value="0.8" step="0.05"></div>
+        </div>
+        <div class="sim-outputs">
+          <div class="sim-output"><div class="sim-output-label">Jumlah Armatur</div><div class="sim-output-value"><span id="light-n">—</span><span class="unit">unit</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Lux Aktual</div><div class="sim-output-value"><span id="light-actual">—</span><span class="unit">lx</span></div></div>
+        </div>
+        <div class="sim-formula">
+          A = L × W = <span id="light-area">48.0</span> m² · N = (E × A)/(Φ × CU × LLF)<br>
+          N = (<span id="lf-e">300</span> × <span id="lf-a">48.0</span>) / (<span id="lf-lm">3600</span> × <span id="lf-cu">0.60</span> × <span id="lf-llf">0.80</span>) = <span id="lf-n">8.3</span> → <span id="lf-nc">9</span> unit
+        </div>
+      </div>
+    </div>
+  `;
+}
+function initLighting() {
+  const ids = ['light-L','light-W','light-lux','light-lm','light-cu','light-llf'];
+  const els = ids.map(i => document.getElementById(i));
+  if (els.some(e => !e)) return;
+  const [Lel, Wel, luxEl, lmEl, cuEl, llfEl] = els;
+
+  const update = () => {
+    const L = parseFloat(Lel.value), W = parseFloat(Wel.value);
+    const E = parseFloat(luxEl.value), lm = parseFloat(lmEl.value);
+    const cu = parseFloat(cuEl.value), llf = parseFloat(llfEl.value);
+    const A = L * W;
+    const nExact = (E * A) / (lm * cu * llf);
+    const N = Math.max(1, Math.ceil(nExact));
+    const actual = (N * lm * cu * llf) / A;
+
+    // layout grid: cols proporsional terhadap rasio ruang
+    let cols = Math.max(1, Math.round(Math.sqrt(N * (L / W))));
+    let rows = Math.ceil(N / cols);
+    while ((rows - 1) * cols >= N && rows > 1) rows--;
+
+    // value labels
+    document.getElementById('light-L-val').textContent = L.toFixed(1) + ' m';
+    document.getElementById('light-W-val').textContent = W.toFixed(1) + ' m';
+    document.getElementById('light-lux-val').textContent = E.toFixed(0) + ' lx';
+    document.getElementById('light-lm-val').textContent = lm.toFixed(0) + ' lm';
+    document.getElementById('light-cu-val').textContent = cu.toFixed(2);
+    document.getElementById('light-llf-val').textContent = llf.toFixed(2);
+
+    document.getElementById('light-n').textContent = N;
+    document.getElementById('light-actual').textContent = actual.toFixed(0);
+    document.getElementById('light-room-label').textContent = L.toFixed(1) + ' m × ' + W.toFixed(1) + ' m';
+    document.getElementById('light-grid-label').textContent = N + ' armatur (' + cols + ' × ' + rows + ')';
+
+    document.getElementById('light-area').textContent = A.toFixed(1);
+    document.getElementById('lf-e').textContent = E.toFixed(0);
+    document.getElementById('lf-a').textContent = A.toFixed(1);
+    document.getElementById('lf-lm').textContent = lm.toFixed(0);
+    document.getElementById('lf-cu').textContent = cu.toFixed(2);
+    document.getElementById('lf-llf').textContent = llf.toFixed(2);
+    document.getElementById('lf-n').textContent = nExact.toFixed(1);
+    document.getElementById('lf-nc').textContent = N;
+
+    // draw fixtures
+    const g = document.getElementById('light-fixtures');
+    const x0 = 40, y0 = 40, w = 320, h = 210;
+    let dots = '';
+    let placed = 0;
+    for (let r = 0; r < rows && placed < N; r++) {
+      const cy = y0 + h * (r + 1) / (rows + 1);
+      for (let c = 0; c < cols && placed < N; c++) {
+        const cx = x0 + w * (c + 1) / (cols + 1);
+        dots += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="7" fill="#FFD400" stroke="#9a7f4f" stroke-width="1.2"/>'
+              + '<line x1="' + (cx-4).toFixed(1) + '" y1="' + cy.toFixed(1) + '" x2="' + (cx+4).toFixed(1) + '" y2="' + cy.toFixed(1) + '" stroke="#9a7f4f" stroke-width="1.2"/>';
+        placed++;
+      }
+    }
+    g.innerHTML = dots;
+  };
+
+  els.forEach(e => e.addEventListener('input', update));
+  update();
+}
+
+// =================== S1 LAB 2: Voltage Drop Checker (PUIL) ===================
+const _VD_RHO = { cu: 0.0225, al: 0.036 }; // Ω·mm²/m @ ~70°C
+function getVoltageDropHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">Instalasi Bangunan · Drop Tegangan</div>
+      <h2>Voltage Drop <span class="italic">Checker (PUIL)</span></h2>
+      <p>Vd = k × ρ × L × I / A (k = 2 untuk 1 fasa, √3 untuk 3 fasa). Bandingkan %drop terhadap batas PUIL (umumnya ≤ 5%).</p>
+    </div>
+    <div class="sim-workspace">
+      <div class="sim-visual">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="95" width="56" height="50" rx="4" fill="#1a1d2e"/>
+          <text x="48" y="125" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">APP</text>
+          <line x1="76" y1="120" x2="324" y2="120" stroke="#9a7f4f" stroke-width="5" id="vd-cable"/>
+          <rect x="324" y="95" width="56" height="50" rx="4" fill="#1a1d2e" id="vd-loadbox"/>
+          <text x="352" y="118" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">Beban</text>
+          <text x="352" y="135" text-anchor="middle" font-family="Georgia" font-size="11" fill="#FFD400" id="vd-vload">—</text>
+          <text x="200" y="105" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e" id="vd-len-label">30 m</text>
+          <!-- bar -->
+          <text x="40" y="185" font-family="Georgia" font-size="11" fill="#1a1d2e">Drop Tegangan</text>
+          <rect x="40" y="195" width="320" height="20" rx="4" fill="#e5e5e5"/>
+          <rect x="40" y="195" width="0" height="20" rx="4" fill="#15803d" id="vd-bar"/>
+          <line x1="200" y1="190" x2="200" y2="220" stroke="#1a1d2e" stroke-width="1.5" stroke-dasharray="3 3" id="vd-limit-marker"/>
+          <text x="200" y="234" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e" id="vd-limit-label">batas 5%</text>
+          <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="20" fill="#15803d" font-weight="700" id="vd-pct">—</text>
+          <text x="200" y="282" text-anchor="middle" font-family="Georgia" font-size="13" fill="#15803d" font-weight="700" id="vd-verdict">—</text>
+        </svg>
+      </div>
+      <div class="sim-controls">
+        <div class="sim-control-group">
+          <div class="sim-control"><label>Arus beban (I) <span class="sim-value" id="vd-I-val">16 A</span></label><input type="range" id="vd-I" min="1" max="100" value="16" step="1"></div>
+          <div class="sim-control"><label>Panjang kabel (L) <span class="sim-value" id="vd-len-val">30 m</span></label><input type="range" id="vd-len" min="1" max="200" value="30" step="1"></div>
+          <div class="sim-control"><label>Luas penampang (A)</label>
+            <select id="vd-csa"><option>1.5</option><option>2.5</option><option selected>4</option><option>6</option><option>10</option><option>16</option><option>25</option><option>35</option><option>50</option></select></div>
+          <div class="sim-control"><label>Sistem</label>
+            <select id="vd-sys"><option value="1">1 Fasa (230 V)</option><option value="3" selected>3 Fasa (400 V)</option></select></div>
+          <div class="sim-control"><label>Konduktor</label>
+            <select id="vd-cond"><option value="cu" selected>Tembaga (Cu)</option><option value="al">Aluminium (Al)</option></select></div>
+          <div class="sim-control"><label>Batas drop (%) <span class="sim-value" id="vd-lim-val">5.0 %</span></label><input type="range" id="vd-lim" min="1" max="8" value="5" step="0.5"></div>
+        </div>
+        <div class="sim-outputs">
+          <div class="sim-output"><div class="sim-output-label">Drop Tegangan</div><div class="sim-output-value"><span id="vd-volt">—</span><span class="unit">V</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Persen Drop</div><div class="sim-output-value"><span id="vd-percent">—</span><span class="unit">%</span></div></div>
+        </div>
+        <div class="sim-formula">
+          Vd = k × ρ × L × I / A<br>
+          Vd = <span id="vf-k">1.73</span> × <span id="vf-rho">0.0225</span> × <span id="vf-l">30</span> × <span id="vf-i">16</span> / <span id="vf-a">4</span> = <span id="vf-vd">—</span> V (<span id="vf-pct">—</span> % dari <span id="vf-vsys">400</span> V)
+        </div>
+      </div>
+    </div>
+  `;
+}
+function initVoltageDrop() {
+  const Iel = document.getElementById('vd-I');
+  const Lel = document.getElementById('vd-len');
+  const csaEl = document.getElementById('vd-csa');
+  const sysEl = document.getElementById('vd-sys');
+  const condEl = document.getElementById('vd-cond');
+  const limEl = document.getElementById('vd-lim');
+  if (!Iel) return;
+
+  const update = () => {
+    const I = parseFloat(Iel.value), L = parseFloat(Lel.value);
+    const A = parseFloat(csaEl.value);
+    const phase = sysEl.value;
+    const rho = _VD_RHO[condEl.value];
+    const limit = parseFloat(limEl.value);
+    const k = phase === '3' ? Math.sqrt(3) : 2;
+    const Vsys = phase === '3' ? 400 : 230;
+
+    const Vd = k * rho * L * I / A;
+    const pct = Vd / Vsys * 100;
+    const ok = pct <= limit;
+    const color = ok ? '#15803d' : '#c0392b';
+
+    document.getElementById('vd-I-val').textContent = I.toFixed(0) + ' A';
+    document.getElementById('vd-len-val').textContent = L.toFixed(0) + ' m';
+    document.getElementById('vd-lim-val').textContent = limit.toFixed(1) + ' %';
+
+    document.getElementById('vd-volt').textContent = Vd.toFixed(2);
+    document.getElementById('vd-percent').textContent = pct.toFixed(2);
+
+    document.getElementById('vd-len-label').textContent = L.toFixed(0) + ' m';
+    document.getElementById('vd-vload').textContent = (Vsys - Vd).toFixed(0) + ' V';
+    document.getElementById('vd-pct').textContent = pct.toFixed(2) + ' %';
+    document.getElementById('vd-pct').setAttribute('fill', color);
+    document.getElementById('vd-verdict').textContent = ok ? '✓ LULUS (≤ ' + limit.toFixed(1) + '%)' : '✗ GAGAL — perbesar kabel';
+    document.getElementById('vd-verdict').setAttribute('fill', color);
+    document.getElementById('vd-cable').setAttribute('stroke', ok ? '#9a7f4f' : '#c0392b');
+
+    // bar: skala 0..10%; marker batas
+    const scaleMax = 10;
+    document.getElementById('vd-bar').setAttribute('width', Math.min(pct / scaleMax, 1) * 320);
+    document.getElementById('vd-bar').setAttribute('fill', color);
+    const markerX = 40 + Math.min(limit / scaleMax, 1) * 320;
+    document.getElementById('vd-limit-marker').setAttribute('x1', markerX);
+    document.getElementById('vd-limit-marker').setAttribute('x2', markerX);
+    document.getElementById('vd-limit-label').setAttribute('x', markerX);
+    document.getElementById('vd-limit-label').textContent = 'batas ' + limit.toFixed(1) + '%';
+
+    document.getElementById('vf-k').textContent = phase === '3' ? '1.73' : '2';
+    document.getElementById('vf-rho').textContent = rho.toFixed(4);
+    document.getElementById('vf-l').textContent = L.toFixed(0);
+    document.getElementById('vf-i').textContent = I.toFixed(0);
+    document.getElementById('vf-a').textContent = A;
+    document.getElementById('vf-vd').textContent = Vd.toFixed(2);
+    document.getElementById('vf-pct').textContent = pct.toFixed(2);
+    document.getElementById('vf-vsys').textContent = Vsys;
+  };
+
+  [Iel, Lel, csaEl, sysEl, condEl, limEl].forEach(e => e.addEventListener('input', update));
+  update();
+}
+
+// =================== S1 LAB 3: MCB & Cable Coordination ===================
+const _MCB_RATINGS = [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100];
+function getMCBCoordHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">Instalasi Bangunan · Proteksi</div>
+      <h2>MCB &amp; Cable <span class="italic">Coordination</span></h2>
+      <p>Aturan koordinasi proteksi (PUIL / IEC 60364): Ib ≤ In ≤ Iz. Tentukan rating MCB & ukuran kabel minimum dari arus beban.</p>
+    </div>
+    <div class="sim-workspace">
+      <div class="sim-visual">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <line x1="30" y1="70" x2="120" y2="70" stroke="#1a1d2e" stroke-width="2"/>
+          <text x="30" y="60" font-family="Georgia" font-size="11" fill="#1a1d2e">Sumber (Ib)</text>
+          <text x="30" y="92" font-family="Georgia" font-size="12" fill="#9a7f4f" font-weight="600" id="mcb-ib-label">22 A</text>
+          <rect x="120" y="45" width="60" height="55" rx="5" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+          <text x="150" y="40" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">MCB</text>
+          <text x="150" y="78" text-anchor="middle" font-family="Georgia" font-size="16" fill="#1a1d2e" font-weight="700" id="mcb-in-label">25 A</text>
+          <line x1="180" y1="70" x2="320" y2="70" stroke="#9a7f4f" stroke-width="6" id="mcb-cable"/>
+          <text x="250" y="58" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9a7f4f" font-weight="600" id="mcb-csa-label">4 mm²</text>
+          <text x="250" y="90" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="mcb-iz-label">Iz = — A</text>
+          <rect x="320" y="50" width="50" height="45" rx="4" fill="#1a1d2e"/>
+          <text x="345" y="77" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">Beban</text>
+          <!-- checks -->
+          <text x="40" y="150" font-family="Georgia" font-size="14" fill="#1a1d2e" font-weight="600" id="mcb-chk1">Ib ≤ In</text>
+          <text x="40" y="180" font-family="Georgia" font-size="14" fill="#1a1d2e" font-weight="600" id="mcb-chk2">In ≤ Iz</text>
+          <rect x="40" y="205" width="330" height="60" rx="6" fill="rgba(21,128,61,0.08)" stroke="#15803d" stroke-width="1.5" id="mcb-verdict-box"/>
+          <text x="205" y="240" text-anchor="middle" font-family="Georgia" font-size="15" fill="#15803d" font-weight="700" id="mcb-verdict">—</text>
+        </svg>
+      </div>
+      <div class="sim-controls">
+        <div class="sim-control-group">
+          <div class="sim-control"><label>Arus beban / desain (Ib) <span class="sim-value" id="mcb-ib-val">22 A</span></label><input type="range" id="mcb-ib" min="1" max="90" value="22" step="1"></div>
+          <div class="sim-control"><label>Faktor derating (Ca × Cg) <span class="sim-value" id="mcb-dr-val">1.00</span></label><input type="range" id="mcb-dr" min="0.5" max="1" value="1" step="0.05"></div>
+          <div class="sim-control"><label>Konduktor</label>
+            <select id="mcb-cond"><option value="cu" selected>Tembaga (Cu)</option><option value="al">Aluminium (Al)</option></select></div>
+          <div class="sim-control"><label>Insulasi</label>
+            <select id="mcb-ins"><option value="pvc" selected>PVC (70°C)</option><option value="xlpe">XLPE (90°C)</option></select></div>
+          <div class="sim-control"><label>Pemasangan</label>
+            <select id="mcb-method"><option value="conduit" selected>Dalam konduit</option><option value="tray">Pada tray</option></select></div>
+        </div>
+        <div class="sim-outputs">
+          <div class="sim-output"><div class="sim-output-label">Rating MCB (In)</div><div class="sim-output-value"><span id="mcb-in">—</span><span class="unit">A</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Kabel Minimum</div><div class="sim-output-value"><span id="mcb-csa">—</span><span class="unit">mm²</span></div></div>
+        </div>
+        <div class="sim-formula">
+          Ib ≤ In ≤ Iz · Iz = Iz_tabel × derating<br>
+          Ib = <span id="mf-ib">22</span> A → In = <span id="mf-in">25</span> A → butuh Iz ≥ <span id="mf-izreq">25.0</span> A → kabel <span id="mf-csa">4</span> mm² (Iz = <span id="mf-iz">—</span> A)
+        </div>
+      </div>
+    </div>
+  `;
+}
+function initMCBCoord() {
+  const ibEl = document.getElementById('mcb-ib');
+  const drEl = document.getElementById('mcb-dr');
+  const condEl = document.getElementById('mcb-cond');
+  const insEl = document.getElementById('mcb-ins');
+  const methodEl = document.getElementById('mcb-method');
+  if (!ibEl) return;
+
+  const update = () => {
+    const Ib = parseFloat(ibEl.value);
+    const derate = parseFloat(drEl.value);
+    const key = condEl.value + '-' + insEl.value + '-' + methodEl.value;
+    const ampArr = _AMPACITY[key] || _AMPACITY['cu-pvc-conduit'];
+
+    // 1) Pilih In = rating MCB standar terkecil ≥ Ib
+    let In = _MCB_RATINGS.find(r => r >= Ib);
+    let inOversize = false;
+    if (In === undefined) { In = _MCB_RATINGS[_MCB_RATINGS.length - 1]; inOversize = true; }
+
+    // 2) Iz_tabel × derate ≥ In  →  kabel terkecil yang memenuhi
+    const izReq = In / derate;
+    let csa = null, izEff = 0, izTab = 0;
+    for (let i = 0; i < ampArr.length; i++) {
+      if (ampArr[i] > 0 && ampArr[i] * derate >= In) { csa = _CABLE_SIZES[i]; izTab = ampArr[i]; izEff = ampArr[i] * derate; break; }
+    }
+    let csaOversize = false;
+    if (csa === null) { const last = ampArr.length - 1; csa = _CABLE_SIZES[last]; izTab = ampArr[last]; izEff = ampArr[last] * derate; csaOversize = true; }
+
+    const c1 = Ib <= In;
+    const c2 = In <= izEff;
+    const allOk = c1 && c2 && !inOversize && !csaOversize;
+    const green = '#15803d', red = '#c0392b';
+
+    document.getElementById('mcb-ib-val').textContent = Ib.toFixed(0) + ' A';
+    document.getElementById('mcb-dr-val').textContent = derate.toFixed(2);
+    document.getElementById('mcb-in').textContent = In + (inOversize ? '+' : '');
+    document.getElementById('mcb-csa').textContent = csa + (csaOversize ? '+' : '');
+
+    document.getElementById('mcb-ib-label').textContent = Ib.toFixed(0) + ' A';
+    document.getElementById('mcb-in-label').textContent = In + ' A';
+    document.getElementById('mcb-csa-label').textContent = csa + ' mm²';
+    document.getElementById('mcb-iz-label').textContent = 'Iz = ' + izEff.toFixed(0) + ' A';
+    document.getElementById('mcb-cable').setAttribute('stroke', allOk ? '#9a7f4f' : red);
+
+    const chk1 = document.getElementById('mcb-chk1');
+    chk1.textContent = (c1 ? '✓ ' : '✗ ') + 'Ib (' + Ib.toFixed(0) + ') ≤ In (' + In + ')';
+    chk1.setAttribute('fill', c1 ? green : red);
+    const chk2 = document.getElementById('mcb-chk2');
+    chk2.textContent = (c2 ? '✓ ' : '✗ ') + 'In (' + In + ') ≤ Iz (' + izEff.toFixed(0) + ')';
+    chk2.setAttribute('fill', c2 ? green : red);
+
+    const vbox = document.getElementById('mcb-verdict-box');
+    const vtxt = document.getElementById('mcb-verdict');
+    if (allOk) {
+      vtxt.textContent = '✓ Koordinasi OK — proteksi & kabel aman';
+      vtxt.setAttribute('fill', green);
+      vbox.setAttribute('stroke', green);
+      vbox.setAttribute('fill', 'rgba(21,128,61,0.08)');
+    } else {
+      vtxt.textContent = inOversize ? '⚠ Beban > 100 A — pakai MCCB' : '⚠ Periksa ukuran kabel / derating';
+      vtxt.setAttribute('fill', red);
+      vbox.setAttribute('stroke', red);
+      vbox.setAttribute('fill', 'rgba(192,57,43,0.07)');
+    }
+
+    document.getElementById('mf-ib').textContent = Ib.toFixed(0);
+    document.getElementById('mf-in').textContent = In;
+    document.getElementById('mf-izreq').textContent = izReq.toFixed(1);
+    document.getElementById('mf-csa').textContent = csa;
+    document.getElementById('mf-iz').textContent = izEff.toFixed(0);
+  };
+
+  [ibEl, drEl, condEl, insEl, methodEl].forEach(e => e.addEventListener('input', update));
+  update();
+}
+
+// ================================================
+// SIMULATOR BUILDERS — lab spesialisasi S2..S8 + Fondasi (Transformer)
+// Shared helpers untuk markup ringkas & konsisten dgn pola sim-workspace.
+// ================================================
+const _labV   = id => parseFloat(document.getElementById(id).value);
+const _labRaw = id => document.getElementById(id).value;
+const _labSetv = (id, t) => { const e = document.getElementById(id + '-val'); if (e) e.textContent = t; };
+const _labSet  = (id, t) => { const e = document.getElementById(id); if (e) e.textContent = t; };
+const _labAttr = (id, a, v) => { const e = document.getElementById(id); if (e) e.setAttribute(a, v); };
+const _labBind = (ids, fn) => { ids.forEach(i => { const e = document.getElementById(i); if (e) e.addEventListener('input', fn); }); fn(); };
+const _labShell = (o) => `
+  <div class="sim-modal-header">
+    <div class="sim-modal-eyebrow">${o.eyebrow}</div>
+    <h2>${o.title} <span class="italic">${o.italic || ''}</span></h2>
+    <p>${o.desc}</p>
+  </div>
+  <div class="sim-workspace">
+    <div class="sim-visual"><svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">${o.svg}</svg></div>
+    <div class="sim-controls">
+      <div class="sim-control-group">${o.controls}</div>
+      <div class="sim-outputs">${o.outputs}</div>
+      <div class="sim-formula">${o.formula}</div>
+    </div>
+  </div>`;
+const _labSld = (id, label, min, max, val, step) => `<div class="sim-control"><label>${label} <span class="sim-value" id="${id}-val"></span></label><input type="range" id="${id}" min="${min}" max="${max}" value="${val}" step="${step}"></div>`;
+const _labSel = (id, label, opts) => `<div class="sim-control"><label>${label}</label><select id="${id}">${opts}</select></div>`;
+const _labOut = (id, label, unit) => `<div class="sim-output"><div class="sim-output-label">${label}</div><div class="sim-output-value"><span id="${id}">—</span><span class="unit">${unit}</span></div></div>`;
+const _GREEN = '#15803d', _RED = '#c0392b', _GOLD = '#9a7f4f', _INK = '#1a1d2e';
+const fmtRp = n => n >= 1e9 ? (n/1e9).toFixed(2) + ' M' : n >= 1e6 ? (n/1e6).toFixed(1) + ' jt' : Math.round(n).toLocaleString('id-ID');
+
+const SIM_BUILDERS = {
+  // ============ FONDASI: Transformer Ratio ============
+  'transformer': {
+    html: () => _labShell({
+      eyebrow: 'Fondasi · Sistem Tenaga', title: 'Transformer', italic: 'Ratio Calculator',
+      desc: 'Vs = Vp × (Ns/Np) · Is = Ip × (Np/Ns). Geser jumlah lilitan & tegangan primer, lihat sisi sekunder.',
+      svg: `<line x1="200" y1="40" x2="200" y2="230" stroke="#1a1d2e" stroke-width="2" opacity="0.3"/>
+        <line x1="206" y1="40" x2="206" y2="230" stroke="#1a1d2e" stroke-width="2" opacity="0.3"/>
+        <path d="M150 70 q-22 0 -22 16 q0 16 22 16 q-22 0 -22 16 q0 16 22 16 q-22 0 -22 16 q0 16 22 16" stroke="#9a7f4f" stroke-width="3" fill="none"/>
+        <path d="M256 70 q22 0 22 16 q0 16 -22 16 q22 0 22 16 q0 16 -22 16 q22 0 22 16 q0 16 -22 16" stroke="#1a1d2e" stroke-width="3" fill="none"/>
+        <text x="120" y="60" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9a7f4f" font-weight="700">PRIMER</text>
+        <text x="286" y="60" text-anchor="middle" font-family="Georgia" font-size="12" fill="#1a1d2e" font-weight="700">SEKUNDER</text>
+        <text x="120" y="195" text-anchor="middle" font-family="Georgia" font-size="13" fill="#9a7f4f" id="tr-vp-lbl">Vp</text>
+        <text x="120" y="213" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="tr-np-lbl">Np</text>
+        <text x="286" y="195" text-anchor="middle" font-family="Georgia" font-size="13" fill="#1a1d2e" id="tr-vs-lbl">Vs</text>
+        <text x="286" y="213" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="tr-ns-lbl">Ns</text>
+        <text x="203" y="265" text-anchor="middle" font-family="Georgia" font-size="13" fill="#9a7f4f" font-weight="700" id="tr-type">—</text>`,
+      controls: _labSld('tr-vp', 'Tegangan primer Vp (V)', 100, 1000, 400, 10)
+              + _labSld('tr-np', 'Lilitan primer Np', 50, 2000, 1000, 10)
+              + _labSld('tr-ns', 'Lilitan sekunder Ns', 10, 2000, 250, 10)
+              + _labSld('tr-ip', 'Arus primer Ip (A)', 1, 100, 10, 1),
+      outputs: _labOut('tr-vs', 'Tegangan Sekunder', 'V') + _labOut('tr-is', 'Arus Sekunder', 'A'),
+      formula: `a = Np/Ns = <span id="trf-a">4.0</span> · Vs = Vp/a · Is = Ip × a<br>S = Vp × Ip = <span id="trf-s">4000</span> VA (ideal, daya tetap)`
+    }),
+    init: () => _labBind(['tr-vp','tr-np','tr-ns','tr-ip'], () => {
+      const Vp=_labV('tr-vp'), Np=_labV('tr-np'), Ns=_labV('tr-ns'), Ip=_labV('tr-ip');
+      const a=Np/Ns, Vs=Vp*Ns/Np, Is=Ip*Np/Ns, S=Vp*Ip;
+      _labSetv('tr-vp',Vp.toFixed(0)+' V'); _labSetv('tr-np',Np.toFixed(0)); _labSetv('tr-ns',Ns.toFixed(0)); _labSetv('tr-ip',Ip.toFixed(0)+' A');
+      _labSet('tr-vs',Vs.toFixed(0)); _labSet('tr-is',Is.toFixed(2));
+      _labSet('tr-vp-lbl',Vp.toFixed(0)+' V'); _labSet('tr-np-lbl',Np.toFixed(0)+' lilit');
+      _labSet('tr-vs-lbl',Vs.toFixed(0)+' V'); _labSet('tr-ns-lbl',Ns.toFixed(0)+' lilit');
+      _labSet('tr-type', Vs>Vp?'STEP-UP ▲':(Vs<Vp?'STEP-DOWN ▼':'ISOLASI 1:1'));
+      _labSet('trf-a',a.toFixed(2)); _labSet('trf-s',S.toFixed(0));
+    })
+  },
+
+  // ============ S2: Motor Starting (DOL vs Star-Delta) ============
+  'motor-starting': {
+    html: () => _labShell({
+      eyebrow: 'Industri · Motor', title: 'Motor Starting', italic: 'DOL vs Star-Delta',
+      desc: 'Arus start motor induksi 3 fasa. Star-Delta menurunkan arus & torsi start menjadi 1/3 dari DOL.',
+      svg: `<line x1="40" y1="250" x2="370" y2="250" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="90" y="250" width="60" height="0" fill="#c0392b" id="ms-bar-dol"/>
+        <rect x="240" y="250" width="60" height="0" fill="#15803d" id="ms-bar-yd"/>
+        <text x="120" y="270" text-anchor="middle" font-family="Georgia" font-size="12" fill="#1a1d2e" font-weight="600">DOL</text>
+        <text x="270" y="270" text-anchor="middle" font-family="Georgia" font-size="12" fill="#1a1d2e" font-weight="600">Star-Delta</text>
+        <text x="120" y="240" text-anchor="middle" font-family="Georgia" font-size="12" fill="#c0392b" font-weight="700" id="ms-dol-top">—</text>
+        <text x="270" y="240" text-anchor="middle" font-family="Georgia" font-size="12" fill="#15803d" font-weight="700" id="ms-yd-top">—</text>
+        <text x="205" y="30" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a">Arus Start (A)</text>`,
+      controls: _labSld('ms-p', 'Daya motor (kW)', 1, 200, 30, 1)
+              + _labSel('ms-v', 'Tegangan', '<option value="400" selected>400 V</option><option value="690">690 V</option>')
+              + _labSld('ms-pf', 'Power factor', 0.7, 0.95, 0.85, 0.01)
+              + _labSld('ms-eff', 'Efisiensi', 0.8, 0.96, 0.9, 0.01)
+              + _labSld('ms-mult', 'Rasio arus start (× FLC)', 4, 8, 6, 0.5),
+      outputs: _labOut('ms-flc', 'Arus Nominal (FLC)', 'A') + _labOut('ms-dol', 'Start DOL', 'A'),
+      formula: `FLC = P/(√3·V·cosφ·η) · I_DOL = mult × FLC · I_Y∆ = I_DOL / 3<br>Start Star-Delta = <span id="msf-yd">—</span> A (torsi start ≈ 33%)`
+    }),
+    init: () => _labBind(['ms-p','ms-v','ms-pf','ms-eff','ms-mult'], () => {
+      const P=_labV('ms-p'), V=_labV('ms-v'), pf=_labV('ms-pf'), eff=_labV('ms-eff'), m=_labV('ms-mult');
+      const flc=P*1000/(Math.sqrt(3)*V*pf*eff), dol=m*flc, yd=dol/3;
+      _labSetv('ms-p',P.toFixed(0)+' kW'); _labSetv('ms-pf',pf.toFixed(2)); _labSetv('ms-eff',eff.toFixed(2)); _labSetv('ms-mult',m.toFixed(1)+'×');
+      _labSet('ms-flc',flc.toFixed(1)); _labSet('ms-dol',dol.toFixed(0)); _labSet('msf-yd',yd.toFixed(0));
+      const maxH=200, h1=Math.min(dol/ (m*flc) ,1)*maxH; // dol fills full
+      _labAttr('ms-bar-dol','height',maxH); _labAttr('ms-bar-dol','y',250-maxH);
+      _labAttr('ms-bar-yd','height',maxH/3); _labAttr('ms-bar-yd','y',250-maxH/3);
+      _labSet('ms-dol-top',dol.toFixed(0)+' A'); _labSet('ms-yd-top',yd.toFixed(0)+' A');
+    })
+  },
+
+  // ============ S2: VFD Energy Saving ============
+  'vfd-saving': {
+    html: () => _labShell({
+      eyebrow: 'Industri · Efisiensi', title: 'VFD', italic: 'Energy Saving',
+      desc: 'Affinity law: daya pompa/fan ∝ kecepatan³. VFD jauh lebih hemat dari throttling/damper saat beban turun.',
+      svg: `<line x1="40" y1="250" x2="370" y2="250" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="90" y="250" width="60" height="0" fill="#c0392b" id="vf-bar-thr"/>
+        <rect x="240" y="250" width="60" height="0" fill="#15803d" id="vf-bar-vfd"/>
+        <text x="120" y="270" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Throttle/Damper</text>
+        <text x="270" y="270" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">VFD</text>
+        <text x="120" y="240" text-anchor="middle" font-family="Georgia" font-size="12" fill="#c0392b" font-weight="700" id="vf-thr-top">—</text>
+        <text x="270" y="240" text-anchor="middle" font-family="Georgia" font-size="12" fill="#15803d" font-weight="700" id="vf-vfd-top">—</text>
+        <text x="205" y="30" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a">Daya Serap (kW)</text>`,
+      controls: _labSld('vf-p', 'Daya rated motor (kW)', 1, 500, 75, 1)
+              + _labSld('vf-spd', 'Kecepatan operasi (%)', 20, 100, 70, 5)
+              + _labSld('vf-hr', 'Jam operasi / hari', 1, 24, 16, 1)
+              + _labSld('vf-tar', 'Tarif (Rp/kWh)', 800, 2500, 1500, 50),
+      outputs: _labOut('vf-pvfd', 'Daya dgn VFD', 'kW') + _labOut('vf-save', 'Hemat Daya', 'kW'),
+      formula: `P_VFD = P × (n%)³ · P_throttle ≈ P × (0.4 + 0.6·n%)<br>Penghematan ≈ <span id="vff-kwh">—</span> kWh/th ≈ <span id="vff-rp">—</span> Rp/th`
+    }),
+    init: () => _labBind(['vf-p','vf-spd','vf-hr','vf-tar'], () => {
+      const P=_labV('vf-p'), n=_labV('vf-spd')/100, hr=_labV('vf-hr'), tar=_labV('vf-tar');
+      const pv=P*Math.pow(n,3), pt=P*(0.4+0.6*n), save=Math.max(0,pt-pv);
+      const kwhYr=save*hr*365, rpYr=kwhYr*tar;
+      _labSetv('vf-p',P.toFixed(0)+' kW'); _labSetv('vf-spd',(_labV('vf-spd')).toFixed(0)+' %'); _labSetv('vf-hr',hr.toFixed(0)+' jam'); _labSetv('vf-tar','Rp '+tar.toFixed(0));
+      _labSet('vf-pvfd',pv.toFixed(1)); _labSet('vf-save',save.toFixed(1));
+      _labSet('vff-kwh',Math.round(kwhYr).toLocaleString('id-ID')); _labSet('vff-rp','Rp '+fmtRp(rpYr));
+      const maxH=200; _labAttr('vf-bar-thr','height',Math.min(pt/P,1)*maxH); _labAttr('vf-bar-thr','y',250-Math.min(pt/P,1)*maxH);
+      _labAttr('vf-bar-vfd','height',Math.min(pv/P,1)*maxH); _labAttr('vf-bar-vfd','y',250-Math.min(pv/P,1)*maxH);
+      _labSet('vf-thr-top',pt.toFixed(0)); _labSet('vf-vfd-top',pv.toFixed(0));
+    })
+  },
+
+  // ============ S3: Distribution Transformer Loading ============
+  'trafo-loading': {
+    html: () => _labShell({
+      eyebrow: 'Distribusi · Trafo', title: 'Transformer', italic: 'Loading',
+      desc: 'Pembebanan trafo distribusi. %loading = (kVA beban / rating) × 100. Aman ≤ 80%, waspada 80–100%, overload > 100%.',
+      svg: `<rect x="150" y="40" width="100" height="210" rx="6" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+        <rect x="150" y="250" width="100" height="0" id="tl-fill" fill="#15803d"/>
+        <line x1="140" y1="82" x2="260" y2="82" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="266" y="86" font-family="Georgia" font-size="10" fill="#c0392b">100%</text>
+        <line x1="140" y1="124" x2="260" y2="124" stroke="#9a7f4f" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="266" y="128" font-family="Georgia" font-size="10" fill="#9a7f4f">80%</text>
+        <text x="200" y="150" text-anchor="middle" font-family="Georgia" font-size="22" fill="#1a1d2e" font-weight="700" id="tl-pct">—</text>
+        <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="tl-status">—</text>`,
+      controls: _labSel('tl-rating', 'Rating trafo (kVA)', [50,100,160,200,250,315,400,630,1000].map(r=>`<option ${r===250?'selected':''}>${r}</option>`).join(''))
+              + _labSld('tl-load', 'Beban aktif (kW)', 0, 900, 180, 5)
+              + _labSld('tl-pf', 'Power factor', 0.7, 1, 0.85, 0.01),
+      outputs: _labOut('tl-kva', 'Beban Semu', 'kVA') + _labOut('tl-head', 'Sisa Kapasitas', 'kVA'),
+      formula: `S = P / cosφ · %loading = S / rating × 100<br>S = <span id="tlf-p">180</span> / <span id="tlf-pf">0.85</span> = <span id="tlf-kva">—</span> kVA dari <span id="tlf-r">250</span> kVA`
+    }),
+    init: () => _labBind(['tl-rating','tl-load','tl-pf'], () => {
+      const rating=_labV('tl-rating'), P=_labV('tl-load'), pf=_labV('tl-pf');
+      const kva=P/pf, pct=kva/rating*100, head=rating-kva;
+      _labSetv('tl-load',P.toFixed(0)+' kW'); _labSetv('tl-pf',pf.toFixed(2));
+      _labSet('tl-kva',kva.toFixed(1)); _labSet('tl-head',head.toFixed(1));
+      _labSet('tl-pct',pct.toFixed(0)+'%');
+      const col = pct>100?_RED:(pct>80?_GOLD:_GREEN);
+      const maxH=210, h=Math.min(pct/120,1)*maxH;
+      _labAttr('tl-fill','height',h); _labAttr('tl-fill','y',250-h); _labAttr('tl-fill','fill',col);
+      _labSet('tl-status', pct>100?'OVERLOAD':(pct>80?'WASPADA':'AMAN')); _labAttr('tl-status','fill',col); _labAttr('tl-pct','fill',col);
+      _labSet('tlf-p',P.toFixed(0)); _labSet('tlf-pf',pf.toFixed(2)); _labSet('tlf-kva',kva.toFixed(1)); _labSet('tlf-r',rating.toFixed(0));
+    })
+  },
+
+  // ============ S3: Feeder Drop & Losses 20 kV ============
+  'feeder-vd-20kv': {
+    html: () => _labShell({
+      eyebrow: 'Distribusi · Feeder', title: 'Feeder Drop', italic: '& Losses 20 kV',
+      desc: 'Penyulang 20 kV. I = P/(√3·V·cosφ). Drop ≈ √3·I·L·(R·cosφ + X·sinφ). Rugi daya = 3·I²·R·L.',
+      svg: `<rect x="20" y="95" width="50" height="50" rx="4" fill="#1a1d2e"/><text x="45" y="124" text-anchor="middle" font-family="Georgia" font-size="10" fill="#f5f0e6">GI 20kV</text>
+        <line x1="70" y1="120" x2="330" y2="120" stroke="#9a7f4f" stroke-width="4" id="fd-line"/>
+        <circle cx="330" cy="120" r="10" fill="#1a1d2e"/><text x="330" y="148" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">Beban</text>
+        <text x="200" y="108" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="fd-dist-lbl">8 km</text>
+        <text x="40" y="180" font-family="Georgia" font-size="11" fill="#1a1d2e">% Drop Tegangan</text>
+        <rect x="40" y="190" width="320" height="18" rx="4" fill="#e5e5e5"/><rect x="40" y="190" width="0" height="18" rx="4" fill="#15803d" id="fd-bar"/>
+        <text x="200" y="245" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" id="fd-pct">—</text>
+        <text x="200" y="268" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a" id="fd-loss-lbl">—</text>`,
+      controls: _labSld('fd-load', 'Beban (MW)', 0.1, 10, 3, 0.1)
+              + _labSld('fd-dist', 'Jarak (km)', 1, 30, 8, 1)
+              + _labSel('fd-cond', 'Konduktor (R Ω/km)', '<option value="0.46">AAAC 70 mm² (0.46)</option><option value="0.21" selected>AAAC 150 mm² (0.21)</option><option value="0.13">AAAC 240 mm² (0.13)</option>')
+              + _labSld('fd-pf', 'Power factor', 0.8, 1, 0.9, 0.01),
+      outputs: _labOut('fd-i', 'Arus Feeder', 'A') + _labOut('fd-loss', 'Rugi Daya', 'kW'),
+      formula: `X ≈ 0.35 Ω/km · sistem 20 kV<br>Drop = <span id="fdf-vd">—</span> % · Arus = <span id="fdf-i">—</span> A`
+    }),
+    init: () => _labBind(['fd-load','fd-dist','fd-cond','fd-pf'], () => {
+      const P=_labV('fd-load')*1e6, L=_labV('fd-dist'), R=_labV('fd-cond'), pf=_labV('fd-pf');
+      const X=0.35, V=20000, sinp=Math.sqrt(Math.max(0,1-pf*pf));
+      const I=P/(Math.sqrt(3)*V*pf);
+      const Vd=Math.sqrt(3)*I*L*(R*pf+X*sinp), pct=Vd/V*100;
+      const loss=3*I*I*R*L/1000;
+      _labSetv('fd-load',_labV('fd-load').toFixed(1)+' MW'); _labSetv('fd-dist',L.toFixed(0)+' km'); _labSetv('fd-pf',pf.toFixed(2));
+      _labSet('fd-i',I.toFixed(0)); _labSet('fd-loss',loss.toFixed(0));
+      _labSet('fd-dist-lbl',L.toFixed(0)+' km'); _labSet('fd-loss-lbl','Rugi: '+loss.toFixed(0)+' kW');
+      const col=pct>5?_RED:(pct>3?_GOLD:_GREEN);
+      _labSet('fd-pct',pct.toFixed(2)+' %'); _labAttr('fd-pct','fill',col);
+      _labAttr('fd-bar','width',Math.min(pct/10,1)*320); _labAttr('fd-bar','fill',col); _labAttr('fd-line','stroke',col===_GREEN?_GOLD:col);
+      _labSet('fdf-vd',pct.toFixed(2)); _labSet('fdf-i',I.toFixed(0));
+    })
+  },
+
+  // ============ S4: Transmission Line Sag & Tension ============
+  'line-sag': {
+    html: () => _labShell({
+      eyebrow: 'Transmisi · Mekanik', title: 'Line Sag', italic: '& Tension',
+      desc: 'Andongan parabola: S = w·L² / (8·T). Span makin panjang & beban makin berat → sag besar; tarikan tinggi → sag kecil.',
+      svg: `<line x1="50" y1="60" x2="50" y2="230" stroke="#1a1d2e" stroke-width="3"/><line x1="350" y1="60" x2="350" y2="230" stroke="#1a1d2e" stroke-width="3"/>
+        <path d="M50 70 Q200 70 350 70" stroke="#9a7f4f" stroke-width="2.5" fill="none" id="ls-curve"/>
+        <line x1="200" y1="70" x2="200" y2="70" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 3" id="ls-sagline"/>
+        <text x="212" y="120" font-family="Georgia" font-size="12" fill="#c0392b" font-weight="600" id="ls-sag-lbl">sag</text>
+        <text x="200" y="255" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a" id="ls-span-lbl">span 300 m</text>`,
+      controls: _labSld('ls-span', 'Panjang span L (m)', 100, 500, 300, 10)
+              + _labSld('ls-w', 'Berat konduktor w (N/m)', 5, 30, 15, 0.5)
+              + _labSld('ls-t', 'Tarikan T (kN)', 10, 60, 30, 1),
+      outputs: _labOut('ls-sag', 'Andongan (Sag)', 'm') + _labOut('ls-len', 'Panjang Konduktor', 'm'),
+      formula: `S = w·L² / (8·T)<br>S = <span id="lsf-w">15</span>·<span id="lsf-l">300</span>² / (8·<span id="lsf-t">30000</span>) = <span id="lsf-s">—</span> m`
+    }),
+    init: () => _labBind(['ls-span','ls-w','ls-t'], () => {
+      const L=_labV('ls-span'), w=_labV('ls-w'), T=_labV('ls-t')*1000;
+      const S=w*L*L/(8*T), len=L+8*S*S/(3*L);
+      _labSetv('ls-span',L.toFixed(0)+' m'); _labSetv('ls-w',w.toFixed(1)+' N/m'); _labSetv('ls-t',_labV('ls-t').toFixed(0)+' kN');
+      _labSet('ls-sag',S.toFixed(2)); _labSet('ls-len',len.toFixed(2));
+      _labSet('ls-span-lbl','span '+L.toFixed(0)+' m'); _labSet('ls-sag-lbl',S.toFixed(2)+' m');
+      const sagPx=Math.min(S/15,1)*150, midY=70+sagPx;
+      _labAttr('ls-curve','d',`M50 70 Q200 ${(70+2*sagPx).toFixed(0)} 350 70`);
+      _labAttr('ls-sagline','y2',midY.toFixed(0)); _labAttr('ls-sag-lbl','y',(midY-6).toFixed(0));
+      _labSet('lsf-w',w.toFixed(1)); _labSet('lsf-l',L.toFixed(0)); _labSet('lsf-t',T.toFixed(0)); _labSet('lsf-s',S.toFixed(2));
+    })
+  },
+
+  // ============ S4: Insulation Coordination (BIL) ============
+  'insulation-coord': {
+    html: () => _labShell({
+      eyebrow: 'Transmisi · Isolasi', title: 'Insulation', italic: 'Coordination (BIL)',
+      desc: 'Pilih BIL standar & jumlah isolator piring untuk tegangan sistem, plus jarak rambat (creepage) sesuai tingkat polusi (IEC 60815).',
+      svg: `<line x1="200" y1="30" x2="200" y2="50" stroke="#1a1d2e" stroke-width="3"/>
+        <g id="ic-discs"></g>
+        <line x1="180" y1="250" x2="220" y2="250" stroke="#1a1d2e" stroke-width="3"/><circle cx="200" cy="258" r="5" fill="#9a7f4f"/>
+        <text x="280" y="150" font-family="Georgia" font-size="13" fill="#1a1d2e" font-weight="700" id="ic-n-lbl">— piring</text>`,
+      controls: _labSel('ic-v', 'Tegangan sistem', '<option value="20">20 kV</option><option value="70">70 kV</option><option value="150" selected>150 kV</option><option value="275">275 kV</option><option value="500">500 kV</option>')
+              + _labSel('ic-pol', 'Tingkat polusi (mm/kV)', '<option value="16">Ringan (16)</option><option value="20" selected>Sedang (20)</option><option value="25">Berat (25)</option><option value="31">Sangat berat (31)</option>')
+              + _labSld('ic-alt', 'Ketinggian (mdpl)', 0, 3000, 500, 100),
+      outputs: _labOut('ic-bil', 'BIL Standar', 'kV') + _labOut('ic-creep', 'Creepage Total', 'mm'),
+      formula: `Creepage = V_fasa × (mm/kV) × faktor_altitude · 1 piring ≈ 292 mm<br>Jumlah piring = <span id="icf-n">—</span> unit`
+    }),
+    init: () => _labBind(['ic-v','ic-pol','ic-alt'], () => {
+      const V=_labV('ic-v'), pol=_labV('ic-pol'), alt=_labV('ic-alt');
+      const BILMAP={20:125,70:325,150:650,275:1050,500:1550};
+      const bil=BILMAP[V]||650;
+      const altF=1+Math.max(0,(alt-1000))/12500;
+      const Vph=V/Math.sqrt(3);
+      const creep=Vph*pol*altF;
+      const discCreep=292, discs=Math.max(1,Math.ceil(creep/discCreep));
+      _labSetv('ic-alt',alt.toFixed(0)+' m');
+      _labSet('ic-bil',bil); _labSet('ic-creep',creep.toFixed(0));
+      _labSet('ic-n-lbl',discs+' piring'); _labSet('icf-n',discs);
+      let g='', shown=Math.min(discs,12), y0=50, step=Math.min(16,(195)/shown);
+      for(let i=0;i<shown;i++){ const y=y0+i*step; g+=`<ellipse cx="200" cy="${(y+step/2).toFixed(0)}" rx="16" ry="${(step*0.32).toFixed(1)}" fill="#cdd3dc" stroke="#1a1d2e" stroke-width="1"/>`; }
+      if(discs>12) g+=`<text x="200" y="${(y0+shown*step+12).toFixed(0)}" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">+${discs-12} lagi</text>`;
+      _labSet('ic-discs', ''); document.getElementById('ic-discs').innerHTML=g;
+    })
+  },
+
+  // ============ S5: Load Forecasting (Moving Average) ============
+  'load-forecast': {
+    html: () => _labShell({
+      eyebrow: 'Data Science · Forecasting', title: 'Load Forecasting', italic: 'Moving Average',
+      desc: 'Prediksi beban dengan rata-rata bergerak (moving average). Window kecil = responsif tapi berisik; besar = halus tapi lambat.',
+      svg: `<line x1="40" y1="240" x2="380" y2="240" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="40" y1="40" x2="40" y2="240" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="lfc-actual" fill="none" stroke="#1a1d2e" stroke-width="2" points=""/>
+        <polyline id="lfc-ma" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="4 3" points=""/>
+        <text x="300" y="55" font-family="Georgia" font-size="11" fill="#1a1d2e">— Aktual</text>
+        <text x="300" y="72" font-family="Georgia" font-size="11" fill="#c0392b">-- Forecast (MA)</text>`,
+      controls: _labSld('lf-win', 'Window MA (hari)', 2, 7, 3, 1),
+      outputs: _labOut('lf-next', 'Forecast Besok', 'MW') + _labOut('lf-mape', 'Error (MAPE)', '%'),
+      formula: `Data beban 14 hari (MW). Forecast_t = rata-rata <span id="lff-w">3</span> hari sebelumnya.<br>MAPE = rata-rata |aktual − forecast| / aktual × 100%`
+    }),
+    init: () => {
+      const DATA=[210,225,219,240,255,248,260,272,265,280,295,288,300,312];
+      _labBind(['lf-win'], () => {
+        const w=_labV('lf-win');
+        _labSetv('lf-win',w.toFixed(0)+' hari'); _labSet('lff-w',w.toFixed(0));
+        const ma=[]; let errSum=0,errN=0;
+        for(let i=0;i<DATA.length;i++){ if(i>=w){ const avg=DATA.slice(i-w,i).reduce((a,b)=>a+b,0)/w; ma[i]=avg; errSum+=Math.abs(DATA[i]-avg)/DATA[i]; errN++; } }
+        const nextF=DATA.slice(DATA.length-w).reduce((a,b)=>a+b,0)/w;
+        const mape=errN?errSum/errN*100:0;
+        _labSet('lf-next',nextF.toFixed(0)); _labSet('lf-mape',mape.toFixed(1));
+        const min=200,max=320, X=i=>40+(340)*(i/(DATA.length-1)), Y=v=>240-(v-min)/(max-min)*190;
+        _labAttr('lfc-actual','points',DATA.map((v,i)=>X(i).toFixed(0)+','+Y(v).toFixed(0)).join(' '));
+        _labAttr('lfc-ma','points',ma.map((v,i)=>v==null?null:X(i).toFixed(0)+','+Y(v).toFixed(0)).filter(Boolean).join(' '));
+      });
+    }
+  },
+
+  // ============ S5: NTL / Loss Detection ============
+  'ntl-detect': {
+    html: () => _labShell({
+      eyebrow: 'Data Science · Losses', title: 'NTL', italic: 'Loss Detection',
+      desc: 'Bandingkan kWh tercatat vs estimasi pemakaian wajar. Selisih besar → indikasi non-technical loss (pencurian/meter rusak).',
+      svg: `<line x1="40" y1="250" x2="370" y2="250" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="90" y="250" width="60" height="0" fill="#1a1d2e" id="nt-bar-exp"/>
+        <rect x="240" y="250" width="60" height="0" fill="#15803d" id="nt-bar-bil"/>
+        <text x="120" y="270" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Estimasi</text>
+        <text x="270" y="270" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Tercatat</text>
+        <text x="205" y="30" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="nt-verdict">—</text>`,
+      controls: _labSld('nt-exp', 'Estimasi wajar (kWh)', 100, 1000, 500, 10)
+              + _labSld('nt-bil', 'Tercatat meter (kWh)', 0, 1000, 470, 10)
+              + _labSld('nt-th', 'Ambang anomali (%)', 5, 40, 15, 1),
+      outputs: _labOut('nt-loss', 'Indikasi Loss', '%') + _labOut('nt-kwh', 'Selisih', 'kWh'),
+      formula: `Loss% = (Estimasi − Tercatat) / Estimasi × 100<br>Status: <span id="ntf-st">—</span> (ambang <span id="ntf-th">15</span>%)`
+    }),
+    init: () => _labBind(['nt-exp','nt-bil','nt-th'], () => {
+      const exp=_labV('nt-exp'), bil=_labV('nt-bil'), th=_labV('nt-th');
+      const loss=Math.max(0,(exp-bil)/exp*100), diff=exp-bil, flag=loss>th;
+      _labSetv('nt-exp',exp.toFixed(0)+' kWh'); _labSetv('nt-bil',bil.toFixed(0)+' kWh'); _labSetv('nt-th',th.toFixed(0)+' %');
+      _labSet('nt-loss',loss.toFixed(1)); _labSet('nt-kwh',diff.toFixed(0));
+      const col=flag?_RED:_GREEN, maxH=200, mx=Math.max(exp,bil,1);
+      _labAttr('nt-bar-exp','height',exp/mx*maxH); _labAttr('nt-bar-exp','y',250-exp/mx*maxH);
+      _labAttr('nt-bar-bil','height',bil/mx*maxH); _labAttr('nt-bar-bil','y',250-bil/mx*maxH); _labAttr('nt-bar-bil','fill',col);
+      _labSet('nt-verdict',flag?'⚠ SUSPECT NTL':'✓ NORMAL'); _labAttr('nt-verdict','fill',col);
+      _labSet('ntf-st',flag?'SUSPECT':'NORMAL'); _labSet('ntf-th',th.toFixed(0));
+    })
+  },
+
+  // ============ S6: Energy Audit & Payback ============
+  'energy-payback': {
+    html: () => _labShell({
+      eyebrow: 'Energy Auditor · Ekonomi', title: 'Energy Audit', italic: '& Payback',
+      desc: 'Hitung penghematan retrofit (mis. ganti ke peralatan efisien) & berapa tahun investasi balik modal.',
+      svg: `<line x1="40" y1="220" x2="370" y2="220" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="90" y="220" width="55" height="0" fill="#c0392b" id="ep-bar-old"/>
+        <rect x="230" y="220" width="55" height="0" fill="#15803d" id="ep-bar-new"/>
+        <text x="117" y="238" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Existing</text>
+        <text x="257" y="238" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Efisien</text>
+        <text x="205" y="270" text-anchor="middle" font-family="Georgia" font-size="15" font-weight="700" fill="#9a7f4f" id="ep-pb">—</text>`,
+      controls: _labSld('ep-old', 'Daya existing (kW)', 1, 200, 50, 1)
+              + _labSld('ep-new', 'Daya efisien (kW)', 1, 200, 35, 1)
+              + _labSld('ep-hr', 'Jam operasi / tahun', 500, 8760, 4000, 100)
+              + _labSld('ep-tar', 'Tarif (Rp/kWh)', 800, 2500, 1500, 50)
+              + _labSld('ep-inv', 'Investasi (juta Rp)', 1, 500, 50, 1),
+      outputs: _labOut('ep-kwh', 'Hemat Energi', 'kWh/th') + _labOut('ep-rp', 'Hemat Biaya', 'Rp/th'),
+      formula: `Hemat = (P_old − P_new) × jam × tarif · Payback = Investasi / Hemat<br>Payback ≈ <span id="epf-pb">—</span> tahun`
+    }),
+    init: () => _labBind(['ep-old','ep-new','ep-hr','ep-tar','ep-inv'], () => {
+      const o=_labV('ep-old'), n=_labV('ep-new'), hr=_labV('ep-hr'), tar=_labV('ep-tar'), inv=_labV('ep-inv')*1e6;
+      const dKW=Math.max(0,o-n), kwh=dKW*hr, rp=kwh*tar, pb=rp>0?inv/rp:Infinity;
+      _labSetv('ep-old',o.toFixed(0)+' kW'); _labSetv('ep-new',n.toFixed(0)+' kW'); _labSetv('ep-hr',hr.toFixed(0)+' jam'); _labSetv('ep-tar','Rp '+tar.toFixed(0)); _labSetv('ep-inv','Rp '+_labV('ep-inv').toFixed(0)+' jt');
+      _labSet('ep-kwh',Math.round(kwh).toLocaleString('id-ID')); _labSet('ep-rp','Rp '+fmtRp(rp));
+      const maxH=170, mx=Math.max(o,n,1);
+      _labAttr('ep-bar-old','height',o/mx*maxH); _labAttr('ep-bar-old','y',220-o/mx*maxH);
+      _labAttr('ep-bar-new','height',n/mx*maxH); _labAttr('ep-bar-new','y',220-n/mx*maxH);
+      _labSet('ep-pb', isFinite(pb)?('Payback '+pb.toFixed(1)+' th'):'—'); _labSet('epf-pb', isFinite(pb)?pb.toFixed(1):'∞');
+    })
+  },
+
+  // ============ S6: Power Factor Correction ============
+  'pf-correction': {
+    html: () => _labShell({
+      eyebrow: 'Energy Auditor · Kualitas Daya', title: 'Power Factor', italic: 'Correction',
+      desc: 'Capacitor bank menaikkan cosφ. Qc = P·(tanφ₁ − tanφ₂). PF tinggi → arus & denda kVARh turun.',
+      svg: `<line x1="50" y1="240" x2="300" y2="240" stroke="#1a1d2e" stroke-width="2"/>
+        <line x1="50" y1="240" x2="300" y2="100" stroke="#c0392b" stroke-width="2.5" id="pfc-s1"/>
+        <line x1="300" y1="240" x2="300" y2="100" stroke="#c0392b" stroke-width="2" id="pfc-q1"/>
+        <line x1="50" y1="240" x2="300" y2="170" stroke="#15803d" stroke-width="2.5" id="pfc-s2"/>
+        <line x1="300" y1="240" x2="300" y2="170" stroke="#15803d" stroke-width="2" id="pfc-q2"/>
+        <text x="175" y="256" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">P (kW)</text>
+        <text x="150" y="160" font-family="Georgia" font-size="11" fill="#c0392b">S sebelum</text>
+        <text x="150" y="205" font-family="Georgia" font-size="11" fill="#15803d">S sesudah</text>`,
+      controls: _labSld('pf-p', 'Daya aktif P (kW)', 1, 500, 100, 1)
+              + _labSld('pf-pf1', 'PF awal (cosφ₁)', 0.5, 0.95, 0.75, 0.01)
+              + _labSld('pf-pf2', 'PF target (cosφ₂)', 0.85, 1, 0.95, 0.01),
+      outputs: _labOut('pf-qc', 'Kapasitor Dibutuhkan', 'kVAR') + _labOut('pf-s2', 'Daya Semu Baru', 'kVA'),
+      formula: `Qc = P·(tanφ₁ − tanφ₂)<br>Qc = <span id="pff-p">100</span>·(<span id="pff-t1">0.88</span> − <span id="pff-t2">0.33</span>) = <span id="pff-qc">—</span> kVAR`
+    }),
+    init: () => _labBind(['pf-p','pf-pf1','pf-pf2'], () => {
+      const P=_labV('pf-p'), pf1=_labV('pf-pf1'), pf2=Math.max(_labV('pf-pf2'),pf1+0.001);
+      const t1=Math.tan(Math.acos(pf1)), t2=Math.tan(Math.acos(pf2));
+      const Qc=P*(t1-t2), S1=P/pf1, S2=P/pf2;
+      _labSetv('pf-p',P.toFixed(0)+' kW'); _labSetv('pf-pf1',pf1.toFixed(2)); _labSetv('pf-pf2',_labV('pf-pf2').toFixed(2));
+      _labSet('pf-qc',Qc.toFixed(1)); _labSet('pf-s2',S2.toFixed(1));
+      const px=250, q1px=(t1)*px*0.45, q2px=(t2)*px*0.45;
+      _labAttr('pfc-q1','y2',(240-Math.min(q1px,140)).toFixed(0)); _labAttr('pfc-s1','y2',(240-Math.min(q1px,140)).toFixed(0));
+      _labAttr('pfc-q2','y2',(240-Math.min(q2px,140)).toFixed(0)); _labAttr('pfc-s2','y2',(240-Math.min(q2px,140)).toFixed(0));
+      _labSet('pff-p',P.toFixed(0)); _labSet('pff-t1',t1.toFixed(2)); _labSet('pff-t2',t2.toFixed(2)); _labSet('pff-qc',Qc.toFixed(1));
+    })
+  },
+
+  // ============ S7: BESS Sizing ============
+  'bess-sizing': {
+    html: () => _labShell({
+      eyebrow: 'Renewable · Storage', title: 'BESS', italic: 'Sizing',
+      desc: 'Kapasitas baterai = (beban × autonomy) / (DoD × efisiensi). Inverter mengikuti daya beban puncak.',
+      svg: `<rect x="140" y="60" width="120" height="180" rx="8" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+        <rect x="180" y="48" width="40" height="14" rx="3" fill="#1a1d2e"/>
+        <rect x="140" y="240" width="120" height="0" id="bs-fill" fill="#15803d"/>
+        <text x="200" y="155" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" fill="#1a1d2e" id="bs-kwh-lbl">—</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a" id="bs-inv-lbl">inverter — kW</text>`,
+      controls: _labSld('bs-load', 'Beban (kW)', 1, 500, 50, 1)
+              + _labSld('bs-hr', 'Autonomy (jam)', 1, 12, 4, 0.5)
+              + _labSld('bs-dod', 'Depth of Discharge (%)', 50, 95, 80, 1)
+              + _labSld('bs-eff', 'Efisiensi sistem (%)', 80, 98, 90, 1),
+      outputs: _labOut('bs-kwh', 'Kapasitas Baterai', 'kWh') + _labOut('bs-inv', 'Inverter', 'kW'),
+      formula: `Energi = beban × jam = <span id="bsf-e">—</span> kWh<br>Baterai = Energi / (DoD × η) = <span id="bsf-b">—</span> kWh`
+    }),
+    init: () => _labBind(['bs-load','bs-hr','bs-dod','bs-eff'], () => {
+      const load=_labV('bs-load'), hr=_labV('bs-hr'), dod=_labV('bs-dod')/100, eff=_labV('bs-eff')/100;
+      const energy=load*hr, batt=energy/(dod*eff), inv=load;
+      _labSetv('bs-load',load.toFixed(0)+' kW'); _labSetv('bs-hr',hr.toFixed(1)+' jam'); _labSetv('bs-dod',_labV('bs-dod').toFixed(0)+' %'); _labSetv('bs-eff',_labV('bs-eff').toFixed(0)+' %');
+      _labSet('bs-kwh',batt.toFixed(1)); _labSet('bs-inv',inv.toFixed(0));
+      _labSet('bs-kwh-lbl',batt.toFixed(0)+' kWh'); _labSet('bs-inv-lbl','inverter '+inv.toFixed(0)+' kW');
+      const fillH=Math.min(dod,1)*180; _labAttr('bs-fill','height',fillH); _labAttr('bs-fill','y',240-fillH);
+      _labSet('bsf-e',energy.toFixed(1)); _labSet('bsf-b',batt.toFixed(1));
+    })
+  },
+
+  // ============ S8: Arc Flash & PPE Selector ============
+  'arc-flash-ppe': {
+    html: () => _labShell({
+      eyebrow: 'K3 Listrik · Arc Flash', title: 'Arc Flash', italic: '& PPE Selector',
+      desc: 'Metode Ralph Lee (konservatif): E = 5.12×10⁵·V·I_bf·(t/D²) J/cm². Kategori APD (PPE) mengikuti NFPA 70E.',
+      svg: `<path d="M150 60 L200 130 L180 130 L230 200 L195 145 L215 145 Z" fill="#FFD400" stroke="#FF6B00" stroke-width="1.5"/>
+        <circle cx="200" cy="150" r="95" stroke="#FF6B00" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+        <rect x="60" y="250" width="280" height="34" rx="6" id="af-box" fill="rgba(21,128,61,0.1)" stroke="#15803d" stroke-width="1.5"/>
+        <text x="200" y="232" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" id="af-e">—</text>
+        <text x="200" y="272" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="700" id="af-cat">—</text>`,
+      controls: _labSel('af-v', 'Tegangan sistem', '<option value="0.4">0.4 kV</option><option value="0.69">0.69 kV</option><option value="4.16">4.16 kV</option><option value="13.8" selected>13.8 kV</option><option value="20">20 kV</option>')
+              + _labSld('af-ibf', 'Arus gangguan I_bf (kA)', 1, 40, 20, 0.5)
+              + _labSld('af-t', 'Waktu busur t (detik)', 0.05, 2, 0.2, 0.05)
+              + _labSld('af-d', 'Jarak kerja D (mm)', 300, 1000, 455, 5),
+      outputs: _labOut('af-energy', 'Incident Energy', 'cal/cm²') + _labOut('af-ppe', 'Kategori PPE', ''),
+      formula: `E[J/cm²] = 5.12×10⁵·V·I_bf·(t/D²) · cal = J/4.184<br>E = <span id="aff-e">—</span> cal/cm² · batas kerja: <span id="aff-cat">—</span>`
+    }),
+    init: () => _labBind(['af-v','af-ibf','af-t','af-d'], () => {
+      const V=_labV('af-v'), Ibf=_labV('af-ibf'), t=_labV('af-t'), D=_labV('af-d');
+      const EJ=5.12e5*V*Ibf*(t/(D*D)), Ecal=EJ/4.184;
+      _labSetv('af-ibf',Ibf.toFixed(1)+' kA'); _labSetv('af-t',t.toFixed(2)+' s'); _labSetv('af-d',D.toFixed(0)+' mm');
+      _labSet('af-energy',Ecal.toFixed(2));
+      let cat,col;
+      if(Ecal<=1.2){cat='Minimal (<1.2)';col=_GREEN;}
+      else if(Ecal<=4){cat='PPE Cat 1';col=_GREEN;}
+      else if(Ecal<=8){cat='PPE Cat 2';col=_GOLD;}
+      else if(Ecal<=25){cat='PPE Cat 3';col=_GOLD;}
+      else if(Ecal<=40){cat='PPE Cat 4';col=_RED;}
+      else{cat='BAHAYA >40 — jgn energized';col=_RED;}
+      _labSet('af-ppe',cat.replace('PPE ','').replace(' (<1.2)',''));
+      _labSet('af-cat',cat); _labAttr('af-cat','fill',col); _labAttr('af-e','fill',col);
+      _labAttr('af-box','stroke',col); _labAttr('af-box','fill', col===_RED?'rgba(192,57,43,0.1)':(col===_GOLD?'rgba(154,127,79,0.12)':'rgba(21,128,61,0.1)'));
+      _labSet('af-e',Ecal.toFixed(1)+' cal/cm²');
+      _labSet('aff-e',Ecal.toFixed(2)); _labSet('aff-cat',cat);
+    })
+  },
+
+  // ============ S8: Earthing & Touch Voltage ============
+  'earthing-touch': {
+    html: () => _labShell({
+      eyebrow: 'K3 Listrik · Pembumian', title: 'Earthing', italic: '& Touch Voltage',
+      desc: 'Resistansi 1 batang elektroda (Dwight): R = (ρ/2πL)·(ln(8L/d) − 1). Tegangan sentuh ≈ I_fault × R. Aman bila ≤ 50 V.',
+      svg: `<rect x="40" y="120" width="320" height="130" fill="#efe6d4"/>
+        <line x1="200" y1="90" x2="200" y2="235" stroke="#9a7f4f" stroke-width="6" id="et-rod"/>
+        <line x1="170" y1="90" x2="230" y2="90" stroke="#1a1d2e" stroke-width="3"/>
+        <text x="40" y="112" font-family="Georgia" font-size="11" fill="#6b6d7a">permukaan tanah</text>
+        <text x="245" y="160" font-family="Georgia" font-size="14" font-weight="700" fill="#1a1d2e" id="et-r-lbl">R = — Ω</text>
+        <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="700" id="et-verdict">—</text>`,
+      controls: _labSel('et-rho', 'Jenis tanah (ρ Ω·m)', '<option value="30">Tanah basah (30)</option><option value="100" selected>Lempung (100)</option><option value="300">Berpasir (300)</option><option value="1000">Berbatu (1000)</option>')
+              + _labSld('et-l', 'Panjang elektroda L (m)', 1, 6, 3, 0.5)
+              + _labSld('et-d', 'Diameter batang d (mm)', 12, 30, 16, 1)
+              + _labSld('et-if', 'Arus gangguan ke tanah (A)', 1, 50, 10, 1),
+      outputs: _labOut('et-r', 'Resistansi Pembumian', 'Ω') + _labOut('et-touch', 'Tegangan Sentuh', 'V'),
+      formula: `R = (ρ / 2πL)·(ln(8L/d) − 1)<br>V_sentuh = I × R = <span id="etf-i">10</span> × <span id="etf-r">—</span> = <span id="etf-v">—</span> V`
+    }),
+    init: () => _labBind(['et-rho','et-l','et-d','et-if'], () => {
+      const rho=_labV('et-rho'), L=_labV('et-l'), d=_labV('et-d')/1000, If=_labV('et-if');
+      const R=(rho/(2*Math.PI*L))*(Math.log(8*L/d)-1), Vt=If*R, safe=Vt<=50;
+      _labSetv('et-l',L.toFixed(1)+' m'); _labSetv('et-d',_labV('et-d').toFixed(0)+' mm'); _labSetv('et-if',If.toFixed(0)+' A');
+      _labSet('et-r',R.toFixed(2)); _labSet('et-touch',Vt.toFixed(0));
+      _labSet('et-r-lbl','R = '+R.toFixed(1)+' Ω');
+      const col=safe?_GREEN:_RED;
+      _labSet('et-verdict',safe?'✓ AMAN (≤ 50 V)':'✗ BAHAYA (> 50 V)'); _labAttr('et-verdict','fill',col); _labAttr('et-rod','stroke',safe?'#9a7f4f':_RED);
+      _labSet('etf-i',If.toFixed(0)); _labSet('etf-r',R.toFixed(2)); _labSet('etf-v',Vt.toFixed(0));
+    })
+  }
+};
 
 // ================================================
 // CAREER ADVISORY — Quiz engine + recommendation
@@ -17631,7 +18600,7 @@ const FAQ_DATA = [
     a: 'Ya — sudah termasuk. Setelah Anda menyelesaikan Level 2 Fundamental, akses ke <strong>Career Advisory</strong> aktif: (1) pemetaan jalur karir personal ke 8 jalur (PLN distribusi, IPP, kontraktor MEP, konsultan, K3, auditor, renewable, manufaktur); (2) review CV &amp; portofolio oleh advisor industri; (3) mock interview teknis dengan AI + 1 sesi live bulanan dengan engineer senior; (4) career mentoring 30 menit/bulan via dashboard untuk diskusi target karir, gaji, atau transisi industri.' },
 
   { cat: 'Lab & Simulator', q: 'Apa itu Lab / Simulator Room?',
-    a: 'Ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta. Isinya: <strong>6 Digital Simulator</strong> (wiring panel, motor control 3-fase, PLC ladder, pengukuran Megger/Earth tester, proteksi grading, distribusi 20 kV), <strong>9 Design Calculator</strong> (cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling, protection coordination), plus <strong>Physical Lab Room</strong> mitra ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.' },
+    a: 'Ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta. Isinya: <strong>16 Simulator Lab per spesialisasi</strong> (Instalasi: Lighting/Voltage Drop/MCB; Industri: Motor Starting/VFD; Distribusi: Trafo Loading/Feeder 20 kV; Transmisi: Sag-Tension/BIL; Data Science: Load Forecasting/NTL; Auditor: Energy Payback/Power Factor; Renewable: PV/BESS; K3: Arc Flash/Pembumian), <strong>9 Design Calculator</strong> (cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling, protection coordination), plus <strong>Physical Lab Room</strong> mitra ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.' },
   { cat: 'Lab & Simulator', q: 'Bagaimana cara akses Lab & Simulator?',
     a: 'Buka menu navigasi atas → <strong>Labs</strong>, atau langsung dari dashboard member. Semua simulator gratis untuk member aktif paket Rp 299.000. Untuk Physical Lab Room (offline), undangan dikirim via email/WA H-7 untuk jadwal terdekat di kota Anda.' },
   { cat: 'Lab & Simulator', q: 'Simulator butuh install software?',

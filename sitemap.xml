@@ -10,6 +10,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://electraacademy.com/manual-book.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- Hash-routed views — Google sebenarnya tidak crawl hash, tapi
        kita inisiasi awareness dgn sitemap. Untuk SEO real, perlu
        migrate ke per-jalur HTML page (Next.js / static pre-render). -->
