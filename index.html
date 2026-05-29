@@ -15233,7 +15233,14 @@ const SIMULATORS = [
   { id: 'biogas-power', jalur: 'S13', category: 'WtE · Biogas', name: 'Landfill Gas & Biogas Power', desc: 'Produksi metana dari sampah organik, daya genset gas, & kredit karbon dari penangkapan CH₄.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.grid, working: true },
   { id: 'wte-economics', jalur: 'S13', category: 'WtE · Ekonomi', name: 'WtE Plant Economics', desc: 'Pendapatan WtE dari tipping fee + jual listrik vs OPEX; laba operasi & margin proyek.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
   { id: 'waste-sort', jalur: 'S13', category: 'WtE · Komposisi', name: 'Waste Composition & LHV', desc: 'Nilai kalor sampah campuran dari fraksi organik/plastik/kertas; kelayakan insinerasi (≥7 MJ/kg).', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.audit, working: true },
-  { id: 'wte-vs-recycle', jalur: 'S13', category: 'WtE · Strategi', name: 'Recycle vs Incinerate', desc: 'Bandingkan dampak CO₂ daur ulang vs bakar per material; hierarki sampah & rekomendasi terbaik.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.data, working: true }
+  { id: 'wte-vs-recycle', jalur: 'S13', category: 'WtE · Strategi', name: 'Recycle vs Incinerate', desc: 'Bandingkan dampak CO₂ daur ulang vs bakar per material; hierarki sampah & rekomendasi terbaik.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.data, working: true },
+
+  // ===== S14 · Hydrogen Energy =====
+  { id: 'h2-electrolyzer', jalur: 'S14', category: 'Hidrogen · Produksi', name: 'Electrolyzer H₂ Production', desc: 'Produksi hidrogen hijau dari elektroliser: kg H₂/hari, konsumsi air, efisiensi sistem & biaya per kg.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'h2-fuelcell', jalur: 'S14', category: 'Hidrogen · Fuel Cell', name: 'Fuel Cell Power & Efficiency', desc: 'Kurva polarisasi fuel cell (V-i), daya stack, tegangan & efisiensi terhadap rapat arus operasi.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'h2-lcoh', jalur: 'S14', category: 'Hidrogen · Ekonomi', name: 'Green H₂ Cost (LCOH)', desc: 'Levelized Cost of Hydrogen: komponen listrik + CAPEX + O&M vs target harga kompetitif.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'h2-p2g', jalur: 'S14', category: 'Hidrogen · Penyimpanan', name: 'Power-to-Gas Round Trip', desc: 'Efisiensi round-trip simpan listrik EBT jadi H₂ lalu balik via fuel cell; bandingkan vs baterai.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'h2-storage', jalur: 'S14', category: 'Hidrogen · Tangki', name: 'H₂ Storage & Refueling', desc: 'Massa H₂ dalam tangki bertekanan (350/700 bar), energi setara, & jumlah pengisian kendaraan FCEV.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true }
 ];
 
 // ================================================
@@ -19262,6 +19269,179 @@ const SIM_BUILDERS = {
       const ih=Math.abs(incCO2)*sc;
       if(incCO2>=0){ _labAttr('wr-bar-inc','y',base-ih); _labAttr('wr-bar-inc','height',ih); _labAttr('wr-bar-inc','fill','#c0392b'); }
       else { _labAttr('wr-bar-inc','y',base); _labAttr('wr-bar-inc','height',ih); _labAttr('wr-bar-inc','fill','#15803d'); }
+    })
+  },
+
+  // ============ S14: Electrolyzer Production ============
+  'h2-electrolyzer': {
+    html: () => _labShell({
+      eyebrow: 'Hidrogen · Produksi', title: 'Electrolyzer', italic: 'H₂ Production',
+      desc: 'Produksi hidrogen hijau dari elektroliser: laju H₂ = daya × efisiensi / energi spesifik (~50 kWh/kg). Hitung kg H₂/hari, konsumsi air, & efisiensi sistem.',
+      svg: `<rect x="150" y="55" width="100" height="120" rx="6" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+        <line x1="180" y1="65" x2="180" y2="165" stroke="#3aa0c8" stroke-width="3"/><line x1="220" y1="65" x2="220" y2="165" stroke="#c0392b" stroke-width="3"/>
+        <text x="180" y="60" text-anchor="middle" font-family="Georgia" font-size="14">−</text><text x="220" y="60" text-anchor="middle" font-family="Georgia" font-size="14">+</text>
+        <g id="h2-bubbles"></g>
+        <text x="200" y="200" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" fill="#3aa0c8" id="h2-rate">—</text>
+        <text x="200" y="258" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" id="h2-info">—</text>`,
+      controls: _labSld('h2-pow','Daya elektroliser (MW)',0.1,100,10,0.1)
+        + _labSel('h2-tech','Teknologi','<option value="52" selected>PEM (52 kWh/kg)</option><option value="50">Alkaline (50 kWh/kg)</option><option value="40">SOEC (40 kWh/kg)</option>')
+        + _labSld('h2-cf','Capacity factor (%)',20,95,60,1)
+        + _labSld('h2-cost','Harga listrik (Rp/kWh)',400,2000,800,50),
+      outputs: _labOut('h2-kg','Produksi H₂','kg/hari') + _labOut('h2-eff','Efisiensi Sistem','%') + _labOut('h2-lcoh','Biaya H₂','Rp/kg'),
+      formula: `kg/jam = MW×1000×CF / (kWh/kg) · air ≈ 9 L/kg H₂ · efisiensi = 39.4/(kWh/kg)<br>LCOH (listrik saja) = (kWh/kg) × harga listrik. HHV H₂ = 39.4 kWh/kg.`
+    }),
+    init: () => _labBind(['h2-pow','h2-tech','h2-cf','h2-cost'], () => {
+      const MW=_labV('h2-pow'), spec=_labV('h2-tech'), cf=_labV('h2-cf')/100, cost=_labV('h2-cost');
+      _labSetv('h2-pow',MW.toFixed(1)+' MW'); _labSetv('h2-cf',(cf*100).toFixed(0)+' %'); _labSetv('h2-cost','Rp '+cost.toFixed(0));
+      const kgH=MW*1000*cf/spec, kgDay=kgH*24, eff=39.4/spec*100, lcoh=spec*cost, water=kgDay*9;
+      _labSet('h2-kg',Math.round(kgDay).toLocaleString('id-ID')); _labSet('h2-eff',eff.toFixed(0)); _labSet('h2-lcoh','Rp '+Math.round(lcoh).toLocaleString('id-ID'));
+      _labSet('h2-rate',Math.round(kgDay).toLocaleString('id-ID')+' kg/hari'); _labSet('h2-info','Air ~'+Math.round(water).toLocaleString('id-ID')+' L/hari · efisiensi '+eff.toFixed(0)+'% · Rp'+Math.round(lcoh).toLocaleString('id-ID')+'/kg');
+      _labAttr('h2-info','fill','#3aa0c8');
+      // bubbles
+      const g=document.getElementById('h2-bubbles'); let o='';
+      for(let i=0;i<6;i++){ o+='<circle class="lab-glow" style="animation-delay:'+(i*0.2).toFixed(1)+'s" cx="'+(176+(i%2?-6:0))+'" cy="'+(150-i*14)+'" r="'+(2+i*0.4).toFixed(1)+'" fill="#3aa0c8" opacity="0.6"/>'; }
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S14: Fuel Cell Power ============
+  'h2-fuelcell': {
+    html: () => _labShell({
+      eyebrow: 'Hidrogen · Fuel Cell', title: 'Fuel Cell', italic: 'Power & Efficiency',
+      desc: 'Fuel cell mengubah H₂ jadi listrik. Daya = laju H₂ × energi spesifik × efisiensi. Lihat kurva polarisasi (tegangan turun saat arus naik) & daya keluaran.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Tegangan (V)</text>
+        <text x="372" y="250" text-anchor="end" font-family="Georgia" font-size="10" fill="#6b6d7a">Rapat arus (A/cm²)</text>
+        <line x1="52" y1="44" x2="52" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="232" x2="372" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="fc-vcurve" fill="none" stroke="#3aa0c8" stroke-width="2.5" points=""/>
+        <polyline id="fc-pcurve" fill="none" stroke="#e0863a" stroke-width="2" stroke-dasharray="4 3" points=""/>
+        <circle id="fc-op" r="5" fill="#15803d" class="lab-glow"/>
+        <text x="300" y="58" font-family="Georgia" font-size="9.5" fill="#3aa0c8">— V-i</text>
+        <text x="300" y="72" font-family="Georgia" font-size="9.5" fill="#e0863a">-- daya</text>
+        <text x="210" y="262" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#3aa0c8" id="fc-info">—</text>`,
+      controls: _labSld('fc-area','Luas sel aktif (cm²)',50,1000,300,10)
+        + _labSld('fc-cells','Jumlah sel (stack)',50,500,200,5)
+        + _labSld('fc-j','Rapat arus operasi (A/cm²)',0.1,1.5,0.6,0.05)
+        + _labSld('fc-h2','Pasokan H₂ (kg/jam)',0.5,50,5,0.5),
+      outputs: _labOut('fc-pow','Daya Stack','kW') + _labOut('fc-volt','Tegangan Stack','V') + _labOut('fc-eff','Efisiensi','%'),
+      formula: `V_sel ≈ 1.0 − 0.25·j − 0.06·ln(j) (polarisasi) · P = V_sel×n×j×area<br>Efisiensi ≈ V_sel/1.48 (HHV). Daya puncak di titik tertentu sebelum drop.`
+    }),
+    init: () => _labBind(['fc-area','fc-cells','fc-j','fc-h2'], () => {
+      const area=_labV('fc-area'), n=_labV('fc-cells'), j=_labV('fc-j'), h2=_labV('fc-h2');
+      _labSetv('fc-area',area.toFixed(0)+' cm²'); _labSetv('fc-cells',n.toFixed(0)); _labSetv('fc-j',j.toFixed(2)+' A/cm²'); _labSetv('fc-h2',h2.toFixed(1)+' kg/jam');
+      const vcell=jj=>Math.max(0.3,1.0-0.25*jj-0.06*Math.log(jj+0.01));
+      const vc=vcell(j), I=j*area, Pstack=vc*n*I/1000, Vstack=vc*n, eff=vc/1.48*100;
+      _labSet('fc-pow',Pstack.toFixed(1)); _labSet('fc-volt',Vstack.toFixed(0)); _labSet('fc-eff',eff.toFixed(0));
+      _labSet('fc-info','Daya '+Pstack.toFixed(0)+' kW · '+Vstack.toFixed(0)+' V · efisiensi '+eff.toFixed(0)+'%'); _labAttr('fc-info','fill','#3aa0c8');
+      const X=jj=>52+jj/1.5*320, Yv=v=>232-v/1.1*188, Pmax=vcell(1.5)*n*1.5*area/1000*1.1, Yp=p=>232-p/Pmax*188;
+      let vp='',pp=''; for(let jj=0.05;jj<=1.5;jj+=0.05){ vp+=X(jj).toFixed(1)+','+Yv(vcell(jj)).toFixed(1)+' '; pp+=X(jj).toFixed(1)+','+Yp(vcell(jj)*n*jj*area/1000).toFixed(1)+' '; }
+      _labAttr('fc-vcurve','points',vp.trim()); _labAttr('fc-pcurve','points',pp.trim());
+      _labAttr('fc-op','cx',X(j)); _labAttr('fc-op','cy',Yv(vc));
+    })
+  },
+
+  // ============ S14: Green H2 LCOH ============
+  'h2-lcoh': {
+    html: () => _labShell({
+      eyebrow: 'Hidrogen · Ekonomi', title: 'Green H₂', italic: 'Cost (LCOH)',
+      desc: 'Levelized Cost of Hydrogen: gabungan CAPEX elektroliser, biaya listrik, & O&M. Listrik biasanya komponen terbesar. Bandingkan dengan target harga H₂ kompetitif.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Komponen LCOH (USD/kg)</text>
+        <g id="hl-stack"></g>
+        <line id="hl-target" x1="60" y1="0" x2="360" y2="0" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="364" y="0" id="hl-tgt-lbl" font-family="Georgia" font-size="9" fill="#c0392b">target</text>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="hl-verdict">—</text>`,
+      controls: _labSld('hl-capex','CAPEX elektroliser (USD/kW)',300,2000,800,50)
+        + _labSld('hl-elec','Harga listrik (USD/MWh)',10,120,40,1)
+        + _labSld('hl-spec','Energi spesifik (kWh/kg)',40,60,52,1)
+        + _labSld('hl-cf','Capacity factor (%)',20,95,55,1)
+        + _labSld('hl-tgt','Target harga H₂ (USD/kg)',1,8,3,0.1),
+      outputs: _labOut('hl-elec-o','Komp. Listrik','USD/kg') + _labOut('hl-capex-o','Komp. CAPEX+O&M','USD/kg') + _labOut('hl-total','LCOH Total','USD/kg'),
+      formula: `Listrik = (kWh/kg)×harga · CAPEX/kg = CAPEX×CRF×(kWh/kg)/(8760×CF)<br>CRF≈0.1 (10%,20th) · O&M ≈ 20% CAPEX. Total = listrik + CAPEX + O&M.`
+    }),
+    init: () => _labBind(['hl-capex','hl-elec','hl-spec','hl-cf','hl-tgt'], () => {
+      const capex=_labV('hl-capex'), elec=_labV('hl-elec'), spec=_labV('hl-spec'), cf=_labV('hl-cf')/100, tgt=_labV('hl-tgt');
+      _labSetv('hl-capex','$'+capex.toFixed(0)); _labSetv('hl-elec','$'+elec.toFixed(0)); _labSetv('hl-spec',spec.toFixed(0)); _labSetv('hl-cf',(cf*100).toFixed(0)+' %'); _labSetv('hl-tgt','$'+tgt.toFixed(1));
+      const cElec=spec*elec/1000;
+      const crf=0.1, capexPerKg=capex*crf*spec/(8760*cf), om=capexPerKg*0.2;
+      const total=cElec+capexPerKg+om;
+      _labSet('hl-elec-o',cElec.toFixed(2)); _labSet('hl-capex-o',(capexPerKg+om).toFixed(2)); _labSet('hl-total',total.toFixed(2));
+      const ok=total<=tgt, col=ok?_GREEN:_RED;
+      _labSet('hl-verdict', ok?('✓ LCOH $'+total.toFixed(2)+'/kg ≤ target $'+tgt.toFixed(1)):('✗ LCOH $'+total.toFixed(2)+'/kg > target — turunkan biaya listrik/CAPEX')); _labAttr('hl-verdict','fill',col);
+      const g=document.getElementById('hl-stack'); const maxv=Math.max(total,tgt,1)*1.15, H=170, base=235, sc=H/maxv, x=160,w=80;
+      const segs=[[cElec,'#e0863a','listrik'],[capexPerKg,'#3aa0c8','CAPEX'],[om,'#9a7f4f','O&M']];
+      let y=base, o='';
+      segs.forEach(s=>{ const h=s[0]*sc; o+='<rect x="'+x+'" y="'+(y-h).toFixed(1)+'" width="'+w+'" height="'+h.toFixed(1)+'" fill="'+s[1]+'"/>'; y-=h; });
+      o+='<text x="'+(x+w/2)+'" y="'+(y-6).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a1d2e">$'+total.toFixed(2)+'</text>';
+      // legend
+      segs.forEach((s,i)=>{ const ly=70+i*20; o+='<rect x="290" y="'+(ly-9)+'" width="11" height="11" fill="'+s[1]+'"/><text x="306" y="'+(ly+1)+'" font-family="Georgia" font-size="9.5" fill="#1a1d2e">'+s[2]+'</text>'; });
+      g.innerHTML=o;
+      const ty=base-tgt*sc; _labAttr('hl-target','y1',ty); _labAttr('hl-target','y2',ty); _labAttr('hl-tgt-lbl','y',ty+3);
+    })
+  },
+
+  // ============ S14: Power-to-Gas Round Trip ============
+  'h2-p2g': {
+    html: () => _labShell({
+      eyebrow: 'Hidrogen · Penyimpanan', title: 'Power-to-Gas', italic: 'Round Trip',
+      desc: 'Simpan kelebihan listrik EBT jadi H₂, lalu balik jadi listrik via fuel cell. Tiap konversi ada rugi — efisiensi round-trip rendah. Bandingkan vs baterai.',
+      svg: `<text x="80" y="60" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Listrik</text>
+        <g id="p2g-flow"></g>
+        <text x="200" y="200" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" id="p2g-rt">—</text>
+        <text x="200" y="222" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">efisiensi round-trip</text>
+        <text x="200" y="258" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" id="p2g-info">—</text>`,
+      controls: _labSld('p2g-in','Listrik masuk (MWh)',1,1000,100,1)
+        + _labSld('p2g-el','Efisiensi elektrolisis (%)',55,80,65,1)
+        + _labSld('p2g-comp','Rugi kompresi+simpan (%)',2,15,8,1)
+        + _labSld('p2g-fc','Efisiensi fuel cell (%)',40,60,50,1),
+      outputs: _labOut('p2g-h2','Energi jadi H₂','MWh') + _labOut('p2g-out','Listrik kembali','MWh') + _labOut('p2g-rt-o','Round-Trip','%'),
+      formula: `η_RT = η_elektrolisis × (1−rugi simpan) × η_fuel cell<br>P2G ≈ 30–40% (vs baterai ~85%), tapi unggul untuk simpan musiman skala besar.`
+    }),
+    init: () => _labBind(['p2g-in','p2g-el','p2g-comp','p2g-fc'], () => {
+      const inE=_labV('p2g-in'), el=_labV('p2g-el')/100, comp=_labV('p2g-comp')/100, fc=_labV('p2g-fc')/100;
+      _labSetv('p2g-in',inE.toFixed(0)+' MWh'); _labSetv('p2g-el',(el*100).toFixed(0)+' %'); _labSetv('p2g-comp',(comp*100).toFixed(0)+' %'); _labSetv('p2g-fc',(fc*100).toFixed(0)+' %');
+      const h2E=inE*el, stored=h2E*(1-comp), out=stored*fc, rt=out/inE*100;
+      _labSet('p2g-h2',h2E.toFixed(0)); _labSet('p2g-out',out.toFixed(0)); _labSet('p2g-rt-o',rt.toFixed(0));
+      _labSet('p2g-rt',rt.toFixed(0)+'%');
+      const col=rt>=40?_GREEN:(rt>=30?_GOLD:_RED);
+      _labAttr('p2g-rt','fill',col);
+      _labSet('p2g-info','Dari '+inE.toFixed(0)+' MWh → kembali '+out.toFixed(0)+' MWh ('+rt.toFixed(0)+'%) · cocok simpan musiman'); _labAttr('p2g-info','fill',col);
+      // flow diagram (3 boxes shrinking)
+      const g=document.getElementById('p2g-flow'); const stages=[['⚡',inE],['H₂',h2E],['🔋',stored],['⚡',out]];
+      const cols=['#c9a96e','#3aa0c8','#7a8a3a','#15803d']; let o=''; const y=90,bw=58,gap=24,x0=40;
+      stages.forEach((st,i)=>{ const x=x0+i*(bw+gap); const frac=st[1]/inE; const h=24+frac*30;
+        o+='<rect x="'+x+'" y="'+(y-h/2)+'" width="'+bw+'" height="'+h.toFixed(1)+'" rx="4" fill="'+cols[i]+'"/>';
+        o+='<text x="'+(x+bw/2)+'" y="'+(y+4)+'" text-anchor="middle" font-family="Georgia" font-size="12" fill="#fff" font-weight="700">'+st[0]+'</text>';
+        o+='<text x="'+(x+bw/2)+'" y="'+(y+h/2+14)+'" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1a1d2e">'+st[1].toFixed(0)+'</text>';
+        if(i<3) o+='<text x="'+(x+bw+gap/2)+'" y="'+(y+4)+'" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9a7f4f">→</text>';
+      });
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S14: H2 Storage & Refueling ============
+  'h2-storage': {
+    html: () => _labShell({
+      eyebrow: 'Hidrogen · Penyimpanan', title: 'H₂ Storage', italic: '& Refueling',
+      desc: 'Hidrogen disimpan bertekanan tinggi (350/700 bar). Hitung massa H₂ dalam tangki, jumlah pengisian kendaraan, & energi yang tersimpan setara.',
+      svg: `<rect x="130" y="80" width="140" height="70" rx="35" fill="none" stroke="#1a1d2e" stroke-width="2.5"/>
+        <rect x="130" y="80" width="0" height="70" rx="35" fill="#3aa0c8" opacity="0.3" id="hs-tank"/>
+        <text x="200" y="120" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="hs-bar-lbl">—</text>
+        <text x="200" y="180" text-anchor="middle" font-family="Georgia" font-size="18" font-weight="700" fill="#3aa0c8" id="hs-mass">—</text>
+        <text x="200" y="240" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" id="hs-info">—</text>`,
+      controls: _labSld('hs-vol','Volume tangki (m³)',0.5,50,10,0.5)
+        + _labSel('hs-press','Tekanan simpan','<option value="350" selected>350 bar (komersial)</option><option value="700">700 bar (mobil FCEV)</option><option value="200">200 bar (industri)</option>')
+        + _labSld('hs-veh','H₂ per pengisian kendaraan (kg)',1,8,5,0.5),
+      outputs: _labOut('hs-kg','Massa H₂','kg') + _labOut('hs-energy','Energi Setara','MWh') + _labOut('hs-fills','Pengisian Kendaraan',''),
+      formula: `Densitas H₂ ≈ tekanan(bar)/350 × 23 kg/m³ (aproks pada 350 bar ≈ 23 kg/m³)<br>Energi = massa × 39.4 kWh/kg (HHV) · pengisian = massa / kebutuhan per kendaraan.`
+    }),
+    init: () => _labBind(['hs-vol','hs-press','hs-veh'], () => {
+      const vol=_labV('hs-vol'), press=_labV('hs-press'), veh=_labV('hs-veh');
+      _labSetv('hs-vol',vol.toFixed(1)+' m³'); _labSetv('hs-veh',veh.toFixed(1)+' kg');
+      const density=press/350*23, mass=vol*density, energy=mass*39.4/1000, fills=Math.floor(mass/veh);
+      _labSet('hs-kg',Math.round(mass).toLocaleString('id-ID')); _labSet('hs-energy',energy.toFixed(1)); _labSet('hs-fills',fills.toLocaleString('id-ID'));
+      _labSet('hs-mass',Math.round(mass).toLocaleString('id-ID')+' kg H₂'); _labSet('hs-bar-lbl',press+' bar');
+      _labSet('hs-info','Energi '+energy.toFixed(1)+' MWh · cukup '+fills.toLocaleString('id-ID')+' pengisian kendaraan'); _labAttr('hs-info','fill','#3aa0c8');
+      const fillW=Math.min(press/700,1)*140; _labAttr('hs-tank','width',fillW);
     })
   }
 };
