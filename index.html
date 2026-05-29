@@ -15240,7 +15240,14 @@ const SIMULATORS = [
   { id: 'h2-fuelcell', jalur: 'S14', category: 'Hidrogen · Fuel Cell', name: 'Fuel Cell Power & Efficiency', desc: 'Kurva polarisasi fuel cell (V-i), daya stack, tegangan & efisiensi terhadap rapat arus operasi.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.battery, working: true },
   { id: 'h2-lcoh', jalur: 'S14', category: 'Hidrogen · Ekonomi', name: 'Green H₂ Cost (LCOH)', desc: 'Levelized Cost of Hydrogen: komponen listrik + CAPEX + O&M vs target harga kompetitif.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
   { id: 'h2-p2g', jalur: 'S14', category: 'Hidrogen · Penyimpanan', name: 'Power-to-Gas Round Trip', desc: 'Efisiensi round-trip simpan listrik EBT jadi H₂ lalu balik via fuel cell; bandingkan vs baterai.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
-  { id: 'h2-storage', jalur: 'S14', category: 'Hidrogen · Tangki', name: 'H₂ Storage & Refueling', desc: 'Massa H₂ dalam tangki bertekanan (350/700 bar), energi setara, & jumlah pengisian kendaraan FCEV.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true }
+  { id: 'h2-storage', jalur: 'S14', category: 'Hidrogen · Tangki', name: 'H₂ Storage & Refueling', desc: 'Massa H₂ dalam tangki bertekanan (350/700 bar), energi setara, & jumlah pengisian kendaraan FCEV.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true },
+
+  // ===== S15 · Baterai & BESS =====
+  { id: 'bess-peakshave', jalur: 'S15', category: 'BESS · Peak Shaving', name: 'Peak Shaving & Demand Charge', desc: 'BESS pangkas beban puncak; kapasitas kWh dibutuhkan & penghematan demand charge dengan profil sebelum/sesudah.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'bess-crate', jalur: 'S15', category: 'BESS · Sel', name: 'C-Rate & Thermal Limit', desc: 'C-rate isi/lepas, waktu isi, rugi panas & kenaikan suhu vs batas kimia sel (LFP/NMC/LTO) & pendinginan.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'bess-degrade', jalur: 'S15', category: 'BESS · Umur', name: 'Battery Degradation & Cycle Life', desc: 'Kurva degradasi SoH dari siklus & kalender; efek DoD pada umur, tahun ke End-of-Life (80%), throughput.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'bess-arbitrage', jalur: 'S15', category: 'BESS · Pendapatan', name: 'Energy Arbitrage', desc: 'Beli energi murah, jual mahal: pendapatan arbitrase harian/tahunan dengan efisiensi round-trip & spread tarif.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'bess-pack', jalur: 'S15', category: 'BESS · Konfigurasi', name: 'Battery Pack Series-Parallel', desc: 'Susun sel sSpP: tegangan & kapasitas pack dari konfigurasi seri-paralel untuk capai target sistem.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true }
 ];
 
 // ================================================
@@ -19442,6 +19449,184 @@ const SIM_BUILDERS = {
       _labSet('hs-mass',Math.round(mass).toLocaleString('id-ID')+' kg H₂'); _labSet('hs-bar-lbl',press+' bar');
       _labSet('hs-info','Energi '+energy.toFixed(1)+' MWh · cukup '+fills.toLocaleString('id-ID')+' pengisian kendaraan'); _labAttr('hs-info','fill','#3aa0c8');
       const fillW=Math.min(press/700,1)*140; _labAttr('hs-tank','width',fillW);
+    })
+  },
+
+  // ============ S15: Peak Shaving / Demand Charge ============
+  'bess-peakshave': {
+    html: () => _labShell({
+      eyebrow: 'BESS · Peak Shaving', title: 'Peak Shaving', italic: '& Demand Charge',
+      desc: 'BESS memangkas beban puncak: isi saat beban rendah, lepas saat puncak. Kurangi denda demand charge (Rp/kVA). Lihat profil sebelum/sesudah & penghematan.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Beban (kW)</text>
+        <line x1="50" y1="210" x2="378" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="50" y1="44" x2="50" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="bp-orig" fill="none" stroke="#c0392b" stroke-width="2" points=""/>
+        <polyline id="bp-shaved" fill="none" stroke="#15803d" stroke-width="2.5" points=""/>
+        <line id="bp-thresh" x1="50" y1="0" x2="378" y2="0" stroke="#3a5fb0" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="300" y="58" font-family="Georgia" font-size="9.5" fill="#c0392b">— asli</text>
+        <text x="300" y="72" font-family="Georgia" font-size="9.5" fill="#15803d">— di-shave</text>
+        <text x="214" y="262" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#15803d" id="bp-info">—</text>`,
+      controls: _labSld('bp-peak','Beban puncak (kW)',100,5000,1000,10)
+        + _labSld('bp-base','Beban dasar (kW)',50,3000,400,10)
+        + _labSld('bp-target','Target batas demand (kW)',100,5000,700,10)
+        + _labSld('bp-charge','Demand charge (rb Rp/kVA/bln)',20,150,40,1),
+      outputs: _labOut('bp-shaved-o','Puncak Baru','kW') + _labOut('bp-bess','BESS Diperlukan','kWh') + _labOut('bp-save','Hemat Demand','jt/bln'),
+      formula: `Profil harian; BESS melepas (peak−target) saat puncak · energi = ∫(beban−target)⁺ dt<br>Hemat = (puncak−target) × demand charge/PF. Butuh kapasitas kWh memadai.`
+    }),
+    init: () => _labBind(['bp-peak','bp-base','bp-target','bp-charge'], () => {
+      const peak=_labV('bp-peak'), base=_labV('bp-base'), tgt=Math.min(_labV('bp-target'),peak), chg=_labV('bp-charge')*1000;
+      _labSetv('bp-peak',peak.toFixed(0)+' kW'); _labSetv('bp-base',base.toFixed(0)+' kW'); _labSetv('bp-target',tgt.toFixed(0)+' kW'); _labSetv('bp-charge','Rp'+_labV('bp-charge').toFixed(0)+'rb');
+      // profile 24h: peak around 13-19
+      const prof=[]; for(let h=0;h<24;h++){ const bump=(h>=13&&h<=19)?1:(h>=8&&h<=22?0.5:0.1); prof.push(base+(peak-base)*bump*(0.7+0.3*Math.sin((h-13)/6*Math.PI))); }
+      const orig=prof.map(p=>Math.min(p,peak));
+      let energy=0; const shaved=orig.map(p=>{ if(p>tgt){ energy+=(p-tgt); return tgt; } return p; });
+      const bessKwh=energy/0.9; // efisiensi
+      const reduce=Math.max(0,peak-tgt), saveM=reduce/0.85*chg/1e6;
+      _labSet('bp-shaved-o',tgt.toFixed(0)); _labSet('bp-bess',bessKwh.toFixed(0)); _labSet('bp-save',saveM.toFixed(1));
+      _labSet('bp-info','Puncak '+peak.toFixed(0)+'→'+tgt.toFixed(0)+' kW · BESS '+bessKwh.toFixed(0)+' kWh · hemat Rp'+saveM.toFixed(1)+' jt/bln'); _labAttr('bp-info','fill',_GREEN);
+      const maxv=peak*1.1, X=h=>50+h/23*328, Y=p=>210-p/maxv*166;
+      _labAttr('bp-orig','points',orig.map((p,h)=>X(h).toFixed(1)+','+Y(p).toFixed(1)).join(' '));
+      _labAttr('bp-shaved','points',shaved.map((p,h)=>X(h).toFixed(1)+','+Y(p).toFixed(1)).join(' '));
+      const ty=Y(tgt); _labAttr('bp-thresh','y1',ty); _labAttr('bp-thresh','y2',ty);
+    })
+  },
+
+  // ============ S15: C-Rate & Thermal ============
+  'bess-crate': {
+    html: () => _labShell({
+      eyebrow: 'BESS · Sel', title: 'C-Rate', italic: '& Thermal Limit',
+      desc: 'C-rate = daya/kapasitas. C-rate tinggi = isi/lepas cepat tapi panas & rugi I²R lebih besar. Cek waktu isi, rugi panas, dan apakah perlu pendinginan.',
+      svg: `<rect x="140" y="60" width="120" height="120" rx="8" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+        <rect x="140" y="180" width="120" height="0" id="bc-heat" fill="#c0392b" opacity="0.3"/>
+        <text x="200" y="115" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" id="bc-crate">—</text>
+        <text x="200" y="138" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">C-rate</text>
+        <text x="200" y="210" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="bc-temp">—</text>
+        <text x="200" y="258" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" id="bc-verdict">—</text>`,
+      controls: _labSld('bc-cap','Kapasitas baterai (kWh)',10,2000,200,10)
+        + _labSld('bc-pow','Daya isi/lepas (kW)',10,2000,100,10)
+        + _labSel('bc-chem','Kimia sel','<option value="1" selected>LFP (aman, 1C)</option><option value="2">NMC (2C)</option><option value="3">LTO (cepat, 3C+)</option>')
+        + _labSel('bc-cool','Pendinginan','<option value="1">Udara pasif</option><option value="0.6" selected>Udara paksa</option><option value="0.35">Liquid cooling</option>'),
+      outputs: _labOut('bc-cr','C-Rate','C') + _labOut('bc-time','Waktu Isi','jam') + _labOut('bc-loss','Rugi Panas','%'),
+      formula: `C-rate = daya/kapasitas · waktu isi ≈ 1/C-rate (jam) · rugi I²R ∝ C-rate²<br>Melebihi batas kimia sel = degradasi cepat & risiko thermal runaway.`
+    }),
+    init: () => _labBind(['bc-cap','bc-pow','bc-chem','bc-cool'], () => {
+      const cap=_labV('bc-cap'), pow=_labV('bc-pow'), maxC=_labV('bc-chem'), coolF=_labV('bc-cool');
+      _labSetv('bc-cap',cap.toFixed(0)+' kWh'); _labSetv('bc-pow',pow.toFixed(0)+' kW');
+      const cr=pow/cap, time=1/cr, loss=Math.min(40,cr*cr*2.5*coolF), tempRise=cr*cr*12*coolF;
+      _labSet('bc-cr',cr.toFixed(2)); _labSet('bc-time',time.toFixed(2)); _labSet('bc-loss',loss.toFixed(1));
+      _labSet('bc-crate',cr.toFixed(2)+'C');
+      const over=cr>maxC, col=over?_RED:(cr>maxC*0.7?_GOLD:_GREEN);
+      _labSet('bc-temp','ΔT ≈ +'+tempRise.toFixed(0)+'°C'); _labAttr('bc-temp','fill',col); _labAttr('bc-crate','fill',col);
+      _labSet('bc-verdict', over?('✗ Lewat batas '+maxC+'C — degradasi/risiko panas'):(cr>maxC*0.7?'⚠ Mendekati batas — pastikan pendinginan':'✓ Aman dalam batas C-rate kimia sel'));
+      _labAttr('bc-verdict','fill',col);
+      const hh=Math.min(tempRise/40,1)*120; _labAttr('bc-heat','height',hh); _labAttr('bc-heat','y',180-hh);
+    })
+  },
+
+  // ============ S15: Battery Degradation / Cycle Life ============
+  'bess-degrade': {
+    html: () => _labShell({
+      eyebrow: 'BESS · Umur', title: 'Battery', italic: 'Degradation',
+      desc: 'Kapasitas baterai turun tiap siklus & seiring waktu (kalender). DoD lebih dangkal = umur lebih panjang. Lihat kurva degradasi & estimasi tahun sampai End-of-Life (80%).',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">SoH (%)</text>
+        <line x1="52" y1="44" x2="52" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="210" x2="375" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="170" x2="375" y2="170" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="370" y="166" text-anchor="end" font-family="Georgia" font-size="9" fill="#c0392b">EoL 80%</text>
+        <polyline id="bd-curve" fill="none" stroke="#5b8def" stroke-width="2.5" points=""/>
+        <line id="bd-eol" x1="0" y1="44" x2="0" y2="210" stroke="#15803d" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="214" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#5b8def" id="bd-info">—</text>`,
+      controls: _labSld('bd-cycles','Siklus per tahun',50,730,365,5)
+        + _labSld('bd-dod','Depth of Discharge (%)',20,100,80,1)
+        + _labSel('bd-chem','Kimia (siklus penuh @100%DoD)','<option value="6000" selected>LFP (~6000)</option><option value="3000">NMC (~3000)</option><option value="15000">LTO (~15000)</option>')
+        + _labSld('bd-cal','Degradasi kalender (%/th)',0.5,3,1.5,0.1),
+      outputs: _labOut('bd-life','Umur (EoL)','tahun') + _labOut('bd-throughput','Throughput','MWh/kWh') + _labOut('bd-eolyr','SoH thn ke-10','%'),
+      formula: `Siklus efektif = siklus_dasar / (DoD%)^1.5 (DoD dangkal panjangkan umur) · degradasi siklus + kalender<br>EoL saat SoH ≤ 80%. Throughput = total energi vs kapasitas awal.`
+    }),
+    init: () => _labBind(['bd-cycles','bd-dod','bd-chem','bd-cal'], () => {
+      const cyc=_labV('bd-cycles'), dod=_labV('bd-dod')/100, baseCyc=_labV('bd-chem'), cal=_labV('bd-cal')/100;
+      _labSetv('bd-cycles',cyc.toFixed(0)); _labSetv('bd-dod',(dod*100).toFixed(0)+' %'); _labSetv('bd-cal',(cal*100).toFixed(1)+' %');
+      const effCyc=baseCyc/Math.pow(dod,1.5); // total siklus sampai 80%
+      const cycDegPerCycle=0.2/effCyc; // 20% loss over effCyc cycles
+      // find year where SoH<=80
+      let yr=0; for(let y=1;y<=30;y++){ const soh=1 - (cycDegPerCycle*cyc*y) - cal*y; if(soh<=0.8){ yr=y; break; } yr=y; }
+      const soh10=Math.max(0,(1 - cycDegPerCycle*cyc*10 - cal*10)*100);
+      const throughput=cyc*yr*dod; // kWh per kWh kapasitas (≈MWh/MWh)
+      _labSet('bd-life',yr>=30?'>30':yr); _labSet('bd-throughput',(throughput).toFixed(0)); _labSet('bd-eolyr',soh10.toFixed(0));
+      _labSet('bd-info','EoL ~'+(yr>=30?'>30':yr)+' th · DoD '+(dod*100).toFixed(0)+'% · '+effCyc.toFixed(0)+' siklus efektif'); _labAttr('bd-info','fill','#5b8def');
+      const Ymax=30, X=y=>52+y/Ymax*323, Y=soh=>210-(soh-0.6)/0.4*166;
+      let pts=''; for(let y=0;y<=Ymax;y+=0.5){ const soh=Math.max(0.6,1-cycDegPerCycle*cyc*y-cal*y); pts+=X(y).toFixed(1)+','+Y(soh).toFixed(1)+' '; }
+      _labAttr('bd-curve','points',pts.trim());
+      if(yr<30){ const ex=X(yr); _labAttr('bd-eol','x1',ex); _labAttr('bd-eol','x2',ex);} else {_labAttr('bd-eol','x1',-10);_labAttr('bd-eol','x2',-10);}
+    })
+  },
+
+  // ============ S15: BESS Arbitrage / Revenue ============
+  'bess-arbitrage': {
+    html: () => _labShell({
+      eyebrow: 'BESS · Pendapatan', title: 'Energy', italic: 'Arbitrage',
+      desc: 'BESS membeli energi saat tarif murah & menjual saat mahal. Hitung pendapatan arbitrase harian/tahunan dengan memperhitungkan efisiensi & degradasi.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Tarif (Rp/kWh)</text>
+        <line x1="52" y1="44" x2="52" y2="205" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="205" x2="378" y2="205" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="ba-tariff" fill="none" stroke="#9a7f4f" stroke-width="2" points=""/>
+        <g id="ba-zones"></g>
+        <text x="214" y="226" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Jam (hijau=beli murah, merah=jual mahal)</text>
+        <text x="214" y="258" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="ba-info">—</text>`,
+      controls: _labSld('ba-cap','Kapasitas usable (kWh)',50,5000,1000,10)
+        + _labSld('ba-low','Tarif beli murah (Rp/kWh)',500,1500,900,25)
+        + _labSld('ba-high','Tarif jual mahal (Rp/kWh)',1500,3500,2200,25)
+        + _labSld('ba-eff','Efisiensi round-trip (%)',80,95,88,1)
+        + _labSld('ba-cycle','Siklus per hari',0.5,2,1,0.5),
+      outputs: _labOut('ba-day','Pendapatan/hari','rb Rp') + _labOut('ba-year','Pendapatan/th','jt') + _labOut('ba-spread','Spread Efektif','Rp/kWh'),
+      formula: `Pendapatan = kapasitas × (jual×η − beli) × siklus/hari · η = efisiensi round-trip<br>Spread harus > biaya degradasi/kWh agar untung. Tahunan = harian × 365.`
+    }),
+    init: () => _labBind(['ba-cap','ba-low','ba-high','ba-eff','ba-cycle'], () => {
+      const cap=_labV('ba-cap'), low=_labV('ba-low'), high=_labV('ba-high'), eff=_labV('ba-eff')/100, cyc=_labV('ba-cycle');
+      _labSetv('ba-cap',cap.toFixed(0)+' kWh'); _labSetv('ba-low','Rp'+low.toFixed(0)); _labSetv('ba-high','Rp'+high.toFixed(0)); _labSetv('ba-eff',(eff*100).toFixed(0)+' %'); _labSetv('ba-cycle',cyc.toFixed(1));
+      const spread=high*eff-low, dayRev=cap*spread*cyc/1000, yrRev=dayRev*365/1000;
+      _labSet('ba-day',dayRev.toFixed(0)); _labSet('ba-year',yrRev.toFixed(0)); _labSet('ba-spread',spread.toFixed(0));
+      const col=spread>0?_GREEN:_RED;
+      _labSet('ba-info', spread>0?('Spread Rp'+spread.toFixed(0)+'/kWh · Rp'+yrRev.toFixed(0)+' jt/th'):'✗ Spread negatif — efisiensi terlalu rendah / selisih tarif kecil'); _labAttr('ba-info','fill',col);
+      const X=h=>52+h/24*326, lo=205, hiY=50;
+      const tar=h=>{ let f=0.3; if(h>=18&&h<=22)f=1; else if(h>=10&&h<=14)f=0.7; else if(h>=23||h<=5)f=0; return low+(high-low)*f; };
+      const Yt=v=>205-(v-low)/(high-low+1)*155;
+      let pts=''; for(let h=0;h<=24;h++) pts+=X(h).toFixed(1)+','+Yt(tar(h)).toFixed(1)+' ';
+      _labAttr('ba-tariff','points',pts.trim());
+      let z='<rect x="'+X(0).toFixed(1)+'" y="44" width="'+(X(5)-X(0)).toFixed(1)+'" height="161" fill="rgba(21,128,61,0.12)"/>';
+      z+='<rect x="'+X(18).toFixed(1)+'" y="44" width="'+(X(22)-X(18)).toFixed(1)+'" height="161" fill="rgba(192,57,43,0.12)"/>';
+      document.getElementById('ba-zones').innerHTML=z;
+    })
+  },
+
+  // ============ S15: Battery Pack Configuration ============
+  'bess-pack': {
+    html: () => _labShell({
+      eyebrow: 'BESS · Konfigurasi', title: 'Battery Pack', italic: 'Series-Parallel',
+      desc: 'Susun sel jadi pack: seri (S) menaikkan tegangan, paralel (P) menaikkan kapasitas/arus. Tentukan konfigurasi sSpP untuk capai tegangan & kapasitas target.',
+      svg: `<g id="pk-grid"></g>
+        <text x="200" y="248" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="pk-config">—</text>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" id="pk-info">—</text>`,
+      controls: _labSel('pk-cell','Jenis sel','<option value="3.2|3.2|280" selected>LFP 3.2V 280Ah</option><option value="3.7|3.7|50">NMC 3.7V 50Ah</option><option value="3.2|3.2|100">LFP 3.2V 100Ah</option>')
+        + _labSld('pk-series','Jumlah seri (S)',4,200,16,1)
+        + _labSld('pk-parallel','Jumlah paralel (P)',1,20,4,1),
+      outputs: _labOut('pk-volt','Tegangan Pack','V') + _labOut('pk-ah','Kapasitas','Ah') + _labOut('pk-kwh','Energi','kWh'),
+      formula: `V_pack = V_sel × S · Ah_pack = Ah_sel × P · kWh = V_pack × Ah_pack / 1000<br>Total sel = S × P. Pilih S untuk tegangan sistem (mis. 48V, 400V), P untuk kapasitas.`
+    }),
+    init: () => _labBind(['pk-cell','pk-series','pk-parallel'], () => {
+      const parts=_labRaw('pk-cell').split('|').map(parseFloat), vnom=parts[1], ah=parts[2];
+      const S=Math.round(_labV('pk-series')), P=Math.round(_labV('pk-parallel'));
+      _labSetv('pk-series',S); _labSetv('pk-parallel',P);
+      const vpack=vnom*S, ahpack=ah*P, kwh=vpack*ahpack/1000, total=S*P;
+      _labSet('pk-volt',vpack.toFixed(1)); _labSet('pk-ah',ahpack.toFixed(0)); _labSet('pk-kwh',kwh.toFixed(2));
+      _labSet('pk-config',S+'S'+P+'P · '+total+' sel'); _labSet('pk-info',vpack.toFixed(0)+' V · '+ahpack.toFixed(0)+' Ah · '+kwh.toFixed(1)+' kWh');
+      _labAttr('pk-info','fill','#5b8def');
+      // draw grid (cap display)
+      const g=document.getElementById('pk-grid'); const cols=Math.min(S,16), rows=Math.min(P,8);
+      const cw=Math.min(20,300/cols), ch=Math.min(20,170/rows), x0=200-cols*cw/2, y0=50; let o='';
+      for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){ o+='<rect x="'+(x0+c*cw).toFixed(1)+'" y="'+(y0+r*ch).toFixed(1)+'" width="'+(cw-2).toFixed(1)+'" height="'+(ch-2).toFixed(1)+'" rx="2" fill="#5b8def" opacity="0.7"/>'; }
+      if(S>16||P>8) o+='<text x="200" y="'+(y0+rows*ch+14)+'" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6b6d7a">(tampilan disederhanakan)</text>';
+      g.innerHTML=o;
     })
   }
 };
