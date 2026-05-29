@@ -78,6 +78,19 @@
   .btn-wa:hover { background: #2fd36b; }
   .btn-home { display: inline-block; margin-top: 16px; font-size: 0.86rem; color: rgba(245,240,230,0.7); }
 
+  /* Download card (Manual Book PDF) */
+  .dl-card { display: flex; gap: 20px; align-items: flex-start; margin: 28px 0 8px; padding: 24px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(212,175,106,0.14), rgba(160,120,64,0.05)); border: 1px solid rgba(212,175,106,0.4); }
+  .dl-ic { font-size: 2.6rem; line-height: 1; flex: 0 0 auto; }
+  .dl-eyebrow { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: #f0d080; font-weight: 800; margin-bottom: 6px; }
+  .dl-title { font-size: 1.18rem; font-weight: 800; color: #f5f0e6; margin-bottom: 8px; line-height: 1.25; }
+  .dl-desc { font-size: 0.9rem; color: rgba(245,240,230,0.8); line-height: 1.6; margin-bottom: 16px; }
+  .dl-btn { display: inline-flex; align-items: center; gap: 9px; background: linear-gradient(135deg,#d4af6a,#c9a96e); color: #1a1208;
+    font-weight: 800; text-decoration: none; padding: 13px 26px; border-radius: 10px; font-size: 0.96rem; box-shadow: 0 8px 22px rgba(212,175,106,0.4); transition: transform .15s, box-shadow .15s; }
+  .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(212,175,106,0.55); }
+  .dl-note { margin-top: 12px; font-size: 0.78rem; color: rgba(245,240,230,0.6); }
+  @media (max-width: 520px) { .dl-card { flex-direction: column; gap: 12px; } .dl-ic { font-size: 2.2rem; } }
+
   footer { text-align: center; padding: 32px 20px; color: rgba(245,240,230,0.4); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 48px; }
 
   @media (max-width: 520px) {
@@ -102,6 +115,18 @@
     <h1>Cara Belajar di Setiap Modul</h1>
     <p>Setiap modul punya alur belajar yang sama. Ikuti urutan ini supaya pemahamanmu maksimal dan quiz bisa kamu selesaikan dengan skor tinggi.</p>
     <span class="flow-tag">📹 Video → 📊 Materi (PPT) → 📝 Quiz → 🎥 Live Class</span>
+  </div>
+
+  <!-- ===== Manual Book PDF download card ===== -->
+  <div class="dl-card">
+    <div class="dl-ic">📕</div>
+    <div class="dl-body">
+      <div class="dl-eyebrow">Manual Book Lengkap (PDF)</div>
+      <h3 class="dl-title">Panduan Member &amp; Semua Fasilitas Electra Academy</h3>
+      <p class="dl-desc">Satu dokumen berisi <strong>semua yang perlu kamu tahu sebagai member</strong>: cara mulai &amp; aktivasi akses, struktur belajar (8 jalur, 6 level, 605+ modul), cara mengerjakan quiz, serta seluruh fasilitas — AI Tutor, 16 Simulator Lab, 9 Design Calculator, Electra Library, Live Class, Career Hub, e-book bonus, sertifikat &amp; verifikasi, sampai info keanggotaan. Unduh, simpan, baca kapan saja (online maupun offline).</p>
+      <a class="dl-btn" href="MANUAL_BOOK_ELECTRA_ACADEMY.pdf" download="Manual Book Member - Electra Skill Academy.pdf">📥 Unduh Manual Book (PDF)</a>
+      <div class="dl-note">Gratis untuk semua member · format PDF · ~10 halaman</div>
+    </div>
   </div>
 
   <h2><span class="ic">🧭</span> Struktur Tiap Modul</h2>
