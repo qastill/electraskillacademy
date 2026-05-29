@@ -15119,7 +15119,7 @@ const SIM_GROUPS = [
   { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor, VFD, KHA kabel, harmonik & pompa.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
   { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo, feeder 20kV, proteksi, kapasitor & restorasi SCADA.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
   { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag, isolasi, arester petir, korona EHV & aliran daya.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
-  { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
+  { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting, regresi, deteksi anomali & PLTS.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
   { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Audit, payback & koreksi faktor daya.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
   { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS rooftop & sizing baterai (BESS).', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, APD & sistem pembumian.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
@@ -15163,6 +15163,9 @@ const SIMULATORS = [
   // ===== S5 · Energy Analyst & Data Science =====
   { id: 'load-forecast', jalur: 'S5', category: 'Data · Forecasting', name: 'Load Forecasting (Moving Average)', desc: 'Prediksi beban harian dengan moving average & lihat error (MAPE) terhadap data aktual.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
   { id: 'ntl-detect', jalur: 'S5', category: 'Data · Losses', name: 'NTL / Loss Detection', desc: 'Deteksi anomali pemakaian (non-technical loss) dari profil konsumsi pelanggan.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
+  { id: 'regression-trend', jalur: 'S5', category: 'Data · Regresi', name: 'Linear Regression Trend', desc: 'Klik kanvas untuk menaruh titik data, lihat garis regresi least-squares, R², & proyeksi nilai berikutnya secara real-time.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.data, working: true },
+  { id: 'anomaly-zscore', jalur: 'S5', category: 'Data · Anomali', name: 'Anomaly Detection (Z-Score)', desc: 'Profil beban 24 jam; atur ambang z-score, titik pencilan ditandai otomatis — simulasi deteksi meter rusak / pencurian.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.data, working: true },
+  { id: 'solar-forecast', jalur: 'S5', category: 'Data · EBT', name: 'Solar Generation Forecast', desc: 'Prediksi profil produksi PLTS harian terhadap kapasitas, cuaca & musim; energi harian, daya puncak, capacity factor.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
 
   // ===== S6 · Energy Auditor =====
   { id: 'energy-payback', jalur: 'S6', category: 'Audit · Ekonomi', name: 'Energy Audit & Payback', desc: 'Hitung penghematan kWh, rupiah/tahun, dan payback period dari retrofit (mis. ganti LED / motor efisien).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
@@ -16839,6 +16842,72 @@ function _frRender(){
 }
 function firstOpenAfter(){ return 99; }
 
+// --- Linear Regression Trend (interaktif klik) ---
+// koordinat data dlm satuan grafik: x 0..12, y 0..10
+let _rgPts = [];
+function _rgClick(ev){
+  const r = ev.target.getBoundingClientRect();
+  const px = ev.clientX - r.left, py = ev.clientY - r.top;
+  const x = px / r.width * 12, y = (1 - py / r.height) * 10;
+  _rgPts.push({x, y}); _rgRender();
+}
+function _rgSeed(){ _rgPts = [{x:1,y:2.2},{x:2,y:2.6},{x:3,y:3.1},{x:4,y:3.0},{x:5,y:3.8},{x:6,y:4.3},{x:7,y:4.6},{x:8,y:5.4},{x:9,y:5.7},{x:10,y:6.2}]; _rgRender(); }
+function _rgUndo(){ _rgPts.pop(); _rgRender(); }
+function _rgClear(){ _rgPts=[]; _rgRender(); }
+function _rgRender(){
+  if (!document.getElementById('rg-pts')) return;
+  const n=_rgPts.length;
+  const X=x=>50+x/12*325, Y=y=>235-y/10*195;
+  let g='';
+  _rgPts.forEach(p=>{ g+='<circle cx="'+X(p.x).toFixed(1)+'" cy="'+Y(p.y).toFixed(1)+'" r="4.5" fill="#1a1d2e"/>'; });
+  document.getElementById('rg-pts').innerHTML=g;
+  _labSet('rg-n',n);
+  if (n<2){ _labSet('rg-slope','—'); _labSet('rg-r2','—'); _labSet('rg-pred','—'); _labSet('rg-eq', n===0?'klik area untuk menambah titik':'tambah ≥1 titik lagi'); _labAttr('rg-line','x1',0); _labAttr('rg-line','x2',0); return; }
+  const mx=_rgPts.reduce((a,p)=>a+p.x,0)/n, my=_rgPts.reduce((a,p)=>a+p.y,0)/n;
+  let sxy=0,sxx=0,sst=0; _rgPts.forEach(p=>{ sxy+=(p.x-mx)*(p.y-my); sxx+=(p.x-mx)*(p.x-mx); sst+=(p.y-my)*(p.y-my); });
+  const m = sxx? sxy/sxx : 0, b = my - m*mx;
+  let ssr=0; _rgPts.forEach(p=>{ const e=p.y-(m*p.x+b); ssr+=e*e; });
+  const r2 = sst? 1-ssr/sst : 1, pred = m*11+b;
+  _labSet('rg-slope',m.toFixed(2)); _labSet('rg-r2',r2.toFixed(3)); _labSet('rg-pred',pred.toFixed(2));
+  _labSet('rg-eq','ŷ = '+m.toFixed(2)+'·x '+(b>=0?'+ '+b.toFixed(2):'− '+(-b).toFixed(2))+' · R²='+r2.toFixed(2));
+  const y0=b, y12=m*12+b;
+  _labAttr('rg-line','x1',X(0)); _labAttr('rg-line','y1',Y(Math.max(-1,Math.min(11,y0))));
+  _labAttr('rg-line','x2',X(12)); _labAttr('rg-line','y2',Y(Math.max(-1,Math.min(11,y12))));
+}
+
+// --- Anomaly Detection z-score ---
+let _azData = null;
+function _azGen(mode){
+  const a=[]; for(let h=0;h<24;h++){ a.push(40+30*Math.sin((h-6)/24*2*Math.PI)+ (Math.random()*6-3)); }
+  if(mode===0){ a[10]+=55; a[18]+=48; }                 // 2 spike
+  else if(mode===1){ for(let h=19;h<24;h++)a[h]*=0.25; a[2]*=0.15; } // pencurian malam
+  // mode 2 = acak murni
+  _azData=a.map(v=>Math.max(2,v)); _azRender();
+}
+function _azRender(){
+  if(!document.getElementById('az-pts')||!_azData) return;
+  const a=_azData, n=a.length, th=_labV('az-th');
+  _labSetv('az-th',th.toFixed(1));
+  const mean=a.reduce((x,y)=>x+y,0)/n;
+  const std=Math.sqrt(a.reduce((x,y)=>x+(y-mean)*(y-mean),0)/n);
+  let anom=0;
+  const maxv=Math.max(...a)*1.1, X=i=>44+i/(n-1)*340, Y=v=>200-v/maxv*160;
+  let line='', pts='';
+  a.forEach((v,i)=>{ const z=std?(v-mean)/std:0; const bad=Math.abs(z)>th; if(bad)anom++;
+    line+=X(i).toFixed(1)+','+Y(v).toFixed(1)+' ';
+    pts+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="'+(bad?5:3)+'" fill="'+(bad?'#c0392b':'#9a7f4f')+'"/>';
+    if(bad) pts+='<text x="'+X(i).toFixed(1)+'" y="'+(Y(v)-9).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="9" fill="#c0392b" font-weight="700">z'+z.toFixed(1)+'</text>';
+  });
+  _labAttr('az-line','points',line.trim());
+  document.getElementById('az-pts').innerHTML=pts;
+  const my=Y(mean); _labAttr('az-mean','y1',my); _labAttr('az-mean','y2',my);
+  const top=Y(mean+th*std), bot=Y(mean-th*std); _labAttr('az-band','y',top); _labAttr('az-band','height',Math.max(0,bot-top));
+  _labSet('az-mean-o',mean.toFixed(1)); _labSet('az-std',std.toFixed(1)); _labSet('az-anom',anom);
+  const col=anom>0?_RED:_GREEN;
+  _labSet('az-verdict', anom>0?('⚠ '+anom+' anomali terdeteksi (|z| > '+th.toFixed(1)+')'):'✓ Tidak ada anomali pada ambang ini');
+  _labAttr('az-verdict','fill',col);
+}
+
 const SIM_BUILDERS = {
   // ============ S1: Conduit Fill (interaktif) ============
   'conduit-fill': {
@@ -17591,6 +17660,90 @@ const SIM_BUILDERS = {
       _labAttr('nt-bar-bil','height',bil/mx*maxH); _labAttr('nt-bar-bil','y',250-bil/mx*maxH); _labAttr('nt-bar-bil','fill',col);
       _labSet('nt-verdict',flag?'⚠ SUSPECT NTL':'✓ NORMAL'); _labAttr('nt-verdict','fill',col);
       _labSet('ntf-st',flag?'SUSPECT':'NORMAL'); _labSet('ntf-th',th.toFixed(0));
+    })
+  },
+
+  // ============ S5: Linear Regression Trend (interaktif) ============
+  'regression-trend': {
+    html: () => _labShell({
+      eyebrow: 'Data Science · Regresi', title: 'Linear Regression', italic: 'Trend Fit',
+      desc: 'Klik kanvas untuk menambah titik data (mis. beban vs tahun). Garis regresi least-squares + R² dihitung otomatis, plus proyeksi nilai berikutnya.',
+      svg: `<line x1="50" y1="40" x2="50" y2="235" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="50" y1="235" x2="375" y2="235" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <rect id="rg-hit" x="50" y="40" width="325" height="195" fill="transparent" style="cursor:crosshair" onclick="_rgClick(event)"/>
+        <line id="rg-line" x1="0" y1="0" x2="0" y2="0" stroke="#c0392b" stroke-width="2.5"/>
+        <g id="rg-pts"></g>
+        <text x="212" y="255" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">klik area untuk menambah titik →</text>
+        <text x="212" y="274" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="rg-eq">—</text>`,
+      controls: `<div class="sim-control"><label>Data</label><div style="display:flex;gap:8px;flex-wrap:wrap">`
+          + `<button type="button" onclick="_rgSeed()" style="${_BTN}">Contoh data tren</button>`
+          + `<button type="button" onclick="_rgUndo()" style="${_BTN}">↶ Hapus titik</button>`
+          + `<button type="button" onclick="_rgClear()" style="${_BTN}">⟲ Kosongkan</button></div></div>`
+          + `<div class="sim-control"><div style="font-size:12px;color:#6b6d7a;line-height:1.5">Klik di area grafik untuk menaruh titik (x = waktu, y = nilai). Minimal 2 titik untuk garis tren.</div></div>`,
+      outputs: _labOut('rg-slope','Slope (m)','') + _labOut('rg-r2','R²','') + _labOut('rg-n','Titik','') + _labOut('rg-pred','Proyeksi x=11','') ,
+      formula: `m = Σ(x−x̄)(y−ȳ)/Σ(x−x̄)² · b = ȳ − m·x̄ · ŷ = m·x + b<br>R² = 1 − SS_res/SS_tot (1.0 = fit sempurna).`
+    }),
+    init: () => { _rgPts=[]; _rgSeed(); }
+  },
+
+  // ============ S5: Anomaly Detection (z-score) ============
+  'anomaly-zscore': {
+    html: () => _labShell({
+      eyebrow: 'Data Science · Anomali', title: 'Anomaly Detection', italic: '(Z-Score)',
+      desc: 'Profil beban 24 jam dengan beberapa pencilan (anomali). Atur ambang z-score; titik dengan |z| > ambang ditandai merah (indikasi meter rusak / pencurian / spike).',
+      svg: `<line x1="44" y1="200" x2="384" y2="200" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="44" y1="40" x2="44" y2="200" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line id="az-mean" x1="44" y1="0" x2="384" y2="0" stroke="#3a5fb0" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <rect id="az-band" x="44" y="0" width="340" height="0" fill="rgba(58,95,176,0.08)"/>
+        <polyline id="az-line" fill="none" stroke="#9a7f4f" stroke-width="2" points=""/>
+        <g id="az-pts"></g>
+        <text x="214" y="222" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Jam ke- (0–23)</text>
+        <text x="214" y="266" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="az-verdict">—</text>`,
+      controls: _labSld('az-th','Ambang z-score',1.5,4,2.5,0.1)
+        + `<div class="sim-control"><label>Skenario data</label><div style="display:flex;gap:8px;flex-wrap:wrap">`
+          + `<button type="button" onclick="_azGen(0)" style="${_BTN}">Normal + 2 spike</button>`
+          + `<button type="button" onclick="_azGen(1)" style="${_BTN}">Pencurian (drop malam)</button>`
+          + `<button type="button" onclick="_azGen(2)" style="${_BTN}">Acak ulang</button></div></div>`,
+      outputs: _labOut('az-mean-o','Rata-rata','kW') + _labOut('az-std','Std Dev','kW') + _labOut('az-anom','Anomali','titik'),
+      formula: `z = (xᵢ − μ)/σ · titik anomali bila |z| > ambang<br>Pita biru = μ ± ambang·σ (rentang normal).`
+    }),
+    init: () => { _azData=null; _azGen(0); _labBind(['az-th'], _azRender); }
+  },
+
+  // ============ S5: Solar Generation Forecast ============
+  'solar-forecast': {
+    html: () => _labShell({
+      eyebrow: 'Data Science · EBT', title: 'Solar Generation', italic: 'Forecast',
+      desc: 'Prediksi profil produksi PLTS harian (kurva bell sinar matahari) terhadap kapasitas, cuaca, & musim. Hitung energi harian, peak, & capacity factor.',
+      svg: `<line x1="48" y1="205" x2="384" y2="205" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="48" y1="40" x2="48" y2="205" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <path id="sf-area" fill="rgba(201,169,110,0.18)" stroke="none" d=""/>
+        <polyline id="sf-curve" fill="none" stroke="#e0863a" stroke-width="2.5" points=""/>
+        <circle cx="360" cy="62" r="13" fill="#c9a96e" class="lab-glow"/>
+        <text x="216" y="224" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Jam (5–19)</text>
+        <text x="216" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#e0863a" id="sf-info">—</text>`,
+      controls: _labSld('sf-kwp','Kapasitas PLTS (kWp)',1,1000,100,1)
+        + _labSel('sf-wx','Cuaca','<option value="1" selected>Cerah (100%)</option><option value="0.7">Berawan (70%)</option><option value="0.4">Mendung (40%)</option><option value="0.15">Hujan (15%)</option>')
+        + _labSld('sf-day','Panjang siang (jam)',9,13,12,0.5)
+        + _labSld('sf-pr','Performance Ratio',0.7,0.9,0.8,0.01),
+      outputs: _labOut('sf-energy','Energi Harian','kWh') + _labOut('sf-peak','Daya Puncak','kW') + _labOut('sf-cf','Capacity Factor','%'),
+      formula: `P(t) = kWp·PR·wx·sin(π·(t−t₀)/Lsiang) · Energi = ∫P dt<br>CF = energi harian / (kWp × 24 jam) × 100%`
+    }),
+    init: () => _labBind(['sf-kwp','sf-wx','sf-day','sf-pr'], () => {
+      const kwp=_labV('sf-kwp'), wx=_labV('sf-wx'), Lday=_labV('sf-day'), pr=_labV('sf-pr');
+      _labSetv('sf-kwp',kwp.toFixed(0)+' kWp'); _labSetv('sf-day',Lday.toFixed(1)+' jam'); _labSetv('sf-pr',pr.toFixed(2));
+      const t0=12-Lday/2, t1=12+Lday/2, Ppeak=kwp*pr*wx;
+      let energy=0; const dt=0.25;
+      for(let t=t0;t<=t1;t+=dt){ const p=Ppeak*Math.sin(Math.PI*(t-t0)/Lday); energy+=p*dt; }
+      const cf=energy/(kwp*24)*100;
+      _labSet('sf-energy',energy.toFixed(0)); _labSet('sf-peak',Ppeak.toFixed(0)); _labSet('sf-cf',cf.toFixed(1));
+      _labSet('sf-info','Energi '+energy.toFixed(0)+' kWh/hari · puncak '+Ppeak.toFixed(0)+' kW · CF '+cf.toFixed(0)+'%');
+      // chart hours 5..19
+      const H0=5,H1=19, X=h=>48+(h-H0)/(H1-H0)*336, Y=p=>205-(p/Math.max(kwp,1))*160;
+      let pts='', area='M '+X(H0).toFixed(1)+' '+Y(0).toFixed(1)+' ';
+      for(let h=H0;h<=H1;h+=0.5){ let p=0; if(h>=t0&&h<=t1) p=Ppeak*Math.sin(Math.PI*(h-t0)/Lday); pts+=X(h).toFixed(1)+','+Y(p).toFixed(1)+' '; area+='L '+X(h).toFixed(1)+' '+Y(p).toFixed(1)+' '; }
+      area+='L '+X(H1).toFixed(1)+' '+Y(0).toFixed(1)+' Z';
+      _labAttr('sf-curve','points',pts.trim()); _labAttr('sf-area','d',area);
     })
   },
 
