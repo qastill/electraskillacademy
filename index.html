@@ -2624,104 +2624,67 @@ body {
   gap: 24px;
 }
 
-/* ===== Simulator Lab — kartu visual per spesialisasi (clickable) ===== */
-#simulator-grid { display: block; }
-.lab-spec { margin-bottom: 46px; }
-.lab-spec:last-child { margin-bottom: 0; }
-.lab-spec-head {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  border-bottom: 1px solid var(--line-gold);
-  padding-bottom: 14px;
-  margin-bottom: 22px;
+/* ===== Simulator Lab — launcher 1 layar (tile bergambar, klik buka) ===== */
+.lab-launch { padding: 56px 48px 64px !important; }
+.lab-launch-inner { max-width: 1180px; margin: 0 auto; }
+.lab-launch-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 18px; flex-wrap: wrap; margin-bottom: 22px;
 }
-.lab-spec-num {
-  flex: 0 0 auto;
-  width: 46px; height: 46px;
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-family: var(--serif, Georgia, serif);
-  font-size: 1.25rem; font-weight: 700;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+.lab-launch-title {
+  font-family: var(--serif, Georgia, serif); font-size: clamp(26px, 3vw, 40px);
+  font-weight: 400; color: var(--navy-deep, #1a1d2e); margin: 6px 0 0; line-height: 1.1;
 }
-.lab-spec-head > div { flex: 1; }
-.lab-spec-title {
-  font-family: var(--serif, Georgia, serif);
-  font-size: 1.5rem; font-weight: 600;
-  color: var(--navy-deep, #1a1d2e); margin: 0;
-  line-height: 1.2;
+.lab-launch-title .italic { font-style: italic; color: var(--gold-dark, #9a7f4f); }
+.lab-chips { display: flex; gap: 8px; }
+.lab-chip {
+  font-family: var(--sans); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
+  padding: 9px 16px; border-radius: 999px; cursor: pointer;
+  background: #fff; color: var(--ink-mute, #6b6d7a);
+  border: 1px solid var(--line, rgba(26,29,46,0.14)); transition: all 0.18s ease;
 }
-.lab-spec-sub { font-size: 0.88rem; color: var(--ink-mute, #6b6d7a); margin: 2px 0 0; }
-.lab-spec-count {
-  flex: 0 0 auto;
-  font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--gold-dark, #9a7f4f); background: rgba(201,169,110,0.12);
-  border: 1px solid rgba(201,169,110,0.32); border-radius: 999px;
-  padding: 4px 11px; font-weight: 700;
-}
-.lab-cardgrid {
+.lab-chip:hover { border-color: var(--gold, #c9a96e); color: var(--navy-deep, #1a1d2e); }
+.lab-chip.active { background: var(--navy-deep, #1a1d2e); color: #fff; border-color: var(--navy-deep, #1a1d2e); }
+
+.lab-launch-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 22px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
-.lab-card {
-  display: flex; flex-direction: column;
-  text-align: left; padding: 0; cursor: pointer;
-  background: #fff;
-  border: 1px solid var(--line, rgba(26,29,46,0.1));
-  border-radius: 16px; overflow: hidden;
-  font-family: inherit;
-  box-shadow: 0 4px 16px rgba(26,29,46,0.06);
-  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+.lab-tile {
+  position: relative; padding: 0; border: none; cursor: pointer;
+  border-radius: 14px; overflow: hidden; aspect-ratio: 4 / 3;
+  background: #1a1d2e; box-shadow: 0 6px 18px rgba(26,29,46,0.14);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.lab-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 40px rgba(26,29,46,0.16);
-  border-color: var(--gold, #c9a96e);
-}
-.lab-card-banner {
-  position: relative;
-  height: 104px;
+.lab-tile:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(26,29,46,0.3); }
+.lab-tile-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.lab-tile:hover .lab-tile-img { transform: scale(1.09); }
+.lab-tile-grad { position: absolute; inset: 0; opacity: 0.34; mix-blend-mode: multiply; }
+.lab-tile-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,15,28,0.93) 6%, rgba(13,15,28,0.5) 42%, rgba(13,15,28,0.08) 100%); }
+.lab-tile-badge {
+  position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.38); color: #fff;
+  font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 0.82rem;
 }
-.lab-card-banner::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(circle at 70% 20%, rgba(255,255,255,0.25), transparent 60%);
-}
-.lab-card-icon { color: #fff; transform: scale(1.9); opacity: 0.95; }
-.lab-card-icon svg { width: 26px; height: 26px; }
-.lab-card:hover .lab-card-icon { transform: scale(2.1); transition: transform 0.22s ease; }
-.lab-card-tag {
-  position: absolute; top: 10px; right: 10px;
-  font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;
-  color: #fff; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.3);
-  padding: 3px 9px; border-radius: 999px; backdrop-filter: blur(2px);
-}
-.lab-card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
-.lab-card-cat {
-  font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--gold-dark, #9a7f4f); font-weight: 700; margin-bottom: 6px;
-}
-.lab-card-title {
-  font-family: var(--serif, Georgia, serif);
-  font-size: 1.12rem; font-weight: 600; color: var(--navy-deep, #1a1d2e);
-  margin: 0 0 7px; line-height: 1.25;
-}
-.lab-card-desc {
-  font-size: 0.85rem; color: var(--ink-mute, #6b6d7a); line-height: 1.55; margin: 0 0 14px;
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-}
-.lab-card-foot {
-  margin-top: auto; display: flex; align-items: center; justify-content: space-between;
-  font-size: 0.78rem; color: var(--ink-mute, #6b6d7a);
-}
-.lab-card-open {
-  display: inline-flex; align-items: center; gap: 6px;
-  color: var(--gold-dark, #9a7f4f); font-weight: 700;
-}
-.lab-card:hover .lab-card-open { gap: 10px; transition: gap 0.22s ease; }
-@media (max-width: 600px) { .lab-cardgrid { grid-template-columns: 1fr; } }
+.lab-tile-content { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 13px; display: flex; flex-direction: column; gap: 2px; text-align: left; }
+.lab-tile-cat { font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: #f0d080; font-weight: 800; }
+.lab-tile-title { font-family: var(--serif, Georgia, serif); font-size: 1.0rem; font-weight: 600; color: #fff; line-height: 1.18; }
+.lab-tile-open { margin-top: 5px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; opacity: 0; transform: translateY(4px); transition: opacity 0.2s ease, transform 0.2s ease; display: inline-flex; align-items: center; gap: 5px; }
+.lab-tile:hover .lab-tile-open { opacity: 1; transform: none; }
+.lab-launch-hint { text-align: center; margin-top: 22px; font-size: 0.85rem; color: var(--ink-mute, #6b6d7a); }
+@media (max-width: 980px) { .lab-launch-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 680px) { .lab-launch { padding: 44px 22px !important; } .lab-launch-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } .lab-tile-title { font-size: 0.9rem; } }
+
+/* Banner gambar di tiap halaman simulator (modal) */
+.sim-banner { position: relative; height: 130px; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+.sim-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sim-banner-grad { position: absolute; inset: 0; opacity: 0.4; mix-blend-mode: multiply; }
+.sim-banner-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,15,28,0.9), rgba(13,15,28,0.15)); }
+.sim-banner-txt { position: absolute; left: 20px; bottom: 14px; right: 20px; display: flex; flex-direction: column; gap: 3px; }
+.sim-banner-cat { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: #f0d080; font-weight: 800; }
+.sim-banner-title { font-family: var(--serif, Georgia, serif); font-size: 1.5rem; font-weight: 600; color: #fff; line-height: 1.15; }
 
 /* Electrical Design Calculators */
 .calc-section {
@@ -11905,14 +11868,20 @@ button:active:not(:disabled),
   </section>
 
   <!-- Simulator Section -->
-  <section class="simulator-section" id="lab-simulator">
-    <div class="lab-section-inner">
-      <div class="lab-section-header">
-        <div class="lab-section-eyebrow">Digital Simulator Lab</div>
-        <h2 class="lab-section-title">16 simulator lab <span class="italic">per spesialisasi</span></h2>
-        <p class="lab-section-sub">8 jalur karir × 2 lab = 16 simulator interaktif, semua aktif. Tinggal klik kartunya, geser slider, dan lihat hasilnya real-time — plus lab dasar &amp; tools sebagai bonus. Gratis untuk member ESA.</p>
+  <section class="simulator-section lab-launch" id="lab-simulator">
+    <div class="lab-launch-inner">
+      <div class="lab-launch-head">
+        <div>
+          <div class="lab-section-eyebrow">Digital Simulator Lab</div>
+          <h2 class="lab-launch-title">16 Lab Interaktif — <span class="italic">tinggal klik</span></h2>
+        </div>
+        <div class="lab-chips">
+          <button class="lab-chip active" data-set="spec" onclick="labShowSet('spec')">16 Spesialisasi</button>
+          <button class="lab-chip" data-set="bonus" onclick="labShowSet('bonus')">Dasar &amp; Tools</button>
+        </div>
       </div>
-      <div class="simulator-grid" id="simulator-grid"></div>
+      <div class="lab-launch-grid" id="simulator-grid"></div>
+      <div class="lab-launch-hint">Klik salah satu lab untuk masuk ke halamannya — geser parameter &amp; lihat visualisasi real-time.</div>
     </div>
   </section>
 
@@ -15115,16 +15084,17 @@ const SIM_ICONS = {
 };
 
 // Urutan, label, & warna grup spesialisasi (8 jalur karir = 16 lab; + grup Dasar/Tools bonus)
+const _U = (id) => 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=600&q=70';
 const SIM_GROUPS = [
-  { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan & drop tegangan.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)' },
-  { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor starting & efisiensi VFD.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)' },
-  { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo distribusi & penyulang 20 kV.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)' },
-  { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag-tension & koordinasi isolasi SUTET.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)' },
-  { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)' },
-  { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Audit, payback & koreksi faktor daya.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)' },
-  { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS rooftop & sizing baterai (BESS).', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)' },
-  { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, APD & sistem pembumian.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)' },
-  { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)' }
+  { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan & drop tegangan.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)', photo: _U('1621905251918-48416bd8575a') },
+  { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor starting & efisiensi VFD.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
+  { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo distribusi & penyulang 20 kV.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
+  { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag-tension & koordinasi isolasi SUTET.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
+  { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
+  { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Audit, payback & koreksi faktor daya.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
+  { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS rooftop & sizing baterai (BESS).', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
+  { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, APD & sistem pembumian.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
+  { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
 ];
 
 const SIMULATORS = [
@@ -15618,43 +15588,37 @@ const PRAKTIKUM_CLASSES = [
   { jalur: 'S8', jalurName: 'K3 Listrik', name: 'K3 Bootcamp & Rescue Drill', desc: 'Safety drill: rescue korban tersengat listrik, CPR, LOTO (lockout-tagout), APD use, fire class A & C. Wajib Kemnaker.', location: 'Jakarta · Bekasi', duration: '3 hari · 24 jam', schedule: 'Tiap bulan', price: 'Rp 2.200.000', includes: 'APD lengkap + Materi + Sertifikat', photo: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80' }
 ];
 
+let _labLaunchSet = 'spec';
+function _simGroup(s) { return SIM_GROUPS.find(g => g.key === (s.jalur || 'Fondasi')) || SIM_GROUPS[0]; }
+function labShowSet(which) {
+  _labLaunchSet = which;
+  document.querySelectorAll('.lab-chip').forEach(c => c.classList.toggle('active', c.dataset.set === which));
+  renderSimulators();
+}
 function renderSimulators() {
   const grid = document.getElementById('simulator-grid');
   if (!grid) return;
+  const arrow = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  const arrow = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const sims = (_labLaunchSet === 'bonus')
+    ? SIMULATORS.filter(s => (s.jalur || 'Fondasi') === 'Fondasi')
+    : SIMULATORS.filter(s => (s.jalur || 'Fondasi') !== 'Fondasi');
 
-  // Kartu lab visual & seluruhnya bisa diklik (ala kartu spesialisasi di Home).
-  const cardHTML = (s, grad) => `
-    <button type="button" class="lab-card" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
-      <div class="lab-card-banner" style="background:${grad}">
-        <span class="lab-card-icon">${s.icon}</span>
-        <span class="lab-card-tag">${s.level}</span>
-      </div>
-      <div class="lab-card-body">
-        <div class="lab-card-cat">${s.category}</div>
-        <h4 class="lab-card-title">${s.name}</h4>
-        <p class="lab-card-desc">${s.desc}</p>
-        <div class="lab-card-foot"><span>${s.duration}</span><span class="lab-card-open">Buka Lab ${arrow}</span></div>
-      </div>
-    </button>`;
-
-  // Render per spesialisasi (SIM_GROUPS) — tiap grup punya nomor & warna.
-  grid.innerHTML = SIM_GROUPS.map(g => {
-    const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);
-    if (!sims.length) return '';
+  // Satu layar: grid tile bergambar, seluruh tile diklik -> buka halaman simulator.
+  grid.innerHTML = sims.map(s => {
+    const g = _simGroup(s);
     return `
-      <div class="lab-spec">
-        <div class="lab-spec-head">
-          <span class="lab-spec-num" style="background:${g.grad}">${g.num}</span>
-          <div>
-            <h3 class="lab-spec-title">${g.label}</h3>
-            <p class="lab-spec-sub">${g.desc}</p>
-          </div>
-          <span class="lab-spec-count">${sims.length} lab</span>
-        </div>
-        <div class="lab-cardgrid">${sims.map(s => cardHTML(s, g.grad)).join('')}</div>
-      </div>`;
+    <button type="button" class="lab-tile" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
+      <img class="lab-tile-img" src="${g.photo}" alt="" loading="lazy" onerror="this.style.display='none'">
+      <span class="lab-tile-grad" style="background:${g.grad}"></span>
+      <span class="lab-tile-shade"></span>
+      <span class="lab-tile-badge">${g.num}</span>
+      <span class="lab-tile-content">
+        <span class="lab-tile-cat">${g.label}</span>
+        <span class="lab-tile-title">${s.name}</span>
+        <span class="lab-tile-open">Buka Lab ${arrow}</span>
+      </span>
+    </button>`;
   }).join('');
 }
 
@@ -15704,15 +15668,30 @@ function openSimulator(simId) {
   const sim = SIMULATORS.find(s => s.id === simId);
   if (!sim || !sim.working) return;
 
-  // Inject HTML based on simulator ID
-  if (simId === 'ohm-law') content.innerHTML = getOhmLawHTML();
-  else if (simId === 'three-phase') content.innerHTML = getThreePhaseHTML();
-  else if (simId === 'cable-sizing') content.innerHTML = getCableSizingHTML();
-  else if (simId === 'pv-sizing') content.innerHTML = getPVSizingHTML();
-  else if (simId === 'inst-lighting') content.innerHTML = getLightingHTML();
-  else if (simId === 'inst-vdrop') content.innerHTML = getVoltageDropHTML();
-  else if (simId === 'inst-mcb') content.innerHTML = getMCBCoordHTML();
-  else if (SIM_BUILDERS[simId]) content.innerHTML = SIM_BUILDERS[simId].html();
+  // Build simulator body HTML
+  let body = '';
+  if (simId === 'ohm-law') body = getOhmLawHTML();
+  else if (simId === 'three-phase') body = getThreePhaseHTML();
+  else if (simId === 'cable-sizing') body = getCableSizingHTML();
+  else if (simId === 'pv-sizing') body = getPVSizingHTML();
+  else if (simId === 'inst-lighting') body = getLightingHTML();
+  else if (simId === 'inst-vdrop') body = getVoltageDropHTML();
+  else if (simId === 'inst-mcb') body = getMCBCoordHTML();
+  else if (SIM_BUILDERS[simId]) body = SIM_BUILDERS[simId].html();
+
+  // Banner gambar representatif (bukan emoji) di tiap halaman simulator
+  const g = _simGroup(sim);
+  const banner = `
+    <div class="sim-banner">
+      <img src="${g.photo}" alt="" onerror="this.style.display='none'">
+      <span class="sim-banner-grad" style="background:${g.grad}"></span>
+      <span class="sim-banner-shade"></span>
+      <span class="sim-banner-txt">
+        <span class="sim-banner-cat">${g.num} · ${g.label}</span>
+        <span class="sim-banner-title">${sim.name}</span>
+      </span>
+    </div>`;
+  content.innerHTML = banner + body;
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
