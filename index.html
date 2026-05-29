@@ -15226,7 +15226,14 @@ const SIMULATORS = [
   { id: 'spklu-load', jalur: 'S12', category: 'EV · SPKLU', name: 'SPKLU Site Power & Load Mgmt', desc: 'Daya puncak stasiun multi-dispenser vs kapasitas trafo; perlukah load management agar tidak overload.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.grid, working: true },
   { id: 'ev-range', jalur: 'S12', category: 'EV · Jarak', name: 'EV Range & Efficiency', desc: 'Jarak tempuh vs kecepatan, AC, & medan; konsumsi kWh/km dan efisiensi realistis vs klaim pabrikan.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true },
   { id: 'ev-charger-roi', jalur: 'S12', category: 'EV · Bisnis', name: 'Charger Business ROI', desc: 'Kelayakan bisnis SPKLU: margin/kWh, laba bulanan & payback dari tarif jual, biaya listrik & opex.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
-  { id: 'ev-v2g', jalur: 'S12', category: 'EV · V2G', name: 'Smart Charging & V2G', desc: 'Arbitrase tarif: isi murah malam, jual balik saat puncak (V2G); potensi pendapatan harian armada EV.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true }
+  { id: 'ev-v2g', jalur: 'S12', category: 'EV · V2G', name: 'Smart Charging & V2G', desc: 'Arbitrase tarif: isi murah malam, jual balik saat puncak (V2G); potensi pendapatan harian armada EV.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
+
+  // ===== S13 · Waste to Energy =====
+  { id: 'wte-power', jalur: 'S13', category: 'WtE · Insinerasi', name: 'Waste-to-Energy Power', desc: 'Daya listrik insinerasi sampah dari tonase, nilai kalor & efisiensi; rumah terlayani & reduksi volume.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.grid, working: true },
+  { id: 'biogas-power', jalur: 'S13', category: 'WtE · Biogas', name: 'Landfill Gas & Biogas Power', desc: 'Produksi metana dari sampah organik, daya genset gas, & kredit karbon dari penangkapan CH₄.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.grid, working: true },
+  { id: 'wte-economics', jalur: 'S13', category: 'WtE · Ekonomi', name: 'WtE Plant Economics', desc: 'Pendapatan WtE dari tipping fee + jual listrik vs OPEX; laba operasi & margin proyek.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'waste-sort', jalur: 'S13', category: 'WtE · Komposisi', name: 'Waste Composition & LHV', desc: 'Nilai kalor sampah campuran dari fraksi organik/plastik/kertas; kelayakan insinerasi (≥7 MJ/kg).', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'wte-vs-recycle', jalur: 'S13', category: 'WtE · Strategi', name: 'Recycle vs Incinerate', desc: 'Bandingkan dampak CO₂ daur ulang vs bakar per material; hierarki sampah & rekomendasi terbaik.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.data, working: true }
 ];
 
 // ================================================
@@ -19080,6 +19087,181 @@ const SIM_BUILDERS = {
       a+='<rect x="'+X(0).toFixed(1)+'" y="44" width="'+(X(5)-X(0)).toFixed(1)+'" height="166" fill="rgba(21,128,61,0.12)"/>';
       a+='<rect x="'+X(18).toFixed(1)+'" y="44" width="'+(X(22)-X(18)).toFixed(1)+'" height="166" fill="rgba(58,95,176,0.14)"/>';
       document.getElementById('v2g-acts').innerHTML=a;
+    })
+  },
+
+  // ============ S13: Waste-to-Energy Power Potential ============
+  'wte-power': {
+    html: () => _labShell({
+      eyebrow: 'WtE · Insinerasi', title: 'Waste-to-Energy', italic: 'Power Potential',
+      desc: 'Daya listrik dari insinerasi sampah: P = (tonase × LHV × efisiensi) / waktu. Hitung daya bangkitan, rumah tangga terlayani, & sampah tereduksi.',
+      svg: `<rect x="120" y="60" width="90" height="90" rx="6" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+        <path d="M135 60 q10 -22 20 0 q10 -22 20 0 q10 -22 20 0" fill="none" stroke="#9a7f4f" stroke-width="2" class="lab-flow"/>
+        <text x="165" y="112" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1a1d2e">Insinerator</text>
+        <line x1="210" y1="105" x2="270" y2="105" stroke="#9a7f4f" stroke-width="4" class="lab-flow"/>
+        <circle cx="290" cy="105" r="18" fill="none" stroke="#1a1d2e" stroke-width="2.5"/><text x="290" y="110" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700">G</text>
+        <text x="200" y="180" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" fill="#15803d" id="wte-mw">—</text>
+        <text x="200" y="240" text-anchor="middle" font-family="Georgia" font-size="12" id="wte-homes">—</text>
+        <text x="200" y="264" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="wte-detail">—</text>`,
+      controls: _labSld('wte-ton','Sampah masuk (ton/hari)',50,3000,1000,10)
+        + _labSld('wte-lhv','Nilai kalor LHV (MJ/kg)',5,15,8,0.5)
+        + _labSld('wte-eff','Efisiensi pembangkit (%)',15,30,22,1)
+        + _labSld('wte-cf','Capacity factor (%)',60,95,85,1),
+      outputs: _labOut('wte-pow','Daya Listrik','MW') + _labOut('wte-energy','Energi','GWh/th') + _labOut('wte-home','Rumah Terlayani',''),
+      formula: `P(MW) = ton/hari×1000×LHV(MJ/kg)×η / (86400 s) · energi = P×8760×CF<br>1 rumah ≈ 900 kWh/th. WtE juga reduksi volume sampah ~90%.`
+    }),
+    init: () => _labBind(['wte-ton','wte-lhv','wte-eff','wte-cf'], () => {
+      const ton=_labV('wte-ton'), lhv=_labV('wte-lhv'), eff=_labV('wte-eff')/100, cf=_labV('wte-cf')/100;
+      _labSetv('wte-ton',ton.toFixed(0)+' t/hari'); _labSetv('wte-lhv',lhv.toFixed(1)+' MJ/kg'); _labSetv('wte-eff',(eff*100).toFixed(0)+' %'); _labSetv('wte-cf',(cf*100).toFixed(0)+' %');
+      const kgPerS=ton*1000/86400, P=kgPerS*lhv*eff; // MW (MJ/s = MW)
+      const energy=P*8760*cf/1000, homes=energy*1e6/900;
+      _labSet('wte-pow',P.toFixed(1)); _labSet('wte-energy',energy.toFixed(0)); _labSet('wte-home',Math.round(homes).toLocaleString('id-ID'));
+      _labSet('wte-mw',P.toFixed(1)+' MW'); _labSet('wte-homes','~'+Math.round(homes).toLocaleString('id-ID')+' rumah terlayani');
+      _labSet('wte-detail',ton.toFixed(0)+' t/hari → '+energy.toFixed(0)+' GWh/th · reduksi volume ~90%');
+    })
+  },
+
+  // ============ S13: Landfill Gas / Biogas ============
+  'biogas-power': {
+    html: () => _labShell({
+      eyebrow: 'WtE · Biogas', title: 'Landfill Gas', italic: '& Biogas Power',
+      desc: 'Sampah organik di TPA/digester menghasilkan metana (CH₄). Hitung produksi biogas, daya genset gas, & kredit karbon dari metana yang ditangkap (bukan dilepas).',
+      svg: `<ellipse cx="120" cy="150" rx="70" ry="40" fill="#7a8a3a" opacity="0.25"/>
+        <path d="M55 150 q65 -55 130 0" fill="none" stroke="#7a8a3a" stroke-width="2.5"/>
+        <text x="120" y="155" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1a1d2e">TPA / digester</text>
+        <line x1="190" y1="130" x2="250" y2="110" stroke="#9a7f4f" stroke-width="3" class="lab-flow"/>
+        <circle cx="275" cy="105" r="18" fill="none" stroke="#1a1d2e" stroke-width="2.5"/><text x="275" y="110" text-anchor="middle" font-family="Georgia" font-size="10" font-weight="700">G</text>
+        <text x="200" y="200" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" fill="#15803d" id="bg-mw">—</text>
+        <text x="200" y="258" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" fill="#15803d" id="bg-info">—</text>`,
+      controls: _labSld('bg-mass','Sampah organik (ton/hari)',10,2000,300,10)
+        + _labSld('bg-yield','Yield biogas (m³/ton)',60,200,120,5)
+        + _labSld('bg-ch4','Kandungan CH₄ (%)',45,70,55,1)
+        + _labSld('bg-eff','Efisiensi genset gas (%)',30,42,38,1),
+      outputs: _labOut('bg-gas','Biogas','m³/hari') + _labOut('bg-pow','Daya Genset','kW') + _labOut('bg-co2','Kredit Karbon','tCO₂e/th'),
+      formula: `Biogas = massa × yield · energi CH₄ ≈ 10 kWh/m³ CH₄ · P = energi×η/24<br>CH₄ ditangkap: GWP 28× CO₂ — kredit karbon besar dari mencegah emisi metana.`
+    }),
+    init: () => _labBind(['bg-mass','bg-yield','bg-ch4','bg-eff'], () => {
+      const mass=_labV('bg-mass'), yld=_labV('bg-yield'), ch4=_labV('bg-ch4')/100, eff=_labV('bg-eff')/100;
+      _labSetv('bg-mass',mass.toFixed(0)+' t/hari'); _labSetv('bg-yield',yld.toFixed(0)+' m³/t'); _labSetv('bg-ch4',(ch4*100).toFixed(0)+' %'); _labSetv('bg-eff',(eff*100).toFixed(0)+' %');
+      const gas=mass*yld, ch4vol=gas*ch4, energyKwh=ch4vol*10, P=energyKwh*eff/24;
+      const ch4ton=ch4vol*0.000717*365, co2cred=ch4ton*28; // GWP metana
+      _labSet('bg-gas',Math.round(gas).toLocaleString('id-ID')); _labSet('bg-pow',P.toFixed(0)); _labSet('bg-co2',Math.round(co2cred).toLocaleString('id-ID'));
+      _labSet('bg-mw',(P/1000).toFixed(2)+' MW'); _labSet('bg-info',Math.round(gas).toLocaleString('id-ID')+' m³/hari → '+P.toFixed(0)+' kW · kredit '+Math.round(co2cred).toLocaleString('id-ID')+' tCO₂e/th');
+    })
+  },
+
+  // ============ S13: Tipping Fee & WtE Economics ============
+  'wte-economics': {
+    html: () => _labShell({
+      eyebrow: 'WtE · Ekonomi', title: 'WtE Plant', italic: 'Economics',
+      desc: 'Pendapatan WtE dari 2 sumber: tipping fee (bayaran terima sampah) + jual listrik. Bandingkan terhadap CAPEX besar & OPEX untuk menilai kelayakan proyek.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Pendapatan vs biaya (Rp miliar/th)</text>
+        <line x1="60" y1="210" x2="360" y2="210" stroke="#1a1d2e" stroke-width="1.5"/>
+        <g id="we-bars"></g>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="we-verdict">—</text>`,
+      controls: _labSld('we-ton','Kapasitas (ton/hari)',100,3000,1000,10)
+        + _labSld('we-tip','Tipping fee (rb Rp/ton)',100,800,400,10)
+        + _labSld('we-mw','Daya jual (MW)',1,80,18,1)
+        + _labSld('we-tar','Tarif listrik (Rp/kWh)',1000,2500,1600,50)
+        + _labSld('we-opex','OPEX (miliar/th)',10,500,90,5),
+      outputs: _labOut('we-rev','Pendapatan','M/th') + _labOut('we-profit','Laba Operasi','M/th') + _labOut('we-margin','Margin','%'),
+      formula: `Pendapatan = tipping (ton×365×fee) + listrik (MW×8760×0.85×tarif)<br>Laba operasi = pendapatan − OPEX (belum termasuk depresiasi CAPEX).`
+    }),
+    init: () => _labBind(['we-ton','we-tip','we-mw','we-tar','we-opex'], () => {
+      const ton=_labV('we-ton'), tip=_labV('we-tip')*1000, mw=_labV('we-mw'), tar=_labV('we-tar'), opex=_labV('we-opex');
+      _labSetv('we-ton',ton.toFixed(0)+' t/hari'); _labSetv('we-tip','Rp'+_labV('we-tip').toFixed(0)+'rb'); _labSetv('we-mw',mw.toFixed(0)+' MW'); _labSetv('we-tar','Rp'+tar.toFixed(0)); _labSetv('we-opex',opex.toFixed(0)+' M');
+      const revTip=ton*365*tip/1e9, revElec=mw*8760*0.85*tar*1000/1e9, rev=revTip+revElec;
+      const profit=rev-opex, margin=rev>0?profit/rev*100:0;
+      _labSet('we-rev',rev.toFixed(0)); _labSet('we-profit',profit.toFixed(0)); _labSet('we-margin',margin.toFixed(0));
+      const col=profit>0?_GREEN:_RED;
+      _labSet('we-verdict', profit>0?('✓ Laba operasi Rp'+profit.toFixed(0)+' M/th (margin '+margin.toFixed(0)+'%)'):('✗ Rugi operasi — naikkan tipping fee / tarif')); _labAttr('we-verdict','fill',col);
+      const g=document.getElementById('we-bars'); const maxv=Math.max(rev,opex,1)*1.12, H=150, base=210, sc=H/maxv;
+      // stacked revenue bar + opex bar
+      let o=''; const x1=120;
+      const ht=revTip*sc, he=revElec*sc;
+      o+='<rect x="'+x1+'" y="'+(base-ht).toFixed(1)+'" width="60" height="'+ht.toFixed(1)+'" fill="#7a8a3a"/>';
+      o+='<rect x="'+x1+'" y="'+(base-ht-he).toFixed(1)+'" width="60" height="'+he.toFixed(1)+'" fill="#15803d"/>';
+      o+='<text x="'+(x1+30)+'" y="'+(base-ht-he-6).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="10" font-weight="700" fill="#1a1d2e">'+rev.toFixed(0)+'</text>';
+      o+='<text x="'+(x1+30)+'" y="226" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">pendapatan</text>';
+      const x2=240, ho=opex*sc;
+      o+='<rect x="'+x2+'" y="'+(base-ho).toFixed(1)+'" width="60" height="'+ho.toFixed(1)+'" fill="#c0392b"/>';
+      o+='<text x="'+(x2+30)+'" y="'+(base-ho-6).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="10" font-weight="700" fill="#1a1d2e">'+opex.toFixed(0)+'</text>';
+      o+='<text x="'+(x2+30)+'" y="226" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">OPEX</text>';
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S13: Waste Composition & Sorting ============
+  'waste-sort': {
+    html: () => _labShell({
+      eyebrow: 'WtE · Komposisi', title: 'Waste Composition', italic: '& Calorific Value',
+      desc: 'Nilai kalor sampah campuran bergantung komposisi. Atur fraksi organik/plastik/kertas/lainnya — lihat LHV gabungan & kelayakannya untuk insinerasi (perlu ≥ 7 MJ/kg).',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Komposisi & kontribusi kalor</text>
+        <g id="ws-comp"></g>
+        <text x="200" y="248" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" id="ws-lhv">—</text>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="ws-verdict">—</text>`,
+      controls: _labSld('ws-org','Organik basah (%)',0,80,50,1)
+        + _labSld('ws-plas','Plastik (%)',0,50,15,1)
+        + _labSld('ws-paper','Kertas/karton (%)',0,50,20,1),
+      outputs: _labOut('ws-lhv-o','LHV Campuran','MJ/kg') + _labOut('ws-other','Fraksi Lain','%') + _labOut('ws-fit','Layak Insinerasi',''),
+      formula: `LHV ≈ Σ(fraksi × LHV bahan): organik ~4, plastik ~32, kertas ~15, lain ~10 MJ/kg<br>Organik tinggi (basah) menurunkan LHV — pilah/keringkan agar layak bakar (≥7 MJ/kg).`
+    }),
+    init: () => _labBind(['ws-org','ws-plas','ws-paper'], () => {
+      let org=_labV('ws-org'), plas=_labV('ws-plas'), paper=_labV('ws-paper');
+      _labSetv('ws-org',org.toFixed(0)+' %'); _labSetv('ws-plas',plas.toFixed(0)+' %'); _labSetv('ws-paper',paper.toFixed(0)+' %');
+      let other=Math.max(0,100-org-plas-paper);
+      const sum=org+plas+paper+other;
+      const f=x=>x/sum;
+      const lhv=f(org)*4 + f(plas)*32 + f(paper)*15 + f(other)*10;
+      _labSet('ws-lhv-o',lhv.toFixed(1)); _labSet('ws-other',other.toFixed(0)); _labSet('ws-fit', lhv>=7?'✓ Ya':'✗ Tidak');
+      _labSet('ws-lhv','LHV '+lhv.toFixed(1)+' MJ/kg');
+      const ok=lhv>=7, col=ok?_GREEN:_RED;
+      _labSet('ws-verdict', ok?'✓ Layak insinerasi (LHV ≥ 7 MJ/kg)':'✗ LHV rendah — pilah organik / keringkan dulu'); _labAttr('ws-verdict','fill',col);
+      // stacked horizontal bar
+      const g=document.getElementById('ws-comp'); const segs=[[f(org),'#7a8a3a','Organik'],[f(plas),'#c0392b','Plastik'],[f(paper),'#e0863a','Kertas'],[f(other),'#9aa0ad','Lain']];
+      const x0=60, W=280, y=60, h=34; let x=x0, o='';
+      segs.forEach(s=>{ const w=s[0]*W; if(w>0){ o+='<rect x="'+x.toFixed(1)+'" y="'+y+'" width="'+w.toFixed(1)+'" height="'+h+'" fill="'+s[1]+'"/>'; if(w>30)o+='<text x="'+(x+w/2).toFixed(1)+'" y="'+(y+h/2+4)+'" text-anchor="middle" font-family="Georgia" font-size="10" fill="#fff" font-weight="700">'+(s[0]*100).toFixed(0)+'%</text>'; } x+=w; });
+      // legend
+      segs.forEach((s,i)=>{ const lx=60+i*80; o+='<rect x="'+lx+'" y="110" width="11" height="11" fill="'+s[1]+'"/><text x="'+(lx+15)+'" y="120" font-family="Georgia" font-size="9.5" fill="#1a1d2e">'+s[2]+'</text>'; });
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S13: Recycling vs Incineration (CO2) ============
+  'wte-vs-recycle': {
+    html: () => _labShell({
+      eyebrow: 'WtE · Strategi', title: 'Recycle vs', italic: 'Incinerate',
+      desc: 'Hierarki sampah: daur ulang biasanya lebih baik dari bakar untuk material tertentu. Bandingkan dampak CO₂ & nilai dari mendaur ulang vs membakar fraksi sampah.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Manfaat bersih (relatif)</text>
+        <line x1="60" y1="150" x2="360" y2="150" stroke="#1a1d2e" stroke-width="1.2"/>
+        <rect x="110" y="0" width="70" height="0" id="wr-bar-rec" fill="#15803d"/>
+        <rect x="240" y="0" width="70" height="0" id="wr-bar-inc" fill="#e0863a"/>
+        <text x="145" y="166" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Daur ulang</text>
+        <text x="275" y="166" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Bakar (WtE)</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="wr-verdict">—</text>`,
+      controls: _labSel('wr-mat','Jenis material','<option value="plastic" selected>Plastik PET</option><option value="paper">Kertas</option><option value="metal">Logam (aluminium)</option><option value="organic">Organik</option>')
+        + _labSld('wr-ton','Tonase (ton/th)',100,50000,5000,100)
+        + _labSld('wr-recrate','Tingkat daur ulang dapat dicapai (%)',10,95,70,1),
+      outputs: _labOut('wr-recco2','Hemat CO₂ Daur Ulang','tCO₂') + _labOut('wr-incco2','Net CO₂ Bakar','tCO₂') + _labOut('wr-best','Disarankan',''),
+      formula: `Daur ulang: hemat CO₂ dari hindari produksi primer · Bakar: hasilkan listrik tapi lepas CO₂ fosil (plastik).<br>Logam & kertas: daur ulang menang telak. Organik: lebih baik kompos/biogas.`
+    }),
+    init: () => _labBind(['wr-mat','wr-ton','wr-recrate'], () => {
+      const mat=_labRaw('wr-mat'), ton=_labV('wr-ton'), rate=_labV('wr-recrate')/100;
+      _labSetv('wr-ton',ton.toFixed(0)+' t/th'); _labSetv('wr-recrate',(rate*100).toFixed(0)+' %');
+      // factor: CO2 saved per ton recycled, and net CO2 per ton incinerated
+      const data={ plastic:{rec:1.5,inc:2.3,name:'Plastik'}, paper:{rec:0.9,inc:-0.2,name:'Kertas'}, metal:{rec:9.0,inc:0.1,name:'Logam'}, organic:{rec:0.3,inc:0.0,name:'Organik'} }[mat];
+      const recCO2=ton*rate*data.rec, incCO2=ton*data.inc; // inc positive = emisi
+      _labSet('wr-recco2',Math.round(recCO2).toLocaleString('id-ID')); _labSet('wr-incco2',Math.round(incCO2).toLocaleString('id-ID'));
+      const recBetter = recCO2 > -incCO2; // recycle saves vs incinerate emits
+      _labSet('wr-best', recBetter?'Daur Ulang':'WtE / lainnya');
+      const col=recBetter?_GREEN:_GOLD;
+      _labSet('wr-verdict', mat==='metal'?'✓ Logam: daur ulang menang telak (hemat 9 tCO₂/ton)':(mat==='organic'?'◐ Organik: kompos/biogas lebih baik dari bakar':(recBetter?'✓ Daur ulang lebih hemat karbon':'WtE bisa dipertimbangkan untuk residu')));
+      _labAttr('wr-verdict','fill',col);
+      const maxv=Math.max(recCO2,Math.abs(incCO2),1)*1.15, H=110, base=150, sc=H/maxv;
+      _labAttr('wr-bar-rec','height',Math.max(0,recCO2*sc)); _labAttr('wr-bar-rec','y',base-Math.max(0,recCO2*sc));
+      const ih=Math.abs(incCO2)*sc;
+      if(incCO2>=0){ _labAttr('wr-bar-inc','y',base-ih); _labAttr('wr-bar-inc','height',ih); _labAttr('wr-bar-inc','fill','#c0392b'); }
+      else { _labAttr('wr-bar-inc','y',base); _labAttr('wr-bar-inc','height',ih); _labAttr('wr-bar-inc','fill','#15803d'); }
     })
   }
 };
