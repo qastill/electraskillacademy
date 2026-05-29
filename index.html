@@ -2624,6 +2624,54 @@ body {
   gap: 24px;
 }
 
+/* Grouped simulator layout (per spesialisasi) */
+#simulator-grid { display: block; }
+.sim-group { margin-bottom: 48px; }
+.sim-group:last-child { margin-bottom: 0; }
+.sim-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line-gold);
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+}
+.sim-group-title {
+  font-family: var(--serif, Georgia, serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--navy-deep, #1a1d2e);
+  margin: 0;
+}
+.sim-group-count {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-dark, #c9a96e);
+  background: rgba(201,169,110,0.12);
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-weight: 700;
+}
+.sim-group-desc {
+  font-size: 0.9rem;
+  color: var(--ink-mute, rgba(245,240,230,0.6));
+  margin: 0 0 20px;
+}
+.sim-group-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 920px) {
+  .sim-group-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .sim-group-grid { grid-template-columns: 1fr; }
+}
+
 /* Electrical Design Calculators */
 .calc-section {
   padding: 100px 80px;
@@ -11809,8 +11857,8 @@ button:active:not(:disabled),
     <div class="lab-section-inner">
       <div class="lab-section-header">
         <div class="lab-section-eyebrow">Digital Simulator Lab</div>
-        <h2 class="lab-section-title">Enam simulator <span class="italic">interaktif</span></h2>
-        <p class="lab-section-sub">Eksperimen langsung di browser. Geser slider, ubah parameter, lihat hasilnya real-time. Semua gratis untuk alumni ESA.</p>
+        <h2 class="lab-section-title">Simulator lab <span class="italic">per spesialisasi</span></h2>
+        <p class="lab-section-sub">Tiap jalur karir punya lab spesifik sendiri — total 16 simulator yang sedang kami kembangkan bertahap. Eksperimen langsung di browser: geser slider, ubah parameter, lihat hasilnya real-time. Gratis untuk member ESA.</p>
       </div>
       <div class="simulator-grid" id="simulator-grid"></div>
     </div>
@@ -15001,16 +15049,71 @@ const SIM_ICONS = {
   cable: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-3 2 6 2-6 2 6 2-3h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   pv: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M12 2v1M12 11v1M17 7h-1M8 7H7M15.5 3.5l-.7.7M9.2 10.8l-.7.7M15.5 10.5l-.7-.7M9.2 3.2l-.7-.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="4" y="14" width="16" height="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 14v7M12 14v7M16 14v7M4 17.5h16" stroke="currentColor" stroke-width="1"/></svg>',
   trafo: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="15" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9v6M21 9v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-  pf: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 20L12 4l8 16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 14l4-2 4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+  pf: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 20L12 4l8 16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 14l4-2 4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  bulb: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.7.8 1 1.5 1 2.5h6c0-1 .3-1.7 1-2.5A6 6 0 0012 3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  vdrop: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 6h3l4 12 4-9 3 6h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 3"/></svg>',
+  mcb: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-2M15 21v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  motor: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="12" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 15v-6l2.5 4 2.5-4v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 9h3M18 15h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  grid: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3l-5 18M12 3l5 18M7 21h10M9 9h6M8 14h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  audit: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M9 8h6M9 12h6M9 16h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  battery: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M21 10v4M10 9l-2 3h3l-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  shield: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M11 7l-2 5h3l-1 4 4-6h-3l1-3z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  earth: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3v8M5 11h14M7.5 15h9M10 19h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  data: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
 
+// Urutan & label grup spesialisasi (selaras 8 jalur karir + grup Fondasi lintas-jurusan)
+const SIM_GROUPS = [
+  { key: 'Fondasi', label: 'Fondasi · Lintas Jurusan', desc: 'Konsep dasar yang dipakai semua spesialisasi.' },
+  { key: 'S1', label: 'S1 · Instalasi Bangunan', desc: 'MEP gedung: pencahayaan, drop tegangan, proteksi & koordinasi kabel.' },
+  { key: 'S2', label: 'S2 · Industri & Manufaktur', desc: 'Motor, drive, dan efisiensi pabrik.' },
+  { key: 'S3', label: 'S3 · Distribusi', desc: 'Jaringan 20 kV, gardu distribusi, dan trafo.' },
+  { key: 'S4', label: 'S4 · Transmisi', desc: 'Saluran 150/500 kV, sag-tension, koordinasi isolasi.' },
+  { key: 'S5', label: 'S5 · Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.' },
+  { key: 'S6', label: 'S6 · Energy Auditor', desc: 'Audit energi, payback, dan koreksi faktor daya.' },
+  { key: 'S7', label: 'S7 · Pembangkitan & Renewable', desc: 'PLTS, BESS, dan energi terbarukan.' },
+  { key: 'S8', label: 'S8 · K3 Listrik', desc: 'Arc flash, APD, dan sistem pembumian.' }
+];
+
 const SIMULATORS = [
-  { id: 'ohm-law', category: 'Fisika Listrik', name: 'Ohm\'s Law Simulator', desc: 'Visualisasi interaktif hukum Ohm (V = I × R) + perhitungan daya. Ganti variabel, lihat hasilnya langsung.', level: 'Esensial', duration: '~15 menit', icon: SIM_ICONS.ohm, working: true },
-  { id: 'three-phase', category: 'Sistem Tenaga', name: '3-Phase Power Triangle', desc: 'Hitung daya aktif (P), reaktif (Q), dan semu (S) dari sistem 3 fasa. Visualisasi diagram segitiga daya real-time.', level: 'Fundamental', duration: '~20 menit', icon: SIM_ICONS.phase, working: true },
-  { id: 'cable-sizing', category: 'Instalasi', name: 'Cable Sizing Calculator', desc: 'Hitung luas penampang kabel sesuai PUIL 2011 / SNI. Input beban, tegangan, panjang — output ukuran + voltage drop.', level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.cable, working: true },
-  { id: 'pv-sizing', category: 'Renewable', name: 'PV System Designer', desc: 'Rancang sistem PLTS atap: jumlah panel, ukuran inverter, kapasitas baterai backup, dan luas atap yang dibutuhkan.', level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.pv, working: true },
-  { id: 'transformer', category: 'Sistem Tenaga', name: 'Transformer Ratio Calc', desc: 'Hitung rasio transformator step-up / step-down: tegangan, arus, dan jumlah lilitan primer-sekunder.', level: 'Fundamental', duration: '~15 menit', icon: SIM_ICONS.trafo, working: false },
-  { id: 'pf-correction', category: 'Kualitas Daya', name: 'Power Factor Correction', desc: 'Simulasi koreksi cos φ dengan capacitor bank industri. Input PF existing + target — dapat kapasitas kVAR.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pf, working: false }
+  // ===== Fondasi (lintas jurusan) =====
+  { id: 'ohm-law', jalur: 'Fondasi', category: 'Fisika Listrik', name: 'Ohm\'s Law Simulator', desc: 'Visualisasi interaktif hukum Ohm (V = I × R) + perhitungan daya. Ganti variabel, lihat hasilnya langsung.', level: 'Esensial', duration: '~15 menit', icon: SIM_ICONS.ohm, working: true },
+  { id: 'three-phase', jalur: 'Fondasi', category: 'Sistem Tenaga', name: '3-Phase Power Triangle', desc: 'Hitung daya aktif (P), reaktif (Q), dan semu (S) dari sistem 3 fasa. Visualisasi diagram segitiga daya real-time.', level: 'Fundamental', duration: '~20 menit', icon: SIM_ICONS.phase, working: true },
+  { id: 'transformer', jalur: 'Fondasi', category: 'Sistem Tenaga', name: 'Transformer Ratio Calc', desc: 'Hitung rasio transformator step-up / step-down: tegangan, arus, dan jumlah lilitan primer-sekunder.', level: 'Fundamental', duration: '~15 menit', icon: SIM_ICONS.trafo, working: false },
+
+  // ===== S1 · Instalasi Bangunan (3 lab baru + cable sizing) =====
+  { id: 'inst-lighting', jalur: 'S1', category: 'Instalasi · Pencahayaan', name: 'Lighting Design (Lumen Method)', desc: 'Hitung jumlah armatur/lampu sesuai target lux ruangan (metode lumen, SNI 6197). Input dimensi ruang, target iluminasi, lumen lampu.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.bulb, working: true },
+  { id: 'inst-vdrop', jalur: 'S1', category: 'Instalasi · Drop Tegangan', name: 'Voltage Drop Checker (PUIL)', desc: 'Cek persen drop tegangan pada feeder instalasi & status LULUS/GAGAL vs batas PUIL (≤5%). Geser arus, panjang, dan ukuran kabel.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.vdrop, working: true },
+  { id: 'inst-mcb', jalur: 'S1', category: 'Instalasi · Proteksi', name: 'MCB & Cable Coordination', desc: 'Tentukan rating MCB & ukuran kabel minimum dengan aturan koordinasi Ib ≤ In ≤ Iz (PUIL/IEC 60364). Termasuk faktor derating.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.mcb, working: true },
+  { id: 'cable-sizing', jalur: 'S1', category: 'Instalasi · Kabel', name: 'Cable Sizing Calculator', desc: 'Hitung luas penampang kabel sesuai PUIL 2011 / IEC. Input beban, tegangan, panjang — output ukuran + voltage drop.', level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.cable, working: true },
+
+  // ===== S2 · Industri & Manufaktur =====
+  { id: 'motor-starting', jalur: 'S2', category: 'Industri · Motor', name: 'Motor Starting (DOL vs Star-Delta)', desc: 'Bandingkan arus & torsi start motor induksi 3 fasa: Direct-On-Line vs Star-Delta. Lihat penurunan inrush current.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.motor, working: false },
+  { id: 'vfd-saving', jalur: 'S2', category: 'Industri · Efisiensi', name: 'VFD Energy Saving', desc: 'Estimasi penghematan energi pompa/fan saat dipasang VFD (affinity law: daya ∝ kecepatan³).', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.motor, working: false },
+
+  // ===== S3 · Distribusi =====
+  { id: 'trafo-loading', jalur: 'S3', category: 'Distribusi · Trafo', name: 'Distribution Transformer Loading', desc: 'Hitung pembebanan trafo distribusi (kVA), %loading, dan rugi-rugi. Cek apakah trafo overload.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.trafo, working: false },
+  { id: 'feeder-vd-20kv', jalur: 'S3', category: 'Distribusi · Feeder', name: 'Feeder Drop & Losses 20 kV', desc: 'Simulasi drop tegangan & rugi daya pada penyulang 20 kV terhadap jarak dan beban.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: false },
+
+  // ===== S4 · Transmisi =====
+  { id: 'line-sag', jalur: 'S4', category: 'Transmisi · Mekanik', name: 'Transmission Line Sag & Tension', desc: 'Hitung andongan (sag) & tegangan tarik konduktor SUTT/SUTET terhadap span, suhu, dan beban.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: false },
+  { id: 'insulation-coord', jalur: 'S4', category: 'Transmisi · Isolasi', name: 'Insulation Coordination (BIL)', desc: 'Pilih BIL & jumlah isolator string untuk tegangan sistem tertentu, plus jarak rambat (creepage).', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: false },
+
+  // ===== S5 · Energy Analyst & Data Science =====
+  { id: 'load-forecast', jalur: 'S5', category: 'Data · Forecasting', name: 'Load Forecasting (Moving Average)', desc: 'Prediksi beban harian dengan moving average & lihat error (MAPE) terhadap data aktual.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: false },
+  { id: 'ntl-detect', jalur: 'S5', category: 'Data · Losses', name: 'NTL / Loss Detection', desc: 'Deteksi anomali pemakaian (non-technical loss) dari profil konsumsi pelanggan.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: false },
+
+  // ===== S6 · Energy Auditor =====
+  { id: 'energy-payback', jalur: 'S6', category: 'Audit · Ekonomi', name: 'Energy Audit & Payback', desc: 'Hitung penghematan kWh, rupiah/tahun, dan payback period dari retrofit (mis. ganti LED / motor efisien).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.audit, working: false },
+  { id: 'pf-correction', jalur: 'S6', category: 'Audit · Kualitas Daya', name: 'Power Factor Correction', desc: 'Simulasi koreksi cos φ dengan capacitor bank. Input PF existing + target — dapat kapasitas kVAR & penghematan denda.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pf, working: false },
+
+  // ===== S7 · Pembangkitan & Renewable =====
+  { id: 'pv-sizing', jalur: 'S7', category: 'Renewable · PLTS', name: 'PV System Designer', desc: 'Rancang sistem PLTS atap: jumlah panel, ukuran inverter, kapasitas baterai backup, dan luas atap yang dibutuhkan.', level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.pv, working: true },
+  { id: 'bess-sizing', jalur: 'S7', category: 'Renewable · Storage', name: 'BESS Sizing', desc: 'Tentukan kapasitas baterai (kWh) & inverter (kW) untuk backup/peak-shaving dengan target DoD & autonomy.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.battery, working: false },
+
+  // ===== S8 · K3 Listrik =====
+  { id: 'arc-flash-ppe', jalur: 'S8', category: 'K3 · Arc Flash', name: 'Arc Flash & PPE Selector', desc: 'Estimasi incident energy (cal/cm²) & kategori APD (PPE) sesuai NFPA 70E dari arus gangguan & jarak kerja.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: false },
+  { id: 'earthing-touch', jalur: 'S8', category: 'K3 · Pembumian', name: 'Earthing & Touch Voltage', desc: 'Hitung resistansi pembumian batang elektroda & tegangan sentuh terhadap resistivitas tanah.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.earth, working: false }
 ];
 
 // ================================================
@@ -15464,7 +15567,8 @@ const PRAKTIKUM_CLASSES = [
 function renderSimulators() {
   const grid = document.getElementById('simulator-grid');
   if (!grid) return;
-  grid.innerHTML = SIMULATORS.map(s => `
+
+  const cardHTML = (s) => `
     <div class="simulator-card ${s.working ? '' : 'soon'}">
       ${!s.working ? '<div class="sim-card-badge-soon">Coming Soon</div>' : ''}
       <div class="sim-card-icon">${s.icon}</div>
@@ -15479,8 +15583,23 @@ function renderSimulators() {
         ${s.working ? 'Buka Simulator' : 'Segera Hadir'}
         ${s.working ? '<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
       </button>
-    </div>
-  `).join('');
+    </div>`;
+
+  // Render dikelompokkan per spesialisasi (SIM_GROUPS), hanya grup yang punya lab.
+  grid.innerHTML = SIM_GROUPS.map(g => {
+    const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);
+    if (!sims.length) return '';
+    const ready = sims.filter(s => s.working).length;
+    return `
+      <div class="sim-group">
+        <div class="sim-group-head">
+          <h3 class="sim-group-title">${g.label}</h3>
+          <span class="sim-group-count">${ready}/${sims.length} aktif</span>
+        </div>
+        <p class="sim-group-desc">${g.desc}</p>
+        <div class="sim-group-grid">${sims.map(cardHTML).join('')}</div>
+      </div>`;
+  }).join('');
 }
 
 function renderPraktikum() {
@@ -15534,6 +15653,9 @@ function openSimulator(simId) {
   else if (simId === 'three-phase') content.innerHTML = getThreePhaseHTML();
   else if (simId === 'cable-sizing') content.innerHTML = getCableSizingHTML();
   else if (simId === 'pv-sizing') content.innerHTML = getPVSizingHTML();
+  else if (simId === 'inst-lighting') content.innerHTML = getLightingHTML();
+  else if (simId === 'inst-vdrop') content.innerHTML = getVoltageDropHTML();
+  else if (simId === 'inst-mcb') content.innerHTML = getMCBCoordHTML();
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -15544,6 +15666,9 @@ function openSimulator(simId) {
     else if (simId === 'three-phase') initThreePhase();
     else if (simId === 'cable-sizing') initCableSizing();
     else if (simId === 'pv-sizing') initPVSizing();
+    else if (simId === 'inst-lighting') initLighting();
+    else if (simId === 'inst-vdrop') initVoltageDrop();
+    else if (simId === 'inst-mcb') initMCBCoord();
   }, 50);
 }
 
@@ -16059,6 +16184,351 @@ function initPVSizing() {
   };
 
   [loadEl, sphEl, wattEl, backupEl].forEach(el => el.addEventListener('input', update));
+  update();
+}
+
+// =================== S1 LAB 1: Lighting Design (Lumen Method) ===================
+function getLightingHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">Instalasi Bangunan · Pencahayaan</div>
+      <h2>Lighting Design <span class="italic">— Lumen Method</span></h2>
+      <p>Metode lumen (SNI 6197). Jumlah armatur N = (E × A) / (Φ × CU × LLF). Geser parameter, tata letak & lux aktual dihitung otomatis.</p>
+    </div>
+    <div class="sim-workspace">
+      <div class="sim-visual">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="40" width="320" height="210" rx="6" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+          <g id="light-fixtures"></g>
+          <text x="200" y="272" text-anchor="middle" font-family="Georgia" font-size="13" fill="#1a1d2e" font-weight="600" id="light-room-label">8 m × 6 m</text>
+          <text x="200" y="290" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9a7f4f" id="light-grid-label">— armatur</text>
+        </svg>
+      </div>
+      <div class="sim-controls">
+        <div class="sim-control-group">
+          <div class="sim-control"><label>Panjang ruang <span class="sim-value" id="light-L-val">8.0 m</span></label><input type="range" id="light-L" min="2" max="30" value="8" step="0.5"></div>
+          <div class="sim-control"><label>Lebar ruang <span class="sim-value" id="light-W-val">6.0 m</span></label><input type="range" id="light-W" min="2" max="30" value="6" step="0.5"></div>
+          <div class="sim-control"><label>Target iluminasi (lux) <span class="sim-value" id="light-lux-val">300 lx</span></label><input type="range" id="light-lux" min="50" max="1000" value="300" step="25"></div>
+          <div class="sim-control"><label>Lumen per armatur <span class="sim-value" id="light-lm-val">3600 lm</span></label><input type="range" id="light-lm" min="500" max="8000" value="3600" step="100"></div>
+          <div class="sim-control"><label>Coefficient of Utilization (CU) <span class="sim-value" id="light-cu-val">0.60</span></label><input type="range" id="light-cu" min="0.3" max="0.9" value="0.6" step="0.05"></div>
+          <div class="sim-control"><label>Light Loss Factor (LLF) <span class="sim-value" id="light-llf-val">0.80</span></label><input type="range" id="light-llf" min="0.5" max="0.95" value="0.8" step="0.05"></div>
+        </div>
+        <div class="sim-outputs">
+          <div class="sim-output"><div class="sim-output-label">Jumlah Armatur</div><div class="sim-output-value"><span id="light-n">—</span><span class="unit">unit</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Lux Aktual</div><div class="sim-output-value"><span id="light-actual">—</span><span class="unit">lx</span></div></div>
+        </div>
+        <div class="sim-formula">
+          A = L × W = <span id="light-area">48.0</span> m² · N = (E × A)/(Φ × CU × LLF)<br>
+          N = (<span id="lf-e">300</span> × <span id="lf-a">48.0</span>) / (<span id="lf-lm">3600</span> × <span id="lf-cu">0.60</span> × <span id="lf-llf">0.80</span>) = <span id="lf-n">8.3</span> → <span id="lf-nc">9</span> unit
+        </div>
+      </div>
+    </div>
+  `;
+}
+function initLighting() {
+  const ids = ['light-L','light-W','light-lux','light-lm','light-cu','light-llf'];
+  const els = ids.map(i => document.getElementById(i));
+  if (els.some(e => !e)) return;
+  const [Lel, Wel, luxEl, lmEl, cuEl, llfEl] = els;
+
+  const update = () => {
+    const L = parseFloat(Lel.value), W = parseFloat(Wel.value);
+    const E = parseFloat(luxEl.value), lm = parseFloat(lmEl.value);
+    const cu = parseFloat(cuEl.value), llf = parseFloat(llfEl.value);
+    const A = L * W;
+    const nExact = (E * A) / (lm * cu * llf);
+    const N = Math.max(1, Math.ceil(nExact));
+    const actual = (N * lm * cu * llf) / A;
+
+    // layout grid: cols proporsional terhadap rasio ruang
+    let cols = Math.max(1, Math.round(Math.sqrt(N * (L / W))));
+    let rows = Math.ceil(N / cols);
+    while ((rows - 1) * cols >= N && rows > 1) rows--;
+
+    // value labels
+    document.getElementById('light-L-val').textContent = L.toFixed(1) + ' m';
+    document.getElementById('light-W-val').textContent = W.toFixed(1) + ' m';
+    document.getElementById('light-lux-val').textContent = E.toFixed(0) + ' lx';
+    document.getElementById('light-lm-val').textContent = lm.toFixed(0) + ' lm';
+    document.getElementById('light-cu-val').textContent = cu.toFixed(2);
+    document.getElementById('light-llf-val').textContent = llf.toFixed(2);
+
+    document.getElementById('light-n').textContent = N;
+    document.getElementById('light-actual').textContent = actual.toFixed(0);
+    document.getElementById('light-room-label').textContent = L.toFixed(1) + ' m × ' + W.toFixed(1) + ' m';
+    document.getElementById('light-grid-label').textContent = N + ' armatur (' + cols + ' × ' + rows + ')';
+
+    document.getElementById('light-area').textContent = A.toFixed(1);
+    document.getElementById('lf-e').textContent = E.toFixed(0);
+    document.getElementById('lf-a').textContent = A.toFixed(1);
+    document.getElementById('lf-lm').textContent = lm.toFixed(0);
+    document.getElementById('lf-cu').textContent = cu.toFixed(2);
+    document.getElementById('lf-llf').textContent = llf.toFixed(2);
+    document.getElementById('lf-n').textContent = nExact.toFixed(1);
+    document.getElementById('lf-nc').textContent = N;
+
+    // draw fixtures
+    const g = document.getElementById('light-fixtures');
+    const x0 = 40, y0 = 40, w = 320, h = 210;
+    let dots = '';
+    let placed = 0;
+    for (let r = 0; r < rows && placed < N; r++) {
+      const cy = y0 + h * (r + 1) / (rows + 1);
+      for (let c = 0; c < cols && placed < N; c++) {
+        const cx = x0 + w * (c + 1) / (cols + 1);
+        dots += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="7" fill="#FFD400" stroke="#9a7f4f" stroke-width="1.2"/>'
+              + '<line x1="' + (cx-4).toFixed(1) + '" y1="' + cy.toFixed(1) + '" x2="' + (cx+4).toFixed(1) + '" y2="' + cy.toFixed(1) + '" stroke="#9a7f4f" stroke-width="1.2"/>';
+        placed++;
+      }
+    }
+    g.innerHTML = dots;
+  };
+
+  els.forEach(e => e.addEventListener('input', update));
+  update();
+}
+
+// =================== S1 LAB 2: Voltage Drop Checker (PUIL) ===================
+const _VD_RHO = { cu: 0.0225, al: 0.036 }; // Ω·mm²/m @ ~70°C
+function getVoltageDropHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">Instalasi Bangunan · Drop Tegangan</div>
+      <h2>Voltage Drop <span class="italic">Checker (PUIL)</span></h2>
+      <p>Vd = k × ρ × L × I / A (k = 2 untuk 1 fasa, √3 untuk 3 fasa). Bandingkan %drop terhadap batas PUIL (umumnya ≤ 5%).</p>
+    </div>
+    <div class="sim-workspace">
+      <div class="sim-visual">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="95" width="56" height="50" rx="4" fill="#1a1d2e"/>
+          <text x="48" y="125" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">APP</text>
+          <line x1="76" y1="120" x2="324" y2="120" stroke="#9a7f4f" stroke-width="5" id="vd-cable"/>
+          <rect x="324" y="95" width="56" height="50" rx="4" fill="#1a1d2e" id="vd-loadbox"/>
+          <text x="352" y="118" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">Beban</text>
+          <text x="352" y="135" text-anchor="middle" font-family="Georgia" font-size="11" fill="#FFD400" id="vd-vload">—</text>
+          <text x="200" y="105" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e" id="vd-len-label">30 m</text>
+          <!-- bar -->
+          <text x="40" y="185" font-family="Georgia" font-size="11" fill="#1a1d2e">Drop Tegangan</text>
+          <rect x="40" y="195" width="320" height="20" rx="4" fill="#e5e5e5"/>
+          <rect x="40" y="195" width="0" height="20" rx="4" fill="#15803d" id="vd-bar"/>
+          <line x1="200" y1="190" x2="200" y2="220" stroke="#1a1d2e" stroke-width="1.5" stroke-dasharray="3 3" id="vd-limit-marker"/>
+          <text x="200" y="234" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e" id="vd-limit-label">batas 5%</text>
+          <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="20" fill="#15803d" font-weight="700" id="vd-pct">—</text>
+          <text x="200" y="282" text-anchor="middle" font-family="Georgia" font-size="13" fill="#15803d" font-weight="700" id="vd-verdict">—</text>
+        </svg>
+      </div>
+      <div class="sim-controls">
+        <div class="sim-control-group">
+          <div class="sim-control"><label>Arus beban (I) <span class="sim-value" id="vd-I-val">16 A</span></label><input type="range" id="vd-I" min="1" max="100" value="16" step="1"></div>
+          <div class="sim-control"><label>Panjang kabel (L) <span class="sim-value" id="vd-len-val">30 m</span></label><input type="range" id="vd-len" min="1" max="200" value="30" step="1"></div>
+          <div class="sim-control"><label>Luas penampang (A)</label>
+            <select id="vd-csa"><option>1.5</option><option>2.5</option><option selected>4</option><option>6</option><option>10</option><option>16</option><option>25</option><option>35</option><option>50</option></select></div>
+          <div class="sim-control"><label>Sistem</label>
+            <select id="vd-sys"><option value="1">1 Fasa (230 V)</option><option value="3" selected>3 Fasa (400 V)</option></select></div>
+          <div class="sim-control"><label>Konduktor</label>
+            <select id="vd-cond"><option value="cu" selected>Tembaga (Cu)</option><option value="al">Aluminium (Al)</option></select></div>
+          <div class="sim-control"><label>Batas drop (%) <span class="sim-value" id="vd-lim-val">5.0 %</span></label><input type="range" id="vd-lim" min="1" max="8" value="5" step="0.5"></div>
+        </div>
+        <div class="sim-outputs">
+          <div class="sim-output"><div class="sim-output-label">Drop Tegangan</div><div class="sim-output-value"><span id="vd-volt">—</span><span class="unit">V</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Persen Drop</div><div class="sim-output-value"><span id="vd-percent">—</span><span class="unit">%</span></div></div>
+        </div>
+        <div class="sim-formula">
+          Vd = k × ρ × L × I / A<br>
+          Vd = <span id="vf-k">1.73</span> × <span id="vf-rho">0.0225</span> × <span id="vf-l">30</span> × <span id="vf-i">16</span> / <span id="vf-a">4</span> = <span id="vf-vd">—</span> V (<span id="vf-pct">—</span> % dari <span id="vf-vsys">400</span> V)
+        </div>
+      </div>
+    </div>
+  `;
+}
+function initVoltageDrop() {
+  const Iel = document.getElementById('vd-I');
+  const Lel = document.getElementById('vd-len');
+  const csaEl = document.getElementById('vd-csa');
+  const sysEl = document.getElementById('vd-sys');
+  const condEl = document.getElementById('vd-cond');
+  const limEl = document.getElementById('vd-lim');
+  if (!Iel) return;
+
+  const update = () => {
+    const I = parseFloat(Iel.value), L = parseFloat(Lel.value);
+    const A = parseFloat(csaEl.value);
+    const phase = sysEl.value;
+    const rho = _VD_RHO[condEl.value];
+    const limit = parseFloat(limEl.value);
+    const k = phase === '3' ? Math.sqrt(3) : 2;
+    const Vsys = phase === '3' ? 400 : 230;
+
+    const Vd = k * rho * L * I / A;
+    const pct = Vd / Vsys * 100;
+    const ok = pct <= limit;
+    const color = ok ? '#15803d' : '#c0392b';
+
+    document.getElementById('vd-I-val').textContent = I.toFixed(0) + ' A';
+    document.getElementById('vd-len-val').textContent = L.toFixed(0) + ' m';
+    document.getElementById('vd-lim-val').textContent = limit.toFixed(1) + ' %';
+
+    document.getElementById('vd-volt').textContent = Vd.toFixed(2);
+    document.getElementById('vd-percent').textContent = pct.toFixed(2);
+
+    document.getElementById('vd-len-label').textContent = L.toFixed(0) + ' m';
+    document.getElementById('vd-vload').textContent = (Vsys - Vd).toFixed(0) + ' V';
+    document.getElementById('vd-pct').textContent = pct.toFixed(2) + ' %';
+    document.getElementById('vd-pct').setAttribute('fill', color);
+    document.getElementById('vd-verdict').textContent = ok ? '✓ LULUS (≤ ' + limit.toFixed(1) + '%)' : '✗ GAGAL — perbesar kabel';
+    document.getElementById('vd-verdict').setAttribute('fill', color);
+    document.getElementById('vd-cable').setAttribute('stroke', ok ? '#9a7f4f' : '#c0392b');
+
+    // bar: skala 0..10%; marker batas
+    const scaleMax = 10;
+    document.getElementById('vd-bar').setAttribute('width', Math.min(pct / scaleMax, 1) * 320);
+    document.getElementById('vd-bar').setAttribute('fill', color);
+    const markerX = 40 + Math.min(limit / scaleMax, 1) * 320;
+    document.getElementById('vd-limit-marker').setAttribute('x1', markerX);
+    document.getElementById('vd-limit-marker').setAttribute('x2', markerX);
+    document.getElementById('vd-limit-label').setAttribute('x', markerX);
+    document.getElementById('vd-limit-label').textContent = 'batas ' + limit.toFixed(1) + '%';
+
+    document.getElementById('vf-k').textContent = phase === '3' ? '1.73' : '2';
+    document.getElementById('vf-rho').textContent = rho.toFixed(4);
+    document.getElementById('vf-l').textContent = L.toFixed(0);
+    document.getElementById('vf-i').textContent = I.toFixed(0);
+    document.getElementById('vf-a').textContent = A;
+    document.getElementById('vf-vd').textContent = Vd.toFixed(2);
+    document.getElementById('vf-pct').textContent = pct.toFixed(2);
+    document.getElementById('vf-vsys').textContent = Vsys;
+  };
+
+  [Iel, Lel, csaEl, sysEl, condEl, limEl].forEach(e => e.addEventListener('input', update));
+  update();
+}
+
+// =================== S1 LAB 3: MCB & Cable Coordination ===================
+const _MCB_RATINGS = [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100];
+function getMCBCoordHTML() {
+  return `
+    <div class="sim-modal-header">
+      <div class="sim-modal-eyebrow">Instalasi Bangunan · Proteksi</div>
+      <h2>MCB &amp; Cable <span class="italic">Coordination</span></h2>
+      <p>Aturan koordinasi proteksi (PUIL / IEC 60364): Ib ≤ In ≤ Iz. Tentukan rating MCB & ukuran kabel minimum dari arus beban.</p>
+    </div>
+    <div class="sim-workspace">
+      <div class="sim-visual">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <line x1="30" y1="70" x2="120" y2="70" stroke="#1a1d2e" stroke-width="2"/>
+          <text x="30" y="60" font-family="Georgia" font-size="11" fill="#1a1d2e">Sumber (Ib)</text>
+          <text x="30" y="92" font-family="Georgia" font-size="12" fill="#9a7f4f" font-weight="600" id="mcb-ib-label">22 A</text>
+          <rect x="120" y="45" width="60" height="55" rx="5" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
+          <text x="150" y="40" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">MCB</text>
+          <text x="150" y="78" text-anchor="middle" font-family="Georgia" font-size="16" fill="#1a1d2e" font-weight="700" id="mcb-in-label">25 A</text>
+          <line x1="180" y1="70" x2="320" y2="70" stroke="#9a7f4f" stroke-width="6" id="mcb-cable"/>
+          <text x="250" y="58" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9a7f4f" font-weight="600" id="mcb-csa-label">4 mm²</text>
+          <text x="250" y="90" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="mcb-iz-label">Iz = — A</text>
+          <rect x="320" y="50" width="50" height="45" rx="4" fill="#1a1d2e"/>
+          <text x="345" y="77" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f5f0e6">Beban</text>
+          <!-- checks -->
+          <text x="40" y="150" font-family="Georgia" font-size="14" fill="#1a1d2e" font-weight="600" id="mcb-chk1">Ib ≤ In</text>
+          <text x="40" y="180" font-family="Georgia" font-size="14" fill="#1a1d2e" font-weight="600" id="mcb-chk2">In ≤ Iz</text>
+          <rect x="40" y="205" width="330" height="60" rx="6" fill="rgba(21,128,61,0.08)" stroke="#15803d" stroke-width="1.5" id="mcb-verdict-box"/>
+          <text x="205" y="240" text-anchor="middle" font-family="Georgia" font-size="15" fill="#15803d" font-weight="700" id="mcb-verdict">—</text>
+        </svg>
+      </div>
+      <div class="sim-controls">
+        <div class="sim-control-group">
+          <div class="sim-control"><label>Arus beban / desain (Ib) <span class="sim-value" id="mcb-ib-val">22 A</span></label><input type="range" id="mcb-ib" min="1" max="90" value="22" step="1"></div>
+          <div class="sim-control"><label>Faktor derating (Ca × Cg) <span class="sim-value" id="mcb-dr-val">1.00</span></label><input type="range" id="mcb-dr" min="0.5" max="1" value="1" step="0.05"></div>
+          <div class="sim-control"><label>Konduktor</label>
+            <select id="mcb-cond"><option value="cu" selected>Tembaga (Cu)</option><option value="al">Aluminium (Al)</option></select></div>
+          <div class="sim-control"><label>Insulasi</label>
+            <select id="mcb-ins"><option value="pvc" selected>PVC (70°C)</option><option value="xlpe">XLPE (90°C)</option></select></div>
+          <div class="sim-control"><label>Pemasangan</label>
+            <select id="mcb-method"><option value="conduit" selected>Dalam konduit</option><option value="tray">Pada tray</option></select></div>
+        </div>
+        <div class="sim-outputs">
+          <div class="sim-output"><div class="sim-output-label">Rating MCB (In)</div><div class="sim-output-value"><span id="mcb-in">—</span><span class="unit">A</span></div></div>
+          <div class="sim-output"><div class="sim-output-label">Kabel Minimum</div><div class="sim-output-value"><span id="mcb-csa">—</span><span class="unit">mm²</span></div></div>
+        </div>
+        <div class="sim-formula">
+          Ib ≤ In ≤ Iz · Iz = Iz_tabel × derating<br>
+          Ib = <span id="mf-ib">22</span> A → In = <span id="mf-in">25</span> A → butuh Iz ≥ <span id="mf-izreq">25.0</span> A → kabel <span id="mf-csa">4</span> mm² (Iz = <span id="mf-iz">—</span> A)
+        </div>
+      </div>
+    </div>
+  `;
+}
+function initMCBCoord() {
+  const ibEl = document.getElementById('mcb-ib');
+  const drEl = document.getElementById('mcb-dr');
+  const condEl = document.getElementById('mcb-cond');
+  const insEl = document.getElementById('mcb-ins');
+  const methodEl = document.getElementById('mcb-method');
+  if (!ibEl) return;
+
+  const update = () => {
+    const Ib = parseFloat(ibEl.value);
+    const derate = parseFloat(drEl.value);
+    const key = condEl.value + '-' + insEl.value + '-' + methodEl.value;
+    const ampArr = _AMPACITY[key] || _AMPACITY['cu-pvc-conduit'];
+
+    // 1) Pilih In = rating MCB standar terkecil ≥ Ib
+    let In = _MCB_RATINGS.find(r => r >= Ib);
+    let inOversize = false;
+    if (In === undefined) { In = _MCB_RATINGS[_MCB_RATINGS.length - 1]; inOversize = true; }
+
+    // 2) Iz_tabel × derate ≥ In  →  kabel terkecil yang memenuhi
+    const izReq = In / derate;
+    let csa = null, izEff = 0, izTab = 0;
+    for (let i = 0; i < ampArr.length; i++) {
+      if (ampArr[i] > 0 && ampArr[i] * derate >= In) { csa = _CABLE_SIZES[i]; izTab = ampArr[i]; izEff = ampArr[i] * derate; break; }
+    }
+    let csaOversize = false;
+    if (csa === null) { const last = ampArr.length - 1; csa = _CABLE_SIZES[last]; izTab = ampArr[last]; izEff = ampArr[last] * derate; csaOversize = true; }
+
+    const c1 = Ib <= In;
+    const c2 = In <= izEff;
+    const allOk = c1 && c2 && !inOversize && !csaOversize;
+    const green = '#15803d', red = '#c0392b';
+
+    document.getElementById('mcb-ib-val').textContent = Ib.toFixed(0) + ' A';
+    document.getElementById('mcb-dr-val').textContent = derate.toFixed(2);
+    document.getElementById('mcb-in').textContent = In + (inOversize ? '+' : '');
+    document.getElementById('mcb-csa').textContent = csa + (csaOversize ? '+' : '');
+
+    document.getElementById('mcb-ib-label').textContent = Ib.toFixed(0) + ' A';
+    document.getElementById('mcb-in-label').textContent = In + ' A';
+    document.getElementById('mcb-csa-label').textContent = csa + ' mm²';
+    document.getElementById('mcb-iz-label').textContent = 'Iz = ' + izEff.toFixed(0) + ' A';
+    document.getElementById('mcb-cable').setAttribute('stroke', allOk ? '#9a7f4f' : red);
+
+    const chk1 = document.getElementById('mcb-chk1');
+    chk1.textContent = (c1 ? '✓ ' : '✗ ') + 'Ib (' + Ib.toFixed(0) + ') ≤ In (' + In + ')';
+    chk1.setAttribute('fill', c1 ? green : red);
+    const chk2 = document.getElementById('mcb-chk2');
+    chk2.textContent = (c2 ? '✓ ' : '✗ ') + 'In (' + In + ') ≤ Iz (' + izEff.toFixed(0) + ')';
+    chk2.setAttribute('fill', c2 ? green : red);
+
+    const vbox = document.getElementById('mcb-verdict-box');
+    const vtxt = document.getElementById('mcb-verdict');
+    if (allOk) {
+      vtxt.textContent = '✓ Koordinasi OK — proteksi & kabel aman';
+      vtxt.setAttribute('fill', green);
+      vbox.setAttribute('stroke', green);
+      vbox.setAttribute('fill', 'rgba(21,128,61,0.08)');
+    } else {
+      vtxt.textContent = inOversize ? '⚠ Beban > 100 A — pakai MCCB' : '⚠ Periksa ukuran kabel / derating';
+      vtxt.setAttribute('fill', red);
+      vbox.setAttribute('stroke', red);
+      vbox.setAttribute('fill', 'rgba(192,57,43,0.07)');
+    }
+
+    document.getElementById('mf-ib').textContent = Ib.toFixed(0);
+    document.getElementById('mf-in').textContent = In;
+    document.getElementById('mf-izreq').textContent = izReq.toFixed(1);
+    document.getElementById('mf-csa').textContent = csa;
+    document.getElementById('mf-iz').textContent = izEff.toFixed(0);
+  };
+
+  [ibEl, drEl, condEl, insEl, methodEl].forEach(e => e.addEventListener('input', update));
   update();
 }
 
