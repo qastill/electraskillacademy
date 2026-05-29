@@ -15219,7 +15219,14 @@ const SIMULATORS = [
   { id: 're100-target', jalur: 'S11', category: 'Carbon · Energi Bersih', name: 'RE100 Renewable Target', desc: 'Kapasitas PLTS + REC untuk mencapai target % energi terbarukan; gap & pemenuhan vs target (RE100).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
   { id: 'carbon-abatement', jalur: 'S11', category: 'Carbon · Mitigasi', name: 'Carbon Abatement Cost', desc: 'Biaya per ton CO₂ dihindari dari langkah mitigasi (LED/PLTS/VFD/chiller); negatif = win-win hemat uang & karbon.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
   { id: 'netzero-path', jalur: 'S11', category: 'Carbon · Strategi', name: 'Net Zero Pathway', desc: 'Lintasan dekarbonisasi menuju net zero: emisi turun bertahap + offset residual; kurva & tahun net zero.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
-  { id: 'carbon-intensity', jalur: 'S11', category: 'Carbon · KPI ESG', name: 'Energy & Carbon Intensity', desc: 'KPI ESG: intensitas energi (kWh/unit) & karbon (kgCO₂/unit) vs benchmark industri untuk laporan keberlanjutan.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.data, working: true }
+  { id: 'carbon-intensity', jalur: 'S11', category: 'Carbon · KPI ESG', name: 'Energy & Carbon Intensity', desc: 'KPI ESG: intensitas energi (kWh/unit) & karbon (kgCO₂/unit) vs benchmark industri untuk laporan keberlanjutan.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.data, working: true },
+
+  // ===== S12 · EV & EV Charging =====
+  { id: 'ev-charge-time', jalur: 'S12', category: 'EV · Pengisian', name: 'EV Charging Time & Power', desc: 'Waktu isi AC vs DC fast charging dengan taper SoC tinggi; energi, durasi, & tambahan jarak tempuh.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'spklu-load', jalur: 'S12', category: 'EV · SPKLU', name: 'SPKLU Site Power & Load Mgmt', desc: 'Daya puncak stasiun multi-dispenser vs kapasitas trafo; perlukah load management agar tidak overload.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.grid, working: true },
+  { id: 'ev-range', jalur: 'S12', category: 'EV · Jarak', name: 'EV Range & Efficiency', desc: 'Jarak tempuh vs kecepatan, AC, & medan; konsumsi kWh/km dan efisiensi realistis vs klaim pabrikan.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'ev-charger-roi', jalur: 'S12', category: 'EV · Bisnis', name: 'Charger Business ROI', desc: 'Kelayakan bisnis SPKLU: margin/kWh, laba bulanan & payback dari tarif jual, biaya listrik & opex.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'ev-v2g', jalur: 'S12', category: 'EV · V2G', name: 'Smart Charging & V2G', desc: 'Arbitrase tarif: isi murah malam, jual balik saat puncak (V2G); potensi pendapatan harian armada EV.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true }
 ];
 
 // ================================================
@@ -18889,6 +18896,190 @@ const SIM_BUILDERS = {
       const maxv=Math.max(CI,bm,0.1)*1.2, H=120, base=150, sc=H/maxv;
       _labAttr('ci-bar-you','height',CI*sc); _labAttr('ci-bar-you','y',base-CI*sc); _labAttr('ci-bar-you','fill',col===_RED?_RED:'#c0392b');
       _labAttr('ci-bar-bm','height',bm*sc); _labAttr('ci-bar-bm','y',base-bm*sc);
+    })
+  },
+
+  // ============ S12: EV Charging Time ============
+  'ev-charge-time': {
+    html: () => _labShell({
+      eyebrow: 'EV · Pengisian', title: 'EV Charging', italic: 'Time & Power',
+      desc: 'Waktu isi = (kapasitas × ΔSoC) / (daya charger × efisiensi). Bandingkan AC (slow) vs DC fast charging, dengan taper di SoC tinggi (CV phase).',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">SoC (%)</text>
+        <text x="372" y="250" text-anchor="end" font-family="Georgia" font-size="10" fill="#6b6d7a">waktu (menit)</text>
+        <line x1="52" y1="44" x2="52" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="232" x2="372" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="ev-curve" fill="none" stroke="#3a86c8" stroke-width="2.5" points=""/>
+        <line x1="52" y1="70" x2="372" y2="70" stroke="#9aa0ad" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="360" y="66" text-anchor="end" font-family="Georgia" font-size="9" fill="#6b6d7a">80% (taper)</text>
+        <text x="210" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#3a86c8" id="ev-info">—</text>`,
+      controls: _labSld('ev-batt','Kapasitas baterai (kWh)',20,120,60,1)
+        + _labSld('ev-soc0','SoC awal (%)',0,80,20,1)
+        + _labSld('ev-soc1','SoC target (%)',30,100,80,1)
+        + _labSel('ev-charger','Charger','<option value="7.4">AC 7.4 kW (rumah)</option><option value="22" selected>AC 22 kW</option><option value="50">DC 50 kW</option><option value="120">DC 120 kW</option><option value="250">DC 250 kW (ultra)</option>'),
+      outputs: _labOut('ev-energy','Energi Diisi','kWh') + _labOut('ev-time','Waktu Isi','menit') + _labOut('ev-rate','Tambah Jarak','km'),
+      formula: `Energi = batt × ΔSoC · waktu = energi/(daya×η) + taper di atas 80%<br>η≈0.9 · jarak ≈ energi/0.16 kWh/km. DC fast melambat (CV) di SoC tinggi.`
+    }),
+    init: () => _labBind(['ev-batt','ev-soc0','ev-soc1','ev-charger'], () => {
+      const batt=_labV('ev-batt'), s0=_labV('ev-soc0'), s1v=Math.max(_labV('ev-soc1'),_labV('ev-soc0')+1), P=_labV('ev-charger');
+      _labSetv('ev-batt',batt.toFixed(0)+' kWh'); _labSetv('ev-soc0',s0.toFixed(0)+' %'); _labSetv('ev-soc1',_labV('ev-soc1').toFixed(0)+' %');
+      const eff=0.9, energy=batt*(s1v-s0)/100;
+      // time with taper above 80%: below 80 full power, above derate to ~0.4x avg
+      let mins=0; const step=1;
+      for(let soc=s0;soc<s1v;soc+=step){ const e=batt*step/100; const derate = soc>=80 ? 0.45 : 1; const pEff=Math.min(P,P*derate); mins+=e/(pEff*eff)*60; }
+      const km=energy/0.16;
+      _labSet('ev-energy',energy.toFixed(1)); _labSet('ev-time',mins.toFixed(0)); _labSet('ev-rate',km.toFixed(0));
+      _labSet('ev-info','+'+energy.toFixed(0)+' kWh dalam '+mins.toFixed(0)+' menit (~'+km.toFixed(0)+' km)');
+      _labAttr('ev-info','fill', P>=50?'#15803d':'#3a86c8');
+      // chart SoC vs time
+      const X0=52,X1=372,Y0=44,Y1=232; const totMin=mins||1;
+      let pts=''; let t=0; let prev=s0;
+      pts+=X0+','+(Y1-(s0/100)*(Y1-Y0)).toFixed(1)+' ';
+      for(let soc=s0;soc<=s1v;soc+=1){ const e=batt*1/100; const derate=soc>=80?0.45:1; const pEff=Math.min(P,P*derate); t+=e/(pEff*eff)*60;
+        pts+=(X0+(X1-X0)*Math.min(t/totMin,1)).toFixed(1)+','+(Y1-(soc/100)*(Y1-Y0)).toFixed(1)+' '; }
+      _labAttr('ev-curve','points',pts.trim());
+    })
+  },
+
+  // ============ S12: SPKLU Site Power & Load Mgmt ============
+  'spklu-load': {
+    html: () => _labShell({
+      eyebrow: 'EV · SPKLU', title: 'SPKLU Site', italic: 'Power & Load Mgmt',
+      desc: 'Stasiun pengisian dengan beberapa dispenser DC. Tanpa manajemen beban, daya puncak = jumlah semua charger. Load management membatasi ke kapasitas trafo terpasang.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Permintaan daya vs kapasitas trafo (kW)</text>
+        <line x1="60" y1="210" x2="360" y2="210" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="100" y="210" width="70" height="0" rx="3" fill="#c0392b" id="sk-bar-peak"/>
+        <rect x="230" y="210" width="70" height="0" rx="3" fill="#15803d" id="sk-bar-mgd"/>
+        <line id="sk-trafo" x1="60" y1="0" x2="360" y2="0" stroke="#3a5fb0" stroke-width="2" stroke-dasharray="5 3"/>
+        <text x="135" y="226" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">tanpa LM</text>
+        <text x="265" y="226" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">dgn LM</text>
+        <text x="200" y="256" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="sk-verdict">—</text>`,
+      controls: _labSld('sk-n','Jumlah dispenser DC',1,12,4,1)
+        + _labSld('sk-pw','Daya per dispenser (kW)',25,250,60,5)
+        + _labSld('sk-util','Utilisasi simultan (%)',20,100,70,5)
+        + _labSel('sk-trafo-sel','Kapasitas trafo (kVA)','<option value="200">200</option><option value="400" selected>400</option><option value="630">630</option><option value="1000">1000</option>'),
+      outputs: _labOut('sk-peak','Puncak tanpa LM','kW') + _labOut('sk-mgd','Dgn Load Mgmt','kW') + _labOut('sk-cap','Kapasitas Trafo','kW'),
+      formula: `Puncak = n × daya × utilisasi · kapasitas trafo (kW) ≈ kVA × 0.9<br>Load management membatasi total ≤ kapasitas trafo (charger berbagi daya).`
+    }),
+    init: () => _labBind(['sk-n','sk-pw','sk-util','sk-trafo-sel'], () => {
+      const n=_labV('sk-n'), pw=_labV('sk-pw'), util=_labV('sk-util')/100, kva=_labV('sk-trafo-sel');
+      _labSetv('sk-n',n.toFixed(0)); _labSetv('sk-pw',pw.toFixed(0)+' kW'); _labSetv('sk-util',(util*100).toFixed(0)+' %');
+      const peak=n*pw*util, cap=kva*0.9, mgd=Math.min(peak,cap);
+      _labSet('sk-peak',peak.toFixed(0)); _labSet('sk-mgd',mgd.toFixed(0)); _labSet('sk-cap',cap.toFixed(0));
+      const over=peak>cap, col=over?_GOLD:_GREEN;
+      _labSet('sk-verdict', over?('⚠ Perlu Load Mgmt — puncak '+peak.toFixed(0)+'kW > trafo '+cap.toFixed(0)+'kW'):('✓ Trafo cukup tanpa pembatasan (puncak '+peak.toFixed(0)+'kW)')); _labAttr('sk-verdict','fill',col);
+      const maxv=Math.max(peak,cap,1)*1.12, H=150, base=210, sc=H/maxv;
+      _labAttr('sk-bar-peak','height',peak*sc); _labAttr('sk-bar-peak','y',base-peak*sc);
+      _labAttr('sk-bar-mgd','height',mgd*sc); _labAttr('sk-bar-mgd','y',base-mgd*sc);
+      const ty=base-cap*sc; _labAttr('sk-trafo','y1',ty); _labAttr('sk-trafo','y2',ty);
+    })
+  },
+
+  // ============ S12: EV Range & Efficiency ============
+  'ev-range': {
+    html: () => _labShell({
+      eyebrow: 'EV · Jarak Tempuh', title: 'EV Range', italic: '& Efficiency',
+      desc: 'Jarak tempuh = kapasitas baterai / konsumsi (kWh/km). Konsumsi dipengaruhi kecepatan, beban, AC, & medan. Lihat jarak realistis vs klaim.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Jarak (km)</text>
+        <text x="372" y="250" text-anchor="end" font-family="Georgia" font-size="10" fill="#6b6d7a">kecepatan (km/jam)</text>
+        <line x1="52" y1="44" x2="52" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="232" x2="372" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="er-curve" fill="none" stroke="#3a86c8" stroke-width="2.5" points=""/>
+        <circle id="er-op" r="6" fill="#15803d" class="lab-glow"/>
+        <text x="210" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#3a86c8" id="er-info">—</text>`,
+      controls: _labSld('er-batt','Baterai usable (kWh)',20,120,60,1)
+        + _labSld('er-speed','Kecepatan rata-rata (km/jam)',30,130,80,5)
+        + _labSel('er-ac','AC / iklim','<option value="1" selected>Mati</option><option value="1.12">AC sedang (+12%)</option><option value="1.25">AC maks/panas (+25%)</option>')
+        + _labSel('er-terrain','Medan & gaya','<option value="1" selected>Datar, halus</option><option value="1.15">Berbukit (+15%)</option><option value="1.3">Agresif/macet (+30%)</option>'),
+      outputs: _labOut('er-cons','Konsumsi','kWh/km') + _labOut('er-range','Jarak Tempuh','km') + _labOut('er-eff','Efisiensi','km/kWh'),
+      formula: `Konsumsi dasar ≈ 0.12 + ((v−60)/100)²×0.1 (drag) · ×faktor AC ×faktor medan<br>Jarak = baterai / konsumsi · efisiensi = 1/konsumsi.`
+    }),
+    init: () => _labBind(['er-batt','er-speed','er-ac','er-terrain'], () => {
+      const batt=_labV('er-batt'), v=_labV('er-speed'), fac=_labV('er-ac'), ft=_labV('er-terrain');
+      _labSetv('er-batt',batt.toFixed(0)+' kWh'); _labSetv('er-speed',v.toFixed(0)+' km/jam');
+      const consOf=vv=>(0.12 + Math.pow((vv-60)/100,2)*0.1)*fac*ft;
+      const cons=consOf(v), range=batt/cons, eff=1/cons;
+      _labSet('er-cons',cons.toFixed(3)); _labSet('er-range',range.toFixed(0)); _labSet('er-eff',eff.toFixed(1));
+      _labSet('er-info','Jarak ~'+range.toFixed(0)+' km @ '+v.toFixed(0)+' km/jam ('+cons.toFixed(2)+' kWh/km)'); _labAttr('er-info','fill','#3a86c8');
+      const X=vv=>52+(vv-30)/100*320, maxR=batt/consOf(60)*1.05, Y=r=>232-r/maxR*188;
+      let pts=''; for(let vv=30;vv<=130;vv+=5) pts+=X(vv).toFixed(1)+','+Y(batt/consOf(vv)).toFixed(1)+' ';
+      _labAttr('er-curve','points',pts.trim());
+      _labAttr('er-op','cx',X(v)); _labAttr('er-op','cy',Y(range));
+    })
+  },
+
+  // ============ S12: Charger ROI / Business ============
+  'ev-charger-roi': {
+    html: () => _labShell({
+      eyebrow: 'EV · Bisnis SPKLU', title: 'Charger', italic: 'Business ROI',
+      desc: 'Kelayakan bisnis SPKLU: pendapatan dari tarif jual − biaya listrik − operasional, terhadap investasi charger. Hitung margin, laba bulanan, & payback.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Kas kumulatif (jt)</text>
+        <line x1="52" y1="44" x2="52" y2="220" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line id="ecr-zero" x1="52" y1="150" x2="372" y2="150" stroke="#1a1d2e" stroke-width="1" opacity="0.5"/>
+        <polyline id="ecr-cf" fill="none" stroke="#15803d" stroke-width="2.5" points=""/>
+        <circle id="ecr-bep" r="5" fill="#c0392b"/>
+        <text x="210" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="ecr-info">—</text>`,
+      controls: _labSld('ecr-inv','Investasi charger+instalasi (jt)',50,2000,400,10)
+        + _labSld('ecr-kwh','Energi terjual (kWh/hari)',20,2000,300,10)
+        + _labSld('ecr-sell','Tarif jual (Rp/kWh)',1500,4000,2500,50)
+        + _labSld('ecr-cost','Biaya listrik (Rp/kWh)',900,2000,1450,50)
+        + _labSld('ecr-opex','Opex tetap (jt/bln)',1,50,8,1),
+      outputs: _labOut('ecr-margin','Margin/kWh','Rp') + _labOut('ecr-profit','Laba','jt/bln') + _labOut('ecr-pb','Payback','th'),
+      formula: `Laba bln = (tarif−biaya)×kWh×30 − opex · payback = investasi/laba tahunan<br>Margin tipis × volume tinggi = kunci profit SPKLU.`
+    }),
+    init: () => _labBind(['ecr-inv','ecr-kwh','ecr-sell','ecr-cost','ecr-opex'], () => {
+      const inv=_labV('ecr-inv'), kwh=_labV('ecr-kwh'), sell=_labV('ecr-sell'), cost=_labV('ecr-cost'), opex=_labV('ecr-opex');
+      _labSetv('ecr-inv',inv.toFixed(0)+' jt'); _labSetv('ecr-kwh',kwh.toFixed(0)+' kWh'); _labSetv('ecr-sell','Rp '+sell.toFixed(0)); _labSetv('ecr-cost','Rp '+cost.toFixed(0)); _labSetv('ecr-opex',opex.toFixed(0)+' jt');
+      const margin=sell-cost, profitM=(margin*kwh*30)/1e6-opex, pb=profitM>0?inv/(profitM*12):Infinity;
+      _labSet('ecr-margin',margin.toFixed(0)); _labSet('ecr-profit',profitM.toFixed(1)); _labSet('ecr-pb',isFinite(pb)?pb.toFixed(1):'—');
+      const col=profitM>0?_GREEN:_RED;
+      _labSet('ecr-info', profitM>0?('✓ Laba Rp'+profitM.toFixed(1)+' jt/bln · payback '+pb.toFixed(1)+' th'):'✗ Rugi operasional — naikkan tarif/volume'); _labAttr('ecr-info','fill',col);
+      const months=Math.min(60, isFinite(pb)?Math.ceil(pb*12)+12:60);
+      const cf=[-inv]; for(let m=1;m<=months;m++) cf.push(cf[m-1]+profitM);
+      const maxAbs=Math.max(...cf.map(Math.abs),1), X=m=>52+m/months*320, midY=132, Y=v=>midY-(v/maxAbs)*88;
+      _labAttr('ecr-zero','y1',midY); _labAttr('ecr-zero','y2',midY);
+      _labAttr('ecr-cf','points',cf.map((v,m)=>X(m).toFixed(1)+','+Y(v).toFixed(1)).join(' '));
+      if(isFinite(pb)&&pb*12<=months){ _labAttr('ecr-bep','cx',X(pb*12)); _labAttr('ecr-bep','cy',midY); } else { _labAttr('ecr-bep','cx',-10); _labAttr('ecr-bep','cy',-10); }
+    })
+  },
+
+  // ============ S12: V2G / Smart Charging ============
+  'ev-v2g': {
+    html: () => _labShell({
+      eyebrow: 'EV · V2G', title: 'Smart Charging', italic: '& V2G',
+      desc: 'Vehicle-to-Grid: isi mobil saat tarif murah (malam), jual balik ke grid saat tarif mahal (beban puncak). Hitung potensi penghematan/pendapatan harian armada EV.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Rp/kWh</text>
+        <line x1="52" y1="44" x2="52" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="210" x2="375" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="v2g-tariff" fill="none" stroke="#9a7f4f" stroke-width="2" points=""/>
+        <g id="v2g-acts"></g>
+        <text x="210" y="232" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Jam (hijau=isi murah, biru=jual puncak)</text>
+        <text x="210" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="v2g-info">—</text>`,
+      controls: _labSld('v2g-fleet','Jumlah EV armada',1,200,20,1)
+        + _labSld('v2g-cap','Energi tersedia/EV (kWh)',5,50,20,1)
+        + _labSld('v2g-low','Tarif murah malam (Rp/kWh)',800,1500,1000,50)
+        + _labSld('v2g-high','Tarif puncak (Rp/kWh)',1800,4000,2800,50),
+      outputs: _labOut('v2g-arb','Arbitrase/EV','Rp/hari') + _labOut('v2g-total','Total Armada','Rp/hari') + _labOut('v2g-year','Setahun','jt'),
+      formula: `Arbitrase = energi × (tarif puncak − tarif malam) × efisiensi roundtrip (≈0.85)<br>V2G: beli murah malam, jual mahal saat puncak — butuh charger bidireksional.`
+    }),
+    init: () => _labBind(['v2g-fleet','v2g-cap','v2g-low','v2g-high'], () => {
+      const fleet=_labV('v2g-fleet'), cap=_labV('v2g-cap'), low=_labV('v2g-low'), high=_labV('v2g-high');
+      _labSetv('v2g-fleet',fleet.toFixed(0)); _labSetv('v2g-cap',cap.toFixed(0)+' kWh'); _labSetv('v2g-low','Rp '+low.toFixed(0)); _labSetv('v2g-high','Rp '+high.toFixed(0));
+      const rt=0.85, arb=cap*(high-low)*rt, tot=arb*fleet, yr=tot*365/1e6;
+      _labSet('v2g-arb',arb.toFixed(0)); _labSet('v2g-total',tot.toLocaleString('id-ID')); _labSet('v2g-year',yr.toFixed(0));
+      const col=high>low?_GREEN:_GOLD;
+      _labSet('v2g-info','Potensi Rp'+tot.toLocaleString('id-ID')+'/hari ('+yr.toFixed(0)+' jt/th) dari '+fleet.toFixed(0)+' EV'); _labAttr('v2g-info','fill',col);
+      // tariff curve over 24h
+      const X=h=>52+h/24*323, lo=210, hi=50, span=high-low;
+      const tar=h=>{ // dua puncak: 10-14 & 18-22
+        let f=0.3; if(h>=18&&h<=22)f=1; else if(h>=10&&h<=14)f=0.8; else if(h>=23||h<=5)f=0; return low+span*f; };
+      const Yt=v=>210-(v-low)/(high-low+1)*160;
+      let pts=''; for(let h=0;h<=24;h++) pts+=X(h).toFixed(1)+','+Yt(tar(h)).toFixed(1)+' ';
+      _labAttr('v2g-tariff','points',pts.trim());
+      // action markers: charge 0-5 (green), discharge 18-22 (blue)
+      let a='';
+      a+='<rect x="'+X(0).toFixed(1)+'" y="44" width="'+(X(5)-X(0)).toFixed(1)+'" height="166" fill="rgba(21,128,61,0.12)"/>';
+      a+='<rect x="'+X(18).toFixed(1)+'" y="44" width="'+(X(22)-X(18)).toFixed(1)+'" height="166" fill="rgba(58,95,176,0.14)"/>';
+      document.getElementById('v2g-acts').innerHTML=a;
     })
   }
 };
