@@ -15122,7 +15122,7 @@ const SIM_GROUPS = [
   { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting, regresi, deteksi anomali & PLTS.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
   { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Payback, PF, chiller HVAC, retrofit LED & M&V.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
   { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS, BESS, genset, turbin angin & PLTA.', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
-  { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, APD & sistem pembumian.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
+  { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, pembumian, hubung singkat, LOTO & step-touch.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
   { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
 ];
 
@@ -15184,6 +15184,9 @@ const SIMULATORS = [
   // ===== S8 · K3 Listrik =====
   { id: 'arc-flash-ppe', jalur: 'S8', category: 'K3 · Arc Flash', name: 'Arc Flash & PPE Selector', desc: 'Estimasi incident energy (cal/cm²) & kategori APD (PPE) sesuai NFPA 70E dari arus gangguan & jarak kerja.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
   { id: 'earthing-touch', jalur: 'S8', category: 'K3 · Pembumian', name: 'Earthing & Touch Voltage', desc: 'Hitung resistansi pembumian batang elektroda & tegangan sentuh terhadap resistivitas tanah.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.earth, working: true },
+  { id: 'short-circuit', jalur: 'S8', category: 'K3 · Hubung Singkat', name: 'Short-Circuit Current (Icc)', desc: 'Hitung arus hubung singkat prospektif sisi LV dari trafo & impedansi; pastikan breaking capacity breaker memadai.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
+  { id: 'loto-sequence', jalur: 'S8', category: 'K3 · LOTO', name: 'Lock-Out Tag-Out Sequence', desc: 'Latihan interaktif urutan prosedur LOTO yang benar — klik langkah berurutan; salah urutan = reset keselamatan.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.shield, working: true },
+  { id: 'step-touch', jalur: 'S8', category: 'K3 · Grounding Grid', name: 'Step & Touch Voltage (IEEE 80)', desc: 'Tegangan langkah & sentuh saat gangguan ke tanah di gardu vs batas aman tubuh (IEEE 80) sesuai kerikil & berat badan.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.earth, working: true },
 
   // ===== Lab Dasar & Tools (bonus, lintas jurusan) =====
   { id: 'cable-sizing', jalur: 'Fondasi', category: 'Tools · Kabel', name: 'Cable Sizing Calculator', desc: 'Hitung luas penampang kabel sesuai PUIL 2011 / IEC. Input beban, tegangan, panjang — output ukuran + voltage drop.', level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.cable, working: true },
@@ -16941,6 +16944,44 @@ function _lrRender(){
   _labSet('lr-old-top',pOld.toFixed(1)+'kW'); _labSet('lr-new-top',pNew.toFixed(1)+'kW');
 }
 
+// --- LOTO Sequence (interaktif urutan) ---
+const _LT_STEPS = ['Persiapan & notifikasi','Matikan beban','Isolasi sumber (buka pemutus)','Pasang gembok & label','Disipasi energi tersimpan','Verifikasi tegangan nol'];
+let _ltDone = [];
+function _ltPick(i){
+  const next=_ltDone.length;
+  if(i===next){ _ltDone.push(i); } else { _ltDone=[]; _ltWrong=true; }
+  _ltRender(i!==next);
+}
+let _ltWrong=false;
+function _ltReset(){ _ltDone=[]; _ltWrong=false; _ltRender(); }
+function _ltRender(wrong){
+  if(!document.getElementById('lt-steps')) return;
+  // step diagram
+  const g=document.getElementById('lt-steps'); let s='';
+  _LT_STEPS.forEach((t,i)=>{ const y=40+i*32; const done=_ltDone.includes(i);
+    s+='<circle cx="60" cy="'+y+'" r="12" fill="'+(done?'#15803d':'#cfd3da')+'" stroke="#1a1d2e" stroke-width="1.5"/>';
+    s+='<text x="60" y="'+(y+4)+'" text-anchor="middle" font-family="Georgia" font-size="11" fill="#fff" font-weight="700">'+(done?'✓':(i+1))+'</text>';
+    s+='<text x="82" y="'+(y+4)+'" font-family="Georgia" font-size="11.5" fill="'+(done?'#15803d':'#6b6d7a')+'" font-weight="'+(done?'700':'400')+'">'+t+'</text>';
+    if(i<_LT_STEPS.length-1) s+='<line x1="60" y1="'+(y+12)+'" x2="60" y2="'+(y+20)+'" stroke="#cfd3da" stroke-width="2"/>';
+  });
+  g.innerHTML=s;
+  // remaining-step buttons (shuffled order to require thinking)
+  const btns=document.getElementById('lt-btns');
+  if(btns){ const remaining=_LT_STEPS.map((t,i)=>i).filter(i=>!_ltDone.includes(i));
+    // deterministic shuffle by simple rotation
+    const order=remaining.slice().sort((a,b)=>((a*7+3)%5)-((b*7+3)%5));
+    btns.innerHTML = order.map(i=>'<button type="button" onclick="_ltPick('+i+')" style="'+_BTN+'">'+_LT_STEPS[i]+'</button>').join('') || '<span style="color:#15803d;font-weight:700">Selesai ✓</span>';
+  }
+  _labSet('lt-progress',_ltDone.length+' /6');
+  const complete=_ltDone.length===6;
+  _labSet('lt-state', complete?'AMAN BEKERJA':(wrong?'URUTAN SALAH':'berlangsung'));
+  let msg,col;
+  if(complete){ msg='✓ LOTO lengkap & berurutan — zero energy, aman bekerja'; col=_GREEN; }
+  else if(wrong){ msg='✗ Urutan salah! Reset keselamatan — mulai dari langkah 1'; col=_RED; }
+  else { msg='◐ Lanjutkan: langkah '+(_ltDone.length+1)+' dari 6'; col=_GOLD; }
+  _labSet('lt-status',msg); _labAttr('lt-status','fill',col);
+}
+
 const SIM_BUILDERS = {
   // ============ S1: Conduit Fill (interaktif) ============
   'conduit-fill': {
@@ -18165,6 +18206,100 @@ const SIM_BUILDERS = {
       const col=safe?_GREEN:_RED;
       _labSet('et-verdict',safe?'✓ AMAN (≤ 50 V)':'✗ BAHAYA (> 50 V)'); _labAttr('et-verdict','fill',col); _labAttr('et-rod','stroke',safe?'#9a7f4f':_RED);
       _labSet('etf-r',R.toFixed(2)); _labSet('etf-n',n.toFixed(0)); _labSet('etf-g',gpr.toFixed(0));
+    })
+  },
+
+  // ============ S8: Short-Circuit Current (PSCC) ============
+  'short-circuit': {
+    html: () => _labShell({
+      eyebrow: 'K3 · Hubung Singkat', title: 'Short-Circuit', italic: 'Current (Icc)',
+      desc: 'Hitung arus hubung singkat prospektif di sisi LV dari kapasitas trafo & impedansi. Pastikan breaking capacity (Icu) MCB/MCCB ≥ Icc, kalau tidak breaker bisa meledak.',
+      svg: `<rect x="30" y="55" width="56" height="40" rx="4" fill="#1a1d2e"/><text x="58" y="79" text-anchor="middle" font-family="Georgia" font-size="9" fill="#f5f0e6">Trafo</text>
+        <line x1="86" y1="75" x2="180" y2="75" stroke="#9a7f4f" stroke-width="4"/>
+        <rect x="180" y="58" width="40" height="34" rx="3" fill="none" stroke="#1a1d2e" stroke-width="2"/><text x="200" y="80" text-anchor="middle" font-family="Georgia" font-size="9">CB</text>
+        <line x1="220" y1="75" x2="300" y2="75" stroke="#c0392b" stroke-width="4" class="lab-flow"/>
+        <text x="300" y="70" font-family="Georgia" font-size="16">⚡</text>
+        <text x="200" y="135" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" id="sc-icc">—</text>
+        <text x="200" y="158" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Arus hubung singkat prospektif</text>
+        <rect x="60" y="185" width="280" height="40" rx="6" id="sc-box" fill="rgba(21,128,61,0.08)" stroke="#15803d" stroke-width="1.5"/>
+        <text x="200" y="200" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Breaking capacity breaker vs Icc</text>
+        <text x="200" y="218" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="sc-verdict">—</text>
+        <text x="200" y="250" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="sc-detail">—</text>`,
+      controls: _labSel('sc-kva','Kapasitas trafo (kVA)','<option value="250">250</option><option value="400">400</option><option value="630">630</option><option value="1000" selected>1000</option><option value="1600">1600</option><option value="2000">2000</option>')
+        + _labSld('sc-z','Impedansi trafo Z (%)',4,8,6,0.5)
+        + _labSel('sc-v','Tegangan LV','<option value="400" selected>400 V</option><option value="690">690 V</option>')
+        + _labSel('sc-icu','Breaking capacity breaker Icu (kA)','<option value="10">10 kA</option><option value="25">25 kA</option><option value="36" selected>36 kA</option><option value="50">50 kA</option><option value="65">65 kA</option><option value="100">100 kA</option>'),
+      outputs: _labOut('sc-iln','Arus Nominal LV','A') + _labOut('sc-icc-o','Icc Prospektif','kA') + _labOut('sc-ratio','Icu / Icc',''),
+      formula: `I_n = kVA·1000/(√3·V) · Icc ≈ I_n / (Z%/100) (sumber tak terbatas)<br>Syarat: Icu breaker ≥ Icc. Bila tidak → breaker rusak/ledak saat gangguan.`
+    }),
+    init: () => _labBind(['sc-kva','sc-z','sc-v','sc-icu'], () => {
+      const kva=_labV('sc-kva'), z=_labV('sc-z'), V=_labV('sc-v'), icu=_labV('sc-icu');
+      _labSetv('sc-z',z.toFixed(1)+' %');
+      const In=kva*1000/(Math.sqrt(3)*V), Icc=In/(z/100)/1000; // kA
+      const ratio=icu/Icc, ok=icu>=Icc, col=ok?_GREEN:_RED;
+      _labSet('sc-iln',In.toFixed(0)); _labSet('sc-icc-o',Icc.toFixed(1)); _labSet('sc-ratio',ratio.toFixed(2));
+      _labSet('sc-icc',Icc.toFixed(1)+' kA'); _labAttr('sc-icc','fill',col);
+      _labSet('sc-verdict', ok?('✓ AMAN — Icu '+icu+' kA ≥ Icc '+Icc.toFixed(1)+' kA'):('✗ BAHAYA — Icu '+icu+' kA < Icc '+Icc.toFixed(1)+' kA')); _labAttr('sc-verdict','fill',col);
+      _labSet('sc-detail', ok?'Breaker mampu memutus arus gangguan dengan aman':'Pilih breaker dengan Icu lebih tinggi / tambah reaktor pembatas');
+      _labAttr('sc-box','stroke',col); _labAttr('sc-box','fill', ok?'rgba(21,128,61,0.08)':'rgba(192,57,43,0.08)');
+    })
+  },
+
+  // ============ S8: LOTO Sequence (interaktif) ============
+  'loto-sequence': {
+    html: () => _labShell({
+      eyebrow: 'K3 · LOTO', title: 'Lock-Out Tag-Out', italic: 'Sequence',
+      desc: 'Lakukan langkah LOTO dalam urutan yang BENAR (klik). Salah urutan = berbahaya. Simulasi prosedur isolasi energi sebelum bekerja di peralatan listrik.',
+      svg: `<g id="lt-steps"></g>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="lt-status">—</text>`,
+      controls: `<div class="sim-control"><label>Pilih langkah berikutnya (urut benar)</label><div id="lt-btns" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>`
+        + `<div class="sim-control"><div style="display:flex;gap:8px"><button type="button" onclick="_ltReset()" style="${_BTN}">⟲ Mulai ulang</button></div></div>`
+        + `<div class="sim-control"><div style="font-size:12px;color:#6b6d7a;line-height:1.5">Urutan LOTO benar: (1) Persiapan/notifikasi, (2) Matikan beban, (3) Isolasi sumber (buka pemutus), (4) Pasang gembok & label, (5) Disipasi energi tersimpan, (6) Verifikasi tegangan nol.</div></div>`,
+      outputs: _labOut('lt-progress','Langkah Benar','/6') + _labOut('lt-state','Status',''),
+      formula: `LOTO (Lock-Out Tag-Out) — PUIL & Permenaker. Verifikasi "zero energy" sebelum kerja.<br>Klik langkah sesuai urutan; salah satu langkah keliru = reset keselamatan.`
+    }),
+    init: () => { _ltDone=[]; _ltRender(); }
+  },
+
+  // ============ S8: Step & Touch Voltage (grid) ============
+  'step-touch': {
+    html: () => _labShell({
+      eyebrow: 'K3 · Grounding Grid', title: 'Step & Touch', italic: 'Voltage (IEEE 80)',
+      desc: 'Pada gangguan ke tanah di gardu, timbul tegangan langkah (step) & sentuh (touch). Bandingkan terhadap batas aman tubuh (IEEE 80) sesuai berat badan & lapisan kerikil.',
+      svg: `<rect x="40" y="150" width="320" height="80" fill="#efe6d4"/>
+        <rect x="40" y="140" width="320" height="12" fill="#bcae93"/>
+        <line x1="40" y1="152" x2="360" y2="152" stroke="#1a1d2e" stroke-width="1"/>
+        <g id="st-grid"></g>
+        <circle cx="120" cy="138" r="6" fill="#c0392b"/><text x="120" y="124" text-anchor="middle" font-family="Georgia" font-size="14">🧍</text>
+        <text x="200" y="180" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">grid pembumian gardu</text>
+        <text x="200" y="256" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="st-verdict">—</text>
+        <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="st-detail">—</text>`,
+      controls: _labSld('st-if','Arus gangguan grid (A)',200,10000,3000,100)
+        + _labSld('st-rg','Resistansi grid (Ω)',0.2,10,1.5,0.1)
+        + _labSld('st-t','Durasi gangguan (s)',0.1,1,0.5,0.05)
+        + _labSld('st-rho','Resistivitas kerikil (Ω·m)',1000,5000,2500,100)
+        + _labSel('st-bw','Berat badan acuan','<option value="50" selected>50 kg</option><option value="70">70 kg</option>'),
+      outputs: _labOut('st-gpr','GPR','V') + _labOut('st-tlim','Batas Sentuh','V') + _labOut('st-slim','Batas Langkah','V'),
+      formula: `GPR = I·Rg · batas tubuh (IEEE 80): k=0.116 (50kg)/0.157 (70kg)<br>E_touch = (1000+1.5·Cs·ρ)·k/√t · E_step = (1000+6·Cs·ρ)·k/√t`
+    }),
+    init: () => _labBind(['st-if','st-rg','st-t','st-rho','st-bw'], () => {
+      const If=_labV('st-if'), Rg=_labV('st-rg'), t=_labV('st-t'), rho=_labV('st-rho'), bw=_labV('st-bw');
+      _labSetv('st-if',If.toFixed(0)+' A'); _labSetv('st-rg',Rg.toFixed(1)+' Ω'); _labSetv('st-t',t.toFixed(2)+' s'); _labSetv('st-rho',rho.toFixed(0)+' Ω·m');
+      const k=bw==50?0.116:0.157, Cs=0.8;
+      const GPR=If*Rg;
+      const Etouch=(1000+1.5*Cs*rho)*k/Math.sqrt(t);
+      const Estep=(1000+6*Cs*rho)*k/Math.sqrt(t);
+      _labSet('st-gpr',GPR.toFixed(0)); _labSet('st-tlim',Etouch.toFixed(0)); _labSet('st-slim',Estep.toFixed(0));
+      // Asумsi tegangan sentuh aktual ≈ 0.15×GPR (mesh design tipikal)
+      const Vtouch=0.15*GPR, ok=Vtouch<=Etouch, col=ok?_GREEN:_RED;
+      _labSet('st-verdict', ok?('✓ AMAN — V sentuh ~'+Vtouch.toFixed(0)+' V ≤ batas '+Etouch.toFixed(0)+' V'):('✗ BAHAYA — V sentuh ~'+Vtouch.toFixed(0)+' V > batas '+Etouch.toFixed(0)+' V'));
+      _labAttr('st-verdict','fill',col);
+      _labSet('st-detail', ok?'Desain grid memenuhi IEEE 80 (kerikil & mesh memadai)':'Perlu grid lebih rapat / kerikil lebih tebal / Rg lebih kecil');
+      // draw grid rods
+      const g=document.getElementById('st-grid'); let s='';
+      for(let i=0;i<7;i++){ const x=70+i*42; s+='<line x1="'+x+'" y1="152" x2="'+x+'" y2="225" stroke="'+(ok?'#9a7f4f':col)+'" stroke-width="2"/>'; }
+      for(let j=0;j<3;j++){ const y=170+j*22; s+='<line x1="70" y1="'+y+'" x2="322" y2="'+y+'" stroke="'+(ok?'#9a7f4f':col)+'" stroke-width="1.5" opacity="0.6"/>'; }
+      g.innerHTML=s;
     })
   }
 };
