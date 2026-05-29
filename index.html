@@ -15117,7 +15117,7 @@ const _U = (id) => 'https://images.unsplash.com/photo-' + id + '?auto=format&fit
 const SIM_GROUPS = [
   { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan, drop tegangan, konduit, panel 3φ & pembumian.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)', photo: _U('1621905251918-48416bd8575a') },
   { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor, VFD, KHA kabel, harmonik & pompa.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
-  { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo distribusi & penyulang 20 kV.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
+  { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo, feeder 20kV, proteksi, kapasitor & restorasi SCADA.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
   { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag-tension & koordinasi isolasi SUTET.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
   { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Audit, payback & koreksi faktor daya.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
@@ -15149,6 +15149,9 @@ const SIMULATORS = [
   // ===== S3 · Distribusi =====
   { id: 'trafo-loading', jalur: 'S3', category: 'Distribusi · Trafo', name: 'Distribution Transformer Loading', desc: 'Hitung pembebanan trafo distribusi (kVA), %loading, dan rugi-rugi. Cek apakah trafo overload.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.trafo, working: true },
   { id: 'feeder-vd-20kv', jalur: 'S3', category: 'Distribusi · Feeder', name: 'Feeder Drop & Losses 20 kV', desc: 'Simulasi drop tegangan & rugi daya pada penyulang 20 kV terhadap jarak dan beban.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: true },
+  { id: 'protect-coord', jalur: 'S3', category: 'Distribusi · Proteksi', name: 'Recloser–Fuse Coordination (TCC)', desc: 'Plot kurva waktu-arus recloser vs fuse; pastikan recloser fast-trip duluan agar gangguan sementara tak memutus fuse permanen.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.mcb, working: true },
+  { id: 'cap-placement', jalur: 'S3', category: 'Distribusi · Optimasi', name: 'Capacitor Placement', desc: 'Pasang kapasitor shunt di feeder (geser lokasi & kVAR), lihat PF naik, rugi I²R turun, dengan aturan dua-pertiga.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.pf, working: true },
+  { id: 'feeder-restore', jalur: 'S3', category: 'Distribusi · SCADA', name: 'Fault Isolation & Restoration', desc: 'Klik picu gangguan, buka sectionalizer untuk isolasi, tutup tie-switch untuk pulihkan pelanggan dari feeder cadangan — minimalkan SAIDI.', level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.grid, working: true },
 
   // ===== S4 · Transmisi =====
   { id: 'line-sag', jalur: 'S4', category: 'Transmisi · Mekanik', name: 'Transmission Line Sag & Tension', desc: 'Hitung andongan (sag) & tegangan tarik konduktor SUTT/SUTET terhadap span, suhu, dan beban.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.grid, working: true },
@@ -16763,6 +16766,76 @@ function _hmRender(){
   _labAttr('hm-wave','stroke',col);
 }
 
+// --- Feeder Fault Isolation & Restoration (interaktif) ---
+// 5 seksi feeder A (S1..S5), tie-switch ke feeder B di ujung. Tiap seksi 1 sectionalizer di sisi kirinya.
+let _frState = { fault:-1, open:[false,false,false,false,false], tie:false };
+function _frFault(i){ _frState.fault = (_frState.fault===i?-1:i); _frRender(); }
+function _frSw(i){ _frState.open[i] = !_frState.open[i]; _frRender(); }
+function _frTie(){ _frState.tie = !_frState.tie; _frRender(); }
+function _frReset(){ _frState={ fault:-1, open:[false,false,false,false,false], tie:false }; _frRender(); }
+function _frRender(){
+  if (!document.getElementById('fr-net')) return;
+  const N=5, cust=[120,100,90,80,110]; // pelanggan per seksi
+  const { fault, open, tie } = _frState;
+  // energi dari GI-A mengalir kiri→kanan, berhenti di sectionalizer terbuka pertama
+  const fedFromA = new Array(N).fill(false);
+  for (let i=0;i<N;i++){ if (open[i]) break; fedFromA[i]=true; }
+  // energi dari GI-B (tie) mengalir kanan→kiri bila tie ditutup, berhenti di sectionalizer terbuka
+  const fedFromB = new Array(N).fill(false);
+  if (tie){ for (let i=N-1;i>=0;i--){ fedFromB[i]=true; if (open[i]) break; } }
+  // seksi gangguan selalu padam (tak peduli sumber) jika tidak terisolasi dari kedua sumber
+  const energized = new Array(N).fill(false);
+  for (let i=0;i<N;i++){ energized[i] = (fedFromA[i]||fedFromB[i]); }
+  // jika ada gangguan & seksi gangguan ter-energize -> seluruh sumber itu trip (gangguan tidak terisolasi)
+  let isolated = true;
+  if (fault>=0 && energized[fault]) {
+    isolated = false;
+    // gangguan menyebar: matikan semua yang sealiran dgn sumber yg memberi daya ke fault
+    if (fedFromA[fault]) for(let i=0;i<N;i++) if(fedFromA[i]) energized[i]=false;
+    if (fedFromB[fault]) for(let i=0;i<N;i++) if(fedFromB[i]) energized[i]=false;
+  }
+  if (fault>=0) energized[fault]=false; // seksi gangguan tetap padam
+  let outCust=0, restored=0, faultCust = fault>=0?cust[fault]:0;
+  for (let i=0;i<N;i++){ if(!energized[i]) outCust+=cust[i]; }
+  // "dipulihkan" = seksi sehat yang awalnya padam karena fault tapi kini ter-energize via B
+  let baseOut=0; if(fault>=0){ for(let i=0;i<N;i++) if(i>=firstOpenAfter(fault)) baseOut+=0; }
+  const outSect = energized.filter(e=>!e).length;
+  const restoredSect = (tie? energized.filter((e,i)=>e && i>fault).length : 0);
+  // SAIDI relatif ~ pelanggan padam (durasi diasumsikan sama)
+  const saidi = outCust;
+  // draw
+  const g=document.getElementById('fr-net'); const y=95, x0=60, x1=340, step=(x1-x0)/(N-1);
+  let s='';
+  // tie line to GI-B
+  s+='<line x1="'+x1+'" y1="'+y+'" x2="366" y2="70" stroke="'+(tie?'#15803d':'#cfd3da')+'" stroke-width="3" stroke-dasharray="'+(tie?'0':'4 4')+'"/>';
+  s+='<line x1="34" y1="70" x2="'+x0+'" y2="'+y+'" stroke="#15803d" stroke-width="3"/>';
+  for(let i=0;i<N;i++){
+    const x=x0+i*step;
+    const col = (i===fault)?'#c0392b':(energized[i]?'#15803d':'#9aa0ad');
+    if(i<N-1){ const xn=x0+(i+1)*step; s+='<line x1="'+x+'" y1="'+y+'" x2="'+xn+'" y2="'+y+'" stroke="'+(energized[i]&&energized[i+1]?'#15803d':'#cfd3da')+'" stroke-width="3"/>'; }
+    // sectionalizer (saklar) di kiri seksi
+    const sx=x-step/2;
+    if(i>0){ s+='<g style="cursor:pointer" onclick="_frSw('+i+')"><circle cx="'+sx+'" cy="'+y+'" r="7" fill="'+(open[i]?'#fff':'#1a1d2e')+'" stroke="#1a1d2e" stroke-width="2"/>'
+      + (open[i]?'<line x1="'+(sx-4)+'" y1="'+(y-4)+'" x2="'+(sx+4)+'" y2="'+(y+4)+'" stroke="#c0392b" stroke-width="2"/>':'') + '</g>'; }
+    // node seksi (klik = fault)
+    s+='<g style="cursor:pointer" onclick="_frFault('+i+')"><circle cx="'+x+'" cy="'+y+'" r="14" fill="'+col+'" stroke="#1a1d2e" stroke-width="1.5"/>'
+      + '<text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-family="Georgia" font-size="10" fill="#fff" font-weight="700">S'+(i+1)+'</text></g>';
+    s+='<text x="'+x+'" y="'+(y+30)+'" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#6b6d7a">'+cust[i]+'</text>';
+    if(i===fault) s+='<text x="'+x+'" y="'+(y-20)+'" text-anchor="middle" font-family="Georgia" font-size="13">⚡</text>';
+  }
+  g.innerHTML=s;
+  const tb=document.getElementById('fr-tiebtn'); if(tb){ tb.style.background=tie?'#15803d':'rgba(201,169,110,0.14)'; tb.style.color=tie?'#fff':'#1a1d2e'; }
+  _labSet('fr-out',outSect); _labSet('fr-restored',restoredSect); _labSet('fr-saidi',saidi);
+  let msg,col;
+  if(fault<0){ msg='Pilih seksi untuk diberi gangguan'; col='#6b6d7a'; }
+  else if(!isolated){ msg='✗ Gangguan BELUM terisolasi — buka sectionalizer pengapit'; col=_RED; }
+  else if(restoredSect>0){ msg='✓ Terisolasi & '+restoredSect+' seksi dipulihkan dari GI-B'; col=_GREEN; }
+  else { msg='◐ Terisolasi. Tutup tie-switch untuk pulihkan seksi sehat'; col=_GOLD; }
+  _labSet('fr-status',msg); _labAttr('fr-status','fill',col);
+  _labSet('fr-hint', fault<0?'Klik seksi (S1–S5) untuk memicu gangguan':'Saklar hitam=tutup, putih=buka · ⚡=seksi gangguan');
+}
+function firstOpenAfter(){ return 99; }
+
 const SIM_BUILDERS = {
   // ============ S1: Conduit Fill (interaktif) ============
   'conduit-fill': {
@@ -17140,6 +17213,112 @@ const SIM_BUILDERS = {
       _labAttr('fd-bar','width',Math.min(pct/10,1)*320); _labAttr('fd-bar','fill',col); _labAttr('fd-line','stroke',col===_GREEN?_GOLD:col);
       _labSet('fdf-vd',pct.toFixed(2)); _labSet('fdf-i',I.toFixed(0)); _labSet('fdf-ve',Vend.toFixed(2));
     })
+  },
+
+  // ============ S3: Recloser–Fuse Coordination (TCC) ============
+  'protect-coord': {
+    html: () => _labShell({
+      eyebrow: 'Distribusi · Proteksi', title: 'Recloser–Fuse', italic: 'Coordination (TCC)',
+      desc: 'Kurva waktu-arus (TCC). Recloser (fast) harus lebih cepat dari fuse di bawah arus gangguan, agar gangguan sementara tidak memutus fuse permanen. Cek titik koordinasi.',
+      svg: `<text x="30" y="38" font-family="Georgia" font-size="10" fill="#6b6d7a">t (s, log)</text>
+        <text x="372" y="250" text-anchor="end" font-family="Georgia" font-size="10" fill="#6b6d7a">Arus (A, log)</text>
+        <line x1="52" y1="42" x2="52" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="232" x2="372" y2="232" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="pc-recl" fill="none" stroke="#15803d" stroke-width="2.5" points=""/>
+        <polyline id="pc-fuse" fill="none" stroke="#c0392b" stroke-width="2.5" points=""/>
+        <line id="pc-fline" x1="0" y1="42" x2="0" y2="232" stroke="#1a1d2e" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+        <text x="300" y="56" font-family="Georgia" font-size="10" fill="#15803d" font-weight="700">Recloser</text>
+        <text x="300" y="72" font-family="Georgia" font-size="10" fill="#c0392b" font-weight="700">Fuse</text>
+        <text x="200" y="280" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="pc-verdict">—</text>`,
+      controls: _labSld('pc-if','Arus gangguan (A)',100,5000,1200,50)
+        + _labSel('pc-recl-sel','Setting recloser (fast)','<option value="0.5" selected>TD 0.5 (cepat)</option><option value="1">TD 1.0</option><option value="2">TD 2.0</option>')
+        + _labSel('pc-fuse-sel','Rating fuse (K-link)','<option value="40">40K</option><option value="65" selected>65K</option><option value="100">100K</option><option value="140">140K</option>'),
+      outputs: _labOut('pc-trecl','Waktu Recloser','s') + _labOut('pc-tfuse','Waktu Fuse','s') + _labOut('pc-margin','Margin','s'),
+      formula: `Recloser: t = TD·80/((I/Ipu)²−1) · Fuse (melt): t ≈ A·(Irating/I)^1.8<br>Koordinasi OK bila t_recloser < t_fuse pada arus gangguan (fast trip duluan).`
+    }),
+    init: () => _labBind(['pc-if','pc-recl-sel','pc-fuse-sel'], () => {
+      const If=_labV('pc-if'), td=_labV('pc-recl-sel'), fr=_labV('pc-fuse-sel');
+      const Ipu=100;
+      const tRecl = I => { const r=I/Ipu; return r>1 ? td*80/(r*r-1) : 50; };
+      const tFuse = I => 12*Math.pow(fr/I,1.8)*10; // fuse melt approx
+      _labSetv('pc-if',If.toFixed(0)+' A');
+      const tr=tRecl(If), tf=tFuse(If), margin=tf-tr, ok=tr<tf, col=ok?_GREEN:_RED;
+      _labSet('pc-trecl',tr.toFixed(3)); _labSet('pc-tfuse',tf.toFixed(3)); _labSet('pc-margin',margin.toFixed(3));
+      _labSet('pc-verdict', ok?'✓ TERKOORDINASI — recloser fast trip duluan':'✗ TIDAK — fuse putus duluan, atur ulang'); _labAttr('pc-verdict','fill',col);
+      // chart log-log: I 100..5000, t 0.01..10
+      const Imin=100,Imax=5000,tmin=0.01,tmax=10;
+      const LX=I=>52+ (Math.log10(I)-Math.log10(Imin))/(Math.log10(Imax)-Math.log10(Imin))*320;
+      const LY=t=>232- (Math.log10(Math.min(Math.max(t,tmin),tmax))-Math.log10(tmin))/(Math.log10(tmax)-Math.log10(tmin))*190;
+      let rp='',fp='';
+      for(let i=0;i<=40;i++){ const I=Imin*Math.pow(Imax/Imin,i/40); rp+=LX(I).toFixed(1)+','+LY(tRecl(I)).toFixed(1)+' '; fp+=LX(I).toFixed(1)+','+LY(tFuse(I)).toFixed(1)+' '; }
+      _labAttr('pc-recl','points',rp.trim()); _labAttr('pc-fuse','points',fp.trim());
+      const fx=LX(If); _labAttr('pc-fline','x1',fx); _labAttr('pc-fline','x2',fx);
+    })
+  },
+
+  // ============ S3: Capacitor Placement (loss reduction) ============
+  'cap-placement': {
+    html: () => _labShell({
+      eyebrow: 'Distribusi · Optimasi', title: 'Capacitor', italic: 'Placement',
+      desc: 'Pasang kapasitor shunt di feeder untuk menaikkan PF, menurunkan arus & rugi I²R, serta memperbaiki tegangan ujung. Geser lokasi & ukuran kapasitor.',
+      svg: `<rect x="20" y="60" width="44" height="36" rx="4" fill="#1a1d2e"/><text x="42" y="82" text-anchor="middle" font-family="Georgia" font-size="9" fill="#f5f0e6">GI</text>
+        <line x1="64" y1="78" x2="360" y2="78" stroke="#9a7f4f" stroke-width="4" class="lab-flow" id="cp-feeder"/>
+        <circle cx="360" cy="78" r="8" fill="#1a1d2e"/>
+        <line id="cp-cap" x1="0" y1="78" x2="0" y2="120" stroke="#15803d" stroke-width="3"/>
+        <rect id="cp-capbox" x="0" y="120" width="22" height="14" rx="2" fill="#15803d"/>
+        <text x="200" y="170" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Rugi daya feeder (kW)</text>
+        <rect x="80" y="200" width="110" height="22" rx="3" fill="#cfd3da"/><rect x="80" y="200" width="0" height="22" rx="3" fill="#c0392b" id="cp-bar-before"/>
+        <rect x="210" y="200" width="110" height="22" rx="3" fill="#cfd3da"/><rect x="210" y="200" width="0" height="22" rx="3" fill="#15803d" id="cp-bar-after"/>
+        <text x="135" y="238" text-anchor="middle" font-family="Georgia" font-size="10" fill="#c0392b" id="cp-before-lbl">tanpa</text>
+        <text x="265" y="238" text-anchor="middle" font-family="Georgia" font-size="10" fill="#15803d" id="cp-after-lbl">dgn kapasitor</text>
+        <text x="200" y="266" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="cp-save">—</text>`,
+      controls: _labSld('cp-p','Beban aktif P (kW)',100,5000,1500,50)
+        + _labSld('cp-pf','PF awal (cosφ)',0.6,0.95,0.75,0.01)
+        + _labSld('cp-q','Kapasitor (kVAR)',0,3000,600,50)
+        + _labSld('cp-loc','Lokasi kapasitor (% feeder)',0,100,67,1),
+      outputs: _labOut('cp-pf2','PF Baru','') + _labOut('cp-loss','Rugi Baru','kW') + _labOut('cp-red','Penurunan Rugi','%'),
+      formula: `Q_beban = P·tanφ · Q_sisa = Q_beban − Qc · S = √(P²+Q²) · Rugi ∝ S²<br>Lokasi optimal kapasitor ≈ 2/3 panjang feeder (rule of two-thirds).`
+    }),
+    init: () => _labBind(['cp-p','cp-pf','cp-q','cp-loc'], () => {
+      const P=_labV('cp-p'), pf=_labV('cp-pf'), Qc=_labV('cp-q'), loc=_labV('cp-loc');
+      _labSetv('cp-p',P.toFixed(0)+' kW'); _labSetv('cp-pf',pf.toFixed(2)); _labSetv('cp-q',Qc.toFixed(0)+' kVAR'); _labSetv('cp-loc',loc.toFixed(0)+' %');
+      const Qload=P*Math.tan(Math.acos(pf));
+      const Qres=Qload-Qc, S0=P/pf, S1=Math.sqrt(P*P+Qres*Qres);
+      const pf2=Math.min(1,P/S1);
+      // loss ∝ S^2; location factor: best near 2/3 (loss reduction scaled by how close to optimal)
+      const lossBase=0.04*P*Math.pow(S0/P,2); // arbitrary kW scale
+      const lossNoLoc=lossBase*Math.pow(S1/S0,2);
+      const locEff=1-0.4*Math.abs(loc-67)/67;   // 1.0 at 67%, less elsewhere
+      const lossAfter=lossBase-(lossBase-lossNoLoc)*locEff;
+      const red=(lossBase-lossAfter)/lossBase*100;
+      _labSet('cp-pf2',pf2.toFixed(3)); _labSet('cp-loss',lossAfter.toFixed(1)); _labSet('cp-red',red.toFixed(0));
+      _labSet('cp-save', (Qres<0?'⚠ Over-kompensasi (PF leading)':'✓ Rugi turun '+red.toFixed(0)+'% · PF '+pf2.toFixed(2)));
+      _labAttr('cp-save','fill', Qres<0?_GOLD:_GREEN);
+      const maxL=Math.max(lossBase,1);
+      _labAttr('cp-bar-before','width',110); _labAttr('cp-bar-after','width',Math.max(0,lossAfter/maxL*110));
+      _labSet('cp-before-lbl',lossBase.toFixed(0)+' kW'); _labSet('cp-after-lbl',lossAfter.toFixed(0)+' kW');
+      const fx=64+(360-64)*loc/100; _labAttr('cp-cap','x1',fx); _labAttr('cp-cap','x2',fx); _labAttr('cp-capbox','x',fx-11);
+    })
+  },
+
+  // ============ S3: Network Reconfiguration / Fault Isolation (interaktif) ============
+  'feeder-restore': {
+    html: () => _labShell({
+      eyebrow: 'Distribusi · SCADA', title: 'Fault Isolation', italic: '& Restoration',
+      desc: 'Klik section untuk simulasikan gangguan, lalu buka/tutup sectionalizer & tie-switch untuk mengisolasi gangguan dan memulihkan pelanggan dari feeder cadangan. Target: SAIDI minimal.',
+      svg: `<rect x="14" y="40" width="40" height="30" rx="4" fill="#1a1d2e"/><text x="34" y="59" text-anchor="middle" font-family="Georgia" font-size="9" fill="#f5f0e6">GI-A</text>
+        <rect x="346" y="40" width="40" height="30" rx="4" fill="#1a1d2e"/><text x="366" y="59" text-anchor="middle" font-family="Georgia" font-size="9" fill="#f5f0e6">GI-B</text>
+        <g id="fr-net"></g>
+        <text x="200" y="250" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a" id="fr-hint">Klik sebuah seksi untuk memicu gangguan</text>
+        <text x="200" y="276" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="fr-status">—</text>`,
+      controls: `<div class="sim-control"><label>Aksi cepat</label><div style="display:flex;flex-wrap:wrap;gap:6px">`
+          + `<button type="button" onclick="_frTie()" id="fr-tiebtn" style="${_BTN}">Tutup Tie-Switch (feeder B)</button>`
+          + `<button type="button" onclick="_frReset()" style="${_BTN}">⟲ Reset jaringan</button></div></div>`
+          + `<div class="sim-control"><label>Cara pakai</label><div style="font-size:12px;color:#6b6d7a;line-height:1.5">1) Klik seksi yang ingin diberi gangguan (jadi merah). 2) Buka sectionalizer di sisi gangguan (klik saklar). 3) Tutup tie-switch untuk pulihkan seksi sehat dari GI-B.</div></div>`,
+      outputs: _labOut('fr-out','Padam','sect') + _labOut('fr-restored','Dipulihkan','sect') + _labOut('fr-saidi','Indeks SAIDI','rel'),
+      formula: `Isolasi: buka sectionalizer mengapit seksi gangguan · Restorasi: tutup tie-switch dari feeder sehat<br>SAIDI relatif = Σ(pelanggan padam × durasi). Makin kecil makin baik.`
+    }),
+    init: () => { _frReset(); }
   },
 
   // ============ S4: Transmission Line Sag & Tension ============
