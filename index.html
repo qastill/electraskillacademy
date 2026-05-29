@@ -10802,7 +10802,7 @@ button:active:not(:disabled),
             <div class="esa-benefit-photo" data-fallback-icon="🧪"><img loading="lazy" alt="Lab simulator room hands-on" src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
               <div class="esa-benefit-title">Lab &amp; Simulator Room</div>
-              <div class="esa-benefit-desc">Akses penuh ke 16 Simulator Lab per spesialisasi (pencahayaan, drop tegangan, MCB, motor starting, trafo, sag transmisi, arc flash, pembumian, dll) + 9 Design Calculator (cable sizing, arc flash, maximum demand) — plus undangan ke Physical Lab Room mitra ESA di Jabodetabek &amp; Bandung.</div>
+              <div class="esa-benefit-desc">Akses penuh ke Simulator Lab per spesialisasi (5 lab di Instalasi) (pencahayaan, drop tegangan, MCB, motor starting, trafo, sag transmisi, arc flash, pembumian, dll) + 9 Design Calculator (cable sizing, arc flash, maximum demand) — plus undangan ke Physical Lab Room mitra ESA di Jabodetabek &amp; Bandung.</div>
             </div>
           </li>
 
@@ -11056,7 +11056,7 @@ button:active:not(:disabled),
           <div class="home-faq-answer">
             <p><strong>Lab &amp; Simulator Room</strong> adalah ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta:</p>
             <ul>
-              <li><strong>16 Simulator Lab per spesialisasi</strong> — tiap jalur karir punya lab spesifik (Lighting/Voltage Drop/MCB untuk Instalasi, Motor Starting & VFD untuk Industri, Trafo & Feeder 20 kV untuk Distribusi, Sag & BIL untuk Transmisi, Load Forecasting & NTL untuk Data Science, Audit & PF untuk Auditor, PV & BESS untuk Renewable, Arc Flash & Pembumian untuk K3). Buka di menu <em>Labs</em>, gratis untuk member.</li>
+              <li><strong>Simulator Lab per spesialisasi (5 lab di Instalasi)</strong> — tiap jalur karir punya lab spesifik (Lighting/Voltage Drop/MCB untuk Instalasi, Motor Starting & VFD untuk Industri, Trafo & Feeder 20 kV untuk Distribusi, Sag & BIL untuk Transmisi, Load Forecasting & NTL untuk Data Science, Audit & PF untuk Auditor, PV & BESS untuk Renewable, Arc Flash & Pembumian untuk K3). Buka di menu <em>Labs</em>, gratis untuk member.</li>
               <li><strong>9 Design Calculator</strong> — cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling tension, protection coordination.</li>
               <li><strong>Physical Lab Room</strong> — undangan prioritas ke partner training facility ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.</li>
             </ul>
@@ -15115,7 +15115,7 @@ const SIM_ICONS = {
 // Urutan, label, & warna grup spesialisasi (16 jalur karir = 16 lab; + grup Dasar/Tools bonus)
 const _U = (id) => 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=600&q=70';
 const SIM_GROUPS = [
-  { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan & drop tegangan.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)', photo: _U('1621905251918-48416bd8575a') },
+  { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan, drop tegangan, konduit, panel 3φ & pembumian.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)', photo: _U('1621905251918-48416bd8575a') },
   { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor starting & efisiensi VFD.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
   { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo distribusi & penyulang 20 kV.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
   { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag-tension & koordinasi isolasi SUTET.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
@@ -15135,6 +15135,9 @@ const SIMULATORS = [
   // ===== S1 · Instalasi Bangunan (3 lab baru + cable sizing) =====
   { id: 'inst-lighting', jalur: 'S1', category: 'Instalasi · Pencahayaan', name: 'Lighting Design (Lumen Method)', desc: 'Hitung jumlah armatur/lampu sesuai target lux ruangan (metode lumen, SNI 6197). Input dimensi ruang, target iluminasi, lumen lampu.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.bulb, working: true },
   { id: 'inst-vdrop', jalur: 'S1', category: 'Instalasi · Drop Tegangan', name: 'Voltage Drop Checker (PUIL)', desc: 'Cek persen drop tegangan pada feeder instalasi & status LULUS/GAGAL vs batas PUIL (≤5%). Geser arus, panjang, dan ukuran kabel.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.vdrop, working: true },
+  { id: 'conduit-fill', jalur: 'S1', category: 'Instalasi · Konduit', name: 'Conduit Fill Calculator', desc: 'Tambah kabel interaktif (klik tombol) & cek persentase isi konduit vs batas PUIL/NEC, lengkap visual penampang konduit yang terisi.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.cable, working: true },
+  { id: 'panel-schedule', jalur: 'S1', category: 'Instalasi · Panel', name: 'Panel Board Load Balancer 3φ', desc: 'Susun beban panel secara interaktif, seimbangkan fasa R-S-T otomatis, hitung demand, imbalance & ukuran MCB utama.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.mcb, working: true },
+  { id: 'earth-fault-loop', jalur: 'S1', category: 'Instalasi · Pembumian', name: 'Earth Fault Loop & RCD', desc: 'Hitung Zs, arus gangguan, waktu putus MCB & tegangan sentuh; tentukan kebutuhan RCD 30 mA (TN vs TT) dengan diagram beranimasi.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.earth, working: true },
 
   // ===== S2 · Industri & Manufaktur =====
   { id: 'motor-starting', jalur: 'S2', category: 'Industri · Motor', name: 'Motor Starting (DOL vs Star-Delta)', desc: 'Bandingkan arus & torsi start motor induksi 3 fasa: Direct-On-Line vs Star-Delta. Lihat penurunan inrush current.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.motor, working: true },
@@ -16662,7 +16665,147 @@ const _labOut = (id, label, unit) => `<div class="sim-output"><div class="sim-ou
 const _GREEN = '#15803d', _RED = '#c0392b', _GOLD = '#9a7f4f', _INK = '#1a1d2e';
 const fmtRp = n => n >= 1e9 ? (n/1e9).toFixed(2) + ' M' : n >= 1e6 ? (n/1e6).toFixed(1) + ' jt' : Math.round(n).toLocaleString('id-ID');
 
+// ============ Interactive lab helpers (tombol klik, bukan hanya slider) ============
+const _BTN = "padding:7px 11px;border:1px solid #c9a96e;background:rgba(201,169,110,0.14);color:#1a1d2e;border-radius:7px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;line-height:1";
+
+// --- Conduit Fill (interaktif +/-) ---
+const _CF_CABLE = { '2.5':7.0, '4':8.5, '10':11.5 };       // diameter luar kabel (mm)
+const _CF_COND  = { '20':16.1, '25':20.4, '32':26.6, '40':34.0, '50':43.0 }; // Ø dalam konduit (mm)
+let _cfState = { cond:'25', cables:{ '2.5':4, '4':0, '10':0 } };
+function _cfAdd(sz, d){ _cfState.cables[sz] = Math.max(0, (_cfState.cables[sz]||0) + d); _cfRender(); }
+function _cfSetCond(v){ _cfState.cond = v; _cfRender(); }
+function _cfRender(){
+  if (!document.getElementById('cf-fill')) return;
+  const Dint = _CF_COND[_cfState.cond];
+  let n=0, sumA=0, arr=[];
+  Object.keys(_CF_CABLE).forEach(sz => { const c=_cfState.cables[sz]||0; const d=_CF_CABLE[sz]; for(let i=0;i<c;i++) arr.push(d); n+=c; sumA+=c*Math.PI/4*d*d; });
+  const condA = Math.PI/4*Dint*Dint, fill = condA ? sumA/condA*100 : 0;
+  const limit = n<=1?53:(n===2?31:40), ok = fill<=limit && n>0, col = n===0?'#6b6d7a':(fill<=limit?_GREEN:_RED);
+  Object.keys(_CF_CABLE).forEach(sz => { const e=document.getElementById('cf-n-'+sz.replace('.','_')); if(e) e.textContent=_cfState.cables[sz]||0; });
+  _labSet('cf-fill', fill.toFixed(1)); _labSet('cf-count', n); _labSet('cf-limit', limit+' %'); _labSet('cf-dint', Dint.toFixed(1));
+  const fe=document.getElementById('cf-fill'); if(fe) fe.style.color=col;
+  _labSet('cf-verdict', n===0?'tambah kabel →':(fill<=limit?('✓ AMAN (≤ '+limit+'%)'):('✗ LEBIH '+limit+'% — perbesar konduit'))); _labAttr('cf-verdict','fill',col);
+  const g=document.getElementById('cf-pack'); if(!g) return;
+  const cx=150, cy=145, R=108;
+  let s='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="rgba(154,127,79,0.08)" stroke="'+col+'" stroke-width="3"/>';
+  const scale=R/(Dint/2), golden=Math.PI*(3-Math.sqrt(5));
+  for(let i=0;i<arr.length;i++){
+    const cr=Math.max(3,(arr[i]/2)*scale);
+    const t=i*golden, rad=(R-cr-2)*Math.sqrt((i+0.5)/Math.max(arr.length,1));
+    const px=cx+rad*Math.cos(t), py=cy+rad*Math.sin(t);
+    s+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+cr.toFixed(1)+'" fill="#c9a96e" stroke="#1a1d2e" stroke-width="1"/>';
+  }
+  g.innerHTML=s;
+}
+
+// --- Panel Board Load Balancer 3φ (interaktif tambah beban) ---
+const _PS_TYPES = { lamp:{n:'Lampu',kw:0.5}, socket:{n:'Stopkontak',kw:1.0}, ac:{n:'AC',kw:1.5}, motor:{n:'Motor',kw:3.0} };
+let _psLoads = [];
+function _psAdd(t){ const ld=_PS_TYPES[t]; if(!ld) return; const ph=[0,0,0]; _psLoads.forEach(l=>ph[l.ph]+=l.kw); const mi=ph.indexOf(Math.min(...ph)); _psLoads.push({kw:ld.kw, ph:mi}); _psRender(); }
+function _psUndo(){ _psLoads.pop(); _psRender(); }
+function _psReset(){ _psLoads=[]; _psRender(); }
+function _psRender(){
+  if (!document.getElementById('ps-tot')) return;
+  const ph=[0,0,0]; _psLoads.forEach(l=>ph[l.ph]+=l.kw);
+  const tot=ph[0]+ph[1]+ph[2];
+  const div = document.getElementById('ps-div') ? _labV('ps-div') : 0.8;
+  if (document.getElementById('ps-div')) _labSetv('ps-div', div.toFixed(2));
+  const demand=tot*div, avg=tot/3, imb=avg>0?(Math.max(...ph)-Math.min(...ph))/avg*100:0;
+  const Imain=demand*1000/(Math.sqrt(3)*400*0.85);
+  const std=[6,10,16,20,25,32,40,50,63,80,100,125,160,200,250], mcb=std.find(x=>x>=Imain);
+  _labSet('ps-tot',tot.toFixed(1)); _labSet('ps-dem',demand.toFixed(1)); _labSet('ps-imb',imb.toFixed(0)); _labSet('ps-mcb',mcb||'>250');
+  _labSet('ps-info', _psLoads.length+' beban · '+ph.map((p,i)=>'RST'[i]+' '+p.toFixed(1)+'kW').join('  '));
+  const g=document.getElementById('ps-bars'); if(!g) return;
+  const base=232, maxH=168, scale=Math.max(...ph,3), cols=['#c0392b','#d99a2b','#2d7d46'], xs=[120,200,280];
+  let s='<line x1="78" y1="232" x2="322" y2="232" stroke="#1a1d2e" stroke-width="1.5"/>';
+  ph.forEach((p,i)=>{ const h=p/scale*maxH, Iph=p*1000/230;
+    s+='<rect x="'+(xs[i]-30)+'" y="'+(base-h).toFixed(1)+'" width="60" height="'+h.toFixed(1)+'" rx="3" fill="'+cols[i]+'" opacity="0.85"/>';
+    s+='<text x="'+xs[i]+'" y="248" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#1a1d2e">'+'RST'[i]+'</text>';
+    s+='<text x="'+xs[i]+'" y="'+(base-h-6).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="'+cols[i]+'">'+p.toFixed(1)+'</text>';
+    s+='<text x="'+xs[i]+'" y="264" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">'+Iph.toFixed(0)+' A</text>';
+  });
+  g.innerHTML=s;
+}
+
 const SIM_BUILDERS = {
+  // ============ S1: Conduit Fill (interaktif) ============
+  'conduit-fill': {
+    html: () => _labShell({
+      eyebrow: 'Instalasi · Konduit', title: 'Conduit Fill', italic: 'Calculator (PUIL/NEC)',
+      desc: 'Tambah/kurangi kabel pakai tombol, pilih ukuran konduit — persentase isi (fill) dihitung & divisualkan real-time. Batas: 1 kabel 53%, 2 kabel 31%, ≥3 kabel 40%.',
+      svg: `<g id="cf-pack"></g>
+        <text x="150" y="276" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Ø dalam konduit <tspan id="cf-dint">20.4</tspan> mm</text>
+        <text x="320" y="148" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="cf-verdict">—</text>`,
+      controls: `<div class="sim-control"><label>Ukuran konduit</label><select onchange="_cfSetCond(this.value)">`
+          + ['20','25','32','40','50'].map(c=>`<option value="${c}" ${c==='25'?'selected':''}>${c} mm</option>`).join('') + `</select></div>`
+        + ['2.5','4','10'].map(sz=>`<div class="sim-control"><label>Kabel ${sz} mm² (Ø${_CF_CABLE[sz]}mm) <span class="sim-value" id="cf-n-${sz.replace('.','_')}">0</span></label><div style="display:flex;gap:8px"><button type="button" onclick="_cfAdd('${sz}',-1)" style="${_BTN}">− kurangi</button><button type="button" onclick="_cfAdd('${sz}',1)" style="${_BTN}">+ tambah</button></div></div>`).join(''),
+      outputs: _labOut('cf-fill','Fill Konduit','%') + _labOut('cf-count','Jumlah Kabel','') + _labOut('cf-limit','Batas Fill',''),
+      formula: `Fill% = ΣA_kabel / A_konduit × 100 · A = (π/4)·d²<br>Hijau = aman, merah = melebihi batas standar.`
+    }),
+    init: () => { _cfState = { cond:'25', cables:{ '2.5':4, '4':0, '10':0 } }; _cfRender(); }
+  },
+
+  // ============ S1: Panel Board Load Balancer 3φ (interaktif) ============
+  'panel-schedule': {
+    html: () => _labShell({
+      eyebrow: 'Instalasi · Panel', title: 'Panel Board', italic: 'Load Balancer 3φ',
+      desc: 'Klik tombol untuk menambah beban; sistem otomatis menyeimbangkan ke fasa R-S-T. Lihat arus per fasa, ketidakseimbangan, demand & ukuran MCB utama.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Beban per Fasa (kW)</text>
+        <g id="ps-bars"></g>
+        <text x="200" y="284" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" fill="#1a1d2e" id="ps-info">0 beban</text>`,
+      controls: `<div class="sim-control"><label>Tambah beban (auto-balance fasa)</label><div style="display:flex;flex-wrap:wrap;gap:6px">`
+          + `<button type="button" onclick="_psAdd('lamp')" style="${_BTN}">+ Lampu 0.5kW</button>`
+          + `<button type="button" onclick="_psAdd('socket')" style="${_BTN}">+ Stopkontak 1kW</button>`
+          + `<button type="button" onclick="_psAdd('ac')" style="${_BTN}">+ AC 1.5kW</button>`
+          + `<button type="button" onclick="_psAdd('motor')" style="${_BTN}">+ Motor 3kW</button></div></div>`
+        + `<div class="sim-control"><div style="display:flex;gap:8px"><button type="button" onclick="_psUndo()" style="${_BTN}">↶ Hapus terakhir</button><button type="button" onclick="_psReset()" style="${_BTN}">⟲ Reset</button></div></div>`
+        + _labSld('ps-div','Faktor diversitas',0.5,1,0.8,0.05),
+      outputs: _labOut('ps-tot','Total Tersambung','kW') + _labOut('ps-dem','Demand','kW') + _labOut('ps-imb','Imbalance','%') + _labOut('ps-mcb','MCB Utama','A'),
+      formula: `Demand = ΣkW × diversitas · I_fasa = kW×1000/230 · MCB utama = standar ≥ I_demand 3φ (400V)<br>Imbalance = (maks−min)/rata-rata × 100%`
+    }),
+    init: () => { _psLoads=[]; const d=document.getElementById('ps-div'); if(d) d.addEventListener('input', _psRender); _psRender(); }
+  },
+
+  // ============ S1: Earth Fault Loop & RCD (TN/TT) ============
+  'earth-fault-loop': {
+    html: () => _labShell({
+      eyebrow: 'Instalasi · Pembumian', title: 'Earth Fault Loop', italic: '& RCD (TN/TT)',
+      desc: 'Hitung impedansi lingkar gangguan Zs, arus gangguan, kemampuan putus MCB, & tegangan sentuh. Tentukan apakah perlu RCD 30 mA (TN vs TT).',
+      svg: `<rect x="20" y="58" width="48" height="40" rx="4" fill="#1a1d2e"/><text x="44" y="82" text-anchor="middle" font-family="Georgia" font-size="9" fill="#f5f0e6">Sumber</text>
+        <line x1="68" y1="78" x2="300" y2="78" stroke="#cfd3da" stroke-width="6"/><line x1="68" y1="78" x2="300" y2="78" stroke="#c0392b" stroke-width="4" class="lab-flow" id="ef-live"/>
+        <rect x="300" y="58" width="48" height="40" rx="4" fill="#1a1d2e"/><text x="324" y="82" text-anchor="middle" font-family="Georgia" font-size="9" fill="#f5f0e6">Beban</text>
+        <line x1="324" y1="98" x2="324" y2="150" stroke="#c0392b" stroke-width="3"/>
+        <line x1="68" y1="150" x2="324" y2="150" stroke="#9a7f4f" stroke-width="4" class="lab-flow" id="ef-earth"/>
+        <line x1="68" y1="98" x2="68" y2="175" stroke="#9a7f4f" stroke-width="3"/>
+        <path d="M44 176 h48 M52 184 h32 M60 192 h16" stroke="#9a7f4f" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="200" y="214" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" id="ef-if">—</text>
+        <text x="200" y="236" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#6b6d7a" id="ef-zs">—</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="ef-verdict">—</text>`,
+      controls: _labSel('ef-sys','Sistem pembumian','<option value="TN" selected>TN-S (massa ke PEN)</option><option value="TT">TT (elektrode lokal)</option>')
+        + _labSld('ef-ze','Ze impedansi luar (Ω)',0.1,3,0.8,0.05)
+        + _labSld('ef-rr','R1+R2 kabel (Ω)',0.05,4,0.6,0.05)
+        + _labSld('ef-ra','RA elektrode TT (Ω)',1,200,50,1)
+        + _labSel('ef-mcb','MCB rating','<option value="16">16 A</option><option value="20">20 A</option><option value="32" selected>32 A</option><option value="40">40 A</option>')
+        + _labSel('ef-type','Kurva MCB','<option value="5">Tipe B (5×In)</option><option value="10" selected>Tipe C (10×In)</option>'),
+      outputs: _labOut('ef-zs-o','Zs Loop','Ω') + _labOut('ef-if-o','Arus Gangguan','A') + _labOut('ef-touch','Tegangan Sentuh','V'),
+      formula: `Zs = Ze + (R1+R2) · If = 230/Zs · Ia = kurva×In · TT: V_sentuh = 230·RA/(Ze+RA)<br>TN aman bila If ≥ Ia (putus < 0.4 s); TT wajib RCD 30 mA.`
+    }),
+    init: () => _labBind(['ef-sys','ef-ze','ef-rr','ef-ra','ef-mcb','ef-type'], () => {
+      const sys=_labRaw('ef-sys'), Ze=_labV('ef-ze'), RR=_labV('ef-rr'), RA=_labV('ef-ra'), In=_labV('ef-mcb'), kf=_labV('ef-type');
+      const Uo=230, Ia=kf*In;
+      _labSetv('ef-ze',Ze.toFixed(2)+' Ω'); _labSetv('ef-rr',RR.toFixed(2)+' Ω'); _labSetv('ef-ra',RA.toFixed(0)+' Ω');
+      let Zs, If, touch, ok, msg, col;
+      if (sys==='TN'){ Zs=Ze+RR; If=Uo/Zs; touch=Uo*(RR/2)/Zs; ok=If>=Ia; col=ok?_GREEN:_RED;
+        msg = ok ? ('✓ MCB putus < 0.4 s (If ≥ '+Ia.toFixed(0)+' A)') : ('✗ If < '+Ia.toFixed(0)+' A — perbesar kabel / pasang RCD'); }
+      else { Zs=Ze+RA; If=Uo/Zs; touch=Uo*RA/(Ze+RA); ok=touch<=50; col=ok?_GREEN:_GOLD;
+        msg = ok ? '✓ Sentuh ≤ 50 V — tetap pasang RCD 30 mA' : ('⚠ Sentuh '+touch.toFixed(0)+' V > 50 V — WAJIB RCD 30 mA'); }
+      _labSet('ef-zs-o',Zs.toFixed(2)); _labSet('ef-if-o',If.toFixed(0)); _labSet('ef-touch',touch.toFixed(0));
+      _labSet('ef-if',If.toFixed(0)+' A'); _labSet('ef-zs','Zs = '+Zs.toFixed(2)+' Ω · Ia = '+Ia.toFixed(0)+' A');
+      _labSet('ef-verdict',msg); _labAttr('ef-verdict','fill',col);
+      _labAttr('ef-live','stroke',col); _labAttr('ef-earth','stroke', ok?'#9a7f4f':col);
+    })
+  },
+
   // ============ FONDASI: Transformer Ratio ============
   'transformer': {
     html: () => _labShell({
@@ -18758,7 +18901,7 @@ const FAQ_DATA = [
     a: 'Ya — sudah termasuk. Setelah Anda menyelesaikan Level 2 Fundamental, akses ke <strong>Career Advisory</strong> aktif: (1) pemetaan jalur karir personal ke 16 jalur (instalasi, industri, distribusi, transmisi, data science, auditor, renewable, K3, sales engineer, solar, carbon, EV charging, waste-to-energy, hidrogen, BESS, otomasi); (2) review CV &amp; portofolio oleh advisor industri; (3) mock interview teknis dengan AI + 1 sesi live bulanan dengan engineer senior; (4) career mentoring 30 menit/bulan via dashboard untuk diskusi target karir, gaji, atau transisi industri.' },
 
   { cat: 'Lab & Simulator', q: 'Apa itu Lab / Simulator Room?',
-    a: 'Ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta. Isinya: <strong>16 Simulator Lab per spesialisasi</strong> (Instalasi: Lighting/Voltage Drop/MCB; Industri: Motor Starting/VFD; Distribusi: Trafo Loading/Feeder 20 kV; Transmisi: Sag-Tension/BIL; Data Science: Load Forecasting/NTL; Auditor: Energy Payback/Power Factor; Renewable: PV/BESS; K3: Arc Flash/Pembumian), <strong>9 Design Calculator</strong> (cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling, protection coordination), plus <strong>Physical Lab Room</strong> mitra ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.' },
+    a: 'Ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta. Isinya: <strong>Simulator Lab per spesialisasi (5 lab di Instalasi)</strong> (Instalasi: Lighting/Voltage Drop/MCB; Industri: Motor Starting/VFD; Distribusi: Trafo Loading/Feeder 20 kV; Transmisi: Sag-Tension/BIL; Data Science: Load Forecasting/NTL; Auditor: Energy Payback/Power Factor; Renewable: PV/BESS; K3: Arc Flash/Pembumian), <strong>9 Design Calculator</strong> (cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling, protection coordination), plus <strong>Physical Lab Room</strong> mitra ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.' },
   { cat: 'Lab & Simulator', q: 'Bagaimana cara akses Lab & Simulator?',
     a: 'Buka menu navigasi atas → <strong>Labs</strong>, atau langsung dari dashboard member. Semua simulator gratis untuk member aktif paket Rp 299.000. Untuk Physical Lab Room (offline), undangan dikirim via email/WA H-7 untuk jadwal terdekat di kota Anda.' },
   { cat: 'Lab & Simulator', q: 'Simulator butuh install software?',
