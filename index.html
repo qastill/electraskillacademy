@@ -2624,53 +2624,104 @@ body {
   gap: 24px;
 }
 
-/* Grouped simulator layout (per spesialisasi) */
+/* ===== Simulator Lab — kartu visual per spesialisasi (clickable) ===== */
 #simulator-grid { display: block; }
-.sim-group { margin-bottom: 48px; }
-.sim-group:last-child { margin-bottom: 0; }
-.sim-group-head {
+.lab-spec { margin-bottom: 46px; }
+.lab-spec:last-child { margin-bottom: 0; }
+.lab-spec-head {
   display: flex;
-  align-items: baseline;
-  gap: 14px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
   border-bottom: 1px solid var(--line-gold);
-  padding-bottom: 12px;
-  margin-bottom: 6px;
+  padding-bottom: 14px;
+  margin-bottom: 22px;
 }
-.sim-group-title {
+.lab-spec-num {
+  flex: 0 0 auto;
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-family: var(--serif, Georgia, serif);
+  font-size: 1.25rem; font-weight: 700;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+.lab-spec-head > div { flex: 1; }
+.lab-spec-title {
   font-family: var(--serif, Georgia, serif);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--navy-deep, #1a1d2e);
-  margin: 0;
+  font-size: 1.5rem; font-weight: 600;
+  color: var(--navy-deep, #1a1d2e); margin: 0;
+  line-height: 1.2;
 }
-.sim-group-count {
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gold-dark, #c9a96e);
-  background: rgba(201,169,110,0.12);
-  border: 1px solid rgba(201,169,110,0.3);
-  border-radius: 999px;
-  padding: 3px 10px;
-  font-weight: 700;
+.lab-spec-sub { font-size: 0.88rem; color: var(--ink-mute, #6b6d7a); margin: 2px 0 0; }
+.lab-spec-count {
+  flex: 0 0 auto;
+  font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold-dark, #9a7f4f); background: rgba(201,169,110,0.12);
+  border: 1px solid rgba(201,169,110,0.32); border-radius: 999px;
+  padding: 4px 11px; font-weight: 700;
 }
-.sim-group-desc {
-  font-size: 0.9rem;
-  color: var(--ink-mute, rgba(245,240,230,0.6));
-  margin: 0 0 20px;
-}
-.sim-group-grid {
+.lab-cardgrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
 }
-@media (max-width: 920px) {
-  .sim-group-grid { grid-template-columns: repeat(2, 1fr); }
+.lab-card {
+  display: flex; flex-direction: column;
+  text-align: left; padding: 0; cursor: pointer;
+  background: #fff;
+  border: 1px solid var(--line, rgba(26,29,46,0.1));
+  border-radius: 16px; overflow: hidden;
+  font-family: inherit;
+  box-shadow: 0 4px 16px rgba(26,29,46,0.06);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
-@media (max-width: 640px) {
-  .sim-group-grid { grid-template-columns: 1fr; }
+.lab-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(26,29,46,0.16);
+  border-color: var(--gold, #c9a96e);
 }
+.lab-card-banner {
+  position: relative;
+  height: 104px;
+  display: flex; align-items: center; justify-content: center;
+}
+.lab-card-banner::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 70% 20%, rgba(255,255,255,0.25), transparent 60%);
+}
+.lab-card-icon { color: #fff; transform: scale(1.9); opacity: 0.95; }
+.lab-card-icon svg { width: 26px; height: 26px; }
+.lab-card:hover .lab-card-icon { transform: scale(2.1); transition: transform 0.22s ease; }
+.lab-card-tag {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;
+  color: #fff; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.3);
+  padding: 3px 9px; border-radius: 999px; backdrop-filter: blur(2px);
+}
+.lab-card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+.lab-card-cat {
+  font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold-dark, #9a7f4f); font-weight: 700; margin-bottom: 6px;
+}
+.lab-card-title {
+  font-family: var(--serif, Georgia, serif);
+  font-size: 1.12rem; font-weight: 600; color: var(--navy-deep, #1a1d2e);
+  margin: 0 0 7px; line-height: 1.25;
+}
+.lab-card-desc {
+  font-size: 0.85rem; color: var(--ink-mute, #6b6d7a); line-height: 1.55; margin: 0 0 14px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.lab-card-foot {
+  margin-top: auto; display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.78rem; color: var(--ink-mute, #6b6d7a);
+}
+.lab-card-open {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--gold-dark, #9a7f4f); font-weight: 700;
+}
+.lab-card:hover .lab-card-open { gap: 10px; transition: gap 0.22s ease; }
+@media (max-width: 600px) { .lab-cardgrid { grid-template-columns: 1fr; } }
 
 /* Electrical Design Calculators */
 .calc-section {
@@ -11857,8 +11908,8 @@ button:active:not(:disabled),
     <div class="lab-section-inner">
       <div class="lab-section-header">
         <div class="lab-section-eyebrow">Digital Simulator Lab</div>
-        <h2 class="lab-section-title">Simulator lab <span class="italic">per spesialisasi</span></h2>
-        <p class="lab-section-sub">Tiap jalur karir punya lab spesifik sendiri — total 16 simulator yang sedang kami kembangkan bertahap. Eksperimen langsung di browser: geser slider, ubah parameter, lihat hasilnya real-time. Gratis untuk member ESA.</p>
+        <h2 class="lab-section-title">16 simulator lab <span class="italic">per spesialisasi</span></h2>
+        <p class="lab-section-sub">8 jalur karir × 2 lab = 16 simulator interaktif, semua aktif. Tinggal klik kartunya, geser slider, dan lihat hasilnya real-time — plus lab dasar &amp; tools sebagai bonus. Gratis untuk member ESA.</p>
       </div>
       <div class="simulator-grid" id="simulator-grid"></div>
     </div>
@@ -15062,17 +15113,17 @@ const SIM_ICONS = {
   data: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
 
-// Urutan & label grup spesialisasi (selaras 8 jalur karir + grup Fondasi lintas-jurusan)
+// Urutan, label, & warna grup spesialisasi (8 jalur karir = 16 lab; + grup Dasar/Tools bonus)
 const SIM_GROUPS = [
-  { key: 'Fondasi', label: 'Fondasi · Lintas Jurusan', desc: 'Konsep dasar yang dipakai semua spesialisasi.' },
-  { key: 'S1', label: 'S1 · Instalasi Bangunan', desc: 'MEP gedung: pencahayaan, drop tegangan, proteksi & koordinasi kabel.' },
-  { key: 'S2', label: 'S2 · Industri & Manufaktur', desc: 'Motor, drive, dan efisiensi pabrik.' },
-  { key: 'S3', label: 'S3 · Distribusi', desc: 'Jaringan 20 kV, gardu distribusi, dan trafo.' },
-  { key: 'S4', label: 'S4 · Transmisi', desc: 'Saluran 150/500 kV, sag-tension, koordinasi isolasi.' },
-  { key: 'S5', label: 'S5 · Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.' },
-  { key: 'S6', label: 'S6 · Energy Auditor', desc: 'Audit energi, payback, dan koreksi faktor daya.' },
-  { key: 'S7', label: 'S7 · Pembangkitan & Renewable', desc: 'PLTS, BESS, dan energi terbarukan.' },
-  { key: 'S8', label: 'S8 · K3 Listrik', desc: 'Arc flash, APD, dan sistem pembumian.' }
+  { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan & drop tegangan.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)' },
+  { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor starting & efisiensi VFD.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)' },
+  { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo distribusi & penyulang 20 kV.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)' },
+  { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag-tension & koordinasi isolasi SUTET.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)' },
+  { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting beban & deteksi losses.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)' },
+  { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Audit, payback & koreksi faktor daya.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)' },
+  { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS rooftop & sizing baterai (BESS).', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)' },
+  { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, APD & sistem pembumian.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)' },
+  { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)' }
 ];
 
 const SIMULATORS = [
@@ -15084,8 +15135,6 @@ const SIMULATORS = [
   // ===== S1 · Instalasi Bangunan (3 lab baru + cable sizing) =====
   { id: 'inst-lighting', jalur: 'S1', category: 'Instalasi · Pencahayaan', name: 'Lighting Design (Lumen Method)', desc: 'Hitung jumlah armatur/lampu sesuai target lux ruangan (metode lumen, SNI 6197). Input dimensi ruang, target iluminasi, lumen lampu.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.bulb, working: true },
   { id: 'inst-vdrop', jalur: 'S1', category: 'Instalasi · Drop Tegangan', name: 'Voltage Drop Checker (PUIL)', desc: 'Cek persen drop tegangan pada feeder instalasi & status LULUS/GAGAL vs batas PUIL (≤5%). Geser arus, panjang, dan ukuran kabel.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.vdrop, working: true },
-  { id: 'inst-mcb', jalur: 'S1', category: 'Instalasi · Proteksi', name: 'MCB & Cable Coordination', desc: 'Tentukan rating MCB & ukuran kabel minimum dengan aturan koordinasi Ib ≤ In ≤ Iz (PUIL/IEC 60364). Termasuk faktor derating.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.mcb, working: true },
-  { id: 'cable-sizing', jalur: 'S1', category: 'Instalasi · Kabel', name: 'Cable Sizing Calculator', desc: 'Hitung luas penampang kabel sesuai PUIL 2011 / IEC. Input beban, tegangan, panjang — output ukuran + voltage drop.', level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.cable, working: true },
 
   // ===== S2 · Industri & Manufaktur =====
   { id: 'motor-starting', jalur: 'S2', category: 'Industri · Motor', name: 'Motor Starting (DOL vs Star-Delta)', desc: 'Bandingkan arus & torsi start motor induksi 3 fasa: Direct-On-Line vs Star-Delta. Lihat penurunan inrush current.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.motor, working: true },
@@ -15113,7 +15162,11 @@ const SIMULATORS = [
 
   // ===== S8 · K3 Listrik =====
   { id: 'arc-flash-ppe', jalur: 'S8', category: 'K3 · Arc Flash', name: 'Arc Flash & PPE Selector', desc: 'Estimasi incident energy (cal/cm²) & kategori APD (PPE) sesuai NFPA 70E dari arus gangguan & jarak kerja.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
-  { id: 'earthing-touch', jalur: 'S8', category: 'K3 · Pembumian', name: 'Earthing & Touch Voltage', desc: 'Hitung resistansi pembumian batang elektroda & tegangan sentuh terhadap resistivitas tanah.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.earth, working: true }
+  { id: 'earthing-touch', jalur: 'S8', category: 'K3 · Pembumian', name: 'Earthing & Touch Voltage', desc: 'Hitung resistansi pembumian batang elektroda & tegangan sentuh terhadap resistivitas tanah.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.earth, working: true },
+
+  // ===== Lab Dasar & Tools (bonus, lintas jurusan) =====
+  { id: 'cable-sizing', jalur: 'Fondasi', category: 'Tools · Kabel', name: 'Cable Sizing Calculator', desc: 'Hitung luas penampang kabel sesuai PUIL 2011 / IEC. Input beban, tegangan, panjang — output ukuran + voltage drop.', level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.cable, working: true },
+  { id: 'inst-mcb', jalur: 'Fondasi', category: 'Tools · Proteksi', name: 'MCB & Cable Coordination', desc: 'Tentukan rating MCB & ukuran kabel minimum dengan aturan koordinasi Ib ≤ In ≤ Iz (PUIL/IEC 60364). Termasuk faktor derating.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.mcb, working: true }
 ];
 
 // ================================================
@@ -15568,36 +15621,38 @@ function renderSimulators() {
   const grid = document.getElementById('simulator-grid');
   if (!grid) return;
 
-  const cardHTML = (s) => `
-    <div class="simulator-card ${s.working ? '' : 'soon'}">
-      ${!s.working ? '<div class="sim-card-badge-soon">Coming Soon</div>' : ''}
-      <div class="sim-card-icon">${s.icon}</div>
-      <div class="sim-card-cat">${s.category}</div>
-      <h3>${s.name}</h3>
-      <p>${s.desc}</p>
-      <div class="sim-card-meta">
-        <div><span class="sim-meta-label">Level</span> <span class="sim-meta-value">${s.level}</span></div>
-        <div><span class="sim-meta-label">Durasi</span> <span class="sim-meta-value">${s.duration}</span></div>
-      </div>
-      <button class="sim-card-btn" ${s.working ? `onclick="openSimulator('${s.id}')"` : 'disabled'}>
-        ${s.working ? 'Buka Simulator' : 'Segera Hadir'}
-        ${s.working ? '<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
-      </button>
-    </div>`;
+  const arrow = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  // Render dikelompokkan per spesialisasi (SIM_GROUPS), hanya grup yang punya lab.
+  // Kartu lab visual & seluruhnya bisa diklik (ala kartu spesialisasi di Home).
+  const cardHTML = (s, grad) => `
+    <button type="button" class="lab-card" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
+      <div class="lab-card-banner" style="background:${grad}">
+        <span class="lab-card-icon">${s.icon}</span>
+        <span class="lab-card-tag">${s.level}</span>
+      </div>
+      <div class="lab-card-body">
+        <div class="lab-card-cat">${s.category}</div>
+        <h4 class="lab-card-title">${s.name}</h4>
+        <p class="lab-card-desc">${s.desc}</p>
+        <div class="lab-card-foot"><span>${s.duration}</span><span class="lab-card-open">Buka Lab ${arrow}</span></div>
+      </div>
+    </button>`;
+
+  // Render per spesialisasi (SIM_GROUPS) — tiap grup punya nomor & warna.
   grid.innerHTML = SIM_GROUPS.map(g => {
     const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);
     if (!sims.length) return '';
-    const ready = sims.filter(s => s.working).length;
     return `
-      <div class="sim-group">
-        <div class="sim-group-head">
-          <h3 class="sim-group-title">${g.label}</h3>
-          <span class="sim-group-count">${ready}/${sims.length} aktif</span>
+      <div class="lab-spec">
+        <div class="lab-spec-head">
+          <span class="lab-spec-num" style="background:${g.grad}">${g.num}</span>
+          <div>
+            <h3 class="lab-spec-title">${g.label}</h3>
+            <p class="lab-spec-sub">${g.desc}</p>
+          </div>
+          <span class="lab-spec-count">${sims.length} lab</span>
         </div>
-        <p class="sim-group-desc">${g.desc}</p>
-        <div class="sim-group-grid">${sims.map(cardHTML).join('')}</div>
+        <div class="lab-cardgrid">${sims.map(s => cardHTML(s, g.grad)).join('')}</div>
       </div>`;
   }).join('');
 }
