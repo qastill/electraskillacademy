@@ -15247,7 +15247,14 @@ const SIMULATORS = [
   { id: 'bess-crate', jalur: 'S15', category: 'BESS · Sel', name: 'C-Rate & Thermal Limit', desc: 'C-rate isi/lepas, waktu isi, rugi panas & kenaikan suhu vs batas kimia sel (LFP/NMC/LTO) & pendinginan.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
   { id: 'bess-degrade', jalur: 'S15', category: 'BESS · Umur', name: 'Battery Degradation & Cycle Life', desc: 'Kurva degradasi SoH dari siklus & kalender; efek DoD pada umur, tahun ke End-of-Life (80%), throughput.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
   { id: 'bess-arbitrage', jalur: 'S15', category: 'BESS · Pendapatan', name: 'Energy Arbitrage', desc: 'Beli energi murah, jual mahal: pendapatan arbitrase harian/tahunan dengan efisiensi round-trip & spread tarif.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
-  { id: 'bess-pack', jalur: 'S15', category: 'BESS · Konfigurasi', name: 'Battery Pack Series-Parallel', desc: 'Susun sel sSpP: tegangan & kapasitas pack dari konfigurasi seri-paralel untuk capai target sistem.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true }
+  { id: 'bess-pack', jalur: 'S15', category: 'BESS · Konfigurasi', name: 'Battery Pack Series-Parallel', desc: 'Susun sel sSpP: tegangan & kapasitas pack dari konfigurasi seri-paralel untuk capai target sistem.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true },
+
+  // ===== S16 · Kontrol & Otomasi =====
+  { id: 'pid-tuning', jalur: 'S16', category: 'Otomasi · Kontrol', name: 'PID Controller Tuning', desc: 'Atur Kp/Ki/Kd & lihat respon step sistem real-time: overshoot, settling time, steady-state error.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
+  { id: 'sensor-scaling', jalur: 'S16', category: 'Otomasi · Instrumentasi', name: 'Sensor Scaling (4–20 mA)', desc: 'Konversi arus 4–20 mA ke nilai proses & raw ADC PLC; deteksi sinyal putus/over-range.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.data, working: true },
+  { id: 'plc-scan', jalur: 'S16', category: 'Otomasi · PLC', name: 'PLC Scan Time & Response', desc: 'Waktu scan PLC (baca I/O + eksekusi + tulis) & worst-case response vs dinamika proses.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.mcb, working: true },
+  { id: 'valve-cv', jalur: 'S16', category: 'Otomasi · Aktuator', name: 'Control Valve Sizing (Cv)', desc: 'Cv dibutuhkan dari laju alir & ΔP; cek bukaan katup ideal (20–80%) untuk kontrol presisi.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.pf, working: true },
+  { id: 'encoder-motion', jalur: 'S16', category: 'Otomasi · Motion', name: 'Encoder & Motion Resolution', desc: 'Resolusi posisi servo/stepper dari PPR & decoding; frekuensi pulsa pada kecepatan target.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.motor, working: true }
 ];
 
 // ================================================
@@ -19626,6 +19633,184 @@ const SIM_BUILDERS = {
       const cw=Math.min(20,300/cols), ch=Math.min(20,170/rows), x0=200-cols*cw/2, y0=50; let o='';
       for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){ o+='<rect x="'+(x0+c*cw).toFixed(1)+'" y="'+(y0+r*ch).toFixed(1)+'" width="'+(cw-2).toFixed(1)+'" height="'+(ch-2).toFixed(1)+'" rx="2" fill="#5b8def" opacity="0.7"/>'; }
       if(S>16||P>8) o+='<text x="200" y="'+(y0+rows*ch+14)+'" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6b6d7a">(tampilan disederhanakan)</text>';
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S16: PID Tuning ============
+  'pid-tuning': {
+    html: () => _labShell({
+      eyebrow: 'Otomasi · Kontrol', title: 'PID Controller', italic: 'Tuning',
+      desc: 'Atur Kp, Ki, Kd dan lihat respon sistem orde-2 terhadap step setpoint. Cari tuning yang cepat, stabil, & tanpa overshoot berlebih (kurva respon real-time).',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Output</text>
+        <line x1="52" y1="44" x2="52" y2="215" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="215" x2="378" y2="215" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="90" x2="378" y2="90" stroke="#3a5fb0" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="374" y="86" text-anchor="end" font-family="Georgia" font-size="9" fill="#3a5fb0">setpoint</text>
+        <polyline id="pid-resp" fill="none" stroke="#15803d" stroke-width="2.5" points=""/>
+        <text x="214" y="262" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="pid-info">—</text>`,
+      controls: _labSld('pid-kp','Kp (proporsional)',0,10,2,0.1)
+        + _labSld('pid-ki','Ki (integral)',0,5,0.5,0.05)
+        + _labSld('pid-kd','Kd (derivatif)',0,3,0.3,0.05)
+        + _labSel('pid-plant','Plant (sistem)','<option value="slow" selected>Lambat (mis. suhu)</option><option value="fast">Cepat (mis. motor)</option>'),
+      outputs: _labOut('pid-os','Overshoot','%') + _labOut('pid-ts','Settling Time','s') + _labOut('pid-ess','Steady Error','%'),
+      formula: `u = Kp·e + Ki·∫e + Kd·de/dt · plant orde-2 disimulasikan diskret<br>Tuning baik: overshoot < 20%, settling cepat, error steady ≈ 0 (Ki menghapus offset).`
+    }),
+    init: () => _labBind(['pid-kp','pid-ki','pid-kd','pid-plant'], () => {
+      const Kp=_labV('pid-kp'), Ki=_labV('pid-ki'), Kd=_labV('pid-kd'), fast=_labRaw('pid-plant')==='fast';
+      _labSetv('pid-kp',Kp.toFixed(1)); _labSetv('pid-ki',Ki.toFixed(2)); _labSetv('pid-kd',Kd.toFixed(2));
+      // discrete 2nd-order plant: tau, simulate
+      const dt=0.1, T=30, N=Math.round(T/dt), SP=1;
+      const wn=fast?2.0:0.6, zeta=0.25; // underdamped plant
+      let y=0, dy=0, integ=0, prevE=0; const ys=[]; let peak=0;
+      for(let i=0;i<N;i++){ const e=SP-y; integ+=e*dt; const der=(e-prevE)/dt; prevE=e;
+        const u=Kp*e+Ki*integ+Kd*der;
+        // plant: ddy = wn^2*(u - y) - 2*zeta*wn*dy
+        const ddy=wn*wn*(u-y)-2*zeta*wn*dy; dy+=ddy*dt; y+=dy*dt;
+        ys.push(y); peak=Math.max(peak,y);
+      }
+      const overshoot=Math.max(0,(peak-SP)/SP*100);
+      const finalErr=Math.abs(SP-ys[N-1])/SP*100;
+      // settling time: last time outside ±5%
+      let ts=T; for(let i=N-1;i>=0;i--){ if(Math.abs(ys[i]-SP)>0.05){ ts=(i+1)*dt; break; } }
+      _labSet('pid-os',overshoot.toFixed(0)); _labSet('pid-ts',ts.toFixed(1)); _labSet('pid-ess',finalErr.toFixed(1));
+      const stable=peak<3 && finalErr<10, col=stable?(overshoot<20?_GREEN:_GOLD):_RED;
+      _labSet('pid-info', !stable?'✗ Tidak stabil / berosilasi — kurangi Kp/Ki':(overshoot<20?'✓ Respon baik — cepat & stabil':'⚠ Overshoot tinggi — tambah Kd / kurangi Kp')); _labAttr('pid-info','fill',col);
+      const X=i=>52+i/N*326;
+      // mapping: setpoint(1) -> y=90, 0 -> 215
+      const Ymap=v=>215-(Math.max(-0.3,Math.min(v,2.2))/1)* (215-90);
+      let pts=''; for(let i=0;i<N;i+=2) pts+=X(i).toFixed(1)+','+Ymap(ys[i]).toFixed(1)+' ';
+      _labAttr('pid-resp','points',pts.trim()); _labAttr('pid-resp','stroke',col);
+    })
+  },
+
+  // ============ S16: Sensor Scaling (4-20mA) ============
+  'sensor-scaling': {
+    html: () => _labShell({
+      eyebrow: 'Otomasi · Instrumentasi', title: 'Sensor Scaling', italic: '(4–20 mA)',
+      desc: 'Transmitter industri kirim 4–20 mA mewakili rentang ukur. Hitung nilai proses dari arus (atau sebaliknya), nilai raw ADC PLC, & deteksi sinyal putus (<4 mA).',
+      svg: `<line x1="60" y1="150" x2="340" y2="150" stroke="#1a1d2e" stroke-width="2"/>
+        <line x1="60" y1="145" x2="60" y2="155" stroke="#1a1d2e" stroke-width="2"/><text x="60" y="172" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">4mA</text>
+        <line x1="340" y1="145" x2="340" y2="155" stroke="#1a1d2e" stroke-width="2"/><text x="340" y="172" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">20mA</text>
+        <circle id="ss-dot" cx="60" cy="150" r="8" fill="#6a6f7e" class="lab-glow"/>
+        <text x="200" y="110" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" id="ss-pv">—</text>
+        <text x="200" y="200" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="ss-raw">—</text>
+        <text x="200" y="234" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="ss-status">—</text>`,
+      controls: _labSld('ss-ma','Arus sinyal (mA)',3,21,12,0.1)
+        + _labSld('ss-lo','Nilai proses @4mA',0,100,0,1)
+        + _labSld('ss-hi','Nilai proses @20mA',10,1000,100,5)
+        + _labSel('ss-unit','Satuan','<option value="°C">Suhu (°C)</option><option value="bar" selected>Tekanan (bar)</option><option value="%">Level (%)</option><option value="m³/h">Flow (m³/h)</option>'),
+      outputs: _labOut('ss-val','Nilai Proses','') + _labOut('ss-pct','% Rentang','%') + _labOut('ss-adc','Raw ADC (15-bit)',''),
+      formula: `PV = lo + (mA−4)/16 × (hi−lo) · raw ADC = (mA/20)×32767 (skala PLC)<br>mA < 3.6 = sinyal putus/fault (deteksi kabel terputus). 4mA=0%, 20mA=100%.`
+    }),
+    init: () => _labBind(['ss-ma','ss-lo','ss-hi','ss-unit'], () => {
+      const ma=_labV('ss-ma'), lo=_labV('ss-lo'), hi=Math.max(_labV('ss-hi'),lo+1), unit=_labRaw('ss-unit');
+      _labSetv('ss-ma',ma.toFixed(1)+' mA'); _labSetv('ss-lo',lo.toFixed(0)); _labSetv('ss-hi',hi.toFixed(0));
+      const pct=(ma-4)/16*100, pv=lo+(ma-4)/16*(hi-lo), adc=Math.round(ma/20*32767);
+      const fault=ma<3.6, over=ma>20.5;
+      _labSet('ss-val',pv.toFixed(1)); _labSet('ss-pct',pct.toFixed(1)); _labSet('ss-adc',adc.toLocaleString('id-ID'));
+      _labSet('ss-pv',pv.toFixed(1)+' '+unit); _labSet('ss-raw','Raw ADC '+adc.toLocaleString('id-ID')+' · '+pct.toFixed(0)+'% rentang');
+      const col=fault?_RED:(over?_GOLD:_GREEN);
+      _labSet('ss-status', fault?'✗ SINYAL PUTUS (<3.6 mA) — cek kabel':(over?'⚠ Over-range (>20 mA)':'✓ Sinyal normal')); _labAttr('ss-status','fill',col); _labAttr('ss-pv','fill',col);
+      const x=60+Math.max(0,Math.min((ma-4)/16,1))*280; _labAttr('ss-dot','cx',x); _labAttr('ss-dot','fill',col);
+    })
+  },
+
+  // ============ S16: PLC Scan Time ============
+  'plc-scan': {
+    html: () => _labShell({
+      eyebrow: 'Otomasi · PLC', title: 'PLC Scan Time', italic: '& I/O Response',
+      desc: 'Waktu scan PLC = baca input + eksekusi program + tulis output. Scan harus jauh lebih cepat dari dinamika proses & memenuhi worst-case response untuk sinyal kritis.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Siklus scan PLC (ms)</text>
+        <g id="pc-cycle"></g>
+        <text x="200" y="180" text-anchor="middle" font-family="Georgia" font-size="22" font-weight="700" id="pc-total">—</text>
+        <text x="200" y="240" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" id="pc-info">—</text>`,
+      controls: _labSld('pc-rungs','Jumlah rung/instruksi (ribu)',1,50,8,1)
+        + _labSel('pc-cpu','Kecepatan CPU (μs/instruksi)','<option value="0.1" selected>Cepat (0.1 μs)</option><option value="0.3">Sedang (0.3 μs)</option><option value="1">Lambat (1 μs)</option>')
+        + _labSld('pc-io','Jumlah modul I/O',1,64,16,1)
+        + _labSld('pc-proc','Konstanta waktu proses (ms)',10,2000,200,10),
+      outputs: _labOut('pc-scan','Waktu Scan','ms') + _labOut('pc-resp','Worst-case Respon','ms') + _labOut('pc-ratio','Scan vs Proses',''),
+      formula: `Scan = (instruksi × μs/inst) + (I/O × 0.05 ms overhead) · respon worst-case ≈ 2× scan<br>Aman bila scan ≪ konstanta waktu proses (rasio < 10% ideal).`
+    }),
+    init: () => _labBind(['pc-rungs','pc-cpu','pc-io','pc-proc'], () => {
+      const rungs=_labV('pc-rungs')*1000, cpu=_labV('pc-cpu'), io=_labV('pc-io'), proc=_labV('pc-proc');
+      _labSetv('pc-rungs',(_labV('pc-rungs')).toFixed(0)+' rb'); _labSetv('pc-io',io.toFixed(0)); _labSetv('pc-proc',proc.toFixed(0)+' ms');
+      const logicMs=rungs*cpu/1000, ioMs=io*0.05, scan=logicMs+ioMs, resp=2*scan, ratio=scan/proc*100;
+      _labSet('pc-scan',scan.toFixed(2)); _labSet('pc-resp',resp.toFixed(2)); _labSet('pc-ratio',ratio.toFixed(1)+'%');
+      _labSet('pc-total',scan.toFixed(1)+' ms');
+      const col=ratio<10?_GREEN:(ratio<30?_GOLD:_RED);
+      _labSet('pc-info', ratio<10?('✓ Scan '+scan.toFixed(1)+'ms ≪ proses — kontrol mulus'):(ratio<30?'⚠ Scan agak lambat untuk proses ini':'✗ Scan terlalu lambat — proses bisa lepas kontrol')); _labAttr('pc-info','fill',col); _labAttr('pc-total','fill',col);
+      // cycle segments donut-ish bar
+      const g=document.getElementById('pc-cycle'); const segs=[['Baca I/O',ioMs/2,'#3a5fb0'],['Eksekusi',logicMs,'#c9a96e'],['Tulis I/O',ioMs/2,'#15803d']];
+      const total=ioMs+logicMs, W=280, x0=60, y=60, h=30; let x=x0, o='';
+      segs.forEach(s=>{ const w=total>0?s[1]/total*W:0; o+='<rect x="'+x.toFixed(1)+'" y="'+y+'" width="'+w.toFixed(1)+'" height="'+h+'" fill="'+s[2]+'"/>'; x+=w; });
+      segs.forEach((s,i)=>{ const lx=60+i*95; o+='<rect x="'+lx+'" y="105" width="11" height="11" fill="'+s[2]+'"/><text x="'+(lx+15)+'" y="115" font-family="Georgia" font-size="9" fill="#1a1d2e">'+s[0]+'</text>'; });
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S16: Control Valve Sizing (Cv) ============
+  'valve-cv': {
+    html: () => _labShell({
+      eyebrow: 'Otomasi · Aktuator', title: 'Control Valve', italic: 'Sizing (Cv)',
+      desc: 'Koefisien aliran katup Cv menentukan kapasitas. Hitung Cv yang dibutuhkan dari laju alir & drop tekanan, lalu cek apakah katup terpilih beroperasi di bukaan ideal (20–80%).',
+      svg: `<path d="M80 150 L150 150 L150 120 L250 120 L250 150 L320 150" fill="none" stroke="#9a7f4f" stroke-width="6"/>
+        <polygon points="200,108 188,132 212,132" fill="#6a6f7e" id="vc-plug"/>
+        <rect x="190" y="80" width="20" height="30" fill="#1a1d2e"/>
+        <text x="200" y="180" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" id="vc-open">—</text>
+        <text x="200" y="210" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="vc-cv">—</text>
+        <text x="200" y="244" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="vc-verdict">—</text>`,
+      controls: _labSld('vc-flow','Laju alir (m³/jam)',1,500,50,1)
+        + _labSld('vc-dp','Drop tekanan ΔP (bar)',0.1,10,2,0.1)
+        + _labSld('vc-sg','Specific gravity fluida',0.6,1.5,1,0.01)
+        + _labSld('vc-cvmax','Cv maksimum katup terpilih',5,400,60,1),
+      outputs: _labOut('vc-req','Cv Dibutuhkan','') + _labOut('vc-pct','Bukaan Katup','%') + _labOut('vc-fit','Pemilihan',''),
+      formula: `Cv = Q × √(SG/ΔP) (Q m³/h, ΔP bar) · bukaan = Cv_butuh/Cv_maks × 100%<br>Ideal beroperasi 20–80% bukaan untuk kontrol presisi & umur katup.`
+    }),
+    init: () => _labBind(['vc-flow','vc-dp','vc-sg','vc-cvmax'], () => {
+      const Q=_labV('vc-flow'), dp=_labV('vc-dp'), sg=_labV('vc-sg'), cvmax=_labV('vc-cvmax');
+      _labSetv('vc-flow',Q.toFixed(0)+' m³/h'); _labSetv('vc-dp',dp.toFixed(1)+' bar'); _labSetv('vc-sg',sg.toFixed(2)); _labSetv('vc-cvmax',cvmax.toFixed(0));
+      const cvReq=Q*Math.sqrt(sg/dp)/0.865, open=cvReq/cvmax*100; // 0.865 konversi m3/h
+      _labSet('vc-req',cvReq.toFixed(1)); _labSet('vc-pct',open.toFixed(0));
+      const ideal=open>=20&&open<=80, col=open>100?_RED:(ideal?_GREEN:_GOLD);
+      _labSet('vc-fit', open>100?'Terlalu kecil':(ideal?'Ideal':(open<20?'Oversized':'Mendekati maks')));
+      _labSet('vc-open',open>100?'>100%':open.toFixed(0)+'%'); _labAttr('vc-open','fill',col);
+      _labSet('vc-cv','Cv butuh '+cvReq.toFixed(1)+' / maks '+cvmax.toFixed(0));
+      _labSet('vc-verdict', open>100?'✗ Katup terlalu kecil — perbesar Cv':(ideal?'✓ Bukaan ideal (20–80%) — kontrol presisi':(open<20?'⚠ Oversized — kontrol kasar di bukaan kecil':'⚠ Hampir penuh — sedikit margin'))); _labAttr('vc-verdict','fill',col);
+      const py=80+Math.max(0,Math.min(open,100))/100*22; _labAttr('vc-plug','points','200,'+(py).toFixed(0)+' 188,'+(py+24).toFixed(0)+' 212,'+(py+24).toFixed(0));
+    })
+  },
+
+  // ============ S16: Encoder & Motion Resolution ============
+  'encoder-motion': {
+    html: () => _labShell({
+      eyebrow: 'Otomasi · Motion', title: 'Encoder', italic: '& Motion Resolution',
+      desc: 'Encoder menentukan presisi posisi servo/stepper. Hitung resolusi (mm/pulsa atau °/step), pulsa yang dibutuhkan untuk gerak tertentu, & frekuensi pulsa pada kecepatan target.',
+      svg: `<circle cx="200" cy="120" r="60" fill="none" stroke="#6a6f7e" stroke-width="3"/>
+        <g id="em-ticks"></g>
+        <line id="em-arm" x1="200" y1="120" x2="200" y2="65" stroke="#c9a96e" stroke-width="4" class="lab-flow"/>
+        <circle cx="200" cy="120" r="8" fill="#1a1d2e"/>
+        <text x="200" y="210" text-anchor="middle" font-family="Georgia" font-size="18" font-weight="700" id="em-res">—</text>
+        <text x="200" y="244" text-anchor="middle" font-family="Georgia" font-size="11.5" font-weight="700" id="em-info">—</text>`,
+      controls: _labSld('em-ppr','Encoder PPR (pulsa/putaran)',100,10000,1000,50)
+        + _labSel('em-quad','Decoding','<option value="1">×1</option><option value="4" selected>×4 (quadrature)</option>')
+        + _labSld('em-lead','Lead/pitch mekanik (mm/putaran)',1,50,10,0.5)
+        + _labSld('em-speed','Kecepatan target (mm/s)',1,500,100,1),
+      outputs: _labOut('em-resol','Resolusi','mm/pulsa') + _labOut('em-freq','Frekuensi Pulsa','kHz') + _labOut('em-cpr','Counts/Putaran',''),
+      formula: `CPR = PPR × decoding · resolusi = lead / CPR (mm/pulsa)<br>Frekuensi = (kecepatan / lead) × CPR. Cek frekuensi ≤ batas input PLC/drive.`
+    }),
+    init: () => _labBind(['em-ppr','em-quad','em-lead','em-speed'], () => {
+      const ppr=_labV('em-ppr'), quad=_labV('em-quad'), lead=_labV('em-lead'), speed=_labV('em-speed');
+      _labSetv('em-ppr',ppr.toFixed(0)); _labSetv('em-lead',lead.toFixed(1)+' mm'); _labSetv('em-speed',speed.toFixed(0)+' mm/s');
+      const cpr=ppr*quad, resol=lead/cpr, freq=(speed/lead)*cpr/1000;
+      _labSet('em-resol',resol.toFixed(4)); _labSet('em-freq',freq.toFixed(1)); _labSet('em-cpr',cpr.toLocaleString('id-ID'));
+      _labSet('em-res',(resol*1000).toFixed(1)+' μm/pulsa');
+      const col=freq>500?_RED:(freq>200?_GOLD:_GREEN);
+      _labSet('em-info','Resolusi '+(resol*1000).toFixed(1)+' μm · '+freq.toFixed(0)+' kHz @ '+speed.toFixed(0)+' mm/s'); _labAttr('em-info','fill',col);
+      // draw ticks
+      const g=document.getElementById('em-ticks'); const nt=Math.min(36,Math.max(8,Math.round(cpr/200))); let o='';
+      for(let i=0;i<nt;i++){ const a=i/nt*2*Math.PI; const x1=200+54*Math.cos(a), y1=120+54*Math.sin(a), x2=200+60*Math.cos(a), y2=120+60*Math.sin(a);
+        o+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="#9a7f4f" stroke-width="1.5"/>'; }
       g.innerHTML=o;
     })
   }
