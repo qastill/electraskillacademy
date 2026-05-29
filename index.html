@@ -16673,32 +16673,45 @@ const SIM_BUILDERS = {
   'motor-starting': {
     html: () => _labShell({
       eyebrow: 'Industri · Motor', title: 'Motor Starting', italic: 'DOL vs Star-Delta',
-      desc: 'Arus start motor induksi 3 fasa. Star-Delta menurunkan arus & torsi start menjadi 1/3 dari DOL.',
-      svg: `<line x1="40" y1="250" x2="370" y2="250" stroke="#1a1d2e" stroke-width="1.5"/>
-        <rect x="90" y="250" width="60" height="0" fill="#c0392b" id="ms-bar-dol"/>
-        <rect x="240" y="250" width="60" height="0" fill="#15803d" id="ms-bar-yd"/>
-        <text x="120" y="270" text-anchor="middle" font-family="Georgia" font-size="12" fill="#1a1d2e" font-weight="600">DOL</text>
-        <text x="270" y="270" text-anchor="middle" font-family="Georgia" font-size="12" fill="#1a1d2e" font-weight="600">Star-Delta</text>
-        <text x="120" y="240" text-anchor="middle" font-family="Georgia" font-size="12" fill="#c0392b" font-weight="700" id="ms-dol-top">—</text>
-        <text x="270" y="240" text-anchor="middle" font-family="Georgia" font-size="12" fill="#15803d" font-weight="700" id="ms-yd-top">—</text>
-        <text x="205" y="30" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a">Arus Start (A)</text>`,
-      controls: _labSld('ms-p', 'Daya motor (kW)', 1, 200, 30, 1)
+      desc: 'Arus & torsi start motor induksi 3 fasa. Star-Delta menurunkan arus DAN torsi start jadi 1/3 — cek apakah cukup untuk bebanmu.',
+      svg: `<text x="205" y="26" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a">Arus Start (× FLC)</text>
+        <circle cx="350" cy="60" r="22" fill="none" stroke="#9a7f4f" stroke-width="3" stroke-dasharray="8 6" class="lab-flow"/>
+        <text x="350" y="65" text-anchor="middle" font-family="Georgia" font-size="14" fill="#1a1d2e" font-weight="700">M</text>
+        <line x1="55" y1="212" x2="320" y2="212" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="95" y="212" width="56" height="0" rx="2" fill="#c0392b" class="lab-glow" id="ms-bar-dol"/>
+        <rect x="220" y="212" width="56" height="0" rx="2" fill="#15803d" id="ms-bar-yd"/>
+        <text x="123" y="228" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e" font-weight="600">DOL</text>
+        <text x="248" y="228" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e" font-weight="600">Star-Delta</text>
+        <text x="123" y="204" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#c0392b" font-weight="700" id="ms-dol-top">—</text>
+        <text x="248" y="204" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#15803d" font-weight="700" id="ms-yd-top">—</text>
+        <rect x="40" y="246" width="330" height="44" rx="6" fill="rgba(21,128,61,0.08)" stroke="#15803d" stroke-width="1.5" id="ms-vbox"/>
+        <text x="205" y="263" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Kesesuaian metode start</text>
+        <text x="205" y="281" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="ms-verdict">—</text>`,
+      controls: _labSld('ms-p', 'Daya motor (kW)', 1, 250, 30, 1)
               + _labSel('ms-v', 'Tegangan', '<option value="400" selected>400 V</option><option value="690">690 V</option>')
               + _labSld('ms-pf', 'Power factor', 0.7, 0.95, 0.85, 0.01)
               + _labSld('ms-eff', 'Efisiensi', 0.8, 0.96, 0.9, 0.01)
-              + _labSld('ms-mult', 'Rasio arus start (× FLC)', 4, 8, 6, 0.5),
-      outputs: _labOut('ms-flc', 'Arus Nominal (FLC)', 'A') + _labOut('ms-dol', 'Start DOL', 'A'),
-      formula: `FLC = P/(√3·V·cosφ·η) · I_DOL = mult × FLC · I_Y∆ = I_DOL / 3<br>Start Star-Delta = <span id="msf-yd">—</span> A (torsi start ≈ 33%)`
+              + _labSld('ms-mult', 'Rasio arus start LRC (× FLC)', 4, 8, 6, 0.5)
+              + _labSel('ms-load', 'Jenis beban', '<option value="low" selected>Pompa sentrifugal / fan (start ringan)</option><option value="med">Konveyor / mixer (sedang)</option><option value="high">Crusher / kompresor (berat)</option>'),
+      outputs: _labOut('ms-flc', 'Arus Nominal (FLC)', 'A') + _labOut('ms-dol', 'Start DOL', 'A') + _labOut('ms-yd', 'Start Star-Delta', 'A') + _labOut('ms-tq', 'Torsi Start Y-∆', '%'),
+      formula: `FLC = P/(√3·V·cosφ·η) · I_DOL = LRC × FLC · I_Y∆ = I_DOL/3 · Torsi_Y∆ = 33% Torsi_DOL<br>FLC = <span id="msf-flc">—</span> A · Hemat arus inrush Y-∆ = <span id="msf-cut">—</span> A`
     }),
-    init: () => _labBind(['ms-p','ms-v','ms-pf','ms-eff','ms-mult'], () => {
+    init: () => _labBind(['ms-p','ms-v','ms-pf','ms-eff','ms-mult','ms-load'], () => {
       const P=_labV('ms-p'), V=_labV('ms-v'), pf=_labV('ms-pf'), eff=_labV('ms-eff'), m=_labV('ms-mult');
+      const load=_labRaw('ms-load');
       const flc=P*1000/(Math.sqrt(3)*V*pf*eff), dol=m*flc, yd=dol/3;
       _labSetv('ms-p',P.toFixed(0)+' kW'); _labSetv('ms-pf',pf.toFixed(2)); _labSetv('ms-eff',eff.toFixed(2)); _labSetv('ms-mult',m.toFixed(1)+'×');
-      _labSet('ms-flc',flc.toFixed(1)); _labSet('ms-dol',dol.toFixed(0)); _labSet('msf-yd',yd.toFixed(0));
-      const maxH=200, h1=Math.min(dol/ (m*flc) ,1)*maxH; // dol fills full
-      _labAttr('ms-bar-dol','height',maxH); _labAttr('ms-bar-dol','y',250-maxH);
-      _labAttr('ms-bar-yd','height',maxH/3); _labAttr('ms-bar-yd','y',250-maxH/3);
-      _labSet('ms-dol-top',dol.toFixed(0)+' A'); _labSet('ms-yd-top',yd.toFixed(0)+' A');
+      _labSet('ms-flc',flc.toFixed(1)); _labSet('ms-dol',dol.toFixed(0)); _labSet('ms-yd',yd.toFixed(0)); _labSet('ms-tq','33');
+      _labSet('msf-flc',flc.toFixed(1)); _labSet('msf-cut',(dol-yd).toFixed(0));
+      const maxH=150;
+      _labAttr('ms-bar-dol','height',maxH); _labAttr('ms-bar-dol','y',212-maxH);
+      _labAttr('ms-bar-yd','height',maxH/3); _labAttr('ms-bar-yd','y',212-maxH/3);
+      _labSet('ms-dol-top',m.toFixed(1)+'×'); _labSet('ms-yd-top',(m/3).toFixed(1)+'×');
+      const verd = { low:['✓ Star-Delta COCOK (torsi start ringan)', '#15803d'],
+                     med:['⚠ Borderline — pastikan torsi start cukup', '#9a7f4f'],
+                     high:['✗ Torsi Y-∆ tak cukup — pakai DOL / Soft Starter / VFD', '#c0392b'] }[load];
+      _labSet('ms-verdict',verd[0]); _labAttr('ms-verdict','fill',verd[1]);
+      _labAttr('ms-vbox','stroke',verd[1]); _labAttr('ms-vbox','fill', verd[1]==='#c0392b'?'rgba(192,57,43,0.08)':(verd[1]==='#9a7f4f'?'rgba(154,127,79,0.1)':'rgba(21,128,61,0.08)'));
     })
   },
 
@@ -16706,32 +16719,44 @@ const SIM_BUILDERS = {
   'vfd-saving': {
     html: () => _labShell({
       eyebrow: 'Industri · Efisiensi', title: 'VFD', italic: 'Energy Saving',
-      desc: 'Affinity law: daya pompa/fan ∝ kecepatan³. VFD jauh lebih hemat dari throttling/damper saat beban turun.',
-      svg: `<line x1="40" y1="250" x2="370" y2="250" stroke="#1a1d2e" stroke-width="1.5"/>
-        <rect x="90" y="250" width="60" height="0" fill="#c0392b" id="vf-bar-thr"/>
-        <rect x="240" y="250" width="60" height="0" fill="#15803d" id="vf-bar-vfd"/>
-        <text x="120" y="270" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Throttle/Damper</text>
-        <text x="270" y="270" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">VFD</text>
-        <text x="120" y="240" text-anchor="middle" font-family="Georgia" font-size="12" fill="#c0392b" font-weight="700" id="vf-thr-top">—</text>
-        <text x="270" y="240" text-anchor="middle" font-family="Georgia" font-size="12" fill="#15803d" font-weight="700" id="vf-vfd-top">—</text>
-        <text x="205" y="30" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a">Daya Serap (kW)</text>`,
+      desc: 'Affinity law: daya pompa/fan ∝ kecepatan³. Grafik membandingkan kurva VFD vs throttling — plus penghematan, CO₂, & payback.',
+      svg: `<text x="30" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">Daya (%)</text>
+        <text x="360" y="262" text-anchor="end" font-family="Georgia" font-size="10" fill="#6b6d7a">Kecepatan (%)</text>
+        <line x1="50" y1="46" x2="50" y2="240" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="50" y1="240" x2="372" y2="240" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="vf-curve-thr" fill="none" stroke="#c0392b" stroke-width="2.5" points=""/>
+        <polyline id="vf-curve-vfd" fill="none" stroke="#15803d" stroke-width="2.5" points=""/>
+        <line id="vf-vline" x1="0" y1="46" x2="0" y2="240" stroke="#1a1d2e" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+        <circle id="vf-mk-thr" r="5" fill="#c0392b"/>
+        <circle id="vf-mk-vfd" r="5" fill="#15803d" class="lab-glow"/>
+        <text x="300" y="60" font-family="Georgia" font-size="10" fill="#c0392b" font-weight="700">Throttle</text>
+        <text x="300" y="76" font-family="Georgia" font-size="10" fill="#15803d" font-weight="700">VFD</text>
+        <text x="205" y="284" text-anchor="middle" font-family="Georgia" font-size="11.5" fill="#15803d" font-weight="700" id="vf-co2">—</text>`,
       controls: _labSld('vf-p', 'Daya rated motor (kW)', 1, 500, 75, 1)
               + _labSld('vf-spd', 'Kecepatan operasi (%)', 20, 100, 70, 5)
               + _labSld('vf-hr', 'Jam operasi / hari', 1, 24, 16, 1)
-              + _labSld('vf-tar', 'Tarif (Rp/kWh)', 800, 2500, 1500, 50),
-      outputs: _labOut('vf-pvfd', 'Daya dgn VFD', 'kW') + _labOut('vf-save', 'Hemat Daya', 'kW'),
-      formula: `P_VFD = P × (n%)³ · P_throttle ≈ P × (0.4 + 0.6·n%)<br>Penghematan ≈ <span id="vff-kwh">—</span> kWh/th ≈ <span id="vff-rp">—</span> Rp/th`
+              + _labSld('vf-tar', 'Tarif (Rp/kWh)', 800, 2500, 1500, 50)
+              + _labSld('vf-inv', 'Investasi VFD (juta Rp)', 0, 200, 25, 1),
+      outputs: _labOut('vf-pvfd', 'Daya dgn VFD', 'kW') + _labOut('vf-save', 'Hemat Daya', 'kW') + _labOut('vf-rp', 'Hemat Biaya', 'Rp/th') + _labOut('vf-pb', 'Payback', 'th'),
+      formula: `P_VFD = P×(n%)³ · P_throttle ≈ P×(0.4+0.6·n%) · CO₂ pakai 0,85 kg/kWh<br>Hemat ≈ <span id="vff-kwh">—</span> kWh/th · CO₂ turun ≈ <span id="vff-co2">—</span> ton/th`
     }),
-    init: () => _labBind(['vf-p','vf-spd','vf-hr','vf-tar'], () => {
-      const P=_labV('vf-p'), n=_labV('vf-spd')/100, hr=_labV('vf-hr'), tar=_labV('vf-tar');
+    init: () => _labBind(['vf-p','vf-spd','vf-hr','vf-tar','vf-inv'], () => {
+      const P=_labV('vf-p'), n=_labV('vf-spd')/100, hr=_labV('vf-hr'), tar=_labV('vf-tar'), inv=_labV('vf-inv')*1e6;
       const pv=P*Math.pow(n,3), pt=P*(0.4+0.6*n), save=Math.max(0,pt-pv);
-      const kwhYr=save*hr*365, rpYr=kwhYr*tar;
-      _labSetv('vf-p',P.toFixed(0)+' kW'); _labSetv('vf-spd',(_labV('vf-spd')).toFixed(0)+' %'); _labSetv('vf-hr',hr.toFixed(0)+' jam'); _labSetv('vf-tar','Rp '+tar.toFixed(0));
-      _labSet('vf-pvfd',pv.toFixed(1)); _labSet('vf-save',save.toFixed(1));
-      _labSet('vff-kwh',Math.round(kwhYr).toLocaleString('id-ID')); _labSet('vff-rp','Rp '+fmtRp(rpYr));
-      const maxH=200; _labAttr('vf-bar-thr','height',Math.min(pt/P,1)*maxH); _labAttr('vf-bar-thr','y',250-Math.min(pt/P,1)*maxH);
-      _labAttr('vf-bar-vfd','height',Math.min(pv/P,1)*maxH); _labAttr('vf-bar-vfd','y',250-Math.min(pv/P,1)*maxH);
-      _labSet('vf-thr-top',pt.toFixed(0)); _labSet('vf-vfd-top',pv.toFixed(0));
+      const kwhYr=save*hr*365, rpYr=kwhYr*tar, co2=kwhYr*0.85/1000; // ton/th
+      const pb = rpYr>0 ? inv/rpYr : Infinity;
+      _labSetv('vf-p',P.toFixed(0)+' kW'); _labSetv('vf-spd',_labV('vf-spd').toFixed(0)+' %'); _labSetv('vf-hr',hr.toFixed(0)+' jam'); _labSetv('vf-tar','Rp '+tar.toFixed(0)); _labSetv('vf-inv','Rp '+_labV('vf-inv').toFixed(0)+' jt');
+      _labSet('vf-pvfd',pv.toFixed(1)); _labSet('vf-save',save.toFixed(1)); _labSet('vf-rp','Rp '+fmtRp(rpYr)); _labSet('vf-pb', isFinite(pb)?pb.toFixed(1):'—');
+      _labSet('vff-kwh',Math.round(kwhYr).toLocaleString('id-ID')); _labSet('vff-co2',co2.toFixed(1));
+      _labSet('vf-co2','Pengurangan CO₂ ≈ '+co2.toFixed(1)+' ton/tahun');
+      // chart mapping: x 50..372 (0..100% speed), y 240..46 (0..P)
+      const X=s=>50+322*s, Y=p=>240-(p/P)*194;
+      let thr='', vfd='';
+      for(let i=0;i<=20;i++){ const s=i/20; thr+=X(s).toFixed(1)+','+Y(P*(0.4+0.6*s)).toFixed(1)+' '; vfd+=X(s).toFixed(1)+','+Y(P*Math.pow(s,3)).toFixed(1)+' '; }
+      _labAttr('vf-curve-thr','points',thr.trim()); _labAttr('vf-curve-vfd','points',vfd.trim());
+      const mx=X(n); _labAttr('vf-vline','x1',mx); _labAttr('vf-vline','x2',mx);
+      _labAttr('vf-mk-thr','cx',mx); _labAttr('vf-mk-thr','cy',Y(pt));
+      _labAttr('vf-mk-vfd','cx',mx); _labAttr('vf-mk-vfd','cy',Y(pv));
     })
   },
 
