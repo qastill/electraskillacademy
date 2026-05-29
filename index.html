@@ -15212,7 +15212,14 @@ const SIMULATORS = [
   { id: 'pv-dcac', jalur: 'S10', category: 'Solar · Inverter', name: 'DC/AC Ratio & Clipping', desc: 'Oversizing array vs inverter: cari rasio optimal & lihat rugi clipping puncak pada profil produksi harian.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
   { id: 'pv-yield', jalur: 'S10', category: 'Solar · Energi', name: 'Solar Yield & Performance Ratio', desc: 'Energi tahunan E=kWp×PSH×365×PR; dampak rugi suhu/soiling/kabel pada PR & yield spesifik (waterfall).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
   { id: 'pv-tilt', jalur: 'S10', category: 'Solar · Tata Letak', name: 'Tilt & Inter-row Shading', desc: 'Sudut tilt optimal & jarak antar-baris agar tak saling membayangi saat matahari rendah; GCR & visual baris.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
-  { id: 'pv-lcoe', jalur: 'S10', category: 'Solar · Ekonomi', name: 'LCOE Solar', desc: 'Levelized Cost of Energy PLTS vs tarif listrik (grid parity) dari CAPEX, OPEX, yield, umur & degradasi.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true }
+  { id: 'pv-lcoe', jalur: 'S10', category: 'Solar · Ekonomi', name: 'LCOE Solar', desc: 'Levelized Cost of Energy PLTS vs tarif listrik (grid parity) dari CAPEX, OPEX, yield, umur & degradasi.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+
+  // ===== S11 · Sustainability & Carbon Engineer =====
+  { id: 'carbon-footprint', jalur: 'S11', category: 'Carbon · GHG', name: 'Carbon Footprint Scope 1-2-3', desc: 'Hitung jejak karbon organisasi (Scope 1/2/3) per GHG Protocol; total tCO₂e & komposisi tiap scope (donut).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 're100-target', jalur: 'S11', category: 'Carbon · Energi Bersih', name: 'RE100 Renewable Target', desc: 'Kapasitas PLTS + REC untuk mencapai target % energi terbarukan; gap & pemenuhan vs target (RE100).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
+  { id: 'carbon-abatement', jalur: 'S11', category: 'Carbon · Mitigasi', name: 'Carbon Abatement Cost', desc: 'Biaya per ton CO₂ dihindari dari langkah mitigasi (LED/PLTS/VFD/chiller); negatif = win-win hemat uang & karbon.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'netzero-path', jalur: 'S11', category: 'Carbon · Strategi', name: 'Net Zero Pathway', desc: 'Lintasan dekarbonisasi menuju net zero: emisi turun bertahap + offset residual; kurva & tahun net zero.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
+  { id: 'carbon-intensity', jalur: 'S11', category: 'Carbon · KPI ESG', name: 'Energy & Carbon Intensity', desc: 'KPI ESG: intensitas energi (kWh/unit) & karbon (kgCO₂/unit) vs benchmark industri untuk laporan keberlanjutan.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.data, working: true }
 ];
 
 // ================================================
@@ -18696,6 +18703,192 @@ const SIM_BUILDERS = {
       _labAttr('pl-bar-lcoe','height',lcoe*sc); _labAttr('pl-bar-lcoe','y',base-lcoe*sc); _labAttr('pl-bar-lcoe','fill',col===_RED?_RED:'#e0863a');
       _labAttr('pl-bar-grid','height',tar*sc); _labAttr('pl-bar-grid','y',base-tar*sc);
       _labSet('pl-lcoe-top','Rp'+lcoe.toFixed(0)); _labSet('pl-grid-top','Rp'+tar.toFixed(0));
+    })
+  },
+
+  // ============ S11: Carbon Footprint (GHG Scope 1-2-3) ============
+  'carbon-footprint': {
+    html: () => _labShell({
+      eyebrow: 'Carbon · GHG Accounting', title: 'Carbon Footprint', italic: 'Scope 1-2-3',
+      desc: 'Hitung jejak karbon organisasi: Scope 1 (BBM/gas langsung), Scope 2 (listrik grid), Scope 3 (rantai pasok). Lihat total tCO₂e & komposisi tiap scope.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Emisi per Scope (tCO₂e/th)</text>
+        <g id="cf2-donut"></g>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="cf2-total">—</text>`,
+      controls: _labSld('cf2-fuel','Scope 1: solar/bensin (kL/th)',0,500,60,5)
+        + _labSld('cf2-gas','Scope 1: gas alam (ribu m³/th)',0,300,20,5)
+        + _labSld('cf2-elec','Scope 2: listrik (MWh/th)',0,5000,800,10)
+        + _labSld('cf2-travel','Scope 3: logistik+travel (ribu km/th)',0,2000,300,10),
+      outputs: _labOut('cf2-s1','Scope 1','tCO₂e') + _labOut('cf2-s2','Scope 2','tCO₂e') + _labOut('cf2-s3','Scope 3','tCO₂e'),
+      formula: `Solar 2.68 tCO₂/kL · gas 1.93 t/ribu m³ · listrik 0.85 t/MWh · transport 0.12 t/ribu km<br>Total = Scope 1 + 2 + 3 (GHG Protocol).`
+    }),
+    init: () => _labBind(['cf2-fuel','cf2-gas','cf2-elec','cf2-travel'], () => {
+      const fuel=_labV('cf2-fuel'), gas=_labV('cf2-gas'), elec=_labV('cf2-elec'), tr=_labV('cf2-travel');
+      _labSetv('cf2-fuel',fuel.toFixed(0)+' kL'); _labSetv('cf2-gas',gas.toFixed(0)+' rb m³'); _labSetv('cf2-elec',elec.toFixed(0)+' MWh'); _labSetv('cf2-travel',tr.toFixed(0)+' rb km');
+      const s1=fuel*2.68+gas*1.93, s2=elec*0.85, s3=tr*0.12, tot=s1+s2+s3;
+      _labSet('cf2-s1',s1.toFixed(0)); _labSet('cf2-s2',s2.toFixed(0)); _labSet('cf2-s3',s3.toFixed(0));
+      _labSet('cf2-total','Total '+tot.toFixed(0)+' tCO₂e/tahun');
+      // donut
+      const g=document.getElementById('cf2-donut'); const cx=200,cy=140,r=70,sw=34;
+      const segs=[[s1,'#c0392b','S1'],[s2,'#e0863a','S2'],[s3,'#9a7f4f','S3']]; let a0=-Math.PI/2, o='';
+      const C=2*Math.PI*r;
+      segs.forEach(seg=>{ const frac=tot>0?seg[0]/tot:0; const a1=a0+frac*2*Math.PI;
+        const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0), x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+        const large=frac>0.5?1:0;
+        if(frac>0) o+='<path d="M '+x0.toFixed(1)+' '+y0.toFixed(1)+' A '+r+' '+r+' 0 '+large+' 1 '+x1.toFixed(1)+' '+y1.toFixed(1)+'" fill="none" stroke="'+seg[1]+'" stroke-width="'+sw+'"/>';
+        a0=a1; });
+      o+='<text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-family="Georgia" font-size="15" font-weight="700" fill="#1a1d2e">'+tot.toFixed(0)+'</text>';
+      // legend
+      segs.forEach((seg,i)=>{ const ly=110+i*22; o+='<rect x="300" y="'+(ly-9)+'" width="12" height="12" fill="'+seg[1]+'"/><text x="318" y="'+(ly+1)+'" font-family="Georgia" font-size="10" fill="#1a1d2e">'+seg[2]+' '+seg[0].toFixed(0)+'</text>'; });
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S11: RE100 / Renewable Target ============
+  're100-target': {
+    html: () => _labShell({
+      eyebrow: 'Carbon · Energi Bersih', title: 'RE100', italic: 'Renewable Target',
+      desc: 'Berapa kapasitas PLTS + pembelian REC untuk mencapai target % energi terbarukan (RE100). Hitung gap, kapasitas PLTS dibutuhkan, & sisa yang ditutup REC.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Pemenuhan energi terbarukan (%)</text>
+        <rect x="60" y="80" width="280" height="34" rx="6" fill="#e5e5e5"/>
+        <rect x="60" y="80" width="0" height="34" rx="6" fill="#15803d" id="re-bar-pv"/>
+        <rect x="60" y="80" width="0" height="34" id="re-bar-rec" fill="#3a5fb0" opacity="0.7"/>
+        <line id="re-target" x1="0" y1="72" x2="0" y2="122" stroke="#c0392b" stroke-width="2"/>
+        <text x="200" y="150" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" id="re-pct">—</text>
+        <text x="200" y="172" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">PV (hijau) + REC (biru) vs target (merah)</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="re-verdict">—</text>`,
+      controls: _labSld('re-load','Konsumsi tahunan (MWh)',100,50000,5000,100)
+        + _labSld('re-pv','Kapasitas PLTS (kWp)',0,30000,2000,100)
+        + _labSld('re-psh','PSH (kWh/kWp/th)',1000,1700,1450,10)
+        + _labSld('re-rec','Beli REC (MWh/th)',0,30000,0,100)
+        + _labSld('re-tgt','Target RE (%)',10,100,60,5),
+      outputs: _labOut('re-pvgen','Produksi PLTS','MWh') + _labOut('re-share','RE Tercapai','%') + _labOut('re-gap','Gap ke Target','MWh'),
+      formula: `Produksi PLTS = kWp × PSH/1000 · RE% = (PV + REC)/konsumsi × 100%<br>Gap = (target% × konsumsi) − (PV + REC); tutup dengan tambah PLTS / REC.`
+    }),
+    init: () => _labBind(['re-load','re-pv','re-psh','re-rec','re-tgt'], () => {
+      const load=_labV('re-load'), pv=_labV('re-pv'), psh=_labV('re-psh'), rec=_labV('re-rec'), tgt=_labV('re-tgt');
+      _labSetv('re-load',load.toFixed(0)+' MWh'); _labSetv('re-pv',pv.toFixed(0)+' kWp'); _labSetv('re-psh',psh.toFixed(0)); _labSetv('re-rec',rec.toFixed(0)+' MWh'); _labSetv('re-tgt',tgt.toFixed(0)+' %');
+      const pvGen=pv*psh/1000, total=Math.min(pvGen+rec,load), share=load>0?total/load*100:0;
+      const need=tgt/100*load, gap=Math.max(0,need-(pvGen+rec));
+      _labSet('re-pvgen',pvGen.toFixed(0)); _labSet('re-share',share.toFixed(0)); _labSet('re-gap',gap.toFixed(0));
+      const ok=share>=tgt, col=ok?_GREEN:(share>=tgt*0.7?_GOLD:_RED);
+      _labSet('re-pct',share.toFixed(0)+'%'); _labAttr('re-pct','fill',col);
+      _labSet('re-verdict', ok?('✓ Target '+tgt.toFixed(0)+'% tercapai (RE '+share.toFixed(0)+'%)'):('Kurang '+gap.toFixed(0)+' MWh — tambah PLTS/REC')); _labAttr('re-verdict','fill',col);
+      const W=280, pvShare=Math.min(pvGen/load,1), recShare=Math.min(rec/load,1-pvShare);
+      _labAttr('re-bar-pv','width',pvShare*W); _labAttr('re-bar-rec','x',60+pvShare*W); _labAttr('re-bar-rec','width',recShare*W);
+      const tx=60+Math.min(tgt/100,1)*W; _labAttr('re-target','x1',tx); _labAttr('re-target','x2',tx);
+    })
+  },
+
+  // ============ S11: Carbon Abatement / MACC ============
+  'carbon-abatement': {
+    html: () => _labShell({
+      eyebrow: 'Carbon · Mitigasi', title: 'Carbon Abatement', italic: '& Payback',
+      desc: 'Bandingkan langkah mitigasi (LED, PLTS, VFD, efisiensi). Hitung biaya per ton CO₂ dihindari (carbon abatement cost) — negatif berarti malah menghemat uang.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Biaya abatement (Rp/kg CO₂)</text>
+        <line x1="60" y1="150" x2="360" y2="150" stroke="#1a1d2e" stroke-width="1.2"/>
+        <g id="ca2-bars"></g>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="ca2-info">—</text>`,
+      controls: _labSel('ca2-measure','Langkah mitigasi','<option value="led" selected>Retrofit LED</option><option value="pv">PLTS atap</option><option value="vfd">VFD pompa/fan</option><option value="hvac">Upgrade chiller</option>')
+        + _labSld('ca2-invest','Investasi (juta Rp)',5,5000,150,5)
+        + _labSld('ca2-kwh','Hemat energi (MWh/th)',1,5000,120,1)
+        + _labSld('ca2-life','Umur measure (th)',5,25,10,1)
+        + _labSld('ca2-tar','Tarif listrik (Rp/kWh)',900,2500,1450,50),
+      outputs: _labOut('ca2-co2','CO₂ Dihindari','tCO₂/th') + _labOut('ca2-cost','Biaya Abatement','Rp/kg') + _labOut('ca2-net','Status',''),
+      formula: `CO₂ dihindari = hemat MWh × 0.85 tCO₂/MWh · biaya = (investasi − Σhemat biaya)/total CO₂<br>Negatif = win-win (hemat uang DAN karbon).`
+    }),
+    init: () => _labBind(['ca2-measure','ca2-invest','ca2-kwh','ca2-life','ca2-tar'], () => {
+      const inv=_labV('ca2-invest')*1e6, mwh=_labV('ca2-kwh'), life=_labV('ca2-life'), tar=_labV('ca2-tar');
+      _labSetv('ca2-invest',_labV('ca2-invest').toFixed(0)+' jt'); _labSetv('ca2-kwh',mwh.toFixed(0)+' MWh'); _labSetv('ca2-life',life.toFixed(0)+' th'); _labSetv('ca2-tar','Rp '+tar.toFixed(0));
+      const co2y=mwh*0.85, co2tot=co2y*life;
+      const saveTot=mwh*1000*tar*life;
+      const abate=(inv-saveTot)/(co2tot*1000); // Rp/kg
+      _labSet('ca2-co2',co2y.toFixed(0)); _labSet('ca2-cost',abate.toFixed(0)); _labSet('ca2-net', abate<0?'Win-win (hemat)':'Berbiaya');
+      const col=abate<0?_GREEN:(abate<200?_GOLD:_RED);
+      _labSet('ca2-info', abate<0?('✓ Win-win: hemat Rp'+(-abate).toFixed(0)+'/kg CO₂ DAN kurangi '+co2y.toFixed(0)+' t/th'):('Biaya Rp'+abate.toFixed(0)+'/kg CO₂ untuk '+co2y.toFixed(0)+' t/th')); _labAttr('ca2-info','fill',col);
+      // simple bar around zero line (y=150)
+      const g=document.getElementById('ca2-bars'); const scale=0.4, maxH=90; const h=Math.max(-maxH,Math.min(maxH,abate*scale));
+      let o='';
+      const bx=170, bw=60;
+      if(h>=0) o+='<rect x="'+bx+'" y="'+(150-h).toFixed(1)+'" width="'+bw+'" height="'+h.toFixed(1)+'" fill="'+(col)+'"/>';
+      else o+='<rect x="'+bx+'" y="150" width="'+bw+'" height="'+(-h).toFixed(1)+'" fill="#15803d"/>';
+      o+='<text x="'+(bx+bw/2)+'" y="'+(h>=0?(150-h-6):(150-h+14)).toFixed(1)+'" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a1d2e">Rp '+abate.toFixed(0)+'</text>';
+      o+='<text x="40" y="150" font-family="Georgia" font-size="9" fill="#6b6d7a">0</text>';
+      g.innerHTML=o;
+    })
+  },
+
+  // ============ S11: Net Zero Pathway ============
+  'netzero-path': {
+    html: () => _labShell({
+      eyebrow: 'Carbon · Strategi', title: 'Net Zero', italic: 'Pathway',
+      desc: 'Rancang lintasan dekarbonisasi menuju net zero: emisi awal turun bertahap via efisiensi & energi bersih, sisa terakhir di-offset. Lihat kurva & tahun net zero.',
+      svg: `<text x="28" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">tCO₂e</text>
+        <line x1="52" y1="44" x2="52" y2="215" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="52" y1="215" x2="375" y2="215" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <path id="nz-area" fill="rgba(21,128,61,0.12)" d=""/>
+        <polyline id="nz-gross" fill="none" stroke="#c0392b" stroke-width="2.5" points=""/>
+        <polyline id="nz-offset" fill="none" stroke="#3a5fb0" stroke-width="2" stroke-dasharray="4 3" points=""/>
+        <line id="nz-nzline" x1="0" y1="44" x2="0" y2="215" stroke="#15803d" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="290" y="58" font-family="Georgia" font-size="9.5" fill="#c0392b">— emisi bruto</text>
+        <text x="290" y="72" font-family="Georgia" font-size="9.5" fill="#3a5fb0">-- offset</text>
+        <text x="210" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="nz-info">—</text>`,
+      controls: _labSld('nz-base','Emisi awal (ribu tCO₂e)',1,1000,100,1)
+        + _labSld('nz-rate','Penurunan / tahun (%)',2,15,7,0.5)
+        + _labSld('nz-years','Horizon (tahun)',10,40,30,1)
+        + _labSld('nz-offset','Offset maks (% sisa)',0,30,10,1),
+      outputs: _labOut('nz-year','Tahun Net Zero','') + _labOut('nz-cum','Total Emisi','rb tCO₂e') + _labOut('nz-resid','Sisa thn akhir','rb tCO₂e'),
+      formula: `Emisi(t) = awal × (1−laju)ᵗ · net = bruto − offset · Net zero saat net ≤ 0<br>Offset menutup sisa (residual) yang sulit dihilangkan.`
+    }),
+    init: () => _labBind(['nz-base','nz-rate','nz-years','nz-offset'], () => {
+      const base=_labV('nz-base'), rate=_labV('nz-rate')/100, yrs=_labV('nz-years'), offMax=_labV('nz-offset')/100;
+      _labSetv('nz-base',base.toFixed(0)+' rb'); _labSetv('nz-rate',(rate*100).toFixed(1)+' %'); _labSetv('nz-years',yrs.toFixed(0)+' th'); _labSetv('nz-offset',(offMax*100).toFixed(0)+' %');
+      const gross=[],net=[],offs=[]; let cum=0, nzYear=null;
+      for(let t=0;t<=yrs;t++){ const g=base*Math.pow(1-rate,t); const off=g*offMax; const nn=g-off;
+        gross.push(g); offs.push(off); net.push(nn); cum+=nn; if(nzYear===null && nn<=base*0.02) nzYear=t; }
+      const resid=net[net.length-1];
+      _labSet('nz-year', nzYear!==null?('Th +'+nzYear):'>'+yrs); _labSet('nz-cum',cum.toFixed(0)); _labSet('nz-resid',resid.toFixed(1));
+      const col=nzYear!==null?_GREEN:_GOLD;
+      _labSet('nz-info', nzYear!==null?('✓ Mendekati net zero pada tahun +'+nzYear):('Belum net zero dalam '+yrs+' th — naikkan laju/offset')); _labAttr('nz-info','fill',col);
+      const X=t=>52+t/yrs*323, maxv=base*1.05, Y=v=>215-v/maxv*171;
+      _labAttr('nz-gross','points',gross.map((v,t)=>X(t).toFixed(1)+','+Y(v).toFixed(1)).join(' '));
+      _labAttr('nz-offset','points',offs.map((v,t)=>X(t).toFixed(1)+','+Y(v).toFixed(1)).join(' '));
+      let area='M '+X(0)+' '+Y(0)+' '; net.forEach((v,t)=>area+='L '+X(t).toFixed(1)+' '+Y(v).toFixed(1)+' '); area+='L '+X(yrs)+' '+Y(0)+' Z';
+      _labAttr('nz-area','d',area);
+      if(nzYear!==null){ const nx=X(nzYear); _labAttr('nz-nzline','x1',nx); _labAttr('nz-nzline','x2',nx); } else { _labAttr('nz-nzline','x1',-10); _labAttr('nz-nzline','x2',-10); }
+    })
+  },
+
+  // ============ S11: Energy & Carbon Intensity ============
+  'carbon-intensity': {
+    html: () => _labShell({
+      eyebrow: 'Carbon · KPI', title: 'Energy & Carbon', italic: 'Intensity (ESG)',
+      desc: 'KPI ESG: intensitas energi (kWh/unit produk) & intensitas karbon (kgCO₂/unit) — bandingkan dengan benchmark industri untuk laporan keberlanjutan.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Intensitas karbon vs benchmark</text>
+        <line x1="70" y1="150" x2="350" y2="150" stroke="#1a1d2e" stroke-width="1.2"/>
+        <rect x="120" y="0" width="60" height="0" id="ci-bar-you" fill="#c0392b"/>
+        <rect x="240" y="0" width="60" height="0" id="ci-bar-bm" fill="#3a5fb0"/>
+        <text x="150" y="166" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Anda</text>
+        <text x="270" y="166" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Benchmark</text>
+        <text x="200" y="200" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" id="ci-val">—</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="ci-verdict">—</text>`,
+      controls: _labSld('ci-energy','Konsumsi energi (MWh/th)',10,50000,2000,10)
+        + _labSld('ci-prod','Produksi (ribu unit/th)',1,10000,500,1)
+        + _labSel('ci-grid','Faktor emisi grid','<option value="0.85" selected>Jawa-Bali (0.85)</option><option value="1.0">Luar Jawa (1.0)</option><option value="0.5">Grid hijau (0.5)</option>')
+        + _labSld('ci-bm','Benchmark industri (kgCO₂/unit)',0.1,20,3,0.1),
+      outputs: _labOut('ci-ei','Intensitas Energi','kWh/unit') + _labOut('ci-ci','Intensitas Karbon','kgCO₂/unit') + _labOut('ci-vs','vs Benchmark','%'),
+      formula: `EI = MWh×1000/unit · CI = (MWh × faktor grid × 1000)/unit (kg)<br>Di bawah benchmark = lebih efisien & kompetitif untuk ESG rating.`
+    }),
+    init: () => _labBind(['ci-energy','ci-prod','ci-grid','ci-bm'], () => {
+      const mwh=_labV('ci-energy'), prodK=_labV('ci-prod'), gf=_labV('ci-grid'), bm=_labV('ci-bm');
+      _labSetv('ci-energy',mwh.toFixed(0)+' MWh'); _labSetv('ci-prod',prodK.toFixed(0)+' rb unit'); _labSetv('ci-bm',bm.toFixed(1));
+      const units=prodK*1000, EI=mwh*1000/units, CI=mwh*gf*1000/units;
+      _labSet('ci-ei',EI.toFixed(2)); _labSet('ci-ci',CI.toFixed(2)); _labSet('ci-vs',(CI/bm*100).toFixed(0));
+      const ok=CI<=bm, col=ok?_GREEN:_RED;
+      _labSet('ci-val',CI.toFixed(2)+' kgCO₂/unit'); _labAttr('ci-val','fill',col);
+      _labSet('ci-verdict', ok?('✓ Di bawah benchmark ('+(CI/bm*100).toFixed(0)+'%) — efisien'):('✗ Di atas benchmark ('+(CI/bm*100).toFixed(0)+'%) — perlu efisiensi/RE')); _labAttr('ci-verdict','fill',col);
+      const maxv=Math.max(CI,bm,0.1)*1.2, H=120, base=150, sc=H/maxv;
+      _labAttr('ci-bar-you','height',CI*sc); _labAttr('ci-bar-you','y',base-CI*sc); _labAttr('ci-bar-you','fill',col===_RED?_RED:'#c0392b');
+      _labAttr('ci-bar-bm','height',bm*sc); _labAttr('ci-bar-bm','y',base-bm*sc);
     })
   }
 };
