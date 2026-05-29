@@ -8255,6 +8255,46 @@ html, body { overflow-x: hidden; }
   .modul-tab { white-space: nowrap; flex-shrink: 0; }
 }
 
+/* 25b. HP: stack Video → PPT → Quiz vertikal supaya tidak perlu pindah tab.
+   Tab nav disembunyikan, semua panel tampil sebagai section terpisah dengan
+   heading. Action buttons (Bookmark/Catatan/Rating) tetap di pojok kanan. */
+@media (max-width: 900px) {
+  #view-modul .modul-tab,
+  .modul-tab { display: none !important; }
+  #view-modul .modul-tabs,
+  .modul-tabs {
+    border-bottom: none !important;
+    padding: 12px 12px 4px !important;
+    justify-content: flex-end !important;
+    overflow: visible !important;
+  }
+  .modul-panel,
+  .modul-panel.active { display: block !important; }
+  .modul-panel {
+    margin-top: 22px !important;
+    border-top: 1.5px dashed rgba(201,169,110,0.45) !important;
+    padding-top: 6px !important;
+  }
+  .modul-panel:first-of-type { margin-top: 4px !important; border-top: none !important; }
+  .modul-panel::before {
+    display: block;
+    margin: 0 12px 14px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9a7f4f;
+    border-left: 3px solid #c9a96e;
+    background: rgba(201,169,110,0.10);
+    border-radius: 0 6px 6px 0;
+  }
+  #panel-video::before     { content: '📹 Video Pembelajaran'; }
+  #panel-slides::before    { content: '📊 Materi (PPT)'; }
+  #panel-quiz::before      { content: '📝 Quiz 25 Soal'; }
+  #panel-liveclass::before { content: '🎬 Live Class'; }
+}
+
 /* 26. Detail nav responsive — kompakt di mobile */
 @media (max-width: 640px) {
   .detail-nav { padding: 14px 16px !important; }
