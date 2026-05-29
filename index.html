@@ -16108,7 +16108,7 @@ function getPVSizingHTML() {
       <div class="sim-visual">
         <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
           <!-- Sun -->
-          <circle cx="80" cy="60" r="20" fill="#c9a96e"/>
+          <circle cx="80" cy="60" r="20" fill="#c9a96e" class="lab-glow"/>
           <g stroke="#c9a96e" stroke-width="2">
             <line x1="80" y1="25" x2="80" y2="15"/>
             <line x1="80" y1="95" x2="80" y2="105"/>
@@ -16177,12 +16177,13 @@ function getPVSizingHTML() {
             <div class="sim-output-value"><span id="pv-bat">15</span><span class="unit">kWh</span></div>
           </div>
           <div class="sim-output">
-            <div class="sim-output-label">Luas Atap</div>
-            <div class="sim-output-value"><span id="pv-area">15</span><span class="unit">m²</span></div>
+            <div class="sim-output-label">Produksi / th</div>
+            <div class="sim-output-value"><span id="pv-prod">5.5</span><span class="unit">MWh</span></div>
           </div>
         </div>
         <div class="sim-formula">
-          Panels = Load / (SPH × Wp × η) · Area ≈ Panels × 2.5 m² · Battery = Load × backup_days / DoD 80%
+          Panels = Load/(SPH×Wp×η) · Battery = Load×backup/DoD80% · Produksi ≈ Load×365<br>
+          Luas atap ≈ <span id="pv-area">15</span> m² · Offset CO₂ ≈ <span id="pv-co2">—</span> ton/th (0,85 kg/kWh)
         </div>
       </div>
     </div>
@@ -16214,10 +16215,15 @@ function initPVSizing() {
     document.getElementById('pv-watt-val').textContent = watt.toFixed(0) + ' Wp';
     document.getElementById('pv-backup-val').textContent = backup === 0 ? 'Tanpa' : backup.toFixed(1) + ' hari';
 
+    const prodMwh = load * 365 / 1000;        // MWh/tahun (≈ beban harian terpenuhi)
+    const co2 = load * 365 * 0.85 / 1000;     // ton CO2/tahun
+
     document.getElementById('pv-count').textContent = count;
     document.getElementById('pv-inv').textContent = invSize.toFixed(1);
     document.getElementById('pv-bat').textContent = batSize > 0 ? batSize : '-';
+    document.getElementById('pv-prod').textContent = prodMwh.toFixed(1);
     document.getElementById('pv-area').textContent = area;
+    document.getElementById('pv-co2').textContent = co2.toFixed(1);
 
     document.getElementById('pv-count-label').textContent = count;
     document.getElementById('pv-watt-label').textContent = watt;
@@ -16764,9 +16770,9 @@ const SIM_BUILDERS = {
   'trafo-loading': {
     html: () => _labShell({
       eyebrow: 'Distribusi · Trafo', title: 'Transformer', italic: 'Loading',
-      desc: 'Pembebanan trafo distribusi. %loading = (kVA beban / rating) × 100. Aman ≤ 80%, waspada 80–100%, overload > 100%.',
+      desc: 'Pembebanan trafo distribusi + efisiensi (rugi Cu & Fe) + proyeksi tahun sampai overload dari pertumbuhan beban.',
       svg: `<rect x="150" y="40" width="100" height="210" rx="6" fill="#fbf8f1" stroke="#1a1d2e" stroke-width="2"/>
-        <rect x="150" y="250" width="100" height="0" id="tl-fill" fill="#15803d"/>
+        <rect x="150" y="250" width="100" height="0" id="tl-fill" class="lab-glow" fill="#15803d"/>
         <line x1="140" y1="82" x2="260" y2="82" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4 3"/>
         <text x="266" y="86" font-family="Georgia" font-size="10" fill="#c0392b">100%</text>
         <line x1="140" y1="124" x2="260" y2="124" stroke="#9a7f4f" stroke-width="1.5" stroke-dasharray="4 3"/>
@@ -16774,22 +16780,27 @@ const SIM_BUILDERS = {
         <text x="200" y="150" text-anchor="middle" font-family="Georgia" font-size="22" fill="#1a1d2e" font-weight="700" id="tl-pct">—</text>
         <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="tl-status">—</text>`,
       controls: _labSel('tl-rating', 'Rating trafo (kVA)', [50,100,160,200,250,315,400,630,1000].map(r=>`<option ${r===250?'selected':''}>${r}</option>`).join(''))
-              + _labSld('tl-load', 'Beban aktif (kW)', 0, 900, 180, 5)
-              + _labSld('tl-pf', 'Power factor', 0.7, 1, 0.85, 0.01),
-      outputs: _labOut('tl-kva', 'Beban Semu', 'kVA') + _labOut('tl-head', 'Sisa Kapasitas', 'kVA'),
-      formula: `S = P / cosφ · %loading = S / rating × 100<br>S = <span id="tlf-p">180</span> / <span id="tlf-pf">0.85</span> = <span id="tlf-kva">—</span> kVA dari <span id="tlf-r">250</span> kVA`
+              + _labSld('tl-load', 'Beban aktif (kW)', 0, 1000, 180, 5)
+              + _labSld('tl-pf', 'Power factor', 0.7, 1, 0.85, 0.01)
+              + _labSld('tl-growth', 'Pertumbuhan beban (%/th)', 0, 15, 5, 0.5),
+      outputs: _labOut('tl-kva', 'Beban Semu', 'kVA') + _labOut('tl-head', 'Sisa Kapasitas', 'kVA') + _labOut('tl-eff', 'Efisiensi', '%') + _labOut('tl-years', 'Th ke Overload', 'th'),
+      formula: `S = P/cosφ · η = P/(P+P_Fe+P_Cu·(S/S_r)²)<br>S = <span id="tlf-kva">—</span> kVA dari <span id="tlf-r">250</span> kVA · rugi ≈ <span id="tlf-loss">—</span> kW`
     }),
-    init: () => _labBind(['tl-rating','tl-load','tl-pf'], () => {
-      const rating=_labV('tl-rating'), P=_labV('tl-load'), pf=_labV('tl-pf');
+    init: () => _labBind(['tl-rating','tl-load','tl-pf','tl-growth'], () => {
+      const rating=_labV('tl-rating'), P=_labV('tl-load'), pf=_labV('tl-pf'), g=_labV('tl-growth');
       const kva=P/pf, pct=kva/rating*100, head=rating-kva;
-      _labSetv('tl-load',P.toFixed(0)+' kW'); _labSetv('tl-pf',pf.toFixed(2));
-      _labSet('tl-kva',kva.toFixed(1)); _labSet('tl-head',head.toFixed(1));
+      const Pfe=0.002*rating, Pcu=0.011*rating, frac=kva/rating;
+      const loss=Pfe+Pcu*frac*frac, eff=P>0?P/(P+loss)*100:0;
+      const years=(pct>0&&pct<100&&g>0)?Math.log(100/pct)/Math.log(1+g/100):(pct>=100?0:99);
+      _labSetv('tl-load',P.toFixed(0)+' kW'); _labSetv('tl-pf',pf.toFixed(2)); _labSetv('tl-growth',g.toFixed(1)+' %/th');
+      _labSet('tl-kva',kva.toFixed(1)); _labSet('tl-head',head.toFixed(1)); _labSet('tl-eff',eff.toFixed(1));
+      _labSet('tl-years', pct>=100?'0 (sdh overload)':(years>=99?'>50':years.toFixed(1)));
       _labSet('tl-pct',pct.toFixed(0)+'%');
       const col = pct>100?_RED:(pct>80?_GOLD:_GREEN);
       const maxH=210, h=Math.min(pct/120,1)*maxH;
       _labAttr('tl-fill','height',h); _labAttr('tl-fill','y',250-h); _labAttr('tl-fill','fill',col);
       _labSet('tl-status', pct>100?'OVERLOAD':(pct>80?'WASPADA':'AMAN')); _labAttr('tl-status','fill',col); _labAttr('tl-pct','fill',col);
-      _labSet('tlf-p',P.toFixed(0)); _labSet('tlf-pf',pf.toFixed(2)); _labSet('tlf-kva',kva.toFixed(1)); _labSet('tlf-r',rating.toFixed(0));
+      _labSet('tlf-kva',kva.toFixed(1)); _labSet('tlf-r',rating.toFixed(0)); _labSet('tlf-loss',loss.toFixed(1));
     })
   },
 
@@ -16797,12 +16808,13 @@ const SIM_BUILDERS = {
   'feeder-vd-20kv': {
     html: () => _labShell({
       eyebrow: 'Distribusi · Feeder', title: 'Feeder Drop', italic: '& Losses 20 kV',
-      desc: 'Penyulang 20 kV. I = P/(√3·V·cosφ). Drop ≈ √3·I·L·(R·cosφ + X·sinφ). Rugi daya = 3·I²·R·L.',
+      desc: 'Penyulang 20 kV: arus, drop tegangan (R·cosφ + X·sinφ), rugi daya I²R, tegangan ujung & regulasi. Arus mengalir beranimasi.',
       svg: `<rect x="20" y="95" width="50" height="50" rx="4" fill="#1a1d2e"/><text x="45" y="124" text-anchor="middle" font-family="Georgia" font-size="10" fill="#f5f0e6">GI 20kV</text>
-        <line x1="70" y1="120" x2="330" y2="120" stroke="#9a7f4f" stroke-width="4" id="fd-line"/>
+        <line x1="70" y1="120" x2="330" y2="120" stroke="#cfd3da" stroke-width="6"/>
+        <line x1="70" y1="120" x2="330" y2="120" stroke="#9a7f4f" stroke-width="4" class="lab-flow" id="fd-line"/>
         <circle cx="330" cy="120" r="10" fill="#1a1d2e"/><text x="330" y="148" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">Beban</text>
         <text x="200" y="108" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="fd-dist-lbl">8 km</text>
-        <text x="40" y="180" font-family="Georgia" font-size="11" fill="#1a1d2e">% Drop Tegangan</text>
+        <text x="40" y="180" font-family="Georgia" font-size="11" fill="#1a1d2e">% Drop Tegangan (batas 5%)</text>
         <rect x="40" y="190" width="320" height="18" rx="4" fill="#e5e5e5"/><rect x="40" y="190" width="0" height="18" rx="4" fill="#15803d" id="fd-bar"/>
         <text x="200" y="245" text-anchor="middle" font-family="Georgia" font-size="20" font-weight="700" id="fd-pct">—</text>
         <text x="200" y="268" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a" id="fd-loss-lbl">—</text>`,
@@ -16810,51 +16822,58 @@ const SIM_BUILDERS = {
               + _labSld('fd-dist', 'Jarak (km)', 1, 30, 8, 1)
               + _labSel('fd-cond', 'Konduktor (R Ω/km)', '<option value="0.46">AAAC 70 mm² (0.46)</option><option value="0.21" selected>AAAC 150 mm² (0.21)</option><option value="0.13">AAAC 240 mm² (0.13)</option>')
               + _labSld('fd-pf', 'Power factor', 0.8, 1, 0.9, 0.01),
-      outputs: _labOut('fd-i', 'Arus Feeder', 'A') + _labOut('fd-loss', 'Rugi Daya', 'kW'),
-      formula: `X ≈ 0.35 Ω/km · sistem 20 kV<br>Drop = <span id="fdf-vd">—</span> % · Arus = <span id="fdf-i">—</span> A`
+      outputs: _labOut('fd-i', 'Arus Feeder', 'A') + _labOut('fd-loss', 'Rugi Daya', 'kW') + _labOut('fd-vend', 'Tegangan Ujung', 'kV') + _labOut('fd-reg', 'Regulasi', '%'),
+      formula: `X ≈ 0.35 Ω/km · V kirim 20 kV<br>Drop = <span id="fdf-vd">—</span> % · Arus = <span id="fdf-i">—</span> A · V ujung = <span id="fdf-ve">—</span> kV`
     }),
     init: () => _labBind(['fd-load','fd-dist','fd-cond','fd-pf'], () => {
       const P=_labV('fd-load')*1e6, L=_labV('fd-dist'), R=_labV('fd-cond'), pf=_labV('fd-pf');
       const X=0.35, V=20000, sinp=Math.sqrt(Math.max(0,1-pf*pf));
       const I=P/(Math.sqrt(3)*V*pf);
       const Vd=Math.sqrt(3)*I*L*(R*pf+X*sinp), pct=Vd/V*100;
-      const loss=3*I*I*R*L/1000;
+      const loss=3*I*I*R*L/1000, Vend=(V-Vd)/1000;
       _labSetv('fd-load',_labV('fd-load').toFixed(1)+' MW'); _labSetv('fd-dist',L.toFixed(0)+' km'); _labSetv('fd-pf',pf.toFixed(2));
-      _labSet('fd-i',I.toFixed(0)); _labSet('fd-loss',loss.toFixed(0));
-      _labSet('fd-dist-lbl',L.toFixed(0)+' km'); _labSet('fd-loss-lbl','Rugi: '+loss.toFixed(0)+' kW');
+      _labSet('fd-i',I.toFixed(0)); _labSet('fd-loss',loss.toFixed(0)); _labSet('fd-vend',Vend.toFixed(2)); _labSet('fd-reg',pct.toFixed(2));
+      _labSet('fd-dist-lbl',L.toFixed(0)+' km'); _labSet('fd-loss-lbl','Rugi: '+loss.toFixed(0)+' kW · V ujung '+Vend.toFixed(1)+' kV');
       const col=pct>5?_RED:(pct>3?_GOLD:_GREEN);
       _labSet('fd-pct',pct.toFixed(2)+' %'); _labAttr('fd-pct','fill',col);
       _labAttr('fd-bar','width',Math.min(pct/10,1)*320); _labAttr('fd-bar','fill',col); _labAttr('fd-line','stroke',col===_GREEN?_GOLD:col);
-      _labSet('fdf-vd',pct.toFixed(2)); _labSet('fdf-i',I.toFixed(0));
+      _labSet('fdf-vd',pct.toFixed(2)); _labSet('fdf-i',I.toFixed(0)); _labSet('fdf-ve',Vend.toFixed(2));
     })
   },
 
   // ============ S4: Transmission Line Sag & Tension ============
   'line-sag': {
     html: () => _labShell({
-      eyebrow: 'Transmisi · Mekanik', title: 'Line Sag', italic: '& Tension',
-      desc: 'Andongan parabola: S = w·L² / (8·T). Span makin panjang & beban makin berat → sag besar; tarikan tinggi → sag kecil.',
-      svg: `<line x1="50" y1="60" x2="50" y2="230" stroke="#1a1d2e" stroke-width="3"/><line x1="350" y1="60" x2="350" y2="230" stroke="#1a1d2e" stroke-width="3"/>
-        <path d="M50 70 Q200 70 350 70" stroke="#9a7f4f" stroke-width="2.5" fill="none" id="ls-curve"/>
-        <line x1="200" y1="70" x2="200" y2="70" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 3" id="ls-sagline"/>
-        <text x="212" y="120" font-family="Georgia" font-size="12" fill="#c0392b" font-weight="600" id="ls-sag-lbl">sag</text>
-        <text x="200" y="255" text-anchor="middle" font-family="Georgia" font-size="12" fill="#6b6d7a" id="ls-span-lbl">span 300 m</text>`,
+      eyebrow: 'Transmisi · Mekanik', title: 'Line Sag', italic: '& Ground Clearance',
+      desc: 'Andongan parabola S = w·L²/(8·T) + cek jarak aman ke tanah (ground clearance) terhadap standar per tegangan.',
+      svg: `<line x1="50" y1="50" x2="50" y2="245" stroke="#1a1d2e" stroke-width="3"/><line x1="350" y1="50" x2="350" y2="245" stroke="#1a1d2e" stroke-width="3"/>
+        <path d="M50 64 Q200 64 350 64" stroke="#9a7f4f" stroke-width="2.5" fill="none" id="ls-curve"/>
+        <line x1="200" y1="64" x2="200" y2="64" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 3" id="ls-sagline"/>
+        <text x="210" y="110" font-family="Georgia" font-size="11" fill="#c0392b" font-weight="600" id="ls-sag-lbl">sag</text>
+        <rect x="50" y="245" width="300" height="14" fill="#cdb892"/>
+        <line x1="50" y1="245" x2="350" y2="245" stroke="#1a1d2e" stroke-width="1"/>
+        <text x="200" y="237" text-anchor="middle" font-family="Georgia" font-size="11" fill="#15803d" font-weight="700" id="ls-clr-lbl">clearance — m</text>
+        <text x="200" y="276" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="ls-verdict">—</text>`,
       controls: _labSld('ls-span', 'Panjang span L (m)', 100, 500, 300, 10)
               + _labSld('ls-w', 'Berat konduktor w (N/m)', 5, 30, 15, 0.5)
-              + _labSld('ls-t', 'Tarikan T (kN)', 10, 60, 30, 1),
-      outputs: _labOut('ls-sag', 'Andongan (Sag)', 'm') + _labOut('ls-len', 'Panjang Konduktor', 'm'),
-      formula: `S = w·L² / (8·T)<br>S = <span id="lsf-w">15</span>·<span id="lsf-l">300</span>² / (8·<span id="lsf-t">30000</span>) = <span id="lsf-s">—</span> m`
+              + _labSld('ls-t', 'Tarikan T (kN)', 10, 80, 30, 1)
+              + _labSld('ls-h', 'Tinggi titik gantung (m)', 12, 60, 28, 1)
+              + _labSel('ls-kv', 'Tegangan (clearance min)', '<option value="4">20 kV (4 m)</option><option value="5">70 kV (5 m)</option><option value="6.5" selected>150 kV (6.5 m)</option><option value="11">500 kV (11 m)</option>'),
+      outputs: _labOut('ls-sag', 'Andongan (Sag)', 'm') + _labOut('ls-len', 'Panjang Konduktor', 'm') + _labOut('ls-clr', 'Ground Clearance', 'm') + _labOut('ls-min', 'Clearance Min', 'm'),
+      formula: `S = w·L²/(8·T) · Clearance = H − S<br>S = <span id="lsf-s">—</span> m · Clearance = <span id="lsf-c">—</span> m (min <span id="lsf-m">6.5</span> m)`
     }),
-    init: () => _labBind(['ls-span','ls-w','ls-t'], () => {
-      const L=_labV('ls-span'), w=_labV('ls-w'), T=_labV('ls-t')*1000;
-      const S=w*L*L/(8*T), len=L+8*S*S/(3*L);
-      _labSetv('ls-span',L.toFixed(0)+' m'); _labSetv('ls-w',w.toFixed(1)+' N/m'); _labSetv('ls-t',_labV('ls-t').toFixed(0)+' kN');
-      _labSet('ls-sag',S.toFixed(2)); _labSet('ls-len',len.toFixed(2));
-      _labSet('ls-span-lbl','span '+L.toFixed(0)+' m'); _labSet('ls-sag-lbl',S.toFixed(2)+' m');
-      const sagPx=Math.min(S/15,1)*150, midY=70+sagPx;
-      _labAttr('ls-curve','d',`M50 70 Q200 ${(70+2*sagPx).toFixed(0)} 350 70`);
-      _labAttr('ls-sagline','y2',midY.toFixed(0)); _labAttr('ls-sag-lbl','y',(midY-6).toFixed(0));
-      _labSet('lsf-w',w.toFixed(1)); _labSet('lsf-l',L.toFixed(0)); _labSet('lsf-t',T.toFixed(0)); _labSet('lsf-s',S.toFixed(2));
+    init: () => _labBind(['ls-span','ls-w','ls-t','ls-h','ls-kv'], () => {
+      const L=_labV('ls-span'), w=_labV('ls-w'), T=_labV('ls-t')*1000, H=_labV('ls-h'), minC=_labV('ls-kv');
+      const S=w*L*L/(8*T), len=L+8*S*S/(3*L), clr=H-S, ok=clr>=minC;
+      const col=ok?_GREEN:_RED;
+      _labSetv('ls-span',L.toFixed(0)+' m'); _labSetv('ls-w',w.toFixed(1)+' N/m'); _labSetv('ls-t',_labV('ls-t').toFixed(0)+' kN'); _labSetv('ls-h',H.toFixed(0)+' m');
+      _labSet('ls-sag',S.toFixed(2)); _labSet('ls-len',len.toFixed(2)); _labSet('ls-clr',clr.toFixed(2)); _labSet('ls-min',minC.toFixed(1));
+      _labSet('ls-sag-lbl',S.toFixed(2)+' m'); _labSet('ls-clr-lbl','clearance '+clr.toFixed(1)+' m'); _labAttr('ls-clr-lbl','fill',col);
+      _labSet('ls-verdict', ok?'✓ AMAN (≥ '+minC.toFixed(1)+' m)':'✗ BAHAYA — clearance kurang'); _labAttr('ls-verdict','fill',col);
+      const sagPx=Math.min(S/15,1)*150, attachY=64;
+      _labAttr('ls-curve','d',`M50 ${attachY} Q200 ${(attachY+2*sagPx).toFixed(0)} 350 ${attachY}`); _labAttr('ls-curve','stroke',col===_RED?_RED:'#9a7f4f');
+      _labAttr('ls-sagline','y2',(attachY+sagPx).toFixed(0)); _labAttr('ls-sag-lbl','y',(attachY+sagPx-4).toFixed(0));
+      _labSet('lsf-s',S.toFixed(2)); _labSet('lsf-c',clr.toFixed(2)); _labSet('lsf-m',minC.toFixed(1));
     })
   },
 
@@ -16862,16 +16881,17 @@ const SIM_BUILDERS = {
   'insulation-coord': {
     html: () => _labShell({
       eyebrow: 'Transmisi · Isolasi', title: 'Insulation', italic: 'Coordination (BIL)',
-      desc: 'Pilih BIL standar & jumlah isolator piring untuk tegangan sistem, plus jarak rambat (creepage) sesuai tingkat polusi (IEC 60815).',
-      svg: `<line x1="200" y1="30" x2="200" y2="50" stroke="#1a1d2e" stroke-width="3"/>
+      desc: 'BIL standar, jumlah isolator piring, jarak rambat (creepage) per polusi (IEC 60815), & perkiraan air clearance.',
+      svg: `<line x1="200" y1="28" x2="200" y2="46" stroke="#1a1d2e" stroke-width="3"/>
         <g id="ic-discs"></g>
         <line x1="180" y1="250" x2="220" y2="250" stroke="#1a1d2e" stroke-width="3"/><circle cx="200" cy="258" r="5" fill="#9a7f4f"/>
-        <text x="280" y="150" font-family="Georgia" font-size="13" fill="#1a1d2e" font-weight="700" id="ic-n-lbl">— piring</text>`,
+        <text x="282" y="140" font-family="Georgia" font-size="13" fill="#1a1d2e" font-weight="700" id="ic-n-lbl">— piring</text>
+        <text x="282" y="160" font-family="Georgia" font-size="11" fill="#6b6d7a" id="ic-bil-lbl">BIL — kV</text>`,
       controls: _labSel('ic-v', 'Tegangan sistem', '<option value="20">20 kV</option><option value="70">70 kV</option><option value="150" selected>150 kV</option><option value="275">275 kV</option><option value="500">500 kV</option>')
               + _labSel('ic-pol', 'Tingkat polusi (mm/kV)', '<option value="16">Ringan (16)</option><option value="20" selected>Sedang (20)</option><option value="25">Berat (25)</option><option value="31">Sangat berat (31)</option>')
               + _labSld('ic-alt', 'Ketinggian (mdpl)', 0, 3000, 500, 100),
-      outputs: _labOut('ic-bil', 'BIL Standar', 'kV') + _labOut('ic-creep', 'Creepage Total', 'mm'),
-      formula: `Creepage = V_fasa × (mm/kV) × faktor_altitude · 1 piring ≈ 292 mm<br>Jumlah piring = <span id="icf-n">—</span> unit`
+      outputs: _labOut('ic-bil', 'BIL Standar', 'kV') + _labOut('ic-creep', 'Creepage Total', 'mm') + _labOut('ic-n', 'Jumlah Piring', 'unit') + _labOut('ic-air', 'Air Clearance', 'mm'),
+      formula: `Creepage = V_fasa × (mm/kV) × f_altitude · piring ≈ 292 mm · air clearance ≈ BIL×1.7<br>Faktor altitude = <span id="icf-alt">1.00</span> · creepage = <span id="icf-cr">—</span> mm`
     }),
     init: () => _labBind(['ic-v','ic-pol','ic-alt'], () => {
       const V=_labV('ic-v'), pol=_labV('ic-pol'), alt=_labV('ic-alt');
@@ -16881,13 +16901,15 @@ const SIM_BUILDERS = {
       const Vph=V/Math.sqrt(3);
       const creep=Vph*pol*altF;
       const discCreep=292, discs=Math.max(1,Math.ceil(creep/discCreep));
+      const air=bil*1.7;
       _labSetv('ic-alt',alt.toFixed(0)+' m');
-      _labSet('ic-bil',bil); _labSet('ic-creep',creep.toFixed(0));
-      _labSet('ic-n-lbl',discs+' piring'); _labSet('icf-n',discs);
-      let g='', shown=Math.min(discs,12), y0=50, step=Math.min(16,(195)/shown);
-      for(let i=0;i<shown;i++){ const y=y0+i*step; g+=`<ellipse cx="200" cy="${(y+step/2).toFixed(0)}" rx="16" ry="${(step*0.32).toFixed(1)}" fill="#cdd3dc" stroke="#1a1d2e" stroke-width="1"/>`; }
+      _labSet('ic-bil',bil); _labSet('ic-creep',creep.toFixed(0)); _labSet('ic-n',discs); _labSet('ic-air',air.toFixed(0));
+      _labSet('ic-n-lbl',discs+' piring'); _labSet('ic-bil-lbl','BIL '+bil+' kV');
+      _labSet('icf-alt',altF.toFixed(2)); _labSet('icf-cr',creep.toFixed(0));
+      let g='', shown=Math.min(discs,12), y0=46, step=Math.min(15,(196)/shown);
+      for(let i=0;i<shown;i++){ const y=y0+i*step; g+=`<ellipse class="lab-glow" style="animation-delay:${(i*0.1).toFixed(2)}s" cx="200" cy="${(y+step/2).toFixed(0)}" rx="16" ry="${(step*0.32).toFixed(1)}" fill="#cdd3dc" stroke="#1a1d2e" stroke-width="1"/>`; }
       if(discs>12) g+=`<text x="200" y="${(y0+shown*step+12).toFixed(0)}" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">+${discs-12} lagi</text>`;
-      _labSet('ic-discs', ''); document.getElementById('ic-discs').innerHTML=g;
+      document.getElementById('ic-discs').innerHTML=g;
     })
   },
 
@@ -16896,29 +16918,38 @@ const SIM_BUILDERS = {
     html: () => _labShell({
       eyebrow: 'Data Science · Forecasting', title: 'Load Forecasting', italic: 'Moving Average',
       desc: 'Prediksi beban dengan rata-rata bergerak (moving average). Window kecil = responsif tapi berisik; besar = halus tapi lambat.',
-      svg: `<line x1="40" y1="240" x2="380" y2="240" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+      svg: `<line x1="40" y1="240" x2="386" y2="240" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
         <line x1="40" y1="40" x2="40" y2="240" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
         <polyline id="lfc-actual" fill="none" stroke="#1a1d2e" stroke-width="2" points=""/>
         <polyline id="lfc-ma" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="4 3" points=""/>
-        <text x="300" y="55" font-family="Georgia" font-size="11" fill="#1a1d2e">— Aktual</text>
-        <text x="300" y="72" font-family="Georgia" font-size="11" fill="#c0392b">-- Forecast (MA)</text>`,
-      controls: _labSld('lf-win', 'Window MA (hari)', 2, 7, 3, 1),
-      outputs: _labOut('lf-next', 'Forecast Besok', 'MW') + _labOut('lf-mape', 'Error (MAPE)', '%'),
-      formula: `Data beban 14 hari (MW). Forecast_t = rata-rata <span id="lff-w">3</span> hari sebelumnya.<br>MAPE = rata-rata |aktual − forecast| / aktual × 100%`
+        <polyline id="lfc-proj" fill="none" stroke="#15803d" stroke-width="2.5" stroke-dasharray="2 3" points=""/>
+        <text x="285" y="52" font-family="Georgia" font-size="10" fill="#1a1d2e">— Aktual</text>
+        <text x="285" y="67" font-family="Georgia" font-size="10" fill="#c0392b">-- MA fit</text>
+        <text x="285" y="82" font-family="Georgia" font-size="10" fill="#15803d">·· Proyeksi</text>`,
+      controls: _labSld('lf-win', 'Window MA (hari)', 2, 7, 3, 1)
+              + _labSld('lf-hor', 'Horizon prediksi (hari)', 1, 5, 3, 1),
+      outputs: _labOut('lf-next', 'Forecast Besok', 'MW') + _labOut('lf-mape', 'Error (MAPE)', '%') + _labOut('lf-trend', 'Tren', ''),
+      formula: `Data beban 14 hari (MW). Forecast = rata-rata <span id="lff-w">3</span> hari sebelumnya, diproyeksikan <span id="lff-h">3</span> hari ke depan.<br>MAPE = rata-rata |aktual − forecast|/aktual × 100%`
     }),
     init: () => {
       const DATA=[210,225,219,240,255,248,260,272,265,280,295,288,300,312];
-      _labBind(['lf-win'], () => {
-        const w=_labV('lf-win');
-        _labSetv('lf-win',w.toFixed(0)+' hari'); _labSet('lff-w',w.toFixed(0));
+      _labBind(['lf-win','lf-hor'], () => {
+        const w=_labV('lf-win'), hor=_labV('lf-hor');
+        _labSetv('lf-win',w.toFixed(0)+' hari'); _labSetv('lf-hor',hor.toFixed(0)+' hari'); _labSet('lff-w',w.toFixed(0)); _labSet('lff-h',hor.toFixed(0));
         const ma=[]; let errSum=0,errN=0;
         for(let i=0;i<DATA.length;i++){ if(i>=w){ const avg=DATA.slice(i-w,i).reduce((a,b)=>a+b,0)/w; ma[i]=avg; errSum+=Math.abs(DATA[i]-avg)/DATA[i]; errN++; } }
         const nextF=DATA.slice(DATA.length-w).reduce((a,b)=>a+b,0)/w;
         const mape=errN?errSum/errN*100:0;
-        _labSet('lf-next',nextF.toFixed(0)); _labSet('lf-mape',mape.toFixed(1));
-        const min=200,max=320, X=i=>40+(340)*(i/(DATA.length-1)), Y=v=>240-(v-min)/(max-min)*190;
+        // proyeksi rekursif
+        const ext=DATA.slice(); for(let h=0;h<hor;h++){ const avg=ext.slice(ext.length-w).reduce((a,b)=>a+b,0)/w; ext.push(avg); }
+        const trend = nextF>DATA[DATA.length-1]+2?'Naik ↑':(nextF<DATA[DATA.length-1]-2?'Turun ↓':'Stabil →');
+        _labSet('lf-next',nextF.toFixed(0)); _labSet('lf-mape',mape.toFixed(1)); _labSet('lf-trend',trend);
+        const n=DATA.length+hor, min=200,max=340, X=i=>40+(346)*(i/(n-1)), Y=v=>240-(v-min)/(max-min)*195;
         _labAttr('lfc-actual','points',DATA.map((v,i)=>X(i).toFixed(0)+','+Y(v).toFixed(0)).join(' '));
         _labAttr('lfc-ma','points',ma.map((v,i)=>v==null?null:X(i).toFixed(0)+','+Y(v).toFixed(0)).filter(Boolean).join(' '));
+        let proj=[X(DATA.length-1).toFixed(0)+','+Y(DATA[DATA.length-1]).toFixed(0)];
+        for(let h=0;h<hor;h++) proj.push(X(DATA.length+h).toFixed(0)+','+Y(ext[DATA.length+h]).toFixed(0));
+        _labAttr('lfc-proj','points',proj.join(' '));
       });
     }
   },
@@ -16934,17 +16965,18 @@ const SIM_BUILDERS = {
         <text x="120" y="270" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Estimasi</text>
         <text x="270" y="270" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">Tercatat</text>
         <text x="205" y="30" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" id="nt-verdict">—</text>`,
-      controls: _labSld('nt-exp', 'Estimasi wajar (kWh)', 100, 1000, 500, 10)
-              + _labSld('nt-bil', 'Tercatat meter (kWh)', 0, 1000, 470, 10)
-              + _labSld('nt-th', 'Ambang anomali (%)', 5, 40, 15, 1),
-      outputs: _labOut('nt-loss', 'Indikasi Loss', '%') + _labOut('nt-kwh', 'Selisih', 'kWh'),
-      formula: `Loss% = (Estimasi − Tercatat) / Estimasi × 100<br>Status: <span id="ntf-st">—</span> (ambang <span id="ntf-th">15</span>%)`
+      controls: _labSld('nt-exp', 'Estimasi wajar (kWh/bln)', 100, 1000, 500, 10)
+              + _labSld('nt-bil', 'Tercatat meter (kWh/bln)', 0, 1000, 470, 10)
+              + _labSld('nt-th', 'Ambang anomali (%)', 5, 40, 15, 1)
+              + _labSld('nt-tar', 'Tarif (Rp/kWh)', 800, 2500, 1500, 50),
+      outputs: _labOut('nt-loss', 'Indikasi Loss', '%') + _labOut('nt-kwh', 'Selisih', 'kWh') + _labOut('nt-rp', 'Potensi Kerugian', 'Rp/bln'),
+      formula: `Loss% = (Estimasi − Tercatat)/Estimasi × 100 · Kerugian = selisih × tarif<br>Status: <span id="ntf-st">—</span> (ambang <span id="ntf-th">15</span>%)`
     }),
-    init: () => _labBind(['nt-exp','nt-bil','nt-th'], () => {
-      const exp=_labV('nt-exp'), bil=_labV('nt-bil'), th=_labV('nt-th');
-      const loss=Math.max(0,(exp-bil)/exp*100), diff=exp-bil, flag=loss>th;
-      _labSetv('nt-exp',exp.toFixed(0)+' kWh'); _labSetv('nt-bil',bil.toFixed(0)+' kWh'); _labSetv('nt-th',th.toFixed(0)+' %');
-      _labSet('nt-loss',loss.toFixed(1)); _labSet('nt-kwh',diff.toFixed(0));
+    init: () => _labBind(['nt-exp','nt-bil','nt-th','nt-tar'], () => {
+      const exp=_labV('nt-exp'), bil=_labV('nt-bil'), th=_labV('nt-th'), tar=_labV('nt-tar');
+      const loss=Math.max(0,(exp-bil)/exp*100), diff=Math.max(0,exp-bil), flag=loss>th, rp=diff*tar;
+      _labSetv('nt-exp',exp.toFixed(0)+' kWh'); _labSetv('nt-bil',bil.toFixed(0)+' kWh'); _labSetv('nt-th',th.toFixed(0)+' %'); _labSetv('nt-tar','Rp '+tar.toFixed(0));
+      _labSet('nt-loss',loss.toFixed(1)); _labSet('nt-kwh',diff.toFixed(0)); _labSet('nt-rp','Rp '+fmtRp(rp));
       const col=flag?_RED:_GREEN, maxH=200, mx=Math.max(exp,bil,1);
       _labAttr('nt-bar-exp','height',exp/mx*maxH); _labAttr('nt-bar-exp','y',250-exp/mx*maxH);
       _labAttr('nt-bar-bil','height',bil/mx*maxH); _labAttr('nt-bar-bil','y',250-bil/mx*maxH); _labAttr('nt-bar-bil','fill',col);
@@ -16969,18 +17001,21 @@ const SIM_BUILDERS = {
               + _labSld('ep-hr', 'Jam operasi / tahun', 500, 8760, 4000, 100)
               + _labSld('ep-tar', 'Tarif (Rp/kWh)', 800, 2500, 1500, 50)
               + _labSld('ep-inv', 'Investasi (juta Rp)', 1, 500, 50, 1),
-      outputs: _labOut('ep-kwh', 'Hemat Energi', 'kWh/th') + _labOut('ep-rp', 'Hemat Biaya', 'Rp/th'),
-      formula: `Hemat = (P_old − P_new) × jam × tarif · Payback = Investasi / Hemat<br>Payback ≈ <span id="epf-pb">—</span> tahun`
+      outputs: _labOut('ep-kwh', 'Hemat Energi', 'kWh/th') + _labOut('ep-rp', 'Hemat Biaya', 'Rp/th') + _labOut('ep-pbo', 'Payback', 'th') + _labOut('ep-co2', 'CO₂ Turun', 'ton/th'),
+      formula: `Hemat = (P_old − P_new) × jam × tarif · Payback = Investasi/Hemat · CO₂ pakai 0,85 kg/kWh<br>Hemat <span id="epf-kwh">—</span> kWh/th · net 5 th ≈ Rp <span id="epf-net">—</span>`
     }),
     init: () => _labBind(['ep-old','ep-new','ep-hr','ep-tar','ep-inv'], () => {
       const o=_labV('ep-old'), n=_labV('ep-new'), hr=_labV('ep-hr'), tar=_labV('ep-tar'), inv=_labV('ep-inv')*1e6;
       const dKW=Math.max(0,o-n), kwh=dKW*hr, rp=kwh*tar, pb=rp>0?inv/rp:Infinity;
+      const co2=kwh*0.85/1000, net5=rp*5-inv;
       _labSetv('ep-old',o.toFixed(0)+' kW'); _labSetv('ep-new',n.toFixed(0)+' kW'); _labSetv('ep-hr',hr.toFixed(0)+' jam'); _labSetv('ep-tar','Rp '+tar.toFixed(0)); _labSetv('ep-inv','Rp '+_labV('ep-inv').toFixed(0)+' jt');
       _labSet('ep-kwh',Math.round(kwh).toLocaleString('id-ID')); _labSet('ep-rp','Rp '+fmtRp(rp));
+      _labSet('ep-pbo', isFinite(pb)?pb.toFixed(1):'∞'); _labSet('ep-co2',co2.toFixed(1));
       const maxH=170, mx=Math.max(o,n,1);
       _labAttr('ep-bar-old','height',o/mx*maxH); _labAttr('ep-bar-old','y',220-o/mx*maxH);
       _labAttr('ep-bar-new','height',n/mx*maxH); _labAttr('ep-bar-new','y',220-n/mx*maxH);
-      _labSet('ep-pb', isFinite(pb)?('Payback '+pb.toFixed(1)+' th'):'—'); _labSet('epf-pb', isFinite(pb)?pb.toFixed(1):'∞');
+      _labSet('ep-pb', isFinite(pb)?('Payback '+pb.toFixed(1)+' th'):'—');
+      _labSet('epf-kwh',Math.round(kwh).toLocaleString('id-ID')); _labSet('epf-net',fmtRp(net5));
     })
   },
 
@@ -17000,19 +17035,19 @@ const SIM_BUILDERS = {
       controls: _labSld('pf-p', 'Daya aktif P (kW)', 1, 500, 100, 1)
               + _labSld('pf-pf1', 'PF awal (cosφ₁)', 0.5, 0.95, 0.75, 0.01)
               + _labSld('pf-pf2', 'PF target (cosφ₂)', 0.85, 1, 0.95, 0.01),
-      outputs: _labOut('pf-qc', 'Kapasitor Dibutuhkan', 'kVAR') + _labOut('pf-s2', 'Daya Semu Baru', 'kVA'),
-      formula: `Qc = P·(tanφ₁ − tanφ₂)<br>Qc = <span id="pff-p">100</span>·(<span id="pff-t1">0.88</span> − <span id="pff-t2">0.33</span>) = <span id="pff-qc">—</span> kVAR`
+      outputs: _labOut('pf-qc', 'Kapasitor', 'kVAR') + _labOut('pf-s1', 'kVA Sebelum', 'kVA') + _labOut('pf-s2', 'kVA Sesudah', 'kVA') + _labOut('pf-ir', 'Arus Turun', '%'),
+      formula: `Qc = P·(tanφ₁ − tanφ₂) · Arus turun = (1 − cosφ₁/cosφ₂)×100%<br>Qc = <span id="pff-qc">—</span> kVAR · jumlah step kapasitor ≈ <span id="pff-step">—</span> × 25 kVAR`
     }),
     init: () => _labBind(['pf-p','pf-pf1','pf-pf2'], () => {
       const P=_labV('pf-p'), pf1=_labV('pf-pf1'), pf2=Math.max(_labV('pf-pf2'),pf1+0.001);
       const t1=Math.tan(Math.acos(pf1)), t2=Math.tan(Math.acos(pf2));
-      const Qc=P*(t1-t2), S1=P/pf1, S2=P/pf2;
+      const Qc=P*(t1-t2), S1=P/pf1, S2=P/pf2, ir=(1-pf1/pf2)*100, steps=Math.max(1,Math.ceil(Qc/25));
       _labSetv('pf-p',P.toFixed(0)+' kW'); _labSetv('pf-pf1',pf1.toFixed(2)); _labSetv('pf-pf2',_labV('pf-pf2').toFixed(2));
-      _labSet('pf-qc',Qc.toFixed(1)); _labSet('pf-s2',S2.toFixed(1));
+      _labSet('pf-qc',Qc.toFixed(1)); _labSet('pf-s1',S1.toFixed(1)); _labSet('pf-s2',S2.toFixed(1)); _labSet('pf-ir',ir.toFixed(1));
       const px=250, q1px=(t1)*px*0.45, q2px=(t2)*px*0.45;
       _labAttr('pfc-q1','y2',(240-Math.min(q1px,140)).toFixed(0)); _labAttr('pfc-s1','y2',(240-Math.min(q1px,140)).toFixed(0));
       _labAttr('pfc-q2','y2',(240-Math.min(q2px,140)).toFixed(0)); _labAttr('pfc-s2','y2',(240-Math.min(q2px,140)).toFixed(0));
-      _labSet('pff-p',P.toFixed(0)); _labSet('pff-t1',t1.toFixed(2)); _labSet('pff-t2',t2.toFixed(2)); _labSet('pff-qc',Qc.toFixed(1));
+      _labSet('pff-qc',Qc.toFixed(1)); _labSet('pff-step',steps);
     })
   },
 
@@ -17029,18 +17064,19 @@ const SIM_BUILDERS = {
       controls: _labSld('bs-load', 'Beban (kW)', 1, 500, 50, 1)
               + _labSld('bs-hr', 'Autonomy (jam)', 1, 12, 4, 0.5)
               + _labSld('bs-dod', 'Depth of Discharge (%)', 50, 95, 80, 1)
-              + _labSld('bs-eff', 'Efisiensi sistem (%)', 80, 98, 90, 1),
-      outputs: _labOut('bs-kwh', 'Kapasitas Baterai', 'kWh') + _labOut('bs-inv', 'Inverter', 'kW'),
-      formula: `Energi = beban × jam = <span id="bsf-e">—</span> kWh<br>Baterai = Energi / (DoD × η) = <span id="bsf-b">—</span> kWh`
+              + _labSld('bs-eff', 'Efisiensi sistem (%)', 80, 98, 90, 1)
+              + _labSel('bs-mod', 'Modul baterai', '<option value="5">Rak 5 kWh</option><option value="10" selected>Rak 10 kWh</option><option value="100">Container 100 kWh</option>'),
+      outputs: _labOut('bs-kwh', 'Kapasitas Baterai', 'kWh') + _labOut('bs-inv', 'Inverter', 'kW') + _labOut('bs-n', 'Jumlah Modul', 'unit') + _labOut('bs-e', 'Energi Harian', 'kWh'),
+      formula: `Energi = beban × jam · Baterai = Energi/(DoD × η) · Inverter ≈ beban puncak<br>Baterai = <span id="bsf-b">—</span> kWh → <span id="bsf-n">—</span> modul · C-rate ≈ <span id="bsf-c">—</span> C`
     }),
-    init: () => _labBind(['bs-load','bs-hr','bs-dod','bs-eff'], () => {
-      const load=_labV('bs-load'), hr=_labV('bs-hr'), dod=_labV('bs-dod')/100, eff=_labV('bs-eff')/100;
-      const energy=load*hr, batt=energy/(dod*eff), inv=load;
+    init: () => _labBind(['bs-load','bs-hr','bs-dod','bs-eff','bs-mod'], () => {
+      const load=_labV('bs-load'), hr=_labV('bs-hr'), dod=_labV('bs-dod')/100, eff=_labV('bs-eff')/100, mod=_labV('bs-mod');
+      const energy=load*hr, batt=energy/(dod*eff), inv=load, nmod=Math.ceil(batt/mod), crate=load/batt;
       _labSetv('bs-load',load.toFixed(0)+' kW'); _labSetv('bs-hr',hr.toFixed(1)+' jam'); _labSetv('bs-dod',_labV('bs-dod').toFixed(0)+' %'); _labSetv('bs-eff',_labV('bs-eff').toFixed(0)+' %');
-      _labSet('bs-kwh',batt.toFixed(1)); _labSet('bs-inv',inv.toFixed(0));
-      _labSet('bs-kwh-lbl',batt.toFixed(0)+' kWh'); _labSet('bs-inv-lbl','inverter '+inv.toFixed(0)+' kW');
+      _labSet('bs-kwh',batt.toFixed(1)); _labSet('bs-inv',inv.toFixed(0)); _labSet('bs-n',nmod); _labSet('bs-e',energy.toFixed(0));
+      _labSet('bs-kwh-lbl',batt.toFixed(0)+' kWh'); _labSet('bs-inv-lbl',nmod+' × '+mod+' kWh · inv '+inv.toFixed(0)+' kW');
       const fillH=Math.min(dod,1)*180; _labAttr('bs-fill','height',fillH); _labAttr('bs-fill','y',240-fillH);
-      _labSet('bsf-e',energy.toFixed(1)); _labSet('bsf-b',batt.toFixed(1));
+      _labSet('bsf-b',batt.toFixed(1)); _labSet('bsf-n',nmod); _labSet('bsf-c',crate.toFixed(2));
     })
   },
 
@@ -17058,14 +17094,15 @@ const SIM_BUILDERS = {
               + _labSld('af-ibf', 'Arus gangguan I_bf (kA)', 1, 40, 20, 0.5)
               + _labSld('af-t', 'Waktu busur t (detik)', 0.05, 2, 0.2, 0.05)
               + _labSld('af-d', 'Jarak kerja D (mm)', 300, 1000, 455, 5),
-      outputs: _labOut('af-energy', 'Incident Energy', 'cal/cm²') + _labOut('af-ppe', 'Kategori PPE', ''),
-      formula: `E[J/cm²] = 5.12×10⁵·V·I_bf·(t/D²) · cal = J/4.184<br>E = <span id="aff-e">—</span> cal/cm² · batas kerja: <span id="aff-cat">—</span>`
+      outputs: _labOut('af-energy', 'Incident Energy', 'cal/cm²') + _labOut('af-ppe', 'Kategori PPE', '') + _labOut('af-bound', 'Arc Flash Boundary', 'mm'),
+      formula: `E = 5.12×10⁵·V·I_bf·(t/D²) [J/cm²] · cal = J/4.184 · Boundary D_B = D·√(E/1.2)<br>E = <span id="aff-e">—</span> cal/cm² · APD: <span id="aff-cat">—</span> · batas arc flash <span id="aff-b">—</span> mm`
     }),
     init: () => _labBind(['af-v','af-ibf','af-t','af-d'], () => {
       const V=_labV('af-v'), Ibf=_labV('af-ibf'), t=_labV('af-t'), D=_labV('af-d');
       const EJ=5.12e5*V*Ibf*(t/(D*D)), Ecal=EJ/4.184;
+      const boundary=D*Math.sqrt(Ecal/1.2); // jarak di mana E=1.2 cal/cm²
       _labSetv('af-ibf',Ibf.toFixed(1)+' kA'); _labSetv('af-t',t.toFixed(2)+' s'); _labSetv('af-d',D.toFixed(0)+' mm');
-      _labSet('af-energy',Ecal.toFixed(2));
+      _labSet('af-energy',Ecal.toFixed(2)); _labSet('af-bound',boundary.toFixed(0));
       let cat,col;
       if(Ecal<=1.2){cat='Minimal (<1.2)';col=_GREEN;}
       else if(Ecal<=4){cat='PPE Cat 1';col=_GREEN;}
@@ -17077,7 +17114,7 @@ const SIM_BUILDERS = {
       _labSet('af-cat',cat); _labAttr('af-cat','fill',col); _labAttr('af-e','fill',col);
       _labAttr('af-box','stroke',col); _labAttr('af-box','fill', col===_RED?'rgba(192,57,43,0.1)':(col===_GOLD?'rgba(154,127,79,0.12)':'rgba(21,128,61,0.1)'));
       _labSet('af-e',Ecal.toFixed(1)+' cal/cm²');
-      _labSet('aff-e',Ecal.toFixed(2)); _labSet('aff-cat',cat);
+      _labSet('aff-e',Ecal.toFixed(2)); _labSet('aff-cat',cat); _labSet('aff-b',boundary.toFixed(0));
     })
   },
 
@@ -17095,19 +17132,23 @@ const SIM_BUILDERS = {
       controls: _labSel('et-rho', 'Jenis tanah (ρ Ω·m)', '<option value="30">Tanah basah (30)</option><option value="100" selected>Lempung (100)</option><option value="300">Berpasir (300)</option><option value="1000">Berbatu (1000)</option>')
               + _labSld('et-l', 'Panjang elektroda L (m)', 1, 6, 3, 0.5)
               + _labSld('et-d', 'Diameter batang d (mm)', 12, 30, 16, 1)
+              + _labSld('et-n', 'Jumlah batang (paralel)', 1, 10, 1, 1)
               + _labSld('et-if', 'Arus gangguan ke tanah (A)', 1, 50, 10, 1),
-      outputs: _labOut('et-r', 'Resistansi Pembumian', 'Ω') + _labOut('et-touch', 'Tegangan Sentuh', 'V'),
-      formula: `R = (ρ / 2πL)·(ln(8L/d) − 1)<br>V_sentuh = I × R = <span id="etf-i">10</span> × <span id="etf-r">—</span> = <span id="etf-v">—</span> V`
+      outputs: _labOut('et-r', 'Resistansi Pembumian', 'Ω') + _labOut('et-gpr', 'GPR (Naik Potensial)', 'V') + _labOut('et-touch', 'Tegangan Sentuh', 'V'),
+      formula: `R₁ = (ρ/2πL)·(ln(8L/d) − 1) · R_n = R₁/(n·η) · GPR = I×R_n · V_sentuh ≈ 0.7×GPR<br>R = <span id="etf-r">—</span> Ω (n=<span id="etf-n">1</span>) · GPR = <span id="etf-g">—</span> V`
     }),
-    init: () => _labBind(['et-rho','et-l','et-d','et-if'], () => {
-      const rho=_labV('et-rho'), L=_labV('et-l'), d=_labV('et-d')/1000, If=_labV('et-if');
-      const R=(rho/(2*Math.PI*L))*(Math.log(8*L/d)-1), Vt=If*R, safe=Vt<=50;
-      _labSetv('et-l',L.toFixed(1)+' m'); _labSetv('et-d',_labV('et-d').toFixed(0)+' mm'); _labSetv('et-if',If.toFixed(0)+' A');
-      _labSet('et-r',R.toFixed(2)); _labSet('et-touch',Vt.toFixed(0));
+    init: () => _labBind(['et-rho','et-l','et-d','et-n','et-if'], () => {
+      const rho=_labV('et-rho'), L=_labV('et-l'), d=_labV('et-d')/1000, n=_labV('et-n'), If=_labV('et-if');
+      const R1=(rho/(2*Math.PI*L))*(Math.log(8*L/d)-1);
+      const eta = n>1 ? 0.85 : 1;            // efisiensi paralel (kopling mutual)
+      const R = R1/(n*eta);
+      const gpr=If*R, Vt=0.7*gpr, safe=Vt<=50;
+      _labSetv('et-l',L.toFixed(1)+' m'); _labSetv('et-d',_labV('et-d').toFixed(0)+' mm'); _labSetv('et-n',n.toFixed(0)+' batang'); _labSetv('et-if',If.toFixed(0)+' A');
+      _labSet('et-r',R.toFixed(2)); _labSet('et-gpr',gpr.toFixed(0)); _labSet('et-touch',Vt.toFixed(0));
       _labSet('et-r-lbl','R = '+R.toFixed(1)+' Ω');
       const col=safe?_GREEN:_RED;
       _labSet('et-verdict',safe?'✓ AMAN (≤ 50 V)':'✗ BAHAYA (> 50 V)'); _labAttr('et-verdict','fill',col); _labAttr('et-rod','stroke',safe?'#9a7f4f':_RED);
-      _labSet('etf-i',If.toFixed(0)); _labSet('etf-r',R.toFixed(2)); _labSet('etf-v',Vt.toFixed(0));
+      _labSet('etf-r',R.toFixed(2)); _labSet('etf-n',n.toFixed(0)); _labSet('etf-g',gpr.toFixed(0));
     })
   }
 };
