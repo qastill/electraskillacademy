@@ -15120,7 +15120,7 @@ const SIM_GROUPS = [
   { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo, feeder 20kV, proteksi, kapasitor & restorasi SCADA.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
   { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag, isolasi, arester petir, korona EHV & aliran daya.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting, regresi, deteksi anomali & PLTS.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
-  { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Audit, payback & koreksi faktor daya.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
+  { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Payback, PF, chiller HVAC, retrofit LED & M&V.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
   { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS rooftop & sizing baterai (BESS).', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
   { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, APD & sistem pembumian.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
   { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
@@ -15170,6 +15170,9 @@ const SIMULATORS = [
   // ===== S6 · Energy Auditor =====
   { id: 'energy-payback', jalur: 'S6', category: 'Audit · Ekonomi', name: 'Energy Audit & Payback', desc: 'Hitung penghematan kWh, rupiah/tahun, dan payback period dari retrofit (mis. ganti LED / motor efisien).', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
   { id: 'pf-correction', jalur: 'S6', category: 'Audit · Kualitas Daya', name: 'Power Factor Correction', desc: 'Simulasi koreksi cos φ dengan capacitor bank. Input PF existing + target — dapat kapasitas kVAR & penghematan denda.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pf, working: true },
+  { id: 'chiller-eff', jalur: 'S6', category: 'Audit · HVAC', name: 'Chiller Efficiency (kW/TR)', desc: 'Hitung efisiensi chiller (kW/TR & COP), konsumsi tahunan, & potensi hemat bila upgrade ke chiller efisien.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'lighting-retrofit', jalur: 'S6', category: 'Audit · Retrofit', name: 'Lighting Retrofit ROI', desc: 'Susun lampu lama yang diganti LED (klik), hitung hemat daya/energi/biaya, payback, & pengurangan CO₂.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.bulb, working: true },
+  { id: 'energy-mv', jalur: 'S6', category: 'Audit · M&V', name: 'Energy Baseline & Savings (M&V)', desc: 'Verifikasi penghematan ala IPMVP: baseline vs aktual + kurva CUSUM akumulasi hemat pasca program efisiensi.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
 
   // ===== S7 · Pembangkitan & Renewable =====
   { id: 'pv-sizing', jalur: 'S7', category: 'Renewable · PLTS', name: 'PV System Designer', desc: 'Rancang sistem PLTS atap: jumlah panel, ukuran inverter, kapasitas baterai backup, dan luas atap yang dibutuhkan.', level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.pv, working: true },
@@ -16908,6 +16911,33 @@ function _azRender(){
   _labAttr('az-verdict','fill',col);
 }
 
+// --- Lighting Retrofit ROI (interaktif) ---
+// tiap item: jumlah, watt lama (per unit), watt LED pengganti, biaya retrofit per unit (Rp)
+const _LR_TYPES = { pijar:{n:10,old:60,led:8,cost:35000,lbl:'Pijar 60W→LED 8W'},
+                    tl:{n:10,old:40,led:18,cost:60000,lbl:'TL 40W→LED 18W'},
+                    hpl:{n:5,old:250,led:70,cost:350000,lbl:'HPL 250W→LED 70W'} };
+let _lrItems = [];
+function _lrAdd(t){ const d=_LR_TYPES[t]; if(d) _lrItems.push({...d}); _lrRender(); }
+function _lrUndo(){ _lrItems.pop(); _lrRender(); }
+function _lrReset(){ _lrItems=[]; _lrRender(); }
+function _lrRender(){
+  if(!document.getElementById('lr-info')) return;
+  const hr=document.getElementById('lr-hr')?_labV('lr-hr'):12, tar=document.getElementById('lr-tar')?_labV('lr-tar'):1500;
+  if(document.getElementById('lr-hr'))_labSetv('lr-hr',hr.toFixed(0)+' jam');
+  if(document.getElementById('lr-tar'))_labSetv('lr-tar','Rp '+tar.toFixed(0));
+  let pOld=0,pNew=0,invest=0,units=0;
+  _lrItems.forEach(it=>{ pOld+=it.n*it.old; pNew+=it.n*it.led; invest+=it.n*it.cost; units+=it.n; });
+  pOld/=1000; pNew/=1000; // kW
+  const dkw=pOld-pNew, kwh=dkw*hr*365, rp=kwh*tar, pb=rp>0?invest/rp:Infinity, co2=kwh*0.85/1000;
+  _labSet('lr-dkw',dkw.toFixed(2)); _labSet('lr-rp','Rp '+fmtRp(rp)); _labSet('lr-pbo',isFinite(pb)?pb.toFixed(1):'—'); _labSet('lr-co2',co2.toFixed(2));
+  _labSet('lr-info', units===0?'belum ada lampu — klik tombol +':(units+' titik · invest Rp '+fmtRp(invest)));
+  _labSet('lr-pb', units===0?'—':(isFinite(pb)?('Payback '+pb.toFixed(1)+' th · hemat Rp '+fmtRp(rp)+'/th'):'—'));
+  const maxP=Math.max(pOld,pNew,0.1)*1.15, H=150, base=210, sc=H/maxP;
+  _labAttr('lr-bar-old','height',pOld*sc); _labAttr('lr-bar-old','y',base-pOld*sc);
+  _labAttr('lr-bar-new','height',pNew*sc); _labAttr('lr-bar-new','y',base-pNew*sc);
+  _labSet('lr-old-top',pOld.toFixed(1)+'kW'); _labSet('lr-new-top',pNew.toFixed(1)+'kW');
+}
+
 const SIM_BUILDERS = {
   // ============ S1: Conduit Fill (interaktif) ============
   'conduit-fill': {
@@ -17810,6 +17840,118 @@ const SIM_BUILDERS = {
       _labAttr('pfc-q1','y2',(240-Math.min(q1px,140)).toFixed(0)); _labAttr('pfc-s1','y2',(240-Math.min(q1px,140)).toFixed(0));
       _labAttr('pfc-q2','y2',(240-Math.min(q2px,140)).toFixed(0)); _labAttr('pfc-s2','y2',(240-Math.min(q2px,140)).toFixed(0));
       _labSet('pff-qc',Qc.toFixed(1)); _labSet('pff-step',steps);
+    })
+  },
+
+  // ============ S6: Chiller / HVAC Efficiency ============
+  'chiller-eff': {
+    html: () => _labShell({
+      eyebrow: 'Auditor · HVAC', title: 'Chiller', italic: 'Efficiency (kW/TR)',
+      desc: 'Efisiensi chiller diukur dalam kW/TR (makin kecil makin hemat) atau COP. Hitung konsumsi tahunan & potensi hemat bila upgrade ke chiller efisien.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">kW/TR (makin rendah makin baik)</text>
+        <line x1="60" y1="220" x2="360" y2="220" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="100" y="220" width="70" height="0" rx="3" fill="#c0392b" id="ch-bar-now"/>
+        <rect x="240" y="220" width="70" height="0" rx="3" fill="#15803d" id="ch-bar-eff"/>
+        <text x="135" y="236" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">existing</text>
+        <text x="275" y="236" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">efisien</text>
+        <text x="135" y="212" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#c0392b" id="ch-now-top">—</text>
+        <text x="275" y="212" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#15803d" id="ch-eff-top">—</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#15803d" id="ch-save">—</text>`,
+      controls: _labSld('ch-tr','Kapasitas pendinginan (TR)',50,2000,500,10)
+        + _labSld('ch-now','kW/TR existing',0.6,1.5,0.95,0.01)
+        + _labSld('ch-eff','kW/TR efisien (target)',0.45,0.9,0.6,0.01)
+        + _labSld('ch-hr','Jam operasi / tahun',1000,8760,4500,100)
+        + _labSld('ch-tar','Tarif (Rp/kWh)',800,2500,1500,50),
+      outputs: _labOut('ch-cop','COP Existing','') + _labOut('ch-kwh','Hemat Energi','kWh/th') + _labOut('ch-rp','Hemat Biaya','Rp/th'),
+      formula: `Daya = TR × (kW/TR) · COP = 3.517/(kW/TR) · Hemat = TR×Δ(kW/TR)×jam×tarif<br>Daya existing = <span id="chf-pn">—</span> kW → efisien <span id="chf-pe">—</span> kW`
+    }),
+    init: () => _labBind(['ch-tr','ch-now','ch-eff','ch-hr','ch-tar'], () => {
+      const TR=_labV('ch-tr'), now=_labV('ch-now'), eff=Math.min(_labV('ch-eff'),now), hr=_labV('ch-hr'), tar=_labV('ch-tar');
+      _labSetv('ch-tr',TR.toFixed(0)+' TR'); _labSetv('ch-now',now.toFixed(2)); _labSetv('ch-eff',_labV('ch-eff').toFixed(2)); _labSetv('ch-hr',hr.toFixed(0)+' jam'); _labSetv('ch-tar','Rp '+tar.toFixed(0));
+      const Pn=TR*now, Pe=TR*eff, cop=3.517/now;
+      const kwh=(Pn-Pe)*hr, rp=kwh*tar;
+      _labSet('ch-cop',cop.toFixed(2)); _labSet('ch-kwh',Math.round(kwh).toLocaleString('id-ID')); _labSet('ch-rp','Rp '+fmtRp(rp));
+      _labSet('chf-pn',Pn.toFixed(0)); _labSet('chf-pe',Pe.toFixed(0));
+      _labSet('ch-save','Hemat '+((now-eff)/now*100).toFixed(0)+'% energi pendinginan · Rp '+fmtRp(rp)+'/th');
+      const maxv=Math.max(now,eff,0.1)*1.15, H=160, base=220, sc=H/maxv;
+      _labAttr('ch-bar-now','height',now*sc); _labAttr('ch-bar-now','y',base-now*sc);
+      _labAttr('ch-bar-eff','height',eff*sc); _labAttr('ch-bar-eff','y',base-eff*sc);
+      _labSet('ch-now-top',now.toFixed(2)); _labSet('ch-eff-top',eff.toFixed(2));
+    })
+  },
+
+  // ============ S6: Lighting Retrofit ROI (interaktif) ============
+  'lighting-retrofit': {
+    html: () => _labShell({
+      eyebrow: 'Auditor · Retrofit', title: 'Lighting Retrofit', italic: 'ROI',
+      desc: 'Tambahkan jenis lampu lama (klik) yang akan diganti LED. Hitung total penghematan daya, energi, biaya/tahun, payback & pengurangan CO₂ dari retrofit.',
+      svg: `<text x="200" y="24" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a">Daya pencahayaan (kW)</text>
+        <line x1="70" y1="210" x2="350" y2="210" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect x="110" y="210" width="80" height="0" rx="3" fill="#c0392b" id="lr-bar-old"/>
+        <rect x="240" y="210" width="80" height="0" rx="3" fill="#15803d" id="lr-bar-new"/>
+        <text x="150" y="226" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">lama</text>
+        <text x="280" y="226" text-anchor="middle" font-family="Georgia" font-size="11" fill="#1a1d2e">LED</text>
+        <text x="150" y="202" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#c0392b" id="lr-old-top">—</text>
+        <text x="280" y="202" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#15803d" id="lr-new-top">—</text>
+        <text x="200" y="252" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="lr-info">belum ada lampu</text>
+        <text x="200" y="274" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#15803d" id="lr-pb">—</text>`,
+      controls: `<div class="sim-control"><label>Tambah lampu lama (→ diganti LED)</label><div style="display:flex;flex-wrap:wrap;gap:6px">`
+          + `<button type="button" onclick="_lrAdd('pijar')" style="${_BTN}">+ 10× Pijar 60W</button>`
+          + `<button type="button" onclick="_lrAdd('tl')" style="${_BTN}">+ 10× TL 40W</button>`
+          + `<button type="button" onclick="_lrAdd('hpl')" style="${_BTN}">+ 5× HPL-N 250W</button></div></div>`
+          + `<div class="sim-control"><div style="display:flex;gap:8px"><button type="button" onclick="_lrUndo()" style="${_BTN}">↶ Hapus</button><button type="button" onclick="_lrReset()" style="${_BTN}">⟲ Reset</button></div></div>`
+          + _labSld('lr-hr','Jam nyala / hari',1,24,12,1)
+          + _labSld('lr-tar','Tarif (Rp/kWh)',800,2500,1500,50),
+      outputs: _labOut('lr-dkw','Hemat Daya','kW') + _labOut('lr-rp','Hemat Biaya','Rp/th') + _labOut('lr-pbo','Payback','th') + _labOut('lr-co2','CO₂ Turun','ton/th'),
+      formula: `LED ≈ 8W (ganti pijar 60W), 18W (ganti TL 40W), 70W (ganti HPL 250W) · biaya retrofit per titik diperhitungkan<br>Payback = total investasi / hemat biaya tahunan · CO₂ pakai 0,85 kg/kWh`
+    }),
+    init: () => { _lrItems=[]; const f=()=>_lrRender(); ['lr-hr','lr-tar'].forEach(id=>{const e=document.getElementById(id); if(e)e.addEventListener('input',f);}); _lrRender(); }
+  },
+
+  // ============ S6: Energy Baseline & M&V (CUSUM) ============
+  'energy-mv': {
+    html: () => _labShell({
+      eyebrow: 'Auditor · M&V', title: 'Energy Baseline', italic: '& Savings (M&V)',
+      desc: 'Verifikasi penghematan (IPMVP): bandingkan konsumsi aktual vs garis dasar (baseline) setelah implementasi. Kurva CUSUM menunjukkan akumulasi penghematan.',
+      svg: `<text x="30" y="40" font-family="Georgia" font-size="10" fill="#6b6d7a">kWh / CUSUM</text>
+        <line x1="50" y1="44" x2="50" y2="210" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <line x1="50" y1="160" x2="380" y2="160" stroke="#1a1d2e" stroke-width="1" opacity="0.4"/>
+        <polyline id="mv-base" fill="none" stroke="#9aa0ad" stroke-width="2" stroke-dasharray="4 3" points=""/>
+        <polyline id="mv-act" fill="none" stroke="#c0392b" stroke-width="2" points=""/>
+        <polyline id="mv-cusum" fill="none" stroke="#15803d" stroke-width="2.5" points=""/>
+        <line x1="0" y1="44" x2="0" y2="210" id="mv-ecm" stroke="#3a5fb0" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="300" y="56" font-family="Georgia" font-size="9.5" fill="#9aa0ad">-- baseline</text>
+        <text x="300" y="70" font-family="Georgia" font-size="9.5" fill="#c0392b">— aktual</text>
+        <text x="300" y="84" font-family="Georgia" font-size="9.5" fill="#15803d">— CUSUM hemat</text>
+        <text x="214" y="232" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" fill="#15803d" id="mv-info">—</text>`,
+      controls: _labSld('mv-ecm','Bulan mulai program (ECM)',3,9,6,1)
+        + _labSld('mv-save','Penghematan pasca-ECM (%)',0,30,12,1)
+        + _labSld('mv-noise','Variasi acak (%)',0,15,5,1),
+      outputs: _labOut('mv-cum','Akumulasi Hemat','kWh') + _labOut('mv-pct','Hemat Rata-rata','%') + _labOut('mv-verif','Status M&V',''),
+      formula: `CUSUM = Σ(baseline − aktual) · tren naik setelah ECM = penghematan terverifikasi<br>Baseline ≈ 10.000 kWh/bln (12 bulan). Garis biru = mulai program efisiensi.`
+    }),
+    init: () => _labBind(['mv-ecm','mv-save','mv-noise'], () => {
+      const ecm=Math.round(_labV('mv-ecm')), save=_labV('mv-save')/100, noise=_labV('mv-noise')/100;
+      _labSetv('mv-ecm','bulan '+ecm); _labSetv('mv-save',(save*100).toFixed(0)+' %'); _labSetv('mv-noise',(noise*100).toFixed(0)+' %');
+      const base=10000, N=12; const seed=[0.9,1.1,1.0,1.05,0.95,1.0,1.08,0.92,1.03,0.97,1.06,0.94];
+      const cum=[], act=[], baseArr=[];
+      for(let i=0;i<N;i++){ const b=base*(0.96+0.08*Math.sin(i/12*2*Math.PI)); baseArr.push(b);
+        const factor=(i>=ecm-1?(1-save):1)*(1+(seed[i]-1)*noise);
+        const a=b*factor; act.push(a); cum.push((i>0?cum[i-1]:0)+(b-a)); }
+      const cumTotal=cum[N-1];
+      const avgPct = save*100;
+      _labSet('mv-cum',Math.round(cumTotal).toLocaleString('id-ID')); _labSet('mv-pct',avgPct.toFixed(0));
+      const ok=cumTotal>base*0.05;
+      _labSet('mv-verif', ok?'✓ TERVERIFIKASI':'○ Belum signifikan');
+      _labSet('mv-info', ok?('Hemat terverifikasi: '+Math.round(cumTotal).toLocaleString('id-ID')+' kWh sejak bulan '+ecm):'Penghematan belum signifikan');
+      _labAttr('mv-info','fill', ok?'#15803d':'#9a7f4f');
+      const X=i=>50+i/(N-1)*330;
+      const allMax=Math.max(...baseArr,...act)*1.05, Ytop=v=>160-(v/allMax)*116;       // kWh atas
+      const cmax=Math.max(...cum.map(Math.abs),1), Yc=v=>205-(v/cmax)*44;               // CUSUM area bawah
+      _labAttr('mv-base','points',baseArr.map((v,i)=>X(i).toFixed(1)+','+Ytop(v).toFixed(1)).join(' '));
+      _labAttr('mv-act','points',act.map((v,i)=>X(i).toFixed(1)+','+Ytop(v).toFixed(1)).join(' '));
+      _labAttr('mv-cusum','points',cum.map((v,i)=>X(i).toFixed(1)+','+Yc(v).toFixed(1)).join(' '));
+      const ex=X(ecm-1); _labAttr('mv-ecm','x1',ex); _labAttr('mv-ecm','x2',ex);
     })
   },
 
