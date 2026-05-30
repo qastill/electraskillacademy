@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ElectraSim — 16 Simulator Spesialisasi Ketenagalistrikan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --bg:#0b0f17; --bg2:#10151f; --panel:#141b27; --panel2:#1a2433;
+    --line:#26344a; --line2:#33445f;
+    --gold:#e8b339; --gold-d:#b8860b; --gold-soft:#f3d27a;
+    --copper:#c9763b; --copper-l:#e89b5e;
+    --txt:#e7edf6; --txt-d:#8ea0b8; --txt-dd:#5b6b82;
+    --ok:#3ddc84; --ok-d:#16331f; --err:#ff5d5d; --err-d:#33161a;
+    --live:#ffd34d; --pe:#3ddc84;
+    --R:#ff6b6b; --S:#ffd34d; --T:#5b8cff;
+    --r:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);
+    background-image:
+      radial-gradient(1200px 600px at 80% -10%, rgba(232,179,57,.06), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(201,118,59,.05), transparent 60%),
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:auto,auto,40px 40px,40px 40px;
+    background-blend-mode:normal,normal,overlay,overlay;
+    overflow-x:hidden;
+  }
+  body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 40%, transparent, rgba(0,0,0,.45));pointer-events:none;z-index:0}
+  .wrap{position:relative;z-index:1;max-width:1220px;margin:0 auto;padding:18px 16px 60px}
+
+  header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+  .logo{display:flex;align-items:center;gap:11px}
+  .bolt{width:42px;height:42px;border-radius:11px;background:linear-gradient(145deg,var(--gold),var(--gold-d));
+    display:grid;place-items:center;box-shadow:0 6px 22px rgba(232,179,57,.35), inset 0 1px 0 rgba(255,255,255,.4)}
+  .bolt svg{width:22px;height:22px}
+  .brand h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:21px;letter-spacing:.5px;line-height:1}
+  .brand h1 span{color:var(--gold)}
+  .brand p{font-size:11.5px;color:var(--txt-d);letter-spacing:.3px;margin-top:3px}
+  .stats{margin-left:auto;display:flex;gap:10px;align-items:center}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold-soft);
+    background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 13px;display:flex;gap:7px;align-items:center}
+  .chip b{color:var(--txt)}
+
+  .layout{display:grid;grid-template-columns:266px 1fr;gap:16px;align-items:start}
+  @media(max-width:920px){.layout{grid-template-columns:1fr}}
+
+  .modules{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:12px;max-height:78vh;overflow-y:auto}
+  @media(max-width:920px){.modules{max-height:none}}
+  .catname{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--txt-dd);margin:12px 6px 6px;display:flex;align-items:center;gap:6px}
+  .catname:first-child{margin-top:2px}
+  .catname .bar{width:14px;height:2px;border-radius:2px;background:var(--gold-d)}
+  .mod{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:11px;
+    padding:9px 10px;cursor:pointer;color:var(--txt);transition:.18s;margin-bottom:3px;font-family:inherit}
+  .mod:hover{background:var(--panel2);border-color:var(--line)}
+  .mod.active{background:linear-gradient(135deg,rgba(232,179,57,.16),rgba(232,179,57,.05));border-color:var(--gold-d)}
+  .mod .num{font-family:'JetBrains Mono',monospace;font-size:11px;width:24px;height:24px;border-radius:7px;flex-shrink:0;
+    display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);color:var(--txt-d)}
+  .mod.active .num{background:var(--gold);color:#1a1206;border-color:var(--gold);font-weight:700}
+  .mod.done .num{background:var(--ok-d);border-color:var(--ok);color:var(--ok)}
+  .mod .mt{font-size:12.5px;font-weight:600;line-height:1.18}
+  .mod .check{margin-left:auto;color:var(--ok);font-size:13px;opacity:0}
+  .mod.done .check{opacity:1}
+
+  .stage{display:flex;flex-direction:column;gap:14px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .ex-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .ex-head .badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.5px;padding:4px 9px;border-radius:6px;text-transform:uppercase}
+  .b-pen{background:rgba(232,179,57,.14);color:var(--gold-soft);border:1px solid var(--gold-d)}
+  .b-mtr{background:rgba(201,118,59,.16);color:var(--copper-l);border:1px solid var(--copper)}
+  .b-pln{background:rgba(61,220,132,.12);color:var(--ok);border:1px solid #2c7a4d}
+  .b-1ph{background:rgba(91,140,255,.14);color:#9db4ff;border:1px solid #3a5cc0}
+  .b-3ph{background:rgba(255,107,107,.13);color:#ff9d9d;border:1px solid #a8434a}
+  .b-rum{background:rgba(243,210,122,.12);color:var(--gold-soft);border:1px solid var(--gold-d)}
+  .b-lain{background:rgba(142,160,184,.13);color:var(--txt);border:1px solid var(--line2)}
+  .ex-head h2{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:600}
+  .ex-head .lvl{margin-left:auto;font-size:11px;color:var(--txt-d);display:flex;gap:3px;align-items:center}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--line2)}
+  .dot.on{background:var(--gold)}
+
+  .ex-desc{padding:11px 16px;font-size:13px;color:var(--txt-d);line-height:1.5;border-bottom:1px solid var(--line);background:rgba(0,0,0,.15)}
+  .ex-desc b{color:var(--gold-soft)}
+
+  .board-wrap{position:relative;background:
+      radial-gradient(900px 400px at 50% 0%, rgba(232,179,57,.04), transparent 70%),
+      repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(38,52,74,.4) 27px,rgba(38,52,74,.4) 28px),
+      repeating-linear-gradient(90deg,transparent,transparent 27px,rgba(38,52,74,.4) 27px,rgba(38,52,74,.4) 28px),
+      #0a0e16;}
+  svg.board{display:block;width:100%;height:auto;touch-action:manipulation}
+
+  .term{cursor:pointer}
+  .term-hit{fill:transparent}
+  .term-dot{fill:#0a0e16;stroke:var(--line2);stroke-width:2;transition:.15s}
+  .term:hover .term-dot{stroke:var(--gold-soft)}
+  .term.sel .term-dot{fill:var(--gold);stroke:var(--gold-soft);stroke-width:3}
+  .term.hint .term-dot{stroke:var(--gold);stroke-width:3}
+  .term.live .term-dot{fill:var(--live);stroke:var(--live)}
+  .term-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;fill:var(--txt-dd);pointer-events:none}
+
+  .wire{stroke-width:4.5;fill:none;stroke-linecap:round;cursor:pointer;transition:stroke .2s}
+  .wire:hover{stroke:var(--err)}
+  .wire.live{stroke:var(--live)}
+  .wire-flow{stroke:#fff8d6;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-dasharray:2 14;
+    animation:flow .6s linear infinite;pointer-events:none;opacity:.9}
+  @keyframes flow{to{stroke-dashoffset:-16}}
+
+  .comp-body{fill:var(--panel2);stroke:var(--line2);stroke-width:2}
+  .comp-lbl{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:600;fill:var(--txt);text-anchor:middle;pointer-events:none}
+  .comp-sub{font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--txt-dd);text-anchor:middle;pointer-events:none}
+  .tappable{cursor:pointer}
+
+  .filament{stroke:var(--txt-dd);stroke-width:2.5;fill:none;transition:.2s}
+  .lamp-glass{fill:rgba(255,255,255,.04);stroke:var(--line2);stroke-width:2.5;transition:.25s}
+  .lamp-on .lamp-glass{fill:var(--live);stroke:var(--gold-soft);filter:drop-shadow(0 0 14px var(--live))}
+  .lamp-on .filament{stroke:#7a4d00;stroke-width:3}
+  .motor-rot{transform-origin:center;transform-box:fill-box;transition:.2s}
+  .motor-run .motor-rot{animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .motor-run .motor-ring{stroke:var(--live);filter:drop-shadow(0 0 10px var(--live))}
+  .sw-lever{stroke:var(--gold);stroke-width:4;stroke-linecap:round;transition:.18s}
+  .ind{fill:#0a0e16;stroke:var(--line2);stroke-width:1.5;transition:.2s}
+  .outlet-live .ind{fill:var(--live);stroke:var(--gold-soft);filter:drop-shadow(0 0 8px var(--live))}
+  .bell-body{transform-origin:center top;transition:.2s}
+  .bell-ring .bell-body{animation:ring .18s linear infinite;stroke:var(--live);filter:drop-shadow(0 0 8px var(--live))}
+  @keyframes ring{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+  .pe-line{stroke:var(--pe);stroke-dasharray:1 0}
+
+  .controls{display:flex;gap:10px;padding:13px 16px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line)}
+  .btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;letter-spacing:.3px;border:1px solid var(--line2);
+    background:var(--panel2);color:var(--txt);padding:11px 17px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.16s}
+  .btn:hover{border-color:var(--gold-d);transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn.primary{background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;border-color:var(--gold)}
+  .btn.primary:hover{box-shadow:0 6px 20px rgba(232,179,57,.4)}
+  .btn.ghost{background:transparent}
+  .btn svg{width:15px;height:15px}
+  .toggle{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:12px;color:var(--txt-d)}
+  .sw{width:42px;height:23px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:.2s;border:1px solid var(--line2)}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:var(--txt-d);transition:.2s}
+  .sw.on{background:var(--gold-d)}
+  .sw.on::after{left:21px;background:var(--gold-soft)}
+
+  .feedback{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s,padding .3s}
+  .feedback.show{max-height:280px;padding:14px 16px 16px}
+  .fb{border-radius:11px;padding:13px 15px;font-size:13px;line-height:1.5;border:1px solid}
+  .fb.ok{background:var(--ok-d);border-color:#2c7a4d;color:#bff5d4}
+  .fb.err{background:var(--err-d);border-color:#7a2c34;color:#ffc9cc}
+  .fb b{font-weight:700}
+  .fb .h{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center;margin-bottom:5px}
+
+  .guide{padding:14px 16px;border-top:1px solid var(--line);display:none}
+  .guide.show{display:block}
+  .guide .gt{font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+  .step{display:flex;gap:11px;align-items:flex-start;padding:8px 10px;border-radius:9px;font-size:12.5px;color:var(--txt-d);margin-bottom:5px;border:1px solid transparent}
+  .step .si{font-family:'JetBrains Mono',monospace;font-size:11px;width:22px;height:22px;flex-shrink:0;border-radius:6px;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line)}
+  .step.done{color:var(--txt-dd)}
+  .step.done .si{background:var(--ok-d);border-color:var(--ok);color:var(--ok)}
+  .step.done .stx{text-decoration:line-through;opacity:.7}
+  .step.next{background:rgba(232,179,57,.08);border-color:var(--gold-d);color:var(--txt)}
+  .step.next .si{background:var(--gold);border-color:var(--gold);color:#1a1206;font-weight:700}
+
+  .hintbar{font-size:11.5px;color:var(--txt-dd);padding:9px 16px;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;display:flex;gap:8px;align-items:center}
+  .hintbar b{color:var(--gold-soft)}
+  .foot{text-align:center;color:var(--txt-dd);font-size:11px;margin-top:22px;font-family:'JetBrains Mono',monospace}
+  .foot b{color:var(--gold-d)}
+  .task{padding:11px 16px;font-size:13.5px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.15);line-height:1.5}
+  .task b{color:var(--gold-soft)}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;padding:10px 16px;border-top:1px solid var(--line);background:rgba(0,0,0,.12)}
+  .lg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--txt-d);font-family:'JetBrains Mono',monospace}
+  .lgdot{width:16px;height:4px;border-radius:3px;display:inline-block}
+  details.learn{border-top:1px solid var(--line)}
+  .learn-h{padding:13px 16px;font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px}
+  .learn-h::-webkit-details-marker{display:none}
+  .learn-h::after{content:'▾';margin-left:auto;transition:.2s}
+  details[open] .learn-h::after{transform:rotate(180deg)}
+  #learnBody{padding:0 16px 14px}
+  .learn-sec{margin-bottom:12px}
+  .ls-t{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--gold-soft);margin:6px 0 7px;font-weight:600}
+  .ls-intro{font-size:13px;color:var(--txt-d);line-height:1.55}
+  .ls-intro b{color:var(--gold-soft)}
+  .partrow{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:12.5px;color:var(--txt-d)}
+  .partrow b{color:var(--txt);min-width:110px;flex-shrink:0}
+  ul.flow{margin:0;padding-left:18px;color:var(--txt-d);font-size:12.5px;line-height:1.6}
+  ul.flow li{margin-bottom:5px}
+  ul.flow li b{color:var(--gold-soft)}
+  .step .why{font-size:11.5px;color:var(--txt-dd);margin-top:3px;line-height:1.45}
+  .help-ov{position:fixed;inset:0;background:rgba(4,7,12,.78);z-index:50;display:none;align-items:center;justify-content:center;padding:18px}
+  .help-ov.show{display:flex}
+  .help-card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line2);border-radius:16px;max-width:440px;width:100%;padding:18px 20px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .help-h{display:flex;align-items:center;font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:12px}
+  .help-h button{margin-left:auto;background:var(--panel2);border:1px solid var(--line2);color:var(--txt);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:14px}
+  .help-card ol{margin:0;padding-left:20px;color:var(--txt-d);font-size:13px;line-height:1.55}
+  .help-card li{margin-bottom:8px}
+  .help-card b{color:var(--gold-soft)}
+
+/* ===== ElectraSim hub + sim framework ===== */
+/* ===== topbar / shell ===== */
+.topbar{position:sticky;top:0;z-index:30;background:rgba(11,15,23,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1220px;margin:0 auto;padding:11px 16px;display:flex;align-items:center;gap:12px}
+.tb-back{display:none;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line2);color:var(--txt);
+  font-family:'Chakra Petch',sans-serif;font-size:12.5px;padding:8px 13px;border-radius:9px;cursor:pointer}
+.tb-back:hover{border-color:var(--gold-d)}
+.tb-crumb{font-size:12.5px;color:var(--txt-d);font-family:'JetBrains Mono',monospace}
+.tb-brand{display:flex;align-items:center;gap:9px;cursor:pointer}
+.tb-brand .bolt{width:34px;height:34px;border-radius:9px}
+.tb-brand .bolt svg{width:18px;height:18px}
+.tb-brand h1{font-family:'Chakra Petch',sans-serif;font-size:17px;font-weight:700;letter-spacing:.5px}
+.tb-brand h1 span{color:var(--gold)}
+
+.view{max-width:1220px;margin:0 auto;padding:20px 16px 70px}
+
+/* ===== hub ===== */
+.hub-hero{padding:14px 4px 22px}
+.hub-hero .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+.hub-hero h1{font-family:'Playfair Display',Georgia,serif;font-size:34px;font-weight:800;line-height:1.05;margin:8px 0 8px;letter-spacing:-.5px}
+.hub-hero h1 span{color:var(--gold)}
+.hub-hero p{color:var(--txt-d);font-size:14px;max-width:620px;line-height:1.55}
+@media(max-width:600px){.hub-hero h1{font-size:26px}}
+
+.hub-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1000px){.hub-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.hub-grid{grid-template-columns:1fr}}
+
+.tcard{display:flex;flex-direction:column;text-align:left;border:none;border-radius:16px;overflow:hidden;cursor:pointer;
+  background:#e0d4b2;box-shadow:0 8px 26px rgba(0,0,0,.35);transition:.2s;font-family:inherit;padding:0}
+.tcard:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.tcard-ic{position:relative;height:118px;display:grid;place-items:center;
+  background:linear-gradient(160deg,#161b2c 0%,#2b2a36 45%,#6a5734 100%)}
+.tcard-ic svg{width:50px;height:50px;color:var(--gold-soft);opacity:.92}
+.tcard-arrow{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:#f3eee2;color:#1a1206;
+  display:grid;place-items:center;font-size:15px;font-weight:700;transition:.2s}
+.tcard:hover .tcard-arrow{background:var(--gold);transform:translateX(2px)}
+.tcard-body{padding:14px 15px 16px;flex:1;display:flex;flex-direction:column}
+.tcard-no{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1px;color:#7a6f52;font-weight:600}
+.tcard-title{font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:#221d12;margin:7px 0 7px;line-height:1.15}
+.tcard-sub{font-size:12px;color:#5c5237;line-height:1.5;flex:1}
+.tcard-cta{margin-top:11px;font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:#6a5734;font-weight:600;display:flex;align-items:center;gap:6px}
+.tcard-cta::after{content:'→'}
+
+/* ===== sim framework ===== */
+.sim-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+.sim-ic{width:52px;height:52px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(145deg,var(--panel2),var(--bg2));border:1px solid var(--line2)}
+.sim-ic svg{width:26px;height:26px;color:var(--gold)}
+.sim-head h2{font-family:'Playfair Display',Georgia,serif;font-size:23px;font-weight:700;line-height:1.1}
+.sim-head p{color:var(--txt-d);font-size:13px;line-height:1.5;margin-top:5px;max-width:680px}
+.sim-head p b{color:var(--gold-soft)}
+
+.sim-grid{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+@media(max-width:860px){.sim-grid{grid-template-columns:1fr}}
+.sim-controls{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.sim-output{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+
+.field{margin-bottom:15px}
+.field label{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--txt-d);margin-bottom:7px;font-weight:600}
+.field .fval{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt-dd)}
+.field .fval b{color:var(--gold-soft);font-size:13px}
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:5px;background:var(--line2);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid #1a1206;box-shadow:0 0 0 3px rgba(232,179,57,.2)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid #1a1206}
+.numin{width:100%;background:var(--bg);border:1px solid var(--line2);color:var(--txt);border-radius:9px;padding:9px 11px;font-family:'JetBrains Mono',monospace}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-width:62px;background:var(--bg);border:1px solid var(--line2);color:var(--txt-d);font-family:'Chakra Petch',sans-serif;
+  font-size:12px;font-weight:600;padding:9px 8px;border-radius:9px;cursor:pointer;transition:.15s}
+.seg button.on{background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;border-color:var(--gold)}
+.subh{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin:16px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+.sim-controls .subh:first-child{border-top:none;padding-top:0;margin-top:0}
+
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.metric{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+.metric.big{grid-column:1/-1;background:linear-gradient(135deg,rgba(232,179,57,.12),transparent);border-color:var(--gold-d)}
+.metric .m-l{font-size:11px;color:var(--txt-dd);margin-bottom:5px}
+.metric .m-v{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--txt-d)}
+.metric .m-v b{font-size:22px;color:var(--txt);font-weight:700}
+.metric.big .m-v b{color:var(--gold-soft)}
+
+.chart{width:100%;height:auto;display:block;margin:6px 0 4px}
+.note{font-size:12px;color:var(--txt-d);line-height:1.55;background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-top:10px}
+.note b{color:var(--gold-soft)}
+.muted{color:var(--txt-dd)}
+
+/* motor / viz */
+.motorviz{display:grid;place-items:center;padding:8px 0 14px}
+.motorviz svg{width:120px;height:120px}
+.motor-rot{transform-origin:center;transform-box:fill-box}
+.motor-run .motor-rot{animation:spin .8s linear infinite}
+
+/* loto */
+.loto{display:flex;align-items:center;gap:11px;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:12px 13px;margin-bottom:8px;cursor:pointer;font-size:13px;transition:.15s}
+.loto:hover{border-color:var(--gold-d)}
+.loto.sel{border-color:var(--gold);background:rgba(232,179,57,.1)}
+.loto .ln{font-family:'JetBrains Mono',monospace;width:24px;height:24px;border-radius:7px;background:var(--panel2);border:1px solid var(--line2);display:grid;place-items:center;font-size:12px;color:var(--gold-soft);flex-shrink:0}
+
+/* quote */
+.quote{margin-top:12px}
+.qrow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px;color:var(--txt-d)}
+.qrow b{color:var(--txt);font-family:'JetBrains Mono',monospace}
+.qrow.tot{border-bottom:none;border-top:2px solid var(--gold-d);margin-top:4px;padding-top:11px;font-size:14px}
+.qrow.tot b{color:var(--gold-soft);font-size:16px}
+.warn{margin-top:10px;background:var(--err-d);border:1px solid #7a2c34;color:#ffc9cc;border-radius:9px;padding:9px 12px;font-size:12px}
+
+/* ev soc bar */
+.socbar{position:relative;height:34px;background:var(--bg);border:1px solid var(--line2);border-radius:9px;overflow:hidden;margin:10px 0}
+.socbar .soc1{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--copper),var(--gold));opacity:.85}
+.socbar .soc0{position:absolute;top:0;height:100%;width:2px;background:#fff;z-index:2}
+.socbar span{position:absolute;inset:0;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:#1a1206;font-weight:700;z-index:3}
+
+.plcbtns{display:flex;gap:10px;margin:6px 0 12px}
+.h2viz{display:grid;place-items:center;padding:6px 0}
+.h2viz svg{width:200px;height:90px}
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-in">
+  <div class="tb-brand" id="homeLink"><div class="bolt"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg></div><h1>Electra<span>Sim</span></h1></div>
+  <button class="tb-back" id="backBtn">← Semua Jalur</button>
+  <div class="tb-crumb" id="crumb">16 Jalur Spesialisasi</div>
+</div></div>
+
+<!-- HUB -->
+<div id="hubView" class="view">
+  <div class="hub-hero">
+    <div class="eyebrow">Electra Academy · Simulator</div>
+    <h1>16 Jalur <span>Spesialisasi</span> Ketenagalistrikan</h1>
+    <p>Pilih satu jalur karier untuk masuk ke simulator interaktifnya. Tiap simulator dibuat hands-on: sambungkan, atur parameter, periksa, dan lihat hasilnya secara langsung.</p>
+  </div>
+  <div class="hub-grid" id="hubGrid"></div>
+</div>
+
+<!-- WIRING (Jalur 01) -->
+<div id="wiringView" style="display:none">
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <div class="bolt"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+      <div class="brand">
+        <h1>Volta<span>Sim</span></h1>
+        <p>Pelatihan Wiring Listrik Virtual · 1φ · 3φ · Instalasi Rumah</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="chip">⚡ Selesai <b id="doneCount">0</b>/<span id="totalCount">0</span></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="modules" id="modList"></nav>
+
+    <section class="stage">
+      <div class="card">
+        <div class="ex-head">
+          <span class="badge" id="exBadge">—</span>
+          <h2 id="exTitle">—</h2>
+          <div class="lvl" id="exLvl"></div>
+        </div>
+        <div class="task" id="exTask"></div>
+        <div class="board-wrap">
+          <svg class="board" id="board" viewBox="0 0 880 480" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div class="hintbar"><span>›</span><span id="hintText">Ketuk satu terminal lalu terminal lain untuk membuat kabel.</span></div>
+        <div class="legend" id="legend"></div>
+        <div class="controls">
+          <button class="btn primary" id="btnCheck">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Periksa Rangkaian
+          </button>
+          <button class="btn ghost" id="btnReset">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v3.3H6.3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Reset
+          </button>
+          <button class="btn ghost" id="btnHelp">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 3.5M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Cara pakai
+          </button>
+          <div class="toggle"><span>Sorot langkah di papan</span><div class="sw" id="guideToggle"></div></div>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <div class="guide show" id="guidePanel"><div class="gt">⬡ Langkah Pemasangan</div><div id="guideSteps"></div></div>
+        <details class="learn" id="learnWrap" open><summary class="learn-h">Cara kerja &amp; alasan</summary><div id="learnBody"></div></details>
+      </div>
+    </section>
+  </div>
+  <div class="help-ov" id="helpOv"><div class="help-card">
+    <div class="help-h">Cara Pakai <button id="helpClose">✕</button></div>
+    <ol>
+      <li><b>Sambung kabel:</b> ketuk satu terminal (titik bulat), lalu ketuk terminal lain — kabel otomatis tergambar.</li>
+      <li><b>Warna kabel</b> menunjukkan fungsinya (lihat keterangan di bawah papan). Kabel <b>merah</b> berarti salah sambung / korslet.</li>
+      <li><b>Hapus kabel:</b> cukup ketuk kabelnya.</li>
+      <li><b>Saklar / MCB:</b> ketuk komponennya di papan untuk ON / OFF.</li>
+      <li><b>Periksa Rangkaian:</b> memvalidasi sambungan lalu menjalankan simulasi — lampu menyala, motor berputar, arus mengalir.</li>
+      <li>Aktifkan <b>Sorot langkah di papan</b> untuk dituntun terminal mana yang disambung berikutnya.</li>
+    </ol>
+  </div></div>
+  <div class="foot">VoltaSim · dibuat untuk <b>Electra Academy</b> · sambung • periksa • simulasikan</div>
+</div>
+</div>
+
+<!-- GENERIC SIM (Jalur 02-16) -->
+<div id="simView" class="view" style="display:none"><div id="simMount"></div></div>
+
+<script>
+/* ---------- shared calc engine ---------- */
+(function(g){
+const C={};
+const r2=(x,n)=>{const p=Math.pow(10,n==null?2:n);return Math.round(x*p)/p;};
+C.r2=r2;
+
+/* ---- 02 Industri: motor FLA, starter, protection ---- */
+C.motorFLA=(P_kW,V,pf,eff)=> (P_kW*1000)/(Math.sqrt(3)*V*pf*eff);
+C.STARTERS={
+  dol:{name:'DOL (Direct On Line)',Imult:6,Tpct:100,note:'Paling sederhana & murah, tapi arus start ~6× — bikin kedip tegangan.'},
+  yd:{name:'Star-Delta (Y-Δ)',Imult:2,Tpct:33,note:'Arus start turun ~1/3, tapi torsi start juga turun ~1/3. Untuk start tanpa beban berat.'},
+  soft:{name:'Soft Starter',Imult:3.5,Tpct:50,note:'Ramp tegangan halus, mengurangi hentakan mekanik & arus.'},
+  vfd:{name:'VFD (Inverter)',Imult:1.3,Tpct:150,note:'Arus start hampir nominal & torsi terkendali; bisa atur kecepatan.'},
+};
+C.motorAnalysis=(P_kW,V,pf,eff,starter)=>{
+  const FLA=C.motorFLA(P_kW,V,pf,eff);const s=C.STARTERS[starter];
+  return {FLA,Istart:FLA*s.Imult,Imult:s.Imult,Tpct:s.Tpct,overload:1.15*FLA,name:s.name,note:s.note};
+};
+
+/* ---- 03 Distribusi: feeder connectivity / fault isolation ----
+   sections array [0..n-1]; switches between section i and i+1 = sw[i] (closed=true)
+   CB main feeds section0 (closed). tie at end feeds last section from backup (open default).
+   faultSection index. A section is energized if reachable from an active source through
+   closed switches WITHOUT crossing the faulted section boundary into the fault itself.
+   We treat the faulted section as a permanent short: if energized, it's a live fault (bad).
+*/
+C.feederState=(n,cbClosed,tieClosed,sw,faultSection)=>{
+  // adjacency: node i connects to i-1 via sw[i-1], to i+1 via sw[i]
+  const energized=new Array(n).fill(false);
+  function flood(start){const st=[start];while(st.length){const i=st.pop();if(i<0||i>=n||energized[i])continue;energized[i]=true;
+    if(i>0&&sw[i-1])st.push(i-1); if(i<n-1&&sw[i])st.push(i+1);}}
+  if(cbClosed)flood(0);
+  if(tieClosed)flood(n-1);
+  const faultLive=energized[faultSection];
+  const restored=energized.filter((e,i)=>e&&i!==faultSection).length;
+  return {energized,faultLive,restored,total:n-1};
+};
+
+/* ---- 04 Transmisi: IEC standard inverse relay trip time ---- */
+C.relayTrip=(If,Ipick,TMS,curve)=>{
+  if(If<=Ipick) return {trips:false,t:Infinity};
+  const K={si:[0.14,0.02],vi:[13.5,1],ei:[80,2]}[curve||'si'];
+  const t=TMS*K[0]/(Math.pow(If/Ipick,K[1])-1);
+  return {trips:true,t};
+};
+
+/* ---- 05 Energy Analyst: linear regression + MAPE + NTL flag ---- */
+C.linreg=(ys)=>{const n=ys.length;let sx=0,sy=0,sxx=0,sxy=0;
+  for(let i=0;i<n;i++){sx+=i;sy+=ys[i];sxx+=i*i;sxy+=i*ys[i];}
+  const b=(n*sxy-sx*sy)/(n*sxx-sx*sx);const a=(sy-b*sx)/n;return {a,b};};
+C.forecast=(ys,ahead)=>{const {a,b}=C.linreg(ys);return a+b*(ys.length-1+ahead);};
+C.mape=(act,pred)=>{let s=0,k=0;for(let i=0;i<act.length;i++){if(act[i]!==0){s+=Math.abs((act[i]-pred[i])/act[i]);k++;}}return 100*s/k;};
+C.ntlFlag=(series,dropPct)=>{ // flag if last reading drops > dropPct vs avg of previous
+  const prev=series.slice(0,-1);const avg=prev.reduce((x,y)=>x+y,0)/prev.length;const last=series[series.length-1];
+  return {avg,last,drop:100*(avg-last)/avg,flag:(avg-last)/avg*100>=dropPct};};
+
+/* ---- 06 Energy Auditor ---- */
+C.loadKWh=(W,qty,hrs)=>W*qty*hrs*365/1000;
+C.auditTotals=(loads,tariff,ef)=>{let kwh=0;loads.forEach(l=>kwh+=C.loadKWh(l.W,l.qty,l.hrs));
+  return {kwh,cost:kwh*tariff,co2:kwh*ef/1000};}; // co2 in tonnes
+
+/* ---- 07 Pembangkitan: economic dispatch (merit order) ---- */
+C.dispatch=(demand,plants)=>{ // plants:[{name,cap,cost}] cost Rp/MWh
+  const order=[...plants].sort((a,b)=>a.cost-b.cost);let rem=demand;const out=[];let totCost=0;
+  order.forEach(p=>{const g=Math.max(0,Math.min(p.cap,rem));out.push({name:p.name,gen:g,cost:p.cost,color:p.color});rem-=g;totCost+=g*p.cost;});
+  return {gen:out,unmet:Math.max(0,rem),totalCost:totCost};
+};
+
+/* ---- 08 K3: LOTO order ---- */
+C.LOTO=['Beri tahu & koordinasi','Matikan peralatan (shutdown)','Isolasi sumber energi','Pasang gembok & label (lock-out tag-out)','Buang energi tersimpan (disipasi)','Uji tegangan nol (verifikasi)'];
+C.lotoCheck=(arr)=>arr.length===C.LOTO.length&&arr.every((v,i)=>v===C.LOTO[i]);
+
+/* ---- 09 Sales: cable & trafo sizing ---- */
+C.CABLE=[ // mm2, ampacity A (NYY cu approx), R ohm/km
+ {mm2:4,amp:34,R:4.61},{mm2:6,amp:44,R:3.08},{mm2:10,amp:61,R:1.83},{mm2:16,amp:82,R:1.15},
+ {mm2:25,amp:108,R:0.727},{mm2:35,amp:135,R:0.524},{mm2:50,amp:168,R:0.387},{mm2:70,amp:207,R:0.268},
+ {mm2:95,amp:250,R:0.193},{mm2:120,amp:292,R:0.153},{mm2:150,amp:335,R:0.124},{mm2:185,amp:382,R:0.0991},{mm2:240,amp:453,R:0.0754}];
+C.TRAFO=[25,50,100,160,200,250,315,400,500,630,800,1000,1250,1600,2000];
+C.current3=(P_kW,V,pf)=>(P_kW*1000)/(Math.sqrt(3)*V*pf);
+C.cableSelect=(I)=>{const need=I*1.25;return C.CABLE.find(c=>c.amp>=need)||C.CABLE[C.CABLE.length-1];};
+C.vdrop=(I,cable,L,V)=>{const drop=Math.sqrt(3)*I*(cable.R/1000)*L;return {volt:drop,pct:100*drop/V};};
+C.trafoSelect=(P_kW,pf)=>{const kva=P_kW/pf;return C.TRAFO.find(t=>t>=kva*1.25)||C.TRAFO[C.TRAFO.length-1];};
+
+/* ---- 10 PV Solar ---- */
+C.pv=(kWp,psh,pr,Wp)=>({panels:Math.ceil(kWp*1000/Wp),yield:kWp*psh*365*pr,inverter:r2(kWp*0.85,1)});
+C.pvFromArea=(area,Wp,m2perpanel)=>{const panels=Math.floor(area/m2perpanel);return {panels,kWp:r2(panels*Wp/1000,2)};};
+
+/* ---- 11 GHG ---- */
+C.EF={diesel:2.68,bensin:2.31,grid:0.79,gas:2.02}; // kgCO2 per L or per kWh(grid)
+C.ghg=(dieselL,gridKWh,gasM3)=>{
+  const s1=dieselL*C.EF.diesel+ (gasM3||0)*C.EF.gas;
+  const s2=gridKWh*C.EF.grid;
+  return {s1:s1/1000,s2:s2/1000,total:(s1+s2)/1000}; // tonnes
+};
+
+/* ---- 12 EV charging (CC-CV taper above 80%) ---- */
+C.evCharge=(battKWh,soc0,soc1,kW,tariff)=>{
+  const energy=battKWh*(soc1-soc0)/100;
+  // time: below 80% full power, above 80% effective 0.5x
+  let t=0;const fast=Math.max(0,Math.min(soc1,80)-soc0)/100*battKWh;
+  const taper=Math.max(0,soc1-Math.max(soc0,80))/100*battKWh;
+  t=fast/kW + taper/(kW*0.5);
+  return {energy,hours:t,cost:energy*tariff};
+};
+
+/* ---- 13 Waste to Energy (mass burn) ---- */
+C.wte=(tonsDay,lhv_MJkg,eff)=>{
+  const energyMJ=tonsDay*1000*lhv_MJkg*eff; // per day
+  const MWh=energyMJ/3600; const MW=MWh/24;
+  return {MWh,MW,homes:Math.round(MWh*1000/ (900/30))}; // ~900kWh/home/month ->30kWh/day
+};
+
+/* ---- 14 Hydrogen electrolysis ---- */
+C.h2=(MW,specKWhkg,eff)=>{
+  const kWh=MW*1000*24*eff; const kg=kWh/specKWhkg;
+  return {kgDay:kg, waterL:kg*9, co2avoid:kg*9.3/1000}; // grey H2 ~9.3 kgCO2/kg
+};
+
+/* ---- 15 BESS peak shaving ---- */
+C.peakShave=(load24,battKWh,kW,threshold)=>{
+  const out=load24.slice();let soc=battKWh; // start full
+  // discharge above threshold
+  for(let h=0;h<24;h++){if(out[h]>threshold){const need=Math.min(out[h]-threshold,kW,soc);out[h]-=need;soc-=need;}}
+  const newPeak=Math.max(...out);const oldPeak=Math.max(...load24);
+  return {out,newPeak,oldPeak,shaved:oldPeak-newPeak};
+};
+
+/* ---- 16 PLC ladder: start/stop seal-in ---- */
+C.ladderEval=(start,stop,prevCoil)=> (start||prevCoil)&&!stop;
+
+if(typeof module!=='undefined'&&module.exports)module.exports=C;
+g.CALC=C;
+})(typeof window!=='undefined'?window:globalThis);
+
+</script>
+<script>
+/* ---------- wiring trainer (Jalur 01), isolated ---------- */
+(function(){
+
+/* ====================== Component blueprints ====================== */
+function dot(x,y){return `<circle cx="${x}" cy="${y}" r="3.5" fill="var(--txt-d)"/>`;}
+const COMP = {
+  source:{terms:[{key:'L',dx:78,dy:26,lbl:'L',side:'r'},{key:'N',dx:78,dy:70,lbl:'N',side:'r'}],
+    draw:c=>`<rect class="comp-body" x="${c.x}" y="${c.y}" width="78" height="96" rx="9"/>
+      <text class="comp-lbl" x="${c.x+39}" y="${c.y+34}">SUMBER</text><text class="comp-sub" x="${c.x+39}" y="${c.y+50}">220V AC</text>
+      <circle cx="${c.x+30}" cy="${c.y+68}" r="9" fill="none" stroke="var(--gold)" stroke-width="2"/>
+      <path d="M${c.x+24} ${c.y+68}h12M${c.x+30} ${c.y+62}v12" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/>`},
+
+  src3ph:{terms:[{key:'R',dx:84,dy:22,lbl:'R',side:'r'},{key:'S',dx:84,dy:50,lbl:'S',side:'r'},{key:'T',dx:84,dy:78,lbl:'T',side:'r'},{key:'N',dx:84,dy:106,lbl:'N',side:'r'}],
+    draw:c=>`<rect class="comp-body" x="${c.x}" y="${c.y}" width="84" height="128" rx="9"/>
+      <text class="comp-lbl" x="${c.x+42}" y="${c.y+15}">SUMBER 3φ</text>
+      <circle cx="${c.x+18}" cy="${c.y+22}" r="4" fill="var(--R)"/><circle cx="${c.x+18}" cy="${c.y+50}" r="4" fill="var(--S)"/>
+      <circle cx="${c.x+18}" cy="${c.y+78}" r="4" fill="var(--T)"/><circle cx="${c.x+18}" cy="${c.y+106}" r="4" fill="var(--txt-d)"/>
+      <text class="comp-sub" x="${c.x+42}" y="${c.y+122}">380V</text>`},
+
+  lamp:{terms:[{key:'a',dx:0,dy:64,side:'bl'},{key:'b',dx:64,dy:64,side:'br'}],
+    draw:c=>{const cx=c.x+32,cy=c.y+30;return `<g class="lamp" id="g_${c.id}">
+      <circle class="lamp-glass" cx="${cx}" cy="${cy}" r="26"/>
+      <path class="filament" d="M${cx-9} ${cy+8} L${cx-4} ${cy-6} L${cx} ${cy+4} L${cx+4} ${cy-6} L${cx+9} ${cy+8}"/>
+      <line x1="${c.x+8}" y1="${c.y+58}" x2="${c.x}" y2="${c.y+64}" stroke="var(--line2)" stroke-width="2.5"/>
+      <line x1="${c.x+56}" y1="${c.y+58}" x2="${c.x+64}" y2="${c.y+64}" stroke="var(--line2)" stroke-width="2.5"/>
+      <text class="comp-sub" x="${cx}" y="${cy+44}">${c.label||'LAMPU'}</text></g>`}},
+
+  bell:{terms:[{key:'a',dx:10,dy:64,side:'bl'},{key:'b',dx:60,dy:64,side:'br'}],
+    draw:c=>{const cx=c.x+35;return `<g class="bell" id="g_${c.id}">
+      <g class="bell-body"><path d="M${cx-22} ${c.y+40} A22 22 0 0 1 ${cx+22} ${c.y+40} Z" fill="var(--panel2)" stroke="var(--line2)" stroke-width="2.5"/>
+      <circle cx="${cx}" cy="${c.y+40}" r="4" fill="var(--line2)"/></g>
+      <line x1="${c.x+10}" y1="${c.y+44}" x2="${c.x+10}" y2="${c.y+64}" stroke="var(--line2)" stroke-width="2.5"/>
+      <line x1="${c.x+60}" y1="${c.y+44}" x2="${c.x+60}" y2="${c.y+64}" stroke="var(--line2)" stroke-width="2.5"/>
+      <text class="comp-sub" x="${cx}" y="${c.y+58}">BEL</text></g>`}},
+
+  switch:{terms:[{key:'in',dx:0,dy:25,side:'l'},{key:'out',dx:74,dy:25,side:'r'}],
+    draw:(c,on)=>{const lx=c.x+18,rx=c.x+56,ly=c.y+25;const ex=on?rx:c.x+50,ey=on?ly:c.y+11;return `
+      <g class="tappable" data-tap="${c.id}"><rect class="comp-body" x="${c.x}" y="${c.y}" width="74" height="50" rx="9" ${on?'stroke="var(--gold)"':''}/>
+      ${dot(lx,ly)}${dot(rx,ly)}<line class="sw-lever" x1="${lx}" y1="${ly}" x2="${ex}" y2="${ey}"/>
+      <text class="comp-sub" x="${c.x+37}" y="${c.y+44}">${c.label||'SAKLAR'}·${on?'ON':'OFF'}</text></g>`}},
+
+  mcb:{terms:[{key:'in',dx:0,dy:25,side:'l'},{key:'out',dx:66,dy:25,side:'r'}],
+    draw:(c,on)=>{const lx=c.x+15,rx=c.x+51,ly=c.y+25;const ey=on?ly:c.y+12;return `
+      <g class="tappable" data-tap="${c.id}"><rect class="comp-body" x="${c.x}" y="${c.y}" width="66" height="50" rx="6" ${on?'stroke="var(--gold)"':''}/>
+      <rect x="${c.x+26}" y="${c.y+6}" width="14" height="38" rx="3" fill="#0a0e16" stroke="var(--line2)"/>
+      ${dot(lx,ly)}${dot(rx,ly)}<line class="sw-lever" x1="${c.x+33}" y1="${c.y+38}" x2="${c.x+33}" y2="${ey}"/>
+      <text class="comp-sub" x="${c.x+33}" y="${c.y+46}" style="font-size:8px">${c.label||'MCB'}</text></g>`}},
+
+  mcb3:{terms:[{key:'Ri',dx:0,dy:20,lbl:'R',side:'l'},{key:'Si',dx:0,dy:48,lbl:'S',side:'l'},{key:'Ti',dx:0,dy:76,lbl:'T',side:'l'},
+                {key:'Ro',dx:78,dy:20,side:'r'},{key:'So',dx:78,dy:48,side:'r'},{key:'To',dx:78,dy:76,side:'r'}],
+    draw:(c,on)=>{return `<g class="tappable" data-tap="${c.id}">
+      <rect class="comp-body" x="${c.x}" y="${c.y}" width="78" height="96" rx="7" ${on?'stroke="var(--gold)"':''}/>
+      <text class="comp-lbl" x="${c.x+39}" y="${c.y+13}" style="font-size:10px">MCB 3φ</text>
+      ${[20,48,76].map(d=>dot(c.x,c.y+d)+dot(c.x+78,c.y+d)+`<line class="sw-lever" x1="${c.x+22}" y1="${c.y+d}" x2="${on?c.x+56:c.x+50}" y2="${on?c.y+d:c.y+d-9}"/>`).join('')}
+      <text class="comp-sub" x="${c.x+39}" y="${c.y+92}">${on?'ON':'OFF'}</text></g>`}},
+
+  switch3:{terms:[{key:'com',dx:0,dy:37,lbl:'C',side:'l'},{key:'p1',dx:80,dy:18,lbl:'1',side:'r'},{key:'p2',dx:80,dy:56,lbl:'2',side:'r'}],
+    draw:(c,st)=>{const pole=st?2:1;const cx=c.x+16,cy=c.y+37;const tx=c.x+64,ty=pole===1?c.y+18:c.y+56;return `
+      <g class="tappable" data-tap="${c.id}"><rect class="comp-body" x="${c.x}" y="${c.y}" width="80" height="74" rx="9"/>
+      ${dot(cx,cy)}${dot(c.x+64,c.y+18)}${dot(c.x+64,c.y+56)}<line class="sw-lever" x1="${cx}" y1="${cy}" x2="${tx}" y2="${ty}"/>
+      <text class="comp-sub" x="${c.x+40}" y="${c.y+70}">${c.label||'TUKAR'}·P${pole}</text></g>`}},
+
+  switch2:{terms:[{key:'in',dx:0,dy:37,side:'l'},{key:'o1',dx:80,dy:18,lbl:'1',side:'r'},{key:'o2',dx:80,dy:56,lbl:'2',side:'r'}],
+    draw:(c,st)=>{const a=st.a,b=st.b;const cx=c.x+16;return `<g>
+      <rect class="comp-body" x="${c.x}" y="${c.y}" width="80" height="74" rx="9"/>
+      ${dot(cx,c.y+30)}${dot(cx,c.y+44)}${dot(c.x+64,c.y+18)}${dot(c.x+64,c.y+56)}
+      <line class="sw-lever" x1="${cx}" y1="${c.y+30}" x2="${a?c.x+64:c.x+50}" y2="${a?c.y+18:c.y+10}"/>
+      <line class="sw-lever" x1="${cx}" y1="${c.y+44}" x2="${b?c.x+64:c.x+50}" y2="${b?c.y+56:c.y+64}"/>
+      <rect class="tappable" data-tap="${c.id}:a" x="${c.x}" y="${c.y}" width="80" height="37" fill="transparent"/>
+      <rect class="tappable" data-tap="${c.id}:b" x="${c.x}" y="${c.y+37}" width="80" height="37" fill="transparent"/>
+      <text class="comp-sub" x="${c.x+40}" y="${c.y+89}">SERI ${a?'1✓':'1'} ${b?'2✓':'2'}</text></g>`}},
+
+  intermediate:{terms:[{key:'a1',dx:0,dy:18,side:'l'},{key:'a2',dx:0,dy:52,side:'l'},{key:'b1',dx:80,dy:18,side:'r'},{key:'b2',dx:80,dy:52,side:'r'}],
+    draw:(c,cross)=>{const L1=c.x+16,L2=c.x+16,R1=c.x+64,R2=c.x+64;return `
+      <g class="tappable" data-tap="${c.id}"><rect class="comp-body" x="${c.x}" y="${c.y}" width="80" height="70" rx="9"/>
+      ${dot(L1,c.y+18)}${dot(L2,c.y+52)}${dot(R1,c.y+18)}${dot(R2,c.y+52)}
+      ${cross?`<line class="sw-lever" x1="${L1}" y1="${c.y+18}" x2="${R2}" y2="${c.y+52}"/><line class="sw-lever" x1="${L2}" y1="${c.y+52}" x2="${R1}" y2="${c.y+18}"/>`
+              :`<line class="sw-lever" x1="${L1}" y1="${c.y+18}" x2="${R1}" y2="${c.y+18}"/><line class="sw-lever" x1="${L2}" y1="${c.y+52}" x2="${R2}" y2="${c.y+52}"/>`}
+      <text class="comp-sub" x="${c.x+40}" y="${c.y+66}">SILANG·${cross?'X':'=='}</text></g>`}},
+
+  contactor:{terms:[{key:'A1',dx:0,dy:24,lbl:'A1',side:'l'},{key:'A2',dx:96,dy:24,lbl:'A2',side:'r'},{key:'T1',dx:0,dy:92,lbl:'T1',side:'l'},{key:'T2',dx:96,dy:92,lbl:'T2',side:'r'}],
+    draw:(c,en)=>`<g id="g_${c.id}"><rect class="comp-body" x="${c.x}" y="${c.y}" width="96" height="120" rx="10" ${en?'stroke="var(--gold)"':''}/>
+      <text class="comp-lbl" x="${c.x+48}" y="${c.y+16}">KONTAKTOR</text>
+      <rect x="${c.x+30}" y="${c.y+22}" width="36" height="22" rx="4" fill="none" stroke="${en?'var(--live)':'var(--line2)'}" stroke-width="2"/>
+      <text class="comp-sub" x="${c.x+48}" y="${c.y+37}">COIL</text>
+      <line x1="${c.x+14}" y1="${c.y+92}" x2="${c.x+40}" y2="${c.y+92}" stroke="var(--line2)" stroke-width="2.5"/>
+      <line x1="${c.x+56}" y1="${c.y+92}" x2="${c.x+82}" y2="${c.y+92}" stroke="var(--line2)" stroke-width="2.5"/>
+      <line x1="${c.x+40}" y1="${c.y+92}" x2="${c.x+56}" y2="${en?c.y+92:c.y+80}" stroke="${en?'var(--live)':'var(--txt-d)'}" stroke-width="3" stroke-linecap="round"/>
+      <text class="comp-sub" x="${c.x+48}" y="${c.y+112}">${en?'NO·CLOSED':'NO·OPEN'}</text></g>`},
+
+  motor:{terms:[{key:'a',dx:0,dy:38,lbl:'U',side:'l'},{key:'b',dx:76,dy:38,lbl:'V',side:'r'}],
+    draw:c=>{const x=c.x,y=c.y,cx=x+38,cy=y+38;return `<g class="motor" id="g_${c.id}">
+      <rect x="${x+14}" y="${y+60}" width="14" height="9" rx="2" fill="#1a2433" stroke="#33445f" stroke-width="1.5"/>
+      <rect x="${x+48}" y="${y+60}" width="14" height="9" rx="2" fill="#1a2433" stroke="#33445f" stroke-width="1.5"/>
+      <line x1="${x}" y1="${cy}" x2="${x+15}" y2="${cy}" stroke="#33445f" stroke-width="3" stroke-linecap="round"/>
+      <line x1="${x+61}" y1="${cy}" x2="${x+76}" y2="${cy}" stroke="#33445f" stroke-width="3" stroke-linecap="round"/>
+      <rect x="${x+15}" y="${y+13}" width="46" height="50" rx="8" fill="#1a2433" stroke="#33445f" stroke-width="2"/>
+      ${[0,1,2,3,4].map(i=>`<line x1="${x+20+i*9}" y1="${y+16}" x2="${x+20+i*9}" y2="${y+60}" stroke="#0d1320" stroke-width="1.6"/>`).join('')}
+      <circle class="motor-ring" cx="${cx}" cy="${cy}" r="22" fill="#11161f" stroke="#33445f" stroke-width="2.5"/>
+      <g class="motor-rot"><g transform="translate(${cx},${cy})">
+        <path d="M0 -18 Q5 -8 0 0 Q-5 -8 0 -18Z" fill="#c9763b"/><path d="M18 0 Q8 5 0 0 Q8 -5 18 0Z" fill="#e89b5e"/>
+        <path d="M0 18 Q-5 8 0 0 Q5 8 0 18Z" fill="#c9763b"/><path d="M-18 0 Q-8 -5 0 0 Q-8 5 -18 0Z" fill="#e89b5e"/></g></g>
+      <circle cx="${cx}" cy="${cy}" r="7.5" fill="#0a0e16" stroke="#33445f" stroke-width="1.5"/>
+      <text class="comp-lbl" x="${cx}" y="${cy+4}" style="font-size:11px">M</text>
+      <text class="comp-sub" x="${cx}" y="${y+68}">MOTOR 1~</text></g>`}},
+
+  motor3s:{terms:[{key:'U',dx:16,dy:2,lbl:'U'},{key:'V',dx:48,dy:2,lbl:'V'},{key:'W',dx:80,dy:2,lbl:'W'}],
+    draw:c=>{const x=c.x,y=c.y;return `<g class="motor" id="g_${c.id}">
+      <rect x="${x+20}" y="${y+64}" width="16" height="10" rx="2" fill="#1a2433" stroke="#33445f" stroke-width="1.5"/>
+      <rect x="${x+58}" y="${y+64}" width="16" height="10" rx="2" fill="#1a2433" stroke="#33445f" stroke-width="1.5"/>
+      <line x1="${x-5}" y1="${y+46}" x2="${x+10}" y2="${y+46}" stroke="#33445f" stroke-width="4" stroke-linecap="round"/>
+      <rect class="motor-ring" x="${x+8}" y="${y+26}" width="74" height="38" rx="9" fill="#1a2433" stroke="#33445f" stroke-width="2.5"/>
+      ${[...Array(8)].map((_,i)=>`<line x1="${x+16+i*8}" y1="${y+29}" x2="${x+16+i*8}" y2="${y+61}" stroke="#0d1320" stroke-width="1.8"/>`).join('')}
+      <circle cx="${x+82}" cy="${y+45}" r="12" fill="#11161f" stroke="#33445f" stroke-width="2"/>
+      <g class="motor-rot"><g transform="translate(${x+82},${y+45})">
+        <path d="M0 -10 L3 0 L0 10 L-3 0Z" fill="#e89b5e"/><path d="M-10 0 L0 3 L10 0 L0 -3Z" fill="#c9763b"/></g></g>
+      <rect x="${x+10}" y="${y+12}" width="76" height="15" rx="3" fill="#222d3f" stroke="#33445f" stroke-width="1.5"/>
+      ${[16,48,80].map(dx=>`<line x1="${x+dx}" y1="${y+3}" x2="${x+dx}" y2="${y+13}" stroke="#33445f" stroke-width="2"/>`+dot(x+dx,y+13)).join('')}
+      <rect x="${x+30}" y="${y+38} " width="30" height="15" rx="3" fill="#0a0e16" stroke="#33445f"/>
+      <text class="comp-lbl" x="${x+45}" y="${y+49}" style="font-size:11px">3~</text></g>`}},
+
+  motor3box:{terms:[{key:'U1',dx:22,dy:0,lbl:'U1'},{key:'V1',dx:65,dy:0,lbl:'V1'},{key:'W1',dx:108,dy:0,lbl:'W1'},
+                     {key:'W2',dx:22,dy:132,lbl:'W2',side:'b'},{key:'U2',dx:65,dy:132,lbl:'U2',side:'b'},{key:'V2',dx:108,dy:132,lbl:'V2',side:'b'}],
+    draw:c=>{const cx=c.x+65,cy=c.y+66;return `<g class="motor" id="g_${c.id}">
+      <rect class="comp-body" x="${c.x}" y="${c.y+18}" width="130" height="96" rx="10"/>
+      ${[22,65,108].map(d=>`<line x1="${c.x+d}" y1="${c.y}" x2="${c.x+d}" y2="${c.y+18}" stroke="var(--line2)" stroke-width="2.5"/>`+dot(c.x+d,c.y+18)).join('')}
+      ${[22,65,108].map(d=>`<line x1="${c.x+d}" y1="${c.y+114}" x2="${c.x+d}" y2="${c.y+132}" stroke="var(--line2)" stroke-width="2.5"/>`+dot(c.x+d,c.y+114)).join('')}
+      <circle class="motor-ring" cx="${cx}" cy="${cy}" r="26" fill="#0a0e16" stroke="var(--line2)" stroke-width="2.5"/>
+      <g class="motor-rot"><path d="M${cx} ${cy-14} L${cx} ${cy+14} M${cx-14} ${cy} L${cx+14} ${cy}" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/></g>
+      <text class="comp-sub" x="${cx}" y="${cy+4}" style="font-size:11px">TERMINAL BOX</text></g>`}},
+
+  outlet:{terms:[{key:'L',dx:14,dy:0,lbl:'L'},{key:'N',dx:66,dy:0,lbl:'N'},{key:'PE',dx:40,dy:80,lbl:'PE',side:'b'}],
+    draw:c=>{const cx=c.x+40,cy=c.y+42;return `<g class="outlet" id="g_${c.id}">
+      <line x1="${c.x+14}" y1="${c.y}" x2="${c.x+14}" y2="${c.y+16}" stroke="var(--line2)" stroke-width="2.5"/>
+      <line x1="${c.x+66}" y1="${c.y}" x2="${c.x+66}" y2="${c.y+16}" stroke="var(--line2)" stroke-width="2.5"/>
+      <line x1="${cx}" y1="${c.y+68}" x2="${cx}" y2="${c.y+80}" stroke="var(--pe)" stroke-width="2.5"/>
+      <rect class="comp-body" x="${c.x}" y="${c.y+16}" width="80" height="52" rx="10"/>
+      <circle cx="${cx}" cy="${cy}" r="20" fill="#0a0e16" stroke="var(--line2)"/>
+      <circle class="ind" cx="${cx-7}" cy="${cy}" r="3.5"/><circle class="ind" cx="${cx+7}" cy="${cy}" r="3.5"/>
+      <text class="comp-sub" x="${cx}" y="${c.y+62}">STOP KONTAK</text></g>`}},
+
+  kwh:{terms:[{key:'iL',dx:16,dy:160,lbl:'1',side:'b'},{key:'iN',dx:49,dy:160,lbl:'2',side:'b'},{key:'oL',dx:82,dy:160,lbl:'3',side:'b'},{key:'oN',dx:114,dy:160,lbl:'4',side:'b'}],
+    draw:c=>{const x=c.x,y=c.y,gid='mg_'+c.id;
+      const btn=(bx,by,t)=>`<rect x="${bx}" y="${by}" width="24" height="14" rx="3" fill="#eef0f3" stroke="#aeb4be" stroke-width="1"/><text x="${bx+12}" y="${by+10.5}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#3a4250">${t}</text>`;
+      const keys=[['1','2','3'],['4','5','6'],['7','8','9'],['*','0','#']];
+      let pad='';keys.forEach((row,r)=>row.forEach((k,ci)=>{pad+=btn(x+16+ci*34,y+78+r*17,k);}));
+      const screws=[16,49,82,114].map(dx=>`<rect x="${x+dx-7}" y="${y+152}" width="14" height="14" rx="2" fill="#0a0e16" stroke="#33445f"/>`).join('');
+      return `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f1f3f6"/><stop offset="0.55" stop-color="#dde1e8"/><stop offset="1" stop-color="#c7ccd5"/></linearGradient></defs>
+        <rect x="${x-2}" y="${y-1}" width="134" height="173" rx="13" fill="#05080d" opacity="0.55"/>
+        <rect x="${x}" y="${y}" width="130" height="168" rx="12" fill="url(#${gid})" stroke="#9aa1ac" stroke-width="2"/>
+        <rect x="${x+3}" y="${y+3}" width="124" height="162" rx="10" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1"/>
+        <rect x="${x+8}" y="${y+7}" width="114" height="20" rx="5" fill="#16203044" stroke="#0f1726"/>
+        <rect x="${x+8}" y="${y+7}" width="114" height="20" rx="5" fill="#172234"/>
+        <text x="${x+17}" y="${y+21}" font-family="Chakra Petch,sans-serif" font-weight="700" font-size="12" fill="#f3d27a">PLN</text>
+        <text x="${x+115}" y="${y+15}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#8ea0b8">METER</text>
+        <text x="${x+115}" y="${y+23}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#8ea0b8">PRABAYAR</text>
+        <rect x="${x+10}" y="${y+31}" width="110" height="30" rx="4" fill="#06140f" stroke="#0c3a2c" stroke-width="1.5"/>
+        <text x="${x+15}" y="${y+53}" font-family="JetBrains Mono,monospace" font-weight="700" font-size="17" fill="#27e6a8" letter-spacing="1">0042.7</text>
+        <text x="${x+114}" y="${y+44}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="8" fill="#27e6a8">kWh</text>
+        <text x="${x+114}" y="${y+56}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="6" fill="#1f8f6b">SISA</text>
+        <circle cx="${x+16}" cy="${y+70}" r="3" fill="#ff4d4d"><animate attributeName="opacity" values="1;0.15;1" dur="1.1s" repeatCount="indefinite"/></circle>
+        <text x="${x+24}" y="${y+73}" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#5b6b82">1000 imp/kWh</text>
+        ${pad}
+        <rect x="${x+4}" y="${y+150}" width="122" height="18" rx="4" fill="#11161f" stroke="#2a3445"/>
+        ${screws}
+        <text x="${x+8}" y="${y+147}" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#5b6b82">IN</text>
+        <text x="${x+122}" y="${y+147}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#5b6b82">OUT</text>`;}},
+
+  ground:{terms:[{key:'e',dx:25,dy:0,lbl:'PE'}],
+    draw:c=>{const cx=c.x+25;return `<g><line x1="${cx}" y1="${c.y}" x2="${cx}" y2="${c.y+22}" stroke="var(--pe)" stroke-width="2.5"/>
+      <line x1="${cx-16}" y1="${c.y+22}" x2="${cx+16}" y2="${c.y+22}" stroke="var(--pe)" stroke-width="3"/>
+      <line x1="${cx-10}" y1="${c.y+30}" x2="${cx+10}" y2="${c.y+30}" stroke="var(--pe)" stroke-width="3"/>
+      <line x1="${cx-5}" y1="${c.y+38}" x2="${cx+5}" y2="${c.y+38}" stroke="var(--pe)" stroke-width="3"/>
+      <text class="comp-sub" x="${cx}" y="${c.y+52}" style="fill:var(--pe)">ARDE</text></g>`}},
+};
+
+/* ====================== Exercises ====================== */
+const EX = [
+ /* ---- PENERANGAN ---- */
+ {id:'lampu1',cat:'pen',lvl:1,title:'Lampu Tunggal + Saklar',
+  desc:'Rangkaian paling dasar: <b>Sumber → Saklar → Lampu → kembali ke Sumber</b>. Sambungkan agar lampu bisa dinyalakan lewat saklar.',
+  comps:[{id:'SRC',type:'source',x:60,y:190},{id:'S1',type:'switch',x:300,y:120,label:'S1'},{id:'L1',type:'lamp',x:560,y:100,label:'L1'}],
+  nets:[['SRC.L','S1.in'],['S1.out','L1.a'],['L1.b','SRC.N']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'}],poles:['SRC.L','SRC.N'],switches:['S1'],
+  guide:['Hubungkan L Sumber ke IN saklar S1.','Hubungkan OUT S1 ke terminal kiri lampu L1.','Hubungkan kanan L1 ke N Sumber.','Tekan S1 jadi ON, lalu Periksa.']},
+
+ {id:'seri',cat:'pen',lvl:2,title:'Dua Lampu Seri',
+  desc:'Hubungkan dua lampu secara <b>seri</b>. Arus melewati L1 lalu L2. Kalau satu putus, keduanya padam.',
+  comps:[{id:'SRC',type:'source',x:60,y:190},{id:'S1',type:'switch',x:280,y:60,label:'S1'},{id:'L1',type:'lamp',x:500,y:60,label:'L1'},{id:'L2',type:'lamp',x:680,y:60,label:'L2'}],
+  nets:[['SRC.L','S1.in'],['S1.out','L1.a'],['L1.b','L2.a'],['L2.b','SRC.N']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'},{type:'lamp',comp:'L2',a:'L2.a',b:'L2.b'}],poles:['SRC.L','SRC.N'],switches:['S1'],
+  guide:['L Sumber → IN S1.','OUT S1 → kiri L1.','Kanan L1 → kiri L2 (seri).','Kanan L2 → N Sumber.','ON-kan S1 lalu Periksa.']},
+
+ {id:'paralel',cat:'pen',lvl:2,title:'Dua Lampu Paralel',
+  desc:'Hubungkan dua lampu secara <b>paralel</b>. Keduanya dapat tegangan penuh, sama terang. Satu padam, lain tetap nyala.',
+  comps:[{id:'SRC',type:'source',x:60,y:190},{id:'S1',type:'switch',x:280,y:200,label:'S1'},{id:'L1',type:'lamp',x:560,y:80,label:'L1'},{id:'L2',type:'lamp',x:560,y:280,label:'L2'}],
+  nets:[['SRC.L','S1.in'],['S1.out','L1.a','L2.a'],['L1.b','L2.b','SRC.N']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'},{type:'lamp',comp:'L2',a:'L2.a',b:'L2.b'}],poles:['SRC.L','SRC.N'],switches:['S1'],
+  guide:['L Sumber → IN S1.','OUT S1 → kiri L1 DAN kiri L2.','Kanan L1 DAN kanan L2 → N Sumber.','ON-kan S1 lalu Periksa.']},
+
+ {id:'tukar',cat:'pen',lvl:3,title:'Saklar Tukar (Hotel / Tangga)',
+  desc:'Satu lampu dari <b>dua saklar tukar</b>. COM S1→sumber, COM S2→lampu, dua kabel traveler P1-P1 & P2-P2.',
+  comps:[{id:'SRC',type:'source',x:60,y:190},{id:'S1',type:'switch3',x:280,y:150,label:'S1'},{id:'S2',type:'switch3',x:540,y:150,label:'S2'},{id:'L1',type:'lamp',x:760,y:170,label:'L1'}],
+  nets:[['SRC.L','S1.com'],['S1.p1','S2.p1'],['S1.p2','S2.p2'],['S2.com','L1.a'],['L1.b','SRC.N']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'}],poles:['SRC.L','SRC.N'],switches:['S1','S2'],
+  guide:['L Sumber → COM(C) S1.','S1 P1 → S2 P1 (traveler 1).','S1 P2 → S2 P2 (traveler 2).','COM(C) S2 → kiri L1.','Kanan L1 → N Sumber. Coba tekan S1/S2.']},
+
+ /* ---- 1 FASA ---- */
+ {id:'mcb1',cat:'ph1',lvl:1,title:'Proteksi 1 Fasa: MCB → Beban',
+  desc:'MCB melindungi & memutus jalur fasa (L). <b>L → MCB → beban</b>, sedangkan N langsung. ON-kan MCB untuk mengalirkan daya.',
+  comps:[{id:'SRC',type:'source',x:60,y:190},{id:'MCB',type:'mcb',x:300,y:150,label:'C6'},{id:'L1',type:'lamp',x:560,y:120,label:'BEBAN'}],
+  nets:[['SRC.L','MCB.in'],['MCB.out','L1.a'],['L1.b','SRC.N']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'}],poles:['SRC.L','SRC.N'],switches:['MCB'],
+  guide:['L Sumber → IN MCB.','OUT MCB → kiri beban.','Kanan beban → N Sumber.','ON-kan MCB lalu Periksa.']},
+
+ {id:'soket',cat:'ph1',lvl:2,title:'Stop Kontak + Pembumian (Arde)',
+  desc:'Pasang stop kontak 3 pin: <b>L</b> lewat MCB, <b>N</b> dari netral, dan <b>PE</b> (pembumian) ke arde. Pin PE wajib terhubung demi keamanan.',
+  comps:[{id:'SRC',type:'source',x:60,y:170},{id:'MCB',type:'mcb',x:280,y:120,label:'C16'},{id:'OUT',type:'outlet',x:540,y:170},{id:'GND',type:'ground',x:555,y:340}],
+  nets:[['SRC.L','MCB.in'],['MCB.out','OUT.L'],['SRC.N','OUT.N'],['OUT.PE','GND.e']],
+  loads:[{type:'outlet',comp:'OUT',a:'OUT.L',b:'OUT.N'}],poles:['SRC.L','SRC.N'],switches:['MCB'],
+  guide:['L Sumber → IN MCB.','OUT MCB → pin L stop kontak.','N Sumber → pin N stop kontak.','Pin PE stop kontak → ARDE.','ON-kan MCB. Indikator stop kontak menyala = bertegangan.']},
+
+ /* ---- 3 FASA ---- */
+ {id:'star',cat:'ph3',lvl:3,title:'Beban 3 Fasa — Hubungan Bintang (Y)',
+  desc:'Di terminal box motor, hubungan <b>BINTANG</b>: ujung U2-V2-W2 disatukan (titik bintang), lalu U1→R, V1→S, W1→T. Tegangan per belitan = 220V.',
+  comps:[{id:'SRC',type:'src3ph',x:60,y:150},{id:'M',type:'motor3box',x:520,y:140}],
+  nets:[['SRC.R','M.U1'],['SRC.S','M.V1'],['SRC.T','M.W1'],['M.U2','M.V2','M.W2']],
+  loads:[],loads3:[{type:'motor3',comp:'M',feeds:['M.U1','M.V1','M.W1']}],poles:['SRC.R','SRC.S','SRC.T'],switches:[],
+  guide:['R Sumber → U1.','S Sumber → V1.','T Sumber → W1.','Satukan U2 + V2 + W2 (titik bintang).','Periksa — motor berputar.']},
+
+ {id:'delta',cat:'ph3',lvl:3,title:'Beban 3 Fasa — Hubungan Segitiga (Δ)',
+  desc:'Hubungan <b>SEGITIGA</b>: tiap sudut menyambung ujung satu belitan ke awal belitan lain. U1-W2→R, V1-U2→S, W1-V2→T. Tegangan per belitan = 380V.',
+  comps:[{id:'SRC',type:'src3ph',x:60,y:150},{id:'M',type:'motor3box',x:520,y:140}],
+  nets:[['SRC.R','M.U1','M.W2'],['SRC.S','M.V1','M.U2'],['SRC.T','M.W1','M.V2']],
+  loads:[],loads3:[{type:'motor3',comp:'M',feeds:['M.U1','M.V1','M.W1']}],poles:['SRC.R','SRC.S','SRC.T'],switches:[],
+  guide:['Sudut 1: U1 + W2 → R.','Sudut 2: V1 + U2 → S.','Sudut 3: W1 + V2 → T.','Periksa — motor berputar (Δ).']},
+
+ {id:'motor3',cat:'ph3',lvl:2,title:'Motor 3 Fasa via MCB 3 Fasa',
+  desc:'Suplai motor 3 fasa lewat <b>MCB 3 kutub</b>. R/S/T masuk MCB, keluarannya ke U/V/W motor. Satu tuas memutus ketiga fasa sekaligus.',
+  comps:[{id:'SRC',type:'src3ph',x:60,y:150},{id:'MCB',type:'mcb3',x:330,y:160},{id:'M',type:'motor3s',x:640,y:230}],
+  nets:[['SRC.R','MCB.Ri'],['SRC.S','MCB.Si'],['SRC.T','MCB.Ti'],['MCB.Ro','M.U'],['MCB.So','M.V'],['MCB.To','M.W']],
+  loads:[],loads3:[{type:'motor3',comp:'M',feeds:['M.U','M.V','M.W']}],poles:['SRC.R','SRC.S','SRC.T'],switches:['MCB'],
+  guide:['R → MCB R(masuk), S → MCB S, T → MCB T.','MCB R(keluar) → U motor.','MCB S(keluar) → V motor.','MCB T(keluar) → W motor.','ON-kan MCB 3φ — motor berputar.']},
+
+ {id:'dol',cat:'mtr',lvl:3,title:'Kontaktor — Kontrol Motor',
+  desc:'<b>Rangkaian kontrol</b>: L→Saklar Kontrol→A1, A2→N. <b>Rangkaian daya</b>: L→T1, T2→Motor→N. Coil energi → kontak utama menutup.',
+  comps:[{id:'SRC',type:'source',x:60,y:180},{id:'SK',type:'switch',x:300,y:50,label:'Kontrol'},{id:'K',type:'contactor',x:430,y:120},{id:'M',type:'motor',x:720,y:230,label:'M'}],
+  nets:[['SRC.L','SK.in','K.T1'],['SK.out','K.A1'],['K.A2','SRC.N','M.b'],['K.T2','M.a']],
+  loads:[{type:'motor',comp:'M',a:'M.a',b:'M.b'}],poles:['SRC.L','SRC.N'],switches:['SK'],
+  contactors:[{comp:'K',coilA:'K.A1',coilB:'K.A2',cA:'K.T1',cB:'K.T2'}],
+  guide:['Kontrol: L → IN Saklar Kontrol.','OUT Saklar Kontrol → A1.','A2 → N Sumber.','Daya: L → T1.','T2 → U motor.','V motor → N. ON-kan Kontrol → motor jalan.']},
+
+ /* ---- INSTALASI RUMAH ---- */
+ {id:'rumah',cat:'rum',lvl:3,title:'Instalasi Rumah Sederhana',
+  desc:'Rangkaian rumah lengkap: <b>PLN → kWh → MCB utama</b>, lalu dibagi ke <b>grup penerangan</b> (saklar+lampu) dan <b>grup stop kontak</b> berarde. Netral dipakai bersama.',
+  vb:'0 0 980 540',
+  comps:[{id:'SRC',type:'source',x:40,y:230},{id:'KW',type:'kwh',x:215,y:175},{id:'MCB',type:'mcb',x:450,y:150,label:'Utama'},
+         {id:'S1',type:'switch',x:600,y:60,label:'S'},{id:'L1',type:'lamp',x:820,y:50,label:'Lampu'},
+         {id:'OUT',type:'outlet',x:790,y:280},{id:'GND',type:'ground',x:805,y:430}],
+  nets:[['SRC.L','KW.iL'],['SRC.N','KW.iN'],['KW.oL','MCB.in'],['MCB.out','S1.in','OUT.L'],
+        ['S1.out','L1.a'],['L1.b','KW.oN','OUT.N'],['OUT.PE','GND.e']],
+  conduct:[['KW.iL','KW.oL'],['KW.iN','KW.oN']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'},{type:'outlet',comp:'OUT',a:'OUT.L',b:'OUT.N'}],
+  poles:['SRC.L','SRC.N'],switches:['MCB','S1'],
+  guide:['L PLN → kWh-1, N PLN → kWh-2.','kWh-3 (L keluar) → IN MCB utama.','OUT MCB → IN saklar S DAN pin L stop kontak (jalur fasa).','OUT saklar S → kiri lampu.','Netral bersama: kanan lampu + kWh-4 + pin N stop kontak disatukan.','Pin PE stop kontak → ARDE.','ON-kan MCB (stop kontak hidup) lalu S (lampu menyala).']},
+
+ /* ---- LAINNYA ---- */
+ {id:'seri2',cat:'lain',lvl:2,title:'Saklar Seri (Saklar Dobel)',
+  desc:'Satu <b>saklar seri</b> mengendalikan dua lampu terpisah dari satu titik. IN sebagai fasa bersama, O1→lampu1, O2→lampu2. Tiap tuas dikontrol sendiri.',
+  comps:[{id:'SRC',type:'source',x:60,y:200},{id:'SS',type:'switch2',x:300,y:160,label:'Seri'},{id:'L1',type:'lamp',x:600,y:60,label:'L1'},{id:'L2',type:'lamp',x:600,y:280,label:'L2'}],
+  nets:[['SRC.L','SS.in'],['SS.o1','L1.a'],['SS.o2','L2.a'],['L1.b','L2.b','SRC.N']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'},{type:'lamp',comp:'L2',a:'L2.a',b:'L2.b'}],poles:['SRC.L','SRC.N'],switches:['SS'],
+  guide:['L Sumber → IN saklar seri.','O1 → kiri L1.','O2 → kiri L2.','Kanan L1 & L2 → N Sumber.','Tekan tuas atas/bawah — tiap lampu menyala sendiri-sendiri.']},
+
+ {id:'silang',cat:'lain',lvl:3,title:'Saklar Tukar Silang (Kontrol 3 Titik)',
+  desc:'Lampu dikendalikan dari <b>tiga tempat</b>: saklar tukar – saklar silang (intermediate) – saklar tukar. Saklar silang menukar pasangan traveler.',
+  vb:'0 0 980 480',
+  comps:[{id:'SRC',type:'source',x:40,y:200},{id:'S1',type:'switch3',x:240,y:170,label:'S1'},{id:'SX',type:'intermediate',x:440,y:175},{id:'S2',type:'switch3',x:640,y:170,label:'S2'},{id:'L1',type:'lamp',x:860,y:190}],
+  nets:[['SRC.L','S1.com'],['S1.p1','SX.a1'],['S1.p2','SX.a2'],['SX.b1','S2.p1'],['SX.b2','S2.p2'],['S2.com','L1.a'],['L1.b','SRC.N']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'}],poles:['SRC.L','SRC.N'],switches:['S1','SX','S2'],
+  guide:['L Sumber → COM S1.','S1 P1 → SX a1; S1 P2 → SX a2.','SX b1 → S2 P1; SX b2 → S2 P2.','COM S2 → kiri lampu.','Kanan lampu → N. Tekan S1/SX/S2 — semua bisa nyalakan/matikan.']},
+
+ {id:'bel',cat:'lain',lvl:1,title:'Bel Listrik dengan Tombol',
+  desc:'Rangkaian bel sederhana: <b>L → Tombol → Bel → N</b>. Selama tombol ON, bel berbunyi.',
+  comps:[{id:'SRC',type:'source',x:60,y:190},{id:'PB',type:'switch',x:300,y:150,label:'Tombol'},{id:'BL',type:'bell',x:560,y:140}],
+  nets:[['SRC.L','PB.in'],['PB.out','BL.a'],['BL.b','SRC.N']],
+  loads:[{type:'bell',comp:'BL',a:'BL.a',b:'BL.b'}],poles:['SRC.L','SRC.N'],switches:['PB'],
+  guide:['L Sumber → IN Tombol.','OUT Tombol → terminal kiri bel.','Terminal kanan bel → N Sumber.','Tekan Tombol (ON) — bel berbunyi.']},
+
+ /* ---- PLN ---- */
+ {id:'kwh',cat:'pln',lvl:2,title:'Sambungan kWh Meter 1 Fasa',
+  desc:'Pasang kWh meter antara sumber PLN dan beban. <b>Urutan SPLN</b>: 1=L masuk, 2=N masuk, 3=L keluar, 4=N keluar. Beban di sisi keluar.',
+  comps:[{id:'SRC',type:'source',x:60,y:200},{id:'KW',type:'kwh',x:360,y:130},{id:'L1',type:'lamp',x:700,y:200,label:'BEBAN'}],
+  nets:[['SRC.L','KW.iL'],['SRC.N','KW.iN'],['KW.oL','L1.a'],['KW.oN','L1.b']],
+  conduct:[['KW.iL','KW.oL'],['KW.iN','KW.oN']],
+  loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'}],poles:['SRC.L','SRC.N'],switches:[],
+  guide:['L Sumber → terminal 1 meter.','N Sumber → terminal 2 meter.','Terminal 3 → kiri beban.','Terminal 4 → kanan beban.','Periksa — daya mengalir ke beban.']},
+];
+const CAT={pen:{lbl:'Penerangan',cls:'b-pen'},ph1:{lbl:'1 Fasa',cls:'b-1ph'},ph3:{lbl:'3 Fasa',cls:'b-3ph'},
+  mtr:{lbl:'Motor & Panel',cls:'b-mtr'},rum:{lbl:'Instalasi Rumah',cls:'b-rum'},lain:{lbl:'Lainnya',cls:'b-lain'},pln:{lbl:'Instalasi PLN',cls:'b-pln'}};
+const CATORDER=['pen','ph1','ph3','mtr','rum','lain','pln'];
+
+/* ====================== Conductor roles (colour code) ====================== */
+const ROLE={
+  line:{l:'Fasa / Line (L)',c:'#c2772f'},
+  sline:{l:'Fasa tersaklar',c:'#e8902e'},
+  neutral:{l:'Netral (N)',c:'#5b8cff'},
+  earth:{l:'Pembumian (PE)',c:'#3ddc84'},
+  traveler:{l:'Kabel tukar (traveler)',c:'#b07cff'},
+  control:{l:'Rangkaian kontrol',c:'#f3d27a'},
+  power:{l:'Rangkaian daya',c:'#d98a3d'},
+  R:{l:'Fasa R',c:'#ff6b6b'}, S:{l:'Fasa S',c:'#ffd34d'}, T:{l:'Fasa T',c:'#6db3ff'},
+  star:{l:'Titik bintang (Y)',c:'#8ea0b8'},
+};
+
+/* ====================== Educational content per module ====================== */
+const INFO={
+ lampu1:{netRoles:['line','sline','neutral'],
+  task:'Nyalakan satu lampu lewat satu saklar.',
+  parts:[['Sumber','menyediakan 220V: terminal L (fasa) dan N (netral)'],['Saklar','memutus/menyambung jalur fasa menuju lampu'],['Lampu','beban yang menyala saat mendapat L dan N']],
+  flow:['Fasa keluar dari L sumber menuju saklar.','Saat saklar ON, fasa diteruskan ke lampu (disebut fasa tersaklar).','Setelah melewati lampu, arus kembali ke sumber lewat netral (N).','Saklar selalu dipasang di jalur fasa, bukan netral, demi keamanan saat perbaikan.'],
+  steps:[['L Sumber ke IN saklar S1','Mengambil fasa dari sumber agar bisa dikendalikan saklar.'],['OUT S1 ke kiri lampu L1','Fasa hanya sampai lampu jika saklar ON.'],['Kanan L1 ke N Sumber','Menutup rangkaian agar arus mengalir balik.'],['Tekan S1 jadi ON lalu Periksa','Menyambungkan fasa ke lampu.']]},
+ seri:{netRoles:['line','sline','sline','neutral'],
+  task:'Hubungkan dua lampu berurutan (seri).',
+  parts:[['Saklar','mengendalikan kedua lampu sekaligus'],['L1 dan L2','dilewati arus secara berurutan dalam satu jalur']],
+  flow:['Arus melewati L1 dulu, baru L2, baru kembali ke netral.','Karena satu jalur, tegangan terbagi sehingga lampu cenderung lebih redup.','Jika salah satu lampu putus, jalur terputus dan keduanya padam.'],
+  steps:[['L Sumber ke IN S1','Sumber fasa.'],['OUT S1 ke kiri L1','Fasa tersaklar masuk lampu pertama.'],['Kanan L1 ke kiri L2','Sambungan seri: keluaran L1 jadi masukan L2.'],['Kanan L2 ke N Sumber','Menutup rangkaian di lampu terakhir.'],['ON-kan S1 lalu Periksa','']]},
+ paralel:{netRoles:['line','sline','neutral'],
+  task:'Hubungkan dua lampu sejajar (paralel).',
+  parts:[['Titik cabang','fasa dan netral dibagi ke dua lampu'],['L1 dan L2','masing-masing menerima tegangan penuh']],
+  flow:['Fasa tersaklar bercabang ke kedua lampu.','Setiap lampu punya jalur sendiri menuju netral.','Tegangan penuh di tiap lampu sehingga sama terang; satu padam, lain tetap nyala.'],
+  steps:[['L Sumber ke IN S1',''],['OUT S1 ke kiri L1 DAN kiri L2','Titik percabangan fasa.'],['Kanan L1 DAN kanan L2 ke N Sumber','Kedua lampu berbagi netral.'],['ON-kan S1 lalu Periksa','']]},
+ tukar:{netRoles:['line','traveler','traveler','sline','neutral'],
+  task:'Kendalikan satu lampu dari dua tempat (saklar tukar).',
+  parts:[['Saklar tukar','punya 1 COM dan 2 kontak P1/P2'],['Kabel traveler','dua kabel penghubung antar saklar']],
+  flow:['Fasa masuk ke COM saklar pertama.','Dua kabel traveler menghubungkan P1-P1 dan P2-P2.','Lampu menyala bila kedua saklar memilih jalur yang sama; mengubah salah satu akan memutus atau menyambung.','Cocok untuk lampu tangga atau lorong.'],
+  steps:[['L Sumber ke COM (C) S1','Fasa masuk saklar pertama.'],['S1 P1 ke S2 P1','Kabel traveler pertama.'],['S1 P2 ke S2 P2','Kabel traveler kedua.'],['COM (C) S2 ke kiri L1','Keluaran saklar kedua menuju lampu.'],['Kanan L1 ke N Sumber, coba tekan S1/S2','Netral penutup; uji dari dua sisi.']]},
+ mcb1:{netRoles:['line','sline','neutral'],
+  task:'Pasang MCB sebagai pengaman jalur fasa.',
+  parts:[['MCB','memutus otomatis saat arus berlebih; dipasang di jalur fasa'],['Beban','lampu sebagai contoh beban']],
+  flow:['Fasa dari sumber harus lewat MCB lebih dulu.','MCB memutus L (bukan N) saat gangguan atau beban lebih.','Keluaran MCB menuju beban, lalu kembali via netral.'],
+  steps:[['L Sumber ke IN MCB','Fasa masuk pengaman.'],['OUT MCB ke kiri beban','Fasa terlindungi menuju beban.'],['Kanan beban ke N Sumber','Penutup rangkaian.'],['ON-kan MCB lalu Periksa','Menaikkan tuas MCB menyambung fasa.']]},
+ soket:{netRoles:['line','sline','neutral','earth'],
+  task:'Pasang stop kontak 3 pin (L, N, PE) berarde.',
+  parts:[['Stop kontak','3 pin: L (fasa), N (netral), PE (pembumian)'],['MCB','pengaman jalur fasa ke stop kontak'],['Arde','elektroda bumi untuk keselamatan']],
+  flow:['Fasa lewat MCB menuju pin L stop kontak.','Netral langsung ke pin N.','Pin PE wajib tersambung ke arde untuk mengalirkan kebocoran arus ke bumi agar bodi alat tidak menyetrum.','Tanpa PE, stop kontak tetap bertegangan tetapi tidak aman.'],
+  steps:[['L Sumber ke IN MCB',''],['OUT MCB ke pin L','Fasa terlindungi ke stop kontak.'],['N Sumber ke pin N','Jalur balik.'],['Pin PE ke ARDE','Pengaman: salurkan bocor arus ke bumi.'],['ON-kan MCB','Indikator menyala berarti stop kontak bertegangan.']]},
+ star:{netRoles:['R','S','T','star'],
+  task:'Sambung motor 3 fasa dengan hubungan BINTANG (Y).',
+  parts:[['Sumber 3 fasa','tiga fasa R-S-T'],['Terminal box','6 ujung belitan U1-V1-W1 dan U2-V2-W2']],
+  flow:['Ujung awal tiap belitan (U1, V1, W1) disambung ke R, S, T.','Ujung akhir (U2, V2, W2) disatukan menjadi titik bintang.','Tegangan tiap belitan 220V sehingga arus start lebih kecil.'],
+  steps:[['R ke U1, S ke V1, T ke W1','Tiap fasa ke awal belitan.'],['Satukan U2, V2, dan W2','Membentuk titik bintang.'],['Periksa','Motor berputar bila ketiga fasa benar.']]},
+ delta:{netRoles:['R','S','T'],
+  task:'Sambung motor 3 fasa dengan hubungan SEGITIGA (Delta).',
+  parts:[['Terminal box','tiap sudut menyatukan ujung satu belitan dengan awal belitan lain']],
+  flow:['U1-W2 ke R, V1-U2 ke S, W1-V2 ke T.','Tiap belitan menerima tegangan antar-fasa 380V sehingga torsi dan daya penuh.','Umumnya dipakai saat motor sudah berjalan, setelah start bintang.'],
+  steps:[['U1 dan W2 ke R','Sudut pertama.'],['V1 dan U2 ke S','Sudut kedua.'],['W1 dan V2 ke T','Sudut ketiga.'],['Periksa','Motor berputar (Delta).']]},
+ motor3:{netRoles:['R','S','T','R','S','T'],
+  task:'Suplai motor 3 fasa lewat MCB 3 kutub.',
+  parts:[['MCB 3 fasa','tiga kutub; satu tuas memutus R-S-T bersamaan'],['Motor 3 fasa','terminal U-V-W']],
+  flow:['R, S, T masuk ke sisi atas MCB.','Keluaran MCB (R, S, T) menuju U, V, W motor.','Satu tuas memutus ketiga fasa serempak; penting agar motor tidak kehilangan satu fasa yang bisa membuatnya terbakar.'],
+  steps:[['R ke MCB R, S ke MCB S, T ke MCB T','Tiga fasa masuk pengaman.'],['MCB R (keluar) ke U','Fasa R ke belitan U.'],['MCB S (keluar) ke V',''],['MCB T (keluar) ke W',''],['ON-kan MCB 3 fasa','Menyambung ketiga fasa sekaligus.']]},
+ dol:{netRoles:['line','control','neutral','power'],
+  task:'Jalankan motor lewat kontaktor (rangkaian kontrol + daya).',
+  parts:[['Kontaktor','saklar elektromagnetik: coil A1-A2 dan kontak utama T1-T2'],['Saklar kontrol','menyalakan coil'],['Motor','beban daya']],
+  flow:['Rangkaian KONTROL: L ke saklar kontrol ke A1, lalu A2 ke N. Saat coil bertegangan, ia menarik kontak utama menutup.','Rangkaian DAYA: L ke T1 dan T2 ke motor ke N. Kontak baru menutup bila coil energi.','Jadi saklar kecil (kontrol) mengendalikan arus besar (daya) dengan aman.'],
+  steps:[['Kontrol: L ke IN saklar kontrol','Sumber untuk coil.'],['OUT saklar kontrol ke A1','Mengaktifkan coil saat ON.'],['A2 ke N','Menutup rangkaian coil.'],['Daya: L ke T1','Fasa daya ke kontak utama.'],['T2 ke U motor','Keluaran kontak ke motor.'],['V motor ke N, lalu ON-kan kontrol','Coil energi membuat kontak menutup dan motor berjalan.']]},
+ rumah:{netRoles:['line','neutral','line','sline','sline','neutral','earth'],
+  task:'Rakit instalasi rumah: PLN ke kWh ke MCB, lalu ke penerangan dan stop kontak.',
+  parts:[['kWh meter','mengukur pemakaian; fasa dan netral melewatinya'],['MCB utama','pengaman sekaligus sakelar induk rumah'],['Saklar + lampu','grup penerangan'],['Stop kontak + arde','grup daya/colokan']],
+  flow:['PLN masuk meter (L ke 1, N ke 2) dan keluar meter (L ke 3, N ke 4).','Fasa keluar meter menuju MCB utama, lalu menjadi rel fasa rumah.','Rel fasa dibagi: ke saklar (lampu) dan ke pin L stop kontak.','Netral dipakai bersama oleh lampu, keluaran meter (4), dan stop kontak.','PE stop kontak ke arde untuk keselamatan.'],
+  steps:[['L PLN ke kWh-1, N PLN ke kWh-2','Sumber masuk meter.'],['kWh-3 (L keluar) ke IN MCB utama','Fasa terukur menuju pengaman induk.'],['OUT MCB ke IN saklar S DAN pin L stop kontak','Membentuk rel fasa rumah (bercabang).'],['OUT saklar S ke kiri lampu','Fasa tersaklar ke lampu.'],['Netral bersama: kanan lampu + kWh-4 + pin N stop kontak','Satu netral untuk semua beban.'],['Pin PE stop kontak ke ARDE','Pengaman.'],['ON-kan MCB lalu S','MCB menghidupkan stop kontak; saklar menyalakan lampu.']]},
+ seri2:{netRoles:['line','sline','sline','neutral'],
+  task:'Kendalikan dua lampu terpisah dari satu saklar seri (dobel).',
+  parts:[['Saklar seri','satu IN bersama, dua keluaran O1/O2 dengan tuas terpisah'],['L1 dan L2','dikontrol secara independen']],
+  flow:['Fasa masuk ke IN bersama.','Tuas atas menyambung O1 ke lampu1, tuas bawah O2 ke lampu2.','Tiap lampu bisa dinyala-matikan sendiri walau dari satu titik saklar.'],
+  steps:[['L Sumber ke IN saklar seri','Fasa bersama.'],['O1 ke kiri L1','Keluaran tuas pertama.'],['O2 ke kiri L2','Keluaran tuas kedua.'],['Kanan L1 dan L2 ke N Sumber','Netral bersama.'],['Tekan tuas atas/bawah','Uji kontrol terpisah.']]},
+ silang:{netRoles:['line','traveler','traveler','traveler','traveler','sline','neutral'],
+  task:'Kendalikan satu lampu dari tiga tempat (tukar - silang - tukar).',
+  parts:[['Saklar tukar S1, S2','di kedua ujung'],['Saklar silang SX','di tengah, menukar pasangan traveler'],['Lampu','beban']],
+  flow:['S1 dan S2 saklar tukar di ujung; SX saklar silang di tengah.','SX menyilangkan pasangan kabel traveler.','Dengan satu silang di tengah, lampu dapat dikendalikan dari tiga titik. Tambah silang lagi untuk titik keempat, dan seterusnya.'],
+  steps:[['L Sumber ke COM S1','Fasa masuk.'],['S1 P1 ke SX a1; S1 P2 ke SX a2','Traveler S1 ke silang.'],['SX b1 ke S2 P1; SX b2 ke S2 P2','Silang ke S2.'],['COM S2 ke kiri lampu','Keluaran akhir ke lampu.'],['Kanan lampu ke N','Penutup; uji dari S1/SX/S2.']]},
+ bel:{netRoles:['line','sline','neutral'],
+  task:'Bunyikan bel lewat tombol tekan.',
+  parts:[['Tombol','menyambung selama ditekan'],['Bel','beban yang berbunyi saat dialiri arus']],
+  flow:['Fasa lewat tombol menuju bel.','Selama tombol ON, rangkaian tertutup dan bel berbunyi.','Lepas tombol, rangkaian terputus, bel diam.'],
+  steps:[['L Sumber ke IN Tombol',''],['OUT Tombol ke kiri bel','Fasa ke bel saat ditekan.'],['Kanan bel ke N Sumber','Penutup.'],['Tekan Tombol (ON)','Bel berbunyi.']]},
+ kwh:{netRoles:['line','neutral','line','neutral'],
+  task:'Pasang kWh meter 1 fasa antara PLN dan beban.',
+  parts:[['kWh meter','4 terminal: 1=L masuk, 2=N masuk, 3=L keluar, 4=N keluar'],['Beban','dipasang di sisi keluar meter']],
+  flow:['L dan N dari PLN masuk ke terminal 1 dan 2.','Di dalam meter arus diukur lalu diteruskan ke terminal 3 dan 4.','Beban mendapat suplai dari sisi keluar (3 dan 4). Salah urutan membuat meter tidak mengukur dengan benar.'],
+  steps:[['L Sumber ke terminal 1','Fasa masuk meter.'],['N Sumber ke terminal 2','Netral masuk meter.'],['Terminal 3 ke kiri beban','Fasa terukur ke beban.'],['Terminal 4 ke kanan beban','Netral terukur.'],['Periksa','Daya mengalir dan terukur.']]},
+};
+function curSteps(){const ex=EX[curIdx];const info=INFO[ex.id];return (info&&info.steps)?info.steps:((ex.guide||[]).map(g=>[g,'']));}
+
+/* ====================== State & engine ====================== */
+let curIdx=0,wires=[],selected=null,switchStates={},guideMode=false,simState={},done=new Set(),checkedOk=false,termRole={};
+const board=document.getElementById('board');
+
+function makeUF(){const p={};return{
+  find(x){if(p[x]===undefined)p[x]=x;while(p[x]!==x){p[x]=p[p[x]];x=p[x];}return x;},
+  union(a,b){p[this.find(a)]=this.find(b);},conn(a,b){return this.find(a)===this.find(b);}};}
+
+function termPos(ex,tid){const[cid,key]=tid.split('.');const c=ex.comps.find(x=>x.id===cid);const t=COMP[c.type].terms.find(x=>x.key===key);return{x:c.x+t.dx,y:c.y+t.dy};}
+
+function validate(ex){
+  const uf=makeUF();wires.forEach(w=>uf.union(w.a,w.b));
+  for(const net of ex.nets)for(let i=1;i<net.length;i++)if(!uf.conn(net[0],net[i]))return{ok:false,reason:'incomplete'};
+  for(let i=0;i<ex.nets.length;i++)for(let j=i+1;j<ex.nets.length;j++)if(uf.conn(ex.nets[i][0],ex.nets[j][0]))return{ok:false,reason:'cross'};
+  return{ok:true};
+}
+
+function baseUF(ex,wireOnly){
+  const uf=makeUF();wires.forEach(w=>uf.union(w.a,w.b));
+  if(wireOnly) return uf;
+  (ex.conduct||[]).forEach(e=>uf.union(e[0],e[1]));
+  (ex.switches||[]).forEach(sid=>{const c=ex.comps.find(x=>x.id===sid),st=switchStates[sid];
+    if(c.type==='switch'||c.type==='mcb'){if(st)uf.union(sid+'.in',sid+'.out');}
+    else if(c.type==='mcb3'){if(st){uf.union(sid+'.Ri',sid+'.Ro');uf.union(sid+'.Si',sid+'.So');uf.union(sid+'.Ti',sid+'.To');}}
+    else if(c.type==='switch3'){const pole=st?'p2':'p1';uf.union(sid+'.com',sid+'.'+pole);}
+    else if(c.type==='switch2'){if(st.a)uf.union(sid+'.in',sid+'.o1');if(st.b)uf.union(sid+'.in',sid+'.o2');}
+    else if(c.type==='intermediate'){if(st){uf.union(sid+'.a1',sid+'.b2');uf.union(sid+'.a2',sid+'.b1');}else{uf.union(sid+'.a1',sid+'.b1');uf.union(sid+'.a2',sid+'.b2');}}
+  });
+  return uf;
+}
+function buildSimUF(ex,exclude){
+  const uf=baseUF(ex,false);
+  (ex.contactors||[]).forEach(k=>{
+    const tmp=baseUF(ex,false);const[P,N]=ex.poles;
+    const en=(tmp.conn(k.coilA,P)&&tmp.conn(k.coilB,N))||(tmp.conn(k.coilA,N)&&tmp.conn(k.coilB,P));
+    if(en)uf.union(k.cA,k.cB);});
+  (ex.loads||[]).forEach(ld=>{if(ld.comp!==exclude)uf.union(ld.a,ld.b);});
+  return uf;
+}
+function loadEnergized(ex,ld){
+  const uf=buildSimUF(ex,ld.comp);
+  const Sa=ex.poles.filter(p=>uf.conn(ld.a,p)),Sb=ex.poles.filter(p=>uf.conn(ld.b,p));
+  for(const x of Sa)for(const y of Sb)if(x!==y)return true;
+  return false;
+}
+const PERM3=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+function motor3Energized(ex,dev){
+  const uf=buildSimUF(ex,null);const P=ex.poles;
+  const reach=dev.feeds.map(f=>P.filter(p=>uf.conn(f,p)));
+  return PERM3.some(pm=>reach[0].includes(P[pm[0]])&&reach[1].includes(P[pm[1]])&&reach[2].includes(P[pm[2]]));
+}
+function simulate(ex){
+  const res={_coil:{}};
+  (ex.loads||[]).forEach(ld=>res[ld.comp]={on:loadEnergized(ex,ld),type:ld.type});
+  (ex.loads3||[]).forEach(d=>res[d.comp]={on:motor3Energized(ex,d),type:'motor3'});
+  (ex.contactors||[]).forEach(k=>{const uf=baseUF(ex,false);const[P,N]=ex.poles;
+    res._coil[k.comp]=(uf.conn(k.coilA,P)&&uf.conn(k.coilB,N))||(uf.conn(k.coilA,N)&&uf.conn(k.coilB,P));});
+  return res;
+}
+function allOn(ex){
+  const a=(ex.loads||[]).every(l=>simState[l.comp]&&simState[l.comp].on);
+  const b=(ex.loads3||[]).every(d=>simState[d.comp]&&simState[d.comp].on);
+  return a&&b&&((ex.loads||[]).length+(ex.loads3||[]).length>0);
+}
+function markLive(ex){
+  const uf=buildSimUF(ex,null);const roots=new Set();
+  (ex.loads||[]).forEach(ld=>{if(simState[ld.comp]&&simState[ld.comp].on){roots.add(uf.find(ld.a));roots.add(uf.find(ld.b));}});
+  (ex.loads3||[]).forEach(d=>{if(simState[d.comp]&&simState[d.comp].on)d.feeds.forEach(f=>roots.add(uf.find(f)));});
+  const liveT=new Set();
+  wires.forEach(w=>{w._live=roots.has(uf.find(w.a))||roots.has(uf.find(w.b));if(w._live){liveT.add(w.a);liveT.add(w.b);}});
+  simState._liveTerms=liveT;
+}
+function nextGuideTarget(ex){
+  const uf=makeUF();wires.forEach(w=>uf.union(w.a,w.b));
+  for(let s=0;s<ex.nets.length;s++){const net=ex.nets[s];for(let i=1;i<net.length;i++)if(!uf.conn(net[0],net[i]))return{step:Math.min(s,curSteps().length-1),a:net[0],b:net[i]};}
+  return null;
+}
+
+/* ====================== Render ====================== */
+function render(){
+  const ex=EX[curIdx];let svg='';
+  wires.forEach((w,i)=>{const A=termPos(ex,w.a),B=termPos(ex,w.b);
+    const ra=termRole[w.a],rb=termRole[w.b];
+    let col='#c9763b';
+    if(ra&&rb)col = ra===rb ? (ROLE[ra]?ROLE[ra].c:'#c9763b') : '#ff5d5d';
+    const d=`M${A.x} ${A.y} C ${A.x+40} ${A.y}, ${B.x-40} ${B.y}, ${B.x} ${B.y}`;
+    svg+=`<path class="wire ${w._live?'live':''}" data-wire="${i}" stroke="${col}" d="${d}"/>`;
+    if(w._live)svg+=`<path class="wire-flow" d="${d}"/>`;});
+  ex.comps.forEach(c=>{let extra;const t=c.type;
+    if(t==='switch'||t==='mcb'||t==='mcb3'||t==='switch3'||t==='intermediate')extra=switchStates[c.id];
+    else if(t==='switch2')extra=switchStates[c.id];
+    else if(t==='contactor')extra=simState._coil&&simState._coil[c.id];
+    svg+=`<g>${COMP[t].draw(c,extra)}</g>`;});
+  const guideT=guideMode?nextGuideTarget(ex):null;
+  ex.comps.forEach(c=>{COMP[c.type].terms.forEach(t=>{
+    const tid=c.id+'.'+t.key,x=c.x+t.dx,y=c.y+t.dy;
+    const sel=selected===tid?'sel':'',hint=guideT&&(guideT.a===tid||guideT.b===tid)?'hint':'',
+      live=simState._liveTerms&&simState._liveTerms.has(tid)?'live':'';
+    let lbl=t.lbl||'',lx=x,ly=y,anc='middle';
+    if(t.side==='l'){lx=x-13;anc='end';}else if(t.side==='r'){lx=x+13;anc='start';}
+    else if(t.side==='bl'){lx=x-9;ly=y+13;anc='end';}else if(t.side==='br'){lx=x+9;ly=y+13;anc='start';}
+    else if(t.side==='b'){ly=y+16;}else{ly=y-12;}
+    svg+=`<g class="term ${sel} ${hint} ${live}" data-term="${tid}">
+      <circle class="term-hit" cx="${x}" cy="${y}" r="17"/><circle class="term-dot" cx="${x}" cy="${y}" r="6.5"/>
+      ${lbl?`<text class="term-lbl" x="${lx}" y="${ly+3}" text-anchor="${anc}">${lbl}</text>`:''}</g>`;});});
+  board.innerHTML=svg;
+
+  [...(ex.loads||[]),...(ex.loads3||[])].forEach(ld=>{const g=document.getElementById('g_'+ld.comp);if(!g)return;
+    const on=simState[ld.comp]&&simState[ld.comp].on;
+    if(ld.type==='lamp')g.classList.toggle('lamp-on',!!on);
+    else if(ld.type==='motor'||ld.type==='motor3')g.classList.toggle('motor-run',!!on);
+    else if(ld.type==='outlet')g.classList.toggle('outlet-live',!!on);
+    else if(ld.type==='bell')g.classList.toggle('bell-ring',!!on);});
+  bindBoard();
+}
+function bindBoard(){
+  board.querySelectorAll('[data-term]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();tapTerm(el.getAttribute('data-term'));}));
+  board.querySelectorAll('[data-wire]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();delWire(+el.getAttribute('data-wire'));}));
+  board.querySelectorAll('[data-tap]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();toggleSwitch(el.getAttribute('data-tap'));}));
+}
+function tapTerm(tid){
+  if(selected===null){selected=tid;hint('Pilih terminal lain untuk menyambung, atau ketuk lagi untuk batal.');render();return;}
+  if(selected===tid){selected=null;hint('Dibatalkan.');render();return;}
+  if(!wires.some(w=>(w.a===selected&&w.b===tid)||(w.a===tid&&w.b===selected)))wires.push({a:selected,b:tid});
+  selected=null;clearSim();hint('Kabel tersambung. Lanjut sambung atau tekan Periksa.');render();updateGuide();
+}
+function delWire(i){wires.splice(i,1);clearSim();hint('Kabel dihapus.');render();updateGuide();}
+function toggleSwitch(token){
+  const[cid,sub]=token.split(':');const ex=EX[curIdx];const c=ex.comps.find(x=>x.id===cid);
+  if(c.type==='switch2'){switchStates[cid][sub]=!switchStates[cid][sub];}
+  else{switchStates[cid]=!switchStates[cid];}
+  reSim();
+}
+function clearSim(){simState={};wires.forEach(w=>w._live=false);hideFeedback();}
+function reSim(){const ex=EX[curIdx];if(checkedOk){simState=simulate(ex);markLive(ex);if(allOn(ex))markDone();}render();}
+
+function check(){
+  const ex=EX[curIdx];const v=validate(ex);const fb=document.getElementById('feedback');
+  if(v.ok){
+    checkedOk=true;simState=simulate(ex);markLive(ex);render();
+    const on=allOn(ex);const needSw=(ex.switches||[]).length>0;
+    if(on){markDone();
+      fb.innerHTML=`<div class="fb ok"><div class="h">✓ Rangkaian Benar & Aktif!</div>Topologi wiring tepat dan semua beban bekerja. Coba mainkan saklarnya untuk melihat perilaku rangkaian.</div>`;}
+    else{fb.innerHTML=`<div class="fb ok"><div class="h">✓ Wiring Benar — beban belum aktif</div>Sambunganmu sudah benar. ${needSw?'Beban belum aktif karena ada <b>saklar/MCB yang masih OFF</b> — ketuk untuk meng-ON-kan.':'Periksa kondisi rangkaian.'}</div>`;}
+  }else{
+    checkedOk=false;clearSim();render();
+    const r=v.reason==='cross'?'Ada terminal dari titik berbeda <b>tersambung salah</b> (korslet/silang). Ketuk kabel yang keliru untuk menghapus.'
+      :'Rangkaian <b>belum lengkap</b> — masih ada sambungan kurang. Aktifkan Mode Panduan jika perlu tuntunan.';
+    fb.innerHTML=`<div class="fb err"><div class="h">✕ Belum Tepat</div>${r}</div>`;
+  }
+  fb.classList.add('show');
+}
+function hideFeedback(){document.getElementById('feedback').classList.remove('show');checkedOk=false;}
+function markDone(){const ex=EX[curIdx];if(!done.has(ex.id)){done.add(ex.id);buildModList();updateCounts();}}
+
+function updateGuide(){
+  const ex=EX[curIdx];const steps=curSteps();const tgt=nextGuideTarget(ex);const cur=tgt?tgt.step:-1;
+  const p=document.getElementById('guidePanel');p.classList.add('show');
+  document.getElementById('guideSteps').innerHTML=steps.map((s,i)=>{
+    let cls='';if(tgt===null)cls='done';else if(i<cur)cls='done';else if(i===cur)cls='next';
+    const why=s[1]?`<div class="why">${s[1]}</div>`:'';
+    return `<div class="step ${cls}"><div class="si">${cls==='done'?'✓':i+1}</div><div class="stx">${s[0]}${why}</div></div>`;}).join('');
+}
+
+function buildModList(){
+  const list=document.getElementById('modList');let html='';
+  CATORDER.forEach(cat=>{
+    const items=EX.map((ex,i)=>({ex,i})).filter(o=>o.ex.cat===cat);if(!items.length)return;
+    html+=`<div class="catname"><span class="bar"></span>${CAT[cat].lbl}</div>`;
+    items.forEach(({ex,i})=>{html+=`<button class="mod ${i===curIdx?'active':''} ${done.has(ex.id)?'done':''}" data-mod="${i}">
+      <span class="num">${done.has(ex.id)?'✓':i+1}</span><span class="mt">${ex.title}</span><span class="check">●</span></button>`;});
+  });
+  list.innerHTML=html;
+  list.querySelectorAll('[data-mod]').forEach(el=>el.addEventListener('click',()=>loadEx(+el.getAttribute('data-mod'))));
+}
+function loadEx(i){
+  curIdx=i;wires=[];selected=null;switchStates={};simState={};checkedOk=false;
+  const ex=EX[i];const info=INFO[ex.id];
+  (ex.switches||[]).forEach(s=>{const c=ex.comps.find(x=>x.id===s);switchStates[s]=c.type==='switch2'?{a:false,b:false}:false;});
+  // conductor role map (for wire colouring)
+  termRole={};if(info&&info.netRoles)ex.nets.forEach((net,k)=>{const r=info.netRoles[k];net.forEach(t=>termRole[t]=r);});
+  document.getElementById('exTitle').textContent=ex.title;
+  document.getElementById('exTask').innerHTML=info&&info.task?('<b>Tugas:</b> '+info.task):ex.desc;
+  // legend
+  const roles=[...new Set((info&&info.netRoles)||[])];
+  document.getElementById('legend').innerHTML=roles.map(r=>ROLE[r]?`<span class="lg"><span class="lgdot" style="background:${ROLE[r].c}"></span>${ROLE[r].l}</span>`:'').join('')||'<span class="lg" style="color:var(--txt-dd)">Sambungkan terminal sesuai langkah</span>';
+  // learn panel
+  const lb=document.getElementById('learnBody');
+  let html=`<div class="learn-sec"><div class="ls-intro">${ex.desc}</div></div>`;
+  if(info){
+    if(info.parts)html+=`<div class="learn-sec"><div class="ls-t">Komponen &amp; fungsinya</div>${info.parts.map(p=>`<div class="partrow"><b>${p[0]}</b><span>${p[1]}</span></div>`).join('')}</div>`;
+    if(info.flow)html+=`<div class="learn-sec"><div class="ls-t">Alur listrik &amp; alasannya</div><ul class="flow">${info.flow.map(f=>`<li>${f}</li>`).join('')}</ul></div>`;
+  }
+  lb.innerHTML=html;
+  const c=CAT[ex.cat];const badge=document.getElementById('exBadge');badge.textContent=c.lbl;badge.className='badge '+c.cls;
+  document.getElementById('exLvl').innerHTML='Level '+ex.lvl+' '+[1,2,3].map(n=>`<span class="dot ${n<=ex.lvl?'on':''}"></span>`).join('');
+  board.setAttribute('viewBox',ex.vb||'0 0 880 480');
+  hideFeedback();buildModList();render();updateGuide();
+  hint('Ketuk satu terminal lalu terminal lain untuk membuat kabel.');
+}
+function updateCounts(){document.getElementById('doneCount').textContent=done.size;document.getElementById('totalCount').textContent=EX.length;}
+function hint(t){document.getElementById('hintText').innerHTML=t;}
+
+document.getElementById('btnCheck').addEventListener('click',check);
+document.getElementById('btnReset').addEventListener('click',()=>{wires=[];selected=null;clearSim();render();updateGuide();hint('Board dikosongkan.');});
+document.getElementById('guideToggle').addEventListener('click',function(){guideMode=!guideMode;this.classList.toggle('on',guideMode);updateGuide();render();});
+document.getElementById('btnHelp').addEventListener('click',()=>document.getElementById('helpOv').classList.add('show'));
+document.getElementById('helpClose').addEventListener('click',()=>document.getElementById('helpOv').classList.remove('show'));
+document.getElementById('helpOv').addEventListener('click',e=>{if(e.target.id==='helpOv')e.currentTarget.classList.remove('show');});
+board.addEventListener('click',()=>{if(selected){selected=null;render();}});
+
+updateCounts();loadEx(0);
+
+})();
+</script>
+<script>
+/* ---------- hub + specialization simulators ---------- */
+/* ============ HUB DATA (16 specializations) ============ */
+const TRACKS=[
+ {id:'t1', cat:'Instalasi', title:'Instalasi Bangunan', sub:'MEP gedung, hotel, RS, mall — dari wiring dasar sampai smart building.', icon:'plug', kind:'wiring'},
+ {id:'t2', cat:'Industri', title:'Industri & Manufaktur', sub:'Motor, drive, reliability, maintenance pabrik & mining.', icon:'motor'},
+ {id:'t3', cat:'Distribusi', title:'Distribusi', sub:'Jaringan 20kV, gardu, SCADA, smart grid.', icon:'tower'},
+ {id:'t4', cat:'Transmisi', title:'Transmisi', sub:'Saluran 150/500kV, GITET, sistem proteksi.', icon:'shield'},
+ {id:'t5', cat:'Data', title:'Energy Analyst & Data Science', sub:'Python/ML untuk utility: load forecasting, deteksi NTL.', icon:'chart'},
+ {id:'t6', cat:'Audit', title:'Energy Auditor', sub:'Audit energi industri, ISO 50001, efisiensi.', icon:'audit'},
+ {id:'t7', cat:'Pembangkitan', title:'Pembangkitan & Renewable', sub:'PLTU, PLTG, PLTA, PLTS, BESS — dispatch & bauran energi.', icon:'plant'},
+ {id:'t8', cat:'K3', title:'K3 Listrik', sub:'Safety officer, LOTO, identifikasi bahaya.', icon:'helmet'},
+ {id:'t9', cat:'Sales', title:'Sales & Technical Marketing', sub:'Sizing kabel/trafo & penawaran teknis MV.', icon:'tag'},
+ {id:'t10',cat:'Solar', title:'PV & Solar Engineer', sub:'Desain PLTS rooftop / ground-mount, hitung yield.', icon:'sun'},
+ {id:'t11',cat:'Karbon', title:'Sustainability & Carbon', sub:'GHG accounting Scope 1-2-3 & strategi net zero.', icon:'leaf'},
+ {id:'t12',cat:'EV', title:'EV & EV Charging', sub:'SPKLU, daya charger, waktu & biaya pengisian.', icon:'ev'},
+ {id:'t13',cat:'WtE', title:'Waste to Energy', sub:'Sampah jadi listrik: insinerator, LFG, PLTSa.', icon:'trash'},
+ {id:'t14',cat:'Hidrogen', title:'Hydrogen Energy', sub:'Green hydrogen via elektrolisis & fuel cell.', icon:'h2'},
+ {id:'t15',cat:'BESS', title:'Baterai & BESS', sub:'Battery storage: peak shaving & integrasi grid.', icon:'batt'},
+ {id:'t16',cat:'Otomasi', title:'Kontrol & Otomasi', sub:'PLC, HMI, SCADA — ladder logic start/stop.', icon:'plc'},
+];
+const ICON={
+ plug:'<path d="M9 7V3M15 7V3M7 7h10v4a5 5 0 01-5 5 5 5 0 01-5-5V7zM12 16v5"/>',
+ motor:'<circle cx="11" cy="12" r="6"/><path d="M11 9v6M8 12h6M17 10h4M19 8v8M19 16h2"/>',
+ tower:'<path d="M12 3v18M6 21l6-14 6 14M8 9h8M7 13h10"/>',
+ shield:'<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3zM9 12l2 2 4-4"/>',
+ chart:'<path d="M4 20V4M4 20h16M8 16l3-5 3 3 4-7"/>',
+ audit:'<path d="M7 3h7l5 5v13H7zM14 3v5h5M9 13h6M9 17h6"/>',
+ plant:'<path d="M4 21V9l5-3 5 3v12M14 21V11l5-3v13M7 12h2M7 15h2M17 12h.01"/>',
+ helmet:'<path d="M4 16a8 8 0 0116 0zM3 16h18v3H3zM10 8V5h4v3"/>',
+ tag:'<path d="M3 12l9-9 9 9-9 9zM12 7v.01"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+ leaf:'<path d="M5 19C5 9 12 5 20 5c0 9-6 14-13 14-2 0-2-3-2-3zM5 19c4-4 7-6 11-7"/>',
+ ev:'<path d="M3 16V9a2 2 0 012-2h7a2 2 0 012 2v7M3 16h11M5 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM17 8l3 4h-2v4"/>',
+ trash:'<path d="M5 7h14l-1 14H6L5 7zM3 7h18M9 7V4h6v3M10 11v6M14 11v6"/>',
+ h2:'<circle cx="7" cy="10" r="3"/><circle cx="17" cy="10" r="3"/><path d="M10 10h4M7 18h10"/><text x="12" y="22" font-size="5" text-anchor="middle" fill="currentColor" stroke="none">H2</text>',
+ batt:'<path d="M3 8h16v8H3zM19 11h2v2h-2M7 8v8M9 11l-2 0M12 9l2 6 2-6"/>',
+ plc:'<path d="M3 6h18v12H3zM6 12h3l1-3 2 6 1-3h5"/>',
+};
+
+/* ============ App shell / router ============ */
+let mounted=null;
+function showHub(){
+  document.getElementById('hubView').style.display='block';
+  document.getElementById('wiringView').style.display='none';
+  document.getElementById('simView').style.display='none';
+  document.getElementById('backBtn').style.display='none';
+  document.getElementById('crumb').textContent='16 Jalur Spesialisasi';
+  window.scrollTo(0,0);
+}
+function openTrack(id){
+  const t=TRACKS.find(x=>x.id===id);
+  document.getElementById('hubView').style.display='none';
+  document.getElementById('backBtn').style.display='inline-flex';
+  document.getElementById('crumb').textContent=t.title;
+  if(t.kind==='wiring'){
+    document.getElementById('wiringView').style.display='block';
+    document.getElementById('simView').style.display='none';
+  }else{
+    document.getElementById('wiringView').style.display='none';
+    const sv=document.getElementById('simView');sv.style.display='block';
+    const host=document.getElementById('simMount');host.innerHTML='';
+    (SIMS[id]||SIMS._todo)(host,t);
+  }
+  window.scrollTo(0,0);
+}
+function buildHub(){
+  const grid=document.getElementById('hubGrid');
+  grid.innerHTML=TRACKS.map((t,i)=>`
+    <button class="tcard" data-t="${t.id}">
+      <div class="tcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON[t.icon]||''}</svg>
+        <span class="tcard-arrow">→</span></div>
+      <div class="tcard-body">
+        <div class="tcard-no">S${i+1} · JALUR ${String(i+1).padStart(2,'0')}</div>
+        <div class="tcard-title">${t.title}</div>
+        <div class="tcard-sub">${t.sub}</div>
+        <div class="tcard-cta">Buka Simulator</div>
+      </div>
+    </button>`).join('');
+  grid.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>openTrack(b.getAttribute('data-t'))));
+}
+
+/* ============ UI kit ============ */
+const UI={};
+UI.shell=(t,intro,controls,output)=>`
+  <div class="sim-head">
+    <div class="sim-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICON[t.icon]||''}</svg></div>
+    <div><h2>${t.title}</h2><p>${intro}</p></div>
+  </div>
+  <div class="sim-grid">
+    <div class="sim-controls">${controls}</div>
+    <div class="sim-output">${output}</div>
+  </div>`;
+UI.slider=(id,label,min,max,val,step,unit)=>`
+  <div class="field"><label>${label}<span class="fval"><b id="${id}_v">${val}</b> ${unit||''}</span></label>
+   <input type="range" id="${id}" min="${min}" max="${max}" value="${val}" step="${step||1}"></div>`;
+UI.seg=(id,label,opts)=>`<div class="field"><label>${label}</label><div class="seg" id="${id}">
+   ${opts.map((o,i)=>`<button data-v="${o.v}" class="${i===0?'on':''}">${o.t}</button>`).join('')}</div></div>`;
+UI.num=(id,label,val,unit)=>`<div class="field"><label>${label}<span class="fval">${unit||''}</span></label>
+   <input type="number" id="${id}" value="${val}" class="numin"></div>`;
+UI.metric=(label,id,unit,big)=>`<div class="metric ${big?'big':''}"><div class="m-l">${label}</div><div class="m-v"><b id="${id}">–</b> <span>${unit||''}</span></div></div>`;
+UI.bindSeg=(id,cb)=>{const s=document.getElementById(id);s.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  s.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');cb(b.getAttribute('data-v'));}));};
+UI.segVal=(id)=>document.getElementById(id).querySelector('button.on').getAttribute('data-v');
+const Rp=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
+const fmt=(n,d=0)=>Number(n).toLocaleString('id-ID',{maximumFractionDigits:d,minimumFractionDigits:d});
+
+/* charts */
+function barsSVG(items,opts){opts=opts||{};const W=420,H=opts.h||150,pad=26,n=items.length;
+  const max=opts.max||Math.max(...items.map(i=>i.val),1);const bw=(W-pad*2)/n*0.6;const gap=(W-pad*2)/n;
+  let s=`<svg viewBox="0 0 ${W} ${H+30}" class="chart">`;
+  s+=`<line x1="${pad}" y1="${H}" x2="${W-pad}" y2="${H}" stroke="#33445f"/>`;
+  items.forEach((it,i)=>{const h=Math.max(2,(it.val/max)*(H-20));const x=pad+gap*i+(gap-bw)/2;
+    s+=`<rect x="${x}" y="${H-h}" width="${bw}" height="${h}" rx="4" fill="${it.color||'#e8b339'}"/>`;
+    s+=`<text x="${x+bw/2}" y="${H-h-5}" text-anchor="middle" font-size="10" fill="#e7edf6">${it.lbl||fmt(it.val)}</text>`;
+    s+=`<text x="${x+bw/2}" y="${H+16}" text-anchor="middle" font-size="9.5" fill="#8ea0b8">${it.name}</text>`;});
+  return s+'</svg>';}
+function donutSVG(items){const tot=items.reduce((a,b)=>a+b.val,0)||1;let acc=0;const cx=70,cy=70,r=52,rin=30;
+  let s=`<svg viewBox="0 0 220 150" class="chart">`;
+  items.forEach(it=>{const a0=acc/tot*2*Math.PI-Math.PI/2;acc+=it.val;const a1=acc/tot*2*Math.PI-Math.PI/2;
+    const large=(a1-a0)>Math.PI?1:0;const x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+    const xi1=cx+rin*Math.cos(a1),yi1=cy+rin*Math.sin(a1),xi0=cx+rin*Math.cos(a0),yi0=cy+rin*Math.sin(a0);
+    if(it.val>0)s+=`<path d="M${x0} ${y0} A${r} ${r} 0 ${large} 1 ${x1} ${y1} L${xi1} ${yi1} A${rin} ${rin} 0 ${large} 0 ${xi0} ${yi0} Z" fill="${it.color}"/>`;});
+  s+=items.map((it,i)=>`<g transform="translate(150,${28+i*22})"><rect width="12" height="12" rx="3" fill="${it.color}"/><text x="18" y="10" font-size="10.5" fill="#e7edf6">${it.name} ${fmt(it.val)}</text></g>`).join('');
+  return s+'</svg>';}
+function lineSVG(series,opts){opts=opts||{};const W=440,H=160,pad=30;
+  const all=[].concat(...series.map(s=>s.data));const max=Math.max(...all,1),min=Math.min(...all,0);
+  const n=series[0].data.length;const sx=i=>pad+i*(W-pad*2)/(n-1);const sy=v=>H-pad-(v-min)/(max-min||1)*(H-pad*2);
+  let s=`<svg viewBox="0 0 ${W} ${H}" class="chart">`;
+  s+=`<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#33445f"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#33445f"/>`;
+  if(opts.thresh!=null)s+=`<line x1="${pad}" y1="${sy(opts.thresh)}" x2="${W-pad}" y2="${sy(opts.thresh)}" stroke="#ff5d5d" stroke-dasharray="4 4"/>`;
+  series.forEach(se=>{let d='';se.data.forEach((v,i)=>d+=(i?'L':'M')+sx(i)+' '+sy(v)+' ');
+    s+=`<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2.5"/>`;});
+  s+=series.map((se,i)=>`<g transform="translate(${W-pad-110},${pad+i*16})"><rect width="11" height="11" rx="2" fill="${se.color}"/><text x="16" y="9" font-size="10" fill="#e7edf6">${se.name}</text></g>`).join('');
+  return s+'</svg>';}
+function gaugeSVG(pct,label){pct=Math.max(0,Math.min(100,pct));const a=Math.PI*(1-pct/100);
+  const cx=80,cy=80,r=60;const x=cx+r*Math.cos(a),y=cy-r*Math.sin(a);
+  return `<svg viewBox="0 0 160 100" class="chart"><path d="M20 80 A60 60 0 0 1 140 80" fill="none" stroke="#26344a" stroke-width="12"/>
+    <path d="M20 80 A60 60 0 0 1 ${x} ${y}" fill="none" stroke="#e8b339" stroke-width="12" stroke-linecap="round"/>
+    <text x="80" y="72" text-anchor="middle" font-size="22" font-weight="700" fill="#f3d27a">${fmt(pct)}%</text>
+    <text x="80" y="92" text-anchor="middle" font-size="10" fill="#8ea0b8">${label||''}</text></svg>`;}
+
+/* ============ SIM MODULES ============ */
+const SIMS={};
+SIMS._todo=(host,t)=>{host.innerHTML=UI.shell(t,'Simulator jalur ini sedang disiapkan.','<p class="muted">Segera hadir.</p>','');};
+
+/* ---- t2 Industri: motor starter & protection ---- */
+SIMS.t2=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Pilih metode start motor & lihat dampaknya pada arus start, torsi, dan setting proteksi.',
+    UI.slider('p','Daya motor',1,200,22,1,'kW')+
+    UI.slider('v','Tegangan',220,690,380,10,'V')+
+    UI.slider('pf','Faktor daya',0.7,0.99,0.85,0.01,'')+
+    UI.seg('st','Metode start',[{v:'dol',t:'DOL'},{v:'yd',t:'Y-Δ'},{v:'soft',t:'Soft'},{v:'vfd',t:'VFD'}]),
+    `<div class="motorviz"><svg viewBox="0 0 120 120" id="t2motor"><circle cx="60" cy="60" r="40" fill="#1a2433" stroke="#33445f" stroke-width="3"/>
+      <g class="motor-rot" id="t2rot"><path d="M60 28v64M28 60h64M38 38l44 44M82 38l-44 44" stroke="#e8b339" stroke-width="4" stroke-linecap="round"/></g>
+      <circle cx="60" cy="60" r="10" fill="#0a0e16" stroke="#33445f" stroke-width="2"/></svg></div>
+     <div class="metrics">${UI.metric('Arus nominal (FLA)','t2fla','A',1)}${UI.metric('Arus start','t2is','A',1)}
+       ${UI.metric('Torsi start','t2tq','%')}${UI.metric('Setting overload','t2ol','A')}</div>
+     <div id="t2bar"></div><div class="note" id="t2note"></div>`);
+  let starter='dol';
+  function upd(){const P=+v('p'),V=+v('v'),pf=+v('pf');setv('p',P);setv('v',V);setv('pf',pf);
+    const m=CALC.motorAnalysis(P,V,pf,0.9,starter);
+    txt('t2fla',fmt(m.FLA,1));txt('t2is',fmt(m.Istart,1));txt('t2tq',m.Tpct);txt('t2ol',fmt(m.overload,1));
+    document.getElementById('t2bar').innerHTML=barsSVG([{name:'FLA',val:m.FLA,color:'#3ddc84'},{name:'Arus start',val:m.Istart,color:'#ff6b6b'}],{max:m.FLA*6.2});
+    document.getElementById('t2note').textContent=m.note;
+    document.getElementById('t2rot').style.animationDuration=(2.4/(m.Tpct/50))+'s';}
+  ['p','v','pf'].forEach(bindInput(upd));UI.bindSeg('st',x=>{starter=x;upd();});upd();
+};
+
+/* ---- t3 Distribusi: feeder fault isolation ---- */
+SIMS.t3=(host,t)=>{
+  const N=5;const fault=2;let cb=true,tie=false,sw=[true,true,true,true];
+  host.innerHTML=UI.shell(t,'Penyulang 20kV dengan gangguan di salah satu seksi. Buka sakelar untuk <b>mengisolasi gangguan</b>, lalu tutup tie-switch ke gardu cadangan untuk <b>memulihkan</b> pelanggan di hilir.',
+    `<div class="note">Tujuan: seksi gangguan padam, dan sebanyak mungkin seksi lain kembali menyala. Ketuk komponen pada diagram.</div>
+     <div class="metrics">${UI.metric('Status gangguan','t3f','')}${UI.metric('Seksi pulih','t3r','dari 4')}</div>`,
+    `<div id="t3board"></div><div class="note" id="t3msg"></div>`);
+  function draw(){const st=CALC.feederState(N,cb,tie,sw,fault);
+    const W=460,H=150;let s=`<svg viewBox="0 0 ${W} ${H}" class="chart">`;
+    const xs=i=>40+i*95;const y=70;
+    // backbone
+    for(let i=0;i<N;i++){const en=st.energized[i];const isF=i===fault;
+      const col=isF?(en?'#ff5d5d':'#5b6b82'):(en?'#ffd34d':'#33445f');
+      s+=`<rect x="${xs(i)-26}" y="${y-16}" width="52" height="32" rx="6" fill="#141b27" stroke="${col}" stroke-width="2.5"/>`;
+      s+=`<text x="${xs(i)}" y="${y+5}" text-anchor="middle" font-size="11" fill="${col}">${isF?'⚡FAULT':'S'+(i+1)}</text>`;
+      if(en&&!isF)s+=`<circle cx="${xs(i)}" cy="${y-26}" r="4" fill="#ffd34d"/>`;}
+    // switches between
+    for(let i=0;i<N-1;i++){const cl=sw[i];const x=(xs(i)+xs(i+1))/2;
+      s+=`<line x1="${xs(i)+26}" y1="${y}" x2="${x-10}" y2="${y}" stroke="#5b6b82" stroke-width="3"/>`;
+      s+=`<line x1="${x+10}" y1="${y}" x2="${xs(i+1)-26}" y2="${y}" stroke="#5b6b82" stroke-width="3"/>`;
+      s+=`<g class="tap" data-sw="${i}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="13" fill="#1a2433" stroke="${cl?'#3ddc84':'#ff5d5d'}" stroke-width="2.5"/>
+        <line x1="${x-7}" y1="${y}" x2="${x+7}" y2="${cl?y:y-9}" stroke="${cl?'#3ddc84':'#ff5d5d'}" stroke-width="3" stroke-linecap="round"/></g>`;
+      s+=`<text x="${x}" y="${y+28}" text-anchor="middle" font-size="8.5" fill="#8ea0b8">SW${i+1} ${cl?'TUTUP':'BUKA'}</text>`;}
+    // main source + CB
+    s+=`<text x="${xs(0)}" y="22" text-anchor="middle" font-size="9" fill="#3ddc84">GI UTAMA</text>`;
+    s+=`<g class="tap" data-cb="1" style="cursor:pointer"><rect x="${xs(0)-14}" y="30" width="28" height="16" rx="3" fill="#1a2433" stroke="${cb?'#3ddc84':'#ff5d5d'}" stroke-width="2"/><text x="${xs(0)}" y="42" text-anchor="middle" font-size="8" fill="${cb?'#3ddc84':'#ff5d5d'}">CB ${cb?'ON':'OFF'}</text></g>`;
+    s+=`<line x1="${xs(0)}" y1="46" x2="${xs(0)}" y2="${y-16}" stroke="#5b6b82" stroke-width="3"/>`;
+    // backup + tie at end
+    s+=`<text x="${xs(N-1)}" y="22" text-anchor="middle" font-size="9" fill="#6db3ff">GI CADANGAN</text>`;
+    s+=`<g class="tap" data-tie="1" style="cursor:pointer"><rect x="${xs(N-1)-16}" y="30" width="32" height="16" rx="3" fill="#1a2433" stroke="${tie?'#3ddc84':'#5b6b82'}" stroke-width="2"/><text x="${xs(N-1)}" y="42" text-anchor="middle" font-size="8" fill="${tie?'#3ddc84':'#8ea0b8'}">TIE ${tie?'ON':'OFF'}</text></g>`;
+    s+=`<line x1="${xs(N-1)}" y1="46" x2="${xs(N-1)}" y2="${y-16}" stroke="${tie?'#6db3ff':'#33445f'}" stroke-width="3"/>`;
+    s+='</svg>';
+    document.getElementById('t3board').innerHTML=s;
+    const bd=document.getElementById('t3board');
+    bd.querySelectorAll('[data-sw]').forEach(e=>e.addEventListener('click',()=>{const i=+e.getAttribute('data-sw');sw[i]=!sw[i];draw();}));
+    bd.querySelector('[data-cb]').addEventListener('click',()=>{cb=!cb;draw();});
+    bd.querySelector('[data-tie]').addEventListener('click',()=>{tie=!tie;draw();});
+    txt('t3f',st.faultLive?'⚠ MASIH BERTEGANGAN':'✓ TERISOLASI');
+    document.getElementById('t3f').parentElement.style.color=st.faultLive?'#ff5d5d':'#3ddc84';
+    txt('t3r',st.restored);
+    const msg=document.getElementById('t3msg');
+    if(st.faultLive)msg.innerHTML='Gangguan masih dialiri arus — buka sakelar di kedua sisi seksi FAULT.';
+    else if(st.restored===st.total)msg.innerHTML='<b style="color:#3ddc84">Sempurna!</b> Gangguan terisolasi & semua seksi sehat dipulihkan (sebagian via gardu cadangan).';
+    else msg.innerHTML='Gangguan aman. Coba tutup TIE untuk memulihkan seksi hilir yang masih padam.';
+  }
+  // robust toggle for switches
+  host.querySelector('#t3board');draw();
+  host.addEventListener('click',e=>{const swEl=e.target.closest('[data-sw]');if(swEl){const i=+swEl.getAttribute('data-sw');sw[i]=!sw[i];draw();}});
+};
+
+/* ---- t4 Transmisi: relay coordination ---- */
+SIMS.t4=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Atur setelan relai proteksi (OCR) jenis <i>standard inverse</i>. Lihat apakah relai trip dan berapa lama saat terjadi gangguan.',
+    UI.slider('if','Arus gangguan',0.5,20,8,0.5,'kA')+
+    UI.slider('ip','Pickup (Iset)',0.5,10,2,0.1,'kA')+
+    UI.slider('tms','TMS',0.05,1,0.2,0.05,'')+
+    UI.seg('cv','Kurva',[{v:'si',t:'Standard'},{v:'vi',t:'Very'},{v:'ei',t:'Extreme'}]),
+    `<div class="metrics">${UI.metric('Status relai','t4st','',1)}${UI.metric('Waktu trip','t4t','detik')}${UI.metric('Rasio I/Iset','t4r','×')}</div>
+     <div id="t4curve"></div>
+     <div class="note">Relai harus trip cukup cepat saat gangguan besar, tapi tetap selektif (tidak trip untuk arus beban normal di bawah pickup).</div>`);
+  let cv='si';
+  function upd(){const If=+v('if'),Ip=+v('ip'),tms=+v('tms');setv('if',If);setv('ip',Ip);setv('tms',tms);
+    const r=CALC.relayTrip(If,Ip,tms,cv);
+    txt('t4st',r.trips?'⚡ TRIP':'— diam');document.getElementById('t4st').parentElement.style.color=r.trips?'#ffd34d':'#8ea0b8';
+    txt('t4t',r.trips?fmt(r.t,3):'∞');txt('t4r',fmt(If/Ip,2));
+    // curve: sweep multiples
+    const pts=[];for(let mlt=1.05;mlt<=20;mlt*=1.12){const rr=CALC.relayTrip(mlt*Ip,Ip,tms,cv);if(rr.t<60)pts.push({m:mlt,t:rr.t});}
+    const W=440,H=170,pad=34;const maxM=20,maxT=Math.max(...pts.map(p=>p.t),1);
+    const sx=m=>pad+(Math.log(m)/Math.log(maxM))*(W-pad*2);const sy=tt=>H-pad-(Math.log(tt+0.01)-Math.log(0.01))/(Math.log(maxT+0.01)-Math.log(0.01))*(H-pad*2);
+    let s=`<svg viewBox="0 0 ${W} ${H}" class="chart"><line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#33445f"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#33445f"/>`;
+    let d='';pts.forEach((p,i)=>d+=(i?'L':'M')+sx(p.m)+' '+sy(p.t)+' ');s+=`<path d="${d}" fill="none" stroke="#e8b339" stroke-width="2.5"/>`;
+    if(r.trips&&r.t<60){s+=`<circle cx="${sx(If/Ip)}" cy="${sy(r.t)}" r="5" fill="#ff6b6b"/><line x1="${sx(If/Ip)}" y1="${sy(r.t)}" x2="${sx(If/Ip)}" y2="${H-pad}" stroke="#ff6b6b" stroke-dasharray="3 3"/>`;}
+    s+=`<text x="${W/2}" y="${H-8}" text-anchor="middle" font-size="9.5" fill="#8ea0b8">kelipatan arus (I / Iset)</text><text x="12" y="${pad+4}" font-size="9.5" fill="#8ea0b8">t(s)</text></svg>`;
+    document.getElementById('t4curve').innerHTML=s;}
+  ['if','ip','tms'].forEach(bindInput(upd));UI.bindSeg('cv',x=>{cv=x;upd();});upd();
+};
+
+/* ---- t5 Data Science: forecast + NTL ---- */
+SIMS.t5=(host,t)=>{
+  const base=[210,225,219,240,250,248,265,270,268,285,292,300,310,318];
+  host.innerHTML=UI.shell(t,'Dua tugas analitik utility: <b>peramalan beban</b> (regresi linear) dan <b>deteksi NTL</b> (kehilangan non-teknis / pencurian) dari pola konsumsi.',
+    UI.slider('h','Ramal berapa hari ke depan',1,7,3,1,'hari')+
+    `<div class="subh">Deteksi NTL — konsumsi 5 bulan terakhir (kWh)</div>`+
+    UI.slider('c5','Bulan ke-5 (terbaru)',20,400,90,5,'kWh')+
+    `<div class="note">Geser bulan ke-5 turun drastis untuk mensimulasikan sambungan ilegal / meter dimanipulasi.</div>`,
+    `<div class="subh">Peramalan beban harian</div><div id="t5f"></div>
+     <div class="metrics">${UI.metric('Prediksi','t5p','MW')}${UI.metric('Akurasi (MAPE)','t5m','%')}</div>
+     <div class="subh">Status pelanggan (NTL)</div><div class="metrics">${UI.metric('Rata-rata 4 bln','t5avg','kWh')}${UI.metric('Penurunan','t5d','%')}${UI.metric('Indikasi','t5flag','',1)}</div>`);
+  function upd(){const ah=+v('h');setv('h',ah);
+    const fc=CALC.forecast(base,ah);
+    // build fitted line for chart
+    const {a,b}=CALC.linreg(base);const fit=base.map((_,i)=>a+b*i);const fut=[];for(let k=1;k<=ah;k++)fut.push(a+b*(base.length-1+k));
+    const series=[{name:'Aktual',color:'#6db3ff',data:base.concat(fut.map(()=>null)).map((x,i)=>x==null?base[base.length-1]:x)},
+      {name:'Tren+Ramal',color:'#e8b339',data:fit.concat(fut)}];
+    document.getElementById('t5f').innerHTML=lineSVG(series,{});
+    txt('t5p',fmt(fc,0));
+    const pred=base.map((_,i)=>a+b*i);txt('t5m',fmt(CALC.mape(base.slice(-5),pred.slice(-5)),1));
+    const c5=+v('c5');setv('c5',c5);const ser=[300,310,295,305,c5];const n=CALC.ntlFlag(ser,40);
+    txt('t5avg',fmt(n.avg,0));txt('t5d',fmt(n.drop,1));
+    txt('t5flag',n.flag?'⚠ CURIGA':'✓ Normal');document.getElementById('t5flag').parentElement.style.color=n.flag?'#ff5d5d':'#3ddc84';}
+  ['h','c5'].forEach(bindInput(upd));upd();
+};
+
+/* ---- t6 Energy Auditor ---- */
+SIMS.t6=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Audit energi sebuah pabrik. Hitung konsumsi & biaya tahunan, lalu terapkan langkah efisiensi dan lihat penghematan + payback.',
+    UI.slider('lt','Jam nyala lampu/hari',1,24,10,1,'jam')+
+    UI.slider('nl','Jumlah titik lampu',10,500,120,10,'titik')+
+    UI.slider('mt','Jam operasi motor/hari',1,24,16,1,'jam')+
+    UI.seg('led','Penerangan',[{v:'no',t:'Lampu biasa 36W'},{v:'yes',t:'Ganti LED 18W'}])+
+    UI.seg('vfd','Motor',[{v:'no',t:'Motor langsung'},{v:'yes',t:'Pasang VFD −25%'}]),
+    `<div class="metrics">${UI.metric('Energi/tahun','t6kwh','kWh',1)}${UI.metric('Biaya/tahun','t6cost','')}
+       ${UI.metric('Emisi','t6co2','tCO₂')}${UI.metric('Hemat/tahun','t6save','')}</div>
+     <div id="t6bar"></div><div class="note" id="t6note"></div>`);
+  let led='no',vfd='no';const tariff=1444.7,ef=0.79;
+  function upd(){const lh=+v('lt'),nl=+v('nl'),mh=+v('mt');setv('lt',lh);setv('nl',nl);setv('mt',mh);
+    const lampW=led==='yes'?18:36;const motorW=11000*(vfd==='yes'?0.75:1);
+    const loads=[{W:lampW,qty:nl,hrs:lh},{W:motorW,qty:4,hrs:mh}];
+    const base=CALC.auditTotals([{W:36,qty:nl,hrs:lh},{W:11000,qty:4,hrs:mh}],tariff,ef);
+    const now=CALC.auditTotals(loads,tariff,ef);
+    txt('t6kwh',fmt(now.kwh,0));txt('t6cost',Rp(now.cost));txt('t6co2',fmt(now.co2,1));
+    const save=base.cost-now.cost;txt('t6save',Rp(save));
+    document.getElementById('t6bar').innerHTML=barsSVG([{name:'Baseline',val:base.kwh,color:'#5b6b82'},{name:'Setelah efisiensi',val:now.kwh,color:'#3ddc84'}],{});
+    const inv=(led==='yes'?nl*45000:0)+(vfd==='yes'?4*15000000:0);
+    document.getElementById('t6note').innerHTML=inv>0?`Investasi ≈ ${Rp(inv)} · payback ≈ <b>${save>0?fmt(inv/save,1):'∞'} tahun</b>`:'Belum ada langkah efisiensi dipilih.';}
+  ['lt','nl','mt'].forEach(bindInput(upd));UI.bindSeg('led',x=>{led=x;upd();});UI.bindSeg('vfd',x=>{vfd=x;upd();});upd();
+};
+
+/* ---- t7 Pembangkitan: economic dispatch ---- */
+SIMS.t7=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Penuhi permintaan beban dengan biaya termurah (<b>economic dispatch</b>). Pembangkit dipanggil berurutan dari biaya marjinal terendah.',
+    UI.slider('d','Permintaan beban',50,800,450,10,'MW')+
+    UI.seg('sun','Kondisi',[{v:'1',t:'Siang (PLTS penuh)'},{v:'0',t:'Malam (PLTS 0)'}]),
+    `<div class="metrics">${UI.metric('Total biaya/jam','t7c','',1)}${UI.metric('Tak terlayani','t7u','MW')}</div>
+     <div id="t7pie"></div><div id="t7bar"></div>
+     <div class="note">Hijau = energi murah/bersih (hidro, surya). Pembangkit mahal (PLTG) hanya dipakai saat beban puncak.</div>`);
+  let sun='1';
+  function upd(){const D=+v('d');setv('d',D);
+    const plants=[{name:'PLTA',cap:120,cost:0,color:'#6db3ff'},{name:'PLTS',cap:sun==='1'?150:0,cost:0,color:'#ffd34d'},
+      {name:'PLTU',cap:300,cost:650000,color:'#8ea0b8'},{name:'PLTG',cap:250,cost:1600000,color:'#ff8a5e'}];
+    const r=CALC.dispatch(D,plants);
+    txt('t7c',Rp(r.totalCost));txt('t7u',fmt(r.unmet,0));
+    document.getElementById('t7u').parentElement.style.color=r.unmet>0?'#ff5d5d':'#3ddc84';
+    const used=r.gen.filter(g=>g.gen>0).map(g=>({name:g.name,val:g.gen,color:g.color}));
+    document.getElementById('t7pie').innerHTML=donutSVG(used.length?used:[{name:'–',val:1,color:'#33445f'}]);
+    document.getElementById('t7bar').innerHTML=barsSVG(r.gen.map(g=>({name:g.name,val:g.gen,color:g.color})),{max:300});}
+  ['d'].forEach(bindInput(upd));UI.bindSeg('sun',x=>{sun=x;upd();});upd();
+};
+
+/* ---- t8 K3: LOTO ordering ---- */
+SIMS.t8=(host,t)=>{
+  const correct=CALC.LOTO;let order=shuffle(correct.map((_,i)=>i));
+  host.innerHTML=UI.shell(t,'Susun prosedur <b>LOTO (Lock-Out Tag-Out)</b> dalam urutan yang benar sebelum bekerja pada instalasi listrik. Ketuk dua langkah untuk menukar posisinya.',
+    `<div class="note">Urutan yang salah bisa berakibat fatal. Susun dari langkah pertama sampai terakhir.</div>
+     <div class="metrics">${UI.metric('Status','t8st','',1)}</div><button class="btn primary" id="t8check" style="margin-top:8px">Periksa Urutan</button> <button class="btn ghost" id="t8re">Acak lagi</button>`,
+    `<div id="t8list"></div>`);
+  let sel=null;
+  function draw(){document.getElementById('t8list').innerHTML=order.map((idx,pos)=>
+    `<div class="loto ${sel===pos?'sel':''}" data-pos="${pos}"><span class="ln">${pos+1}</span>${correct[idx]}</div>`).join('');
+    document.getElementById('t8list').querySelectorAll('[data-pos]').forEach(e=>e.addEventListener('click',()=>{
+      const p=+e.getAttribute('data-pos');if(sel===null){sel=p;}else{const tmp=order[sel];order[sel]=order[p];order[p]=tmp;sel=null;}draw();}));}
+  document.getElementById('t8check').addEventListener('click',()=>{const okk=CALC.lotoCheck(order.map(i=>correct[i]));
+    txt('t8st',okk?'✓ BENAR':'✕ Belum tepat');document.getElementById('t8st').parentElement.style.color=okk?'#3ddc84':'#ff5d5d';});
+  document.getElementById('t8re').addEventListener('click',()=>{order=shuffle(correct.map((_,i)=>i));sel=null;draw();txt('t8st','–');});
+  draw();
+};
+
+/* ---- t9 Sales: cable & trafo sizing + quote ---- */
+SIMS.t9=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Buat penawaran teknis: hitung arus beban, pilih ukuran kabel & trafo, cek drop tegangan, lalu susun harga.',
+    UI.slider('p','Daya beban',10,1000,150,10,'kW')+
+    UI.slider('l','Jarak kabel',10,500,80,5,'m')+
+    UI.slider('pf','Faktor daya',0.8,0.99,0.85,0.01,'')+
+    UI.slider('mg','Margin',5,40,20,1,'%'),
+    `<div class="metrics">${UI.metric('Arus beban','t9i','A',1)}${UI.metric('Kabel terpilih','t9c','mm²',1)}
+       ${UI.metric('Drop tegangan','t9v','%')}${UI.metric('Trafo','t9t','kVA')}</div>
+     <div class="quote" id="t9q"></div>`);
+  function upd(){const P=+v('p'),L=+v('l'),pf=+v('pf'),mg=+v('mg');setv('p',P);setv('l',L);setv('pf',pf);setv('mg',mg);
+    const I=CALC.current3(P,380,pf);const cb=CALC.cableSelect(I);const vd=CALC.vdrop(I,cb,L,380);const kva=CALC.trafoSelect(P,pf);
+    txt('t9i',fmt(I,1));txt('t9c',cb.mm2);txt('t9v',fmt(vd.pct,2));txt('t9t',kva);
+    document.getElementById('t9v').parentElement.style.color=vd.pct>5?'#ff5d5d':'#3ddc84';
+    const cableCost=cb.mm2*1200*L*4;const trafoCost=kva*450000;const sub=cableCost+trafoCost;const total=sub*(1+mg/100);
+    document.getElementById('t9q').innerHTML=`<div class="qrow"><span>Kabel NYY ${cb.mm2}mm² × ${L}m (4 inti)</span><b>${Rp(cableCost)}</b></div>
+      <div class="qrow"><span>Trafo distribusi ${kva} kVA</span><b>${Rp(trafoCost)}</b></div>
+      <div class="qrow"><span>Subtotal</span><b>${Rp(sub)}</b></div>
+      <div class="qrow"><span>Margin ${mg}%</span><b>${Rp(total-sub)}</b></div>
+      <div class="qrow tot"><span>TOTAL PENAWARAN</span><b>${Rp(total)}</b></div>
+      ${vd.pct>5?'<div class="warn">⚠ Drop tegangan >5% — naikkan ukuran kabel.</div>':''}`;}
+  ['p','l','pf','mg'].forEach(bindInput(upd));upd();
+};
+
+/* ---- t10 PV Solar ---- */
+SIMS.t10=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Desain PLTS: dari kapasitas target hitung jumlah panel, produksi energi tahunan, ukuran inverter, dan payback.',
+    UI.slider('kwp','Kapasitas',1,500,50,1,'kWp')+
+    UI.slider('psh','Peak Sun Hours',3,6,4.5,0.1,'jam')+
+    UI.slider('pr','Performance Ratio',0.7,0.85,0.8,0.01,'')+
+    UI.slider('wp','Daya panel',400,650,550,10,'Wp'),
+    `<div class="metrics">${UI.metric('Jumlah panel','t10n','unit',1)}${UI.metric('Produksi','t10y','kWh/th',1)}
+       ${UI.metric('Inverter','t10inv','kW')}${UI.metric('CO₂ dihindari','t10co2','tCO₂/th')}</div>
+     <div id="t10bar"></div><div class="note" id="t10n2"></div>`);
+  const tariff=1444.7,ef=0.79,capexPerKwp=11000000;
+  function upd(){const kwp=+v('kwp'),psh=+v('psh'),pr=+v('pr'),wp=+v('wp');setv('kwp',kwp);setv('psh',psh);setv('pr',pr);setv('wp',wp);
+    const r=CALC.pv(kwp,psh,pr,wp);txt('t10n',r.panels);txt('t10y',fmt(r.yield,0));txt('t10inv',r.inverter);txt('t10co2',fmt(r.yield*ef/1000,1));
+    const months=[0.95,0.97,1.0,1.02,1.05,1.03,1.04,1.06,1.0,0.98,0.93,0.9].map(m=>({name:'',val:r.yield/12*m,color:'#ffd34d'}));
+    document.getElementById('t10bar').innerHTML=barsSVG(months.map((m,i)=>({name:['J','F','M','A','M','J','J','A','S','O','N','D'][i],val:m.val,color:'#ffd34d',lbl:''})),{});
+    const save=r.yield*tariff;const capex=kwp*capexPerKwp;
+    document.getElementById('t10n2').innerHTML=`Estimasi investasi ≈ ${Rp(capex)} · hemat tagihan ≈ ${Rp(save)}/th · payback ≈ <b>${fmt(capex/save,1)} tahun</b> (produksi bulanan di atas).`;}
+  ['kwp','psh','pr','wp'].forEach(bindInput(upd));upd();
+};
+
+/* ---- t11 Sustainability: GHG ---- */
+SIMS.t11=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Hitung jejak karbon perusahaan (<b>GHG accounting</b>) per scope, lalu uji target pengurangan menuju net zero.',
+    UI.slider('d','Solar (Scope 1)',0,200000,40000,1000,'L/th')+
+    UI.slider('e','Listrik grid (Scope 2)',0,5000000,800000,10000,'kWh/th')+
+    UI.slider('tg','Target pengurangan',0,100,30,5,'%'),
+    `<div class="metrics">${UI.metric('Scope 1','t11s1','tCO₂')}${UI.metric('Scope 2','t11s2','tCO₂')}
+       ${UI.metric('Total','t11t','tCO₂e',1)}${UI.metric('Setara pohon','t11tree','pohon/th')}</div>
+     <div id="t11g"></div><div class="note" id="t11n"></div>`);
+  function upd(){const d=+v('d'),e=+v('e'),tg=+v('tg');setv('d',fmt(d));setv('e',fmt(e));setv('tg',tg);
+    const g=CALC.ghg(d,e,0);txt('t11s1',fmt(g.s1,1));txt('t11s2',fmt(g.s2,1));txt('t11t',fmt(g.total,1));
+    txt('t11tree',fmt(g.total*1000/21,0));
+    document.getElementById('t11g').innerHTML=gaugeSVG(tg,'target pengurangan');
+    const after=g.total*(1-tg/100);
+    document.getElementById('t11n').innerHTML=`Dengan target ${tg}%: emisi turun jadi <b>${fmt(after,1)} tCO₂e</b> (pengurangan ${fmt(g.total-after,1)} tCO₂e). Grid EF Indonesia ≈ 0,79 kgCO₂/kWh.`;}
+  ['d','e','tg'].forEach(bindInput(upd));upd();
+};
+
+/* ---- t12 EV charging ---- */
+SIMS.t12=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Simulasi pengisian kendaraan listrik di SPKLU. Hitung waktu & biaya pengisian dengan efek <i>tapering</i> di atas 80%.',
+    UI.slider('b','Kapasitas baterai',20,120,60,5,'kWh')+
+    UI.slider('s0','SoC awal',0,90,20,5,'%')+
+    UI.slider('s1','SoC target',30,100,80,5,'%')+
+    UI.seg('kw','Jenis charger',[{v:'7',t:'AC 7kW'},{v:'22',t:'AC 22kW'},{v:'50',t:'DC 50kW'},{v:'120',t:'DC 120kW'}]),
+    `<div class="metrics">${UI.metric('Energi terisi','t12e','kWh',1)}${UI.metric('Waktu','t12t','',1)}${UI.metric('Biaya','t12c','')}</div>
+     <div id="t12bar"></div><div class="note" id="t12n"></div>`);
+  let kw=7;const tariff=2466.7;
+  function upd(){let b=+v('b'),s0=+v('s0'),s1=+v('s1');if(s1<=s0){s1=s0+5;document.getElementById('s1').value=s1;}
+    setv('b',b);setv('s0',s0);setv('s1',s1);
+    const r=CALC.evCharge(b,s0,s1,kw,tariff);txt('t12e',fmt(r.energy,1));
+    const hh=Math.floor(r.hours),mm=Math.round((r.hours-hh)*60);txt('t12t',(hh?hh+' j ':'')+mm+' mnt');txt('t12c',Rp(r.cost));
+    document.getElementById('t12bar').innerHTML=`<div class="socbar"><div class="soc0" style="left:${s0}%"></div><div class="soc1" style="width:${s1}%"></div><span>${s0}% → ${s1}%</span></div>`;
+    document.getElementById('t12n').innerHTML=kw>=50?'Pengisian DC cepat: di atas 80% laju sengaja diturunkan (tapering) untuk melindungi sel baterai.':'Pengisian AC cocok untuk di rumah/kantor dengan durasi lebih lama.';}
+  ['b','s0','s1'].forEach(bindInput(upd));UI.bindSeg('kw',x=>{kw=+x;upd();});upd();
+};
+
+/* ---- t13 Waste to Energy ---- */
+SIMS.t13=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Hitung potensi listrik dari sampah kota (teknologi <i>mass-burn</i> / insinerator). Inspirasi: TPST Bantar Gebang.',
+    UI.slider('tons','Volume sampah',100,5000,1000,50,'ton/hari')+
+    UI.slider('lhv','Nilai kalor (LHV)',6,14,10,0.5,'MJ/kg')+
+    UI.slider('eff','Efisiensi konversi',15,35,25,1,'%'),
+    `<div class="metrics">${UI.metric('Energi','t13e','MWh/hari',1)}${UI.metric('Daya listrik','t13p','MW',1)}${UI.metric('Setara rumah','t13h','rumah')}</div>
+     <div id="t13bar"></div><div class="note">Sampah dengan nilai kalor lebih tinggi (lebih kering, banyak plastik/kertas) menghasilkan lebih banyak energi per ton.</div>`);
+  function upd(){const tn=+v('tons'),lhv=+v('lhv'),ef=+v('eff');setv('tons',fmt(tn));setv('lhv',lhv);setv('eff',ef);
+    const r=CALC.wte(tn,lhv,ef/100);txt('t13e',fmt(r.MWh,0));txt('t13p',fmt(r.MW,1));txt('t13h',fmt(r.homes,0));
+    const sweep=[500,1000,2000,3000,5000].map(x=>({name:x>=1000?(x/1000)+'rb':x,val:CALC.wte(x,lhv,ef/100).MW,color:x===Math.round(tn)?'#e8b339':'#5b6b82'}));
+    document.getElementById('t13bar').innerHTML=barsSVG(sweep,{});}
+  ['tons','lhv','eff'].forEach(bindInput(upd));upd();
+};
+
+/* ---- t14 Hydrogen ---- */
+SIMS.t14=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Produksi <b>green hydrogen</b> via elektrolisis air bertenaga listrik terbarukan.',
+    UI.slider('mw','Daya elektroliser',1,100,10,1,'MW')+
+    UI.slider('spec','Konsumsi energi',48,60,52,1,'kWh/kg')+
+    UI.slider('eff','Faktor kapasitas',30,95,70,5,'%'),
+    `<div class="metrics">${UI.metric('Produksi H₂','t14kg','kg/hari',1)}${UI.metric('Air dibutuhkan','t14w','L/hari',1)}${UI.metric('CO₂ dihindari','t14co2','tCO₂/hari')}</div>
+     <div class="h2viz"><svg viewBox="0 0 200 90"><circle cx="60" cy="45" r="20" fill="none" stroke="#6db3ff" stroke-width="3"/><text x="60" y="50" text-anchor="middle" font-size="13" fill="#6db3ff">H₂O</text><path d="M88 45h24" stroke="#e8b339" stroke-width="2.5" marker-end="url(#a14)"/><defs><marker id="a14" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0l6 3-6 3" fill="#e8b339"/></marker></defs><circle cx="140" cy="45" r="20" fill="none" stroke="#3ddc84" stroke-width="3"/><text x="140" y="50" text-anchor="middle" font-size="14" fill="#3ddc84">H₂</text></svg></div>
+     <div class="note">Hidrogen hijau hanya memakai listrik terbarukan, jadi nyaris tanpa emisi dibanding hidrogen "abu-abu" dari gas alam.</div>`);
+  function upd(){const mw=+v('mw'),sp=+v('spec'),ef=+v('eff');setv('mw',mw);setv('spec',sp);setv('eff',ef);
+    const r=CALC.h2(mw,sp,ef/100);txt('t14kg',fmt(r.kgDay,0));txt('t14w',fmt(r.waterL,0));txt('t14co2',fmt(r.co2avoid,1));}
+  ['mw','spec','eff'].forEach(bindInput(upd));upd();
+};
+
+/* ---- t15 BESS peak shaving ---- */
+SIMS.t15=(host,t)=>{
+  const load=[40,38,36,35,35,38,45,60,75,82,85,80,78,80,84,88,95,110,120,115,95,75,58,46];
+  host.innerHTML=UI.shell(t,'Gunakan <b>BESS</b> untuk memangkas beban puncak (<i>peak shaving</i>). Baterai dilepas saat beban tinggi, mengurangi puncak & biaya daya.',
+    UI.slider('cap','Kapasitas baterai',50,500,200,10,'kWh')+
+    UI.slider('pw','Daya baterai',20,150,60,5,'kW')+
+    UI.slider('th','Ambang puncak',60,120,90,2,'kW'),
+    `<div class="metrics">${UI.metric('Puncak awal','t15o','kW')}${UI.metric('Puncak baru','t15n','kW',1)}${UI.metric('Pemangkasan','t15s','kW')}</div>
+     <div id="t15chart"></div><div class="note" id="t15note"></div>`);
+  function upd(){const cap=+v('cap'),pw=+v('pw'),th=+v('th');setv('cap',cap);setv('pw',pw);setv('th',th);
+    const r=CALC.peakShave(load,cap,pw,th);txt('t15o',fmt(r.oldPeak,0));txt('t15n',fmt(r.newPeak,0));txt('t15s',fmt(r.shaved,0));
+    document.getElementById('t15chart').innerHTML=lineSVG([{name:'Beban asli',color:'#5b6b82',data:load},{name:'Setelah BESS',color:'#3ddc84',data:r.out}],{thresh:th});
+    const demandCharge=40000;document.getElementById('t15note').innerHTML=`Estimasi hemat biaya daya ≈ <b>${Rp(r.shaved*demandCharge)}/bulan</b> (garis merah = ambang puncak).`;}
+  ['cap','pw','th'].forEach(bindInput(upd));upd();
+};
+
+/* ---- t16 Kontrol & Otomasi: PLC ladder ---- */
+SIMS.t16=(host,t)=>{
+  let start=false,stop=false,coil=false;
+  host.innerHTML=UI.shell(t,'Simulasi <b>ladder logic PLC</b> untuk start/stop motor dengan <i>seal-in</i> (pengunci). Tekan tombol Start/Stop dan amati rel yang bertegangan.',
+    `<div class="note">Logika: Motor = (Start ATAU Motor) DAN (BUKAN Stop). Kontak Motor paralel dengan Start membuat rangkaian "mengunci" sendiri setelah Start dilepas.</div>
+     <div class="plcbtns"><button class="btn primary" id="t16start">▶ START (tahan)</button><button class="btn" id="t16stop">⏹ STOP</button></div>
+     <div class="metrics">${UI.metric('Output (Motor)','t16o','',1)}</div>`,
+    `<div id="t16ladder"></div>
+     <div class="motorviz"><svg viewBox="0 0 120 120" id="t16m"><circle cx="60" cy="60" r="40" fill="#1a2433" stroke="#33445f" stroke-width="3"/>
+      <g class="motor-rot" id="t16rot"><path d="M60 28v64M28 60h64" stroke="#e8b339" stroke-width="4" stroke-linecap="round"/></g>
+      <circle cx="60" cy="60" r="10" fill="#0a0e16" stroke="#33445f" stroke-width="2"/></svg></div>`);
+  function draw(){coil=CALC.ladderEval(start,stop,coil);
+    const live='#ffd34d',dead='#33445f';const rail=coil||start?live:dead;
+    const W=440,H=130;let s=`<svg viewBox="0 0 ${W} ${H}" class="chart">`;
+    // left & right rails
+    s+=`<line x1="20" y1="20" x2="20" y2="${H-20}" stroke="#c9763b" stroke-width="3"/><line x1="${W-20}" y1="20" x2="${W-20}" y2="${H-20}" stroke="#c9763b" stroke-width="3"/>`;
+    // rung top: Start NO contact -> ... -> Stop NC -> coil
+    const yT=45;
+    const startCol=start?live:dead;
+    s+=`<line x1="20" y1="${yT}" x2="80" y2="${yT}" stroke="${startCol}" stroke-width="2.5"/>`;
+    s+=`<line x1="80" y1="${yT-12}" x2="80" y2="${yT+12}" stroke="${startCol}" stroke-width="2.5"/><line x1="100" y1="${yT-12}" x2="100" y2="${yT+12}" stroke="${startCol}" stroke-width="2.5"/>`;
+    s+=`<text x="90" y="${yT-18}" text-anchor="middle" font-size="9" fill="#8ea0b8">Start</text>`;
+    s+=`<line x1="100" y1="${yT}" x2="250" y2="${yT}" stroke="${(start||coil)?live:dead}" stroke-width="2.5"/>`;
+    // Stop NC
+    const stopCol=stop?dead:live;
+    s+=`<line x1="250" y1="${yT-12}" x2="250" y2="${yT+12}" stroke="${stopCol}" stroke-width="2.5"/><line x1="270" y1="${yT-12}" x2="270" y2="${yT+12}" stroke="${stopCol}" stroke-width="2.5"/><line x1="248" y1="${yT-12}" x2="272" y2="${yT+12}" stroke="${stopCol}" stroke-width="1.5"/>`;
+    s+=`<text x="260" y="${yT-18}" text-anchor="middle" font-size="9" fill="#8ea0b8">Stop</text>`;
+    s+=`<line x1="270" y1="${yT}" x2="360" y2="${yT}" stroke="${coil?live:dead}" stroke-width="2.5"/>`;
+    // coil
+    s+=`<circle cx="380" cy="${yT}" r="13" fill="none" stroke="${coil?live:dead}" stroke-width="2.5"/><text x="380" y="${yT+4}" text-anchor="middle" font-size="10" fill="${coil?live:'#8ea0b8'}">M</text>`;
+    s+=`<line x1="393" y1="${yT}" x2="${W-20}" y2="${yT}" stroke="${coil?live:dead}" stroke-width="2.5"/>`;
+    // rung bottom: seal-in Motor NO parallel to Start
+    const yB=95;const sealCol=coil?live:dead;
+    s+=`<line x1="20" y1="${yT}" x2="20" y2="${yB}" stroke="${rail}" stroke-width="2.5"/>`;
+    s+=`<line x1="20" y1="${yB}" x2="80" y2="${yB}" stroke="${sealCol}" stroke-width="2.5"/>`;
+    s+=`<line x1="80" y1="${yB-12}" x2="80" y2="${yB+12}" stroke="${sealCol}" stroke-width="2.5"/><line x1="100" y1="${yB-12}" x2="100" y2="${yB+12}" stroke="${sealCol}" stroke-width="2.5"/>`;
+    s+=`<text x="90" y="${yB+24}" text-anchor="middle" font-size="9" fill="#8ea0b8">Motor (seal-in)</text>`;
+    s+=`<line x1="100" y1="${yB}" x2="100" y2="${yT}" stroke="${sealCol}" stroke-width="2.5"/>`;
+    s+='</svg>';
+    document.getElementById('t16ladder').innerHTML=s;
+    txt('t16o',coil?'⚡ ON':'OFF');document.getElementById('t16o').parentElement.style.color=coil?'#ffd34d':'#8ea0b8';
+    document.getElementById('t16m').classList.toggle('motor-run',coil);}
+  const sBtn=document.getElementById('t16start');
+  sBtn.addEventListener('mousedown',()=>{start=true;draw();});
+  sBtn.addEventListener('mouseup',()=>{start=false;draw();});
+  sBtn.addEventListener('mouseleave',()=>{if(start){start=false;draw();}});
+  sBtn.addEventListener('touchstart',e=>{e.preventDefault();start=true;draw();});
+  sBtn.addEventListener('touchend',e=>{e.preventDefault();start=false;draw();});
+  document.getElementById('t16stop').addEventListener('click',()=>{stop=true;draw();stop=false;setTimeout(draw,150);});
+  draw();
+};
+
+/* ============ helpers ============ */
+function v(id){return document.getElementById(id).value;}
+function setv(id,val){const e=document.getElementById(id+'_v');if(e)e.textContent=val;}
+function txt(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
+function bindInput(cb){return id=>document.getElementById(id).addEventListener('input',cb);}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ============ init ============ */
+document.getElementById('backBtn').addEventListener('click',showHub);
+document.getElementById('homeLink').addEventListener('click',showHub);
+buildHub();showHub();
+
+</script>
+</body>
+</html>
