@@ -79,6 +79,17 @@
   .b-3ph{background:rgba(255,107,107,.13);color:#ff9d9d;border:1px solid #a8434a}
   .b-rum{background:rgba(243,210,122,.12);color:var(--gold-soft);border:1px solid var(--gold-d)}
   .b-lain{background:rgba(142,160,184,.13);color:var(--txt);border:1px solid var(--line2)}
+  .b-plts{background:rgba(124,212,255,.13);color:#7cd4ff;border:1px solid #1f4a6e}
+  .b-bess{background:rgba(61,220,132,.13);color:var(--ok);border:1px solid #1d5836}
+  .b-ev{background:rgba(154,208,255,.13);color:#9ad0ff;border:1px solid #244a5c}
+  .b-dist{background:rgba(243,210,122,.12);color:var(--gold-soft);border:1px solid var(--gold-d)}
+  /* DC / EBT component indicators */
+  .inv .inv-led,.evse .ev-led{fill:#33445f;transition:.25s}
+  .inv.on .inv-led,.evse.on .ev-led{fill:var(--ok);filter:drop-shadow(0 0 6px var(--ok))}
+  .inv.on .comp-body,.evse.on .comp-body{stroke:var(--gold)}
+  .pv-glow{fill:#ffd34d;opacity:0;transition:.3s}
+  .pv .pv-glow{opacity:.7;filter:drop-shadow(0 0 5px #ffd34d)}
+  .battery .bat-fill{fill:#3ddc84}
   .ex-head h2{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:600}
   .ex-head .lvl{margin-left:auto;font-size:11px;color:var(--txt-d);display:flex;gap:3px;align-items:center}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--line2)}
@@ -442,6 +453,54 @@ const COMP = {
       <line x1="${cx-10}" y1="${c.y+30}" x2="${cx+10}" y2="${c.y+30}" stroke="var(--pe)" stroke-width="3"/>
       <line x1="${cx-5}" y1="${c.y+38}" x2="${cx+5}" y2="${c.y+38}" stroke="var(--pe)" stroke-width="3"/>
       <text class="comp-sub" x="${cx}" y="${c.y+52}" style="fill:var(--pe)">ARDE</text></g>`}},
+
+  // ---- DC / EBT components (PLTS, BESS, EV, Distribusi) ----
+  pv:{terms:[{key:'p',dx:90,dy:16,lbl:'+',side:'r'},{key:'n',dx:90,dy:50,lbl:'−',side:'r'}],
+    draw:c=>{const x=c.x,y=c.y;let cells='';for(let r=0;r<2;r++)for(let k=0;k<4;k++)cells+=`<rect x="${x+8+k*19}" y="${y+10+r*24}" width="16" height="21" rx="2" fill="#16365c" stroke="#2b5c93" stroke-width="1"/>`;
+      return `<g class="pv" id="g_${c.id}"><rect class="comp-body" x="${x}" y="${y}" width="84" height="64" rx="6"/>${cells}
+      <circle class="pv-glow" cx="${x+72}" cy="${y+8}" r="5"/>
+      <line x1="${x+84}" y1="${y+16}" x2="${x+90}" y2="${y+16}" stroke="var(--R)" stroke-width="2.5"/><line x1="${x+84}" y1="${y+50}" x2="${x+90}" y2="${y+50}" stroke="#5b8cff" stroke-width="2.5"/>
+      ${dot(x+90,y+16)}${dot(x+90,y+50)}
+      <text class="comp-sub" x="${x+42}" y="${y+78}">${c.label||'PV'}</text></g>`}},
+
+  inverter:{terms:[{key:'dcp',dx:0,dy:24,lbl:'+',side:'l'},{key:'dcn',dx:0,dy:60,lbl:'−',side:'l'},{key:'L',dx:104,dy:24,lbl:'L',side:'r'},{key:'N',dx:104,dy:60,lbl:'N',side:'r'}],
+    draw:c=>{const x=c.x,y=c.y;return `<g class="inv" id="g_${c.id}"><rect class="comp-body" x="${x}" y="${y}" width="104" height="86" rx="9"/>
+      <text class="comp-lbl" x="${x+52}" y="${y+20}">INVERTER</text>
+      <text class="comp-sub" x="${x+52}" y="${y+40}" style="font-size:8px">DC ⟶ AC</text>
+      <circle class="inv-led" cx="${x+52}" cy="${y+58}" r="5.5"/>
+      <text class="comp-sub" x="${x+52}" y="${y+80}">⏎ ∿</text>
+      <text class="comp-lbl" x="${x+12}" y="${y+15}" style="font-size:8px">DC</text><text class="comp-lbl" x="${x+92}" y="${y+15}" style="font-size:8px">AC</text>
+      ${dot(x,y+24)}${dot(x,y+60)}${dot(x+104,y+24)}${dot(x+104,y+60)}</g>`}},
+
+  battery:{terms:[{key:'p',dx:84,dy:18,lbl:'+',side:'r'},{key:'n',dx:84,dy:50,lbl:'−',side:'r'}],
+    draw:c=>{const x=c.x,y=c.y;return `<g class="battery" id="g_${c.id}"><rect class="comp-body" x="${x}" y="${y}" width="78" height="64" rx="7"/>
+      <rect class="bat-fill" x="${x+10}" y="${y+14}" width="12" height="36" rx="2"/><rect class="bat-fill" x="${x+26}" y="${y+14}" width="12" height="36" rx="2" opacity=".7"/><rect class="bat-fill" x="${x+42}" y="${y+14}" width="12" height="36" rx="2" opacity=".45"/>
+      <line x1="${x+78}" y1="${y+18}" x2="${x+84}" y2="${y+18}" stroke="var(--R)" stroke-width="2.5"/><line x1="${x+78}" y1="${y+50}" x2="${x+84}" y2="${y+50}" stroke="#5b8cff" stroke-width="2.5"/>
+      ${dot(x+84,y+18)}${dot(x+84,y+50)}
+      <text class="comp-lbl" x="${x+64}" y="${y+22}" style="font-size:11px">+</text><text class="comp-lbl" x="${x+64}" y="${y+54}" style="font-size:11px">−</text>
+      <text class="comp-sub" x="${x+39}" y="${y+62}">${c.label||'BATT'}</text></g>`}},
+
+  bms:{terms:[{key:'bp',dx:0,dy:22,lbl:'B+',side:'l'},{key:'bn',dx:0,dy:58,lbl:'B−',side:'l'},{key:'pp',dx:96,dy:22,lbl:'P+',side:'r'},{key:'pn',dx:96,dy:58,lbl:'P−',side:'r'}],
+    draw:c=>{const x=c.x,y=c.y;return `<g class="bms"><rect class="comp-body" x="${x}" y="${y}" width="96" height="80" rx="9"/>
+      <text class="comp-lbl" x="${x+48}" y="${y+22}">BMS</text>
+      <text class="comp-sub" x="${x+48}" y="${y+42}" style="font-size:8px">Battery Mgmt</text>
+      <rect x="${x+30}" y="${y+50}" width="36" height="12" rx="2" fill="none" stroke="var(--line2)"/>
+      ${dot(x,y+22)}${dot(x,y+58)}${dot(x+96,y+22)}${dot(x+96,y+58)}</g>`}},
+
+  evse:{terms:[{key:'L',dx:0,dy:20,lbl:'L',side:'l'},{key:'N',dx:0,dy:50,lbl:'N',side:'l'},{key:'PE',dx:0,dy:82,lbl:'PE',side:'l'}],
+    draw:c=>{const x=c.x,y=c.y;return `<g class="evse" id="g_${c.id}"><rect class="comp-body" x="${x}" y="${y}" width="84" height="100" rx="10"/>
+      <text class="comp-lbl" x="${x+42}" y="${y+18}" style="font-size:9px">EV CHARGER</text>
+      <circle class="ev-led" cx="${x+42}" cy="${y+42}" r="6"/>
+      <rect x="${x+26}" y="${y+60}" width="32" height="22" rx="4" fill="#0a0e16" stroke="var(--line2)"/><text class="comp-sub" x="${x+42}" y="${y+74}" style="font-size:7px">PLUG</text>
+      <text class="comp-sub" x="${x+42}" y="${y+96}">SPKLU</text>
+      ${dot(x,y+20)}${dot(x,y+50)}${dot(x,y+82)}</g>`}},
+
+  trafo:{terms:[{key:'Ri',dx:0,dy:22,lbl:'R',side:'l'},{key:'Si',dx:0,dy:55,lbl:'S',side:'l'},{key:'Ti',dx:0,dy:88,lbl:'T',side:'l'},{key:'Ro',dx:110,dy:22,lbl:'r',side:'r'},{key:'So',dx:110,dy:55,lbl:'s',side:'r'},{key:'To',dx:110,dy:88,lbl:'t',side:'r'}],
+    draw:c=>{const x=c.x,y=c.y;return `<g class="trafo"><rect class="comp-body" x="${x}" y="${y}" width="110" height="110" rx="10"/>
+      <circle cx="${x+44}" cy="${y+44}" r="15" fill="none" stroke="var(--line2)" stroke-width="2.5"/><circle cx="${x+44}" cy="${y+70}" r="15" fill="none" stroke="var(--line2)" stroke-width="2.5"/>
+      <circle cx="${x+66}" cy="${y+44}" r="15" fill="none" stroke="var(--copper-l)" stroke-width="2.5"/><circle cx="${x+66}" cy="${y+70}" r="15" fill="none" stroke="var(--copper-l)" stroke-width="2.5"/>
+      <text class="comp-lbl" x="${x+55}" y="${y+18}" style="font-size:7.5px">TRAFO 20kV/400V</text>
+      ${[22,55,88].map(d=>dot(x,y+d)+dot(x+110,y+d)).join('')}</g>`}},
 };
 
 /* ====================== Exercises ====================== */
@@ -565,10 +624,73 @@ const EX = [
   conduct:[['KW.iL','KW.oL'],['KW.iN','KW.oN']],
   loads:[{type:'lamp',comp:'L1',a:'L1.a',b:'L1.b'}],poles:['SRC.L','SRC.N'],switches:[],
   guide:['L Sumber → terminal 1 meter.','N Sumber → terminal 2 meter.','Terminal 3 → kiri beban.','Terminal 4 → kanan beban.','Periksa — daya mengalir ke beban.']},
+
+ /* ---- PLTS / SURYA ---- */
+ {id:'plts-string',cat:'plts',lvl:2,title:'PLTS: String Panel Surya (Seri)',vb:'0 0 920 420',
+  desc:'Tiga modul surya disusun <b>seri</b> untuk menaikkan tegangan string DC. Ujung + string → DC+ inverter, ujung − → DC− inverter.',
+  comps:[{id:'PV1',type:'pv',x:60,y:40,label:'PV1'},{id:'PV2',type:'pv',x:60,y:170,label:'PV2'},{id:'PV3',type:'pv',x:60,y:300,label:'PV3'},{id:'INV',type:'inverter',x:600,y:180}],
+  nets:[['PV1.n','PV2.p'],['PV2.n','PV3.p'],['PV1.p','INV.dcp'],['PV3.n','INV.dcn']],
+  loads:[{type:'inv',comp:'INV',a:'INV.dcp',b:'INV.dcn'}],poles:['PV1.p','PV3.n'],switches:[],
+  guide:['PV1(−) → PV2(+): sambung seri.','PV2(−) → PV3(+): seri berikutnya.','PV1(+) ujung atas string → DC(+) inverter.','PV3(−) ujung bawah string → DC(−) inverter.','Periksa — inverter menerima daya DC.']},
+
+ {id:'plts-combiner',cat:'plts',lvl:2,title:'PLTS: 2 String Paralel (Combiner)',vb:'0 0 1000 460',
+  desc:'Dua string (masing-masing 2 modul seri) di-<b>paralel</b> untuk menambah arus. Semua (+) jadi satu, semua (−) jadi satu, lalu ke inverter.',
+  comps:[{id:'PV1',type:'pv',x:40,y:40,label:'A1'},{id:'PV2',type:'pv',x:40,y:170,label:'A2'},{id:'PV3',type:'pv',x:240,y:40,label:'B1'},{id:'PV4',type:'pv',x:240,y:170,label:'B2'},{id:'INV',type:'inverter',x:680,y:120}],
+  nets:[['PV1.n','PV2.p'],['PV3.n','PV4.p'],['PV1.p','PV3.p','INV.dcp'],['PV2.n','PV4.n','INV.dcn']],
+  loads:[{type:'inv',comp:'INV',a:'INV.dcp',b:'INV.dcn'}],poles:['PV1.p','PV2.n'],switches:[],
+  guide:['String A: A1(−) → A2(+).','String B: B1(−) → B2(+).','Paralel (+): A1(+) & B1(+) → DC(+) inverter.','Paralel (−): A2(−) & B2(−) → DC(−) inverter.','Periksa.']},
+
+ {id:'plts-ongrid',cat:'plts',lvl:3,title:'PLTS On-Grid: DC Isolator + Inverter ke Grid',vb:'0 0 1100 440',
+  desc:'PLTS on-grid: string → <b>DC isolator</b> → inverter → MCB AC → jaringan PLN. Isolator wajib ON saat operasi.',
+  comps:[{id:'PV1',type:'pv',x:40,y:40,label:'PV1'},{id:'PV2',type:'pv',x:40,y:170,label:'PV2'},{id:'ISO',type:'switch',x:300,y:70,label:'DC ISO'},{id:'INV',type:'inverter',x:500,y:150},{id:'MCB',type:'mcb',x:760,y:165,label:'MCB AC'},{id:'GRID',type:'source',x:940,y:150,label:'PLN'}],
+  nets:[['PV1.n','PV2.p'],['PV1.p','ISO.in'],['ISO.out','INV.dcp'],['PV2.n','INV.dcn'],['INV.L','MCB.in'],['MCB.out','GRID.L'],['INV.N','GRID.N']],
+  loads:[{type:'inv',comp:'INV',a:'INV.dcp',b:'INV.dcn'}],poles:['PV1.p','PV2.n'],switches:['ISO','MCB'],
+  guide:['Seri panel: PV1(−) → PV2(+).','PV1(+) → IN DC isolator; OUT isolator → DC(+) inverter.','PV2(−) → DC(−) inverter.','AC inverter: L → MCB → GRID L; N inverter → GRID N.','ON-kan DC isolator & MCB lalu Periksa.']},
+
+ /* ---- BATERAI / BESS ---- */
+ {id:'bess-series',cat:'bess',lvl:2,title:'BESS: Modul Baterai Seri (Naikkan Tegangan)',vb:'0 0 900 420',
+  desc:'Tiga modul baterai <b>seri</b>: tegangan dijumlah (mis. 3×48V = 144V), kapasitas (Ah) tetap. + modul ke − modul berikutnya.',
+  comps:[{id:'B1',type:'battery',x:60,y:40,label:'48V'},{id:'B2',type:'battery',x:60,y:170,label:'48V'},{id:'B3',type:'battery',x:60,y:300,label:'48V'},{id:'INV',type:'inverter',x:600,y:180}],
+  nets:[['B1.n','B2.p'],['B2.n','B3.p'],['B1.p','INV.dcp'],['B3.n','INV.dcn']],
+  loads:[{type:'inv',comp:'INV',a:'INV.dcp',b:'INV.dcn'}],poles:['B1.p','B3.n'],switches:[],
+  guide:['B1(−) → B2(+): seri.','B2(−) → B3(+): seri.','B1(+) → DC(+) inverter.','B3(−) → DC(−) inverter.','Periksa.']},
+
+ {id:'bess-parallel',cat:'bess',lvl:2,title:'BESS: Modul Baterai Paralel (Naikkan Kapasitas)',vb:'0 0 900 420',
+  desc:'Dua modul baterai <b>paralel</b>: kapasitas (Ah) dijumlah, tegangan tetap. Semua (+) disatukan, semua (−) disatukan.',
+  comps:[{id:'B1',type:'battery',x:60,y:70,label:'100Ah'},{id:'B2',type:'battery',x:60,y:240,label:'100Ah'},{id:'INV',type:'inverter',x:600,y:150}],
+  nets:[['B1.p','B2.p','INV.dcp'],['B1.n','B2.n','INV.dcn']],
+  loads:[{type:'inv',comp:'INV',a:'INV.dcp',b:'INV.dcn'}],poles:['B1.p','B1.n'],switches:[],
+  guide:['Paralel (+): B1(+) & B2(+) → DC(+) inverter.','Paralel (−): B1(−) & B2(−) → DC(−) inverter.','Periksa — kapasitas bertambah, tegangan tetap.']},
+
+ {id:'bess-bms',cat:'bess',lvl:3,title:'BESS: Baterai → BMS → Inverter',vb:'0 0 1000 360',
+  desc:'Pack baterai dilindungi <b>BMS</b> sebelum ke inverter. B+/B− BMS ke baterai, P+/P− BMS ke inverter.',
+  comps:[{id:'B1',type:'battery',x:60,y:140,label:'PACK'},{id:'BMS',type:'bms',x:340,y:130},{id:'INV',type:'inverter',x:660,y:130}],
+  conduct:[['BMS.bp','BMS.pp'],['BMS.bn','BMS.pn']],
+  nets:[['B1.p','BMS.bp'],['B1.n','BMS.bn'],['BMS.pp','INV.dcp'],['BMS.pn','INV.dcn']],
+  loads:[{type:'inv',comp:'INV',a:'INV.dcp',b:'INV.dcn'}],poles:['B1.p','B1.n'],switches:[],
+  guide:['Baterai (+) → B+ BMS; (−) → B− BMS.','BMS P+ → DC(+) inverter.','BMS P− → DC(−) inverter.','Periksa — daya lewat BMS ke inverter.']},
+
+ /* ---- EV CHARGING ---- */
+ {id:'ev-ac',cat:'ev',lvl:2,title:'EV Charging (SPKLU) AC + Pembumian',vb:'0 0 920 380',
+  desc:'Charger EV AC: sumber → MCB/RCBO → charger (L,N). <b>PE wajib</b> ke pembumian demi keselamatan pengguna.',
+  comps:[{id:'SRC',type:'source',x:60,y:120,label:'PLN'},{id:'MCB',type:'mcb',x:300,y:150,label:'RCBO'},{id:'EVSE',type:'evse',x:560,y:110},{id:'GND',type:'ground',x:355,y:300}],
+  nets:[['SRC.L','MCB.in'],['MCB.out','EVSE.L'],['EVSE.N','SRC.N'],['EVSE.PE','GND.e']],
+  loads:[{type:'evse',comp:'EVSE',a:'EVSE.L',b:'EVSE.N'}],poles:['SRC.L','SRC.N'],switches:['MCB'],
+  guide:['L sumber → IN MCB/RCBO.','OUT MCB → L charger.','N charger → N sumber.','PE charger → pembumian (GND).','ON-kan MCB lalu Periksa.']},
+
+ /* ---- DISTRIBUSI ---- */
+ {id:'dist-trafo',cat:'dist',lvl:3,title:'Gardu Distribusi: 20kV → Trafo → 400V → Beban',vb:'0 0 1120 420',
+  desc:'Jaringan distribusi: sumber 20kV (R,S,T) → <b>cut-out/LBS</b> → trafo distribusi → sisi 400V → beban (motor 3 fasa).',
+  comps:[{id:'SRC',type:'src3ph',x:40,y:120},{id:'CO',type:'mcb3',x:300,y:120,label:'LBS'},{id:'TR',type:'trafo',x:520,y:90},{id:'M',type:'motor3s',x:880,y:150}],
+  conduct:[['TR.Ri','TR.Ro'],['TR.Si','TR.So'],['TR.Ti','TR.To']],
+  nets:[['SRC.R','CO.Ri'],['SRC.S','CO.Si'],['SRC.T','CO.Ti'],['CO.Ro','TR.Ri'],['CO.So','TR.Si'],['CO.To','TR.Ti'],['TR.Ro','M.U'],['TR.So','M.V'],['TR.To','M.W']],
+  loads:[],loads3:[{type:'motor3',comp:'M',feeds:['M.U','M.V','M.W']}],poles:['SRC.R','SRC.S','SRC.T'],switches:['CO'],
+  guide:['Sisi 20kV: SRC R/S/T → LBS R/S/T.','LBS keluar → trafo primer R/S/T.','Trafo sekunder (r/s/t) → beban U/V/W.','ON-kan LBS lalu Periksa.']},
 ];
 const CAT={pen:{lbl:'Penerangan',cls:'b-pen'},ph1:{lbl:'1 Fasa',cls:'b-1ph'},ph3:{lbl:'3 Fasa',cls:'b-3ph'},
-  mtr:{lbl:'Motor & Panel',cls:'b-mtr'},rum:{lbl:'Instalasi Rumah',cls:'b-rum'},lain:{lbl:'Lainnya',cls:'b-lain'},pln:{lbl:'Instalasi PLN',cls:'b-pln'}};
-const CATORDER=['pen','ph1','ph3','mtr','rum','lain','pln'];
+  mtr:{lbl:'Motor & Panel',cls:'b-mtr'},rum:{lbl:'Instalasi Rumah',cls:'b-rum'},lain:{lbl:'Lainnya',cls:'b-lain'},pln:{lbl:'Instalasi PLN',cls:'b-pln'},
+  plts:{lbl:'PLTS / Surya',cls:'b-plts'},bess:{lbl:'Baterai / BESS',cls:'b-bess'},ev:{lbl:'EV Charging',cls:'b-ev'},dist:{lbl:'Distribusi',cls:'b-dist'}};
+const CATORDER=['plts','bess','ev','dist','pen','ph1','ph3','mtr','rum','lain','pln'];
 
 /* ====================== Conductor roles (colour code) ====================== */
 const ROLE={
@@ -660,11 +782,75 @@ const INFO={
   parts:[['kWh meter','4 terminal: 1=L masuk, 2=N masuk, 3=L keluar, 4=N keluar'],['Beban','dipasang di sisi keluar meter']],
   flow:['L dan N dari PLN masuk ke terminal 1 dan 2.','Di dalam meter arus diukur lalu diteruskan ke terminal 3 dan 4.','Beban mendapat suplai dari sisi keluar (3 dan 4). Salah urutan membuat meter tidak mengukur dengan benar.'],
   steps:[['L Sumber ke terminal 1','Fasa masuk meter.'],['N Sumber ke terminal 2','Netral masuk meter.'],['Terminal 3 ke kiri beban','Fasa terukur ke beban.'],['Terminal 4 ke kanan beban','Netral terukur.'],['Periksa','Daya mengalir dan terukur.']]},
+ 'plts-string':{task:'Susun 3 modul surya seri lalu sambungkan ke inverter.',
+  parts:[['Modul PV','sumber DC; punya terminal + dan −. Disusun seri menaikkan tegangan'],['Inverter','mengubah DC dari panel menjadi AC. Punya input DC (+/−) dan output AC (L/N)']],
+  flow:['Seri = + modul satu disambung ke − modul berikutnya, sehingga tegangan dijumlahkan.','Ujung + dan − string menyuplai input DC inverter.','Inverter mengubah DC menjadi AC untuk beban/grid.'],
+  steps:[['PV1(−) → PV2(+)','Membentuk seri pertama, tegangan bertambah.'],['PV2(−) → PV3(+)','Seri berikutnya.'],['PV1(+) → DC(+) inverter','Ujung positif string ke inverter.'],['PV3(−) → DC(−) inverter','Ujung negatif string ke inverter.'],['Periksa','Inverter menerima daya DC.']]},
+ 'plts-combiner':{task:'Paralelkan 2 string panel ke inverter.',
+  parts:[['String','rangkaian seri modul; tegangan tinggi'],['Combiner (paralel)','menggabungkan beberapa string; arus dijumlahkan, tegangan tetap']],
+  flow:['Tiap string disusun seri dulu.','Semua terminal + string disatukan, semua − disatukan.','Hasil gabungan menyuplai inverter dengan arus lebih besar.'],
+  steps:[['A1(−) → A2(+)','String A seri.'],['B1(−) → B2(+)','String B seri.'],['A1(+) & B1(+) → DC(+) inverter','Paralel sisi positif.'],['A2(−) & B2(−) → DC(−) inverter','Paralel sisi negatif.'],['Periksa','']]},
+ 'plts-ongrid':{task:'Rangkai PLTS on-grid lengkap dengan DC isolator dan MCB AC.',
+  parts:[['DC isolator','saklar DC untuk memutus string saat perawatan; wajib ON ketika beroperasi'],['Inverter','DC→AC, sinkron dengan jaringan'],['MCB AC','proteksi sisi AC sebelum ke grid PLN']],
+  flow:['Panel seri menghasilkan tegangan DC.','DC isolator memutus/menyambung jalur DC ke inverter.','Inverter mengekspor daya AC melalui MCB ke jaringan PLN.'],
+  steps:[['PV1(−) → PV2(+)','Seri panel.'],['PV1(+) → IN isolator; OUT → DC(+) inverter','Lewat DC isolator.'],['PV2(−) → DC(−) inverter','Jalur negatif.'],['Inverter L → MCB → GRID L; N → GRID N','Sisi AC ke jaringan.'],['ON-kan DC isolator & MCB lalu Periksa','']]},
+ 'bess-series':{task:'Susun 3 modul baterai seri ke inverter.',
+  parts:[['Modul baterai','sumber DC dengan + dan −. Seri menambah tegangan'],['Inverter','DC→AC dari pack baterai']],
+  flow:['Seri menjumlahkan tegangan tiap modul (Ah tetap).','Ujung + dan − pack menyuplai inverter.'],
+  steps:[['B1(−) → B2(+)','Seri.'],['B2(−) → B3(+)','Seri.'],['B1(+) → DC(+) inverter',''],['B3(−) → DC(−) inverter',''],['Periksa','']]},
+ 'bess-parallel':{task:'Paralelkan 2 modul baterai ke inverter.',
+  parts:[['Modul baterai','paralel menambah kapasitas (Ah), tegangan tetap']],
+  flow:['Semua + disatukan, semua − disatukan.','Kapasitas total = jumlah Ah modul.'],
+  steps:[['B1(+) & B2(+) → DC(+) inverter','Paralel positif.'],['B1(−) & B2(−) → DC(−) inverter','Paralel negatif.'],['Periksa','']]},
+ 'bess-bms':{task:'Lewatkan pack baterai melalui BMS sebelum ke inverter.',
+  parts:[['BMS','Battery Management System: lindungi pack dari over-charge/discharge & balancing. B+/B− ke baterai, P+/P− ke beban'],['Inverter','DC→AC']],
+  flow:['Baterai masuk ke sisi B+/B− BMS.','BMS meneruskan daya terlindungi ke sisi P+/P−.','Sisi P BMS menyuplai inverter.'],
+  steps:[['Baterai (+) → B+ BMS; (−) → B− BMS',''],['BMS P+ → DC(+) inverter',''],['BMS P− → DC(−) inverter',''],['Periksa','']]},
+ 'ev-ac':{task:'Rangkai charger EV AC lengkap dengan pembumian.',
+  parts:[['RCBO/MCB','proteksi arus lebih & arus bocor untuk keselamatan'],['EV charger (EVSE)','menyalurkan AC ke kendaraan; butuh L, N, dan PE'],['Pembumian (PE)','mengamankan bodi charger; wajib agar aman disentuh']],
+  flow:['Fasa lewat MCB/RCBO menuju charger.','Netral kembali ke sumber.','PE charger dihubungkan ke pembumian — proteksi sentuh.'],
+  steps:[['L sumber → IN MCB','Proteksi sisi fasa.'],['OUT MCB → L charger',''],['N charger → N sumber',''],['PE charger → pembumian',''],['ON-kan MCB lalu Periksa','']]},
+ 'dist-trafo':{task:'Rangkai gardu distribusi 20kV ke beban 400V.',
+  parts:[['Sumber 20kV','jaringan menengah 3 fasa R/S/T'],['LBS/Cut-out','pemutus sisi 20kV'],['Trafo distribusi','menurunkan 20kV → 400V'],['Beban','motor 3 fasa pada sisi tegangan rendah']],
+  flow:['Tegangan 20kV masuk lewat pemutus (LBS).','Trafo menurunkan tegangan ke 400V.','Sisi tegangan rendah menyuplai beban 3 fasa.'],
+  steps:[['SRC R/S/T → LBS R/S/T','Sisi 20kV.'],['LBS keluar → trafo primer','Masuk trafo.'],['Trafo sekunder → beban U/V/W','Sisi 400V ke beban.'],['ON-kan LBS lalu Periksa','']]},
 };
 function curSteps(){const ex=EX[curIdx];const info=INFO[ex.id];return (info&&info.steps)?info.steps:((ex.guide||[]).map(g=>[g,'']));}
 
 /* ====================== State & engine ====================== */
 let curIdx=0,wires=[],selected=null,switchStates={},guideMode=false,simState={},done=new Set(),checkedOk=false,termRole={};
+
+/* ---------- routing per spesialisasi (?spec=S1..S16) ---------- */
+const SPEC_SCEN={
+  S1:['lampu1','seri','paralel','tukar','mcb1','soket','bel','rumah'],
+  S2:['motor3','dol','star','delta'],
+  S3:['dist-trafo','kwh','mcb1'],
+  S4:['dist-trafo','motor3'],
+  S5:['mcb1','kwh'],
+  S6:['mcb1','kwh','dol'],
+  S7:['plts-string','plts-combiner','plts-ongrid','bess-series','bess-bms','star'],
+  S8:['soket','ev-ac','dol'],
+  S9:['paralel','kwh'],
+  S10:['plts-string','plts-combiner','plts-ongrid'],
+  S11:['plts-string','mcb1'],
+  S12:['ev-ac','bess-parallel','bess-bms'],
+  S13:['star','dol','dist-trafo'],
+  S14:['bess-bms','mcb1'],
+  S15:['bess-series','bess-parallel','bess-bms'],
+  S16:['dol','star','delta'],
+  SP:['dist-trafo','kwh','mcb1']
+};
+const SPEC_NAME={S1:'Instalasi Bangunan',S2:'Industri & Manufaktur',S3:'Distribusi',S4:'Transmisi',S5:'Energy Analyst & Data Science',S6:'Energy Auditor',S7:'Pembangkitan & Renewable',S8:'K3 Listrik',S9:'Sales & Technical Marketing',S10:'PV & Solar Engineer',S11:'Sustainability & Carbon',S12:'EV & EV Charging',S13:'Waste to Energy',S14:'Hydrogen Energy',S15:'Baterai & BESS',S16:'Kontrol & Otomasi',SP:'PLN Distribution Academy'};
+const SPEC=(new URLSearchParams(location.search).get('spec')||'').toUpperCase();
+let SHOWN;
+if(SPEC && SPEC_SCEN[SPEC]) SHOWN=SPEC_SCEN[SPEC].map(id=>EX.findIndex(e=>e.id===id)).filter(i=>i>=0);
+if(!SHOWN||!SHOWN.length) SHOWN=EX.map((_,i)=>i);
+function applySpecLabel(){
+  const nm=SPEC_NAME[SPEC];if(!nm)return;
+  const p=document.querySelector('.brand p');if(p)p.textContent='Spesialisasi: '+nm;
+  document.title='Wiring Trainer — '+nm;
+}
+
 const board=document.getElementById('board');
 
 function makeUF(){const p={};return{
@@ -775,7 +961,8 @@ function render(){
     if(ld.type==='lamp')g.classList.toggle('lamp-on',!!on);
     else if(ld.type==='motor'||ld.type==='motor3')g.classList.toggle('motor-run',!!on);
     else if(ld.type==='outlet')g.classList.toggle('outlet-live',!!on);
-    else if(ld.type==='bell')g.classList.toggle('bell-ring',!!on);});
+    else if(ld.type==='bell')g.classList.toggle('bell-ring',!!on);
+    else if(ld.type==='inv'||ld.type==='evse')g.classList.toggle('on',!!on);});
   bindBoard();
 }
 function bindBoard(){
@@ -830,10 +1017,10 @@ function updateGuide(){
 function buildModList(){
   const list=document.getElementById('modList');let html='';
   CATORDER.forEach(cat=>{
-    const items=EX.map((ex,i)=>({ex,i})).filter(o=>o.ex.cat===cat);if(!items.length)return;
+    const items=EX.map((ex,i)=>({ex,i})).filter(o=>o.ex.cat===cat&&SHOWN.includes(o.i));if(!items.length)return;
     html+=`<div class="catname"><span class="bar"></span>${CAT[cat].lbl}</div>`;
     items.forEach(({ex,i})=>{html+=`<button class="mod ${i===curIdx?'active':''} ${done.has(ex.id)?'done':''}" data-mod="${i}">
-      <span class="num">${done.has(ex.id)?'✓':i+1}</span><span class="mt">${ex.title}</span><span class="check">●</span></button>`;});
+      <span class="num">${done.has(ex.id)?'✓':SHOWN.indexOf(i)+1}</span><span class="mt">${ex.title}</span><span class="check">●</span></button>`;});
   });
   list.innerHTML=html;
   list.querySelectorAll('[data-mod]').forEach(el=>el.addEventListener('click',()=>loadEx(+el.getAttribute('data-mod'))));
@@ -863,7 +1050,7 @@ function loadEx(i){
   hideFeedback();buildModList();render();updateGuide();
   hint('Ketuk satu terminal lalu terminal lain untuk membuat kabel.');
 }
-function updateCounts(){document.getElementById('doneCount').textContent=done.size;document.getElementById('totalCount').textContent=EX.length;}
+function updateCounts(){document.getElementById('doneCount').textContent=done.size;document.getElementById('totalCount').textContent=SHOWN.length;}
 function hint(t){document.getElementById('hintText').innerHTML=t;}
 
 document.getElementById('btnCheck').addEventListener('click',check);
@@ -874,7 +1061,7 @@ document.getElementById('helpClose').addEventListener('click',()=>document.getEl
 document.getElementById('helpOv').addEventListener('click',e=>{if(e.target.id==='helpOv')e.currentTarget.classList.remove('show');});
 board.addEventListener('click',()=>{if(selected){selected=null;render();}});
 
-updateCounts();loadEx(0);
+applySpecLabel();updateCounts();loadEx(SHOWN[0]);
 
 })();
 </script>
