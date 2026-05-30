@@ -2702,6 +2702,40 @@ body {
   .lab-group-label { font-size: 1rem; }
   .lab-group-desc { display: none; }
 }
+/* Hub 16 jalur — muat 1 layar, klik kartu untuk masuk */
+.lab-jalur-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.lab-jalur-card {
+  position: relative; text-align: left; cursor: pointer; overflow: hidden;
+  display: flex; flex-direction: column; gap: 8px; min-height: 104px;
+  padding: 14px 15px 13px 18px; border-radius: 13px; background: #fff;
+  border: 1px solid rgba(26,29,46,0.1); box-shadow: 0 4px 12px rgba(26,29,46,0.07);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.lab-jalur-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--g-grad, #c9a96e); }
+.lab-jalur-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(26,29,46,0.18); border-color: transparent; }
+.lab-jalur-num {
+  width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; color: #fff;
+  font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 0.92rem;
+  background: var(--g-grad, linear-gradient(135deg,#d4af6a,#9a7f4f)); box-shadow: 0 4px 11px rgba(26,29,46,0.2);
+}
+.lab-jalur-label { font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 0.96rem; color: var(--ink, #1a1d2e); line-height: 1.16; }
+.lab-jalur-count {
+  margin-top: auto; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--gold-dark, #9a7f4f); display: inline-flex; align-items: center; gap: 6px;
+}
+.lab-jalur-count svg { opacity: 0.45; transition: transform 0.18s ease, opacity 0.18s ease; }
+.lab-jalur-card:hover .lab-jalur-count svg { opacity: 1; transform: translateX(3px); }
+/* Bar kembali + header jalur saat sebuah jalur dibuka */
+.lab-back-bar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.lab-back-btn {
+  flex-shrink: 0; cursor: pointer; font-size: 0.82rem; font-weight: 700; color: var(--ink, #1a1d2e);
+  background: #fff; border: 1px solid rgba(26,29,46,0.14); border-radius: 999px; padding: 9px 16px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.lab-back-btn:hover { border-color: var(--gold, #c9a96e); transform: translateX(-2px); }
+.lab-open-head { flex: 1; min-width: 200px; border-bottom: none; padding-bottom: 0; }
+@media (max-width: 980px) { .lab-jalur-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 680px) { .lab-jalur-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .lab-jalur-card { min-height: 92px; } .lab-open-head .lab-group-desc { display: none; } }
 /* ElectraSim featured launch card */
 .electrasim-feature {
   display: flex; align-items: center; gap: 18px; margin-bottom: 22px;
@@ -11946,7 +11980,7 @@ button:active:not(:disabled),
         </span>
       </a>
       <div class="lab-groups" id="simulator-grid"></div>
-      <div class="lab-launch-hint">Klik salah satu lab untuk masuk ke halamannya — geser parameter &amp; lihat visualisasi real-time.</div>
+      <div class="lab-launch-hint">Pilih satu jalur untuk melihat daftar lab-nya, lalu klik lab untuk masuk — geser parameter &amp; lihat visualisasi real-time.</div>
     </div>
   </section>
 
@@ -15765,23 +15799,29 @@ const PRAKTIKUM_CLASSES = [
 ];
 
 let _labLaunchSet = 'spec';
+let _labOpenJalur = null; // null = hub 16 jalur (1 layar); 'S1'.. = drill-down lab di jalur itu
 function _simGroup(s) { return SIM_GROUPS.find(g => g.key === (s.jalur || 'Fondasi')) || SIM_GROUPS[0]; }
 function labShowSet(which) {
   _labLaunchSet = which;
+  _labOpenJalur = null; // ganti set → kembali ke hub
   document.querySelectorAll('.lab-chip').forEach(c => c.classList.toggle('active', c.dataset.set === which));
   renderSimulators();
 }
-function renderSimulators() {
-  const grid = document.getElementById('simulator-grid');
-  if (!grid) return;
-  const arrow = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
-  // Kelompok yang ditampilkan: 16 jalur spesialisasi (S1..S16) atau bonus (Fondasi).
-  const groups = (_labLaunchSet === 'bonus')
-    ? SIM_GROUPS.filter(g => g.key === 'Fondasi')
-    : SIM_GROUPS.filter(g => g.key !== 'Fondasi');
-
-  const tile = (s, g) => `
+function openJalur(key) {
+  _labOpenJalur = key;
+  renderSimulators();
+  const sec = document.getElementById('lab-simulator');
+  if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function backToJalurs() {
+  _labOpenJalur = null;
+  renderSimulators();
+  const sec = document.getElementById('lab-simulator');
+  if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+const _LAB_ARROW = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function _labTile(s, g) {
+  return `
     <button type="button" class="lab-tile" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
       <img class="lab-tile-img" src="${g.photo}" alt="" loading="lazy" onerror="this.style.display='none'">
       <span class="lab-tile-grad" style="background:${g.grad}"></span>
@@ -15790,27 +15830,54 @@ function renderSimulators() {
       <span class="lab-tile-content">
         <span class="lab-tile-cat">${g.label}</span>
         <span class="lab-tile-title">${s.name}</span>
-        <span class="lab-tile-open">Buka Lab ${arrow}</span>
+        <span class="lab-tile-open">Buka Lab ${_LAB_ARROW}</span>
       </span>
     </button>`;
+}
+function renderSimulators() {
+  const grid = document.getElementById('simulator-grid');
+  if (!grid) return;
 
-  // Tiap jalur = satu blok berlabel, lab di dalamnya dikelompokkan rapi (tidak tercecer).
-  grid.innerHTML = groups.map(g => {
+  // Set "Dasar & Tools": langsung tampilkan lab (kelompok tunggal Fondasi).
+  if (_labLaunchSet === 'bonus') {
+    const g = SIM_GROUPS.find(x => x.key === 'Fondasi');
+    const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === 'Fondasi');
+    grid.innerHTML = `<div class="lab-launch-grid">${sims.map(s => _labTile(s, g)).join('')}</div>`;
+    return;
+  }
+
+  // Drill-down: satu jalur dibuka → tampilkan lab-lab di dalamnya + tombol kembali.
+  if (_labOpenJalur) {
+    const g = SIM_GROUPS.find(x => x.key === _labOpenJalur) || SIM_GROUPS[0];
+    const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);
+    grid.innerHTML = `
+      <div class="lab-back-bar">
+        <button type="button" class="lab-back-btn" onclick="backToJalurs()">← Semua Jalur</button>
+        <div class="lab-group-head lab-open-head" style="--g-grad:${g.grad}">
+          <span class="lab-group-num">${g.num}</span>
+          <div class="lab-group-meta">
+            <span class="lab-group-label">${g.label}</span>
+            <span class="lab-group-desc">${g.desc}</span>
+          </div>
+          <span class="lab-group-count">${sims.length} lab</span>
+        </div>
+      </div>
+      <div class="lab-launch-grid">${sims.map(s => _labTile(s, g)).join('')}</div>`;
+    return;
+  }
+
+  // Hub: 16 kartu jalur dalam satu layar — klik untuk masuk ke lab-nya.
+  const groups = SIM_GROUPS.filter(g => g.key !== 'Fondasi');
+  grid.innerHTML = `<div class="lab-jalur-grid">` + groups.map(g => {
     const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);
     if (!sims.length) return '';
     return `
-    <section class="lab-group">
-      <div class="lab-group-head" style="--g-grad:${g.grad}">
-        <span class="lab-group-num">${g.num}</span>
-        <div class="lab-group-meta">
-          <span class="lab-group-label">${g.label}</span>
-          <span class="lab-group-desc">${g.desc}</span>
-        </div>
-        <span class="lab-group-count">${sims.length} lab</span>
-      </div>
-      <div class="lab-launch-grid">${sims.map(s => tile(s, g)).join('')}</div>
-    </section>`;
-  }).join('');
+    <button type="button" class="lab-jalur-card" style="--g-grad:${g.grad}" onclick="openJalur('${g.key}')" aria-label="Buka jalur ${g.label}">
+      <span class="lab-jalur-num">${g.num}</span>
+      <span class="lab-jalur-label">${g.label}</span>
+      <span class="lab-jalur-count">${sims.length} lab ${_LAB_ARROW}</span>
+    </button>`;
+  }).join('') + `</div>`;
 }
 
 function renderPraktikum() {
