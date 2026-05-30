@@ -2674,6 +2674,34 @@ body {
 .lab-tile-open { margin-top: 5px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; opacity: 0; transform: translateY(4px); transition: opacity 0.2s ease, transform 0.2s ease; display: inline-flex; align-items: center; gap: 5px; }
 .lab-tile:hover .lab-tile-open { opacity: 1; transform: none; }
 .lab-launch-hint { text-align: center; margin-top: 22px; font-size: 0.85rem; color: var(--ink-mute, #6b6d7a); }
+/* 16 kelompok jalur — tiap jalur satu blok berlabel */
+.lab-groups { display: flex; flex-direction: column; gap: 30px; }
+.lab-group { display: flex; flex-direction: column; gap: 14px; }
+.lab-group-head {
+  display: flex; align-items: center; gap: 14px;
+  padding-bottom: 12px; border-bottom: 1px solid rgba(26,29,46,0.1);
+}
+.lab-group-num {
+  flex-shrink: 0; width: 42px; height: 42px; border-radius: 11px;
+  display: grid; place-items: center; color: #fff;
+  font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 1.05rem;
+  background: var(--g-grad, linear-gradient(135deg,#d4af6a,#9a7f4f));
+  box-shadow: 0 5px 14px rgba(26,29,46,0.22);
+}
+.lab-group-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.lab-group-label { font-family: var(--serif, Georgia, serif); font-size: 1.12rem; font-weight: 700; color: var(--ink, #1a1d2e); line-height: 1.2; }
+.lab-group-desc { font-size: 0.82rem; color: var(--ink-mute, #6b6d7a); line-height: 1.4; }
+.lab-group-count {
+  margin-left: auto; flex-shrink: 0; align-self: flex-start;
+  font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--gold-dark, #9a7f4f); background: rgba(201,169,110,0.14);
+  border: 1px solid rgba(201,169,110,0.4); border-radius: 999px; padding: 4px 11px; white-space: nowrap;
+}
+@media (max-width: 680px) {
+  .lab-groups { gap: 24px; }
+  .lab-group-label { font-size: 1rem; }
+  .lab-group-desc { display: none; }
+}
 /* ElectraSim featured launch card */
 .electrasim-feature {
   display: flex; align-items: center; gap: 18px; margin-bottom: 22px;
@@ -11899,7 +11927,7 @@ button:active:not(:disabled),
       <div class="lab-launch-head">
         <div>
           <div class="lab-section-eyebrow">Digital Simulator Lab</div>
-          <h2 class="lab-launch-title">16 Lab Interaktif — <span class="italic">tinggal klik</span></h2>
+          <h2 class="lab-launch-title">16 Jalur Spesialisasi — <span class="italic">terklasifikasi rapi</span></h2>
         </div>
         <div class="lab-chips">
           <button class="lab-chip active" data-set="spec" onclick="labShowSet('spec')">16 Spesialisasi</button>
@@ -11917,7 +11945,7 @@ button:active:not(:disabled),
           <span class="electrasim-feature-cta">Buka ElectraSim →</span>
         </span>
       </a>
-      <div class="lab-launch-grid" id="simulator-grid"></div>
+      <div class="lab-groups" id="simulator-grid"></div>
       <div class="lab-launch-hint">Klik salah satu lab untuk masuk ke halamannya — geser parameter &amp; lihat visualisasi real-time.</div>
     </div>
   </section>
@@ -15748,14 +15776,12 @@ function renderSimulators() {
   if (!grid) return;
   const arrow = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  const sims = (_labLaunchSet === 'bonus')
-    ? SIMULATORS.filter(s => (s.jalur || 'Fondasi') === 'Fondasi')
-    : SIMULATORS.filter(s => (s.jalur || 'Fondasi') !== 'Fondasi');
+  // Kelompok yang ditampilkan: 16 jalur spesialisasi (S1..S16) atau bonus (Fondasi).
+  const groups = (_labLaunchSet === 'bonus')
+    ? SIM_GROUPS.filter(g => g.key === 'Fondasi')
+    : SIM_GROUPS.filter(g => g.key !== 'Fondasi');
 
-  // Satu layar: grid tile bergambar, seluruh tile diklik -> buka halaman simulator.
-  grid.innerHTML = sims.map(s => {
-    const g = _simGroup(s);
-    return `
+  const tile = (s, g) => `
     <button type="button" class="lab-tile" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
       <img class="lab-tile-img" src="${g.photo}" alt="" loading="lazy" onerror="this.style.display='none'">
       <span class="lab-tile-grad" style="background:${g.grad}"></span>
@@ -15767,6 +15793,23 @@ function renderSimulators() {
         <span class="lab-tile-open">Buka Lab ${arrow}</span>
       </span>
     </button>`;
+
+  // Tiap jalur = satu blok berlabel, lab di dalamnya dikelompokkan rapi (tidak tercecer).
+  grid.innerHTML = groups.map(g => {
+    const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);
+    if (!sims.length) return '';
+    return `
+    <section class="lab-group">
+      <div class="lab-group-head" style="--g-grad:${g.grad}">
+        <span class="lab-group-num">${g.num}</span>
+        <div class="lab-group-meta">
+          <span class="lab-group-label">${g.label}</span>
+          <span class="lab-group-desc">${g.desc}</span>
+        </div>
+        <span class="lab-group-count">${sims.length} lab</span>
+      </div>
+      <div class="lab-launch-grid">${sims.map(s => tile(s, g)).join('')}</div>
+    </section>`;
   }).join('');
 }
 
