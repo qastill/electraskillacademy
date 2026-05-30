@@ -25643,6 +25643,19 @@ function renderQuiz(module) {
   answeredCount = 0;
   answeredQuestions = new Set();
 
+  // Reset the scoring engine for a fresh attempt. Tanpa ini, currentQuizStats
+  // (correct/wrong/answered) menumpuk dari attempt/modul sebelumnya sehingga
+  // skor akhir salah hitung — peserta bisa jawab semua benar tapi dinyatakan
+  // "Belum Lulus". Ambil levelId/trackId dari currentModuleData (di-set openModul).
+  if (typeof window.esaResetQuizStats === 'function') {
+    const md = window.currentModuleData || {};
+    window.esaResetQuizStats(
+      module.code,
+      md.levelId || module.level || null,
+      md.trackId || md.track || null
+    );
+  }
+
   // Start the 15-minute quiz timer (auto-submits when expired)
   if (typeof window.esaStartQuizTimer === 'function') window.esaStartQuizTimer();
 }
@@ -27707,7 +27720,13 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (!currentQuizModule) return;
     stopQuizTimer();
     const total = 25;
-    const correct = currentQuizStats.correct;
+    // Hitung skor otoritatif dari peta jawaban per-soal (sumber kebenaran),
+    // bukan dari counter berjalan yang bisa desync kalau jawaban diubah-ubah.
+    const answerMap = currentQuizStats.answers || {};
+    const correct = Object.keys(answerMap).filter(k => answerMap[k] === true).length;
+    // Sinkronkan counter agar konsisten dengan recordModuleResult & UI lain.
+    currentQuizStats.correct = correct;
+    currentQuizStats.wrong = currentQuizStats.answered.size - correct;
     const pct = Math.round((correct / total) * 100);
     const passed = pct >= 70;
     const xpGained = passed ? Math.round((correct / total) * 25) : 0;
