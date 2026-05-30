@@ -15365,6 +15365,17 @@ const SIMULATORS = [
   { id: 'encoder-motion', jalur: 'S16', category: 'Otomasi · Motion', name: 'Encoder & Motion Resolution', desc: 'Resolusi posisi servo/stepper dari PPR & decoding; frekuensi pulsa pada kecepatan target.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.motor, working: true }
 ];
 
+// Wiring Trainer interaktif (VoltaSim) — ditempelkan di tiap spesialisasi S1..S16.
+// Lab praktik merangkai instalasi: sambung terminal, periksa, jalankan simulasi + tutorial & panduan langkah.
+['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12','S13','S14','S15','S16'].forEach(j => {
+  SIMULATORS.push({
+    id: 'wiring-' + j.toLowerCase(), jalur: j, category: 'Praktik · Wiring Trainer',
+    name: 'Wiring Trainer Interaktif',
+    desc: 'Latihan merangkai instalasi listrik virtual: sambungkan terminal, periksa rangkaian, lalu jalankan simulasi (lampu menyala, motor berputar, arus mengalir). 16 latihan + panduan langkah & penjelasan.',
+    level: 'Profesional', duration: '~30 menit', icon: SIM_ICONS.mcb, working: true, embed: 'wiring.html'
+  });
+});
+
 // ================================================
 // ELECTRICAL DESIGN CALCULATORS
 // ================================================
@@ -16060,6 +16071,7 @@ function openSimulator(simId) {
   else if (simId === 'inst-lighting') body = getLightingHTML();
   else if (simId === 'inst-vdrop') body = getVoltageDropHTML();
   else if (simId === 'inst-mcb') body = getMCBCoordHTML();
+  else if (sim.embed) body = `<iframe src="${sim.embed}" title="${sim.name}" loading="lazy" style="width:100%;height:80vh;min-height:560px;border:0;border-radius:12px;background:#0b0f17;display:block"></iframe>`;
   else if (SIM_BUILDERS[simId]) body = SIM_BUILDERS[simId].html();
 
   // Banner gambar representatif (bukan emoji) di tiap halaman simulator
@@ -16076,7 +16088,8 @@ function openSimulator(simId) {
     </div>`;
 
   // Panel penjelasan detail: Fungsi / Tujuan / Kegunaan dunia nyata
-  const info = SIM_INFO[simId];
+  const WIRING_INFO = { w: 'Papan rangkai virtual: sambungkan terminal antar komponen (sumber, saklar, MCB, lampu, motor, stop kontak, kWh meter) untuk membentuk instalasi yang benar, lalu jalankan simulasi.', g: 'Melatih membaca diagram dan merangkai instalasi 1 fasa, 3 fasa, serta instalasi rumah dengan benar dan aman — dipandu langkah demi langkah.', r: 'Bekal praktik wiring sebelum memegang panel/instalasi nyata: teknisi instalasi, panel builder, dan pemeliharaan listrik.' };
+  const info = SIM_INFO[simId] || (sim.embed ? WIRING_INFO : null);
   const about = info
     ? `<div class="sim-about">
         <div class="sim-about-h">ℹ️ Tentang lab ini — fungsi &amp; tujuan</div>
