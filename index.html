@@ -15807,7 +15807,7 @@ function labShowSet(which) {
   document.querySelectorAll('.lab-chip').forEach(c => c.classList.toggle('active', c.dataset.set === which));
   renderSimulators();
 }
-function openJalur(key) {
+function openLabJalur(key) {
   _labOpenJalur = key;
   renderSimulators();
   const sec = document.getElementById('lab-simulator');
@@ -15872,7 +15872,7 @@ function renderSimulators() {
     const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);
     if (!sims.length) return '';
     return `
-    <button type="button" class="lab-jalur-card" style="--g-grad:${g.grad}" onclick="openJalur('${g.key}')" aria-label="Buka jalur ${g.label}">
+    <button type="button" class="lab-jalur-card" style="--g-grad:${g.grad}" onclick="openLabJalur('${g.key}')" aria-label="Buka jalur ${g.label}">
       <span class="lab-jalur-num">${g.num}</span>
       <span class="lab-jalur-label">${g.label}</span>
       <span class="lab-jalur-count">${sims.length} lab ${_LAB_ARROW}</span>
