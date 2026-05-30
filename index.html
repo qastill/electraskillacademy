@@ -15371,8 +15371,8 @@ const SIMULATORS = [
   SIMULATORS.push({
     id: 'wiring-' + j.toLowerCase(), jalur: j, category: 'Praktik · Wiring Trainer',
     name: 'Wiring Trainer Interaktif',
-    desc: 'Latihan merangkai instalasi listrik virtual: sambungkan terminal, periksa rangkaian, lalu jalankan simulasi (lampu menyala, motor berputar, arus mengalir). 16 latihan + panduan langkah & penjelasan.',
-    level: 'Profesional', duration: '~30 menit', icon: SIM_ICONS.mcb, working: true, embed: 'wiring.html'
+    desc: 'Latihan merangkai instalasi listrik virtual sesuai spesialisasi (mis. PLTS, baterai/BESS, EV charging, distribusi): sambungkan terminal, periksa rangkaian, lalu jalankan simulasi. Tiap jalur menampilkan skenario wiring yang relevan + panduan langkah & penjelasan.',
+    level: 'Profesional', duration: '~30 menit', icon: SIM_ICONS.mcb, working: true, embed: 'wiring.html?spec=' + j
   });
 });
 
