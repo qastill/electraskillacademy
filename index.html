@@ -2774,6 +2774,15 @@ body {
 .sim-banner-cat { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: #f0d080; font-weight: 800; }
 .sim-banner-title { font-family: var(--serif, Georgia, serif); font-size: 1.5rem; font-weight: 600; color: #fff; line-height: 1.15; }
 
+/* Panel penjelasan "Tentang lab ini" di dalam tiap simulator */
+.sim-about { background: linear-gradient(135deg, rgba(201,169,110,0.12), rgba(26,29,46,0.04)); border: 1px solid rgba(201,169,110,0.34); border-radius: 12px; padding: 15px 17px; margin-bottom: 20px; }
+.sim-about-h { font-weight: 800; font-size: 0.72rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--gold-dark, #9a7f4f); margin-bottom: 11px; display: flex; align-items: center; gap: 7px; }
+.sim-about-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.sim-about-item { display: flex; flex-direction: column; gap: 6px; }
+.sim-about-tag { align-self: flex-start; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #1a1d2e; background: rgba(201,169,110,0.85); border-radius: 6px; padding: 3px 9px; }
+.sim-about-item p { font-size: 0.85rem; line-height: 1.55; color: #4a4d5e; margin: 0; }
+@media (max-width: 680px) { .sim-about-grid { grid-template-columns: 1fr; gap: 11px; } }
+
 /* Animasi simulator (aliran arus & glow) */
 @keyframes labFlow { to { stroke-dashoffset: -36; } }
 .lab-flow { stroke-dasharray: 11 8; animation: labFlow 0.8s linear infinite; }
@@ -15804,6 +15813,111 @@ const PRAKTIKUM_CLASSES = [
   { jalur: 'S8', jalurName: 'K3 Listrik', name: 'K3 Bootcamp & Rescue Drill', desc: 'Safety drill: rescue korban tersengat listrik, CPR, LOTO (lockout-tagout), APD use, fire class A & C. Wajib Kemnaker.', location: 'Jakarta · Bekasi', duration: '3 hari · 24 jam', schedule: 'Tiap bulan', price: 'Rp 2.200.000', includes: 'APD lengkap + Materi + Sertifikat', photo: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80' }
 ];
 
+// Penjelasan detail tiap lab — w: Fungsi (apa yg dihitung/dilakukan), g: Tujuan belajar, r: Kegunaan dunia nyata
+const SIM_INFO = {
+  'ohm-law': { w: 'Menghitung hubungan Tegangan (V), Arus (I), dan Hambatan (R) lewat V = I × R sekaligus daya P = V × I; ubah satu nilai, dua lainnya menyesuaikan secara real-time.', g: 'Memahami fondasi semua rangkaian listrik dan bagaimana ketiga besaran saling memengaruhi.', r: 'Dipakai setiap teknisi untuk memperkirakan arus beban, memilih sekering, dan mendiagnosis rangkaian sederhana.' },
+  'three-phase': { w: 'Menghitung daya aktif (P), reaktif (Q), dan semu (S) sistem 3 fasa beserta sudut dan faktor daya, divisualkan sebagai segitiga daya.', g: 'Memahami beda kW vs kVA dan peran cos φ pada sistem tenaga.', r: 'Dasar membaca tagihan kVA industri, sizing genset/trafo, dan analisis kualitas daya.' },
+  'transformer': { w: 'Menghitung rasio belitan, tegangan, dan arus sisi primer-sekunder trafo step-up/step-down.', g: 'Memahami konservasi daya (Vp·Ip ≈ Vs·Is) dan hubungan rasio lilitan.', r: 'Dasar kerja gardu distribusi, adaptor, dan desain catu daya.' },
+  'cable-sizing': { w: 'Menghitung luas penampang kabel sesuai PUIL 2011/IEC dari beban, tegangan, dan panjang, lengkap dengan voltage drop.', g: 'Memahami cara memilih ukuran kabel yang aman dan ekonomis.', r: 'Pekerjaan harian perancang instalasi listrik gedung dan industri.' },
+  'inst-mcb': { w: 'Menentukan rating MCB dan ukuran kabel minimum dengan aturan koordinasi Ib ≤ In ≤ Iz termasuk faktor derating.', g: 'Memahami koordinasi pengaman terhadap kabel agar proteksi tepat.', r: 'Pemilihan pengaman dan kabel pada instalasi sesuai PUIL/IEC 60364.' },
+
+  'inst-lighting': { w: 'Menghitung jumlah armatur/lampu untuk mencapai target iluminasi (lux) suatu ruang dengan metode lumen.', g: 'Belajar mengaitkan dimensi ruang, lumen lampu, dan faktor utilisasi ke target SNI 6197.', r: 'Dipakai konsultan MEP dan desainer pencahayaan untuk kantor, sekolah, gudang, retail.' },
+  'inst-vdrop': { w: 'Menghitung persen drop tegangan pada feeder dari arus, panjang, dan ukuran kabel, lalu memberi status LULUS/GAGAL vs batas PUIL ≤ 5%.', g: 'Memahami mengapa kabel panjang atau kecil membuat tegangan jatuh.', r: 'Wajib saat merancang instalasi agar peralatan di ujung tetap bekerja normal.' },
+  'conduit-fill': { w: 'Menghitung persentase isi konduit terhadap jumlah dan ukuran kabel dibanding batas PUIL/NEC.', g: 'Belajar batas pengisian pipa agar kabel tidak panas dan mudah ditarik.', r: 'Dipakai instalatir dan QC saat menentukan ukuran pipa konduit.' },
+  'panel-schedule': { w: 'Menyusun beban panel dan menyeimbangkan fasa R-S-T otomatis, menghitung demand, imbalance, dan ukuran MCB utama.', g: 'Memahami pentingnya beban seimbang antar fasa.', r: 'Dipakai engineer panel saat membuat single line diagram dan panel schedule gedung.' },
+  'earth-fault-loop': { w: 'Menghitung impedansi loop gangguan (Zs), arus gangguan, waktu putus MCB, dan tegangan sentuh; menentukan kebutuhan RCD 30 mA (TN vs TT).', g: 'Memahami proteksi terhadap sengatan listrik pada sistem pembumian.', r: 'Wajib untuk keselamatan instalasi rumah, rumah sakit, dan komersial.' },
+
+  'motor-starting': { w: 'Membandingkan arus dan torsi start motor induksi 3 fasa: Direct-On-Line vs Star-Delta.', g: 'Memahami mengapa start langsung menarik arus ~6× dan cara menurunkannya.', r: 'Dipakai engineer industri memilih metode start agar tak membuat tegangan kedip.' },
+  'vfd-saving': { w: 'Mengestimasi penghematan energi pompa/fan saat dipasang VFD memakai hukum afinitas (daya sebanding pangkat tiga kecepatan).', g: 'Memahami mengapa menurunkan kecepatan sedikit menghemat banyak energi.', r: 'Dasar proyek efisiensi energi dan justifikasi pemasangan inverter.' },
+  'cable-ampacity': { w: 'Menghitung kapasitas hantar arus (KHA) kabel setelah derating suhu dan pengelompokan; mengecek Ib ≤ Iz.', g: 'Memahami pengaruh lingkungan terhadap kemampuan kabel.', r: 'Memilih kabel feeder pabrik yang aman dari panas berlebih.' },
+  'harmonics-thd': { w: 'Mensimulasikan harmonik orde 3/5/7/11, menampilkan gelombang terdistorsi, spektrum, THD, dan crest factor dibanding IEEE 519.', g: 'Memahami penyebab dan batas distorsi harmonik.', r: 'Penting untuk kualitas daya pabrik dengan banyak inverter/UPS/komputer.' },
+  'pump-duty': { w: 'Mencari titik kerja pompa (perpotongan kurva pompa dan kurva sistem) serta efek perubahan kecepatan.', g: 'Memahami operasi pompa yang efisien dan efek hukum afinitas.', r: 'Dipakai engineer mekanikal/utility memilih dan mengoperasikan pompa.' },
+
+  'trafo-loading': { w: 'Menghitung pembebanan trafo distribusi (kVA), persen loading, dan rugi-rugi.', g: 'Memahami batas aman pembebanan dan kapan trafo overload.', r: 'Dipakai PLN/operator gardu menilai trafo dan merencanakan upgrade.' },
+  'feeder-vd-20kv': { w: 'Mensimulasikan drop tegangan dan rugi daya pada penyulang 20 kV terhadap jarak dan beban.', g: 'Memahami profil tegangan sepanjang jaringan tegangan menengah.', r: 'Perencanaan dan pemeliharaan jaringan distribusi.' },
+  'protect-coord': { w: 'Memplot kurva waktu-arus recloser vs fuse agar recloser fast-trip lebih dulu.', g: 'Memahami koordinasi proteksi agar gangguan sementara tak memutus fuse permanen.', r: 'Dipakai engineer proteksi distribusi untuk menekan pemadaman.' },
+  'cap-placement': { w: 'Menempatkan kapasitor shunt di feeder (geser lokasi dan kVAR), melihat PF naik dan rugi I²R turun dengan aturan dua-pertiga.', g: 'Memahami kompensasi daya reaktif di jaringan.', r: 'Untuk perbaikan tegangan dan efisiensi feeder distribusi.' },
+  'feeder-restore': { w: 'Mensimulasikan isolasi gangguan dengan membuka sectionalizer dan memulihkan pelanggan via tie-switch ke feeder cadangan.', g: 'Belajar prosedur FLISR/SCADA untuk menekan SAIDI/SAIFI.', r: 'Operasi dispatcher PLN saat menangani gangguan jaringan.' },
+
+  'line-sag': { w: 'Menghitung andongan (sag) dan tegangan tarik konduktor SUTT/SUTET terhadap span, suhu, dan beban.', g: 'Memahami keseimbangan sag-tension demi jarak aman ke tanah/pohon.', r: 'Desain mekanik saluran transmisi tegangan tinggi.' },
+  'insulation-coord': { w: 'Memilih BIL dan jumlah isolator string untuk tegangan sistem tertentu plus jarak rambat (creepage).', g: 'Memahami koordinasi isolasi terhadap tegangan lebih dan surja.', r: 'Desain saluran dan gardu tegangan tinggi.' },
+  'surge-arrester': { w: 'Mengecek margin proteksi arester terhadap BIL peralatan dan kesesuaian MCOV.', g: 'Memahami perlindungan peralatan dari surja petir dan switching.', r: 'Proteksi trafo dan peralatan gardu induk.' },
+  'corona-loss': { w: 'Menghitung gradien permukaan konduktor vs gradien kritis Peek serta efek bundling 1-4 sub-konduktor.', g: 'Memahami rugi korona dan cara menekannya di EHV.', r: 'Desain konduktor berkas pada saluran EHV.' },
+  'line-power-flow': { w: 'Memplot kurva daya-sudut P = Pmax·sin δ, batas stabilitas, SIL, dan margin transfer.', g: 'Memahami batas daya yang aman dikirim dan stabilitas saluran.', r: 'Studi aliran daya dan kapasitas transmisi.' },
+
+  'load-forecast': { w: 'Memprediksi beban harian dengan moving average dan menghitung error (MAPE) terhadap data aktual.', g: 'Belajar dasar peramalan deret waktu dan evaluasi akurasinya.', r: 'Perencanaan operasi dan pengadaan energi pada utility.' },
+  'ntl-detect': { w: 'Mendeteksi anomali pemakaian (non-technical loss) dari profil konsumsi pelanggan.', g: 'Belajar mengenali pola pencurian listrik atau meter rusak.', r: 'Mendukung tim P2TL / revenue protection PLN.' },
+  'regression-trend': { w: 'Menaruh titik data pada kanvas dan menghitung garis regresi least-squares, R², serta proyeksi nilai berikutnya.', g: 'Memahami tren linear dan kualitas kecocokan model.', r: 'Analisis hubungan variabel, misalnya suhu vs beban listrik.' },
+  'anomaly-zscore': { w: 'Menandai titik pencilan pada profil beban 24 jam berdasarkan ambang z-score.', g: 'Belajar deteksi anomali secara statistik.', r: 'Monitoring meter dan deteksi gangguan/pencurian otomatis.' },
+  'solar-forecast': { w: 'Memprediksi profil produksi PLTS harian terhadap kapasitas, cuaca, dan musim; energi harian, daya puncak, capacity factor.', g: 'Memahami variabilitas pembangkitan energi terbarukan.', r: 'Integrasi PLTS ke grid dan manajemen energi.' },
+
+  'energy-payback': { w: 'Menghitung penghematan kWh, rupiah per tahun, dan payback period dari retrofit (mis. ganti LED atau motor efisien).', g: 'Belajar menilai kelayakan ekonomi langkah efisiensi.', r: 'Auditor energi menyusun rekomendasi investasi ke manajemen.' },
+  'pf-correction': { w: 'Menghitung kapasitas kapasitor (kVAR) untuk koreksi cos φ dari PF existing ke target plus penghematan denda.', g: 'Memahami perbaikan faktor daya dan dampaknya pada tagihan.', r: 'Menghindari denda kVArh PLN di pelanggan industri.' },
+  'chiller-eff': { w: 'Menghitung efisiensi chiller (kW/TR dan COP), konsumsi tahunan, dan potensi hemat bila upgrade.', g: 'Memahami performa sistem pendingin HVAC.', r: 'Audit dan retrofit chiller gedung besar/mal/hotel.' },
+  'lighting-retrofit': { w: 'Menghitung hemat daya, energi, biaya, payback, dan pengurangan CO₂ saat lampu lama diganti LED.', g: 'Menilai kelayakan proyek penggantian penerangan.', r: 'Audit penerangan dan proyek ESCO.' },
+  'energy-mv': { w: 'Memverifikasi penghematan ala IPMVP: baseline vs aktual plus kurva CUSUM akumulasi hemat.', g: 'Belajar mengukur dan membuktikan penghematan secara kredibel.', r: 'Pelaporan kontrak kinerja energi (Measurement & Verification).' },
+
+  'pv-sizing': { w: 'Merancang sistem PLTS atap: jumlah panel, ukuran inverter, kapasitas baterai backup, dan luas atap.', g: 'Memahami sizing sistem surya secara end-to-end.', r: 'Engineer EBT merancang instalasi PLTS rooftop.' },
+  'bess-sizing': { w: 'Menentukan kapasitas baterai (kWh) dan inverter (kW) untuk backup/peak-shaving dengan target DoD dan autonomy.', g: 'Memahami penentuan ukuran sistem penyimpanan energi.', r: 'Desain BESS untuk gedung, industri, atau microgrid.' },
+  'genset-sizing': { w: 'Memilih rating genset untuk beban plus kejut start motor, mengecek loading optimal, konsumsi BBM, dan biaya per kWh.', g: 'Memahami pemilihan genset yang tepat dan ekonomis.', r: 'Backup power gedung, industri, dan acara.' },
+  'wind-power': { w: 'Memplot kurva daya turbin angin (cut-in, rated, cut-out), daya saat ini, dan capacity factor terhadap kecepatan angin.', g: 'Memahami konversi energi angin ke listrik.', r: 'Studi kelayakan PLTB.' },
+  'hydro-power': { w: 'Menghitung daya hidro P = ρgQHη, rugi head friksi penstock (Darcy), head efektif, dan energi tahunan.', g: 'Memahami konversi energi air menjadi listrik.', r: 'Desain PLTA dan mikrohidro.' },
+
+  'arc-flash-ppe': { w: 'Mengestimasi incident energy (cal/cm²) dan kategori APD (PPE) sesuai NFPA 70E dari arus gangguan dan jarak kerja.', g: 'Memahami bahaya busur api dan APD yang tepat.', r: 'Penyusunan label arc flash dan prosedur kerja aman pada panel.' },
+  'earthing-touch': { w: 'Menghitung resistansi pembumian batang elektroda dan tegangan sentuh terhadap resistivitas tanah.', g: 'Memahami efektivitas sistem pembumian.', r: 'Desain grounding instalasi dan gardu.' },
+  'short-circuit': { w: 'Menghitung arus hubung singkat prospektif sisi tegangan rendah dari trafo dan impedansi.', g: 'Memastikan breaking capacity breaker memadai.', r: 'Pemilihan breaker dan studi proteksi hubung singkat.' },
+  'loto-sequence': { w: 'Latihan interaktif menyusun urutan prosedur Lock-Out Tag-Out yang benar; salah urutan memicu reset keselamatan.', g: 'Menghafal dan memahami isolasi energi sebelum bekerja.', r: 'Wajib K3 sebelum perawatan/perbaikan peralatan listrik.' },
+  'step-touch': { w: 'Menghitung tegangan langkah dan sentuh saat gangguan ke tanah di gardu dibanding batas aman tubuh (IEEE 80).', g: 'Memahami keselamatan area gardu sesuai kerikil dan berat badan.', r: 'Desain grid pembumian gardu induk.' },
+
+  'tco-compare': { w: 'Membandingkan produk murah vs premium atas total biaya kepemilikan (harga beli + energi + perawatan).', g: 'Belajar value selling berbasis biaya jangka panjang, bukan harga awal.', r: 'Senjata sales engineer meyakinkan pelanggan teknis.' },
+  'tender-margin': { w: 'Menyusun harga penawaran (pokok + overhead + margin + PPN) dan membandingkannya dengan HPS.', g: 'Memahami strategi harga menang sambil menjaga laba.', r: 'Tim tender dan estimasi proyek kelistrikan.' },
+  'roi-pitch': { w: 'Membangun business case pelanggan: payback, ROI, dan NPV lengkap grafik arus kas kumulatif.', g: 'Belajar menyusun justifikasi investasi untuk closing.', r: 'Penjualan solusi efisiensi/EBT ke pelanggan korporat.' },
+  'discount-volume': { w: 'Menghitung kenaikan volume minimum agar diskon tidak menggerus laba total.', g: 'Memahami trade-off antara diskon dan margin.', r: 'Pegangan saat negosiasi harga penjualan.' },
+  'sales-funnel': { w: 'Menghitung konversi lead ke qualified ke proposal ke menang dan dampaknya pada revenue.', g: 'Memahami manajemen pipeline penjualan.', r: 'Perencanaan target dan forecast tim sales.' },
+
+  'pv-string': { w: 'Menentukan jumlah modul per string agar Voc saat dingin tidak melebihi Vmax inverter dan Vmpp saat panas tetap dalam rentang MPPT.', g: 'Memahami batas tegangan string surya.', r: 'Desain array PLTS yang aman bagi inverter.' },
+  'pv-dcac': { w: 'Mencari rasio DC/AC optimal dan melihat rugi clipping pada puncak produksi harian.', g: 'Memahami trade-off oversizing array terhadap inverter.', r: 'Optimasi desain dan ekonomi PLTS.' },
+  'pv-yield': { w: 'Menghitung energi tahunan E = kWp × PSH × 365 × PR serta dampak rugi suhu/soiling/kabel terhadap yield.', g: 'Memahami Performance Ratio dan yield spesifik.', r: 'Estimasi produksi dan jaminan kinerja proyek PLTS.' },
+  'pv-tilt': { w: 'Menentukan sudut tilt optimal dan jarak antar-baris agar tidak saling membayangi saat matahari rendah (GCR).', g: 'Memahami tata letak array yang efisien.', r: 'Desain PLTS ground-mount dan rooftop.' },
+  'pv-lcoe': { w: 'Menghitung Levelized Cost of Energy PLTS dari CAPEX, OPEX, yield, umur, dan degradasi dibanding tarif listrik.', g: 'Memahami biaya energi tersaring dan grid parity.', r: 'Analisis kelayakan investasi PLTS.' },
+
+  'carbon-footprint': { w: 'Menghitung jejak karbon organisasi Scope 1/2/3 sesuai GHG Protocol beserta komposisi tiap scope.', g: 'Memahami inventarisasi emisi gas rumah kaca.', r: 'Penyusunan laporan keberlanjutan/ESG perusahaan.' },
+  're100-target': { w: 'Menghitung kapasitas PLTS plus REC yang dibutuhkan untuk mencapai target persen energi terbarukan.', g: 'Memahami pemenuhan target RE100 dan gap-nya.', r: 'Strategi energi bersih korporat.' },
+  'carbon-abatement': { w: 'Menghitung biaya per ton CO₂ yang dihindari dari tiap langkah mitigasi (LED/PLTS/VFD/chiller).', g: 'Memahami prioritas mitigasi termurah (kurva MACC); negatif berarti hemat uang sekaligus karbon.', r: 'Perencanaan program dekarbonisasi.' },
+  'netzero-path': { w: 'Memodelkan lintasan emisi turun bertahap plus offset residual menuju net zero beserta tahun pencapaiannya.', g: 'Memahami strategi dekarbonisasi jangka panjang.', r: 'Roadmap iklim perusahaan atau kota.' },
+  'carbon-intensity': { w: 'Menghitung intensitas energi (kWh/unit) dan karbon (kgCO₂/unit) dibanding benchmark industri.', g: 'Memahami KPI efisiensi dan ESG per unit produksi.', r: 'Pelaporan dan penetapan target keberlanjutan.' },
+
+  'ev-charge-time': { w: 'Menghitung waktu dan biaya pengisian AC vs DC fast charging dengan efek taper di atas SoC 80%.', g: 'Memahami dinamika pengisian baterai kendaraan listrik.', r: 'Edukasi pengguna dan desain layanan SPKLU.' },
+  'spklu-load': { w: 'Menghitung daya puncak stasiun multi-dispenser dibanding kapasitas trafo dan kebutuhan load management.', g: 'Memahami manajemen daya stasiun pengisian.', r: 'Perencanaan SPKLU agar tidak overload.' },
+  'ev-range': { w: 'Menghitung jarak tempuh vs kecepatan, AC, dan medan; konsumsi kWh/km dan efisiensi nyata vs klaim pabrikan.', g: 'Memahami faktor yang memengaruhi jangkauan EV.', r: 'Estimasi jangkauan dan perencanaan perjalanan.' },
+  'ev-charger-roi': { w: 'Menghitung margin per kWh, laba bulanan, dan payback dari tarif jual, biaya listrik, dan opex.', g: 'Menilai kelayakan bisnis stasiun pengisian.', r: 'Investor/operator SPKLU.' },
+  'ev-v2g': { w: 'Menghitung arbitrase tarif (isi murah malam, jual saat puncak via V2G) dan potensi pendapatan armada EV.', g: 'Memahami nilai vehicle-to-grid dan smart charging.', r: 'Layanan agregator dan manajemen energi.' },
+
+  'wte-power': { w: 'Menghitung daya listrik insinerasi sampah dari tonase, nilai kalor, dan efisiensi; rumah terlayani dan reduksi volume.', g: 'Memahami konversi sampah menjadi energi.', r: 'Studi kelayakan PLTSa (mis. TPST Bantar Gebang).' },
+  'biogas-power': { w: 'Menghitung produksi metana dari sampah organik, daya genset gas, dan kredit karbon dari penangkapan CH₄.', g: 'Memahami pemanfaatan landfill gas/biogas.', r: 'Proyek biogas TPA dan pertanian.' },
+  'wte-economics': { w: 'Menghitung pendapatan WtE dari tipping fee plus penjualan listrik dibanding OPEX; laba operasi dan margin.', g: 'Memahami ekonomi proyek waste-to-energy.', r: 'Analisis kelayakan untuk investor dan pemerintah kota.' },
+  'waste-sort': { w: 'Menghitung nilai kalor sampah campuran dari fraksi organik/plastik/kertas dan kelayakan insinerasi (>= 7 MJ/kg).', g: 'Memahami pengaruh komposisi terhadap potensi energi.', r: 'Perencanaan WtE dan strategi pengelolaan sampah.' },
+  'wte-vs-recycle': { w: 'Membandingkan dampak CO₂ daur ulang vs membakar per jenis material.', g: 'Memahami hierarki pengelolaan sampah dan rekomendasi terbaik.', r: 'Kebijakan persampahan kota.' },
+
+  'h2-electrolyzer': { w: 'Menghitung produksi hidrogen hijau dari elektroliser: kg H₂ per hari, konsumsi air, efisiensi sistem, dan biaya per kg.', g: 'Memahami proses elektrolisis air bertenaga EBT.', r: 'Desain pabrik hidrogen hijau.' },
+  'h2-fuelcell': { w: 'Memplot kurva polarisasi fuel cell (V-i), daya stack, tegangan, dan efisiensi terhadap rapat arus.', g: 'Memahami karakteristik operasi fuel cell.', r: 'Desain sistem fuel cell untuk listrik/transportasi.' },
+  'h2-lcoh': { w: 'Menghitung Levelized Cost of Hydrogen dari komponen listrik plus CAPEX plus O&M dibanding target harga kompetitif.', g: 'Memahami struktur biaya hidrogen hijau.', r: 'Analisis kelayakan ekonomi proyek H₂.' },
+  'h2-p2g': { w: 'Menghitung efisiensi round-trip menyimpan listrik EBT menjadi H₂ lalu kembali via fuel cell dibanding baterai.', g: 'Memahami penyimpanan energi musiman power-to-gas.', r: 'Studi integrasi EBT skala besar.' },
+  'h2-storage': { w: 'Menghitung massa H₂ dalam tangki bertekanan (350/700 bar), energi setara, dan jumlah pengisian kendaraan FCEV.', g: 'Memahami penyimpanan dan pengisian hidrogen.', r: 'Desain stasiun pengisian kendaraan fuel cell.' },
+
+  'bess-peakshave': { w: 'Menghitung kapasitas BESS untuk memangkas beban puncak dan penghematan demand charge dengan profil sebelum/sesudah.', g: 'Memahami strategi peak shaving.', r: 'Manajemen biaya daya pelanggan industri.' },
+  'bess-crate': { w: 'Menghitung C-rate isi/lepas, waktu isi, rugi panas, dan kenaikan suhu dibanding batas kimia sel (LFP/NMC/LTO) dan pendinginan.', g: 'Memahami batas termal dan keamanan sel.', r: 'Desain pendinginan dan operasi aman BESS.' },
+  'bess-degrade': { w: 'Memodelkan kurva degradasi SoH dari siklus dan kalender; efek DoD terhadap umur dan throughput sampai End-of-Life.', g: 'Memahami umur baterai dan faktor yang mempercepat aus.', r: 'Perencanaan penggantian dan klaim garansi.' },
+  'bess-arbitrage': { w: 'Menghitung pendapatan beli energi murah jual mahal dengan efisiensi round-trip dan spread tarif.', g: 'Memahami nilai energi arbitrase.', r: 'Model bisnis storage merchant.' },
+  'bess-pack': { w: 'Menyusun sel seri-paralel (sSpP) untuk mencapai tegangan dan kapasitas pack yang ditargetkan.', g: 'Memahami konfigurasi pack baterai.', r: 'Desain pack baterai EV dan stationary.' },
+
+  'pid-tuning': { w: 'Mengatur Kp/Ki/Kd dan melihat respon step sistem secara real-time: overshoot, settling time, steady-state error.', g: 'Memahami cara menala kontroler PID.', r: 'Setting loop kontrol proses industri.' },
+  'sensor-scaling': { w: 'Mengonversi sinyal arus 4-20 mA ke nilai proses dan raw ADC PLC; mendeteksi sinyal putus/over-range.', g: 'Memahami penskalaan sinyal instrumentasi.', r: 'Konfigurasi I/O PLC dan kalibrasi sensor.' },
+  'plc-scan': { w: 'Menghitung waktu scan PLC (baca I/O + eksekusi + tulis) dan worst-case response terhadap dinamika proses.', g: 'Memahami kecepatan respon sistem kontrol.', r: 'Desain sistem kontrol real-time yang andal.' },
+  'valve-cv': { w: 'Menghitung Cv yang dibutuhkan dari laju alir dan beda tekanan; mengecek bukaan katup ideal (20-80%).', g: 'Memahami sizing katup kontrol untuk presisi.', r: 'Pemilihan control valve pada proses fluida.' },
+  'encoder-motion': { w: 'Menghitung resolusi encoder dan gerak (PPR, count, jarak/derajat per pulsa).', g: 'Memahami umpan balik posisi dan kecepatan.', r: 'Desain servo dan sistem motion control.' },
+};
+
 let _labLaunchSet = 'spec';
 let _labOpenJalur = null; // null = hub 16 jalur (1 layar); 'S1'.. = drill-down lab di jalur itu
 function _simGroup(s) { return SIM_GROUPS.find(g => g.key === (s.jalur || 'Fondasi')) || SIM_GROUPS[0]; }
@@ -15960,7 +16074,21 @@ function openSimulator(simId) {
         <span class="sim-banner-title">${sim.name}</span>
       </span>
     </div>`;
-  content.innerHTML = banner + body;
+
+  // Panel penjelasan detail: Fungsi / Tujuan / Kegunaan dunia nyata
+  const info = SIM_INFO[simId];
+  const about = info
+    ? `<div class="sim-about">
+        <div class="sim-about-h">ℹ️ Tentang lab ini — fungsi &amp; tujuan</div>
+        <div class="sim-about-grid">
+          <div class="sim-about-item"><span class="sim-about-tag">Fungsi</span><p>${info.w}</p></div>
+          <div class="sim-about-item"><span class="sim-about-tag">Tujuan belajar</span><p>${info.g}</p></div>
+          <div class="sim-about-item"><span class="sim-about-tag">Kegunaan dunia nyata</span><p>${info.r}</p></div>
+        </div>
+      </div>`
+    : `<div class="sim-about"><div class="sim-about-h">ℹ️ Tentang lab ini</div><div class="sim-about-item"><p>${sim.desc || ''}</p></div></div>`;
+
+  content.innerHTML = banner + about + body;
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
