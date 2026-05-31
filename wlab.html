@@ -228,6 +228,20 @@ const COMP = {
     terms:[{k:'a',side:'l',f:0.28,lbl:'+'},{k:'b',side:'l',f:0.5,lbl:'−'},{k:'cp',side:'l',f:0.7,lbl:'CP'},{k:'pe',side:'l',f:0.9,lbl:'PE'}]},
   earth:{ w:70,h:60,label:'PEMBUMIAN',sub:'PE/arde',kind:'earth',
     terms:[{k:'e',side:'t',f:0.5,lbl:'PE'}]},
+  // --- BESS / penyimpanan energi baterai (S15) ---
+  battPack:{ w:120,h:160,label:'PACK BATERAI',sub:'DC',kind:'src',
+    terms:[{k:'P',side:'r',f:0.3,lbl:'+'},{k:'M',side:'r',f:0.7,lbl:'−'}]},
+  bms:{ w:110,h:150,label:'BMS',sub:'manajemen sel',kind:'bms',
+    terms:[{k:'bp',side:'l',f:0.3,lbl:'B+'},{k:'bn',side:'l',f:0.7,lbl:'B−'},
+           {k:'pp',side:'r',f:0.3,lbl:'P+'},{k:'pn',side:'r',f:0.7,lbl:'P−'}]},
+  dcsw:{ w:90,h:110,label:'DC ISOLATOR',sub:'+ fuse',kind:'sw',
+    terms:[{k:'in',side:'l',f:0.5,lbl:'+'},{k:'out',side:'r',f:0.5,lbl:'+'}]},
+  pcs:{ w:150,h:210,label:'PCS',sub:'DC↔AC bidirectional',kind:'pcs',
+    terms:[{k:'dcp',side:'l',f:0.26,lbl:'DC+'},{k:'dcn',side:'l',f:0.5,lbl:'DC−'},{k:'pe',side:'l',f:0.78,lbl:'PE'},
+           {k:'R',side:'r',f:0.22,lbl:'R'},{k:'S',side:'r',f:0.5,lbl:'S'},{k:'T',side:'r',f:0.78,lbl:'T'}]},
+  trafo3:{ w:120,h:170,label:'TRAFO STEP-UP',sub:'0.4/20 kV',kind:'pass',
+    terms:[{k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
+           {k:'Ro',side:'r',f:0.22,lbl:'r'},{k:'So',side:'r',f:0.5,lbl:'s'},{k:'To',side:'r',f:0.78,lbl:'t'}]},
 };
 
 /* terminal absolute coords */
@@ -292,6 +306,8 @@ function simUF(closed){
     else if(kind==='grid'){ u.u(id+'.R',id+'.Ro');u.u(id+'.S',id+'.So');u.u(id+'.T',id+'.To'); } // busbar grid: rel terhubung
     else if(kind==='earth'){ /* node PE tunggal, tidak menjembatani */ }
     else if(kind==='charger'){ /* AC→DC: output DC jadi sumber saat fase charge (lihat phaseSrc) */ }
+    else if(kind==='bms'){ u.u(id+'.bp',id+'.pp');u.u(id+'.bn',id+'.pn'); } // BMS meneruskan daya (proteksi); B↔P
+    else if(kind==='pcs'){ /* DC↔AC: sisi AC jadi sumber saat discharge (lihat phaseSrc) */ }
     // kind 'coil'/'load'/'relay'/'sync'/'ct secondary' = beban/sensor, tidak menjembatani
   });
   return u;
@@ -358,6 +374,9 @@ function drawComp(inst,closed,live){
   const chg=kind==='charger'&&energized&&phase==='charge';
   if(kind==='charger'){stroke=chg?'#3ddc84':(energized?'#e8b339':'#33445f');accent=chg?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
   if(kind==='earth'){stroke='#3ddc84';accent='#6df0a0';}
+  const dischg=kind==='pcs'&&energized&&phase!=='off';
+  if(kind==='pcs'){stroke=dischg?'#3ddc84':(energized?'#e8b339':'#33445f');accent=dischg?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
+  if(kind==='bms'){stroke=energized?'#5b8cff':'#33445f';accent=energized?'#9db4ff':'#8ea0b8';}
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
@@ -411,6 +430,14 @@ function drawComp(inst,closed,live){
     s+=`<text x="${x+w*0.7}" y="${y+h*0.4}" text-anchor="middle" font-size="11" fill="${chg?'#ffd34d':'#5b6b82'}">DC═</text>`;
     s+=`<rect x="${x+16}" y="${y+h*0.85}" width="${w-32}" height="20" rx="4" fill="${chg?'#0a1f14':'#1a1206'}" stroke="${chg?'#1c5b3a':'#5a4a16'}"/>`;
     s+=`<text x="${cx}" y="${y+h*0.85+14}" text-anchor="middle" font-size="9" fill="${chg?'#3ddc84':'#f3d27a'}" font-family="JetBrains Mono">${chg?'CHARGING ⚡':(energized?'handshake CP…':'standby')}</text>`;
+  }
+  if(kind==='bms'){const cx=x+w/2,cy=y+h*0.5;[0,1,2].forEach(i=>{s+=`<rect x="${x+22+i*22}" y="${cy-10}" width="14" height="20" rx="2" fill="${energized?'#3ddc84':'#33445f'}" opacity="${0.5+i*0.18}"/>`;});s+=`<text x="${cx}" y="${y+h*0.82}" text-anchor="middle" font-size="7.5" fill="#8ea0b8">balancing · proteksi</text>`;}
+  if(kind==='pcs'){const cx=x+w/2;
+    s+=`<text x="${x+w*0.28}" y="${y+h*0.46}" text-anchor="middle" font-size="11" fill="${dischg?'#ffd34d':'#5b6b82'}">DC═</text>`;
+    s+=`<text x="${cx}" y="${y+h*0.46}" text-anchor="middle" font-size="12" fill="#8ea0b8">${dischg?'⇄':'⇄'}</text>`;
+    s+=`<text x="${x+w*0.72}" y="${y+h*0.46}" text-anchor="middle" font-size="11" fill="${dischg?'#3ddc84':'#5b6b82'}">AC∿</text>`;
+    s+=`<rect x="${x+14}" y="${y+h*0.82}" width="${w-28}" height="20" rx="4" fill="${dischg?'#0a1f14':'#1a1206'}" stroke="${dischg?'#1c5b3a':'#5a4a16'}"/>`;
+    s+=`<text x="${cx}" y="${y+h*0.82+14}" text-anchor="middle" font-size="9" fill="${dischg?'#3ddc84':'#f3d27a'}" font-family="JetBrains Mono">${phase==='charge'?'CHARGE (AC→DC)':(dischg?'DISCHARGE (DC→AC)':'standby')}</text>`;
   }
   if(kind==='sync'){
     const syn=energized&&phase==='sync';const closed2=energized&&phase==='closed';
@@ -1025,6 +1052,71 @@ LABS['spklu-dc']={
     <p>Colok → verifikasi PE & proteksi → handshake CP (negosiasi) → kontaktor DC menutup → pengisian dengan arus/tegangan terkontrol → selesai → DC putus dulu sebelum cabut.</p>
     <h4>Di dunia kerja</h4>
     <p>Engineer SPKLU: desain & wiring stasiun (charger 50–350 kW), proteksi, pembumian, integrasi OCPP ke jaringan, dan komisioning sesuai SNI/IEC.</p>`
+};
+
+/* ---- LAB: BESS Wiring — pack → BMS → PCS → trafo → grid (S15) ---- */
+LABS['bess']={
+  id:'bess', jalur:'S15', level:'Advance', short:'BESS', sub:'Battery Energy Storage: pack → DC isolator → BMS → PCS → trafo → grid',
+  vb:'0 0 1100 560',
+  roleColor:{dcp:'#ff6b6b',dcn:'#6db3ff',R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',mv:'#e8b339',pe:'#3ddc84'},
+  roleLabel:{dcp:'DC + (pack/BMS)',dcn:'DC − (pack/BMS)',R:'AC R (PCS)',S:'AC S',T:'AC T',mv:'20kV ke grid',pe:'Pembumian'},
+  comps:[
+    {id:'PACK',type:'battPack',x:24,y:80},
+    {id:'ISO',type:'dcsw',x:190,y:60},
+    {id:'BMS',type:'bms',x:320,y:80},
+    {id:'PCS',type:'pcs',x:500,y:70},
+    {id:'TR',type:'trafo3',x:720,y:80},
+    {id:'BUS',type:'busbar3',x:910,y:80},
+    {id:'GND',type:'earth',x:520,y:380},
+  ],
+  nets:[
+    {role:'dcp',t:['PACK.P','ISO.in']},          // + pack → DC isolator
+    {role:'dcp',t:['ISO.out','BMS.bp']},         // isolator → BMS B+
+    {role:'dcn',t:['PACK.M','BMS.bn']},          // − pack → BMS B−
+    {role:'dcp',t:['BMS.pp','PCS.dcp']},         // BMS P+ → PCS DC+
+    {role:'dcn',t:['BMS.pn','PCS.dcn']},         // BMS P− → PCS DC−
+    {role:'R',t:['PCS.R','TR.Ri']},              // AC PCS → trafo primer
+    {role:'S',t:['PCS.S','TR.Si']},
+    {role:'T',t:['PCS.T','TR.Ti']},
+    {role:'mv',t:['TR.Ro','BUS.R']},             // trafo sekunder 20kV → busbar grid
+    {role:'mv',t:['TR.So','BUS.S']},
+    {role:'mv',t:['TR.To','BUS.T']},
+    {role:'pe',t:['PCS.pe','GND.e']},            // pembumian chassis PCS → arde
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'PACK (+) → DC ISOLATOR', why:'Isolator/saklar DC + fuse: pemutus & proteksi sisi DC, wajib bisa memutus saat perawatan.'},
+    {net:1, txt:'DC isolator → BMS (B+)', why:'BMS memantau & melindungi tiap sel (tegangan, suhu, arus) sebelum daya keluar.'},
+    {net:2, txt:'PACK (−) → BMS (B−)', why:'Sisi negatif pack ke BMS.'},
+    {net:3, txt:'BMS (P+) → PCS DC+', why:'Output BMS yang sudah terproteksi menuju PCS.'},
+    {net:4, txt:'BMS (P−) → PCS DC−', why:'Menutup jalur DC ke PCS.'},
+    {net:5, txt:'PCS (R/S/T) → TRAFO step-up (primer)', why:'PCS (Power Conversion System) mengubah DC↔AC dua arah. Sisi AC ke trafo.'},
+    {net:8, txt:'TRAFO sekunder → BUSBAR 20kV (grid)', why:'Trafo menaikkan tegangan agar bisa diinjeksikan ke jaringan menengah.'},
+    {net:11, txt:'Pembumian chassis PCS → ARDE', why:'Grounding & proteksi DC wajib demi keselamatan dan deteksi gangguan isolasi.'},
+  ],
+  phases:[{key:'discharge',label:'▶ DISCHARGE — baterai → grid (DC→AC)'},{key:'charge',label:'⚡ CHARGE — grid → baterai (AC→DC)'}],
+  phaseClosed:{ discharge:[], charge:[] },
+  phaseSrc:{ discharge:['PCS.R','PCS.S','PCS.T'] },  // discharge: sisi AC PCS jadi sumber → trafo → grid
+  sequence:[{phase:'discharge',ms:3200},{phase:'charge'}],
+  okMsg:'<b>✓ Wiring BESS benar!</b> DISCHARGE: baterai → DC isolator → BMS → PCS (DC→AC) → trafo step-up → grid 20kV. PCS bidirectional juga bisa CHARGE (grid→baterai) untuk peak shaving/arbitrage. DC isolator, BMS, & pembumian wajib.',
+  tutorial:`
+    <h4>Apa itu BESS?</h4>
+    <p>Battery Energy Storage System — menyimpan energi (saat murah/berlebih) dan melepasnya saat dibutuhkan (peak shaving, arbitrage, cadangan, dukungan frekuensi). Rantai: <b>pack baterai → proteksi DC → BMS → PCS → trafo → grid</b>.</p>
+    <h4>Komponen kunci</h4>
+    <ul>
+      <li><span class="badge">DC isolator + fuse</span> memutus & melindungi sisi DC; wajib untuk isolasi saat perawatan.</li>
+      <li><span class="badge">BMS</span> Battery Management System: pantau & lindungi tiap sel (over/under-voltage, suhu, arus), cell balancing.</li>
+      <li><span class="badge">PCS</span> Power Conversion System — inverter <b>dua arah</b>: discharge (DC→AC) & charge (AC→DC).</li>
+      <li><span class="badge">Trafo step-up</span> menaikkan tegangan PCS (LV) ke tegangan jaringan (mis. 20kV).</li>
+    </ul>
+    <h4>Kenapa PCS bidirectional?</h4>
+    <p>Beda dengan inverter PLTS yang satu arah, PCS bisa <b>mengisi dan melepas</b>. Itu inti BESS: beli/simpan energi saat tarif rendah, jual/lepas saat tinggi (arbitrage), atau pangkas beban puncak (peak shaving).</p>
+    <h4>Proteksi & pembumian DC</h4>
+    <p>Sistem DC tegangan tinggi butuh: <b>DC isolator/breaker</b>, <b>fuse DC</b>, monitor <b>isolasi (IMD)</b>, dan <b>pembumian</b> yang benar. Gangguan isolasi DC berbahaya & sulit dipadamkan — proteksi khusus wajib.</p>
+    <h4>Keselamatan baterai</h4>
+    <p>Risiko thermal runaway → butuh manajemen suhu (HVAC), deteksi gas/asap, dan pemadam khusus. BMS adalah lapis pertahanan pertama.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Engineer BESS: desain & wiring container BESS skala utility (MWh), integrasi PCS-trafo-proteksi, komisioning, dan integrasi ke SCADA/grid.</p>`
 };
 
 /* ===================== init ===================== */
