@@ -242,6 +242,16 @@ const COMP = {
   trafo3:{ w:120,h:170,label:'TRAFO STEP-UP',sub:'0.4/20 kV',kind:'pass',
     terms:[{k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
            {k:'Ro',side:'r',f:0.22,lbl:'r'},{k:'So',side:'r',f:0.5,lbl:'s'},{k:'To',side:'r',f:0.78,lbl:'t'}]},
+  // --- pembumian & bonding (S8 K3) ---
+  src1pe:{ w:84,h:130,label:'SUMBER 1φ',sub:'230V+PE',kind:'src',
+    terms:[{k:'L',side:'r',f:0.24,lbl:'L'},{k:'N',side:'r',f:0.52,lbl:'N'},{k:'PE',side:'r',f:0.8,lbl:'PE'}]},
+  rcd:{ w:96,h:120,label:'RCD / ELCB',sub:'30mA',kind:'rcd',
+    terms:[{k:'Li',side:'l',f:0.3,lbl:'L'},{k:'Ni',side:'l',f:0.7,lbl:'N'},
+           {k:'Lo',side:'r',f:0.3,lbl:'L'},{k:'No',side:'r',f:0.7,lbl:'N'}]},
+  appliance:{ w:140,h:150,label:'PERALATAN',sub:'bodi logam',kind:'appliance',
+    terms:[{k:'L',side:'l',f:0.24,lbl:'L'},{k:'N',side:'l',f:0.5,lbl:'N'},{k:'PE',side:'l',f:0.78,lbl:'bodi/PE'}]},
+  rod:{ w:90,h:110,label:'ELEKTRODA',sub:'batang arde',kind:'earth',
+    terms:[{k:'e',side:'t',f:0.5,lbl:'ke PE'}]},
 };
 
 /* terminal absolute coords */
@@ -304,6 +314,8 @@ function simUF(closed){
     else if(kind==='plc'){ u.u(id+'.Lp',id+'.Qc'); } // suplai output (3L+) di-jumper internal dari L+
     else if(kind==='cb'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');} } // PMT/PMK: menutup kecuali saat trip; coil x1-x2 = beban (tak menjembatani)
     else if(kind==='grid'){ u.u(id+'.R',id+'.Ro');u.u(id+'.S',id+'.So');u.u(id+'.T',id+'.To'); } // busbar grid: rel terhubung
+    else if(kind==='rcd'){ if(closed[id]!==false){u.u(id+'.Li',id+'.Lo');u.u(id+'.Ni',id+'.No');} } // RCD: meneruskan L & N kecuali trip
+    else if(kind==='appliance'){ u.u(id+'.L',id+'.N'); } // beban: arus mengalir L→N lewat peralatan
     else if(kind==='earth'){ /* node PE tunggal, tidak menjembatani */ }
     else if(kind==='charger'){ /* AC→DC: output DC jadi sumber saat fase charge (lihat phaseSrc) */ }
     else if(kind==='bms'){ u.u(id+'.bp',id+'.pp');u.u(id+'.bn',id+'.pn'); } // BMS meneruskan daya (proteksi); B↔P
@@ -377,6 +389,10 @@ function drawComp(inst,closed,live){
   const dischg=kind==='pcs'&&energized&&phase!=='off';
   if(kind==='pcs'){stroke=dischg?'#3ddc84':(energized?'#e8b339':'#33445f');accent=dischg?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
   if(kind==='bms'){stroke=energized?'#5b8cff':'#33445f';accent=energized?'#9db4ff':'#8ea0b8';}
+  const rcdTrip=kind==='rcd'&&energized&&phase==='fault'&&on===false;
+  if(kind==='rcd'){ if(on!==false){stroke=energized?'#3ddc84':'#33445f';accent=energized?'#3ddc84':'#8ea0b8';} else if(energized){stroke='#ff5d5d';accent='#ff5d5d';} }
+  const faultLive=kind==='appliance'&&energized&&phase==='fault';
+  if(kind==='appliance'){stroke=faultLive?'#ff5d5d':(energized?'#3ddc84':'#33445f');accent=faultLive?'#ff9d9d':(energized?'#3ddc84':'#8ea0b8');}
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
@@ -432,6 +448,13 @@ function drawComp(inst,closed,live){
     s+=`<text x="${cx}" y="${y+h*0.85+14}" text-anchor="middle" font-size="9" fill="${chg?'#3ddc84':'#f3d27a'}" font-family="JetBrains Mono">${chg?'CHARGING ⚡':(energized?'handshake CP…':'standby')}</text>`;
   }
   if(kind==='bms'){const cx=x+w/2,cy=y+h*0.5;[0,1,2].forEach(i=>{s+=`<rect x="${x+22+i*22}" y="${cy-10}" width="14" height="20" rx="2" fill="${energized?'#3ddc84':'#33445f'}" opacity="${0.5+i*0.18}"/>`;});s+=`<text x="${cx}" y="${y+h*0.82}" text-anchor="middle" font-size="7.5" fill="#8ea0b8">balancing · proteksi</text>`;}
+  if(kind==='rcd'){const trip=energized&&on===false;const cx=x+w/2,cy=y+h*0.5;
+    s+=`<text x="${cx}" y="${cy}" text-anchor="middle" font-size="9" fill="${trip?'#ff5d5d':(energized?'#3ddc84':'#5b6b82')}">${trip?'TRIP!':(energized?'ON':'—')}</text>`;
+    s+=`<text x="${cx}" y="${y+h*0.78}" text-anchor="middle" font-size="7" fill="#5b6b82">deteksi ΔI 30mA</text>`;}
+  if(kind==='appliance'){const flt=energized&&phase==='fault';const cx=x+w/2,cy=y+h*0.46;
+    s+=`<rect x="${cx-22}" y="${cy-14}" width="44" height="28" rx="3" fill="none" stroke="${flt?'#ff5d5d':'#8ea0b8'}" stroke-width="2"/>`;
+    if(flt){s+=`<path d="M${cx-6} ${cy-9} L${cx+2} ${cy} L${cx-3} ${cy} L${cx+6} ${cy+10}" stroke="#ffd34d" stroke-width="2" fill="none"/>`;s+=`<text x="${cx}" y="${y+h*0.84}" text-anchor="middle" font-size="8" fill="#ff5d5d" font-family="JetBrains Mono">FASA KE BODI!</text>`;}
+    else s+=`<text x="${cx}" y="${y+h*0.84}" text-anchor="middle" font-size="8" fill="#8ea0b8">bodi aman (PE)</text>`;}
   if(kind==='pcs'){const cx=x+w/2;
     s+=`<text x="${x+w*0.28}" y="${y+h*0.46}" text-anchor="middle" font-size="11" fill="${dischg?'#ffd34d':'#5b6b82'}">DC═</text>`;
     s+=`<text x="${cx}" y="${y+h*0.46}" text-anchor="middle" font-size="12" fill="#8ea0b8">${dischg?'⇄':'⇄'}</text>`;
@@ -1117,6 +1140,56 @@ LABS['bess']={
     <p>Risiko thermal runaway → butuh manajemen suhu (HVAC), deteksi gas/asap, dan pemadam khusus. BMS adalah lapis pertahanan pertama.</p>
     <h4>Di dunia kerja</h4>
     <p>Engineer BESS: desain & wiring container BESS skala utility (MWh), integrasi PCS-trafo-proteksi, komisioning, dan integrasi ke SCADA/grid.</p>`
+};
+
+/* ---- LAB: Sistem Pembumian & Proteksi RCD (S8 K3) ---- */
+LABS['earthing']={
+  id:'earthing', jalur:'S8', level:'Profesional', short:'Pembumian & RCD', sub:'Grounding TN-S, bonding bodi, & proteksi RCD/ELCB 30mA',
+  vb:'0 0 1040 600',
+  roleColor:{L:'#c9763b',N:'#6db3ff',sL:'#e89b5e',pe:'#3ddc84',fault:'#ff5d5d'},
+  roleLabel:{L:'Fasa (L)',sL:'Fasa tersaklar/terproteksi',N:'Netral (N)',pe:'Pembumian (PE) — kuning-hijau'},
+  comps:[
+    {id:'SRC',type:'src1pe',x:24,y:90},
+    {id:'RCD',type:'rcd',x:210,y:100},
+    {id:'APP',type:'appliance',x:520,y:90},
+    {id:'ROD',type:'rod',x:560,y:400},
+  ],
+  nets:[
+    {role:'L',t:['SRC.L','RCD.Li']},          // fasa → RCD
+    {role:'N',t:['SRC.N','RCD.Ni']},          // netral → RCD
+    {role:'sL',t:['RCD.Lo','APP.L']},         // RCD keluar (L) → peralatan
+    {role:'N',t:['RCD.No','APP.N']},          // RCD keluar (N) → peralatan
+    {role:'pe',t:['SRC.PE','APP.PE','ROD.e']},// PE: sumber + bodi peralatan + elektroda arde (bonding)
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Fasa (L) sumber → RCD (L)', why:'Semua arus L & N harus lewat RCD agar bisa dibandingkan.'},
+    {net:1, txt:'Netral (N) sumber → RCD (N)', why:'RCD mengukur SELISIH arus L vs N. Normal: sama (selisih ~0).'},
+    {net:2, txt:'RCD keluar (L) → peralatan', why:'Fasa terproteksi menuju beban.'},
+    {net:3, txt:'RCD keluar (N) → peralatan', why:'Netral kembali lewat RCD.'},
+    {net:4, txt:'PE: sumber + BODI peralatan + ELEKTRODA arde (bonding)', why:'INTI keselamatan: bodi logam dihubungkan ke PE & arde. Bila fasa menyentuh bodi, arus gangguan mengalir ke PE → selisih L-N muncul → RCD trip <0,3 detik. Tanpa PE, bodi tetap bertegangan & mematikan saat disentuh.'},
+  ],
+  phases:[{key:'normal',label:'▶ NORMAL — peralatan jalan, bodi aman'},{key:'fault',label:'⚡ GANGGUAN — fasa ke bodi → RCD TRIP'}],
+  phaseClosed:{ normal:['RCD'], fault:[] },   // normal RCD menutup; fault RCD trip (membuka)
+  sequence:[{phase:'normal',ms:3200},{phase:'fault'}],
+  okMsg:'<b>✓ Pembumian benar!</b> NORMAL: peralatan jalan, selisih L-N ≈ 0, bodi aman karena terhubung PE. GANGGUAN (fasa menyentuh bodi): arus bocor lewat PE → RCD mendeteksi selisih ≥30mA → <b>TRIP dalam <0,3 detik</b> sebelum membahayakan manusia. Bonding bodi + RCD = nyawa terselamatkan.',
+  tutorial:`
+    <h4>Kenapa pembumian (grounding) penting?</h4>
+    <p>Peralatan berbodi logam bisa "kesetrum" bila isolasi rusak & fasa menyentuh bodi. Tanpa pembumian, bodi jadi bertegangan dan menyetrum siapa pun yang menyentuh. Dengan <b>PE + bonding</b>, arus gangguan punya jalur aman ke bumi dan memicu proteksi.</p>
+    <h4>Sistem TN-S (umum di Indonesia)</h4>
+    <p>Netral (N) dan Pembumian (PE) <b>terpisah</b> sepanjang instalasi. PE kabel kuning-hijau menghubungkan semua bodi logam (kelas I) ke terminal arde → elektroda (batang arde) di tanah.</p>
+    <h4>RCD / ELCB — pendeteksi bocor</h4>
+    <ul>
+      <li>Mengukur <b>selisih</b> arus L vs N. Normal keduanya sama (selisih ≈ 0).</li>
+      <li>Bila ada bocor ke PE/tubuh (mis. fasa ke bodi, atau orang kesetrum), sebagian arus "kabur" lewat PE → L ≠ N → RCD <b>trip</b>.</li>
+      <li>Untuk proteksi manusia: <b>30mA</b>, trip < 300ms (di bawah ambang fibrilasi jantung).</li>
+    </ul>
+    <h4>Bonding ekipotensial</h4>
+    <p>Semua bagian logam (pipa air, rangka, bodi peralatan) di-<b>bonding</b> ke PE agar tidak ada beda potensial berbahaya antar benda yang bisa disentuh bersamaan.</p>
+    <h4>Catatan TT vs TN</h4>
+    <p>Di sistem <b>TT</b> (arde lokal sendiri), RCD WAJIB karena impedansi loop tinggi → MCB saja sering tak cukup cepat trip. RCD menjadi proteksi utama sentuh tak langsung.</p>
+    <h4>Di dunia kerja</h4>
+    <p>K3 listrik: pasang & uji sistem pembumian (ukur resistansi arde, target < 5Ω), uji trip RCD (waktu & arus), audit bonding — wajib sebelum instalasi diserahterimakan.</p>`
 };
 
 /* ===================== init ===================== */
