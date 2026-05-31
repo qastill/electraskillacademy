@@ -2713,30 +2713,30 @@ body {
   .lab-group-desc { display: none; }
 }
 /* Hub 16 jalur — muat 1 layar, kartu bergambar representatif, klik untuk masuk */
-.lab-jalur-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.lab-jalur-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .lab-jalur-card {
   position: relative; text-align: left; cursor: pointer; overflow: hidden;
-  display: flex; flex-direction: row; align-items: center; gap: 13px; min-height: 84px;
-  padding: 12px 14px; border-radius: 13px; background: #fff;
+  display: flex; flex-direction: row; align-items: center; gap: 18px; min-height: 104px;
+  padding: 18px 20px; border-radius: 15px; background: #fff;
   border: 1px solid rgba(26,29,46,0.1); box-shadow: 0 4px 12px rgba(26,29,46,0.07);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 .lab-jalur-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(26,29,46,0.18); border-color: transparent; }
 .lab-jalur-thumb {
-  position: relative; flex-shrink: 0; width: 58px; height: 58px; border-radius: 12px; overflow: hidden;
+  position: relative; flex-shrink: 0; width: 84px; height: 84px; border-radius: 14px; overflow: hidden;
   background: var(--g-grad, linear-gradient(135deg,#d4af6a,#9a7f4f));
 }
 .lab-jalur-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
 .lab-jalur-card:hover .lab-jalur-thumb img { transform: scale(1.08); }
 .lab-jalur-num {
-  position: absolute; left: 4px; bottom: 4px; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 7px;
-  display: grid; place-items: center; color: #fff; font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 0.72rem;
+  position: absolute; left: 6px; bottom: 6px; min-width: 30px; height: 30px; padding: 0 7px; border-radius: 9px;
+  display: grid; place-items: center; color: #fff; font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 0.98rem;
   background: rgba(10,12,20,0.6); border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(2px);
 }
-.lab-jalur-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-.lab-jalur-label { font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 0.96rem; color: var(--ink, #1a1d2e); line-height: 1.16; }
+.lab-jalur-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.lab-jalur-label { font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 1.24rem; color: var(--ink, #1a1d2e); line-height: 1.18; }
 .lab-jalur-count {
-  font-size: 0.66rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+  font-size: 0.82rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
   color: var(--gold-dark, #9a7f4f); display: inline-flex; align-items: center; gap: 6px;
 }
 .lab-jalur-count svg { opacity: 0.45; transition: transform 0.18s ease, opacity 0.18s ease; }
@@ -2750,8 +2750,8 @@ body {
 }
 .lab-back-btn:hover { border-color: var(--gold, #c9a96e); transform: translateX(-2px); }
 .lab-open-head { flex: 1; min-width: 200px; border-bottom: none; padding-bottom: 0; }
-@media (max-width: 980px) { .lab-jalur-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 680px) { .lab-jalur-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .lab-jalur-card { min-height: 78px; } .lab-jalur-thumb { width: 50px; height: 50px; } .lab-open-head .lab-group-desc { display: none; } }
+@media (max-width: 1100px) { .lab-jalur-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .lab-jalur-grid { grid-template-columns: 1fr; gap: 14px; } .lab-jalur-card { min-height: 92px; } .lab-jalur-thumb { width: 72px; height: 72px; } .lab-open-head .lab-group-desc { display: none; } }
 /* ElectraSim featured launch card */
 .electrasim-feature {
   display: flex; align-items: center; gap: 18px; margin-bottom: 22px;
