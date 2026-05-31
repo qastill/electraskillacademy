@@ -201,6 +201,16 @@ const COMP = {
     terms:[{k:'i1',side:'l',f:0.16,lbl:'I-S1'},{k:'i2',side:'l',f:0.28,lbl:'I-S2'},
            {k:'Vp',side:'l',f:0.5,lbl:'+'},{k:'Vm',side:'l',f:0.62,lbl:'−'},
            {k:'t1',side:'r',f:0.5,lbl:'TRIP+'},{k:'t2',side:'r',f:0.62,lbl:'TRIP−'}]},
+  // --- proteksi diferensial trafo 87T (S4 Transmisi) ---
+  diff87:{ w:170,h:260,label:'RELAI DIFERENSIAL',sub:'87T',kind:'relay',
+    terms:[{k:'h1',side:'l',f:0.12,lbl:'HV-S1'},{k:'h2',side:'l',f:0.22,lbl:'HV-S2'},
+           {k:'l1',side:'l',f:0.36,lbl:'LV-S1'},{k:'l2',side:'l',f:0.46,lbl:'LV-S2'},
+           {k:'Vp',side:'l',f:0.66,lbl:'+'},{k:'Vm',side:'l',f:0.76,lbl:'−'},
+           {k:'t1',side:'r',f:0.4,lbl:'TRIP+'},{k:'t2',side:'r',f:0.55,lbl:'TRIP−'}]},
+  pmtT:{ w:100,h:150,label:'PMT',sub:'CB',kind:'cb',
+    terms:[{k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
+           {k:'Ro',side:'r',f:0.22},{k:'So',side:'r',f:0.5},{k:'To',side:'r',f:0.78},
+           {k:'x1',side:'b',f:0.35,lbl:'TC+'},{k:'x2',side:'b',f:0.65,lbl:'TC−'}]},
   // --- sinkronisasi (S7): relai check-sync (25) + synchroscope ---
   syncR:{ w:170,h:240,label:'CHECK-SYNC 25',sub:'synchroscope',kind:'sync',
     terms:[{k:'vg1',side:'l',f:0.12,lbl:'VG-R'},{k:'vg2',side:'l',f:0.22,lbl:'VG-N'},
@@ -240,6 +250,11 @@ const COMP = {
     terms:[{k:'dcp',side:'l',f:0.26,lbl:'DC+'},{k:'dcn',side:'l',f:0.5,lbl:'DC−'},{k:'pe',side:'l',f:0.78,lbl:'PE'},
            {k:'R',side:'r',f:0.22,lbl:'R'},{k:'S',side:'r',f:0.5,lbl:'S'},{k:'T',side:'r',f:0.78,lbl:'T'}]},
   trafo3:{ w:120,h:170,label:'TRAFO STEP-UP',sub:'0.4/20 kV',kind:'pass',
+    terms:[{k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
+           {k:'Ro',side:'r',f:0.22,lbl:'r'},{k:'So',side:'r',f:0.5,lbl:'s'},{k:'To',side:'r',f:0.78,lbl:'t'}]},
+  // Trafo daya dengan ISOLASI galvanik (HV & LV beda node) — untuk proteksi 87T.
+  // Saat energize, daya "menembus" via phaseSrc (bukan union-find pass-through).
+  trafoIso:{ w:130,h:200,label:'TRAFO DAYA',sub:'150/20 kV',kind:'trafoiso',
     terms:[{k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
            {k:'Ro',side:'r',f:0.22,lbl:'r'},{k:'So',side:'r',f:0.5,lbl:'s'},{k:'To',side:'r',f:0.78,lbl:'t'}]},
   // --- pembumian & bonding (S8 K3) ---
@@ -405,6 +420,7 @@ function drawComp(inst,closed,live){
   const tripEn=kind==='relay'&&live.has(inst.id+'.t1');
   if(kind==='relay'){const flt=energized&&phase==='trip';stroke=flt?'#ff5d5d':(energized?'#3ddc84':'#33445f');accent=flt?'#ff9d9d':(energized?'#3ddc84':'#8ea0b8');}
   if(kind==='grid'){const glive=energized;stroke=glive?'#e8b339':'#33445f';accent=glive?'#f3d27a':'#8ea0b8';}
+  if(kind==='trafoiso'){stroke=energized?'#e8b339':'#33445f';accent=energized?'#f3d27a':'#8ea0b8';}
   if(kind==='sync'){const syn=energized&&phase==='sync';stroke=syn?'#3ddc84':(energized?'#e8b339':'#33445f');accent=syn?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
   const chg=kind==='charger'&&energized&&phase==='charge';
   if(kind==='charger'){stroke=chg?'#3ddc84':(energized?'#e8b339':'#33445f');accent=chg?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
@@ -467,6 +483,7 @@ function drawComp(inst,closed,live){
     s+=`<text x="${x+w*0.32}" y="${y+h*0.42}" text-anchor="middle" font-size="7" fill="#5b6b82">I&gt;  I&gt;&gt;</text>`;
   }
   if(kind==='grid'){const glive=energized;[0.2,0.5,0.8].forEach(f=>{s+=`<line x1="${x+8}" y1="${y+f*h}" x2="${x+w-8}" y2="${y+f*h}" stroke="${glive?'#e8b339':'#33445f'}" stroke-width="4" stroke-linecap="round"/>`;});}
+  if(kind==='trafoiso'){const col=energized?'#f3d27a':'#5b6b82';const cx=x+w/2,cy=y+h*0.5;[-1,1].forEach(d=>{s+=`<circle cx="${cx+d*12}" cy="${cy-14}" r="11" fill="none" stroke="${col}" stroke-width="2"/><circle cx="${cx+d*12}" cy="${cy+14}" r="11" fill="none" stroke="${col}" stroke-width="2"/>`;});s+=`<line x1="${cx}" y1="${y+h*0.2}" x2="${cx}" y2="${y+h*0.8}" stroke="${col}" stroke-width="1" stroke-dasharray="3 3"/>`;}
   if(kind==='earth'){const cx=x+w/2,cy=y+h*0.5;s+=`<line x1="${cx}" y1="${y+4}" x2="${cx}" y2="${cy}" stroke="#6df0a0" stroke-width="2.5"/><line x1="${cx-16}" y1="${cy}" x2="${cx+16}" y2="${cy}" stroke="#6df0a0" stroke-width="3"/><line x1="${cx-10}" y1="${cy+7}" x2="${cx+10}" y2="${cy+7}" stroke="#6df0a0" stroke-width="3"/><line x1="${cx-5}" y1="${cy+14}" x2="${cx+5}" y2="${cy+14}" stroke="#6df0a0" stroke-width="3"/>`;}
   if(kind==='charger'){const cx=x+w/2;
     s+=`<text x="${x+w*0.3}" y="${y+h*0.4}" text-anchor="middle" font-size="11" fill="#9db4ff">AC∿</text>`;
@@ -1295,6 +1312,78 @@ LABS['pv-gridtie']={
     <p>Di Indonesia skema bisa berbeda (ekspor dihargai faktor tertentu). Meter ekspor-impor mencatat dua arah; tagihan = impor − (ekspor × faktor).</p>
     <h4>Di dunia kerja</h4>
     <p>Solar engineer: desain string & inverter, wiring DC/AC, proteksi & grounding, komisioning + uji anti-islanding, dan pengurusan izin PLN.</p>`
+};
+
+/* ---- LAB: Bay GITET — Proteksi Diferensial Trafo 87T (S4) ---- */
+LABS['diff-87t']={
+  id:'diff-87t', jalur:'S4', level:'Advance', short:'Diferensial Trafo 87T', sub:'Proteksi diferensial trafo daya: CT 2 sisi → relai 87T → trip 2 PMT',
+  vb:'0 0 1140 620',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',hv:'#e8b339',lv:'#e89b5e',sec:'#5b8cff',p:'#ff6b6b',m:'#6db3ff',trip:'#ff9d3d'},
+  roleLabel:{hv:'Sisi HV (150kV)',lv:'Sisi LV (20kV)',sec:'Sekunder CT → relai 87T',p:'+110V DC',m:'−110V DC',trip:'Trip: 87T → koil trip PMT'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:70},
+    {id:'PMT1',type:'pmtT',x:150,y:60},
+    {id:'CT1',type:'ct3',x:300,y:60},
+    {id:'TR',type:'trafoIso',x:470,y:60},
+    {id:'CT2',type:'ct3',x:650,y:60},
+    {id:'PMT2',type:'pmtT',x:830,y:60},
+    {id:'BUS',type:'busbar3',x:990,y:70},
+    {id:'R87',type:'diff87',x:330,y:320},
+    {id:'BAT',type:'battDC',x:40,y:380},
+  ],
+  nets:[
+    {role:'hv',t:['SRC.R','PMT1.Ri']},{role:'hv',t:['SRC.S','PMT1.Si']},{role:'hv',t:['SRC.T','PMT1.Ti']},
+    {role:'hv',t:['PMT1.Ro','CT1.Ri']},{role:'hv',t:['PMT1.So','CT1.Si']},{role:'hv',t:['PMT1.To','CT1.Ti']},
+    {role:'hv',t:['CT1.Ro','TR.Ri']},{role:'hv',t:['CT1.So','TR.Si']},{role:'hv',t:['CT1.To','TR.Ti']},
+    {role:'lv',t:['TR.Ro','CT2.Ri']},{role:'lv',t:['TR.So','CT2.Si']},{role:'lv',t:['TR.To','CT2.Ti']},
+    {role:'lv',t:['CT2.Ro','PMT2.Ri']},{role:'lv',t:['CT2.So','PMT2.Si']},{role:'lv',t:['CT2.To','PMT2.Ti']},
+    {role:'lv',t:['PMT2.Ro','BUS.R']},{role:'lv',t:['PMT2.So','BUS.S']},{role:'lv',t:['PMT2.To','BUS.T']},
+    {role:'sec',t:['CT1.s1','R87.h1']},{role:'sec',t:['CT1.s2','R87.h2']},   // CT sisi HV → relai (HV)
+    {role:'sec',t:['CT2.s1','R87.l1']},{role:'sec',t:['CT2.s2','R87.l2']},   // CT sisi LV → relai (LV)
+    {role:'p',t:['BAT.P','R87.Vp']},
+    {role:'m',t:['BAT.M','R87.Vm','PMT1.x2','PMT2.x2']},                     // −DC bersama: relai & sisi bawah 2 koil trip
+    {role:'trip',t:['R87.t1','PMT1.x1','PMT2.x1']},                          // output trip 87T → koil trip KEDUA PMT
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'SUMBER 150kV → PMT1 (sisi HV)', why:'PMT sisi tegangan tinggi — masuk ke trafo lewat pemutus.'},
+    {net:3, txt:'PMT1 → CT1 (CT sisi HV)', why:'CT sisi HV mengukur arus MASUK ke trafo.'},
+    {net:6, txt:'CT1 → TRAFO (primer HV)', why:'Arus terukur menuju belitan trafo.'},
+    {net:9, txt:'TRAFO sekunder → CT2 (sisi LV)', why:'CT sisi LV mengukur arus KELUAR dari trafo.'},
+    {net:12, txt:'CT2 → PMT2 (sisi LV) → busbar', why:'Pemutus sisi tegangan rendah lalu ke rel.'},
+    {net:18, txt:'CT1 sekunder → relai 87T (input HV)', why:'87T membandingkan arus masuk (HV)…'},
+    {net:20, txt:'CT2 sekunder → relai 87T (input LV)', why:'…dengan arus keluar (LV). Normal: SAMA (dikoreksi rasio) → selisih ≈ 0.'},
+    {net:22, txt:'+110V DC → relai 87T', why:'Suplai relai & rangkaian trip dari baterai gardu.'},
+    {net:23, txt:'−110V DC → relai & sisi bawah KEDUA koil trip PMT', why:'Rel negatif bersama untuk relai dan dua koil trip.'},
+    {net:24, txt:'Output TRIP 87T → koil trip PMT1 DAN PMT2', why:'Bila selisih arus muncul (gangguan DI DALAM trafo), 87T trip KEDUA pemutus serempak untuk mengisolasi trafo dari dua sisi.'},
+  ],
+  phases:[{key:'run',label:'▶ NORMAL — arus masuk = keluar, 87T diam'},{key:'trip',label:'⚡ GANGGUAN INTERNAL — Idiff>0 → trip 2 PMT'}],
+  phaseClosed:{ run:['PMT1','PMT2'], trip:[] },     // run: kedua PMT closed; trip: keduanya open
+  phaseSrc:{ run:['TR.Ro','TR.So','TR.To'], trip:['R87.t1'] }, // run: sisi LV trafo "hidup" (isolasi galvanik); trip: energize koil trip
+  sequence:[{phase:'run',ms:3200},{phase:'trip'}],
+  okMsg:'<b>✓ Skema diferensial 87T benar!</b> NORMAL: arus masuk (CT HV) = arus keluar (CT LV) → selisih ≈ 0, relai diam. GANGGUAN INTERNAL trafo (hubung singkat belitan): arus tak seimbang → <b>Idiff > setting</b> → 87T trip <b>KEDUA PMT</b> serempak, mengisolasi trafo dari sisi HV & LV. Proteksi utama trafo daya.',
+  tutorial:`
+    <h4>Apa itu proteksi diferensial (87T)?</h4>
+    <p>Proteksi UTAMA trafo daya. Prinsip Hukum Kirchhoff arus: <b>arus yang masuk trafo harus sama dengan yang keluar</b> (setelah dikoreksi rasio belitan). Bila tidak sama → ada gangguan <b>di dalam zona</b> (antara dua CT) → trip.</p>
+    <h4>Cara kerja</h4>
+    <ul>
+      <li>CT di <b>sisi HV</b> mengukur arus masuk; CT di <b>sisi LV</b> mengukur arus keluar.</li>
+      <li>Relai 87T menghitung <b>arus diferensial</b> = |I_HV − I_LV| (terkoreksi).</li>
+      <li>Normal/gangguan luar: I_HV = I_LV → Idiff ≈ 0 → diam (stabil).</li>
+      <li>Gangguan dalam (hubung singkat belitan, flashover): arus bocor → Idiff besar → <b>trip</b>.</li>
+    </ul>
+    <h4>Kenapa trip KEDUA pemutus?</h4>
+    <p>Trafo dapat disuplai dari dua sisi. Untuk benar-benar mematikan gangguan, <b>PMT sisi HV dan LV harus trip bersamaan</b> — kalau hanya satu, sisi lain masih menyuplai busur api.</p>
+    <h4>Tantangan: arus inrush & rasio</h4>
+    <ul>
+      <li><b>Magnetizing inrush</b> saat trafo baru energize bisa bikin Idiff palsu → relai modern pakai <b>harmonic restraint</b> (blok pada harmonik ke-2).</li>
+      <li><b>Koreksi rasio & vektor</b> (mis. Dyn11) & mismatch CT diakomodasi setting/relai numerik.</li>
+      <li><b>Slope/bias</b>: makin besar arus through, makin besar ambang Idiff (agar stabil terhadap mismatch CT saat gangguan luar).</li>
+    </ul>
+    <h4>Zona proteksi</h4>
+    <p>Zona 87T = area di antara kedua CT. Gangguan di luar zona ditangani proteksi lain (OCR/distance). Tumpang-tindih zona penting agar tak ada titik buta.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Engineer proteksi transmisi: setting 87T (slope, harmonic restraint, rasio/vector group), wiring CT-relai-trip, dan uji injeksi (stability test) di GITET — relai mis. SEL-487E, MiCOM P64x, Siemens 7UT.</p>`
 };
 
 /* ===================== init ===================== */
