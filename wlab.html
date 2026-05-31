@@ -156,6 +156,23 @@ const COMP = {
   contactor1:{ w:110,h:130,label:'KONTAKTOR',sub:'',kind:'k1',
     terms:[{k:'A1',side:'l',f:0.2,lbl:'A1'},{k:'A2',side:'r',f:0.2,lbl:'A2'},
            {k:'T1',side:'l',f:0.8,lbl:'T1'},{k:'T2',side:'r',f:0.8,lbl:'T2'}]},
+  // --- control-circuit parts (DOL & lainnya) ---
+  // Kontaktor DOL: 3 kutub daya + coil A1/A2 + kontak bantu NO (13/14) untuk seal-in.
+  dolKM:{ w:120,h:210,label:'KONTAKTOR',sub:'KM',kind:'sw3aux',
+    terms:[{k:'Ri',side:'l',f:0.1,lbl:'R'},{k:'Si',side:'l',f:0.22,lbl:'S'},{k:'Ti',side:'l',f:0.34,lbl:'T'},
+           {k:'Ro',side:'r',f:0.1},{k:'So',side:'r',f:0.22},{k:'To',side:'r',f:0.34},
+           {k:'A1',side:'l',f:0.68,lbl:'A1'},{k:'A2',side:'r',f:0.68,lbl:'A2'},
+           {k:'x1',side:'l',f:0.88,lbl:'13'},{k:'x2',side:'r',f:0.88,lbl:'14'}]},
+  olAux:{ w:84,h:64,label:'OL (95-96)',sub:'NC',kind:'cpass',
+    terms:[{k:'in',side:'l',f:0.5,lbl:'95'},{k:'out',side:'r',f:0.5,lbl:'96'}]},
+  pbStop:{ w:84,h:64,label:'STOP',sub:'NC',kind:'cpass',
+    terms:[{k:'in',side:'l',f:0.5,lbl:''},{k:'out',side:'r',f:0.5,lbl:''}]},
+  estop:{ w:90,h:70,label:'E-STOP',sub:'NC',kind:'cpass',
+    terms:[{k:'in',side:'l',f:0.5,lbl:''},{k:'out',side:'r',f:0.5,lbl:''}]},
+  pbStart:{ w:84,h:64,label:'START',sub:'NO',kind:'sw',
+    terms:[{k:'in',side:'l',f:0.5,lbl:''},{k:'out',side:'r',f:0.5,lbl:''}]},
+  coil:{ w:84,h:64,label:'COIL',sub:'A1-A2',kind:'coil',
+    terms:[{k:'A1',side:'l',f:0.5,lbl:'A1'},{k:'A2',side:'r',f:0.5,lbl:'A2'}]},
 };
 
 /* terminal absolute coords */
@@ -210,18 +227,21 @@ function simUF(closed){
   LAB.comps.forEach(inst=>{const kind=COMP[inst.type].kind;const id=inst.id;
     if(kind==='pass'){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');}
     else if(kind==='sw3'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');} }
+    else if(kind==='sw3aux'){ if(closed[id]){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');u.u(id+'.x1',id+'.x2');} } // kontak bantu 13-14 ikut menutup (seal-in)
     else if(kind==='star'){ if(closed[id]){u.u(id+'.y1',id+'.y2');u.u(id+'.y2',id+'.y3');} }
     else if(kind==='delta'){ if(closed[id]){u.u(id+'.l1',id+'.m1');u.u(id+'.l2',id+'.m2');u.u(id+'.l3',id+'.m3');} }
+    else if(kind==='cpass'){ u.u(id+'.in',id+'.out'); } // kontak NC (STOP/E-STOP/OL 95-96) — normal tertutup
     else if(kind==='sw'){ if(closed[id]!==false)u.u(id+'.in',id+'.out'); }
+    // kind 'coil' = beban, tidak menjembatani (A1/A2 tetap dua node)
   });
   return u;
 }
 function liveSet(closed){
   const s=new Set(); if(!energized)return s;
   const u=simUF(closed);
-  // sources are live
-  const src=LAB.comps.find(c=>COMP[c.type].kind==='src');
-  const srcTerms=src?COMP[src.type].terms.map(t=>src.id+'.'+t.k):[];
+  // semua sumber (daya 3φ & kontrol) dianggap live
+  const srcTerms=[];
+  LAB.comps.forEach(c=>{ if(COMP[c.type].kind==='src')COMP[c.type].terms.forEach(t=>srcTerms.push(c.id+'.'+t.k)); });
   Object.keys(T).forEach(tk=>{ if(srcTerms.some(st=>u.c(tk,st)))s.add(tk); });
   return s;
 }
@@ -259,8 +279,11 @@ function drawComp(inst,closed,live){
   const on=closed[inst.id];
   let stroke='#33445f', accent='#8ea0b8';
   if(kind==='sw3'||kind==='sw'){ if(on!==false){stroke='#3ddc84';accent='#3ddc84';} }
-  if((kind==='star'||kind==='delta')&&on){stroke=LAB.roleColor.cmd||'#ffd34d';accent='#ffd34d';}
+  if((kind==='star'||kind==='delta'||kind==='sw3aux')&&on){stroke=LAB.roleColor.cmd||'#ffd34d';accent='#ffd34d';}
   if(kind==='src'){stroke='#3ddc84';accent='#3ddc84';}
+  if(kind==='cpass'){stroke='#5b8cff';accent='#9db4ff';}
+  const coilEn=kind==='coil'&&live.has(inst.id+'.A1')&&live.has(inst.id+'.A2');
+  if(coilEn){stroke=LAB.roleColor.cmd||'#ffd34d';accent='#ffd34d';}
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
@@ -273,7 +296,14 @@ function drawComp(inst,closed,live){
     if(run)s+=`<text x="${cx}" y="${cy-38}" text-anchor="middle" font-size="9" fill="#ffd34d" font-family="JetBrains Mono">${rev?'◀ REVERSE':'FORWARD ▶'}</text>`;
   }
   if(kind==='star'){const cx=x+w/2,cy=y+h-22;s+=`<path d="M${cx} ${cy} L${cx} ${cy-12} M${cx} ${cy} L${cx-10} ${cy+8} M${cx} ${cy} L${cx+10} ${cy+8}" stroke="${on?'#ffd34d':'#5b6b82'}" stroke-width="2.5" fill="none"/>`;}
-  if(kind==='sw3'||kind==='sw'){s+=`<text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-size="8.5" fill="${on!==false?'#3ddc84':'#ff5d5d'}">${on!==false?'ON':'OFF'}</text>`;}
+  if(kind==='sw3'||kind==='sw'){s+=`<text x="${x+w/2}" y="${y+h*0.45}" text-anchor="middle" font-size="8.5" fill="${on!==false?'#3ddc84':'#ff5d5d'}">${on!==false?'ON':'OFF'}</text>`;}
+  if(kind==='sw3aux'){
+    s+=`<line x1="${x+8}" y1="${y+h*0.55}" x2="${x+w-8}" y2="${y+h*0.55}" stroke="#26344a" stroke-width="1"/>`;
+    s+=`<text x="${x+w/2}" y="${y+h*0.7}" text-anchor="middle" font-size="8" fill="${on?'#ffd34d':'#5b6b82'}">${on?'TERTARIK':'lepas'}</text>`;
+    s+=`<text x="${x+w/2}" y="${y+h*0.83}" text-anchor="middle" font-size="7" fill="#5b6b82">aux 13-14</text>`;
+  }
+  if(kind==='cpass'){const cx=x+w/2,cy=y+h*0.55;s+=`<line x1="${cx-14}" y1="${cy}" x2="${cx+14}" y2="${cy-7}" stroke="#9db4ff" stroke-width="2.5" stroke-linecap="round"/><circle cx="${cx-14}" cy="${cy}" r="2.5" fill="#9db4ff"/><circle cx="${cx+14}" cy="${cy}" r="2.5" fill="#9db4ff"/>`;}
+  if(kind==='coil'){const cx=x+w/2,cy=y+h*0.55;s+=`<rect x="${cx-16}" y="${cy-7}" width="32" height="14" rx="3" fill="none" stroke="${coilEn?'#ffd34d':'#5b6b82'}" stroke-width="2"/>`;if(coilEn)s+=`<circle cx="${cx}" cy="${cy}" r="20" fill="none" stroke="#ffd34d" stroke-width="1" opacity=".5"><animate attributeName="r" values="12;22;12" dur="1.1s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="1.1s" repeatCount="indefinite"/></circle>`;}
   s+=`</g>`;
   return s;
 }
@@ -491,6 +521,78 @@ LABS['fwd-rev']={
     <p>Beri <b>jeda</b> sebelum membalik arah — biarkan motor berhenti dulu agar arus pembalikan (plugging) tidak merusak. Untuk beban berat dipakai timer transisi.</p>
     <h4>Di dunia kerja</h4>
     <p>Conveyor dua arah, pintu/gerbang otomatis, crane/hoist, pompa yang perlu di-flush balik, mesin produksi.</p>`
+};
+
+/* ---- LAB: DOL Starter + Overload + Emergency Stop (S2) ---- */
+LABS['dol-control']={
+  id:'dol-control', jalur:'S2', level:'Profesional', short:'DOL + E-Stop', sub:'Direct-Online starter: rangkaian daya + kontrol start/stop',
+  vb:'0 0 1000 660',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',out:'#e89b5e',mend:'#c98aff',ctl:'#5b8cff',seal:'#b07cff',a1:'#ffd34d',n:'#6db3ff'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',out:'Output ke motor',ctl:'Kontrol (fasa)',seal:'Jalur seal-in (START ∥ aux)',a1:'Ke coil A1',n:'Netral kontrol'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:36},
+    {id:'Q1',type:'mcb3',x:150,y:36},
+    {id:'KM',type:'dolKM',x:330,y:36},
+    {id:'OL',type:'overload',x:520,y:36},
+    {id:'M',type:'motor3box',x:720,y:60},
+    {id:'CTL',type:'src1',x:24,y:470},
+    {id:'ES',type:'estop',x:150,y:500},
+    {id:'OLA',type:'olAux',x:300,y:503},
+    {id:'STOP',type:'pbStop',x:440,y:503},
+    {id:'START',type:'pbStart',x:580,y:503, no:true},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','Q1.Ri']},
+    {role:'S',t:['SRC.S','Q1.Si']},
+    {role:'T',t:['SRC.T','Q1.Ti']},
+    {role:'R',t:['Q1.Ro','KM.Ri']},
+    {role:'S',t:['Q1.So','KM.Si']},
+    {role:'T',t:['Q1.To','KM.Ti']},
+    {role:'out',t:['KM.Ro','OL.Ri']},
+    {role:'out',t:['KM.So','OL.Si']},
+    {role:'out',t:['KM.To','OL.Ti']},
+    {role:'out',t:['OL.Ro','M.U1']},
+    {role:'out',t:['OL.So','M.V1']},
+    {role:'out',t:['OL.To','M.W1']},
+    {role:'mend',t:['M.U2','M.V2','M.W2']},
+    {role:'ctl',t:['CTL.L','ES.in']},
+    {role:'ctl',t:['ES.out','OLA.in']},
+    {role:'ctl',t:['OLA.out','STOP.in']},
+    {role:'seal',t:['STOP.out','START.in','KM.x1']},
+    {role:'a1',t:['START.out','KM.x2','KM.A1']},
+    {role:'n',t:['KM.A2','CTL.N']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'DAYA: SUMBER R/S/T → MCB Q1', why:'Rangkaian daya membawa arus besar ke motor.'},
+    {net:3, txt:'Q1 → kontak utama KM (R/S/T)', why:'Kontak utama kontaktor menyambung daya saat coil tertarik.'},
+    {net:6, txt:'KM → OVERLOAD → motor U1/V1/W1', why:'OL melindungi motor dari beban lebih; lalu ke belitan.'},
+    {net:12, txt:'Satukan U2/V2/W2 (titik bintang)', why:'Belitan motor terhubung di terminal box.'},
+    {net:13, txt:'KONTROL: fasa kontrol → E-STOP → OL(95-96) → STOP', why:'Rangkaian kontrol dirangkai SERI: E-Stop & kontak OL (NC) memutus coil saat darurat / overload.'},
+    {net:16, txt:'STOP → tombol START (NO) DAN kontak bantu KM 13', why:'START dan aux KM dipasang PARALEL — inilah jalur seal-in.'},
+    {net:17, txt:'START & aux KM 14 → coil A1', why:'Tekan START → coil tertarik → aux 13-14 menutup → menahan coil tetap ON walau START dilepas (mengunci sendiri).'},
+    {net:18, txt:'coil A2 → netral kontrol', why:'Menutup rangkaian coil.'},
+  ],
+  phases:[{key:'run',label:'▶ RUN — coil terkunci (seal-in)'}],
+  phaseClosed:{ run:['Q1','KM'] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring benar — DOL berjalan!</b> Tekan START → coil tertarik → <b>kontak bantu 13-14 mengunci</b> coil (seal-in) sehingga motor tetap jalan walau START dilepas. Tekan STOP / E-Stop / OL trip akan memutus coil & menghentikan motor.',
+  tutorial:`
+    <h4>Apa itu DOL (Direct-On-Line) Starter?</h4>
+    <p>Cara paling sederhana menjalankan motor: kontaktor menyambung tegangan penuh langsung ke motor. Cocok untuk motor kecil-menengah yang arus startnya masih ditoleransi jaringan.</p>
+    <h4>Dua rangkaian</h4>
+    <ul>
+      <li><b>Rangkaian DAYA</b> (arus besar): Sumber → MCB → kontak utama KM → Overload → Motor.</li>
+      <li><b>Rangkaian KONTROL</b> (arus kecil): mengatur coil kontaktor lewat tombol & proteksi.</li>
+    </ul>
+    <h4>Seal-in (pengunci) — inti DOL</h4>
+    <p>START itu tombol <b>momentary</b> (NO) — hanya menyambung selama ditekan. Agar motor tetap jalan setelah dilepas, kontak bantu <span class="badge">13-14</span> kontaktor dipasang <b>paralel</b> dengan START. Saat coil tertarik, aux 13-14 ikut menutup dan "mengunci" jalur — coil tetap dapat tegangan. Inilah <b>seal-in / holding contact</b>.</p>
+    <h4>Proteksi diseri di kontrol</h4>
+    <p><span class="badge">STOP</span>, <span class="badge">E-STOP</span>, dan kontak <span class="badge">OL 95-96</span> semuanya <b>NC (normally-closed)</b> dan dipasang <b>seri</b>. Menekan STOP/E-Stop atau OL yang trip akan memutus jalur → coil lepas → motor berhenti. Logika fail-safe: kabel putus = motor mati (aman).</p>
+    <h4>Urutan benar</h4>
+    <p>Fasa kontrol → E-Stop(NC) → OL(NC) → STOP(NC) → (START ∥ aux13-14) → coil A1; coil A2 → netral.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Starter paling umum di industri: pompa, fan, conveyor, mesin. Wajib paham seal-in & rantai proteksi sebelum pegang panel MCC.</p>`
 };
 
 /* ===================== init ===================== */
