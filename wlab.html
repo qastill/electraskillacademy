@@ -146,6 +146,11 @@ const COMP = {
   motor3box:{ w:170,h:150,label:'MOTOR 3φ',sub:'terminal box',kind:'motor',
     terms:[{k:'U1',side:'t',f:0.2,lbl:'U1'},{k:'V1',side:'t',f:0.5,lbl:'V1'},{k:'W1',side:'t',f:0.8,lbl:'W1'},
            {k:'U2',side:'b',f:0.2,lbl:'U2'},{k:'V2',side:'b',f:0.5,lbl:'V2'},{k:'W2',side:'b',f:0.8,lbl:'W2'}]},
+  // VFD / inverter frekuensi (S2): daya 3φ masuk (L1/L2/L3), keluar (U/V/W) ke motor, + kontrol DI
+  vfd:{ w:160,h:240,label:'VFD',sub:'inverter frekuensi',kind:'vfd',
+    terms:[{k:'Ri',side:'l',f:0.1,lbl:'L1'},{k:'Si',side:'l',f:0.2,lbl:'L2'},{k:'Ti',side:'l',f:0.3,lbl:'L3'},
+           {k:'U',side:'r',f:0.1,lbl:'U'},{k:'V',side:'r',f:0.2,lbl:'V'},{k:'W',side:'r',f:0.3,lbl:'W'},
+           {k:'P24',side:'l',f:0.62,lbl:'24V'},{k:'DI',side:'l',f:0.74,lbl:'DI1·RUN'},{k:'CM',side:'l',f:0.86,lbl:'COM'}]},
   // generic small parts reused by other labs later
   src1:{ w:78,h:120,label:'SUMBER 1φ',sub:'220V',kind:'src',
     terms:[{k:'L',side:'r',f:0.3,lbl:'L'},{k:'N',side:'r',f:0.7,lbl:'N'}]},
@@ -449,6 +454,8 @@ function drawComp(inst,closed,live){
   if(coilEn){stroke=LAB.roleColor.cmd||'#ffd34d';accent='#ffd34d';}
   const loadEn=kind==='load'&&live.has(inst.id+'.a')&&live.has(inst.id+'.b');
   if(loadEn){stroke='#ffd34d';accent='#ffd34d';}
+  const vfdRun=kind==='vfd'&&energized&&phase!=='off';
+  if(kind==='vfd'){stroke=vfdRun?'#3ddc84':(energized?'#e8b339':'#33445f');accent=vfdRun?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
   if(kind==='plc'){const plcRun=energized&&phase!=='off';stroke=plcRun?'#3ddc84':'#33445f';accent=plcRun?'#3ddc84':'#8ea0b8';}
   if(kind==='cb'){ if(on!==false){stroke='#3ddc84';accent='#3ddc84';} else if(energized){stroke='#ff5d5d';accent='#ff5d5d';} }
   if(kind==='ct3'){stroke='#5b8cff';accent='#9db4ff';}
@@ -497,6 +504,13 @@ function drawComp(inst,closed,live){
   if(kind==='cpass'){const cx=x+w/2,cy=y+h*0.55;s+=`<line x1="${cx-14}" y1="${cy}" x2="${cx+14}" y2="${cy-7}" stroke="#9db4ff" stroke-width="2.5" stroke-linecap="round"/><circle cx="${cx-14}" cy="${cy}" r="2.5" fill="#9db4ff"/><circle cx="${cx+14}" cy="${cy}" r="2.5" fill="#9db4ff"/>`;}
   if(kind==='coil'){const cx=x+w/2,cy=y+h*0.55;s+=`<rect x="${cx-16}" y="${cy-7}" width="32" height="14" rx="3" fill="none" stroke="${coilEn?'#ffd34d':'#5b6b82'}" stroke-width="2"/>`;if(coilEn)s+=`<circle cx="${cx}" cy="${cy}" r="20" fill="none" stroke="#ffd34d" stroke-width="1" opacity=".5"><animate attributeName="r" values="12;22;12" dur="1.1s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="1.1s" repeatCount="indefinite"/></circle>`;}
   if(kind==='load'){const cx=x+w/2,cy=y+h*0.52;s+=`<circle cx="${cx}" cy="${cy}" r="13" fill="${loadEn?'#ffd34d':'#0a0e16'}" stroke="${loadEn?'#ffe08a':'#5b6b82'}" stroke-width="2"/><path d="M${cx-6} ${cy+9} L${cx-6} ${cy+13} M${cx+6} ${cy+9} L${cx+6} ${cy+13}" stroke="${loadEn?'#ffe08a':'#5b6b82'}" stroke-width="2"/>`;if(loadEn)s+=`<circle cx="${cx}" cy="${cy}" r="18" fill="none" stroke="#ffd34d" stroke-width="1" opacity=".5"><animate attributeName="opacity" values=".7;.1;.7" dur="1s" repeatCount="indefinite"/></circle>`;}
+  if(kind==='vfd'){const cx=x+w/2;
+    s+=`<text x="${x+w*0.3}" y="${y+h*0.48}" text-anchor="middle" font-size="10" fill="#9db4ff">AC∿</text>`;
+    s+=`<text x="${cx}" y="${y+h*0.48}" text-anchor="middle" font-size="11" fill="#8ea0b8">⇒</text>`;
+    s+=`<text x="${x+w*0.7}" y="${y+h*0.48}" text-anchor="middle" font-size="9.5" fill="${vfdRun?'#ffd34d':'#5b6b82'}">f &amp; V atur</text>`;
+    s+=`<rect x="${x+14}" y="${y+h*0.86}" width="${w-28}" height="20" rx="4" fill="${vfdRun?'#0a1f14':'#1a1206'}" stroke="${vfdRun?'#1c5b3a':'#5a4a16'}"/>`;
+    s+=`<text x="${cx}" y="${y+h*0.86+14}" text-anchor="middle" font-size="9" fill="${vfdRun?'#3ddc84':'#f3d27a'}" font-family="JetBrains Mono">${vfdRun?'RUN · ramp ↑':'stop'}</text>`;
+  }
   if(kind==='plc'){
     const plcRun=energized&&phase!=='off';
     // input/output LED indikator
@@ -2026,6 +2040,112 @@ LABS['tns-3f']={
     <p>Saat fasa menyentuh bodi terbonding, terbentuk loop gangguan berimpedansi rendah → arus besar → MCB/MCCB atau RCD memutus dalam waktu aman (lihat lab Pembumian & RCD untuk proteksi arus bocor).</p>
     <h4>Di dunia kerja</h4>
     <p>Ahli K3 listrik: rancang sistem pembumian (TN-S/TN-C-S/TT), pasang MET & bonding, ukur resistansi elektroda (≤ beberapa Ω), & verifikasi loop impedance sesuai PUIL/IEC.</p>`
+};
+
+/* ---- LAB: VFD → Motor 3φ (S2) ---- */
+LABS['vfd-motor']={
+  id:'vfd-motor', jalur:'S2', level:'Advance', short:'VFD → Motor', sub:'Inverter frekuensi: daya 3φ → VFD → motor, + sinyal RUN',
+  vb:'0 0 1120 600',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',u:'#ff9d5c',mend:'#c98aff',p:'#3ddc84',cmd:'#ffd34d'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',u:'Keluaran VFD (U/V/W, frek. variabel)',mend:'Titik bintang motor',p:'24V kontrol VFD',cmd:'Sinyal RUN → DI1'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:80},
+    {id:'Q1',type:'mcb3',x:190,y:80},
+    {id:'VFD',type:'vfd',x:370,y:80},
+    {id:'M',type:'motor3box',x:640,y:120},
+    {id:'RUN',type:'pbNO',x:380,y:430, no:true},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','Q1.Ri']},{role:'S',t:['SRC.S','Q1.Si']},{role:'T',t:['SRC.T','Q1.Ti']},
+    {role:'R',t:['Q1.Ro','VFD.Ri']},{role:'S',t:['Q1.So','VFD.Si']},{role:'T',t:['Q1.To','VFD.Ti']},
+    {role:'u',t:['VFD.U','M.U1']},{role:'u',t:['VFD.V','M.V1']},{role:'u',t:['VFD.W','M.W1']},
+    {role:'mend',t:['M.U2','M.V2','M.W2']},
+    {role:'p',t:['VFD.P24','RUN.in']},                   // 24V internal VFD → tombol RUN
+    {role:'cmd',t:['RUN.out','VFD.DI']},                 // RUN → input digital DI1
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Sumber R/S/T → MCB Q1', why:'Proteksi & isolasi sisi masuk VFD.'},
+    {net:3, txt:'MCB → VFD masukan L1/L2/L3', why:'Daya 3φ tetap (50Hz) masuk ke penyearah VFD.'},
+    {net:6, txt:'VFD keluaran U/V/W → motor U1/V1/W1', why:'VFD menghasilkan tegangan & frekuensi VARIABEL untuk mengatur kecepatan motor.'},
+    {net:9, txt:'Satukan U2/V2/W2 (titik bintang motor)', why:'Sambungan belitan motor di terminal box.'},
+    {net:10, txt:'KONTROL: 24V VFD → tombol RUN', why:'VFD menyediakan 24V untuk rangkaian kontrol input.'},
+    {net:11, txt:'Tombol RUN → input digital DI1', why:'Saat DI1 aktif, VFD menjalankan motor sesuai ramp & referensi frekuensi. JANGAN start/stop motor dengan memutus daya utama VFD.'},
+  ],
+  phases:[{key:'run',label:'▶ RUN — VFD ramp-up, motor berputar mulus'}],
+  phaseClosed:{ run:['Q1','RUN'] },
+  phaseSrc:{ run:['VFD.U','VFD.V','VFD.W','VFD.P24'] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring VFD benar!</b> Daya 3φ → VFD → motor; sinyal RUN lewat input digital (bukan memutus daya). VFD mengatur kecepatan dengan mengubah frekuensi & tegangan keluaran (V/f), memberi start mulus tanpa lonjakan arus seperti DOL.',
+  tutorial:`
+    <h4>Apa itu VFD?</h4>
+    <p>Variable Frequency Drive (inverter) mengubah daya 3φ frekuensi tetap (50Hz) menjadi frekuensi & tegangan <b>variabel</b>. Karena putaran motor induksi ∝ frekuensi, VFD mengatur kecepatan secara halus.</p>
+    <h4>Tiga blok internal</h4>
+    <ul>
+      <li><b>Penyearah</b> (AC→DC), <b>DC bus</b> (kapasitor), <b>inverter IGBT</b> (DC→AC variabel).</li>
+    </ul>
+    <h4>Aturan wiring penting</h4>
+    <ul>
+      <li>Daya masuk ke <b>L1/L2/L3</b>, motor ke <b>U/V/W</b> — JANGAN terbalik (merusak VFD).</li>
+      <li><b>Start/stop lewat sinyal kontrol (DI)</b>, bukan memutus daya utama — agar kapasitor DC bus & elektronik awet.</li>
+      <li>Gunakan kabel motor berperisai (shielded) untuk menekan EMI/harmonik.</li>
+    </ul>
+    <h4>VFD vs Star-Delta / DOL</h4>
+    <p>DOL & star-delta hanya mengurangi arus start; VFD mengatur kecepatan penuh + start sangat mulus + hemat energi pada beban pompa/fan (hukum afinitas: daya ∝ rpm³).</p>
+    <h4>Di dunia kerja</h4>
+    <p>Engineer industri: wiring & parameterisasi VFD (frekuensi dasar, ramp, proteksi), pemilihan rating, mitigasi harmonik, & integrasi ke PLC/HMI.</p>`
+};
+
+/* ---- LAB: Distribusi bertingkat MDP → SDP (S9) ---- */
+LABS['mdp-sdp']={
+  id:'mdp-sdp', jalur:'S9', level:'Profesional', short:'MDP → SDP Bertingkat', sub:'Panel utama (MDP) menyuplai sub-panel (SDP) — selektivitas proteksi',
+  vb:'0 0 1240 360',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',mdp:'#e8b339',sdp:'#e89b5e',ld:'#3ddc84'},
+  roleLabel:{R:'Incoming R',S:'Incoming S',T:'Incoming T',mdp:'Busbar MDP (panel utama)',sdp:'Busbar SDP (sub-panel)',ld:'Feeder ke beban'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:90},
+    {id:'MAIN',type:'mcb3',x:170,y:90},
+    {id:'MDP',type:'busbar3',x:330,y:90},
+    {id:'FDR',type:'mcb3',x:500,y:90},
+    {id:'SDP',type:'busbar3',x:660,y:90},
+    {id:'G1',type:'mcb3',x:830,y:90},
+    {id:'L1',type:'load3',x:1010,y:110},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','MAIN.Ri']},{role:'S',t:['SRC.S','MAIN.Si']},{role:'T',t:['SRC.T','MAIN.Ti']},
+    {role:'mdp',t:['MAIN.Ro','MDP.R']},{role:'mdp',t:['MAIN.So','MDP.S']},{role:'mdp',t:['MAIN.To','MDP.T']},
+    {role:'mdp',t:['MDP.Ro','FDR.Ri']},{role:'mdp',t:['MDP.So','FDR.Si']},{role:'mdp',t:['MDP.To','FDR.Ti']},
+    {role:'sdp',t:['FDR.Ro','SDP.R']},{role:'sdp',t:['FDR.So','SDP.S']},{role:'sdp',t:['FDR.To','SDP.T']},
+    {role:'sdp',t:['SDP.Ro','G1.Ri']},{role:'sdp',t:['SDP.So','G1.Si']},{role:'sdp',t:['SDP.To','G1.Ti']},
+    {role:'ld',t:['G1.Ro','L1.R']},{role:'ld',t:['G1.So','L1.S']},{role:'ld',t:['G1.To','L1.T']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Incoming R/S/T → MCCB utama MDP', why:'Pemutus utama panel utama (Main Distribution Panel).'},
+    {net:3, txt:'MCCB utama → busbar MDP', why:'Busbar MDP rel pembagi daya panel utama.'},
+    {net:6, txt:'Busbar MDP → MCCB feeder (menuju SDP)', why:'Feeder breaker memproteksi kabel antar-panel.'},
+    {net:9, txt:'Feeder → busbar SDP', why:'Sub-panel (Sub Distribution Panel) di area/lantai lain.'},
+    {net:12, txt:'Busbar SDP → MCB grup → beban', why:'Tiga breaker berderet (utama→feeder→grup) harus terkoordinasi.'},
+    {net:15, txt:'MCB grup → beban', why:'Selektivitas: gangguan di beban cukup ditrip MCB grup terdekat; feeder & MCCB utama tetap menyala melayani panel lain.'},
+  ],
+  phases:[{key:'on',label:'▶ ENERGIZE — MDP → feeder → SDP → grup → beban'}],
+  phaseClosed:{ on:['MAIN','FDR','G1'] },
+  sequence:[{phase:'on'}],
+  okMsg:'<b>✓ Wiring distribusi bertingkat benar!</b> Incoming → MCCB utama → busbar MDP → feeder → busbar SDP → MCB grup → beban. Struktur berjenjang ini memungkinkan SELEKTIVITAS: gangguan kecil cukup memutus breaker terdekat, panel di atasnya tetap melayani beban lain.',
+  tutorial:`
+    <h4>Hirarki distribusi: MDP → SDP → beban</h4>
+    <p><b>MDP</b> (Main Distribution Panel) menerima incoming & membaginya ke beberapa feeder. Tiap feeder bisa menyuplai <b>SDP</b> (Sub Distribution Panel) di lantai/area berbeda, yang lalu membagi lagi ke MCB grup beban.</p>
+    <h4>Selektivitas (diskriminasi) proteksi</h4>
+    <p>Tujuannya: bila terjadi gangguan, hanya breaker <b>paling dekat</b> dengan gangguan yang trip, sehingga pemadaman seminimal mungkin. Dicapai dengan koordinasi rating & karakteristik trip (arus & waktu) bertingkat: MCB grup &lt; MCCB feeder &lt; MCCB utama.</p>
+    <h4>Komponen kunci</h4>
+    <ul>
+      <li><span class="badge">MCCB utama</span> proteksi & isolasi seluruh panel.</li>
+      <li><span class="badge">Busbar</span> rel tembaga pembagi daya.</li>
+      <li><span class="badge">Feeder breaker</span> melindungi kabel penghubung antar-panel.</li>
+      <li><span class="badge">MCB grup</span> proteksi tiap sirkit akhir.</li>
+    </ul>
+    <h4>Di dunia kerja (sales/teknis)</h4>
+    <p>Engineer panel/technical sales: membaca SLD bertingkat, menyusun BoQ (busbar, breaker, rating kA), menjamin selektivitas & ukuran kabel feeder, serta menjelaskan keandalan sistem ke pelanggan.</p>`
 };
 
 /* ===================== init ===================== */
