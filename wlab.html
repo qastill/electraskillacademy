@@ -785,6 +785,65 @@ LABS['ocr-gfr']={
     <p>Inti pekerjaan proteksi PLN: setting & wiring relai (mis. SEPAM, MiCOM, REF615) di kubikel 20kV, uji injeksi arus, dan koordinasi gardu.</p>`
 };
 
+/* ---- LAB: ATS PLN ↔ Genset (S1) ---- */
+LABS['ats']={
+  id:'ats', jalur:'S1', level:'Profesional', short:'ATS PLN↔Genset', sub:'Automatic Transfer Switch: changeover otomatis + interlock',
+  vb:'0 0 1020 600',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',rg:'#ff9d6b',sg:'#ffe08a',tg:'#9dd0ff',bus:'#e8b339'},
+  roleLabel:{R:'PLN — Fasa R',S:'PLN — Fasa S',T:'PLN — Fasa T',rg:'Genset — R',sg:'Genset — S',tg:'Genset — T',bus:'Busbar beban (output ATS)'},
+  comps:[
+    {id:'PLN',type:'src3',x:24,y:50},
+    {id:'GEN',type:'src3',x:24,y:330},
+    {id:'KMP',type:'contactor3',x:300,y:60, no:true},
+    {id:'KMG',type:'contactor3',x:300,y:330, no:true},
+    {id:'LOAD',type:'motor3box',x:700,y:170},
+  ],
+  nets:[
+    {role:'R',t:['PLN.R','KMP.Ri']},
+    {role:'S',t:['PLN.S','KMP.Si']},
+    {role:'T',t:['PLN.T','KMP.Ti']},
+    {role:'rg',t:['GEN.R','KMG.Ri']},
+    {role:'sg',t:['GEN.S','KMG.Si']},
+    {role:'tg',t:['GEN.T','KMG.Ti']},
+    {role:'bus',t:['KMP.Ro','KMG.Ro','LOAD.U1']},   // output kedua kontaktor → busbar R → beban
+    {role:'bus',t:['KMP.So','KMG.So','LOAD.V1']},   // busbar S
+    {role:'bus',t:['KMP.To','KMG.To','LOAD.W1']},   // busbar T
+    {role:'bus',t:['LOAD.U2','LOAD.V2','LOAD.W2']}, // titik bintang beban
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'PLN R/S/T → kontaktor utama PLN (KMP)', why:'Sumber utama (PLN) masuk lewat kontaktor KMP.'},
+    {net:3, txt:'GENSET R/S/T → kontaktor genset (KMG)', why:'Sumber cadangan (genset) masuk lewat kontaktor KMG.'},
+    {net:6, txt:'Output KMP & KMG → BUSBAR → beban (R)', why:'Kedua kontaktor menyuplai busbar yang SAMA — beban tidak peduli sumbernya, asal hanya satu aktif.'},
+    {net:7, txt:'Busbar fasa S → beban V1', why:'Lanjutkan busbar fasa S ke beban.'},
+    {net:8, txt:'Busbar fasa T → beban W1', why:'Lanjutkan busbar fasa T ke beban.'},
+    {net:9, txt:'Satukan ujung belitan beban (U2/V2/W2)', why:'Beban gedung (model bintang).'},
+  ],
+  phases:[{key:'pln',label:'▶ NORMAL — PLN suplai (KMP)'},{key:'gen',label:'⚡ PLN PADAM — Genset suplai (KMG)'}],
+  phaseClosed:{ pln:['KMP'], gen:['KMG'] },   // hanya satu kontaktor menutup per kondisi (interlock)
+  sequence:[{phase:'pln',ms:3000},{phase:'gen'}],
+  okMsg:'<b>✓ ATS benar — changeover bekerja!</b> Kondisi NORMAL: <b>KMP</b> menutup, beban disuplai <b>PLN</b>. Saat PLN padam: KMP lepas, <b>KMG</b> menutup, beban pindah ke <b>Genset</b>. KMP & KMG <b>tidak pernah menutup bersamaan</b> — itulah interlock anti-paralel.',
+  tutorial:`
+    <h4>Apa itu ATS (Automatic Transfer Switch)?</h4>
+    <p>Saklar pemindah otomatis antara <b>dua sumber</b>: PLN (utama) dan Genset (cadangan). Saat PLN padam, ATS memerintah genset start lalu memindah beban ke genset; saat PLN kembali, beban dikembalikan ke PLN dan genset dimatikan.</p>
+    <h4>Topologi inti</h4>
+    <ul>
+      <li>Dua kontaktor/changeover: <span class="badge">KMP</span> (ke PLN) dan <span class="badge">KMG</span> (ke genset).</li>
+      <li>Output keduanya bertemu di <b>busbar beban</b> yang sama.</li>
+    </ul>
+    <h4>Interlock — WAJIB (aturan emas)</h4>
+    <p><b>KMP & KMG tak boleh menutup bersamaan.</b> Kalau keduanya menutup, PLN & genset ter-paralel tanpa sinkronisasi → arus balik besar, kerusakan, bahaya bagi petugas PLN yang mengira jaringan mati. Maka dipasang:</p>
+    <ul>
+      <li><b>Interlock listrik:</b> kontak NC tiap kontaktor diseri ke coil lawannya.</li>
+      <li><b>Interlock mekanik:</b> tuas yang mencegah keduanya tertarik bersamaan.</li>
+    </ul>
+    <p>Simulator hanya menutup satu kontaktor per kondisi — meniru interlock ini.</p>
+    <h4>Urutan kerja ATS (sekilas)</h4>
+    <p>PLN padam → tunda (mastикан benar padam) → start genset → tunggu tegangan/frekuensi stabil → buka KMP, tutup KMG. PLN kembali → tunda → buka KMG, tutup KMP → cooling-down genset → stop.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Wajib di rumah sakit, data center, gedung tinggi, pabrik, dan fasilitas kritikal. Teknisi instalasi merakit panel ATS-AMF & menyetel timer transfer.</p>`
+};
+
 /* ===================== init ===================== */
 function buildPicker(){
   const ids=Object.keys(LABS);
