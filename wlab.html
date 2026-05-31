@@ -286,6 +286,15 @@ const COMP = {
            {k:'Lo',side:'r',f:0.3,lbl:'L'},{k:'No',side:'r',f:0.7,lbl:'N'}]},
   grid1:{ w:70,h:120,label:'GRID PLN',sub:'230V',kind:'grid1',
     terms:[{k:'L',side:'l',f:0.3,lbl:'L'},{k:'N',side:'l',f:0.7,lbl:'N'}]},
+  // --- hidrogen (S14) ---
+  rectifier:{ w:140,h:180,label:'RECTIFIER',sub:'AC→DC daya',kind:'charger',
+    terms:[{k:'Ri',side:'l',f:0.2,lbl:'R'},{k:'Si',side:'l',f:0.38,lbl:'S'},{k:'Ti',side:'l',f:0.56,lbl:'T'},{k:'PEi',side:'l',f:0.82,lbl:'PE'},
+           {k:'dcp',side:'r',f:0.34,lbl:'DC+'},{k:'dcn',side:'r',f:0.62,lbl:'DC−'}]},
+  electrolyzer:{ w:150,h:160,label:'ELEKTROLISER',sub:'sel H₂',kind:'load',
+    terms:[{k:'a',side:'l',f:0.34,lbl:'+'},{k:'b',side:'l',f:0.66,lbl:'−'}]},
+  // --- WtE / biogas (S13) ---
+  genset3:{ w:90,h:160,label:'GENSET BIOGAS',sub:'400V 3φ',kind:'src',
+    terms:[{k:'R',side:'r',f:0.22,lbl:'R'},{k:'S',side:'r',f:0.5,lbl:'S'},{k:'T',side:'r',f:0.78,lbl:'T'}]},
 };
 
 /* terminal absolute coords */
@@ -1384,6 +1393,105 @@ LABS['diff-87t']={
     <p>Zona 87T = area di antara kedua CT. Gangguan di luar zona ditangani proteksi lain (OCR/distance). Tumpang-tindih zona penting agar tak ada titik buta.</p>
     <h4>Di dunia kerja</h4>
     <p>Engineer proteksi transmisi: setting 87T (slope, harmonic restraint, rasio/vector group), wiring CT-relai-trip, dan uji injeksi (stability test) di GITET — relai mis. SEL-487E, MiCOM P64x, Siemens 7UT.</p>`
+};
+
+/* ---- LAB: Wiring Elektroliser Hidrogen (S14) ---- */
+LABS['h2-electrolyzer']={
+  id:'h2-electrolyzer', jalur:'S14', level:'Advance', short:'Elektroliser H₂', sub:'Sumber 3φ → MCB → rectifier (AC→DC) → elektroliser + pembumian',
+  vb:'0 0 1000 540',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',dcp:'#ff6b6b',dcn:'#6db3ff',pe:'#3ddc84'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',dcp:'DC + ke stack',dcn:'DC − ke stack',pe:'Pembumian (PE)'},
+  comps:[
+    {id:'SRC',type:'src3pe',x:24,y:80},
+    {id:'Q1',type:'mcb3',x:200,y:80},
+    {id:'REC',type:'rectifier',x:380,y:80},
+    {id:'EL',type:'electrolyzer',x:640,y:120},
+    {id:'GND',type:'rod',x:420,y:380},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','Q1.Ri']},{role:'S',t:['SRC.S','Q1.Si']},{role:'T',t:['SRC.T','Q1.Ti']},
+    {role:'R',t:['Q1.Ro','REC.Ri']},{role:'S',t:['Q1.So','REC.Si']},{role:'T',t:['Q1.To','REC.Ti']},
+    {role:'dcp',t:['REC.dcp','EL.a']},
+    {role:'dcn',t:['REC.dcn','EL.b']},
+    {role:'pe',t:['SRC.PE','REC.PEi','GND.e']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'SUMBER 3φ R/S/T → MCB Q1', why:'Suplai AC masuk lewat pengaman utama.'},
+    {net:3, txt:'MCB → RECTIFIER (input AC)', why:'Rectifier mengubah AC jadi DC arus besar — elektroliser butuh DC.'},
+    {net:6, txt:'Rectifier DC+ → elektroliser (+)', why:'DC dialirkan ke sel; di sini air dipecah jadi H₂ & O₂.'},
+    {net:7, txt:'Rectifier DC− → elektroliser (−)', why:'Menutup rangkaian DC.'},
+    {net:8, txt:'PE: sumber + rectifier + ARDE', why:'Pembumian wajib — area produksi H₂ rawan, grounding & bonding penting cegah percikan.'},
+  ],
+  phases:[{key:'run',label:'⚡ PRODUKSI — DC mengalir, H₂ terbentuk'}],
+  phaseClosed:{ run:['Q1'] },
+  phaseSrc:{ run:['REC.dcp','REC.dcn'] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring elektroliser benar!</b> AC 3φ → MCB → rectifier (AC→DC) → elektroliser. DC arus besar memecah air jadi <b>hidrogen hijau</b> (di katoda) & oksigen (di anoda). Pembumian wajib di area produksi H₂. Inilah jantung produksi green hydrogen.',
+  tutorial:`
+    <h4>Bagaimana hidrogen hijau diproduksi?</h4>
+    <p>Lewat <b>elektrolisis</b>: arus DC dialirkan ke air → terpecah jadi H₂ (katoda) & O₂ (anoda). Jika listriknya dari EBT (surya/angin), hasilnya disebut <b>green hydrogen</b>.</p>
+    <h4>Kenapa butuh rectifier?</h4>
+    <p>Elektroliser butuh <b>DC arus sangat besar</b> (ribuan Ampere, tegangan rendah). Rectifier (penyearah daya) mengubah AC 3φ jaringan menjadi DC terkontrol. Ini komponen termahal & terpenting di plant.</p>
+    <h4>Komponen utama</h4>
+    <ul>
+      <li><span class="badge">MCB/proteksi AC</span> sisi masukan jaringan.</li>
+      <li><span class="badge">Rectifier/transformer-rectifier</span> AC→DC arus besar + kontrol.</li>
+      <li><span class="badge">Stack elektroliser</span> (PEM/Alkaline) tempat reaksi.</li>
+      <li><span class="badge">PE/pembumian</span> wajib — area H₂ rawan ledakan, butuh bonding & klasifikasi area berbahaya.</li>
+    </ul>
+    <h4>Keselamatan</h4>
+    <p>H₂ sangat mudah terbakar. Wajib: ventilasi, deteksi gas, bonding ekipotensial, peralatan ex-proof di zona berbahaya.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Engineer hidrogen: desain power supply (rectifier), proteksi & grounding, integrasi ke sumber EBT, dan komisioning plant elektroliser.</p>`
+};
+
+/* ---- LAB: Evakuasi Daya Genset Biogas PLTSa (S13) ---- */
+LABS['wte-genset']={
+  id:'wte-genset', jalur:'S13', level:'Profesional', short:'Genset Biogas WtE', sub:'Genset biogas → MCB 3φ → trafo step-up → grid (evakuasi daya PLTSa)',
+  vb:'0 0 1040 540',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',mv:'#e8b339',pe:'#3ddc84'},
+  roleLabel:{R:'Fasa R 400V',S:'Fasa S',T:'Fasa T',mv:'20kV ke grid'},
+  comps:[
+    {id:'GEN',type:'genset3',x:24,y:90},
+    {id:'Q1',type:'mcb3',x:200,y:90},
+    {id:'TR',type:'trafo3',x:400,y:90},
+    {id:'PMT',type:'pmtT',x:620,y:90},
+    {id:'BUS',type:'busbar3',x:800,y:90},
+  ],
+  nets:[
+    {role:'R',t:['GEN.R','Q1.Ri']},{role:'S',t:['GEN.S','Q1.Si']},{role:'T',t:['GEN.T','Q1.Ti']},
+    {role:'R',t:['Q1.Ro','TR.Ri']},{role:'S',t:['Q1.So','TR.Si']},{role:'T',t:['Q1.To','TR.Ti']},
+    {role:'mv',t:['TR.Ro','PMT.Ri']},{role:'mv',t:['TR.So','PMT.Si']},{role:'mv',t:['TR.To','PMT.Ti']},
+    {role:'mv',t:['PMT.Ro','BUS.R']},{role:'mv',t:['PMT.So','BUS.S']},{role:'mv',t:['PMT.To','BUS.T']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'GENSET biogas R/S/T → MCB Q1', why:'Genset berbahan bakar biogas dari sampah/landfill menghasilkan 400V 3φ.'},
+    {net:3, txt:'MCB → TRAFO step-up (primer)', why:'Daya genset dinaikkan tegangannya agar bisa masuk jaringan menengah.'},
+    {net:6, txt:'Trafo sekunder → PMT (CB)', why:'Pemutus tenaga sisi 20kV sebelum titik sambung grid.'},
+    {net:9, txt:'PMT → BUSBAR 20kV (grid)', why:'Daya dievakuasi ke jaringan PLN (atau memasok beban kawasan TPA).'},
+  ],
+  phases:[{key:'run',label:'▶ EKSPOR — genset biogas suplai grid'}],
+  phaseClosed:{ run:['Q1','PMT'] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring evakuasi daya benar!</b> Genset biogas (dari gas sampah) → MCB → trafo step-up → PMT → grid 20kV. Sampah jadi listrik, lalu disalurkan ke jaringan. Inilah rantai daya PLTSa / Waste-to-Energy.',
+  tutorial:`
+    <h4>Dari sampah jadi listrik masuk grid</h4>
+    <p>Di PLTSa, gas metana (biogas/landfill gas) dari sampah membakar <b>genset</b> → menghasilkan listrik 400V → dinaikkan <b>trafo step-up</b> → disalurkan ke jaringan 20kV lewat <b>PMT</b>.</p>
+    <h4>Kenapa harus di-step-up?</h4>
+    <p>Untuk mengirim daya jarak jauh dengan rugi kecil, tegangan dinaikkan (400V → 20kV). Sama prinsipnya dengan pembangkit lain.</p>
+    <h4>Komponen evakuasi daya</h4>
+    <ul>
+      <li><span class="badge">Genset biogas</span> sumber 400V 3φ.</li>
+      <li><span class="badge">MCB/proteksi</span> sisi tegangan rendah.</li>
+      <li><span class="badge">Trafo step-up</span> 0,4/20 kV.</li>
+      <li><span class="badge">PMT + proteksi</span> titik interkoneksi ke grid.</li>
+    </ul>
+    <h4>Catatan</h4>
+    <p>Sebelum nyambung grid, unit perlu disinkronkan (lihat lab Sinkronisasi Generator) & memenuhi syarat interkoneksi PLN.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Engineer WtE: desain pembangkitan biogas, evakuasi daya, proteksi & sinkronisasi, serta izin interkoneksi.</p>`
 };
 
 /* ===================== init ===================== */
