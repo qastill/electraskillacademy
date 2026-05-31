@@ -14736,8 +14736,30 @@ function _trackArtURI(id){
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">' + _ART_BG + inner + '</svg>';
   return 'data:image/svg+xml,' + encodeURIComponent(svg);
 }
-['S9','S10','S11','S12','S13','S14','S15','S16'].forEach(id => {
-  const uri = _trackArtURI(id); if (!uri) return;
+// Foto jalur S1–S16: pakai ilustrasi resmi dari folder "ICON HOME/".
+// Override foto Unsplash (S1–S8) maupun art SVG (S9–S16) sebelumnya agar
+// seluruh kartu jalur memakai aset yang sudah disiapkan. Nama file mengandung
+// spasi → encodeURI agar URL valid.
+const _TRACK_ART_FILES = {
+  S1:  'ICON HOME/1. instalsi bangunan.png',
+  S2:  'ICON HOME/2 industri dan manufaktur.png',
+  S3:  'ICON HOME/3 distribution engineer.png',
+  S4:  'ICON HOME/4 transmission engineer.png',
+  S5:  'ICON HOME/5 energy analyst.png',
+  S6:  'ICON HOME/6 energy auditor.png',
+  S7:  'ICON HOME/7 renewable engineer.png',
+  S8:  'ICON HOME/8 safety engineer.png',
+  S9:  'ICON HOME/9 sales.png',
+  S10: 'ICON HOME/10 solar engineer.png',
+  S11: 'ICON HOME/11 carbon auditor.png',
+  S12: 'ICON HOME/12 ev engineer.png',
+  S13: 'ICON HOME/13 waste to energy.png',
+  S14: 'ICON HOME/14 HYDROGEN ENGINEER.png',
+  S15: 'ICON HOME/15 BESS ENGINEER.png',
+  S16: 'ICON HOME/16 kontrol engineer.png'
+};
+Object.keys(_TRACK_ART_FILES).forEach(id => {
+  const uri = encodeURI(_TRACK_ART_FILES[id]);
   const card = PRACTICE_CARDS.find(c => c.id === id); if (card) card.photo = uri;
   if (TRACKS_META[id]) TRACKS_META[id].photo = uri;
 });
@@ -15241,6 +15263,11 @@ const SIM_GROUPS = [
   { key: 'S16', num: '16', label: 'Kontrol & Otomasi', desc: 'Tuning PID, scaling sensor & scan PLC.', grad: 'linear-gradient(135deg,#6a6f7e,#3a3f4e)', photo: _trackArtURI('S16') },
   { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
 ];
+// Simulator Room: pakai ilustrasi resmi ICON HOME untuk kartu jalur S1–S16
+// (selaras dengan grid home). Grup bonus "Fondasi" tetap pakai foto Unsplash.
+SIM_GROUPS.forEach(g => {
+  if (_TRACK_ART_FILES[g.key]) g.photo = encodeURI(_TRACK_ART_FILES[g.key]);
+});
 
 const SIMULATORS = [
   // ===== Fondasi (lintas jurusan) =====
@@ -25643,6 +25670,19 @@ function renderQuiz(module) {
   answeredCount = 0;
   answeredQuestions = new Set();
 
+  // Reset the scoring engine for a fresh attempt. Tanpa ini, currentQuizStats
+  // (correct/wrong/answered) menumpuk dari attempt/modul sebelumnya sehingga
+  // skor akhir salah hitung — peserta bisa jawab semua benar tapi dinyatakan
+  // "Belum Lulus". Ambil levelId/trackId dari currentModuleData (di-set openModul).
+  if (typeof window.esaResetQuizStats === 'function') {
+    const md = window.currentModuleData || {};
+    window.esaResetQuizStats(
+      module.code,
+      md.levelId || module.level || null,
+      md.trackId || md.track || null
+    );
+  }
+
   // Start the 15-minute quiz timer (auto-submits when expired)
   if (typeof window.esaStartQuizTimer === 'function') window.esaStartQuizTimer();
 }
@@ -27707,7 +27747,13 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (!currentQuizModule) return;
     stopQuizTimer();
     const total = 25;
-    const correct = currentQuizStats.correct;
+    // Hitung skor otoritatif dari peta jawaban per-soal (sumber kebenaran),
+    // bukan dari counter berjalan yang bisa desync kalau jawaban diubah-ubah.
+    const answerMap = currentQuizStats.answers || {};
+    const correct = Object.keys(answerMap).filter(k => answerMap[k] === true).length;
+    // Sinkronkan counter agar konsisten dengan recordModuleResult & UI lain.
+    currentQuizStats.correct = correct;
+    currentQuizStats.wrong = currentQuizStats.answered.size - correct;
     const pct = Math.round((correct / total) * 100);
     const passed = pct >= 70;
     const xpGained = passed ? Math.round((correct / total) * 25) : 0;
