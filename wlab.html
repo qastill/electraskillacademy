@@ -1929,6 +1929,105 @@ LABS['gardu-induk']={
     <p>Operator/engineer GI: switching manuver (buka-tutup PMT/PMS sesuai SOP & interlock), pemeliharaan trafo daya, pembacaan proteksi, & koordinasi dengan dispatcher.</p>`
 };
 
+/* ---- LAB: BESS DC-coupled — PV + baterai berbagi DC bus (S15) ---- */
+LABS['bess-dccoupled']={
+  id:'bess-dccoupled', jalur:'S15', level:'Advance', short:'BESS DC-coupled', sub:'PV + baterai berbagi 1 bus DC → PCS → grid (hemat 1 konversi)',
+  vb:'0 0 1200 600',
+  roleColor:{pv:'#f0a93a',bp:'#5bd6a0',dcp:'#ff6b6b',dcn:'#6db3ff',ac:'#e8b339',pe:'#3ddc84'},
+  roleLabel:{pv:'String PV (DC)',bp:'Baterai (DC)',dcp:'Bus DC + (PV & baterai gabung)',dcn:'Bus DC −',ac:'Keluaran AC 3φ',pe:'Pembumian'},
+  comps:[
+    {id:'PV',type:'pvArray',x:30,y:60},
+    {id:'PSW',type:'dcsw2',x:230,y:70},
+    {id:'BAT',type:'battPack',x:30,y:360},
+    {id:'BMS',type:'bms',x:230,y:360},
+    {id:'PCS',type:'pcs',x:470,y:200},
+    {id:'BUS',type:'busbar3',x:740,y:200},
+    {id:'GND',type:'earth',x:560,y:470},
+  ],
+  nets:[
+    {role:'pv',t:['PV.P','PSW.pi']},{role:'pv',t:['PV.M','PSW.ni']},
+    {role:'bp',t:['BAT.P','BMS.bp']},{role:'bp',t:['BAT.M','BMS.bn']},
+    {role:'dcp',t:['PSW.po','BMS.pp','PCS.dcp']},        // BUS DC + : PV & baterai gabung
+    {role:'dcn',t:['PSW.no','BMS.pn','PCS.dcn']},        // BUS DC −
+    {role:'pe',t:['PCS.pe','GND.e']},
+    {role:'ac',t:['PCS.R','BUS.R']},{role:'ac',t:['PCS.S','BUS.S']},{role:'ac',t:['PCS.T','BUS.T']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'String PV (+/−) → DC isolator', why:'Saklar DC mengisolasi PV untuk perawatan.'},
+    {net:2, txt:'Baterai (+/−) → BMS', why:'BMS melindungi & meneruskan daya baterai.'},
+    {net:4, txt:'Gabungkan PV & baterai di BUS DC + → PCS (dcp)', why:'Inilah inti DC-coupled: PV dan baterai berbagi satu bus DC, hanya 1× konversi DC→AC.'},
+    {net:5, txt:'Gabungkan sisi − di BUS DC − → PCS (dcn)', why:'Rel negatif bersama.'},
+    {net:6, txt:'Pembumian PCS → elektroda', why:'Keselamatan & referensi.'},
+    {net:7, txt:'Keluaran AC PCS → busbar 3φ', why:'PCS membalik DC bus menjadi AC untuk grid/beban.'},
+  ],
+  phases:[{key:'run',label:'▶ DISCHARGE — PV & baterai → bus DC → PCS → AC'}],
+  phaseClosed:{ run:['PSW'] },
+  phaseSrc:{ run:['PCS.R','PCS.S','PCS.T'] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring BESS DC-coupled benar!</b> PV dan baterai berbagi satu bus DC, lalu satu PCS membalik ke AC. Dibanding AC-coupled, energi PV ke baterai hanya lewat 1× konversi (lebih efisien) — favorit untuk PLTS + storage skala utilitas.',
+  tutorial:`
+    <h4>DC-coupled vs AC-coupled</h4>
+    <p>Pada <b>AC-coupled</b>, PV punya inverter sendiri & baterai punya PCS sendiri — energi PV→baterai melewati 2× konversi (DC→AC→DC). Pada <b>DC-coupled</b>, PV & baterai berbagi <b>satu bus DC</b> dan satu PCS — energi PV ke baterai cukup 1× konversi → rugi lebih kecil.</p>
+    <h4>Aliran daya</h4>
+    <ul>
+      <li><b>Charge:</b> PV → bus DC → baterai (lewat BMS).</li>
+      <li><b>Discharge:</b> PV + baterai → bus DC → PCS → AC → grid/beban.</li>
+    </ul>
+    <h4>Komponen</h4>
+    <ul>
+      <li><span class="badge">DC isolator</span> putus PV untuk aman.</li>
+      <li><span class="badge">BMS</span> proteksi & balancing sel baterai.</li>
+      <li><span class="badge">PCS</span> Power Conversion System — inverter dua arah (charge/discharge).</li>
+    </ul>
+    <h4>Di dunia kerja</h4>
+    <p>Engineer BESS/PLTS: pilih topologi (AC vs DC coupling) sesuai rasio PV/storage, sizing PCS & DC bus, proteksi DC (fuse, SPD), & strategi kontrol (peak shaving, time-shift).</p>`
+};
+
+/* ---- LAB: Pembumian sistem TN-S 3φ + bonding (S8) ---- */
+LABS['tns-3f']={
+  id:'tns-3f', jalur:'S8', level:'Profesional', short:'Pembumian TN-S 3φ', sub:'N & PE terpisah, bonding bodi peralatan ke elektroda bumi',
+  vb:'0 0 1140 560',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',Lf:'#ff9d5c',N:'#7aa7d8',PE:'#3ddc84'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',Lf:'Fasa setelah MCB ke beban',N:'Netral (N) — pembawa arus',PE:'Pembumian (PE) — pengaman, terpisah dari N'},
+  comps:[
+    {id:'SRC',type:'src3pe',x:24,y:140},
+    {id:'Q',type:'mcb3',x:220,y:150},
+    {id:'A1',type:'appliance',x:470,y:30},
+    {id:'A2',type:'appliance',x:470,y:210},
+    {id:'A3',type:'appliance',x:470,y:390},
+    {id:'MET',type:'earth',x:780,y:300},
+    {id:'ROD',type:'rod',x:780,y:450},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','Q.Ri']},{role:'S',t:['SRC.S','Q.Si']},{role:'T',t:['SRC.T','Q.Ti']},
+    {role:'Lf',t:['Q.Ro','A1.L']},{role:'Lf',t:['Q.So','A2.L']},{role:'Lf',t:['Q.To','A3.L']},
+    {role:'N',t:['SRC.N','A1.N','A2.N','A3.N']},                         // netral bersama (pembawa arus)
+    {role:'PE',t:['SRC.PE','A1.PE','A2.PE','A3.PE','MET.e','ROD.e']},    // PE bersama → MET → elektroda
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Fasa R/S/T sumber → MCB 3φ', why:'MCB memproteksi tiap fasa.'},
+    {net:3, txt:'MCB → fasa ke tiap beban (R/S/T)', why:'Beban dibagi rata ke tiga fasa.'},
+    {net:6, txt:'Netral (N) → semua beban', why:'N membawa arus balik. Di TN-S, N TERPISAH dari PE sepanjang instalasi.'},
+    {net:7, txt:'PE → semua bodi peralatan → MET → elektroda bumi', why:'Semua bagian konduktif terbuka di-BONDING ke satu titik (MET) lalu ke elektroda — bila fasa menyentuh bodi, arus gangguan mengalir & proteksi trip. Inilah equipotential bonding.'},
+  ],
+  phases:[{key:'on',label:'▶ ENERGIZE — sistem TN-S aktif, bodi terbonding aman'}],
+  sequence:[{phase:'on'}],
+  okMsg:'<b>✓ Wiring TN-S benar!</b> Netral (N) & pembumian (PE) terpisah sepanjang instalasi (ciri TN-S). Semua bodi logam di-bonding ke Main Earthing Terminal lalu ke elektroda bumi — bila terjadi gangguan ke bodi, proteksi memutus dengan cepat. Equipotential = aman dari sengatan.',
+  tutorial:`
+    <h4>Sistem pembumian TN-S</h4>
+    <p>Pada <b>TN-S</b>, konduktor <b>Netral (N)</b> dan <b>Pelindung (PE)</b> <u>dipisah</u> sepanjang instalasi (digabung hanya di sumber/trafo). N membawa arus kerja; PE hanya untuk pengaman & idealnya tak dialiri arus saat normal.</p>
+    <h4>Equipotential bonding</h4>
+    <p>Semua <b>bagian konduktif terbuka</b> (bodi panel, mesin, rak) disambung ke <b>Main Earthing Terminal (MET)</b>, lalu MET ke <b>elektroda bumi</b>. Tujuannya menyamakan potensial → tak ada beda tegangan berbahaya yang bisa menyetrum.</p>
+    <h4>Kenapa N dan PE dipisah?</h4>
+    <p>Jika N & PE digabung di banyak titik (seperti TN-C), arus netral bisa mengalir di bodi peralatan & menimbulkan tegangan sentuh + gangguan EMC. TN-S menghindarinya → lebih aman untuk gedung modern & peralatan elektronik.</p>
+    <h4>Proteksi gangguan ke bumi</h4>
+    <p>Saat fasa menyentuh bodi terbonding, terbentuk loop gangguan berimpedansi rendah → arus besar → MCB/MCCB atau RCD memutus dalam waktu aman (lihat lab Pembumian & RCD untuk proteksi arus bocor).</p>
+    <h4>Di dunia kerja</h4>
+    <p>Ahli K3 listrik: rancang sistem pembumian (TN-S/TN-C-S/TT), pasang MET & bonding, ukur resistansi elektroda (≤ beberapa Ω), & verifikasi loop impedance sesuai PUIL/IEC.</p>`
+};
+
 /* ===================== init ===================== */
 function buildPicker(){
   const ids=Object.keys(LABS);
