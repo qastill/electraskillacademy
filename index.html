@@ -15263,6 +15263,11 @@ const SIM_GROUPS = [
   { key: 'S16', num: '16', label: 'Kontrol & Otomasi', desc: 'Tuning PID, scaling sensor & scan PLC.', grad: 'linear-gradient(135deg,#6a6f7e,#3a3f4e)', photo: _trackArtURI('S16') },
   { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
 ];
+// Simulator Room: pakai ilustrasi resmi ICON HOME untuk kartu jalur S1–S16
+// (selaras dengan grid home). Grup bonus "Fondasi" tetap pakai foto Unsplash.
+SIM_GROUPS.forEach(g => {
+  if (_TRACK_ART_FILES[g.key]) g.photo = encodeURI(_TRACK_ART_FILES[g.key]);
+});
 
 const SIMULATORS = [
   // ===== Fondasi (lintas jurusan) =====
