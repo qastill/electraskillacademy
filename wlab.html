@@ -214,6 +214,20 @@ const COMP = {
   busbar3:{ w:60,h:200,label:'BUS',sub:'GRID',kind:'grid',
     terms:[{k:'R',side:'l',f:0.2,lbl:'R'},{k:'S',side:'l',f:0.5,lbl:'S'},{k:'T',side:'l',f:0.8,lbl:'T'},
            {k:'Ro',side:'r',f:0.2},{k:'So',side:'r',f:0.5},{k:'To',side:'r',f:0.8}]},
+  // --- SPKLU / EV DC fast charging (S12) ---
+  src3pe:{ w:84,h:170,label:'SUMBER 3φ',sub:'400V+PE',kind:'src',
+    terms:[{k:'R',side:'r',f:0.16,lbl:'R'},{k:'S',side:'r',f:0.34,lbl:'S'},{k:'T',side:'r',f:0.52,lbl:'T'},
+           {k:'N',side:'r',f:0.7,lbl:'N'},{k:'PE',side:'r',f:0.88,lbl:'PE'}]},
+  rcboB:{ w:110,h:170,label:'RCBO Type B',sub:'proteksi AC+DC',kind:'sw3',
+    terms:[{k:'Ri',side:'l',f:0.2,lbl:'R'},{k:'Si',side:'l',f:0.42,lbl:'S'},{k:'Ti',side:'l',f:0.64,lbl:'T'},{k:'Ni',side:'l',f:0.86,lbl:'N'},
+           {k:'Ro',side:'r',f:0.2},{k:'So',side:'r',f:0.42},{k:'To',side:'r',f:0.64},{k:'No',side:'r',f:0.86}]},
+  charger:{ w:160,h:230,label:'CHARGER DC',sub:'AC→DC · CCS',kind:'charger',
+    terms:[{k:'Ri',side:'l',f:0.16,lbl:'R'},{k:'Si',side:'l',f:0.3,lbl:'S'},{k:'Ti',side:'l',f:0.44,lbl:'T'},{k:'Ni',side:'l',f:0.58,lbl:'N'},{k:'PEi',side:'l',f:0.78,lbl:'PE'},
+           {k:'dcp',side:'r',f:0.3,lbl:'DC+'},{k:'dcn',side:'r',f:0.46,lbl:'DC−'},{k:'cp',side:'r',f:0.66,lbl:'CP'},{k:'pe',side:'r',f:0.82,lbl:'PE'}]},
+  evbatt:{ w:140,h:150,label:'BATERAI EV',sub:'pack DC',kind:'load',
+    terms:[{k:'a',side:'l',f:0.28,lbl:'+'},{k:'b',side:'l',f:0.5,lbl:'−'},{k:'cp',side:'l',f:0.7,lbl:'CP'},{k:'pe',side:'l',f:0.9,lbl:'PE'}]},
+  earth:{ w:70,h:60,label:'PEMBUMIAN',sub:'PE/arde',kind:'earth',
+    terms:[{k:'e',side:'t',f:0.5,lbl:'PE'}]},
 };
 
 /* terminal absolute coords */
@@ -267,7 +281,7 @@ function simUF(closed){
   const u=baseUF();
   LAB.comps.forEach(inst=>{const kind=COMP[inst.type].kind;const id=inst.id;
     if(kind==='pass'){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');}
-    else if(kind==='sw3'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');} }
+    else if(kind==='sw3'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To'); if(T[id+'.Ni']&&T[id+'.No'])u.u(id+'.Ni',id+'.No');} } // 4 kutub (mis. RCBO) ikut menjembatani N
     else if(kind==='sw3aux'){ if(closed[id]){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');u.u(id+'.x1',id+'.x2');} } // kontak bantu 13-14 ikut menutup (seal-in)
     else if(kind==='star'){ if(closed[id]){u.u(id+'.y1',id+'.y2');u.u(id+'.y2',id+'.y3');} }
     else if(kind==='delta'){ if(closed[id]){u.u(id+'.l1',id+'.m1');u.u(id+'.l2',id+'.m2');u.u(id+'.l3',id+'.m3');} }
@@ -276,6 +290,8 @@ function simUF(closed){
     else if(kind==='plc'){ u.u(id+'.Lp',id+'.Qc'); } // suplai output (3L+) di-jumper internal dari L+
     else if(kind==='cb'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');} } // PMT/PMK: menutup kecuali saat trip; coil x1-x2 = beban (tak menjembatani)
     else if(kind==='grid'){ u.u(id+'.R',id+'.Ro');u.u(id+'.S',id+'.So');u.u(id+'.T',id+'.To'); } // busbar grid: rel terhubung
+    else if(kind==='earth'){ /* node PE tunggal, tidak menjembatani */ }
+    else if(kind==='charger'){ /* AC→DC: output DC jadi sumber saat fase charge (lihat phaseSrc) */ }
     // kind 'coil'/'load'/'relay'/'sync'/'ct secondary' = beban/sensor, tidak menjembatani
   });
   return u;
@@ -339,6 +355,9 @@ function drawComp(inst,closed,live){
   if(kind==='relay'){const flt=energized&&phase==='trip';stroke=flt?'#ff5d5d':(energized?'#3ddc84':'#33445f');accent=flt?'#ff9d9d':(energized?'#3ddc84':'#8ea0b8');}
   if(kind==='grid'){const glive=energized;stroke=glive?'#e8b339':'#33445f';accent=glive?'#f3d27a':'#8ea0b8';}
   if(kind==='sync'){const syn=energized&&phase==='sync';stroke=syn?'#3ddc84':(energized?'#e8b339':'#33445f');accent=syn?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
+  const chg=kind==='charger'&&energized&&phase==='charge';
+  if(kind==='charger'){stroke=chg?'#3ddc84':(energized?'#e8b339':'#33445f');accent=chg?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
+  if(kind==='earth'){stroke='#3ddc84';accent='#6df0a0';}
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
@@ -385,6 +404,14 @@ function drawComp(inst,closed,live){
     s+=`<text x="${x+w*0.32}" y="${y+h*0.42}" text-anchor="middle" font-size="7" fill="#5b6b82">I&gt;  I&gt;&gt;</text>`;
   }
   if(kind==='grid'){const glive=energized;[0.2,0.5,0.8].forEach(f=>{s+=`<line x1="${x+8}" y1="${y+f*h}" x2="${x+w-8}" y2="${y+f*h}" stroke="${glive?'#e8b339':'#33445f'}" stroke-width="4" stroke-linecap="round"/>`;});}
+  if(kind==='earth'){const cx=x+w/2,cy=y+h*0.5;s+=`<line x1="${cx}" y1="${y+4}" x2="${cx}" y2="${cy}" stroke="#6df0a0" stroke-width="2.5"/><line x1="${cx-16}" y1="${cy}" x2="${cx+16}" y2="${cy}" stroke="#6df0a0" stroke-width="3"/><line x1="${cx-10}" y1="${cy+7}" x2="${cx+10}" y2="${cy+7}" stroke="#6df0a0" stroke-width="3"/><line x1="${cx-5}" y1="${cy+14}" x2="${cx+5}" y2="${cy+14}" stroke="#6df0a0" stroke-width="3"/>`;}
+  if(kind==='charger'){const cx=x+w/2;
+    s+=`<text x="${x+w*0.3}" y="${y+h*0.4}" text-anchor="middle" font-size="11" fill="#9db4ff">AC∿</text>`;
+    s+=`<text x="${cx}" y="${y+h*0.4}" text-anchor="middle" font-size="11" fill="#8ea0b8">→</text>`;
+    s+=`<text x="${x+w*0.7}" y="${y+h*0.4}" text-anchor="middle" font-size="11" fill="${chg?'#ffd34d':'#5b6b82'}">DC═</text>`;
+    s+=`<rect x="${x+16}" y="${y+h*0.85}" width="${w-32}" height="20" rx="4" fill="${chg?'#0a1f14':'#1a1206'}" stroke="${chg?'#1c5b3a':'#5a4a16'}"/>`;
+    s+=`<text x="${cx}" y="${y+h*0.85+14}" text-anchor="middle" font-size="9" fill="${chg?'#3ddc84':'#f3d27a'}" font-family="JetBrains Mono">${chg?'CHARGING ⚡':(energized?'handshake CP…':'standby')}</text>`;
+  }
   if(kind==='sync'){
     const syn=energized&&phase==='sync';const closed2=energized&&phase==='closed';
     const cx=x+w/2,cy=y+h*0.42,r=34;
@@ -935,6 +962,69 @@ LABS['gen-sync']={
     <p>Manual: operator pantau synchroscope, tekan close di "creep to 12". Otomatis: relai 25 + auto-synchronizer yang mengatur AVR & governor lalu menutup PMK sendiri.</p>
     <h4>Di dunia kerja</h4>
     <p>Pembangkit (PLTU/PLTG/PLTA/PLTD) & genset paralel: setiap unit yang masuk grid harus disinkronkan. Skill inti operator & teknisi listrik pembangkit.</p>`
+};
+
+/* ---- LAB: SPKLU DC Fast Charging (S12) ---- */
+LABS['spklu-dc']={
+  id:'spklu-dc', jalur:'S12', level:'Advance', short:'SPKLU DC', sub:'Stasiun pengisian cepat EV: AC 3φ → RCBO type B → charger DC → mobil',
+  vb:'0 0 1060 600',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',N:'#9db4ff',dcp:'#ff6b6b',dcn:'#6db3ff',cp:'#b07cff',pe:'#3ddc84'},
+  roleLabel:{R:'AC Fasa R',S:'AC Fasa S',T:'AC Fasa T',N:'Netral',dcp:'DC + ke baterai',dcn:'DC − ke baterai',cp:'Control Pilot (komunikasi)',pe:'Pembumian (PE)'},
+  comps:[
+    {id:'SRC',type:'src3pe',x:24,y:60},
+    {id:'RCBO',type:'rcboB',x:200,y:60},
+    {id:'CHG',type:'charger',x:420,y:60},
+    {id:'EV',type:'evbatt',x:760,y:120},
+    {id:'GND',type:'earth',x:470,y:430},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','RCBO.Ri']},
+    {role:'S',t:['SRC.S','RCBO.Si']},
+    {role:'T',t:['SRC.T','RCBO.Ti']},
+    {role:'N',t:['SRC.N','RCBO.Ni']},
+    {role:'R',t:['RCBO.Ro','CHG.Ri']},
+    {role:'S',t:['RCBO.So','CHG.Si']},
+    {role:'T',t:['RCBO.To','CHG.Ti']},
+    {role:'N',t:['RCBO.No','CHG.Ni']},
+    {role:'pe',t:['SRC.PE','CHG.PEi','GND.e']},   // PE: sumber + charger + arde
+    {role:'dcp',t:['CHG.dcp','EV.a']},            // DC+ charger → baterai EV +
+    {role:'dcn',t:['CHG.dcn','EV.b']},            // DC− charger → baterai EV −
+    {role:'cp',t:['CHG.cp','EV.cp']},             // Control Pilot (komunikasi charger↔mobil)
+    {role:'pe',t:['CHG.pe','EV.pe']},             // PE konektor → bodi mobil
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'AC 3φ R/S/T → RCBO Type B', why:'Suplai AC masuk lewat proteksi. RCBO Type B WAJIB di charger DC karena bisa mendeteksi arus bocor DC (RCD AC biasa buta terhadap bocor DC).'},
+    {net:3, txt:'Netral sumber → RCBO (N)', why:'Netral juga lewat proteksi.'},
+    {net:4, txt:'RCBO keluar → CHARGER (input AC)', why:'Daya AC terlindungi masuk ke modul charger.'},
+    {net:8, txt:'PE: sumber + charger + ARDE disatukan', why:'Pembumian wajib — bodi charger & sistem harus terhubung PE demi keselamatan sentuh.'},
+    {net:9, txt:'DC+ charger → baterai mobil (+)', why:'Charger menyearahkan AC→DC lalu mengisi baterai. Tegangan/arus DC diatur sesuai permintaan BMS mobil.'},
+    {net:10, txt:'DC− charger → baterai mobil (−)', why:'Menutup rangkaian DC pengisian.'},
+    {net:11, txt:'Control Pilot (CP) charger ↔ mobil', why:'Jalur komunikasi: mobil & charger berunding (handshake) arus/tegangan aman SEBELUM DC mengalir. Tanpa CP, charger tak akan menyalakan DC.'},
+    {net:12, txt:'PE konektor → bodi mobil', why:'Pin PE pada konektor (CCS/CHAdeMO) menghubungkan bodi mobil ke pembumian.'},
+  ],
+  phases:[{key:'hand',label:'① HANDSHAKE — komunikasi CP (cek proteksi & PE)'},{key:'charge',label:'② CHARGING — DC mengalir ke baterai'}],
+  phaseClosed:{ hand:['RCBO'], charge:['RCBO'] },   // RCBO menutup (AC masuk) di kedua fase
+  phaseSrc:{ charge:['CHG.dcp','CHG.dcn'] },          // rangkaian DC aktif hanya saat charging (setelah handshake)
+  sequence:[{phase:'hand',ms:2600},{phase:'charge'}],
+  okMsg:'<b>✓ Wiring SPKLU benar!</b> Tahap: ① HANDSHAKE — charger & mobil berunding lewat Control Pilot, cek proteksi & PE → ② CHARGING — DC mengalir mengisi baterai. RCBO Type B & PE wajib; tanpa CP, DC tidak akan menyala.',
+  tutorial:`
+    <h4>Bagaimana DC Fast Charging bekerja?</h4>
+    <p>Beda dengan AC charging (penyearah ada di mobil), pada <b>DC fast charging</b> penyearah besar ada di <b>charger/stasiun</b>. Charger mengubah AC 3φ → DC tegangan tinggi (200–1000V) dan menyuntik langsung ke baterai — jauh lebih cepat (puluhan menit).</p>
+    <h4>RCBO Type B — WAJIB</h4>
+    <p>Charger DC bisa menimbulkan <b>arus bocor DC</b>. RCD/RCBO tipe AC atau A <b>tidak bisa</b> mendeteksinya (bisa "buta" lalu gagal trip). Maka standar (IEC 61851) mensyaratkan <b>RCBO Type B</b> (atau RCD type A + RDC-DD 6mA) di sirkuit DC charging.</p>
+    <h4>Pembumian (PE) — keselamatan</h4>
+    <p>Bodi charger, sistem, dan bodi mobil semuanya terhubung ke <b>PE/arde</b>. Konektor CCS/CHAdeMO punya pin PE khusus. Tanpa PE yang baik, tegangan sentuh berbahaya.</p>
+    <h4>Control Pilot (CP) — otak pengisian</h4>
+    <ul>
+      <li>Jalur komunikasi charger ↔ mobil <b>sebelum</b> DC mengalir.</li>
+      <li>Mobil memberi tahu: tegangan baterai, arus maksimum, status; charger menyesuaikan.</li>
+      <li><b>Handshake</b> gagal/PE tidak terdeteksi → charger TIDAK menyalakan DC (interlock keselamatan). Itu sebabnya simulator hanya mengalirkan DC setelah fase handshake.</li>
+    </ul>
+    <h4>Urutan aman</h4>
+    <p>Colok → verifikasi PE & proteksi → handshake CP (negosiasi) → kontaktor DC menutup → pengisian dengan arus/tegangan terkontrol → selesai → DC putus dulu sebelum cabut.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Engineer SPKLU: desain & wiring stasiun (charger 50–350 kW), proteksi, pembumian, integrasi OCPP ke jaringan, dan komisioning sesuai SNI/IEC.</p>`
 };
 
 /* ===================== init ===================== */
