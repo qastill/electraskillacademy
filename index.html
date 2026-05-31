@@ -15430,18 +15430,19 @@ const CALC_THUMBS = {
   demand: '<svg viewBox="0 0 80 60" fill="none"><rect x="10" y="38" width="10" height="14" fill="#c9a96e"/><rect x="24" y="28" width="10" height="24" fill="#c9a96e"/><rect x="38" y="18" width="10" height="34" fill="#FFD400"/><rect x="52" y="32" width="10" height="20" fill="#c9a96e"/><path d="M5 14 L70 14" stroke="#c9a96e" stroke-width="1" stroke-dasharray="3 3"/></svg>',
   protect: '<svg viewBox="0 0 80 60" fill="none"><path d="M40 8 L60 18 L60 32 Q60 46 40 52 Q20 46 20 32 L20 18 Z" stroke="#c9a96e" stroke-width="1.5" fill="rgba(201,169,110,0.1)"/><path d="M30 28 L38 36 L52 22" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
 };
+const _CALC_PHOTO = (id) => 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=600&q=70';
 const CALCULATORS = [
   // Cable Sizing — 5 standards
-  { id: 'cs-asnzs-3008-1-1', group: 'cable', standard: 'AS/NZS 3008.1.1', name: 'AS/NZS 3008.1.1 Cable Sizing Calculator', desc: 'Complies with Australian Standards.', thumb: CALC_THUMBS.cable, badge: 'AU' },
-  { id: 'cs-bs-7671', group: 'cable', standard: 'BS 7671', name: 'BS 7671 Cable Sizing Calculator', desc: 'Complies with IET Wiring Regulations.', thumb: CALC_THUMBS.cable, badge: 'UK' },
-  { id: 'cs-asnzs-3008-1-2', group: 'cable', standard: 'AS/NZS 3008.1.2', name: 'AS/NZS 3008.1.2 Cable Sizing Calculator', desc: 'Complies with New Zealand Standards.', thumb: CALC_THUMBS.cable, badge: 'NZ' },
-  { id: 'cs-iec-60364', group: 'cable', standard: 'IEC 60364-5-52', name: 'IEC 60364-5-52 Cable Sizing Calculator', desc: 'Complies with International Standards.', thumb: CALC_THUMBS.cable, badge: 'IEC' },
-  { id: 'cs-nec-70', group: 'cable', standard: 'NFPA 70 (NEC)', name: 'NFPA (70) NEC Cable Sizing Calculator', desc: 'Complies with National Electric Code (US).', thumb: CALC_THUMBS.cable, badge: 'US' },
+  { id: 'cs-asnzs-3008-1-1', group: 'cable', standard: 'AS/NZS 3008.1.1', name: 'AS/NZS 3008.1.1 Cable Sizing Calculator', desc: 'Menentukan ukuran penampang kabel (mm²) yang aman & ekonomis sesuai standar Australia. Dari arus beban, panjang jalur, metode pemasangan, suhu & grouping → hitung kapasitas hantar arus (KHA), drop tegangan, dan konduktor minimum.', thumb: CALC_THUMBS.cable, photo: _CALC_PHOTO('1621905251918-48416bd8575a'), badge: 'AU' },
+  { id: 'cs-bs-7671', group: 'cable', standard: 'BS 7671', name: 'BS 7671 Cable Sizing Calculator', desc: 'Ukuran kabel sesuai BS 7671 (IET Wiring Regulations) — standar instalasi listrik Inggris. Memperhitungkan KHA, faktor koreksi suhu & grouping, drop tegangan, dan proteksi hubung singkat (adiabatik).', thumb: CALC_THUMBS.cable, photo: _CALC_PHOTO('1581092918056-0c4c3acd3789'), badge: 'UK' },
+  { id: 'cs-asnzs-3008-1-2', group: 'cable', standard: 'AS/NZS 3008.1.2', name: 'AS/NZS 3008.1.2 Cable Sizing Calculator', desc: 'Versi standar Selandia Baru untuk penampang konduktor yang tepat: dari arus beban & kondisi pemasangan dihitung KHA, drop tegangan, dan ukuran kabel minimum sesuai AS/NZS 3008.1.2.', thumb: CALC_THUMBS.cable, photo: _CALC_PHOTO('1565608087341-404b25492fee'), badge: 'NZ' },
+  { id: 'cs-iec-60364', group: 'cable', standard: 'IEC 60364-5-52', name: 'IEC 60364-5-52 Cable Sizing Calculator', desc: 'Cable sizing per standar internasional IEC 60364-5-52 — acuan global yang jadi dasar PUIL di Indonesia. Menghitung KHA berdasarkan metode pemasangan, koreksi suhu & grouping, plus pengecekan drop tegangan.', thumb: CALC_THUMBS.cable, photo: _CALC_PHOTO('1518770660439-4636190af475'), badge: 'IEC' },
+  { id: 'cs-nec-70', group: 'cable', standard: 'NFPA 70 (NEC)', name: 'NFPA (70) NEC Cable Sizing Calculator', desc: 'Ukuran konduktor dalam AWG/kcmil sesuai National Electrical Code (NFPA 70, US) — tabel ampacity 310.16. Memperhitungkan derating suhu, jumlah konduktor dalam konduit, dan continuous load 125%.', thumb: CALC_THUMBS.cable, photo: _CALC_PHOTO('1473341304170-971dccb5ac1e'), badge: 'US' },
   // Additional calculators
-  { id: 'cable-pulling', group: 'add', standard: 'IEEE 1185', name: 'Cable Pulling Calculator', desc: 'Avoid Cable Damage during Installation.', thumb: CALC_THUMBS.pull },
-  { id: 'arc-flash', group: 'add', standard: 'IEEE 1584 / NFPA 70E', name: 'AC/DC Arc Flash Calculator', desc: 'Hazard Levels and Required PPE.', thumb: CALC_THUMBS.arc },
-  { id: 'max-demand', group: 'add', standard: 'AS/NZS 3000', name: 'Maximum Demand Calculator', desc: 'Estimate Peak Realistic Electrical Load.', thumb: CALC_THUMBS.demand },
-  { id: 'protection-coord', group: 'add', standard: 'IEC 60255', name: 'Protection Coordination', desc: 'Verify Selective Tripping of Protective Devices.', thumb: CALC_THUMBS.protect }
+  { id: 'cable-pulling', group: 'add', standard: 'IEEE 1185', name: 'Cable Pulling Calculator', desc: 'Menghitung gaya tarik (pulling tension) & tekanan dinding samping (sidewall pressure) saat kabel ditarik melewati konduit/tray dengan belokan — memastikan kabel tidak rusak (insulasi/konduktor) selama instalasi.', thumb: CALC_THUMBS.pull, photo: _CALC_PHOTO('1621905251918-48416bd8575a') },
+  { id: 'arc-flash', group: 'add', standard: 'IEEE 1584 / NFPA 70E', name: 'AC/DC Arc Flash Calculator', desc: 'Menghitung energi insiden (cal/cm²) & batas arc flash boundary pada panel sesuai IEEE 1584. Jadi dasar pemilihan kategori APD (PPE) dan label keselamatan agar pekerja terlindungi dari ledakan busur listrik.', thumb: CALC_THUMBS.arc, photo: _CALC_PHOTO('1559302995-f1d7e0c8a4ad') },
+  { id: 'max-demand', group: 'add', standard: 'AS/NZS 3000', name: 'Maximum Demand Calculator', desc: 'Memperkirakan beban puncak (maximum demand) instalasi dari daftar beban & faktor diversitas. Hasilnya jadi dasar memilih kabel utama, rating MCB/MCCB induk, dan kapasitas trafo agar sistem tidak over/under-sized.', thumb: CALC_THUMBS.demand, photo: _CALC_PHOTO('1581092160562-40aa08e78837') },
+  { id: 'protection-coord', group: 'add', standard: 'IEC 60255', name: 'Protection Coordination', desc: 'Memeriksa selektivitas/diskriminasi proteksi: memastikan breaker atau fuse di hilir trip lebih dulu daripada di hulu, sehingga hanya bagian terganggu yang padam — bukan seluruh instalasi. Cek selektivitas arus & waktu.', thumb: CALC_THUMBS.protect, photo: _CALC_PHOTO('1591955506264-3f5a6834570a') }
 ];
 
 function renderCalculators() {
@@ -15451,8 +15452,9 @@ function renderCalculators() {
   const cardHTML = (c) => `
     <div class="calc-card">
       <div class="calc-card-thumb">
-        ${c.badge ? `<div class="calc-card-thumb-badge">${c.badge}</div>` : ''}
         ${c.thumb}
+        ${c.photo ? `<img class="calc-card-thumb-photo" src="${c.photo}" alt="${c.name}" loading="lazy" onerror="this.remove();const s=this.nextElementSibling;if(s&&s.classList.contains('calc-card-thumb-shade'))s.remove();"><span class="calc-card-thumb-shade"></span>` : ''}
+        ${c.badge ? `<div class="calc-card-thumb-badge">${c.badge}</div>` : ''}
       </div>
       <h4>${c.name}</h4>
       <p>${c.desc}</p>
