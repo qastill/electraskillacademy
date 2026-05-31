@@ -2525,26 +2525,36 @@ body {
 
 .labs-hero-tabs {
   display: inline-flex;
-  gap: 8px;
+  gap: 10px;
   background: rgba(245, 240, 230, 0.08);
-  padding: 6px;
+  padding: 8px;
   border: 1px solid rgba(201, 169, 110, 0.3);
-  border-radius: 2px;
+  border-radius: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Tab-switched panels — hanya satu section tampil per klik (tanpa scroll panjang) */
+.labs-panel { display: none; }
+.labs-panel.show { display: block; animation: labsFade 0.35s ease; }
+@keyframes labsFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .labs-tab-btn {
-  padding: 12px 28px;
+  padding: 18px 40px;
   background: transparent;
   color: rgba(245, 240, 230, 0.65);
   border: none;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
 .labs-tab-btn:hover { color: var(--cream); }
@@ -11963,15 +11973,15 @@ button:active:not(:disabled),
       <h1>Belajar teori, latih <span class="italic">tangannya</span></h1>
       <p class="labs-hero-desc">Jangan cuma hafal rumus. Coba langsung di simulator interaktif, atau ikut kelas praktikum hands-on di fasilitas partner ESA seluruh Indonesia.</p>
       <div class="labs-hero-tabs">
-        <button class="labs-tab-btn active" onclick="labsScrollTo('simulator')">Digital Simulator Lab</button>
-        <button class="labs-tab-btn" onclick="labsScrollTo('design-calc')">Design Calculators</button>
-        <button class="labs-tab-btn" onclick="labsScrollTo('praktikum')">Kelas Praktikum</button>
+        <button class="labs-tab-btn active" data-panel="simulator" onclick="labsShowSection('simulator')">Digital Simulator Lab</button>
+        <button class="labs-tab-btn" data-panel="design-calc" onclick="labsShowSection('design-calc')">Design Calculators</button>
+        <button class="labs-tab-btn" data-panel="praktikum" onclick="labsShowSection('praktikum')">Kelas Praktikum</button>
       </div>
     </div>
   </section>
 
   <!-- Simulator Section -->
-  <section class="simulator-section lab-launch" id="lab-simulator">
+  <section class="simulator-section lab-launch labs-panel show" id="lab-simulator">
     <div class="lab-launch-inner">
       <div class="lab-launch-head">
         <div>
@@ -12000,7 +12010,7 @@ button:active:not(:disabled),
   </section>
 
   <!-- Electrical Design Calculators Section -->
-  <section class="calc-section" id="lab-design-calc">
+  <section class="calc-section labs-panel" id="lab-design-calc">
     <div class="lab-section-inner">
       <div class="lab-section-header">
         <div class="lab-section-eyebrow">Electrical Design Calculators</div>
@@ -12017,7 +12027,7 @@ button:active:not(:disabled),
   </section>
 
   <!-- Praktikum Section -->
-  <section class="praktikum-section" id="lab-praktikum">
+  <section class="praktikum-section labs-panel" id="lab-praktikum">
     <div class="lab-section-inner">
       <div class="lab-section-header">
         <div class="lab-section-eyebrow">Kelas Praktikum Hands-on</div>
@@ -14802,6 +14812,13 @@ function showView(view) {
     target.classList.add('active');
     currentView = view;
     window.scrollTo({ top: 0, behavior: 'instant' });
+    // Labs: selalu mulai dari panel pertama (Simulator) tiap kali dibuka.
+    if (view === 'labs') {
+      document.querySelectorAll('.labs-tab-btn').forEach(t =>
+        t.classList.toggle('active', t.getAttribute('data-panel') === 'simulator'));
+      document.querySelectorAll('.labs-panel').forEach(p =>
+        p.classList.toggle('show', p.id === 'lab-simulator'));
+    }
   }
 }
 
@@ -16070,13 +16087,21 @@ function renderPraktikum() {
   `).join('');
 }
 
-function labsScrollTo(section) {
-  const tabs = document.querySelectorAll('.labs-tab-btn');
-  tabs.forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
-  const target = document.getElementById('lab-' + section);
-  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// Labs: tab-switched panels — tampilkan satu section per klik, tanpa scroll panjang.
+function labsShowSection(section) {
+  document.querySelectorAll('.labs-tab-btn').forEach(t =>
+    t.classList.toggle('active', t.getAttribute('data-panel') === section));
+  document.querySelectorAll('.labs-panel').forEach(p =>
+    p.classList.toggle('show', p.id === 'lab-' + section));
+  // Bawa fokus ke awal konten panel (tepat di bawah hero), bukan scroll panjang.
+  const hero = document.querySelector('.labs-hero');
+  if (hero) {
+    const top = hero.getBoundingClientRect().bottom + window.pageYOffset;
+    window.scrollTo({ top: Math.max(0, top - 1), behavior: 'smooth' });
+  }
 }
+// Back-compat: pemanggilan lama labsScrollTo() diarahkan ke tab-switch.
+function labsScrollTo(section) { labsShowSection(section); }
 
 // ================================================
 // SIMULATOR MODAL — dynamic content per simulator
