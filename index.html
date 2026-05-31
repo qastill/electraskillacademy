@@ -15423,6 +15423,21 @@ const SIMULATORS = [
   });
 });
 
+// CapBankSim — desain & wiring panel kapasitor bank (PFC). Relevan untuk
+// jalur Instalasi (S1), Industri & Manufaktur (S2), dan Distribusi (S3).
+[
+  { jalur: 'S1', category: 'Instalasi · Power Factor' },
+  { jalur: 'S2', category: 'Industri · Power Factor' },
+  { jalur: 'S3', category: 'Distribusi · Power Factor' }
+].forEach(o => {
+  SIMULATORS.push({
+    id: 'capbank-' + o.jalur.toLowerCase(), jalur: o.jalur, category: o.category,
+    name: 'Capacitor Bank — Desain & Wiring',
+    desc: 'Desain panel kapasitor bank untuk koreksi faktor daya (cos φ): sizing kVAR per step, pemilihan MCCB/MCB/kontaktor & CT, rekomendasi detuned reactor untuk harmonik, single-line diagram otomatis, plus papan wiring interaktif controller-CT-kontaktor-kapasitor dengan simulasi penghematan denda kVAR PLN.',
+    level: 'Profesional', duration: '~30 menit', icon: SIM_ICONS.pf, working: true, embed: 'capbank.html'
+  });
+});
+
 // ================================================
 // ELECTRICAL DESIGN CALCULATORS
 // ================================================
@@ -15875,6 +15890,9 @@ const PRAKTIKUM_CLASSES = [
 
 // Penjelasan detail tiap lab — w: Fungsi (apa yg dihitung/dilakukan), g: Tujuan belajar, r: Kegunaan dunia nyata
 const SIM_INFO = {
+  'capbank-s1': { w: 'Mendesain panel kapasitor bank untuk koreksi faktor daya: hitung kVAR per step, pilih MCCB/MCB/kontaktor & rasio CT, cek kebutuhan detuned reactor terhadap harmonik, lalu rakit wiring controller-CT-kontaktor-kapasitor di papan interaktif dan jalankan simulasi.', g: 'Memahami cara menaikkan cos φ ke ≥0,95 dan mewiring panel capbank dengan benar — termasuk loop sensing CT yang paling sering salah di lapangan.', r: 'Dipakai untuk menghindari denda kVAR PLN dan memperbaiki kualitas daya di gedung, pabrik, dan jaringan distribusi.' },
+  'capbank-s2': { w: 'Mendesain panel kapasitor bank untuk koreksi faktor daya: hitung kVAR per step, pilih MCCB/MCB/kontaktor & rasio CT, cek kebutuhan detuned reactor terhadap harmonik, lalu rakit wiring controller-CT-kontaktor-kapasitor di papan interaktif dan jalankan simulasi.', g: 'Memahami cara menaikkan cos φ ke ≥0,95 dan mewiring panel capbank dengan benar — termasuk loop sensing CT yang paling sering salah di lapangan.', r: 'Dipakai untuk menghindari denda kVAR PLN dan memperbaiki kualitas daya di gedung, pabrik, dan jaringan distribusi.' },
+  'capbank-s3': { w: 'Mendesain panel kapasitor bank untuk koreksi faktor daya: hitung kVAR per step, pilih MCCB/MCB/kontaktor & rasio CT, cek kebutuhan detuned reactor terhadap harmonik, lalu rakit wiring controller-CT-kontaktor-kapasitor di papan interaktif dan jalankan simulasi.', g: 'Memahami cara menaikkan cos φ ke ≥0,95 dan mewiring panel capbank dengan benar — termasuk loop sensing CT yang paling sering salah di lapangan.', r: 'Dipakai untuk menghindari denda kVAR PLN dan memperbaiki kualitas daya di gedung, pabrik, dan jaringan distribusi.' },
   'ohm-law': { w: 'Menghitung hubungan Tegangan (V), Arus (I), dan Hambatan (R) lewat V = I × R sekaligus daya P = V × I; ubah satu nilai, dua lainnya menyesuaikan secara real-time.', g: 'Memahami fondasi semua rangkaian listrik dan bagaimana ketiga besaran saling memengaruhi.', r: 'Dipakai setiap teknisi untuk memperkirakan arus beban, memilih sekering, dan mendiagnosis rangkaian sederhana.' },
   'three-phase': { w: 'Menghitung daya aktif (P), reaktif (Q), dan semu (S) sistem 3 fasa beserta sudut dan faktor daya, divisualkan sebagai segitiga daya.', g: 'Memahami beda kW vs kVA dan peran cos φ pada sistem tenaga.', r: 'Dasar membaca tagihan kVA industri, sizing genset/trafo, dan analisis kualitas daya.' },
   'transformer': { w: 'Menghitung rasio belitan, tegangan, dan arus sisi primer-sekunder trafo step-up/step-down.', g: 'Memahami konservasi daya (Vp·Ip ≈ Vs·Is) dan hubungan rasio lilitan.', r: 'Dasar kerja gardu distribusi, adaptor, dan desain catu daya.' },
