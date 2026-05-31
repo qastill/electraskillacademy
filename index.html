@@ -2668,10 +2668,24 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .lab-tile:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(26,29,46,0.3); }
-.lab-tile-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-.lab-tile:hover .lab-tile-img { transform: scale(1.09); }
-.lab-tile-grad { position: absolute; inset: 0; opacity: 0.34; mix-blend-mode: multiply; }
-.lab-tile-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,15,28,0.93) 6%, rgba(13,15,28,0.5) 42%, rgba(13,15,28,0.08) 100%); }
+.lab-tile-grad { position: absolute; inset: 0; }
+.lab-tile-pattern {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.16) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.5;
+}
+/* Ikon topik per-lab sebagai visual utama (tiap lab beda simbol) */
+.lab-tile-icon {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -64%);
+  width: 64px; height: 64px; color: #fff; opacity: 0.95;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+  transition: transform 0.35s ease;
+  display: flex; align-items: center; justify-content: center;
+}
+.lab-tile-icon svg { width: 100%; height: 100%; }
+.lab-tile:hover .lab-tile-icon { transform: translate(-50%, -64%) scale(1.12); }
+.lab-tile-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,15,28,0.92) 4%, rgba(13,15,28,0.45) 40%, rgba(13,15,28,0.05) 78%); }
 .lab-tile-badge {
   position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
@@ -16000,12 +16014,13 @@ const _LAB_ARROW = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none">
 function _labTile(s, g) {
   return `
     <button type="button" class="lab-tile" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
-      <img class="lab-tile-img" src="${g.photo}" alt="" loading="lazy" onerror="this.style.display='none'">
       <span class="lab-tile-grad" style="background:${g.grad}"></span>
+      <span class="lab-tile-pattern"></span>
+      <span class="lab-tile-icon">${s.icon || ''}</span>
       <span class="lab-tile-shade"></span>
       <span class="lab-tile-badge">${g.num}</span>
       <span class="lab-tile-content">
-        <span class="lab-tile-cat">${g.label}</span>
+        <span class="lab-tile-cat">${s.category || g.label}</span>
         <span class="lab-tile-title">${s.name}</span>
         <span class="lab-tile-open">Buka Lab ${_LAB_ARROW}</span>
       </span>
