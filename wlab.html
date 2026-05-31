@@ -41,6 +41,8 @@
   @keyframes flow{to{stroke-dashoffset:-20}}
   .spin{transform-origin:center;transform-box:fill-box;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+  .spin-rev{transform-origin:center;transform-box:fill-box;animation:spinrev .8s linear infinite}
+  @keyframes spinrev{to{transform:rotate(-360deg)}}
   .legend{display:flex;flex-wrap:wrap;gap:7px 13px;margin-top:10px}
   .lg{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--txt-d);font-family:'JetBrains Mono',monospace}
   .lgdot{width:15px;height:4px;border-radius:3px}
@@ -262,11 +264,13 @@ function drawComp(inst,closed,live){
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
-  if(kind==='motor'){
+  if(kind==='motor'||kind==='motor1'){
     const run=energized&&phase!=='off';const cx=x+w/2,cy=y+h/2;
+    const rev=phase==='rev'||phase==='reverse';const spinCls=run?(rev?'spin-rev':'spin'):'';
     s+=`<circle cx="${cx}" cy="${cy}" r="30" fill="#0a0e16" stroke="${run?'#ffd34d':'#33445f'}" stroke-width="2.5"/>`;
-    s+=`<g class="${run?'spin':''}"><g transform="translate(${cx},${cy})"><path d="M0 -20 L5 0 L0 20 L-5 0Z" fill="${run?'#e89b5e':'#33445f'}"/><path d="M-20 0 L0 5 L20 0 L0 -5Z" fill="${run?'#c9763b':'#26344a'}"/></g></g>`;
+    s+=`<g class="${spinCls}"><g transform="translate(${cx},${cy})"><path d="M0 -20 L5 0 L0 20 L-5 0Z" fill="${run?'#e89b5e':'#33445f'}"/><path d="M-20 0 L0 5 L20 0 L0 -5Z" fill="${run?'#c9763b':'#26344a'}"/></g></g>`;
     s+=`<text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="13" fill="${run?'#ffd34d':'#8ea0b8'}" font-family="Chakra Petch">M</text>`;
+    if(run)s+=`<text x="${cx}" y="${cy-38}" text-anchor="middle" font-size="9" fill="#ffd34d" font-family="JetBrains Mono">${rev?'◀ REVERSE':'FORWARD ▶'}</text>`;
   }
   if(kind==='star'){const cx=x+w/2,cy=y+h-22;s+=`<path d="M${cx} ${cy} L${cx} ${cy-12} M${cx} ${cy} L${cx-10} ${cy+8} M${cx} ${cy} L${cx+10} ${cy+8}" stroke="${on?'#ffd34d':'#5b6b82'}" stroke-width="2.5" fill="none"/>`;}
   if(kind==='sw3'||kind==='sw'){s+=`<text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-size="8.5" fill="${on!==false?'#3ddc84':'#ff5d5d'}">${on!==false?'ON':'OFF'}</text>`;}
@@ -278,7 +282,10 @@ function drawComp(inst,closed,live){
 function currentClosed(){
   const cl={};
   LAB.comps.forEach(inst=>{const kind=COMP[inst.type].kind;
-    if(kind==='sw3'||kind==='sw')cl[inst.id]=swState[inst.id]!==false; // default ON
+    // Komponen ber-flag no:true (normally-open) default LEPAS — hanya menutup
+    // saat fasenya aktif. Tanpa flag, MCB/saklar/kontaktor utama default ON.
+    if(inst.no)cl[inst.id]=false;
+    else if(kind==='sw3'||kind==='sw')cl[inst.id]=swState[inst.id]!==false; // default ON
     else cl[inst.id]=false;});
   if(energized&&LAB.phaseClosed&&LAB.phaseClosed[phase]){LAB.phaseClosed[phase].forEach(id=>cl[id]=true);}
   return cl;
@@ -424,6 +431,66 @@ LABS['star-delta']={
     <p>Karena ujung belitan dilayani dua kontaktor berbeda (Y saat start, Δ saat run) yang tak pernah aktif bersamaan — jadi bukan korslet.</p>
     <h4>Di dunia kerja</h4>
     <p>Dipakai pada pompa, kompresor, fan, conveyor bermotor ≥5,5 kW agar tak men-trip MCB & menjaga tegangan jaringan saat start.</p>`
+};
+
+/* ---- LAB: Forward-Reverse Starter + interlock (S2) ---- */
+LABS['fwd-rev']={
+  id:'fwd-rev', jalur:'S2', level:'Profesional', short:'Forward-Reverse', sub:'Membalik putaran motor 3φ + interlock',
+  vb:'0 0 980 560',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',out:'#e89b5e',mend:'#c98aff'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',out:'Jalur output ke OL/motor',mend:'Titik bintang motor (U2/V2/W2)'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:60},
+    {id:'Q1',type:'mcb3',x:140,y:60},
+    {id:'KMF',type:'contactor3',x:300,y:30, no:true},
+    {id:'KMR',type:'contactor3',x:300,y:250, no:true},
+    {id:'OL',type:'overload',x:520,y:150},
+    {id:'M',type:'motor3box',x:730,y:150},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','Q1.Ri']},
+    {role:'S',t:['SRC.S','Q1.Si']},
+    {role:'T',t:['SRC.T','Q1.Ti']},
+    {role:'R',t:['Q1.Ro','KMF.Ri','KMR.Ri']},      // bus R → kedua kontaktor
+    {role:'S',t:['Q1.So','KMF.Si','KMR.Si']},      // bus S → kedua kontaktor
+    {role:'T',t:['Q1.To','KMF.Ti','KMR.Ti']},      // bus T → kedua kontaktor
+    {role:'out',t:['KMF.Ro','KMR.Ro','OL.Ri']},    // R tetap di kedua arah
+    {role:'out',t:['KMF.So','KMR.To','OL.Si']},    // S fwd / T rev → jalur V (silang)
+    {role:'out',t:['KMF.To','KMR.So','OL.Ti']},    // T fwd / S rev → jalur W (silang)
+    {role:'out',t:['OL.Ro','M.U1']},
+    {role:'out',t:['OL.So','M.V1']},
+    {role:'out',t:['OL.To','M.W1']},
+    {role:'mend',t:['M.U2','M.V2','M.W2']},         // titik bintang internal motor
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'SUMBER R/S/T → MCB Q1', why:'Tiga fasa masuk pengaman utama dulu.'},
+    {net:3, txt:'Q1 keluar → KMF & KMR (paralel)', why:'Kedua kontaktor mengambil 3 fasa dari busbar yang SAMA.'},
+    {net:6, txt:'KMF out & KMR out → OL (R lurus)', why:'Fasa R sama di kedua arah; output kontaktor digabung ke input overload.'},
+    {net:7, txt:'KMF-S & KMR-T → jalur V (silang)', why:'Inti membalik arah: pada KMR, fasa S & T DITUKAR.'},
+    {net:8, txt:'KMF-T & KMR-S → jalur W (silang)', why:'Menukar dua fasa = motor berputar berlawanan.'},
+    {net:9, txt:'OL keluar → motor U1/V1/W1', why:'Overload melindungi motor, lalu ke belitan.'},
+    {net:12, txt:'Satukan U2/V2/W2 (titik bintang)', why:'Belitan motor terhubung bintang di dalam terminal box.'},
+  ],
+  phases:[{key:'fwd',label:'▶ FORWARD (KMF)'},{key:'rev',label:'◀ REVERSE (KMR)'}],
+  phaseClosed:{ fwd:['Q1','KMF'], rev:['Q1','KMR'] },
+  sequence:[{phase:'fwd',ms:3200},{phase:'rev'}],
+  okMsg:'<b>✓ Wiring benar — arah motor bisa dibalik!</b> Lihat motor berputar <b>FORWARD</b> (KMF menutup) lalu <b>REVERSE</b> (KMR menutup, dua fasa tertukar). KMF & KMR tak pernah menutup bersamaan — itulah interlock.',
+  tutorial:`
+    <h4>Apa itu Forward-Reverse Starter?</h4>
+    <p>Rangkaian untuk membalik arah putaran motor induksi 3φ. Caranya: <b>menukar dua dari tiga fasa</b> yang masuk ke motor. Dipakai dua kontaktor — <span class="badge">KMF</span> (maju) dan <span class="badge">KMR</span> (mundur).</p>
+    <h4>Kenapa cuma tukar 2 fasa?</h4>
+    <p>Urutan fasa R-S-T menentukan arah medan putar. Menukar dua fasa (mis. S↔T) membalik urutan → medan & rotor berputar terbalik. Menukar ketiganya = sama saja (tidak berubah).</p>
+    <h4>Interlock — WAJIB</h4>
+    <ul>
+      <li><b>Listrik:</b> kontak NC (normally-closed) tiap kontaktor diseri ke coil lawannya, jadi kalau KMF aktif, coil KMR diputus.</li>
+      <li><b>Mekanik:</b> tuas mekanis yang mencegah keduanya menarik bersamaan.</li>
+    </ul>
+    <p>Kalau KMF & KMR menutup bersamaan → <b>hubung singkat antar fasa</b> (karena outputnya saling silang). Itu sebabnya simulator hanya menutup satu kontaktor per arah.</p>
+    <h4>Praktik aman</h4>
+    <p>Beri <b>jeda</b> sebelum membalik arah — biarkan motor berhenti dulu agar arus pembalikan (plugging) tidak merusak. Untuk beban berat dipakai timer transisi.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Conveyor dua arah, pintu/gerbang otomatis, crane/hoist, pompa yang perlu di-flush balik, mesin produksi.</p>`
 };
 
 /* ===================== init ===================== */
