@@ -14736,8 +14736,30 @@ function _trackArtURI(id){
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">' + _ART_BG + inner + '</svg>';
   return 'data:image/svg+xml,' + encodeURIComponent(svg);
 }
-['S9','S10','S11','S12','S13','S14','S15','S16'].forEach(id => {
-  const uri = _trackArtURI(id); if (!uri) return;
+// Foto jalur S1–S16: pakai ilustrasi resmi dari folder "ICON HOME/".
+// Override foto Unsplash (S1–S8) maupun art SVG (S9–S16) sebelumnya agar
+// seluruh kartu jalur memakai aset yang sudah disiapkan. Nama file mengandung
+// spasi → encodeURI agar URL valid.
+const _TRACK_ART_FILES = {
+  S1:  'ICON HOME/1. instalsi bangunan.png',
+  S2:  'ICON HOME/2 industri dan manufaktur.png',
+  S3:  'ICON HOME/3 distribution engineer.png',
+  S4:  'ICON HOME/4 transmission engineer.png',
+  S5:  'ICON HOME/5 energy analyst.png',
+  S6:  'ICON HOME/6 energy auditor.png',
+  S7:  'ICON HOME/7 renewable engineer.png',
+  S8:  'ICON HOME/8 safety engineer.png',
+  S9:  'ICON HOME/9 sales.png',
+  S10: 'ICON HOME/10 solar engineer.png',
+  S11: 'ICON HOME/11 carbon auditor.png',
+  S12: 'ICON HOME/12 ev engineer.png',
+  S13: 'ICON HOME/13 waste to energy.png',
+  S14: 'ICON HOME/14 HYDROGEN ENGINEER.png',
+  S15: 'ICON HOME/15 BESS ENGINEER.png',
+  S16: 'ICON HOME/16 kontrol engineer.png'
+};
+Object.keys(_TRACK_ART_FILES).forEach(id => {
+  const uri = encodeURI(_TRACK_ART_FILES[id]);
   const card = PRACTICE_CARDS.find(c => c.id === id); if (card) card.photo = uri;
   if (TRACKS_META[id]) TRACKS_META[id].photo = uri;
 });
