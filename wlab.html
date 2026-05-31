@@ -201,6 +201,19 @@ const COMP = {
     terms:[{k:'i1',side:'l',f:0.16,lbl:'I-S1'},{k:'i2',side:'l',f:0.28,lbl:'I-S2'},
            {k:'Vp',side:'l',f:0.5,lbl:'+'},{k:'Vm',side:'l',f:0.62,lbl:'−'},
            {k:'t1',side:'r',f:0.5,lbl:'TRIP+'},{k:'t2',side:'r',f:0.62,lbl:'TRIP−'}]},
+  // --- sinkronisasi (S7): relai check-sync (25) + synchroscope ---
+  syncR:{ w:170,h:240,label:'CHECK-SYNC 25',sub:'synchroscope',kind:'sync',
+    terms:[{k:'vg1',side:'l',f:0.12,lbl:'VG-R'},{k:'vg2',side:'l',f:0.22,lbl:'VG-N'},
+           {k:'vb1',side:'l',f:0.36,lbl:'VBUS-R'},{k:'vb2',side:'l',f:0.46,lbl:'VBUS-N'},
+           {k:'Vp',side:'l',f:0.66,lbl:'+'},{k:'Vm',side:'l',f:0.76,lbl:'−'},
+           {k:'c1',side:'r',f:0.6,lbl:'CLOSE+'},{k:'c2',side:'r',f:0.7,lbl:'CLOSE−'}]},
+  pmk:{ w:110,h:150,label:'PMK (CB)',sub:'sinkron',kind:'cb',
+    terms:[{k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
+           {k:'Ro',side:'r',f:0.22},{k:'So',side:'r',f:0.5},{k:'To',side:'r',f:0.78},
+           {k:'x1',side:'b',f:0.35,lbl:'CC+'},{k:'x2',side:'b',f:0.65,lbl:'CC−'}]},
+  busbar3:{ w:60,h:200,label:'BUS',sub:'GRID',kind:'grid',
+    terms:[{k:'R',side:'l',f:0.2,lbl:'R'},{k:'S',side:'l',f:0.5,lbl:'S'},{k:'T',side:'l',f:0.8,lbl:'T'},
+           {k:'Ro',side:'r',f:0.2},{k:'So',side:'r',f:0.5},{k:'To',side:'r',f:0.8}]},
 };
 
 /* terminal absolute coords */
@@ -261,8 +274,9 @@ function simUF(closed){
     else if(kind==='cpass'){ u.u(id+'.in',id+'.out'); } // kontak NC (STOP/E-STOP/OL 95-96) — normal tertutup
     else if(kind==='sw'){ if(closed[id]!==false)u.u(id+'.in',id+'.out'); }
     else if(kind==='plc'){ u.u(id+'.Lp',id+'.Qc'); } // suplai output (3L+) di-jumper internal dari L+
-    else if(kind==='cb'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');} } // PMT: menutup kecuali saat trip; trip coil x1-x2 = beban (tak menjembatani)
-    // kind 'coil'/'load'/'relay'/'ct3 secondary' = beban/sensor, tidak menjembatani
+    else if(kind==='cb'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');} } // PMT/PMK: menutup kecuali saat trip; coil x1-x2 = beban (tak menjembatani)
+    else if(kind==='grid'){ u.u(id+'.R',id+'.Ro');u.u(id+'.S',id+'.So');u.u(id+'.T',id+'.To'); } // busbar grid: rel terhubung
+    // kind 'coil'/'load'/'relay'/'sync'/'ct secondary' = beban/sensor, tidak menjembatani
   });
   return u;
 }
@@ -271,7 +285,7 @@ function liveSet(closed){
   const u=simUF(closed);
   // semua sumber (daya 3φ & kontrol) dianggap live
   const srcTerms=[];
-  LAB.comps.forEach(c=>{ if(COMP[c.type].kind==='src')COMP[c.type].terms.forEach(t=>srcTerms.push(c.id+'.'+t.k)); });
+  LAB.comps.forEach(c=>{ const k=COMP[c.type].kind; if(k==='src'||k==='grid')COMP[c.type].terms.forEach(t=>srcTerms.push(c.id+'.'+t.k)); });
   // sumber tambahan tergantung fase (mis. OUTPUT PLC yang aktif saat ladder jalan)
   if(LAB.phaseSrc&&LAB.phaseSrc[phase])LAB.phaseSrc[phase].forEach(t=>srcTerms.push(t));
   Object.keys(T).forEach(tk=>{ if(srcTerms.some(st=>u.c(tk,st)))s.add(tk); });
@@ -323,6 +337,8 @@ function drawComp(inst,closed,live){
   if(kind==='ct3'){stroke='#5b8cff';accent='#9db4ff';}
   const tripEn=kind==='relay'&&live.has(inst.id+'.t1');
   if(kind==='relay'){const flt=energized&&phase==='trip';stroke=flt?'#ff5d5d':(energized?'#3ddc84':'#33445f');accent=flt?'#ff9d9d':(energized?'#3ddc84':'#8ea0b8');}
+  if(kind==='grid'){const glive=energized;stroke=glive?'#e8b339':'#33445f';accent=glive?'#f3d27a':'#8ea0b8';}
+  if(kind==='sync'){const syn=energized&&phase==='sync';stroke=syn?'#3ddc84':(energized?'#e8b339':'#33445f');accent=syn?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
@@ -367,6 +383,22 @@ function drawComp(inst,closed,live){
     s+=`<rect x="${x+14}" y="${y+h*0.78}" width="${w-28}" height="20" rx="4" fill="#0a1f14" stroke="${flt?'#ff5d5d':'#1c5b3a'}"/>`;
     s+=`<text x="${cx}" y="${y+h*0.78+14}" text-anchor="middle" font-size="9" fill="${flt?'#ff5d5d':'#3ddc84'}" font-family="JetBrains Mono">${flt?'PICKUP→TRIP':(energized?'monitor I':'—')}</text>`;
     s+=`<text x="${x+w*0.32}" y="${y+h*0.42}" text-anchor="middle" font-size="7" fill="#5b6b82">I&gt;  I&gt;&gt;</text>`;
+  }
+  if(kind==='grid'){const glive=energized;[0.2,0.5,0.8].forEach(f=>{s+=`<line x1="${x+8}" y1="${y+f*h}" x2="${x+w-8}" y2="${y+f*h}" stroke="${glive?'#e8b339':'#33445f'}" stroke-width="4" stroke-linecap="round"/>`;});}
+  if(kind==='sync'){
+    const syn=energized&&phase==='sync';const closed2=energized&&phase==='closed';
+    const cx=x+w/2,cy=y+h*0.42,r=34;
+    // dial
+    s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#0a0e16" stroke="${syn||closed2?'#3ddc84':'#33445f'}" stroke-width="2"/>`;
+    s+=`<text x="${cx}" y="${cy-r-4}" text-anchor="middle" font-size="7.5" fill="#5b6b82">12 (sinkron)</text>`;
+    // jarum: berputar saat belum sinkron, diam di atas saat sinkron/closed
+    const ang = (syn||closed2) ? -90 : 35;
+    const nx=cx+r*0.8*Math.cos(ang*Math.PI/180), ny=cy+r*0.8*Math.sin(ang*Math.PI/180);
+    s+=`<line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="${syn||closed2?'#3ddc84':'#ffd34d'}" stroke-width="3" stroke-linecap="round"${(energized&&phase==='run')?'':''}/>`;
+    s+=`<circle cx="${cx}" cy="${cy}" r="3" fill="#8ea0b8"/>`;
+    s+=`<rect x="${x+12}" y="${y+h*0.74}" width="${w-24}" height="20" rx="4" fill="${syn||closed2?'#0a1f14':'#1a1206'}" stroke="${syn||closed2?'#1c5b3a':'#5a4a16'}"/>`;
+    const msg = closed2?'SINKRON — CLOSE!':(syn?'SYNC OK ✓':(energized?'cek V·f·sudut…':'—'));
+    s+=`<text x="${cx}" y="${y+h*0.74+14}" text-anchor="middle" font-size="9" fill="${syn||closed2?'#3ddc84':'#f3d27a'}" font-family="JetBrains Mono">${msg}</text>`;
   }
   s+=`</g>`;
   return s;
@@ -842,6 +874,67 @@ LABS['ats']={
     <p>PLN padam → tunda (mastикан benar padam) → start genset → tunggu tegangan/frekuensi stabil → buka KMP, tutup KMG. PLN kembali → tunda → buka KMG, tutup KMP → cooling-down genset → stop.</p>
     <h4>Di dunia kerja</h4>
     <p>Wajib di rumah sakit, data center, gedung tinggi, pabrik, dan fasilitas kritikal. Teknisi instalasi merakit panel ATS-AMF & menyetel timer transfer.</p>`
+};
+
+/* ---- LAB: Sinkronisasi Generator ke Grid (S7) ---- */
+LABS['gen-sync']={
+  id:'gen-sync', jalur:'S7', level:'Advance', short:'Sinkronisasi Genset', sub:'Paralel generator ke grid: synchroscope, check-sync (25), close PMK',
+  vb:'0 0 1040 620',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',vg:'#3ddc84',vb:'#e8b339',p:'#ff6b6b',m:'#6db3ff',cc:'#ff9d3d',bus:'#f3d27a'},
+  roleLabel:{R:'Gen R',S:'Gen S',T:'Gen T',vg:'Sensing tegangan generator',vb:'Sensing tegangan bus/grid',p:'+110V DC',m:'−110V DC',cc:'Close: relai 25 → koil PMK',bus:'Busbar grid'},
+  comps:[
+    {id:'GEN',type:'src3',x:24,y:60},
+    {id:'PMK',type:'pmk',x:240,y:60},
+    {id:'BUS',type:'busbar3',x:470,y:60},
+    {id:'SYN',type:'syncR',x:300,y:330},
+    {id:'BAT',type:'battDC',x:30,y:360},
+  ],
+  nets:[
+    {role:'R',t:['GEN.R','PMK.Ri','SYN.vg1']},   // node R generator + tap sensing VG (paralel)
+    {role:'S',t:['GEN.S','PMK.Si','SYN.vg2']},    // node S generator + referensi sensing VG
+    {role:'T',t:['GEN.T','PMK.Ti']},
+    {role:'bus',t:['PMK.Ro','BUS.R','SYN.vb1']},  // node R bus/grid + tap sensing VBUS
+    {role:'bus',t:['PMK.So','BUS.S','SYN.vb2']},  // node S bus + referensi sensing VBUS
+    {role:'bus',t:['PMK.To','BUS.T']},
+    {role:'p',t:['BAT.P','SYN.Vp']},              // +110V DC → relai 25
+    {role:'m',t:['BAT.M','SYN.Vm','PMK.x2']},     // −110V DC bersama: relai & sisi bawah koil close
+    {role:'cc',t:['SYN.c1','PMK.x1']},            // output CLOSE relai 25 → koil close PMK (+)
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'GENERATOR R → PMK, dan tap sensing VG ke relai 25', why:'PMK menutup tepat saat gen sinkron. Tegangan generator juga di-tap (paralel) untuk dibandingkan relai check-sync.'},
+    {net:1, txt:'GENERATOR S → PMK, dan referensi sensing VG', why:'Pasangan sensing tegangan generator.'},
+    {net:2, txt:'GENERATOR T → PMK', why:'Fasa T generator ke PMK.'},
+    {net:3, txt:'PMK keluar R → BUSBAR GRID, dan tap sensing VBUS', why:'Sisi lain PMK adalah grid yang sudah hidup; tegangannya juga di-tap untuk dibandingkan.'},
+    {net:4, txt:'PMK keluar S → BUSBAR, dan referensi sensing VBUS', why:'Synchroscope membandingkan VG vs VBUS (beda sudut & frekuensi).'},
+    {net:5, txt:'PMK keluar T → BUSBAR', why:'Fasa T ke grid.'},
+    {net:6, txt:'+110V DC → relai 25', why:'Suplai relai & rangkaian penutup dari baterai gardu.'},
+    {net:7, txt:'−110V DC → relai 25 & sisi bawah koil close PMK', why:'Rel negatif bersama untuk relai dan koil close.'},
+    {net:8, txt:'Output CLOSE relai 25 → koil close PMK', why:'Relai mengizinkan PMK menutup HANYA saat keempat syarat sinkron terpenuhi.'},
+  ],
+  phases:[{key:'run',label:'① GEN ON — synchroscope berputar (belum sinkron)'},{key:'sync',label:'② SYNC OK — V·f·sudut·urutan cocok'},{key:'closed',label:'③ CLOSE PMK — generator paralel ke grid'}],
+  phaseClosed:{ run:[], sync:[], closed:['PMK'] },   // PMK baru menutup di fase closed
+  phaseSrc:{ closed:['SYN.c1'] },                     // saat sinkron, relai 25 energize koil close
+  sequence:[{phase:'run',ms:2600},{phase:'sync',ms:2400},{phase:'closed'}],
+  okMsg:'<b>✓ Wiring sinkronisasi benar!</b> Tahap: ① generator ON, synchroscope berputar (belum sinkron) → ② saat <b>tegangan, frekuensi, sudut fasa, & urutan fasa</b> cocok, relai 25 memberi izin → ③ <b>PMK menutup</b>, generator paralel ke grid. Menutup di saat salah = hentakan/kerusakan.',
+  tutorial:`
+    <h4>Kenapa generator harus disinkronkan?</h4>
+    <p>Menutup PMK saat generator <b>belum sefase</b> dengan grid = seperti menyambung dua sumber yang "bertabrakan" → arus hentakan besar, torsi kejut yang bisa merusak poros, kopling, dan belitan. Maka harus disinkronkan dulu.</p>
+    <h4>Empat syarat sinkronisasi (WAJIB semua)</h4>
+    <ul>
+      <li><b>Tegangan</b> generator ≈ tegangan grid (atur AVR/eksitasi).</li>
+      <li><b>Frekuensi</b> generator ≈ frekuensi grid (atur governor/putaran), sedikit lebih tinggi agar gen langsung memikul beban.</li>
+      <li><b>Sudut fasa</b> berimpit (synchroscope di posisi jam 12).</li>
+      <li><b>Urutan fasa</b> sama (R-S-T = R-S-T) — kalau terbalik, fatal.</li>
+    </ul>
+    <h4>Synchroscope & relai check-sync (ANSI 25)</h4>
+    <p>Synchroscope: jarum berputar bila ada beda frekuensi; arah putar menunjukkan gen lebih cepat/lambat. Saat jarum melambat & mendekati jam 12 → sefase. <b>Relai 25</b> mengukur otomatis dan baru memberi izin <b>close</b> bila keempat syarat dalam toleransi (mencegah salah tutup oleh operator).</p>
+    <h4>Suplai DC untuk closing</h4>
+    <p>Koil <b>close</b> PMK diberi daya dari baterai DC gardu — sama seperti rangkaian trip — agar andal dan tidak bergantung AC.</p>
+    <h4>Manual vs otomatis</h4>
+    <p>Manual: operator pantau synchroscope, tekan close di "creep to 12". Otomatis: relai 25 + auto-synchronizer yang mengatur AVR & governor lalu menutup PMK sendiri.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Pembangkit (PLTU/PLTG/PLTA/PLTD) & genset paralel: setiap unit yang masuk grid harus disinkronkan. Skill inti operator & teknisi listrik pembangkit.</p>`
 };
 
 /* ===================== init ===================== */
