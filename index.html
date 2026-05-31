@@ -15438,6 +15438,15 @@ const SIMULATORS = [
   });
 });
 
+// Wiring Lab (engine reusable, data-driven) — papan latihan wiring + tutorial.
+// Tahap 1: Star-Delta Starter di jalur Industri & Manufaktur (S2).
+SIMULATORS.push({
+  id: 'wlab-star-delta', jalur: 'S2', category: 'Industri · Kontrol Motor',
+  name: 'Star-Delta Starter — Wiring',
+  desc: 'Latihan merangkai starter bintang-segitiga motor 3φ: sumber → MCB → kontaktor utama → overload → motor, plus kontaktor Y & Δ. Sambungkan terminal, periksa, lalu jalankan — motor START bintang otomatis pindah RUN segitiga. Lengkap panduan langkah & tutorial.',
+  level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.motor, working: true, embed: 'wlab.html?lab=star-delta'
+});
+
 // ================================================
 // ELECTRICAL DESIGN CALCULATORS
 // ================================================
@@ -15890,6 +15899,7 @@ const PRAKTIKUM_CLASSES = [
 
 // Penjelasan detail tiap lab — w: Fungsi (apa yg dihitung/dilakukan), g: Tujuan belajar, r: Kegunaan dunia nyata
 const SIM_INFO = {
+  'wlab-star-delta': { w: 'Papan wiring interaktif starter bintang-segitiga: rangkai sumber 3φ → MCB → kontaktor utama → overload → motor, plus kontaktor Y dan Δ. Periksa rangkaian (deteksi sambungan kurang/korslet), lalu jalankan — motor START dalam bintang lalu otomatis pindah RUN segitiga, dengan animasi urutan kontaktor.', g: 'Memahami cara & alasan start motor besar dengan arus start kecil (bintang) sebelum beralih ke torsi penuh (segitiga), termasuk pentingnya interlock Y/Δ.', r: 'Skill inti teknisi industri untuk menjalankan pompa, kompresor, fan, dan conveyor bermotor ≥5,5 kW tanpa men-trip jaringan.' },
   'capbank-s1': { w: 'Mendesain panel kapasitor bank untuk koreksi faktor daya: hitung kVAR per step, pilih MCCB/MCB/kontaktor & rasio CT, cek kebutuhan detuned reactor terhadap harmonik, lalu rakit wiring controller-CT-kontaktor-kapasitor di papan interaktif dan jalankan simulasi.', g: 'Memahami cara menaikkan cos φ ke ≥0,95 dan mewiring panel capbank dengan benar — termasuk loop sensing CT yang paling sering salah di lapangan.', r: 'Dipakai untuk menghindari denda kVAR PLN dan memperbaiki kualitas daya di gedung, pabrik, dan jaringan distribusi.' },
   'capbank-s2': { w: 'Mendesain panel kapasitor bank untuk koreksi faktor daya: hitung kVAR per step, pilih MCCB/MCB/kontaktor & rasio CT, cek kebutuhan detuned reactor terhadap harmonik, lalu rakit wiring controller-CT-kontaktor-kapasitor di papan interaktif dan jalankan simulasi.', g: 'Memahami cara menaikkan cos φ ke ≥0,95 dan mewiring panel capbank dengan benar — termasuk loop sensing CT yang paling sering salah di lapangan.', r: 'Dipakai untuk menghindari denda kVAR PLN dan memperbaiki kualitas daya di gedung, pabrik, dan jaringan distribusi.' },
   'capbank-s3': { w: 'Mendesain panel kapasitor bank untuk koreksi faktor daya: hitung kVAR per step, pilih MCCB/MCB/kontaktor & rasio CT, cek kebutuhan detuned reactor terhadap harmonik, lalu rakit wiring controller-CT-kontaktor-kapasitor di papan interaktif dan jalankan simulasi.', g: 'Memahami cara menaikkan cos φ ke ≥0,95 dan mewiring panel capbank dengan benar — termasuk loop sensing CT yang paling sering salah di lapangan.', r: 'Dipakai untuk menghindari denda kVAR PLN dan memperbaiki kualitas daya di gedung, pabrik, dan jaringan distribusi.' },

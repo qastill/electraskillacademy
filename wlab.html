@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Wiring Lab — Electra Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0f17;--bg2:#10151f;--panel:#141b27;--panel2:#1a2433;--line:#26344a;--line2:#33445f;
+    --gold:#e8b339;--gold-d:#b8860b;--gold-soft:#f3d27a;--copper:#c9763b;--txt:#e7edf6;--txt-d:#8ea0b8;--txt-dd:#5b6b82;
+    --ok:#3ddc84;--err:#ff5d5d;--err-d:#33161a;--live:#ffd34d;--r:14px}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
+    background-image:radial-gradient(1200px 600px at 80% -10%,rgba(232,179,57,.06),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(201,118,59,.05),transparent 60%),linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:auto,auto,40px 40px,40px 40px;background-blend-mode:normal,normal,overlay,overlay}
+  .wrap{max-width:1220px;margin:0 auto;padding:18px 14px 70px}
+  header{display:flex;align-items:center;gap:13px;margin-bottom:14px;flex-wrap:wrap}
+  .bolt{width:42px;height:42px;border-radius:11px;background:linear-gradient(145deg,var(--gold),var(--gold-d));display:grid;place-items:center;box-shadow:0 6px 22px rgba(232,179,57,.35)}
+  .bolt svg{width:22px;height:22px}
+  .brand h1{font-family:'Chakra Petch',sans-serif;font-size:20px;letter-spacing:.5px}
+  .brand h1 span{color:var(--gold)}
+  .brand p{font-size:11.5px;color:var(--txt-d);margin-top:2px}
+  .lvl{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold-soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 13px}
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:15px;align-items:start}
+  @media(max-width:920px){.layout{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:14px}
+  .card h3{font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:11px}
+  .board-wrap{background:radial-gradient(circle at 50% 25%,#0e131d,#080b11);border:1px solid var(--line2);border-radius:12px;padding:8px;overflow:hidden}
+  #board{width:100%;height:auto;display:block;touch-action:manipulation}
+  .term .hit{fill:transparent;cursor:pointer}
+  .term .dot{fill:#0a0e16;stroke:var(--gold-d);stroke-width:2;transition:.15s}
+  .term:hover .dot{stroke:var(--gold);r:7}
+  .term.sel .dot{fill:var(--gold);stroke:#fff;r:7.5}
+  .term.hl .dot{stroke:#fff;fill:var(--gold);r:7.5}
+  .term.hl .hit{fill:rgba(232,179,57,.12)}
+  .term.lv .dot{fill:var(--live);stroke:#ffe08a}
+  .wire{cursor:pointer}
+  .flow{animation:flow 1s linear infinite}
+  @keyframes flow{to{stroke-dashoffset:-20}}
+  .spin{transform-origin:center;transform-box:fill-box;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .legend{display:flex;flex-wrap:wrap;gap:7px 13px;margin-top:10px}
+  .lg{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--txt-d);font-family:'JetBrains Mono',monospace}
+  .lgdot{width:15px;height:4px;border-radius:3px}
+  .btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;border:1px solid var(--line2);background:var(--panel2);color:var(--txt);padding:10px 14px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+  .btn.primary{background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;border-color:var(--gold)}
+  .btn:hover{border-color:var(--gold-d)}
+  .wbtns{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0}
+  .toggle{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--txt-d);margin-left:auto}
+  .sw{width:42px;height:23px;border-radius:99px;background:var(--line2);position:relative;cursor:pointer;transition:.2s}
+  .sw::after{content:"";position:absolute;top:2.5px;left:2.5px;width:18px;height:18px;border-radius:50%;background:#0a0e16;transition:.2s}
+  .sw.on{background:var(--gold)}.sw.on::after{left:21px;background:#1a1206}
+  .fb{margin-top:12px;border-radius:10px;font-size:13px;line-height:1.5}
+  .fb.ok{background:rgba(61,220,132,.1);border:1px solid #1c5b3a;color:#bff0d2;padding:12px 14px}
+  .fb.err{background:var(--err-d);border:1px solid #7a2c34;color:#ffc9cc;padding:12px 14px}
+  .hintbar{font-size:12px;color:var(--gold-soft);font-family:'JetBrains Mono',monospace;margin:2px 0 10px}
+  .step{display:flex;gap:10px;margin-bottom:8px;font-size:12.5px;color:var(--txt-d);transition:.15s}
+  .step .si{flex-shrink:0;width:24px;height:24px;border-radius:7px;background:var(--panel2);border:1px solid var(--line2);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold-soft)}
+  .step.done{opacity:.5}.step.done .si{background:var(--ok);color:#06140d;border-color:var(--ok)}
+  .step.next .si{background:var(--gold);color:#1a1206;border-color:var(--gold)}
+  .step .why{font-size:11px;color:var(--txt-dd);margin-top:3px;line-height:1.45}
+  .tut h4{font-family:'Chakra Petch',sans-serif;font-size:12.5px;color:var(--gold-soft);margin:14px 0 6px}
+  .tut p,.tut li{font-size:12.5px;color:var(--txt-d);line-height:1.6}
+  .tut ul{padding-left:18px;margin:4px 0}
+  .tut .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gold-soft);background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:2px 7px;margin:2px 3px 2px 0}
+  .phasebar{display:flex;gap:8px;margin:10px 0 0}
+  .phase{flex:1;text-align:center;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:600;padding:8px;border-radius:9px;background:var(--bg);border:1px solid var(--line);color:var(--txt-dd)}
+  .phase.on{background:linear-gradient(135deg,rgba(232,179,57,.18),transparent);border-color:var(--gold-d);color:var(--gold-soft)}
+  .foot{text-align:center;color:var(--txt-dd);font-size:12px;margin-top:26px}
+  .foot b{color:var(--gold-soft)}
+  .picker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .pick{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--txt-d);padding:9px 13px;border-radius:9px;cursor:pointer}
+  .pick.on{background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;border-color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="bolt"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+    <div class="brand"><h1>Wiring <span id="labName">Lab</span></h1><p id="labSub">Latihan merangkai panel listrik · Electra Academy</p></div>
+    <div class="lvl" id="labLvl">—</div>
+  </header>
+
+  <div class="picker" id="picker"></div>
+
+  <div class="layout">
+    <div>
+      <div class="card">
+        <div class="hintbar" id="hint">Ketuk satu terminal lalu terminal lain untuk membuat kabel.</div>
+        <div class="board-wrap"><svg id="board" viewBox="0 0 980 620" preserveAspectRatio="xMidYMid meet"></svg></div>
+        <div class="legend" id="legend"></div>
+        <div class="phasebar" id="phasebar" style="display:none"></div>
+        <div class="wbtns">
+          <button class="btn primary" id="btnCheck">✓ Periksa &amp; Jalankan</button>
+          <button class="btn" id="btnAuto">Contoh benar</button>
+          <button class="btn" id="btnReset">Reset</button>
+          <div class="toggle"><span>Sorot langkah</span><div class="sw" id="guideTog"></div></div>
+        </div>
+        <div class="fb" id="fb"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Langkah Wiring</h3>
+        <div id="steps"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Tutorial &amp; Penjelasan</h3>
+        <div class="tut" id="tut"></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">Wiring Lab · <b>Electra Skill Academy</b> · latihan • penjelasan • simulasi</div>
+</div>
+
+<script>
+/* ============================================================
+   WIRING LAB ENGINE — reusable, data-driven.
+   Tambah lab baru = tambah entri ke LABS (lihat bawah).
+   ============================================================ */
+
+/* ---------- generic component palette ---------- */
+/* terms: {k, side:l/r/t/b, f:0..1 along that side, lbl} */
+function poleBox(label, sub){
+  return { w:90, h:150, label, sub,
+    terms:[
+      {k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
+      {k:'Ro',side:'r',f:0.22},{k:'So',side:'r',f:0.5},{k:'To',side:'r',f:0.78}
+    ]};
+}
+const COMP = {
+  src3:{ w:78,h:150,label:'SUMBER 3φ',sub:'400V',kind:'src',
+    terms:[{k:'R',side:'r',f:0.22,lbl:'R'},{k:'S',side:'r',f:0.5,lbl:'S'},{k:'T',side:'r',f:0.78,lbl:'T'}]},
+  mcb3:{ ...poleBox('MCB 3φ','Q1'), kind:'sw3' },
+  contactor3:{ ...poleBox('KONTAKTOR','KM'), kind:'sw3' },
+  overload:{ ...poleBox('OVERLOAD','OL'), kind:'pass' },
+  star:{ w:120,h:70,label:'KONTAKTOR Y',sub:'KM-Y',kind:'star',
+    terms:[{k:'y1',side:'t',f:0.2,lbl:'U2'},{k:'y2',side:'t',f:0.5,lbl:'V2'},{k:'y3',side:'t',f:0.8,lbl:'W2'}]},
+  delta:{ w:150,h:90,label:'KONTAKTOR Δ',sub:'KM-D',kind:'delta',
+    terms:[{k:'l1',side:'t',f:0.18,lbl:'R'},{k:'l2',side:'t',f:0.5,lbl:'S'},{k:'l3',side:'t',f:0.82,lbl:'T'},
+           {k:'m1',side:'b',f:0.18,lbl:'→W2'},{k:'m2',side:'b',f:0.5,lbl:'→U2'},{k:'m3',side:'b',f:0.82,lbl:'→V2'}]},
+  motor3box:{ w:170,h:150,label:'MOTOR 3φ',sub:'terminal box',kind:'motor',
+    terms:[{k:'U1',side:'t',f:0.2,lbl:'U1'},{k:'V1',side:'t',f:0.5,lbl:'V1'},{k:'W1',side:'t',f:0.8,lbl:'W1'},
+           {k:'U2',side:'b',f:0.2,lbl:'U2'},{k:'V2',side:'b',f:0.5,lbl:'V2'},{k:'W2',side:'b',f:0.8,lbl:'W2'}]},
+  // generic small parts reused by other labs later
+  src1:{ w:78,h:120,label:'SUMBER 1φ',sub:'220V',kind:'src',
+    terms:[{k:'L',side:'r',f:0.3,lbl:'L'},{k:'N',side:'r',f:0.7,lbl:'N'}]},
+  mcb1:{ w:80,h:84,label:'MCB',sub:'1φ',kind:'sw',
+    terms:[{k:'in',side:'l',f:0.5,lbl:''},{k:'out',side:'r',f:0.5,lbl:''}]},
+  motor1:{ w:110,h:110,label:'MOTOR 1φ',sub:'',kind:'motor1',
+    terms:[{k:'a',side:'l',f:0.5,lbl:'U'},{k:'b',side:'r',f:0.5,lbl:'V'}]},
+  contactor1:{ w:110,h:130,label:'KONTAKTOR',sub:'',kind:'k1',
+    terms:[{k:'A1',side:'l',f:0.2,lbl:'A1'},{k:'A2',side:'r',f:0.2,lbl:'A2'},
+           {k:'T1',side:'l',f:0.8,lbl:'T1'},{k:'T2',side:'r',f:0.8,lbl:'T2'}]},
+};
+
+/* terminal absolute coords */
+function termXY(inst, t){
+  const c=COMP[inst.type]; const x=inst.x, y=inst.y, w=c.w, h=c.h;
+  if(t.side==='l')return [x, y+t.f*h];
+  if(t.side==='r')return [x+w, y+t.f*h];
+  if(t.side==='t')return [x+t.f*w, y];
+  return [x+t.f*w, y+h];
+}
+function tlblPos(t){ // label offset relative to terminal
+  if(t.side==='l')return [-12,3,'end'];
+  if(t.side==='r')return [12,3,'start'];
+  if(t.side==='t')return [0,-10,'middle'];
+  return [0,16,'middle'];
+}
+
+/* ---------- state ---------- */
+let LAB=null, wires=[], sel=null, checked=false, energized=false, guideHL=false;
+let swState={}, phase='off', seqTimer=null;
+const T={}, TROLE={}, TNET={};   // terminal -> coords/role/net
+
+function buildIndex(){
+  for(const k in T)delete T[k];
+  for(const k in TROLE)delete TROLE[k];
+  for(const k in TNET)delete TNET[k];
+  LAB.comps.forEach(inst=>{
+    COMP[inst.type].terms.forEach(t=>{ T[inst.id+'.'+t.k]=termXY(inst,t); });
+  });
+  LAB.nets.forEach((nt,i)=>nt.t.forEach(tk=>{TROLE[tk]=nt.role;TNET[tk]=i;}));
+}
+
+/* ---------- union-find ---------- */
+function uf(){const p={};const f=x=>p[x]===undefined?(p[x]=x):(p[x]===x?x:(p[x]=f(p[x])));
+  return {u:(a,b)=>{p[f(a)]=f(b);},c:(a,b)=>f(a)===f(b)};}
+function baseUF(){const u=uf();(LAB.given||[]).forEach(w=>u.u(w[0],w[1]));wires.forEach(w=>u.u(w.a,w.b));return u;}
+
+function validate(){
+  const u=baseUF();
+  for(const nt of LAB.nets){for(let i=1;i<nt.t.length;i++)if(!u.c(nt.t[0],nt.t[i]))return {ok:false,reason:'incomplete'};}
+  for(let i=0;i<LAB.nets.length;i++)for(let j=i+1;j<LAB.nets.length;j++)
+    if(u.c(LAB.nets[i].t[0],LAB.nets[j].t[0]))return {ok:false,reason:'cross'};
+  return {ok:true};
+}
+function nextTarget(){const u=baseUF();
+  for(const nt of LAB.nets){for(let i=1;i<nt.t.length;i++)if(!u.c(nt.t[0],nt.t[i]))return {a:nt.t[0],b:nt.t[i],net:nt};}
+  return null;}
+
+/* ---------- simulation: live terminals depend on closed switches/contactors ---------- */
+function simUF(closed){
+  const u=baseUF();
+  LAB.comps.forEach(inst=>{const kind=COMP[inst.type].kind;const id=inst.id;
+    if(kind==='pass'){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');}
+    else if(kind==='sw3'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');} }
+    else if(kind==='star'){ if(closed[id]){u.u(id+'.y1',id+'.y2');u.u(id+'.y2',id+'.y3');} }
+    else if(kind==='delta'){ if(closed[id]){u.u(id+'.l1',id+'.m1');u.u(id+'.l2',id+'.m2');u.u(id+'.l3',id+'.m3');} }
+    else if(kind==='sw'){ if(closed[id]!==false)u.u(id+'.in',id+'.out'); }
+  });
+  return u;
+}
+function liveSet(closed){
+  const s=new Set(); if(!energized)return s;
+  const u=simUF(closed);
+  // sources are live
+  const src=LAB.comps.find(c=>COMP[c.type].kind==='src');
+  const srcTerms=src?COMP[src.type].terms.map(t=>src.id+'.'+t.k):[];
+  Object.keys(T).forEach(tk=>{ if(srcTerms.some(st=>u.c(tk,st)))s.add(tk); });
+  return s;
+}
+
+/* ---------- render ---------- */
+function wireColor(a,b){const ra=TROLE[a],rb=TROLE[b];if(ra&&rb&&ra===rb)return LAB.roleColor[ra]||'#c9763b';if(ra&&rb&&ra!==rb)return '#ff5d5d';return '#c9763b';}
+function draw(){
+  const closed=currentClosed();
+  const live=liveSet(closed);
+  let s='';
+  // user wires
+  wires.forEach((w,i)=>{const A=T[w.a],B=T[w.b];if(!A||!B)return;const col=wireColor(w.a,w.b);
+    const isLive=live.has(w.a)&&live.has(w.b);
+    const mx=(A[0]+B[0])/2;
+    const d=`M${A[0]} ${A[1]} C ${mx} ${A[1]}, ${mx} ${B[1]}, ${B[0]} ${B[1]}`;
+    s+=`<path class="wire" data-w="${i}" d="${d}" fill="none" stroke="${col}" stroke-width="3.2" stroke-linecap="round"/>`;
+    if(isLive)s+=`<path class="flow" d="${d}" fill="none" stroke="#ffe08a" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>`;});
+  // components
+  LAB.comps.forEach(inst=>{s+=drawComp(inst,closed,live);});
+  // terminals
+  const tgt=guideHL?nextTarget():null;
+  LAB.comps.forEach(inst=>{COMP[inst.type].terms.forEach(t=>{
+    const tk=inst.id+'.'+t.k;const c=T[tk];const x=c[0],y=c[1];
+    const sl=sel===tk?'sel':'';const hl=tgt&&(tgt.a===tk||tgt.b===tk)?'hl':'';const lv=live.has(tk)?'lv':'';
+    const lp=tlblPos(t);
+    s+=`<g class="term ${sl} ${hl} ${lv}" data-t="${tk}"><circle class="hit" cx="${x}" cy="${y}" r="15"/><circle class="dot" cx="${x}" cy="${y}" r="5.5"/>`+
+       (t.lbl?`<text x="${x+lp[0]}" y="${y+lp[1]}" text-anchor="${lp[2]}" font-size="9.5" fill="#8ea0b8" font-family="JetBrains Mono,monospace">${t.lbl}</text>`:'')+`</g>`;});});
+  const b=document.getElementById('board');b.innerHTML=s;
+  b.querySelectorAll('[data-t]').forEach(e=>e.addEventListener('click',ev=>{ev.stopPropagation();tapT(e.getAttribute('data-t'));}));
+  b.querySelectorAll('[data-w]').forEach(e=>e.addEventListener('click',ev=>{ev.stopPropagation();delW(+e.getAttribute('data-w'));}));
+}
+function box(x,y,w,h,stroke){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="#141b27" stroke="${stroke||'#33445f'}" stroke-width="2"/>`;}
+function drawComp(inst,closed,live){
+  const c=COMP[inst.type],x=inst.x,y=inst.y,w=c.w,h=c.h,kind=c.kind;
+  const on=closed[inst.id];
+  let stroke='#33445f', accent='#8ea0b8';
+  if(kind==='sw3'||kind==='sw'){ if(on!==false){stroke='#3ddc84';accent='#3ddc84';} }
+  if((kind==='star'||kind==='delta')&&on){stroke=LAB.roleColor.cmd||'#ffd34d';accent='#ffd34d';}
+  if(kind==='src'){stroke='#3ddc84';accent='#3ddc84';}
+  let s=`<g>${box(x,y,w,h,stroke)}`;
+  s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
+  if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
+  if(kind==='motor'){
+    const run=energized&&phase!=='off';const cx=x+w/2,cy=y+h/2;
+    s+=`<circle cx="${cx}" cy="${cy}" r="30" fill="#0a0e16" stroke="${run?'#ffd34d':'#33445f'}" stroke-width="2.5"/>`;
+    s+=`<g class="${run?'spin':''}"><g transform="translate(${cx},${cy})"><path d="M0 -20 L5 0 L0 20 L-5 0Z" fill="${run?'#e89b5e':'#33445f'}"/><path d="M-20 0 L0 5 L20 0 L0 -5Z" fill="${run?'#c9763b':'#26344a'}"/></g></g>`;
+    s+=`<text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="13" fill="${run?'#ffd34d':'#8ea0b8'}" font-family="Chakra Petch">M</text>`;
+  }
+  if(kind==='star'){const cx=x+w/2,cy=y+h-22;s+=`<path d="M${cx} ${cy} L${cx} ${cy-12} M${cx} ${cy} L${cx-10} ${cy+8} M${cx} ${cy} L${cx+10} ${cy+8}" stroke="${on?'#ffd34d':'#5b6b82'}" stroke-width="2.5" fill="none"/>`;}
+  if(kind==='sw3'||kind==='sw'){s+=`<text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-size="8.5" fill="${on!==false?'#3ddc84':'#ff5d5d'}">${on!==false?'ON':'OFF'}</text>`;}
+  s+=`</g>`;
+  return s;
+}
+
+/* contactor/breaker closed-state for current phase */
+function currentClosed(){
+  const cl={};
+  LAB.comps.forEach(inst=>{const kind=COMP[inst.type].kind;
+    if(kind==='sw3'||kind==='sw')cl[inst.id]=swState[inst.id]!==false; // default ON
+    else cl[inst.id]=false;});
+  if(energized&&LAB.phaseClosed&&LAB.phaseClosed[phase]){LAB.phaseClosed[phase].forEach(id=>cl[id]=true);}
+  return cl;
+}
+
+/* ---------- interactions ---------- */
+function tapT(tk){
+  if(sel===null){sel=tk;hint('Pilih terminal lain untuk menyambung, atau ketuk lagi untuk batal.');draw();return;}
+  if(sel===tk){sel=null;draw();return;}
+  if(!wires.some(w=>(w.a===sel&&w.b===tk)||(w.a===tk&&w.b===sel)))wires.push({a:sel,b:tk});
+  sel=null;stopSeq();checked=false;energized=false;phase='off';draw();updateGuide();updatePhase();
+}
+function delW(i){wires.splice(i,1);stopSeq();checked=false;energized=false;phase='off';draw();updateGuide();updatePhase();}
+function hint(t){document.getElementById('hint').textContent=t;}
+
+function updateGuide(){
+  const tgt=nextTarget();const curNet=tgt?tgt.net:null;
+  const el=document.getElementById('steps');
+  el.innerHTML=LAB.guide.map((g,i)=>{
+    const net=LAB.nets[g.net];const u=baseUF();const done=net?net.t.every((t,k)=>k===0||u.c(net.t[0],t)):false;
+    const isNext=curNet&&net===curNet;
+    return `<div class="step ${done?'done':''} ${isNext?'next':''}"><div class="si">${done?'✓':i+1}</div><div class="stx">${g.txt}<div class="why">${g.why}</div></div></div>`;
+  }).join('');
+}
+
+/* ---------- sequence runner (e.g. star -> delta) ---------- */
+function stopSeq(){if(seqTimer){clearTimeout(seqTimer);seqTimer=null;}}
+function runSequence(){
+  stopSeq();
+  if(!LAB.sequence){phase='run';draw();updatePhase();return;}
+  let idx=0;
+  const step=()=>{
+    if(idx>=LAB.sequence.length){return;}
+    const sp=LAB.sequence[idx];phase=sp.phase;draw();updatePhase();
+    if(idx<LAB.sequence.length-1){seqTimer=setTimeout(()=>{idx++;step();},sp.ms||2600);}
+  };
+  step();
+}
+function updatePhase(){
+  const bar=document.getElementById('phasebar');
+  if(!LAB.phases){bar.style.display='none';return;}
+  bar.style.display='flex';
+  bar.innerHTML=LAB.phases.map(p=>`<div class="phase ${energized&&phase===p.key?'on':''}">${p.label}</div>`).join('');
+}
+
+/* ---------- check / auto / reset ---------- */
+function check(){
+  const v=validate();const fb=document.getElementById('fb');
+  if(v.ok){checked=true;energized=true;runSequence();
+    fb.className='fb ok';fb.innerHTML=LAB.okMsg||'<b>✓ Wiring benar!</b> Rangkaian dijalankan.';}
+  else{checked=false;energized=false;phase='off';stopSeq();draw();updatePhase();
+    fb.className='fb err';
+    fb.innerHTML=v.reason==='cross'?'<b>✕ Ada hubung-singkat / salah sambung.</b> Dua titik berbeda tersambung. Ketuk kabel merah untuk menghapus.':'<b>✕ Belum lengkap.</b> Masih ada sambungan kurang — aktifkan "Sorot langkah" untuk dituntun.';}
+}
+function autoWire(){
+  wires=[];LAB.nets.forEach(nt=>{for(let i=1;i<nt.t.length;i++)wires.push({a:nt.t[0],b:nt.t[i]});});
+  sel=null;checked=true;energized=true;draw();updateGuide();runSequence();
+  const fb=document.getElementById('fb');fb.className='fb ok';fb.innerHTML='<b>Contoh wiring benar dimuat.</b> Pelajari warna &amp; jalurnya, lalu "Reset" dan coba rakit sendiri.';
+}
+function resetW(){wires=[];sel=null;checked=false;energized=false;phase='off';stopSeq();draw();updateGuide();updatePhase();
+  const fb=document.getElementById('fb');fb.className='fb';fb.innerHTML='';}
+
+/* ---------- lab loading ---------- */
+function loadLab(id){
+  LAB=LABS[id]||LABS[Object.keys(LABS)[0]];
+  wires=[];sel=null;checked=false;energized=false;phase='off';guideHL=false;swState={};stopSeq();
+  buildIndex();
+  document.getElementById('labName').textContent=LAB.short||'Lab';
+  document.getElementById('labSub').textContent=LAB.sub||'';
+  document.getElementById('labLvl').textContent=LAB.jalur+' · '+(LAB.level||'Profesional');
+  document.getElementById('board').setAttribute('viewBox',LAB.vb||'0 0 980 620');
+  document.getElementById('legend').innerHTML=Object.keys(LAB.roleLabel||{}).map(r=>`<span class="lg"><span class="lgdot" style="background:${LAB.roleColor[r]}"></span>${LAB.roleLabel[r]}</span>`).join('');
+  document.getElementById('tut').innerHTML=LAB.tutorial||'';
+  document.getElementById('guideTog').classList.remove('on');
+  document.getElementById('fb').className='fb';document.getElementById('fb').innerHTML='';
+  draw();updateGuide();updatePhase();
+  // picker active state
+  document.querySelectorAll('.pick').forEach(b=>b.classList.toggle('on',b.getAttribute('data-lab')===LAB.id));
+}
+
+/* ===================== LABS REGISTRY ===================== */
+const LABS={};
+
+/* ---- LAB: Star-Delta Starter (S2) ---- */
+LABS['star-delta']={
+  id:'star-delta', jalur:'S2', level:'Profesional', short:'Star-Delta', sub:'Starter bintang-segitiga motor 3φ',
+  vb:'0 0 980 620',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',line:'#c9763b',mend:'#e89b5e',cmd:'#ffd34d'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',mend:'Ujung belitan (U2/V2/W2)'},
+  comps:[
+    {id:'SRC',type:'src3',x:30,y:60},
+    {id:'Q1',type:'mcb3',x:150,y:60},
+    {id:'KM',type:'contactor3',x:300,y:60},
+    {id:'OL',type:'overload',x:450,y:60},
+    {id:'M',type:'motor3box',x:640,y:220},
+    {id:'KMY',type:'star',x:330,y:470},
+    {id:'KMD',type:'delta',x:560,y:470},
+  ],
+  // user nets (contactor internal bridges are state-dependent, NOT given)
+  nets:[
+    {role:'R',t:['SRC.R','Q1.Ri']},
+    {role:'S',t:['SRC.S','Q1.Si']},
+    {role:'T',t:['SRC.T','Q1.Ti']},
+    {role:'R',t:['Q1.Ro','KM.Ri']},
+    {role:'S',t:['Q1.So','KM.Si']},
+    {role:'T',t:['Q1.To','KM.Ti']},
+    {role:'R',t:['KM.Ro','OL.Ri']},
+    {role:'S',t:['KM.So','OL.Si']},
+    {role:'T',t:['KM.To','OL.Ti']},
+    {role:'R',t:['OL.Ro','M.U1','KMD.l1']},   // phase R line: to U1, and to KMD pole1 (delta → W2)
+    {role:'S',t:['OL.So','M.V1','KMD.l2']},   // phase S line: to V1, and KMD pole2 (delta → U2)
+    {role:'T',t:['OL.To','M.W1','KMD.l3']},   // phase T line: to W1, and KMD pole3 (delta → V2)
+    {role:'mend',t:['M.U2','KMY.y1','KMD.m2']}, // U2: star-y1 + delta from S
+    {role:'mend',t:['M.V2','KMY.y2','KMD.m3']}, // V2: star-y2 + delta from T
+    {role:'mend',t:['M.W2','KMY.y3','KMD.m1']}, // W2: star-y3 + delta from R
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'SUMBER R/S/T → MCB Q1 (R,S,T)', why:'Tiga fasa masuk pengaman utama lebih dulu.'},
+    {net:3, txt:'MCB Q1 keluar → KONTAKTOR UTAMA KM', why:'KM menyambung/melepas daya ke motor.'},
+    {net:6, txt:'KM keluar → OVERLOAD OL', why:'Relai termal OL melindungi motor dari beban lebih.'},
+    {net:9, txt:'OL keluar → belitan awal U1/V1/W1 motor', why:'Awal tiap belitan SELALU tersambung ke fasa (R→U1, S→V1, T→W1).'},
+    {net:12, txt:'Ujung belitan U2/V2/W2 → KONTAKTOR Y', why:'Saat START, KM-Y menyatukan U2-V2-W2 jadi titik bintang (tegangan per belitan 230V → arus start kecil).'},
+    {net:9, txt:'Fasa R/S/T juga di-tap ke KONTAKTOR Δ (L)', why:'KM-D mengambil fasa dari jalur line untuk koneksi segitiga.'},
+    {net:12, txt:'KONTAKTOR Δ keluar → ujung belitan (W2,U2,V2)', why:'Saat RUN, KM-D menghubungkan R→W2, S→U2, T→V2 (segitiga, 400V penuh).'},
+  ],
+  phases:[{key:'star',label:'① START — Bintang (Y)'},{key:'delta',label:'② RUN — Segitiga (Δ)'}],
+  phaseClosed:{ star:['Q1','KM','KMY'], delta:['Q1','KM','KMD'] },
+  sequence:[{phase:'star',ms:2800},{phase:'delta'}],
+  okMsg:'<b>✓ Wiring benar — starter berjalan!</b> Motor START dalam <b>bintang</b> (arus start kecil), lalu otomatis pindah ke <b>segitiga</b> untuk RUN. Perhatikan kontaktor Y lalu Δ menyala bergantian.',
+  tutorial:`
+    <h4>Apa itu starter Bintang-Segitiga?</h4>
+    <p>Metode start motor induksi 3φ besar yang menurunkan <b>arus start</b>. Saat start belitan dihubung <b>bintang (Y)</b> → tiap belitan dapat 230V (arus start ~⅓). Setelah motor hampir penuh putaran, pindah ke <b>segitiga (Δ)</b> → belitan dapat 400V penuh untuk torsi & daya kerja.</p>
+    <h4>Tiga kontaktor</h4>
+    <ul>
+      <li><span class="badge">KM</span> kontaktor utama — selalu menyala saat motor jalan.</li>
+      <li><span class="badge">KM-Y</span> menyatukan U2-V2-W2 (titik bintang). Hanya saat start.</li>
+      <li><span class="badge">KM-Δ</span> menyilang line ke ujung belitan (R→W2, S→U2, T→V2). Saat run.</li>
+    </ul>
+    <h4>Aturan emas keselamatan</h4>
+    <p><b>KM-Y dan KM-Δ tidak boleh menutup bersamaan</b> — itu hubung singkat antar fasa. Di panel nyata dipasang <b>interlock</b> mekanik + listrik, dan ada jeda transisi.</p>
+    <h4>Kenapa U2/V2/W2 dapat 2 kabel?</h4>
+    <p>Karena ujung belitan dilayani dua kontaktor berbeda (Y saat start, Δ saat run) yang tak pernah aktif bersamaan — jadi bukan korslet.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Dipakai pada pompa, kompresor, fan, conveyor bermotor ≥5,5 kW agar tak men-trip MCB & menjaga tegangan jaringan saat start.</p>`
+};
+
+/* ===================== init ===================== */
+function buildPicker(){
+  const ids=Object.keys(LABS);
+  document.getElementById('picker').innerHTML=ids.map(id=>`<button class="pick" data-lab="${id}" onclick="loadLab('${id}')">${LABS[id].short}</button>`).join('');
+  // hide picker if single lab
+  if(ids.length<=1)document.getElementById('picker').style.display='none';
+}
+document.getElementById('btnCheck').addEventListener('click',check);
+document.getElementById('btnAuto').addEventListener('click',autoWire);
+document.getElementById('btnReset').addEventListener('click',resetW);
+document.getElementById('guideTog').addEventListener('click',function(){guideHL=!guideHL;this.classList.toggle('on',guideHL);draw();});
+document.getElementById('board').addEventListener('click',()=>{if(sel){sel=null;draw();}});
+
+const params=new URLSearchParams(location.search);
+const want=params.get('lab')||'star-delta';
+buildPicker();
+loadLab(LABS[want]?want:Object.keys(LABS)[0]);
+
+/* expose for tests */
+if(typeof window!=='undefined'){window.__WLAB={validate,autoWireNets:()=>{wires=[];LAB.nets.forEach(nt=>{for(let i=1;i<nt.t.length;i++)wires.push({a:nt.t[0],b:nt.t[i]});});return validate();},loadLab,LABS};}
+</script>
+</body>
+</html>
