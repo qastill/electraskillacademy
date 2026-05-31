@@ -1620,6 +1620,106 @@ LABS['smart-metering']={
     <p>Energy data analyst: bangun pipeline data meter, bersihkan & analisis, lalu sajikan dashboard untuk pengambilan keputusan utility.</p>`
 };
 
+/* ---- LAB: Hybrid PLTS + Grid (share energi hijau) (S11) ---- */
+LABS['hybrid-green']={
+  id:'hybrid-green', jalur:'S11', level:'Profesional', short:'Hybrid Hijau', sub:'PLTS + grid PLN suplai beban bersama — dasar hitung share energi hijau & offset CO₂',
+  vb:'0 0 1040 560',
+  roleColor:{dcp:'#ff6b6b',dcn:'#6db3ff',L:'#c9763b',N:'#6db3ff',pe:'#3ddc84'},
+  roleLabel:{dcp:'DC + (PV)',dcn:'DC − (PV)',L:'AC Fasa (bus beban)',N:'Netral',pe:'Pembumian (PE)'},
+  comps:[
+    {id:'PV',type:'pvArray',x:24,y:70},
+    {id:'INV',type:'gtInv',x:210,y:70},
+    {id:'GRID',type:'grid1',x:210,y:340},
+    {id:'LOAD',type:'appliance',x:560,y:150},
+    {id:'GND',type:'rod',x:430,y:380},
+  ],
+  nets:[
+    {role:'dcp',t:['PV.P','INV.dcp']},
+    {role:'dcn',t:['PV.M','INV.dcn']},
+    {role:'L',t:['INV.L','GRID.L','LOAD.L']},   // bus AC: inverter PV + grid + beban
+    {role:'N',t:['INV.N','GRID.N','LOAD.N']},
+    {role:'pe',t:['INV.pe','LOAD.PE','GND.e']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'PV array (+/−) → inverter (DC)', why:'Panel surya menghasilkan DC, masuk inverter.'},
+    {net:2, txt:'Inverter (L), GRID (L), & beban (L) di-bus jadi satu', why:'PLTS & grid PLN sama-sama menyuplai beban. Kalau PV cukup, grid berkurang; kelebihan PV diekspor.'},
+    {net:3, txt:'Netral inverter, grid, & beban disatukan', why:'Referensi netral bersama.'},
+    {net:4, txt:'PE: inverter + bodi beban + ARDE', why:'Pembumian sistem hybrid wajib demi keselamatan.'},
+  ],
+  phases:[{key:'day',label:'☀ SIANG — PV + grid suplai (emisi turun)'}],
+  phaseClosed:{ day:[] },
+  phaseSrc:{ day:['INV.L'] },
+  sequence:[{phase:'day'}],
+  okMsg:'<b>✓ Wiring hybrid benar!</b> PLTS & grid PLN menyuplai beban bersama. Makin besar kontribusi PV, makin sedikit energi grid → <b>emisi CO₂ turun</b>. Inilah dasar perhitungan share energi hijau & carbon offset perusahaan.',
+  tutorial:`
+    <h4>Kenapa hybrid PLTS + grid penting untuk sustainability?</h4>
+    <p>Setiap kWh dari PLTS menggantikan kWh dari grid (yang sebagian dari batubara). Selisihnya = <b>emisi CO₂ yang dihindari</b> (carbon offset). Sistem hybrid membuat beban tetap andal (grid sebagai backup) sambil memaksimalkan energi hijau.</p>
+    <h4>Cara kerja</h4>
+    <ul>
+      <li>PV → inverter grid-tie → bus AC beban.</li>
+      <li>Grid PLN juga tersambung ke bus yang sama (backup & saat PV kurang).</li>
+      <li>Inverter sinkron dengan grid; kelebihan PV bisa diekspor (net metering).</li>
+    </ul>
+    <h4>Hitungan karbon (jalur S11)</h4>
+    <p>Energi hijau (kWh PV) × faktor emisi grid (mis. ~0,8 kgCO₂/kWh) = CO₂ yang dihindari. Data ini jadi dasar laporan ESG, RE100, & carbon accounting.</p>
+    <h4>Catatan teknis</h4>
+    <p>Inverter wajib anti-islanding; sistem butuh proteksi & pembumian. Untuk andal 24 jam, sering ditambah BESS (lihat lab BESS).</p>
+    <h4>Di dunia kerja</h4>
+    <p>Sustainability/carbon engineer: hitung baseline emisi, rancang bauran energi hijau, & verifikasi pengurangan CO₂ (GHG Protocol).</p>`
+};
+
+/* ---- LAB: Panel MDP/SDP Builder (S9) ---- */
+LABS['panel-mdp']={
+  id:'panel-mdp', jalur:'S9', level:'Profesional', short:'Panel MDP', sub:'Rangkai panel distribusi: MCCB utama → busbar → MCB grup → beban',
+  vb:'0 0 1080 580',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',bus:'#e8b339',o:'#e89b5e'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',bus:'Busbar panel',o:'Output ke beban'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:110},
+    {id:'MAIN',type:'mcb3',x:180,y:110},
+    {id:'Q1',type:'mcb3',x:420,y:40},
+    {id:'Q2',type:'mcb3',x:420,y:230},
+    {id:'L1',type:'load3',x:680,y:60},
+    {id:'L2',type:'load3',x:680,y:250},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','MAIN.Ri']},{role:'S',t:['SRC.S','MAIN.Si']},{role:'T',t:['SRC.T','MAIN.Ti']},
+    {role:'bus',t:['MAIN.Ro','Q1.Ri','Q2.Ri']},   // busbar R: dari MCCB utama ke grup MCB
+    {role:'bus',t:['MAIN.So','Q1.Si','Q2.Si']},   // busbar S
+    {role:'bus',t:['MAIN.To','Q1.Ti','Q2.Ti']},   // busbar T
+    {role:'o',t:['Q1.Ro','L1.R']},{role:'o',t:['Q1.So','L1.S']},{role:'o',t:['Q1.To','L1.T']},
+    {role:'o',t:['Q2.Ro','L2.R']},{role:'o',t:['Q2.So','L2.S']},{role:'o',t:['Q2.To','L2.T']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'SUMBER R/S/T → MCCB UTAMA', why:'Incoming masuk ke pemutus utama panel (main breaker).'},
+    {net:3, txt:'MCCB utama keluar → BUSBAR (ke Q1 & Q2)', why:'Busbar adalah rel pembagi: satu sumber dibagi ke banyak grup beban.'},
+    {net:6, txt:'MCB grup Q1 → beban 1', why:'Tiap grup beban punya proteksi (MCB) sendiri dari busbar.'},
+    {net:9, txt:'MCB grup Q2 → beban 2', why:'Grup kedua diambil dari busbar yang sama, proteksi terpisah.'},
+  ],
+  phases:[{key:'run',label:'▶ ENERGIZE — semua grup bertegangan'}],
+  phaseClosed:{ run:['MAIN','Q1','Q2'] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Panel MDP/SDP benar!</b> Incoming → MCCB utama → busbar → MCB per grup → beban. Struktur ini dasar SEMUA panel distribusi: 1 pemutus utama, busbar pembagi, dan proteksi terpisah tiap grup. Paham ini = bisa jualan/spesifikasi panel dengan benar.',
+  tutorial:`
+    <h4>Anatomi panel distribusi (MDP/SDP)</h4>
+    <p>MDP (Main Distribution Panel) / SDP (Sub-DP) membagi daya dari satu sumber ke banyak beban dengan aman. Strukturnya selalu sama: <b>Incoming → Main breaker → Busbar → Outgoing breakers → beban.</b></p>
+    <h4>Komponen & fungsinya (untuk technical sales)</h4>
+    <ul>
+      <li><span class="badge">MCCB utama</span> pemutus & proteksi seluruh panel; rating sesuai total beban (maximum demand).</li>
+      <li><span class="badge">Busbar</span> rel tembaga pembagi; ukurannya sesuai arus total.</li>
+      <li><span class="badge">MCB/MCCB grup</span> proteksi tiap sirkuit; rating sesuai beban grup.</li>
+      <li>Plus: pembumian, label, IP rating, kapasitas hubung singkat (kA).</li>
+    </ul>
+    <h4>Kenapa sales/technical marketing perlu paham ini?</h4>
+    <p>Untuk menawarkan & spesifikasi panel yang benar ke klien: hitung kebutuhan (jumlah grup, rating), pilih komponen (merek MCCB/MCB, busbar, enclosure), dan jelaskan value-nya. Salah spesifikasi = proyek bermasalah.</p>
+    <h4>Tips spesifikasi</h4>
+    <p>Tanya klien: total beban, jumlah sirkuit, lokasi (indoor/outdoor → IP), arus hubung singkat di titik itu (untuk rating kA breaker), & kebutuhan future expansion (sisakan slot).</p>
+    <h4>Di dunia kerja</h4>
+    <p>Technical sales engineer: baca SLD, hitung BoQ panel, buat penawaran, & jelaskan keunggulan teknis komponen ke pelanggan industri/kontraktor.</p>`
+};
+
 /* ===================== init ===================== */
 function buildPicker(){
   const ids=Object.keys(LABS);
