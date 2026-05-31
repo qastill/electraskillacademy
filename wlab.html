@@ -186,6 +186,21 @@ const COMP = {
            {k:'Q0',side:'r',f:0.34,lbl:'Q0.0'},{k:'Qc',side:'r',f:0.58,lbl:'3L+'}]},
   lampDC:{ w:80,h:74,label:'LAMPU',sub:'24V',kind:'load',
     terms:[{k:'a',side:'l',f:0.5,lbl:'+'},{k:'b',side:'r',f:0.5,lbl:'−'}]},
+  // --- proteksi (S3): CB/PMT, CT 3φ, relai OCR/GFR, baterai DC, trip coil ---
+  pmt:{ w:110,h:170,label:'PMT (CB)',sub:'20kV',kind:'cb',
+    terms:[{k:'Ri',side:'l',f:0.18,lbl:'R'},{k:'Si',side:'l',f:0.42,lbl:'S'},{k:'Ti',side:'l',f:0.66,lbl:'T'},
+           {k:'Ro',side:'r',f:0.18},{k:'So',side:'r',f:0.42},{k:'To',side:'r',f:0.66},
+           {k:'x1',side:'b',f:0.35,lbl:'TC+'},{k:'x2',side:'b',f:0.65,lbl:'TC−'}]},
+  ct3:{ w:120,h:150,label:'CT 3φ',sub:'300/5',kind:'pass',
+    terms:[{k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
+           {k:'Ro',side:'r',f:0.22},{k:'So',side:'r',f:0.5},{k:'To',side:'r',f:0.78},
+           {k:'s1',side:'b',f:0.3,lbl:'S1'},{k:'s2',side:'b',f:0.7,lbl:'S2'}]},
+  battDC:{ w:84,h:90,label:'BATERAI',sub:'110V DC',kind:'src',
+    terms:[{k:'P',side:'r',f:0.3,lbl:'+'},{k:'M',side:'r',f:0.7,lbl:'−'}]},
+  ocr:{ w:150,h:230,label:'RELAI OCR/GFR',sub:'50/51 · 50N/51N',kind:'relay',
+    terms:[{k:'i1',side:'l',f:0.16,lbl:'I-S1'},{k:'i2',side:'l',f:0.28,lbl:'I-S2'},
+           {k:'Vp',side:'l',f:0.5,lbl:'+'},{k:'Vm',side:'l',f:0.62,lbl:'−'},
+           {k:'t1',side:'r',f:0.5,lbl:'TRIP+'},{k:'t2',side:'r',f:0.62,lbl:'TRIP−'}]},
 };
 
 /* terminal absolute coords */
@@ -246,7 +261,8 @@ function simUF(closed){
     else if(kind==='cpass'){ u.u(id+'.in',id+'.out'); } // kontak NC (STOP/E-STOP/OL 95-96) — normal tertutup
     else if(kind==='sw'){ if(closed[id]!==false)u.u(id+'.in',id+'.out'); }
     else if(kind==='plc'){ u.u(id+'.Lp',id+'.Qc'); } // suplai output (3L+) di-jumper internal dari L+
-    // kind 'coil'/'load' = beban, tidak menjembatani
+    else if(kind==='cb'){ if(closed[id]!==false){u.u(id+'.Ri',id+'.Ro');u.u(id+'.Si',id+'.So');u.u(id+'.Ti',id+'.To');} } // PMT: menutup kecuali saat trip; trip coil x1-x2 = beban (tak menjembatani)
+    // kind 'coil'/'load'/'relay'/'ct3 secondary' = beban/sensor, tidak menjembatani
   });
   return u;
 }
@@ -303,6 +319,10 @@ function drawComp(inst,closed,live){
   const loadEn=kind==='load'&&live.has(inst.id+'.a')&&live.has(inst.id+'.b');
   if(loadEn){stroke='#ffd34d';accent='#ffd34d';}
   if(kind==='plc'){const plcRun=energized&&phase!=='off';stroke=plcRun?'#3ddc84':'#33445f';accent=plcRun?'#3ddc84':'#8ea0b8';}
+  if(kind==='cb'){ if(on!==false){stroke='#3ddc84';accent='#3ddc84';} else if(energized){stroke='#ff5d5d';accent='#ff5d5d';} }
+  if(kind==='ct3'){stroke='#5b8cff';accent='#9db4ff';}
+  const tripEn=kind==='relay'&&live.has(inst.id+'.t1');
+  if(kind==='relay'){const flt=energized&&phase==='trip';stroke=flt?'#ff5d5d':(energized?'#3ddc84':'#33445f');accent=flt?'#ff9d9d':(energized?'#3ddc84':'#8ea0b8');}
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
@@ -336,6 +356,17 @@ function drawComp(inst,closed,live){
     s+=`<circle cx="${x+22}" cy="${y+h*0.34}" r="4.5" fill="${q0Live?'#ffd34d':'#1a2433'}" stroke="#33445f"/>`;
     s+=`<text x="${x+w/2}" y="${y+h*0.66}" text-anchor="middle" font-size="8.5" fill="${plcRun?'#3ddc84':'#5b6b82'}" font-family="JetBrains Mono">${plcRun?'RUN':'STOP'}</text>`;
     if(plcRun)s+=`<text x="${x+w/2}" y="${y+h*0.78}" text-anchor="middle" font-size="7.5" fill="#8ea0b8">ladder aktif</text>`;
+  }
+  if(kind==='cb'){const open=on===false&&energized;const cx=x+w/2,cy=y+h*0.42;
+    s+=`<text x="${cx}" y="${cy}" text-anchor="middle" font-size="9" fill="${on!==false?'#3ddc84':(energized?'#ff5d5d':'#5b6b82')}">${on!==false?'CLOSED':(energized?'TRIP — OPEN':'open')}</text>`;
+    s+=`<line x1="${cx-22}" y1="${cy+18}" x2="${open||!on?cx+18:cx+22}" y2="${open||on===false?cy+8:cy+18}" stroke="${on!==false?'#3ddc84':'#ff5d5d'}" stroke-width="3" stroke-linecap="round"/>`;
+    s+=`<text x="${cx}" y="${y+h-22}" text-anchor="middle" font-size="7.5" fill="#5b6b82">trip coil</text>`;
+  }
+  if(kind==='ct3'){const cx=x+w/2;[0.22,0.5,0.78].forEach(f=>{s+=`<circle cx="${cx}" cy="${y+f*h}" r="9" fill="none" stroke="#5b8cff" stroke-width="2"/>`;});s+=`<text x="${cx}" y="${y+h*0.92}" text-anchor="middle" font-size="7.5" fill="#5b6b82">sekunder→relai</text>`;}
+  if(kind==='relay'){const flt=energized&&phase==='trip';const cx=x+w/2;
+    s+=`<rect x="${x+14}" y="${y+h*0.78}" width="${w-28}" height="20" rx="4" fill="#0a1f14" stroke="${flt?'#ff5d5d':'#1c5b3a'}"/>`;
+    s+=`<text x="${cx}" y="${y+h*0.78+14}" text-anchor="middle" font-size="9" fill="${flt?'#ff5d5d':'#3ddc84'}" font-family="JetBrains Mono">${flt?'PICKUP→TRIP':(energized?'monitor I':'—')}</text>`;
+    s+=`<text x="${x+w*0.32}" y="${y+h*0.42}" text-anchor="middle" font-size="7" fill="#5b6b82">I&gt;  I&gt;&gt;</text>`;
   }
   s+=`</g>`;
   return s;
@@ -685,6 +716,73 @@ LABS['plc-io']={
     <p>Sourcing (PNP) = sinyal +24V ke input, common input ke 0V (dipakai di lab ini). Sinking (NPN) kebalikannya — cek manual PLC sebelum wiring sensor.</p>
     <h4>Di dunia kerja</h4>
     <p>Dasar semua otomasi: konveyor, mesin packaging, sistem batching, HVAC gedung — semuanya start/stop + interlock di PLC.</p>`
+};
+
+/* ---- LAB: Proteksi OCR/GFR — CT → relai → trip coil PMT (S3) ---- */
+LABS['ocr-gfr']={
+  id:'ocr-gfr', jalur:'S3', level:'Advance', short:'Proteksi OCR/GFR', sub:'Wiring CT → relai proteksi → trip coil PMT (gardu 20kV)',
+  vb:'0 0 1020 600',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',sec:'#5b8cff',p:'#ff6b6b',m:'#6db3ff',trip:'#ff9d3d'},
+  roleLabel:{R:'Fasa R 20kV',S:'Fasa S',T:'Fasa T',sec:'Sekunder CT → relai',p:'+ Baterai 110V DC',m:'− Baterai',trip:'Trip: relai → koil PMT'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:60},
+    {id:'PMT',type:'pmt',x:150,y:50},
+    {id:'CT',type:'ct3',x:330,y:50},
+    {id:'FDR',type:'motor3box',x:560,y:120},
+    {id:'BAT',type:'battDC',x:30,y:430},
+    {id:'RLY',type:'ocr',x:300,y:320},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','PMT.Ri']},
+    {role:'S',t:['SRC.S','PMT.Si']},
+    {role:'T',t:['SRC.T','PMT.Ti']},
+    {role:'R',t:['PMT.Ro','CT.Ri']},
+    {role:'S',t:['PMT.So','CT.Si']},
+    {role:'T',t:['PMT.To','CT.Ti']},
+    {role:'R',t:['CT.Ro','FDR.U1']},
+    {role:'S',t:['CT.So','FDR.V1']},
+    {role:'T',t:['CT.To','FDR.W1']},
+    {role:'sec',t:['FDR.U2','FDR.V2','FDR.W2']},   // beban feeder (titik bintang)
+    {role:'sec',t:['CT.s1','RLY.i1']},             // CT sekunder S1 → relai I-S1
+    {role:'sec',t:['CT.s2','RLY.i2']},             // CT sekunder S2 → relai I-S2
+    {role:'p',t:['BAT.P','RLY.Vp']},               // +110V DC → relai
+    {role:'m',t:['BAT.M','RLY.Vm','PMT.x2','RLY.t2']}, // −110V DC bersama: relai(−), sisi bawah koil trip, & return kontak trip
+    {role:'trip',t:['RLY.t1','PMT.x1']},           // output trip relai → koil trip PMT (+)
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'SUMBER 20kV R/S/T → PMT (CB)', why:'Pemutus tenaga (PMT/CB) memutus arus gangguan saat diperintah relai.'},
+    {net:3, txt:'PMT keluar → CT (primer R/S/T)', why:'Trafo arus (CT) mengukur arus jalur; primer dilewati arus beban.'},
+    {net:6, txt:'CT keluar → feeder/beban (U1/V1/W1)', why:'Setelah diukur, daya menuju penyulang.'},
+    {net:9, txt:'Satukan ujung belitan beban (U2/V2/W2)', why:'Beban feeder (model bintang).'},
+    {net:10, txt:'CT sekunder S1 → relai I-S1', why:'Arus mini (sebanding arus primer) masuk ke relai untuk diukur. JANGAN biarkan sekunder CT terbuka saat berbeban.'},
+    {net:11, txt:'CT sekunder S2 → relai I-S2', why:'Menutup loop sensing arus ke relai OCR/GFR.'},
+    {net:12, txt:'+110V DC baterai → relai (+)', why:'Relai & rangkaian trip pakai suplai DC gardu (andal saat AC hilang).'},
+    {net:13, txt:'−110V DC → relai (−), koil trip PMT (−), & return kontak trip', why:'Rel negatif DC dipakai bersama untuk relai, koil trip, dan jalur balik kontak trip.'},
+    {net:14, txt:'Output TRIP relai → koil trip PMT (TC+)', why:'Saat arus > setting, relai menutup kontak trip → koil trip PMT energize → PMT membuka.'},
+  ],
+  phases:[{key:'run',label:'▶ NORMAL — PMT closed, relai monitor'},{key:'trip',label:'⚡ GANGGUAN — relai TRIP, PMT open'}],
+  phaseClosed:{ run:['PMT'], trip:[] },     // run: PMT menutup (feeder live); trip: PMT membuka
+  phaseSrc:{ trip:['RLY.t1'] },             // saat trip, output relai energize koil trip
+  sequence:[{phase:'run',ms:3200},{phase:'trip'}],
+  okMsg:'<b>✓ Skema proteksi benar!</b> Kondisi NORMAL: PMT closed, feeder bertegangan, relai memantau arus dari CT. Saat <b>GANGGUAN</b> (arus lebih): relai pickup → kontak trip menutup → koil trip PMT energize → <b>PMT membuka</b> mengisolasi gangguan. Itulah rantai CT → relai → trip coil.',
+  tutorial:`
+    <h4>Rantai proteksi: CT → Relai → Trip Coil → PMT</h4>
+    <p>Di gardu, <b>relai proteksi</b> tidak memutus arus gangguan langsung — ia hanya <b>memerintah</b>. Rantainya: arus jalur diukur <b>CT</b> → relai membandingkan dengan setting → bila lebih, relai menutup kontak <b>trip</b> → mengaliri <b>koil trip</b> PMT dari baterai DC → PMT (CB) membuka.</p>
+    <h4>Fungsi relai (kode ANSI)</h4>
+    <ul>
+      <li><span class="badge">50</span> Instantaneous Overcurrent — trip cepat untuk arus hubung singkat besar.</li>
+      <li><span class="badge">51</span> Time Overcurrent (OCR) — trip dengan tunda waktu (kurva), untuk koordinasi.</li>
+      <li><span class="badge">50N/51N</span> Ground Fault (GFR) — deteksi arus gangguan ke tanah (residual/zero-sequence).</li>
+    </ul>
+    <h4>Kenapa pakai CT?</h4>
+    <p>Arus jalur bisa ratusan–ribuan Ampere. CT menurunkannya ke <b>5A (atau 1A)</b> agar aman masuk relai. <b>PENTING:</b> sekunder CT tak boleh dibiarkan terbuka saat ada beban — bisa timbul tegangan tinggi berbahaya. Itu sebabnya loop S1-S2 ke relai wajib tertutup.</p>
+    <h4>Kenapa suplai DC (baterai 110V)?</h4>
+    <p>Rangkaian trip pakai <b>baterai gardu</b>, bukan AC sistem — supaya PMT tetap bisa trip walau tegangan AC hilang saat gangguan. Andal = selamat.</p>
+    <h4>Koordinasi (sekilas)</h4>
+    <p>Relai hilir di-set trip lebih dulu/lebih cepat dari hulu (kurva 51 & setting 50) agar hanya bagian terganggu yang padam — bukan seluruh penyulang.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Inti pekerjaan proteksi PLN: setting & wiring relai (mis. SEPAM, MiCOM, REF615) di kubikel 20kV, uji injeksi arus, dan koordinasi gardu.</p>`
 };
 
 /* ===================== init ===================== */
