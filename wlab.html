@@ -295,6 +295,24 @@ const COMP = {
   // --- WtE / biogas (S13) ---
   genset3:{ w:90,h:160,label:'GENSET BIOGAS',sub:'400V 3φ',kind:'src',
     terms:[{k:'R',side:'r',f:0.22,lbl:'R'},{k:'S',side:'r',f:0.5,lbl:'S'},{k:'T',side:'r',f:0.78,lbl:'T'}]},
+  // --- monitoring & data (S6 Auditor, S5 Data Science) ---
+  ct3s:{ w:120,h:150,label:'CT 3φ',sub:'sekunder ke meter',kind:'pass',
+    terms:[{k:'Ri',side:'l',f:0.22,lbl:'R'},{k:'Si',side:'l',f:0.5,lbl:'S'},{k:'Ti',side:'l',f:0.78,lbl:'T'},
+           {k:'Ro',side:'r',f:0.22},{k:'So',side:'r',f:0.5},{k:'To',side:'r',f:0.78},
+           {k:'s1',side:'b',f:0.3,lbl:'S1'},{k:'s2',side:'b',f:0.7,lbl:'S2'}]},
+  analyzer:{ w:160,h:200,label:'POWER ANALYZER',sub:'kWh · kVAR · cos φ',kind:'meter3',
+    terms:[{k:'Vr',side:'l',f:0.14,lbl:'VR'},{k:'Vs',side:'l',f:0.26,lbl:'VS'},{k:'Vt',side:'l',f:0.38,lbl:'VT'},{k:'Vn',side:'l',f:0.5,lbl:'VN'},
+           {k:'i1',side:'l',f:0.68,lbl:'I-S1'},{k:'i2',side:'l',f:0.8,lbl:'I-S2'},
+           {k:'cp',side:'r',f:0.4,lbl:'RS485+'},{k:'cn',side:'r',f:0.6,lbl:'RS485−'}]},
+  smartmeter:{ w:120,h:150,label:'SMART METER',sub:'energi + komunikasi',kind:'meter3',
+    terms:[{k:'Li',side:'l',f:0.3,lbl:'L'},{k:'Ni',side:'l',f:0.7,lbl:'N'},
+           {k:'Lo',side:'r',f:0.3,lbl:'L'},{k:'No',side:'r',f:0.7,lbl:'N'},
+           {k:'cp',side:'b',f:0.35,lbl:'A+'},{k:'cn',side:'b',f:0.65,lbl:'B−'}]},
+  datalogger:{ w:150,h:160,label:'DATA LOGGER',sub:'gateway/SCADA',kind:'logger',
+    terms:[{k:'cp',side:'l',f:0.3,lbl:'A+'},{k:'cn',side:'l',f:0.6,lbl:'B−'},
+           {k:'P',side:'l',f:0.85,lbl:'24V'},{k:'net',side:'r',f:0.5,lbl:'cloud'}]},
+  load3:{ w:120,h:150,label:'BEBAN 3φ',sub:'pabrik/gedung',kind:'load3',
+    terms:[{k:'R',side:'l',f:0.22,lbl:'R'},{k:'S',side:'l',f:0.5,lbl:'S'},{k:'T',side:'l',f:0.78,lbl:'T'}]},
 };
 
 /* terminal absolute coords */
@@ -361,6 +379,9 @@ function simUF(closed){
     else if(kind==='appliance'){ u.u(id+'.L',id+'.N'); } // beban: arus mengalir L→N lewat peralatan
     else if(kind==='sw2p'){ if(closed[id]!==false){u.u(id+'.pi',id+'.po');u.u(id+'.ni',id+'.no');} } // isolator 2 kutub DC
     else if(kind==='pass2'){ u.u(id+'.Li',id+'.Lo');u.u(id+'.Ni',id+'.No'); } // meter 2 kutub: lewat
+    else if(kind==='meter3'){ if(T[id+'.Li']&&T[id+'.Lo']){u.u(id+'.Li',id+'.Lo');u.u(id+'.Ni',id+'.No');} } // smart meter seri: L/N lewat (analyzer tap sejajar tak menjembatani)
+    else if(kind==='load3'){ u.u(id+'.R',id+'.S');u.u(id+'.S',id+'.T'); } // beban 3φ: titik bintang internal
+    else if(kind==='logger'){ /* endpoint data, tidak menjembatani daya */ }
     else if(kind==='grid1'){ /* sumber 1φ (lihat liveSet) */ }
     else if(kind==='gtinv'){ /* DC→AC: sisi AC jadi sumber saat generate (lihat phaseSrc) */ }
     else if(kind==='earth'){ /* node PE tunggal, tidak menjembatani */ }
@@ -430,6 +451,10 @@ function drawComp(inst,closed,live){
   if(kind==='relay'){const flt=energized&&phase==='trip';stroke=flt?'#ff5d5d':(energized?'#3ddc84':'#33445f');accent=flt?'#ff9d9d':(energized?'#3ddc84':'#8ea0b8');}
   if(kind==='grid'){const glive=energized;stroke=glive?'#e8b339':'#33445f';accent=glive?'#f3d27a':'#8ea0b8';}
   if(kind==='trafoiso'){stroke=energized?'#e8b339':'#33445f';accent=energized?'#f3d27a':'#8ea0b8';}
+  if(kind==='meter3'){stroke=energized?'#3ddc84':'#33445f';accent=energized?'#bff0d2':'#8ea0b8';}
+  if(kind==='load3'){stroke=energized?'#3ddc84':'#33445f';accent=energized?'#3ddc84':'#8ea0b8';}
+  const dataOn=kind==='logger'&&energized&&phase!=='off';
+  if(kind==='logger'){stroke=dataOn?'#5b8cff':'#33445f';accent=dataOn?'#9db4ff':'#8ea0b8';}
   if(kind==='sync'){const syn=energized&&phase==='sync';stroke=syn?'#3ddc84':(energized?'#e8b339':'#33445f');accent=syn?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
   const chg=kind==='charger'&&energized&&phase==='charge';
   if(kind==='charger'){stroke=chg?'#3ddc84':(energized?'#e8b339':'#33445f');accent=chg?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
@@ -493,6 +518,9 @@ function drawComp(inst,closed,live){
   }
   if(kind==='grid'){const glive=energized;[0.2,0.5,0.8].forEach(f=>{s+=`<line x1="${x+8}" y1="${y+f*h}" x2="${x+w-8}" y2="${y+f*h}" stroke="${glive?'#e8b339':'#33445f'}" stroke-width="4" stroke-linecap="round"/>`;});}
   if(kind==='trafoiso'){const col=energized?'#f3d27a':'#5b6b82';const cx=x+w/2,cy=y+h*0.5;[-1,1].forEach(d=>{s+=`<circle cx="${cx+d*12}" cy="${cy-14}" r="11" fill="none" stroke="${col}" stroke-width="2"/><circle cx="${cx+d*12}" cy="${cy+14}" r="11" fill="none" stroke="${col}" stroke-width="2"/>`;});s+=`<line x1="${cx}" y1="${y+h*0.2}" x2="${cx}" y2="${y+h*0.8}" stroke="${col}" stroke-width="1" stroke-dasharray="3 3"/>`;}
+  if(kind==='meter3'){const cx=x+w/2;s+=`<rect x="${x+16}" y="${y+h*0.36}" width="${w-32}" height="22" rx="3" fill="#06140f" stroke="${energized?'#1c5b3a':'#26344a'}"/><text x="${cx}" y="${y+h*0.36+15}" text-anchor="middle" font-size="10" fill="${energized?'#27e6a8':'#5b6b82'}" font-family="JetBrains Mono">${energized?'cos φ 0.92':'-- --'}</text>`;}
+  if(kind==='load3'){const cx=x+w/2,cy=y+h*0.5;s+=`<circle cx="${cx}" cy="${cy}" r="16" fill="none" stroke="${energized?'#3ddc84':'#5b6b82'}" stroke-width="2"/><text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="11" fill="${energized?'#3ddc84':'#8ea0b8'}">3~</text>`;}
+  if(kind==='logger'){const cx=x+w/2;s+=`<circle cx="${cx}" cy="${y+h*0.42}" r="13" fill="none" stroke="${dataOn?'#9db4ff':'#5b6b82'}" stroke-width="2"/><path d="M${cx-7} ${y+h*0.42} a7 5 0 0 1 14 0" fill="none" stroke="${dataOn?'#9db4ff':'#5b6b82'}" stroke-width="1.6"/><text x="${cx}" y="${y+h*0.78}" text-anchor="middle" font-size="8" fill="${dataOn?'#9db4ff':'#5b6b82'}" font-family="JetBrains Mono">${dataOn?'LOGGING →cloud':'idle'}</text>`;}
   if(kind==='earth'){const cx=x+w/2,cy=y+h*0.5;s+=`<line x1="${cx}" y1="${y+4}" x2="${cx}" y2="${cy}" stroke="#6df0a0" stroke-width="2.5"/><line x1="${cx-16}" y1="${cy}" x2="${cx+16}" y2="${cy}" stroke="#6df0a0" stroke-width="3"/><line x1="${cx-10}" y1="${cy+7}" x2="${cx+10}" y2="${cy+7}" stroke="#6df0a0" stroke-width="3"/><line x1="${cx-5}" y1="${cy+14}" x2="${cx+5}" y2="${cy+14}" stroke="#6df0a0" stroke-width="3"/>`;}
   if(kind==='charger'){const cx=x+w/2;
     s+=`<text x="${x+w*0.3}" y="${y+h*0.4}" text-anchor="middle" font-size="11" fill="#9db4ff">AC∿</text>`;
@@ -1492,6 +1520,104 @@ LABS['wte-genset']={
     <p>Sebelum nyambung grid, unit perlu disinkronkan (lihat lab Sinkronisasi Generator) & memenuhi syarat interkoneksi PLN.</p>
     <h4>Di dunia kerja</h4>
     <p>Engineer WtE: desain pembangkitan biogas, evakuasi daya, proteksi & sinkronisasi, serta izin interkoneksi.</p>`
+};
+
+/* ---- LAB: Panel Power Monitoring / Audit Energi (S6) ---- */
+LABS['power-monitor']={
+  id:'power-monitor', jalur:'S6', level:'Profesional', short:'Power Monitoring', sub:'Power analyzer 3φ: voltage sensing + CT → ukur kWh, kVAR, cos φ',
+  vb:'0 0 1040 560',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',sec:'#5b8cff',v:'#c98aff'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',sec:'Sekunder CT → analyzer',v:'Sensing tegangan → analyzer'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:90},
+    {id:'CT',type:'ct3s',x:230,y:80},
+    {id:'LOAD',type:'load3',x:470,y:120},
+    {id:'PA',type:'analyzer',x:470,y:330},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','CT.Ri','PA.Vr']},{role:'S',t:['SRC.S','CT.Si','PA.Vs']},{role:'T',t:['SRC.T','CT.Ti','PA.Vt']},
+    {role:'R',t:['CT.Ro','LOAD.R']},{role:'S',t:['CT.So','LOAD.S']},{role:'T',t:['CT.To','LOAD.T']},
+    {role:'sec',t:['CT.s1','PA.i1']},{role:'sec',t:['CT.s2','PA.i2']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Sumber R/S/T → CT, dan tap tegangan ke analyzer (VR/VS/VT)', why:'Power analyzer butuh sensing TEGANGAN (paralel) untuk hitung daya & cos φ.'},
+    {net:3, txt:'CT keluar → beban 3φ', why:'Arus beban dilewatkan CT lalu menuju beban (pabrik/gedung).'},
+    {net:6, txt:'CT sekunder S1 → analyzer I-S1', why:'CT menurunkan arus jadi 5A untuk diukur analyzer. Sekunder JANGAN terbuka saat berbeban.'},
+    {net:7, txt:'CT sekunder S2 → analyzer I-S2', why:'Menutup loop sensing arus. Analyzer kini punya V & I → bisa hitung kW, kVAR, kVA, cos φ, kWh.'},
+  ],
+  phases:[{key:'run',label:'▶ MONITOR — analyzer membaca daya & cos φ'}],
+  phaseClosed:{ run:[] },
+  phaseSrc:{ run:[] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring monitoring benar!</b> Analyzer mendapat sensing TEGANGAN (paralel) + ARUS (dari CT, seri) → bisa hitung kW, kVAR, kVA, cos φ, dan kWh. Inilah dasar audit energi: kamu tak bisa kelola yang tak terukur.',
+  tutorial:`
+    <h4>Kenapa audit energi butuh power analyzer?</h4>
+    <p>"You can't manage what you can't measure." Power analyzer/power meter mengukur konsumsi & kualitas daya secara akurat — fondasi setiap audit energi & ISO 50001.</p>
+    <h4>Dua input wajib: Tegangan & Arus</h4>
+    <ul>
+      <li><b>Voltage sensing</b> — dihubungkan PARALEL ke R/S/T (langsung atau lewat VT untuk MV).</li>
+      <li><b>Current sensing</b> — lewat <b>CT</b> (seri di jalur), sekunder 5A/1A masuk analyzer.</li>
+    </ul>
+    <p>Dengan V & I + sudut fasanya, analyzer menghitung: kW (aktif), kVAR (reaktif), kVA (semu), <b>cos φ</b> (faktor daya), kWh, dan bahkan harmonik (THD).</p>
+    <h4>Aturan CT penting</h4>
+    <p>Sekunder CT <b>tidak boleh terbuka</b> saat ada arus beban — bisa timbul tegangan tinggi berbahaya. Selalu tertutup ke beban (analyzer) atau di-short saat maintenance.</p>
+    <h4>Manfaat data</h4>
+    <p>Dari data ini auditor temukan: cos φ jelek (denda PLN), beban puncak, ketidakseimbangan fasa, harmonik, & peluang hemat. Logging 24 jam mengungkap pola pemborosan.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Energy auditor / manajer energi: pasang & baca power meter (mis. Schneider PM, Hioki), analisis profil beban, dan susun rekomendasi efisiensi terukur (M&V).</p>`
+};
+
+/* ---- LAB: Smart Meter → Data Logger / SCADA (S5) ---- */
+LABS['smart-metering']={
+  id:'smart-metering', jalur:'S5', level:'Profesional', short:'Smart Metering', sub:'Smart meter → RS485 (Modbus) → data logger/gateway → cloud',
+  vb:'0 0 1040 560',
+  roleColor:{L:'#c9763b',N:'#6db3ff',comm:'#5b8cff',dc:'#ff6b6b'},
+  roleLabel:{L:'Fasa (L)',N:'Netral (N)',comm:'Komunikasi RS485 (Modbus)',dc:'Suplai 24V logger'},
+  comps:[
+    {id:'SRC',type:'src1',x:24,y:90},
+    {id:'MTR',type:'smartmeter',x:220,y:90},
+    {id:'LOAD',type:'appliance',x:470,y:90},
+    {id:'PSU',type:'psu24',x:240,y:360},
+    {id:'LOG',type:'datalogger',x:470,y:330},
+  ],
+  nets:[
+    {role:'L',t:['SRC.L','MTR.Li']},
+    {role:'N',t:['SRC.N','MTR.Ni']},
+    {role:'L',t:['MTR.Lo','LOAD.L']},
+    {role:'N',t:['MTR.No','LOAD.N']},
+    {role:'comm',t:['MTR.cp','LOG.cp']},   // A+ meter → logger
+    {role:'comm',t:['MTR.cn','LOG.cn']},   // B− meter → logger
+    {role:'dc',t:['PSU.P','LOG.P']},       // 24V → logger
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Sumber L/N → SMART METER (input)', why:'Meter mengukur energi yang lewat sebelum ke beban.'},
+    {net:2, txt:'Smart meter (output) → beban', why:'Daya diteruskan ke beban; meter mencatat konsumsinya.'},
+    {net:4, txt:'Meter A+ → data logger A+ (RS485)', why:'Jalur komunikasi Modbus RS485: data digital dikirim, bukan daya.'},
+    {net:5, txt:'Meter B− → data logger B− (RS485)', why:'Pasangan twisted-pair RS485; polaritas A/B harus benar.'},
+    {net:6, txt:'PSU 24V → data logger (catu)', why:'Logger/gateway butuh suplai DC sendiri untuk olah & kirim data.'},
+  ],
+  phases:[{key:'run',label:'▶ DATA MENGALIR — meter → logger → cloud'}],
+  phaseClosed:{ run:[] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring smart metering benar!</b> Smart meter mengukur energi & mengirim datanya via <b>RS485/Modbus</b> ke data logger, lalu diteruskan ke cloud/SCADA. Inilah sumber data mentah untuk analytics: load forecasting, deteksi anomali, & deteksi pencurian (NTL).',
+  tutorial:`
+    <h4>Dari meter fisik ke data analytics</h4>
+    <p>Energy analyst butuh DATA. Smart meter tidak hanya mengukur — ia <b>mengirim</b> data (energi, tegangan, arus, cos φ) lewat jalur komunikasi ke logger/gateway → cloud/SCADA → diolah jadi insight.</p>
+    <h4>Dua jenis koneksi (jangan tertukar)</h4>
+    <ul>
+      <li><b>Jalur DAYA</b> (L/N): listrik yang diukur, menuju beban.</li>
+      <li><b>Jalur DATA</b> (RS485 A+/B−): sinyal digital Modbus, arus kecil, twisted-pair.</li>
+    </ul>
+    <h4>RS485 / Modbus RTU</h4>
+    <p>Standar industri untuk hubungkan banyak meter ke satu logger (daisy-chain). Perhatikan: polaritas <b>A+/B−</b>, terminasi resistor di ujung, dan alamat unik tiap meter.</p>
+    <h4>Kenapa logger butuh catu 24V?</h4>
+    <p>Gateway/logger adalah komputer kecil — perlu suplai DC terpisah untuk membaca meter, menyimpan, dan mengirim ke cloud.</p>
+    <h4>Manfaat datanya (jalur S5)</h4>
+    <p>Data inilah bahan: <b>load forecasting</b>, <b>deteksi anomali</b> (z-score), <b>NTL/loss detection</b> (pencurian listrik), dan dashboard analytics utility.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Energy data analyst: bangun pipeline data meter, bersihkan & analisis, lalu sajikan dashboard untuk pengambilan keputusan utility.</p>`
 };
 
 /* ===================== init ===================== */
