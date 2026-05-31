@@ -265,6 +265,11 @@ const COMP = {
            {k:'Lo',side:'r',f:0.3,lbl:'L'},{k:'No',side:'r',f:0.7,lbl:'N'}]},
   appliance:{ w:140,h:150,label:'PERALATAN',sub:'bodi logam',kind:'appliance',
     terms:[{k:'L',side:'l',f:0.24,lbl:'L'},{k:'N',side:'l',f:0.5,lbl:'N'},{k:'PE',side:'l',f:0.78,lbl:'bodi/PE'}]},
+  // lampu & stop kontak 1φ (kind 'load' = tak menjembatani L–N; menyala bila a&b hidup)
+  lamp1:{ w:120,h:120,label:'LAMPU',sub:'230V',kind:'load',
+    terms:[{k:'a',side:'l',f:0.26,lbl:'L'},{k:'b',side:'l',f:0.54,lbl:'N'},{k:'PE',side:'l',f:0.82,lbl:'PE'}]},
+  socket1:{ w:120,h:120,label:'STOP KONTAK',sub:'230V (beban)',kind:'load',
+    terms:[{k:'a',side:'l',f:0.26,lbl:'L'},{k:'b',side:'l',f:0.54,lbl:'N'},{k:'PE',side:'l',f:0.82,lbl:'PE'}]},
   rod:{ w:90,h:110,label:'ELEKTRODA',sub:'batang arde',kind:'earth',
     terms:[{k:'e',side:'t',f:0.5,lbl:'ke PE'}]},
   // --- PV / Solar grid-tie (S10) ---
@@ -1825,6 +1830,103 @@ LABS['gardu-distribusi']={
     <p>Gardu tiang (portal/cantol), gardu beton, & gardu kios. Untuk gardu pakai kubikel ada proteksi relai (lihat lab OCR/GFR) & pembumian.</p>
     <h4>Di dunia kerja</h4>
     <p>Teknisi distribusi PLN: operasi & pemeliharaan gardu, manuver jaringan, penggantian trafo, dan penanganan gangguan.</p>`
+};
+
+/* ---- LAB: Instalasi penerangan 1φ + pembumian (S1) ---- */
+LABS['inst-1f-pe']={
+  id:'inst-1f-pe', jalur:'S1', level:'Fundamental', short:'Instalasi 1φ + PE', sub:'Saklar di fasa, stop kontak, & pembumian (L/N/PE)',
+  vb:'0 0 1040 520',
+  roleColor:{L:'#ff6b6b',Lf:'#ff9d5c',sw:'#ffd34d',N:'#6db3ff',PE:'#3ddc84'},
+  roleLabel:{L:'Fasa (L) dari sumber',Lf:'Fasa setelah MCB → saklar & stop kontak',sw:'Fasa setelah saklar → lampu',N:'Netral (N)',PE:'Pembumian (PE / arde)'},
+  comps:[
+    {id:'SRC',type:'src1pe',x:30,y:120},
+    {id:'Q',type:'mcb1',x:210,y:130},
+    {id:'SW',type:'pbNO',x:400,y:90, no:true},
+    {id:'LMP',type:'lamp1',x:600,y:50},
+    {id:'KK',type:'socket1',x:600,y:300},
+  ],
+  nets:[
+    {role:'L',t:['SRC.L','Q.in']},                       // fasa sumber → MCB
+    {role:'Lf',t:['Q.out','SW.in','KK.a']},              // fasa setelah MCB → saklar lampu & stop kontak
+    {role:'sw',t:['SW.out','LMP.a']},                    // saklar → lampu (saklar memutus FASA, bukan netral)
+    {role:'N',t:['SRC.N','LMP.b','KK.b']},               // netral bersama
+    {role:'PE',t:['SRC.PE','LMP.PE','KK.PE']},           // pembumian ke bodi logam lampu & stop kontak
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Fasa (L) sumber → MCB', why:'MCB memproteksi & memutus jalur fasa.'},
+    {net:1, txt:'MCB → saklar lampu & stop kontak', why:'Fasa dibagi ke saklar (untuk lampu) dan ke stop kontak.'},
+    {net:2, txt:'Saklar → lampu (saklar memutus FASA)', why:'WAJIB: saklar dipasang di kabel FASA, bukan netral — agar saat OFF lampu benar-benar bebas tegangan & aman diservis.'},
+    {net:3, txt:'Netral (N) → lampu & stop kontak', why:'Netral langsung tersambung ke beban (tak lewat saklar).'},
+    {net:4, txt:'Pembumian (PE) → bodi logam lampu & stop kontak', why:'PE melindungi pengguna: jika fasa menyentuh bodi, arus bocor ke tanah & MCB/ELCB trip.'},
+  ],
+  phases:[{key:'on',label:'▶ Saklar ON — lampu menyala, stop kontak bertegangan'}],
+  phaseClosed:{ on:['SW'] },
+  sequence:[{phase:'on'}],
+  okMsg:'<b>✓ Wiring instalasi benar!</b> MCB → fasa dibagi ke saklar & stop kontak. Saklar memutus FASA (bukan netral) sehingga lampu aman saat OFF. Netral & PE langsung ke beban. PE membumikan bodi logam — kunci keselamatan instalasi rumah/gedung.',
+  tutorial:`
+    <h4>Tiga konduktor instalasi 1φ</h4>
+    <ul>
+      <li><span class="badge">L (Fasa)</span> kabel bertegangan ~230V — biasanya cokelat/hitam.</li>
+      <li><span class="badge">N (Netral)</span> kabel kembali — biru.</li>
+      <li><span class="badge">PE (Pembumian)</span> kuning-hijau — pengaman, tak mengalirkan arus saat normal.</li>
+    </ul>
+    <h4>Aturan emas: saklar di FASA</h4>
+    <p>Saklar HARUS memutus kabel <b>fasa</b>, bukan netral. Kalau saklar dipasang di netral, lampu mati tapi fitting <b>masih bertegangan</b> — bahaya tersengat saat ganti bohlam. Inilah kesalahan instalasi paling umum.</p>
+    <h4>Stop kontak (kotak kontak)</h4>
+    <p>Stop kontak diberi fasa + netral + PE. PE wajib agar peralatan berbodi logam (kulkas, mesin cuci) aman; bila isolasi rusak, arus bocor ke PE & memicu ELCB/MCB.</p>
+    <h4>Kenapa pembumian?</h4>
+    <p>PE + ELCB (RCD 30mA) memutus suplai dalam milidetik saat ada kebocoran arus — mencegah sengatan fatal. Lihat juga lab "Pembumian & RCD".</p>
+    <h4>Di dunia kerja</h4>
+    <p>Teknisi instalasi gedung: tarik instalasi sesuai PUIL, pasang panel/MCB, saklar di fasa, sediakan PE di tiap titik, & uji kontinuitas pembumian.</p>`
+};
+
+/* ---- LAB: Gardu Induk step-down 150/20 kV (S4) ---- */
+LABS['gardu-induk']={
+  id:'gardu-induk', jalur:'S4', level:'Advance', short:'Gardu Induk 150/20kV', sub:'Saluran 150kV → PMT → trafo daya → busbar 20kV → penyulang',
+  vb:'0 0 1180 540',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',mv:'#e8b339'},
+  roleLabel:{R:'150kV Fasa R',S:'150kV Fasa S',T:'150kV Fasa T',mv:'20kV sisi tegangan menengah'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:100},
+    {id:'PMT',type:'pmtT',x:190,y:90},
+    {id:'TR',type:'trafoIso',x:430,y:90},
+    {id:'BUS',type:'busbar3',x:680,y:90},
+    {id:'OUT',type:'load3',x:930,y:130},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','PMT.Ri']},{role:'S',t:['SRC.S','PMT.Si']},{role:'T',t:['SRC.T','PMT.Ti']},
+    {role:'R',t:['PMT.Ro','TR.Ri']},{role:'S',t:['PMT.So','TR.Si']},{role:'T',t:['PMT.To','TR.Ti']},
+    {role:'mv',t:['TR.Ro','BUS.R']},{role:'mv',t:['TR.So','BUS.S']},{role:'mv',t:['TR.To','BUS.T']},
+    {role:'mv',t:['BUS.Ro','OUT.R']},{role:'mv',t:['BUS.So','OUT.S']},{role:'mv',t:['BUS.To','OUT.T']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Saluran 150kV R/S/T → PMT (CB)', why:'PMT (Pemutus Tenaga) sisi 150kV: pemutus utama bay penghantar.'},
+    {net:3, txt:'PMT → TRAFO daya (primer 150kV)', why:'Trafo daya GI menurunkan 150kV → 20kV.'},
+    {net:6, txt:'Trafo sekunder → BUSBAR 20kV', why:'Sisi tegangan menengah masuk rel (busbar) 20kV gardu induk.'},
+    {net:9, txt:'Busbar → penyulang 20kV (feeder keluar)', why:'Dari busbar, daya 20kV dikirim ke penyulang menuju gardu distribusi.'},
+  ],
+  phases:[{key:'on',label:'▶ ENERGIZE — 150kV diturunkan ke 20kV'}],
+  phaseClosed:{ on:['PMT'] },
+  phaseSrc:{ on:['TR.Ro','TR.So','TR.To'] },
+  sequence:[{phase:'on'}],
+  okMsg:'<b>✓ Wiring gardu induk benar!</b> Saluran 150kV → PMT → trafo daya (150/20kV) → busbar 20kV → penyulang. Inilah simpul transmisi-distribusi: tegangan tinggi transmisi diturunkan menjadi tegangan menengah untuk disebar lewat penyulang.',
+  tutorial:`
+    <h4>Apa itu Gardu Induk (GI)?</h4>
+    <p>GI menghubungkan jaringan <b>transmisi</b> (70/150/500 kV) dengan jaringan <b>distribusi</b> (20 kV). Fungsi utamanya menurunkan tegangan via trafo daya & membagi daya ke banyak penyulang.</p>
+    <h4>Rantai bay penghantar & trafo</h4>
+    <p>Saluran transmisi → <b>PMT</b> (pemutus tenaga) → <b>trafo daya</b> 150/20 kV → <b>busbar 20 kV</b> → <b>penyulang</b> (feeder). Tiap bay dilengkapi PMT, PMS (pemisah), CT/PT, & relai proteksi.</p>
+    <h4>Komponen utama</h4>
+    <ul>
+      <li><span class="badge">PMT</span> memutus arus berbeban & arus gangguan (punya pemadam busur).</li>
+      <li><span class="badge">Trafo daya</span> jantung GI, 150/20 kV, berisolasi galvanis.</li>
+      <li><span class="badge">Busbar</span> rel pengumpul yang dibagi ke banyak penyulang.</li>
+    </ul>
+    <h4>Kenapa transmisi 150kV?</h4>
+    <p>Makin tinggi tegangan, makin kecil arus untuk daya sama → rugi I²R & jatuh tegangan jauh lebih kecil pada jarak ratusan kilometer.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Operator/engineer GI: switching manuver (buka-tutup PMT/PMS sesuai SOP & interlock), pemeliharaan trafo daya, pembacaan proteksi, & koordinasi dengan dispatcher.</p>`
 };
 
 /* ===================== init ===================== */
