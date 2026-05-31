@@ -1720,6 +1720,113 @@ LABS['panel-mdp']={
     <p>Technical sales engineer: baca SLD, hitung BoQ panel, buat penawaran, & jelaskan keunggulan teknis komponen ke pelanggan industri/kontraktor.</p>`
 };
 
+/* ---- LAB: MCC — PLC kontrol motor via kontaktor (S16) ---- */
+LABS['mcc-plc']={
+  id:'mcc-plc', jalur:'S16', level:'Advance', short:'MCC (PLC→Motor)', sub:'PLC output → coil kontaktor → motor 3φ (rangkaian daya + kontrol)',
+  vb:'0 0 1100 620',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',p:'#ff6b6b',m:'#6db3ff',in:'#3ddc84',cmd:'#ffd34d',mend:'#c98aff'},
+  roleLabel:{R:'Fasa R',S:'Fasa S',T:'Fasa T',p:'+24V',m:'0V',in:'Sinyal START → input PLC',cmd:'Output PLC → coil kontaktor',mend:'Titik bintang motor'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:60},
+    {id:'Q1',type:'mcb3',x:180,y:60},
+    {id:'KM',type:'dolKM',x:360,y:60},
+    {id:'M',type:'motor3box',x:600,y:120},
+    {id:'PSU',type:'psu24',x:24,y:400},
+    {id:'START',type:'pbNO',x:200,y:430, no:true},
+    {id:'PLC',type:'plc',x:380,y:330},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','Q1.Ri']},{role:'S',t:['SRC.S','Q1.Si']},{role:'T',t:['SRC.T','Q1.Ti']},
+    {role:'R',t:['Q1.Ro','KM.Ri']},{role:'S',t:['Q1.So','KM.Si']},{role:'T',t:['Q1.To','KM.Ti']},
+    {role:'R',t:['KM.Ro','M.U1']},{role:'S',t:['KM.So','M.V1']},{role:'T',t:['KM.To','M.W1']},
+    {role:'mend',t:['M.U2','M.V2','M.W2']},
+    {role:'p',t:['PSU.P','PLC.Lp','START.in']},          // +24V ke PLC & tombol
+    {role:'m',t:['PSU.M','PLC.M','PLC.Ic','KM.A2']},      // 0V: PLC, common input, sisi bawah coil
+    {role:'in',t:['START.out','PLC.I0']},                // START → input I0.0
+    {role:'cmd',t:['PLC.Q0','KM.A1']},                   // output PLC Q0.0 → coil kontaktor A1
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'DAYA: Sumber R/S/T → MCB Q1', why:'Rangkaian daya membawa arus besar ke motor.'},
+    {net:3, txt:'MCB → kontak utama kontaktor KM', why:'Kontaktor menyambung daya ke motor saat coil-nya diberi perintah.'},
+    {net:6, txt:'KM → motor U1/V1/W1', why:'Daya menuju belitan motor.'},
+    {net:9, txt:'Satukan U2/V2/W2 (titik bintang)', why:'Belitan motor terhubung di terminal box.'},
+    {net:10, txt:'KONTROL: +24V → PLC (L+) & tombol START', why:'PLC & sumber sinyal input dari 24V (sourcing).'},
+    {net:11, txt:'0V → PLC (M), common input (1M), & coil A2', why:'Referensi negatif bersama untuk PLC dan coil kontaktor.'},
+    {net:12, txt:'START (NO) → input PLC I0.0', why:'Tekan START → bit input ON, dibaca program ladder.'},
+    {net:13, txt:'Output PLC Q0.0 → coil kontaktor A1', why:'Program PLC menyalakan Q0.0 → coil energize → kontak utama menutup → motor jalan. Inilah jembatan dunia logika (PLC) ke dunia daya (motor).'},
+  ],
+  phases:[{key:'run',label:'▶ RUN — PLC perintah coil, motor berputar'}],
+  phaseClosed:{ run:['Q1','KM'] },
+  phaseSrc:{ run:['PLC.Q0'] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring MCC benar!</b> START → input PLC → ladder menyalakan output Q0.0 → coil kontaktor energize → kontak utama menutup → motor 3φ berputar. Inilah Motor Control Center: PLC (logika arus kecil) mengendalikan motor (daya arus besar) lewat kontaktor.',
+  tutorial:`
+    <h4>Apa itu MCC (Motor Control Center)?</h4>
+    <p>Panel yang mengontrol banyak motor secara terpusat. Tiap "bucket" berisi: proteksi (MCB/MCCB), kontaktor, overload, dan kontrol (kabel atau PLC). Di sini kita pakai <b>PLC</b> sebagai otak kontrol.</p>
+    <h4>Dua dunia yang dijembatani kontaktor</h4>
+    <ul>
+      <li><b>Dunia kontrol</b> (arus kecil, 24V): tombol → input PLC → program ladder → output PLC.</li>
+      <li><b>Dunia daya</b> (arus besar, 400V): kontak utama kontaktor → motor.</li>
+      <li>Output PLC <b>tak kuat</b> menggerakkan motor langsung — ia hanya menyalakan <b>coil kontaktor</b>; kontaktornyalah yang menyambung daya besar.</li>
+    </ul>
+    <h4>Alur sinyal</h4>
+    <p>START ditekan → I0.0 = 1 → ladder set Q0.0 = 1 → Q0.0 mengaliri coil A1 (A2 ke 0V) → coil tarik → kontak utama R/S/T menutup → motor berputar. STOP/interlock memutus Q0.0 → motor berhenti.</p>
+    <h4>Kenapa pakai PLC, bukan kabel saja?</h4>
+    <p>Fleksibel: ubah logika (timer, interlock, urutan, alarm) cukup ubah program — tanpa rewiring. Plus bisa dipantau via HMI/SCADA.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Engineer otomasi: wiring I/O PLC ke field device, program ladder, integrasi ke MCC & HMI, troubleshoot motor yang tak mau start (cek input, output, coil, proteksi).</p>`
+};
+
+/* ---- LAB: Gardu Distribusi 20kV → 400V (S3) ---- */
+LABS['gardu-distribusi']={
+  id:'gardu-distribusi', jalur:'S3', level:'Profesional', short:'Gardu Distribusi', sub:'Jaringan 20kV → LBS → trafo distribusi → LVMDP → beban',
+  vb:'0 0 1120 540',
+  roleColor:{R:'#ff6b6b',S:'#ffd34d',T:'#6db3ff',mv:'#e8b339',lv:'#e89b5e'},
+  roleLabel:{R:'20kV Fasa R',S:'20kV Fasa S',T:'20kV Fasa T',lv:'400V sisi tegangan rendah'},
+  comps:[
+    {id:'SRC',type:'src3',x:24,y:90},
+    {id:'LBS',type:'mcb3',x:190,y:90},
+    {id:'TR',type:'trafoIso',x:400,y:80},
+    {id:'MAIN',type:'mcb3',x:640,y:90},
+    {id:'LOAD',type:'load3',x:870,y:120},
+  ],
+  nets:[
+    {role:'R',t:['SRC.R','LBS.Ri']},{role:'S',t:['SRC.S','LBS.Si']},{role:'T',t:['SRC.T','LBS.Ti']},
+    {role:'R',t:['LBS.Ro','TR.Ri']},{role:'S',t:['LBS.So','TR.Si']},{role:'T',t:['LBS.To','TR.Ti']},
+    {role:'lv',t:['TR.Ro','MAIN.Ri']},{role:'lv',t:['TR.So','MAIN.Si']},{role:'lv',t:['TR.To','MAIN.Ti']},
+    {role:'lv',t:['MAIN.Ro','LOAD.R']},{role:'lv',t:['MAIN.So','LOAD.S']},{role:'lv',t:['MAIN.To','LOAD.T']},
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'Jaringan 20kV R/S/T → LBS (cut-out/pemutus)', why:'LBS (Load Break Switch) memutus sisi 20kV untuk perawatan & proteksi.'},
+    {net:3, txt:'LBS keluar → TRAFO distribusi (primer)', why:'Trafo menurunkan tegangan 20kV → 400V.'},
+    {net:6, txt:'Trafo sekunder → LVMDP (main breaker)', why:'Sisi tegangan rendah masuk panel utama (LV Main Distribution Panel).'},
+    {net:9, txt:'LVMDP → beban 3φ', why:'Daya 400V didistribusikan ke pelanggan/beban kawasan.'},
+  ],
+  phases:[{key:'run',label:'▶ ENERGIZE — 20kV diturunkan ke 400V'}],
+  phaseClosed:{ run:['LBS','MAIN'] },
+  phaseSrc:{ run:['TR.Ro','TR.So','TR.To'] },
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring gardu distribusi benar!</b> Jaringan 20kV → LBS → trafo distribusi (20kV/400V) → LVMDP → beban. Inilah rantai distribusi PLN yang membawa listrik dari jaringan menengah ke tegangan pakai pelanggan.',
+  tutorial:`
+    <h4>Anatomi gardu distribusi</h4>
+    <p>Gardu distribusi menurunkan tegangan menengah (20kV) menjadi tegangan rendah (400V/230V) untuk pelanggan. Rantainya: <b>20kV → LBS/cut-out → trafo → LVMDP → beban.</b></p>
+    <h4>Komponen utama</h4>
+    <ul>
+      <li><span class="badge">LBS / Cut-out</span> pemutus sisi 20kV — isolasi & proteksi.</li>
+      <li><span class="badge">Trafo distribusi</span> 20kV/400V — jantung gardu.</li>
+      <li><span class="badge">LVMDP</span> panel utama tegangan rendah + proteksi.</li>
+      <li><span class="badge">Jaringan TR</span> menyalurkan ke pelanggan.</li>
+    </ul>
+    <h4>Kenapa distribusi pakai 20kV?</h4>
+    <p>Mengirim daya pada tegangan tinggi mengurangi rugi (I²R) untuk arus yang lebih kecil. Baru diturunkan dekat pelanggan agar aman dipakai.</p>
+    <h4>Jenis gardu</h4>
+    <p>Gardu tiang (portal/cantol), gardu beton, & gardu kios. Untuk gardu pakai kubikel ada proteksi relai (lihat lab OCR/GFR) & pembumian.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Teknisi distribusi PLN: operasi & pemeliharaan gardu, manuver jaringan, penggantian trafo, dan penanganan gangguan.</p>`
+};
+
 /* ===================== init ===================== */
 function buildPicker(){
   const ids=Object.keys(LABS);
