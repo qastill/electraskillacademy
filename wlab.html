@@ -173,6 +173,19 @@ const COMP = {
     terms:[{k:'in',side:'l',f:0.5,lbl:''},{k:'out',side:'r',f:0.5,lbl:''}]},
   coil:{ w:84,h:64,label:'COIL',sub:'A1-A2',kind:'coil',
     terms:[{k:'A1',side:'l',f:0.5,lbl:'A1'},{k:'A2',side:'r',f:0.5,lbl:'A2'}]},
+  // --- PLC / otomasi parts (S16) ---
+  psu24:{ w:84,h:90,label:'PSU 24V',sub:'DC',kind:'src',
+    terms:[{k:'P',side:'r',f:0.3,lbl:'L+'},{k:'M',side:'r',f:0.7,lbl:'M'}]},
+  pbNO:{ w:80,h:60,label:'TOMBOL',sub:'NO',kind:'sw',
+    terms:[{k:'in',side:'l',f:0.5,lbl:''},{k:'out',side:'r',f:0.5,lbl:''}]},
+  pbNC:{ w:80,h:60,label:'TOMBOL',sub:'NC',kind:'cpass',
+    terms:[{k:'in',side:'l',f:0.5,lbl:''},{k:'out',side:'r',f:0.5,lbl:''}]},
+  plc:{ w:150,h:300,label:'PLC',sub:'CPU',kind:'plc',
+    terms:[{k:'Lp',side:'l',f:0.08,lbl:'L+'},{k:'M',side:'l',f:0.18,lbl:'M'},
+           {k:'I0',side:'l',f:0.34,lbl:'I0.0'},{k:'I1',side:'l',f:0.46,lbl:'I0.1'},{k:'Ic',side:'l',f:0.58,lbl:'1M'},
+           {k:'Q0',side:'r',f:0.34,lbl:'Q0.0'},{k:'Qc',side:'r',f:0.58,lbl:'3L+'}]},
+  lampDC:{ w:80,h:74,label:'LAMPU',sub:'24V',kind:'load',
+    terms:[{k:'a',side:'l',f:0.5,lbl:'+'},{k:'b',side:'r',f:0.5,lbl:'−'}]},
 };
 
 /* terminal absolute coords */
@@ -232,7 +245,8 @@ function simUF(closed){
     else if(kind==='delta'){ if(closed[id]){u.u(id+'.l1',id+'.m1');u.u(id+'.l2',id+'.m2');u.u(id+'.l3',id+'.m3');} }
     else if(kind==='cpass'){ u.u(id+'.in',id+'.out'); } // kontak NC (STOP/E-STOP/OL 95-96) — normal tertutup
     else if(kind==='sw'){ if(closed[id]!==false)u.u(id+'.in',id+'.out'); }
-    // kind 'coil' = beban, tidak menjembatani (A1/A2 tetap dua node)
+    else if(kind==='plc'){ u.u(id+'.Lp',id+'.Qc'); } // suplai output (3L+) di-jumper internal dari L+
+    // kind 'coil'/'load' = beban, tidak menjembatani
   });
   return u;
 }
@@ -242,6 +256,8 @@ function liveSet(closed){
   // semua sumber (daya 3φ & kontrol) dianggap live
   const srcTerms=[];
   LAB.comps.forEach(c=>{ if(COMP[c.type].kind==='src')COMP[c.type].terms.forEach(t=>srcTerms.push(c.id+'.'+t.k)); });
+  // sumber tambahan tergantung fase (mis. OUTPUT PLC yang aktif saat ladder jalan)
+  if(LAB.phaseSrc&&LAB.phaseSrc[phase])LAB.phaseSrc[phase].forEach(t=>srcTerms.push(t));
   Object.keys(T).forEach(tk=>{ if(srcTerms.some(st=>u.c(tk,st)))s.add(tk); });
   return s;
 }
@@ -284,6 +300,9 @@ function drawComp(inst,closed,live){
   if(kind==='cpass'){stroke='#5b8cff';accent='#9db4ff';}
   const coilEn=kind==='coil'&&live.has(inst.id+'.A1')&&live.has(inst.id+'.A2');
   if(coilEn){stroke=LAB.roleColor.cmd||'#ffd34d';accent='#ffd34d';}
+  const loadEn=kind==='load'&&live.has(inst.id+'.a')&&live.has(inst.id+'.b');
+  if(loadEn){stroke='#ffd34d';accent='#ffd34d';}
+  if(kind==='plc'){const plcRun=energized&&phase!=='off';stroke=plcRun?'#3ddc84':'#33445f';accent=plcRun?'#3ddc84':'#8ea0b8';}
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
@@ -304,6 +323,20 @@ function drawComp(inst,closed,live){
   }
   if(kind==='cpass'){const cx=x+w/2,cy=y+h*0.55;s+=`<line x1="${cx-14}" y1="${cy}" x2="${cx+14}" y2="${cy-7}" stroke="#9db4ff" stroke-width="2.5" stroke-linecap="round"/><circle cx="${cx-14}" cy="${cy}" r="2.5" fill="#9db4ff"/><circle cx="${cx+14}" cy="${cy}" r="2.5" fill="#9db4ff"/>`;}
   if(kind==='coil'){const cx=x+w/2,cy=y+h*0.55;s+=`<rect x="${cx-16}" y="${cy-7}" width="32" height="14" rx="3" fill="none" stroke="${coilEn?'#ffd34d':'#5b6b82'}" stroke-width="2"/>`;if(coilEn)s+=`<circle cx="${cx}" cy="${cy}" r="20" fill="none" stroke="#ffd34d" stroke-width="1" opacity=".5"><animate attributeName="r" values="12;22;12" dur="1.1s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="1.1s" repeatCount="indefinite"/></circle>`;}
+  if(kind==='load'){const cx=x+w/2,cy=y+h*0.52;s+=`<circle cx="${cx}" cy="${cy}" r="13" fill="${loadEn?'#ffd34d':'#0a0e16'}" stroke="${loadEn?'#ffe08a':'#5b6b82'}" stroke-width="2"/><path d="M${cx-6} ${cy+9} L${cx-6} ${cy+13} M${cx+6} ${cy+9} L${cx+6} ${cy+13}" stroke="${loadEn?'#ffe08a':'#5b6b82'}" stroke-width="2"/>`;if(loadEn)s+=`<circle cx="${cx}" cy="${cy}" r="18" fill="none" stroke="#ffd34d" stroke-width="1" opacity=".5"><animate attributeName="opacity" values=".7;.1;.7" dur="1s" repeatCount="indefinite"/></circle>`;}
+  if(kind==='plc'){
+    const plcRun=energized&&phase!=='off';
+    // input/output LED indikator
+    const i0=live.has(inst.id+'.I0'), q0Live=live.has(inst.id+'.Q0');
+    s+=`<rect x="${x+10}" y="${y+h*0.26}" width="${w-20}" height="2" fill="#26344a"/>`;
+    s+=`<text x="${x+w/2}" y="${y+h*0.24}" text-anchor="middle" font-size="8" fill="#5b6b82">— INPUT —</text>`;
+    s+=`<circle cx="${x+w-22}" cy="${y+h*0.34}" r="4.5" fill="${i0?'#3ddc84':'#1a2433'}" stroke="#33445f"/>`;
+    s+=`<circle cx="${x+w-22}" cy="${y+h*0.46}" r="4.5" fill="${live.has(inst.id+'.I1')?'#3ddc84':'#1a2433'}" stroke="#33445f"/>`;
+    s+=`<text x="${x+w/2}" y="${y+h*0.52}" text-anchor="middle" font-size="8" fill="#5b6b82">— OUTPUT —</text>`;
+    s+=`<circle cx="${x+22}" cy="${y+h*0.34}" r="4.5" fill="${q0Live?'#ffd34d':'#1a2433'}" stroke="#33445f"/>`;
+    s+=`<text x="${x+w/2}" y="${y+h*0.66}" text-anchor="middle" font-size="8.5" fill="${plcRun?'#3ddc84':'#5b6b82'}" font-family="JetBrains Mono">${plcRun?'RUN':'STOP'}</text>`;
+    if(plcRun)s+=`<text x="${x+w/2}" y="${y+h*0.78}" text-anchor="middle" font-size="7.5" fill="#8ea0b8">ladder aktif</text>`;
+  }
   s+=`</g>`;
   return s;
 }
@@ -593,6 +626,65 @@ LABS['dol-control']={
     <p>Fasa kontrol → E-Stop(NC) → OL(NC) → STOP(NC) → (START ∥ aux13-14) → coil A1; coil A2 → netral.</p>
     <h4>Di dunia kerja</h4>
     <p>Starter paling umum di industri: pompa, fan, conveyor, mesin. Wajib paham seal-in & rantai proteksi sebelum pegang panel MCC.</p>`
+};
+
+/* ---- LAB: PLC I/O Wiring + Ladder Start/Stop (S16) ---- */
+LABS['plc-io']={
+  id:'plc-io', jalur:'S16', level:'Advance', short:'PLC I/O + Ladder', sub:'Wiring sensor→input PLC & output→beban + ladder start/stop seal-in',
+  vb:'0 0 1000 560',
+  roleColor:{p:'#ff6b6b',m:'#5b8cff',in:'#3ddc84',out:'#ffd34d',ret:'#6db3ff'},
+  roleLabel:{p:'+24V (L+)',m:'0V / M (negatif)',in:'Sinyal ke input PLC',out:'Output PLC → beban',ret:'Return beban'},
+  comps:[
+    {id:'PSU',type:'psu24',x:30,y:60},
+    {id:'START',type:'pbNO',x:30,y:230, no:true},
+    {id:'STOP',type:'pbNC',x:30,y:330},
+    {id:'PLC',type:'plc',x:360,y:90},
+    {id:'KM',type:'lampDC',x:760,y:150},
+  ],
+  nets:[
+    {role:'p',t:['PSU.P','PLC.Lp','START.in','STOP.in']},        // +24V ke PLC L+ dan ke tombol-tombol (sisi atas)
+    {role:'m',t:['PSU.M','PLC.M','PLC.Ic','KM.b']},              // 0V: PLC M, common input (1M), dan return beban
+    {role:'in',t:['START.out','PLC.I0']},                         // tombol START → input I0.0
+    {role:'in',t:['STOP.out','PLC.I1']},                          // tombol STOP(NC) → input I0.1
+    {role:'out',t:['PLC.Q0','KM.a']},                             // output Q0.0 → beban (+)
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'+24V (PSU L+) → PLC L+, dan ke tombol START & STOP', why:'PLC butuh suplai; sumber sinyal input juga diambil dari +24V (PLC sourcing).'},
+    {net:1, txt:'0V (PSU M) → PLC M, common input (1M), & return beban', why:'Rel 0V dipakai bersama: referensi CPU, common semua input, dan jalur balik beban.'},
+    {net:2, txt:'Tombol START (NO) → input I0.0', why:'Saat START ditekan, +24V masuk ke I0.0 → bit input = 1.'},
+    {net:3, txt:'Tombol STOP (NC) → input I0.1', why:'STOP tipe NC: normal mengirim 1 ke I0.1; saat ditekan → 0 (fail-safe, sama seperti rangkaian kawat).'},
+    {net:4, txt:'Output Q0.0 → beban (kontaktor/lampu +)', why:'Output PLC mengalirkan +24V ke beban saat ladder meng-energize Q0.0; sisi lain beban sudah ke 0V.'},
+  ],
+  phases:[{key:'run',label:'▶ RUN — ladder mengunci Q0.0 (seal-in)'}],
+  phaseClosed:{ run:[] },
+  phaseSrc:{ run:['PLC.Q0'] },   // saat run, output Q0.0 jadi sumber +24V ke beban
+  sequence:[{phase:'run'}],
+  okMsg:'<b>✓ Wiring I/O benar — PLC RUN!</b> Logika ladder: <code>I0.0 (START) ∥ Q0.0</code> di-seri dengan <code>I0.1 (STOP)</code> → menyalakan <b>Q0.0</b>. Bit Q0.0 mengunci dirinya sendiri (seal-in di program), beban menyala. Inilah start/stop versi software.',
+  tutorial:`
+    <h4>PLC: pisahkan WIRING dari LOGIKA</h4>
+    <p>Beda dengan rangkaian kawat (DOL), pada PLC tombol & beban hanya disambung ke <b>terminal I/O</b>; logika start/stop ditulis sebagai <b>program ladder</b> di dalam CPU. Mengubah perilaku = ubah program, bukan rewiring.</p>
+    <h4>Wiring input (sisi kiri PLC)</h4>
+    <ul>
+      <li><span class="badge">L+ / M</span> suplai 24V DC ke CPU.</li>
+      <li>Tombol disambung dari <b>+24V → tombol → terminal input</b> (I0.0, I0.1). Common input <span class="badge">1M</span> ke 0V (mode <b>sourcing</b>, umum di Siemens/Eropa).</li>
+      <li><b>STOP dipasang NC</b> agar fail-safe: kabel putus = sinyal hilang = motor berhenti (sama filosofinya dengan rangkaian kawat).</li>
+    </ul>
+    <h4>Wiring output (sisi kanan PLC)</h4>
+    <p>Terminal output <span class="badge">Q0.0</span> menyambung +24V (3L+) ke beban saat bit Q0.0 = 1. Beban (lampu/koil kontaktor) sisi lain ke 0V.</p>
+    <h4>Program ladder (start/stop seal-in)</h4>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#bff0d2;background:#0a1f14;border:1px solid #1c5b3a;border-radius:8px;padding:10px;overflow-x:auto">
+|  I0.0   I0.1            Q0.0
+|--| |----|/|-----------( )--
+|   |
+|  Q0.0
+|--| |--   (seal-in / latch)
+    </pre>
+    <p>Baca: (START <b>ATAU</b> Q0.0) <b>DAN</b> STOP-tak-ditekan → Q0.0 ON. Q0.0 mengunci dirinya — itulah seal-in versi software, persis aux 13-14 di DOL.</p>
+    <h4>PNP vs NPN (catatan)</h4>
+    <p>Sourcing (PNP) = sinyal +24V ke input, common input ke 0V (dipakai di lab ini). Sinking (NPN) kebalikannya — cek manual PLC sebelum wiring sensor.</p>
+    <h4>Di dunia kerja</h4>
+    <p>Dasar semua otomasi: konveyor, mesin packaging, sistem batching, HVAC gedung — semuanya start/stop + interlock di PLC.</p>`
 };
 
 /* ===================== init ===================== */
