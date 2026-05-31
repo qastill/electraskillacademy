@@ -252,6 +252,25 @@ const COMP = {
     terms:[{k:'L',side:'l',f:0.24,lbl:'L'},{k:'N',side:'l',f:0.5,lbl:'N'},{k:'PE',side:'l',f:0.78,lbl:'bodi/PE'}]},
   rod:{ w:90,h:110,label:'ELEKTRODA',sub:'batang arde',kind:'earth',
     terms:[{k:'e',side:'t',f:0.5,lbl:'ke PE'}]},
+  // --- PV / Solar grid-tie (S10) ---
+  pvArray:{ w:120,h:150,label:'ARRAY PV',sub:'string DC',kind:'src',
+    terms:[{k:'P',side:'r',f:0.3,lbl:'+'},{k:'M',side:'r',f:0.7,lbl:'−'}]},
+  combiner:{ w:96,h:130,label:'COMBINER',sub:'+fuse string',kind:'bms',
+    terms:[{k:'bp',side:'l',f:0.3,lbl:'+'},{k:'bn',side:'l',f:0.7,lbl:'−'},
+           {k:'pp',side:'r',f:0.3,lbl:'+'},{k:'pn',side:'r',f:0.7,lbl:'−'}]},
+  dcsw2:{ w:84,h:110,label:'DC ISOLATOR',sub:'PV',kind:'sw2p',
+    terms:[{k:'pi',side:'l',f:0.3,lbl:'+'},{k:'ni',side:'l',f:0.7,lbl:'−'},
+           {k:'po',side:'r',f:0.3,lbl:'+'},{k:'no',side:'r',f:0.7,lbl:'−'}]},
+  gtInv:{ w:150,h:200,label:'INVERTER GT',sub:'DC→AC grid-tie',kind:'gtinv',
+    terms:[{k:'dcp',side:'l',f:0.28,lbl:'DC+'},{k:'dcn',side:'l',f:0.5,lbl:'DC−'},{k:'pe',side:'l',f:0.78,lbl:'PE'},
+           {k:'L',side:'r',f:0.3,lbl:'L'},{k:'N',side:'r',f:0.6,lbl:'N'}]},
+  acsw:{ w:80,h:84,label:'AC ISOLATOR',sub:'MCB',kind:'sw',
+    terms:[{k:'in',side:'l',f:0.5,lbl:'L'},{k:'out',side:'r',f:0.5,lbl:'L'}]},
+  meter:{ w:100,h:120,label:'kWh METER',sub:'ekspor-impor',kind:'pass2',
+    terms:[{k:'Li',side:'l',f:0.3,lbl:'L'},{k:'Ni',side:'l',f:0.7,lbl:'N'},
+           {k:'Lo',side:'r',f:0.3,lbl:'L'},{k:'No',side:'r',f:0.7,lbl:'N'}]},
+  grid1:{ w:70,h:120,label:'GRID PLN',sub:'230V',kind:'grid1',
+    terms:[{k:'L',side:'l',f:0.3,lbl:'L'},{k:'N',side:'l',f:0.7,lbl:'N'}]},
 };
 
 /* terminal absolute coords */
@@ -316,6 +335,10 @@ function simUF(closed){
     else if(kind==='grid'){ u.u(id+'.R',id+'.Ro');u.u(id+'.S',id+'.So');u.u(id+'.T',id+'.To'); } // busbar grid: rel terhubung
     else if(kind==='rcd'){ if(closed[id]!==false){u.u(id+'.Li',id+'.Lo');u.u(id+'.Ni',id+'.No');} } // RCD: meneruskan L & N kecuali trip
     else if(kind==='appliance'){ u.u(id+'.L',id+'.N'); } // beban: arus mengalir L→N lewat peralatan
+    else if(kind==='sw2p'){ if(closed[id]!==false){u.u(id+'.pi',id+'.po');u.u(id+'.ni',id+'.no');} } // isolator 2 kutub DC
+    else if(kind==='pass2'){ u.u(id+'.Li',id+'.Lo');u.u(id+'.Ni',id+'.No'); } // meter 2 kutub: lewat
+    else if(kind==='grid1'){ /* sumber 1φ (lihat liveSet) */ }
+    else if(kind==='gtinv'){ /* DC→AC: sisi AC jadi sumber saat generate (lihat phaseSrc) */ }
     else if(kind==='earth'){ /* node PE tunggal, tidak menjembatani */ }
     else if(kind==='charger'){ /* AC→DC: output DC jadi sumber saat fase charge (lihat phaseSrc) */ }
     else if(kind==='bms'){ u.u(id+'.bp',id+'.pp');u.u(id+'.bn',id+'.pn'); } // BMS meneruskan daya (proteksi); B↔P
@@ -329,7 +352,7 @@ function liveSet(closed){
   const u=simUF(closed);
   // semua sumber (daya 3φ & kontrol) dianggap live
   const srcTerms=[];
-  LAB.comps.forEach(c=>{ const k=COMP[c.type].kind; if(k==='src'||k==='grid')COMP[c.type].terms.forEach(t=>srcTerms.push(c.id+'.'+t.k)); });
+  LAB.comps.forEach(c=>{ const k=COMP[c.type].kind; if(k==='src'||k==='grid'||k==='grid1')COMP[c.type].terms.forEach(t=>srcTerms.push(c.id+'.'+t.k)); });
   // sumber tambahan tergantung fase (mis. OUTPUT PLC yang aktif saat ladder jalan)
   if(LAB.phaseSrc&&LAB.phaseSrc[phase])LAB.phaseSrc[phase].forEach(t=>srcTerms.push(t));
   Object.keys(T).forEach(tk=>{ if(srcTerms.some(st=>u.c(tk,st)))s.add(tk); });
@@ -393,6 +416,11 @@ function drawComp(inst,closed,live){
   if(kind==='rcd'){ if(on!==false){stroke=energized?'#3ddc84':'#33445f';accent=energized?'#3ddc84':'#8ea0b8';} else if(energized){stroke='#ff5d5d';accent='#ff5d5d';} }
   const faultLive=kind==='appliance'&&energized&&phase==='fault';
   if(kind==='appliance'){stroke=faultLive?'#ff5d5d':(energized?'#3ddc84':'#33445f');accent=faultLive?'#ff9d9d':(energized?'#3ddc84':'#8ea0b8');}
+  const gen=kind==='gtinv'&&energized&&phase!=='off';
+  if(kind==='gtinv'){stroke=gen?'#3ddc84':(energized?'#e8b339':'#33445f');accent=gen?'#3ddc84':(energized?'#f3d27a':'#8ea0b8');}
+  if(kind==='sw2p'){ if(on!==false){stroke=energized?'#3ddc84':'#33445f';accent=energized?'#3ddc84':'#8ea0b8';} else if(energized){stroke='#ff5d5d';accent='#ff5d5d';} }
+  if(kind==='grid1'){stroke=energized?'#e8b339':'#33445f';accent=energized?'#f3d27a':'#8ea0b8';}
+  if(kind==='pass2'){stroke=energized?'#3ddc84':'#33445f';accent=energized?'#bff0d2':'#8ea0b8';}
   let s=`<g>${box(x,y,w,h,stroke)}`;
   s+=`<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10" fill="${accent}" font-family="Chakra Petch,sans-serif">${c.label}</text>`;
   if(c.sub)s+=`<text x="${x+w/2}" y="${y+h-8}" text-anchor="middle" font-size="8.5" fill="#5b6b82" font-family="JetBrains Mono,monospace">${c.sub}</text>`;
@@ -455,6 +483,15 @@ function drawComp(inst,closed,live){
     s+=`<rect x="${cx-22}" y="${cy-14}" width="44" height="28" rx="3" fill="none" stroke="${flt?'#ff5d5d':'#8ea0b8'}" stroke-width="2"/>`;
     if(flt){s+=`<path d="M${cx-6} ${cy-9} L${cx+2} ${cy} L${cx-3} ${cy} L${cx+6} ${cy+10}" stroke="#ffd34d" stroke-width="2" fill="none"/>`;s+=`<text x="${cx}" y="${y+h*0.84}" text-anchor="middle" font-size="8" fill="#ff5d5d" font-family="JetBrains Mono">FASA KE BODI!</text>`;}
     else s+=`<text x="${cx}" y="${y+h*0.84}" text-anchor="middle" font-size="8" fill="#8ea0b8">bodi aman (PE)</text>`;}
+  if(kind==='gtinv'){const cx=x+w/2;
+    s+=`<text x="${x+w*0.3}" y="${y+h*0.45}" text-anchor="middle" font-size="11" fill="${gen?'#ffd34d':'#5b6b82'}">DC═</text>`;
+    s+=`<text x="${cx}" y="${y+h*0.45}" text-anchor="middle" font-size="11" fill="#8ea0b8">→</text>`;
+    s+=`<text x="${x+w*0.7}" y="${y+h*0.45}" text-anchor="middle" font-size="11" fill="${gen?'#3ddc84':'#5b6b82'}">AC∿</text>`;
+    s+=`<rect x="${x+14}" y="${y+h*0.82}" width="${w-28}" height="20" rx="4" fill="${gen?'#0a1f14':'#1a1206'}" stroke="${gen?'#1c5b3a':'#5a4a16'}"/>`;
+    s+=`<text x="${cx}" y="${y+h*0.82+14}" text-anchor="middle" font-size="9" fill="${gen?'#3ddc84':'#f3d27a'}" font-family="JetBrains Mono">${gen?'EKSPOR ⚡':(energized?'MPPT…':'standby')}</text>`;}
+  if(kind==='grid1'){const glive=energized;[0.3,0.7].forEach(f=>{s+=`<line x1="${x+8}" y1="${y+f*h}" x2="${x+w-8}" y2="${y+f*h}" stroke="${glive?'#e8b339':'#33445f'}" stroke-width="4" stroke-linecap="round"/>`;});}
+  if(kind==='pass2'){const cx=x+w/2;s+=`<text x="${cx}" y="${y+h*0.5}" text-anchor="middle" font-size="9" fill="${energized?'#bff0d2':'#5b6b82'}" font-family="JetBrains Mono">${energized?'⇄ kWh':'kWh'}</text>`;}
+  if(kind==='sw2p'){s+=`<text x="${x+w/2}" y="${y+h*0.5}" text-anchor="middle" font-size="8.5" fill="${on!==false?'#3ddc84':'#ff5d5d'}">${on!==false?'ON':'OFF'}</text>`;}
   if(kind==='pcs'){const cx=x+w/2;
     s+=`<text x="${x+w*0.28}" y="${y+h*0.46}" text-anchor="middle" font-size="11" fill="${dischg?'#ffd34d':'#5b6b82'}">DC═</text>`;
     s+=`<text x="${cx}" y="${y+h*0.46}" text-anchor="middle" font-size="12" fill="#8ea0b8">${dischg?'⇄':'⇄'}</text>`;
@@ -1190,6 +1227,74 @@ LABS['earthing']={
     <p>Di sistem <b>TT</b> (arde lokal sendiri), RCD WAJIB karena impedansi loop tinggi → MCB saja sering tak cukup cepat trip. RCD menjadi proteksi utama sentuh tak langsung.</p>
     <h4>Di dunia kerja</h4>
     <p>K3 listrik: pasang & uji sistem pembumian (ukur resistansi arde, target < 5Ω), uji trip RCD (waktu & arus), audit bonding — wajib sebelum instalasi diserahterimakan.</p>`
+};
+
+/* ---- LAB: PV Solar Grid-Tie Wiring (S10) ---- */
+LABS['pv-gridtie']={
+  id:'pv-gridtie', jalur:'S10', level:'Advance', short:'PLTS On-Grid', sub:'PV array → combiner → DC isolator → inverter → meter → grid',
+  vb:'0 0 1120 560',
+  roleColor:{dcp:'#ff6b6b',dcn:'#6db3ff',L:'#c9763b',N:'#6db3ff',pe:'#3ddc84',ac:'#e89b5e'},
+  roleLabel:{dcp:'DC + (string)',dcn:'DC − (string)',L:'AC Fasa (L)',N:'AC Netral (N)',pe:'Pembumian (PE)'},
+  comps:[
+    {id:'PV',type:'pvArray',x:24,y:90},
+    {id:'CMB',type:'combiner',x:190,y:100},
+    {id:'ISO',type:'dcsw2',x:330,y:110},
+    {id:'INV',type:'gtInv',x:470,y:90},
+    {id:'ACI',type:'acsw',x:680,y:110},
+    {id:'MTR',type:'meter',x:810,y:100},
+    {id:'GRID',type:'grid1',x:980,y:110},
+    {id:'GND',type:'rod',x:520,y:380},
+  ],
+  nets:[
+    {role:'dcp',t:['PV.P','CMB.bp']},          // PV + → combiner
+    {role:'dcn',t:['PV.M','CMB.bn']},          // PV − → combiner
+    {role:'dcp',t:['CMB.pp','ISO.pi']},        // combiner + → DC isolator
+    {role:'dcn',t:['CMB.pn','ISO.ni']},        // combiner − → DC isolator
+    {role:'dcp',t:['ISO.po','INV.dcp']},       // isolator + → inverter DC+
+    {role:'dcn',t:['ISO.no','INV.dcn']},       // isolator − → inverter DC−
+    {role:'L',t:['INV.L','ACI.in']},           // inverter AC L → AC isolator
+    {role:'L',t:['ACI.out','MTR.Li']},         // AC isolator → meter (L)
+    {role:'N',t:['INV.N','MTR.Ni']},           // inverter N → meter (N)
+    {role:'L',t:['MTR.Lo','GRID.L']},          // meter → grid (L)
+    {role:'N',t:['MTR.No','GRID.N']},          // meter → grid (N)
+    {role:'pe',t:['INV.pe','GND.e']},          // pembumian inverter/array → arde
+  ],
+  given:[],
+  guide:[
+    {net:0, txt:'PV array (+/−) → COMBINER', why:'Combiner box menggabungkan beberapa string & memberi fuse proteksi per string.'},
+    {net:2, txt:'Combiner → DC ISOLATOR (2 kutub)', why:'Saklar pemutus DC — WAJIB bisa memutus + dan − untuk perawatan/pemadaman.'},
+    {net:4, txt:'DC isolator → INVERTER (DC+/DC−)', why:'Inverter grid-tie mengubah DC panel → AC sinkron grid (MPPT cari titik daya maksimum).'},
+    {net:6, txt:'Inverter AC (L) → AC ISOLATOR (MCB)', why:'Proteksi & pemutus sisi AC sebelum ke jaringan.'},
+    {net:7, txt:'AC isolator → kWh METER (L)', why:'Meter ekspor-impor mencatat energi yang dijual ke / dibeli dari PLN (net metering).'},
+    {net:8, txt:'Inverter (N) → meter (N)', why:'Netral lewat meter juga.'},
+    {net:9, txt:'Meter → GRID PLN (L & N)', why:'Titik sambung ke jaringan. Inverter HANYA ekspor saat grid hidup (anti-islanding).'},
+    {net:11, txt:'Pembumian inverter/array → ARDE', why:'Grounding wajib: rangka panel & bodi inverter ke PE demi keselamatan & proteksi petir/surge.'},
+  ],
+  phases:[{key:'generate',label:'☀ GENERATE — PV ekspor ke grid (DC→AC)'}],
+  phaseClosed:{ generate:['ISO','ACI'] },        // isolator DC & AC menutup saat operasi
+  phaseSrc:{ generate:['INV.L'] },               // saat generate, output AC inverter jadi sumber → meter → grid
+  sequence:[{phase:'generate'}],
+  okMsg:'<b>✓ Wiring PLTS on-grid benar!</b> Panel → combiner → DC isolator → inverter (DC→AC) → AC isolator → kWh meter ekspor-impor → grid PLN. Saat matahari ada, inverter MPPT & ekspor energi (meter berputar mundur/ekspor). Inverter anti-islanding: berhenti otomatis bila grid padam. DC isolator & pembumian wajib.',
+  tutorial:`
+    <h4>Bagaimana PLTS On-Grid (grid-tie) bekerja?</h4>
+    <p>Panel surya menghasilkan DC → inverter grid-tie mengubahnya ke AC yang <b>sinkron dengan jaringan PLN</b> → energi dipakai beban rumah, kelebihannya <b>diekspor</b> ke grid (dicatat kWh meter ekspor-impor / net metering).</p>
+    <h4>Rantai komponen</h4>
+    <ul>
+      <li><span class="badge">Array PV</span> string panel seri/paralel menghasilkan tegangan DC tinggi.</li>
+      <li><span class="badge">Combiner box</span> menggabungkan string + fuse proteksi DC + (opsional) SPD surge.</li>
+      <li><span class="badge">DC isolator</span> saklar pemutus DC 2 kutub — wajib untuk isolasi aman.</li>
+      <li><span class="badge">Inverter grid-tie</span> DC→AC dengan <b>MPPT</b> (cari titik daya maksimum) & sinkronisasi grid.</li>
+      <li><span class="badge">AC isolator/MCB</span> proteksi & pemutus sisi AC.</li>
+      <li><span class="badge">kWh meter ekspor-impor</span> mencatat jual-beli energi (net metering).</li>
+    </ul>
+    <h4>Anti-islanding — keselamatan</h4>
+    <p>Bila grid PLN padam, inverter <b>WAJIB berhenti otomatis</b> (anti-islanding). Tanpa ini, inverter bisa "menghidupkan" jaringan mati dan <b>menyetrum petugas PLN</b> yang sedang memperbaiki. Standar IEEE 1547 / IEC 62116.</p>
+    <h4>Pembumian & proteksi</h4>
+    <p>Rangka panel & bodi inverter di-bumikan (PE). Tambah <b>SPD/arrester</b> sisi DC & AC untuk proteksi petir. Kabel DC pakai konektor MC4 & kabel surya tahan UV.</p>
+    <h4>Net metering vs net billing</h4>
+    <p>Di Indonesia skema bisa berbeda (ekspor dihargai faktor tertentu). Meter ekspor-impor mencatat dua arah; tagihan = impor − (ekspor × faktor).</p>
+    <h4>Di dunia kerja</h4>
+    <p>Solar engineer: desain string & inverter, wiring DC/AC, proteksi & grounding, komisioning + uji anti-islanding, dan pengurusan izin PLN.</p>`
 };
 
 /* ===================== init ===================== */
