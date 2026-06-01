@@ -16204,7 +16204,7 @@ function backToJalurs() {
 }
 const _LAB_ARROW = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function _labTile(s, g) {
-  const _locked = !esaContentUnlocked();
+  const _locked = !esaIsFreeLab(s) && !esaContentUnlocked();
   return `
     <button type="button" class="lab-tile${_locked ? ' locked' : ''}" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
       <span class="lab-tile-grad" style="background:${g.grad}"></span>
@@ -16346,6 +16346,15 @@ function esaRequireAccess() {
   return false;
 }
 window.esaRequireAccess = esaRequireAccess;
+// esaIsFreeLab(sim) → true untuk lab WIRING (wiring trainer + wiring lab) yang
+// GRATIS dibuka siapa saja (pemikat). Lab lain (simulator hitung, capbank,
+// hub ElectraSim) tetap terkunci → butuh daftar + bayar.
+function esaIsFreeLab(sim) {
+  if (!sim) return false;
+  var e = String(sim.embed || '');
+  return /^(wiring|wlab)\.html/.test(e);
+}
+window.esaIsFreeLab = esaIsFreeLab;
 
 // ================================================
 // SIMULATOR MODAL — dynamic content per simulator
@@ -16358,9 +16367,9 @@ function openSimulator(simId) {
   const sim = SIMULATORS.find(s => s.id === simId);
   if (!sim || !sim.working) return;
 
-  // Paywall: menelusuri daftar lab gratis, tetapi menjalankan lab untuk
-  // dites memerlukan akses penuh.
-  if (!esaRequireAccess()) return;
+  // Paywall: menelusuri daftar lab gratis. Lab WIRING bebas dibuka siapa saja
+  // (gratis); lab lainnya memerlukan akses penuh (daftar + bayar).
+  if (!esaIsFreeLab(sim) && !esaRequireAccess()) return;
 
   // Build simulator body HTML
   let body = '';
