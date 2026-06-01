@@ -11996,7 +11996,7 @@ button:active:not(:disabled),
           <button class="lab-chip" data-set="bonus" onclick="labShowSet('bonus')">Dasar &amp; Tools</button>
         </div>
       </div>
-      <a class="electrasim-feature" href="electrasim.html" target="_blank" rel="noopener">
+      <a class="electrasim-feature" href="electrasim.html" target="_blank" rel="noopener" onclick="if(!window.esaRequireAccess()){event.preventDefault();return false;}">
         <span class="electrasim-feature-ic">
           <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg>
         </span>
