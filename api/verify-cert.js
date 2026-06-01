@@ -7,9 +7,13 @@
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const KEY = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
+import { applyCors, rateLimited } from '../lib/guard.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  applyCors(req, res, 'GET, OPTIONS');
   res.setHeader('Cache-Control', 'public, max-age=60');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (rateLimited(req, { key: 'verify-cert', max: 60, windowMs: 60000 })) return res.status(429).json({ ok: false, error: 'rate_limited' });
 
   if (!SUPABASE_URL || !KEY) {
     return res.status(503).json({ ok: false, error: 'server_not_configured' });

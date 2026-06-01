@@ -19,12 +19,13 @@ function getClientIp(req) {
     .trim() || null;
 }
 
+import { applyCors, rateLimited } from '../lib/guard.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  applyCors(req, res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' });
+  if (rateLimited(req, { key: 'redeem-promo', max: 10, windowMs: 10 * 60000 })) return res.status(429).json({ ok: false, error: 'rate_limited', message: 'Terlalu banyak percobaan. Coba lagi nanti.' });
 
   if (!SUPABASE_URL || !SERVICE_KEY) {
     return res.status(503).json({
