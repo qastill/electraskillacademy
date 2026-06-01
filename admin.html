@@ -188,12 +188,14 @@
     document.getElementById('login-form').addEventListener('submit', doLogin);
     document.getElementById('logout-btn').addEventListener('click', doLogout);
 
-    // Tab switcher
+    // Tab switcher — memuat data tab secara lazy (hanya saat tab dibuka),
+    // supaya login tidak menembak belasan query berat sekaligus.
     document.querySelectorAll('.tab-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         const tab = btn.dataset.tab;
         document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
         document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.toggle('active', p.id === 'panel-' + tab); });
+        if (typeof window.esaLoadTab === 'function') window.esaLoadTab(tab);
       });
     });
 
@@ -231,15 +233,30 @@
       if (subEl) subEl.textContent = nActive + ' akun aktif × Rp ' + ESA_PRICE.toLocaleString('id-ID');
     } catch (e) { console.warn('[admin] stats error:', e); }
 
-    // Load each tab
-    if (typeof window.esaLoadTabAnalytics === 'function') window.esaLoadTabAnalytics();
-    if (typeof window.esaLoadTabParticipants === 'function') window.esaLoadTabParticipants();
-    if (typeof window.esaLoadTabProgress === 'function') window.esaLoadTabProgress();
-    if (typeof window.esaLoadTabExams === 'function') window.esaLoadTabExams();
-    if (typeof window.esaLoadTabCerts === 'function') window.esaLoadTabCerts();
-    if (typeof window.esaLoadTabPromos === 'function') window.esaLoadTabPromos();
-    if (typeof window.esaLoadTabAuthLog === 'function') window.esaLoadTabAuthLog();
-    if (typeof window.esaLoadTabPayments === 'function') window.esaLoadTabPayments();
+    // Lazy-load: hanya muat tab yang sedang aktif. Tab lain dimuat saat diklik.
+    window.__esaLoadedTabs = {};
+    const activeBtn = document.querySelector('.tab-btn.active');
+    window.esaLoadTab(activeBtn ? activeBtn.dataset.tab : 'participants');
+  };
+
+  // Registry loader per-tab + memo supaya tiap tab hanya di-load sekali per sesi.
+  window.esaLoadTab = function (tab) {
+    const loaders = {
+      participants: window.esaLoadTabParticipants,
+      payments: window.esaLoadTabPayments,
+      analytics: window.esaLoadTabAnalytics,
+      progress: window.esaLoadTabProgress,
+      exams: window.esaLoadTabExams,
+      certs: window.esaLoadTabCerts,
+      promos: window.esaLoadTabPromos,
+      auth_log: window.esaLoadTabAuthLog
+    };
+    window.__esaLoadedTabs = window.__esaLoadedTabs || {};
+    if (window.__esaLoadedTabs[tab]) return;
+    const fn = loaders[tab];
+    if (typeof fn !== 'function') return;
+    window.__esaLoadedTabs[tab] = true;
+    fn();
   };
 
   // ===== Helper: format & escape =====

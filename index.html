@@ -16204,8 +16204,9 @@ function backToJalurs() {
 }
 const _LAB_ARROW = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function _labTile(s, g) {
+  const _locked = !esaContentUnlocked();
   return `
-    <button type="button" class="lab-tile" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
+    <button type="button" class="lab-tile${_locked ? ' locked' : ''}" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
       <span class="lab-tile-grad" style="background:${g.grad}"></span>
       <span class="lab-tile-pattern"></span>
       <span class="lab-tile-icon">${s.icon || ''}</span>
@@ -16213,8 +16214,8 @@ function _labTile(s, g) {
       <span class="lab-tile-badge">${g.num}</span>
       <span class="lab-tile-content">
         <span class="lab-tile-cat">${s.category || g.label}</span>
-        <span class="lab-tile-title">${s.name}</span>
-        <span class="lab-tile-open">Buka Lab ${_LAB_ARROW}</span>
+        <span class="lab-tile-title">${s.name}${_locked ? ' <span class="module-lock-icon">🔒</span>' : ''}</span>
+        <span class="lab-tile-open">${_locked ? 'Buka Lab — perlu akses' : 'Buka Lab'} ${_LAB_ARROW}</span>
       </span>
     </button>`;
 }
@@ -16312,6 +16313,27 @@ function labsShowSection(section) {
 // Back-compat: pemanggilan lama labsScrollTo() diarahkan ke tab-switch.
 function labsScrollTo(section) { labsShowSection(section); }
 
+// ── Gerbang akses konten (paywall) ───────────────────────────────
+// Eksplorasi daftar tetap gratis: buka menu Labs, lihat kurikulum modul,
+// dan telusuri Library boleh tanpa bayar. Tetapi MEMBUKA konten aktual
+// (menjalankan lab, menonton video/PPT modul, membuka isi Library)
+// memerlukan akses penuh.
+// esaContentUnlocked() → true bila member aktif (sudah bayar / akses penuh).
+function esaContentUnlocked() {
+  if (typeof window.esaIsMemberActive === 'function') return !!window.esaIsMemberActive();
+  return false;
+}
+window.esaContentUnlocked = esaContentUnlocked;
+// esaRequireAccess() → true bila boleh lanjut; bila belum, tampilkan modal
+// aktivasi/pembayaran lalu return false (pemanggil harus menghentikan aksi).
+function esaRequireAccess() {
+  if (esaContentUnlocked()) return true;
+  if (typeof window.esaShowActivationModal === 'function') { window.esaShowActivationModal(); }
+  else if (typeof openPurchaseModal === 'function') { openPurchaseModal(); }
+  return false;
+}
+window.esaRequireAccess = esaRequireAccess;
+
 // ================================================
 // SIMULATOR MODAL — dynamic content per simulator
 // ================================================
@@ -16322,6 +16344,10 @@ function openSimulator(simId) {
 
   const sim = SIMULATORS.find(s => s.id === simId);
   if (!sim || !sim.working) return;
+
+  // Paywall: menelusuri daftar lab gratis, tetapi menjalankan lab untuk
+  // dites memerlukan akses penuh.
+  if (!esaRequireAccess()) return;
 
   // Build simulator body HTML
   let body = '';
@@ -22239,8 +22265,11 @@ function renderReferensi() {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(245,240,230,0.5);">Tidak ada buku di kategori ini.</div>';
     return;
   }
+  // Paywall: menelusuri daftar Library gratis, tetapi membuka isi buku
+  // memerlukan akses penuh.
+  const _unlocked = esaContentUnlocked();
   grid.innerHTML = list.map(b => `
-    <a href="${escapeHtml(b.driveUrl)}" target="_blank" rel="noopener" class="esa-book esa-book-p${b.palette}" title="${escapeHtml(b.title)} — ${escapeHtml(b.author)}">
+    <a href="${escapeHtml(b.driveUrl)}" target="_blank" rel="noopener" class="esa-book esa-book-p${b.palette}${_unlocked ? '' : ' locked'}" title="${escapeHtml(b.title)} — ${escapeHtml(b.author)}" onclick="if(!window.esaRequireAccess()){event.preventDefault();return false;}">
       <div class="esa-book-cover">
         <div class="esa-book-cover-spine"></div>
         <div class="esa-book-cover-band">${escapeHtml(b.categoryLabel)}</div>
@@ -22250,7 +22279,7 @@ function renderReferensi() {
         <div class="esa-book-cover-foil">ESA · LIBRARY</div>
       </div>
       <div class="esa-book-meta">
-        <div class="esa-book-meta-title">${escapeHtml(b.title)}</div>
+        <div class="esa-book-meta-title">${escapeHtml(b.title)}${_unlocked ? '' : ' <span class="module-lock-icon">🔒</span>'}</div>
         <div class="esa-book-meta-author">${escapeHtml(b.author)}</div>
       </div>
     </a>
@@ -22276,6 +22305,15 @@ function openModul(code, trackId, levelId) {
   else module = (CURRICULUM[trackId] || []).find(m => m.code === code);
 
   if (!module) return;
+
+  // Paywall: masuk jalur & lihat kurikulum gratis, tetapi membuka detail
+  // modul (video + PPT) memerlukan akses penuh. Level yang ditandai gratis
+  // (isFree) tetap terbuka untuk semua.
+  try {
+    const _lvl = (typeof LEVELS !== 'undefined') ? LEVELS.find(l => l.id === levelId) : null;
+    const _levelIsFree = _lvl ? !!_lvl.isFree : false;
+    if (!_levelIsFree && !esaRequireAccess()) return;
+  } catch (e) { if (!esaRequireAccess()) return; }
 
   // Expose modul aktif ke global supaya bookmark/notes/rating bisa akses
   window.currentModuleData = {
