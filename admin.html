@@ -608,6 +608,84 @@
   };
 
   // ===== Tab: PEMBAYARAN (Xendit belum di-wire-up) =====
+  // ===== Invoice PDF (#4) — dibuat di browser via jsPDF (lazy-load CDN) =====
+  function esaEnsureJsPDF() {
+    return new Promise((resolve, reject) => {
+      if (window.jspdf && window.jspdf.jsPDF) return resolve();
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('jsPDF gagal dimuat (cek koneksi).'));
+      document.head.appendChild(s);
+    });
+  }
+  window.esaInvoice = async function (paymentId) {
+    try {
+      const list = window.__esaPayments || [];
+      const p = list.find(x => String(x.id) === String(paymentId));
+      if (!p) { alert('Data pembayaran tidak ditemukan. Muat ulang tab Pembayaran.'); return; }
+      await esaEnsureJsPDF();
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const W = doc.internal.pageSize.getWidth();
+      const gold = [201, 169, 110], navy = [26, 29, 46], gray = [110, 118, 128];
+      const invNo = String(p.external_id || p.id || '').slice(0, 40) || ('ESA-' + Date.now());
+      const dateStr = fmtDate(p.paid_at || p.created_at);
+      const amount = Number(p.amount || 0).toLocaleString('id-ID');
+      const cur = p.currency || 'IDR';
+      const paid = p.status === 'paid';
+
+      // Header
+      doc.setFillColor(navy[0], navy[1], navy[2]); doc.rect(0, 0, W, 90, 'F');
+      doc.setTextColor(gold[0], gold[1], gold[2]); doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
+      doc.text('INVOICE', 40, 50);
+      doc.setTextColor(245, 240, 230); doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+      doc.text('Electra Skill Academy', 40, 70);
+      doc.setFontSize(9); doc.setTextColor(200, 200, 200);
+      doc.text('electraacademy.com', W - 40, 70, { align: 'right' });
+
+      // Meta
+      let y = 130;
+      doc.setTextColor(gray[0], gray[1], gray[2]); doc.setFontSize(9);
+      doc.text('NO. INVOICE', 40, y); doc.text('TANGGAL', 250, y); doc.text('STATUS', 430, y);
+      doc.setTextColor(40, 40, 40); doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
+      doc.text(invNo, 40, y + 16); doc.text(String(dateStr), 250, y + 16);
+      doc.setTextColor(paid ? 22 : 200, paid ? 163 : 140, paid ? 74 : 0);
+      doc.text(paid ? 'LUNAS' : String(p.status || '-').toUpperCase(), 430, y + 16);
+
+      // Bill to
+      y += 56; doc.setTextColor(gray[0], gray[1], gray[2]); doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+      doc.text('DITAGIHKAN KEPADA', 40, y);
+      doc.setTextColor(40, 40, 40); doc.setFontSize(11); doc.setFont('helvetica', 'bold');
+      doc.text(String(p.participant_email || '-'), 40, y + 16);
+
+      // Table
+      y += 50;
+      doc.setFillColor(245, 242, 235); doc.rect(40, y, W - 80, 28, 'F');
+      doc.setTextColor(gray[0], gray[1], gray[2]); doc.setFont('helvetica', 'bold'); doc.setFontSize(9);
+      doc.text('DESKRIPSI', 52, y + 18); doc.text('JUMLAH', W - 52, y + 18, { align: 'right' });
+      y += 28;
+      doc.setTextColor(40, 40, 40); doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+      const desc = String(p.description || 'Akses Penuh — Electra Skill Academy');
+      doc.text(doc.splitTextToSize(desc, W - 200), 52, y + 20);
+      doc.text(cur + ' ' + amount, W - 52, y + 20, { align: 'right' });
+      y += 50; doc.setDrawColor(220, 220, 220); doc.line(40, y, W - 40, y);
+
+      // Total
+      y += 26; doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
+      doc.text('TOTAL', W - 200, y); doc.setTextColor(gold[0] - 30, gold[1] - 40, gold[2] - 50);
+      doc.text(cur + ' ' + amount, W - 52, y, { align: 'right' });
+
+      // Footer
+      doc.setTextColor(gray[0], gray[1], gray[2]); doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+      doc.text('Pembayaran via QRIS. Invoice ini sah tanpa tanda tangan. Terima kasih telah bergabung di Electra Skill Academy.', 40, 760, { maxWidth: W - 80 });
+
+      doc.save('Invoice-' + invNo + '.pdf');
+    } catch (e) {
+      alert('Gagal membuat invoice: ' + (e && e.message ? e.message : e));
+    }
+  };
+
   window.esaLoadTabPayments = async function () {
     const sb = window.__esaAdminSb;
     const panel = document.getElementById('panel-payments');
@@ -646,7 +724,9 @@
         const idJs = esc(r.id || '').replace(/'/g, "\\'");
         const actBtn = (r.status === 'pending')
           ? '<button onclick="esaActivateAndMarkPaid(\'' + emailJs + '\',\'' + idJs + '\')" style="background:#22c55e;color:#0d0f1c;border:none;border-radius:6px;padding:5px 11px;font-size:0.72rem;cursor:pointer;font-weight:700;white-space:nowrap;">✓ Aktifkan &amp; Lunas</button>'
-          : '<span style="color:rgba(245,240,230,0.4);font-size:0.75rem;">–</span>';
+          : (r.status === 'paid'
+              ? '<button onclick="esaInvoice(\'' + idJs + '\')" style="background:transparent;color:#d4af6a;border:1px solid #d4af6a;border-radius:6px;padding:5px 11px;font-size:0.72rem;cursor:pointer;font-weight:700;white-space:nowrap;">🧾 Invoice</button>'
+              : '<span style="color:rgba(245,240,230,0.4);font-size:0.75rem;">–</span>');
         return '<tr>' +
           '<td>' + esc(fmtDate(r.created_at)) + '</td>' +
           '<td class="mono">' + esc(r.participant_email) + '</td>' +
@@ -659,6 +739,7 @@
           '</tr>';
       }).join('');
     };
+    window.__esaPayments = data;
     render(data);
 
     // Satu klik: verifikasi pembayaran QRIS → buka akses penuh (participants.

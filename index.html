@@ -10973,7 +10973,7 @@ button:active:not(:disabled),
               </span>
               <span style="background:linear-gradient(135deg,#d4af6a,#c9a96e);color:#1a1208;font-family:var(--sans);font-size:0.78rem;font-weight:800;letter-spacing:0.1em;padding:6px 12px;border-radius:6px;">GRATIS untuk Member</span>
             </div>
-            <a href="KANG_LISTRIK_5.pdf" download="E-book Kang Listrik 5.0 - Electra Skill Academy.pdf" onclick="if(!window.esaRequireAccess()){event.preventDefault();return false;}" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#d4af6a,#c9a96e);color:#1a1208;font-family:var(--sans);font-size:0.92rem;font-weight:800;letter-spacing:0.04em;text-decoration:none;padding:14px 28px;border-radius:10px;box-shadow:0 8px 24px rgba(212,175,106,0.4);transition:transform .15s ease,box-shadow .15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 30px rgba(212,175,106,0.55)';" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 24px rgba(212,175,106,0.4)';">📥 Unduh E-book (PDF)</a>
+            <a href="/api/ebook" onclick="return esaDownloadEbook(event)" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#d4af6a,#c9a96e);color:#1a1208;font-family:var(--sans);font-size:0.92rem;font-weight:800;letter-spacing:0.04em;text-decoration:none;padding:14px 28px;border-radius:10px;box-shadow:0 8px 24px rgba(212,175,106,0.4);transition:transform .15s ease,box-shadow .15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 30px rgba(212,175,106,0.55)';" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 24px rgba(212,175,106,0.4)';">📥 Unduh E-book (PDF)</a>
             <div style="font-family:var(--sans);font-size:0.8rem;color:rgba(245,240,230,0.7);line-height:1.6;margin-top:14px;">Gratis untuk member — klik tombol di atas untuk langsung mengunduh file PDF-nya.</div>
           </div>
         </div>
@@ -13254,7 +13254,7 @@ button:active:not(:disabled),
     <div class="cert-hero-inner">
       <div class="cert-hero-eyebrow">Sertifikasi Profesi</div>
       <h1>Ambil sertifikasi<br>diakui <span class="italic">industri</span></h1>
-      <p class="cert-hero-desc">Lulus kelas Profesional di ESA, lanjut ambil sertifikasi kompetensi resmi dan pengakuan industri. Jadi modal nyata untuk melamar kerja di PLN, kontraktor, BUMN, dan industri manufaktur.</p>
+      <p class="cert-hero-desc">Lulus kelas Profesional di ESA, lalu siap mengikuti uji kompetensi di lembaga sertifikasi resmi. Jadi modal nyata untuk melamar kerja di PLN, kontraktor, BUMN, dan industri manufaktur.<br><small style="opacity:.8;font-size:.82em;display:inline-block;margin-top:8px;">Catatan: ESA adalah lembaga <strong>pelatihan/persiapan</strong> — bukan LSP/BNSP. Uji &amp; penerbitan sertifikat kompetensi dilakukan oleh lembaga sertifikasi resmi eksternal.</small></p>
       <div class="cert-hero-stats">
         <div class="cert-stat">
           <div class="cert-stat-num">8</div>
@@ -13296,7 +13296,7 @@ button:active:not(:disabled),
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </div>
         <div class="cert-info-title">Diakui Industri</div>
-        <div class="cert-info-desc">Sertifikat kompetensi & LSP resmi, berlaku di seluruh Indonesia untuk melamar kerja di PLN, BUMN, dan swasta.</div>
+        <div class="cert-info-desc">Materi diselaraskan dengan SKKNI agar kamu siap mengikuti uji kompetensi di lembaga sertifikasi resmi — modal melamar kerja di PLN, BUMN, dan swasta.</div>
       </div>
       <div class="cert-info-item">
         <div class="cert-info-icon">
@@ -14957,10 +14957,9 @@ function renderCerts() {
   if (!grid) return;
   grid.innerHTML = CERTIFICATIONS.map(c => `
     <div class="cert-card">
-      ${c.isBnsp ? '<div class="cert-card-bnsp">Kompetensi</div>' : ''}
       <div class="cert-card-jalur">${c.jalurId} · ${c.jalurName}</div>
       <h3>${c.name}</h3>
-      <div class="cert-card-issuer">${c.issuer}</div>
+      <div class="cert-card-issuer">Persiapan uji kompetensi · diuji &amp; diterbitkan lembaga sertifikasi resmi eksternal</div>
       <p class="cert-card-desc">${c.desc}</p>
       <div class="cert-card-meta">
         <div>
@@ -14985,8 +14984,8 @@ function renderCerts() {
           <span class="cert-card-price-label">Biaya Ujian</span>
           <span class="cert-card-price">${c.price}</span>
         </div>
-        <button class="cert-card-btn" onclick="alert('Pendaftaran ${c.name} — integrasi LSP akan dihubungkan nanti.')">
-          Daftar Ujian
+        <button class="cert-card-btn" onclick="alert('Pendaftaran persiapan ${c.name} — info jadwal & lokasi uji akan diumumkan. Hubungi admin Electra untuk pendaftaran.')">
+          Daftar Persiapan
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
@@ -15189,7 +15188,7 @@ function renderTalents(list) {
       </div>
       <div class="talent-sect">
         <div class="talent-sect-label">Sertifikasi</div>
-        <div class="talent-certs">${t.certs.map(c => `<div class="cert-chip">${c.bnsp ? '<span class="cert-chip-bnsp">Kompetensi</span>' : ''}${c.name}</div>`).join('')}</div>
+        <div class="talent-certs">${t.certs.map(c => `<div class="cert-chip">${c.name}</div>`).join('')}</div>
       </div>
       <div class="talent-sect">
         <div class="talent-sect-label">Preferensi</div>
@@ -16356,6 +16355,19 @@ function esaIsFreeLab(sim) {
   return /^(wiring|wlab)\.html/.test(e);
 }
 window.esaIsFreeLab = esaIsFreeLab;
+// Unduh e-book premium "Kang Listrik 5.0" lewat endpoint ber-otorisasi.
+// File asli tidak lagi ditautkan publik; hanya member aktif yang bisa
+// (server /api/ebook memverifikasi status ke Supabase).
+function esaDownloadEbook(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  if (!esaRequireAccess()) return false; // anonim → modal daftar; belum bayar → modal aktivasi
+  var email = '';
+  try { var u = JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null'); email = (u && u.email) || ''; } catch (e) {}
+  if (!email && typeof window.esaShowAuthModal === 'function') { window.esaShowAuthModal(); return false; }
+  window.location.href = '/api/ebook?email=' + encodeURIComponent(email);
+  return false;
+}
+window.esaDownloadEbook = esaDownloadEbook;
 
 // ================================================
 // SIMULATOR MODAL — dynamic content per simulator
@@ -20563,7 +20575,7 @@ const CAREER_JALUR_INFO = {
     role: 'Industrial Maintenance Engineer / PLC Specialist',
     salary: 'Rp 5-12 juta',
     timeline: '6-12 bulan',
-    cert: 'LSP Industri Teknisi Electrical Industrial Maintenance',
+    cert: 'Persiapan: Teknisi Electrical Industrial Maintenance',
     desc: 'Maintenance & reliability engineering di pabrik, mining, oil & gas. Spesialis motor 3 fasa, VFD, PLC, dan SCADA industrial.',
     skills: [
       '<strong>PLC programming</strong> — OMRON, Siemens S7, Allen-Bradley (ladder + function block)',
@@ -20635,7 +20647,7 @@ const CAREER_JALUR_INFO = {
     role: 'Energy Data Scientist / Analytics Consultant',
     salary: 'Rp 10-25 juta',
     timeline: '1-2 tahun',
-    cert: 'LSP Data Analytics — Indonesia Data Society',
+    cert: 'Persiapan: Data Analyst Utilitas Energi',
     desc: 'Specialist analytics utility energi. Python, SQL, ML untuk load forecasting, NTL detection, dashboard. Bidang dengan growth tertinggi & gaji terbaik.',
     skills: [
       '<strong>Python & SQL</strong> — pandas, scikit-learn, query data utility besar',

@@ -29,12 +29,13 @@ function getClientIp(req) {
     .trim() || null;
 }
 
+import { applyCors, rateLimited } from '../lib/guard.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  applyCors(req, res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
+  if (rateLimited(req, { key: 'log-event', max: 120, windowMs: 60000 })) return res.status(429).json({ ok: false, error: 'rate_limited' });
 
   if (!SUPABASE_URL || !KEY_TO_USE) {
     // Fail-soft: tidak kasih error karena audit-log opsional

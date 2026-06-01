@@ -94,12 +94,14 @@ async function callProvider(providerName, systemPrompt, question) {
   }
 }
 
+import { applyCors, rateLimited } from '../lib/guard.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  applyCors(req, res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
+  // Lindungi biaya AI: batasi 20 permintaan / 5 menit per IP.
+  if (rateLimited(req, { key: 'ai-tutor', max: 20, windowMs: 5 * 60000 })) return res.status(429).json({ error: 'Terlalu banyak pertanyaan dalam waktu singkat. Coba lagi beberapa menit lagi.' });
 
   let body;
   try {

@@ -14,12 +14,13 @@ const ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
 
 const KEY_TO_USE = SERVICE_KEY || ANON_KEY;
 
+import { applyCors, rateLimited } from '../lib/guard.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  applyCors(req, res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' });
+  if (rateLimited(req, { key: 'check-access', max: 60, windowMs: 60000 })) return res.status(429).json({ ok: false, error: 'rate_limited', message: 'Terlalu sering. Coba lagi sebentar.' });
 
   if (!SUPABASE_URL || !KEY_TO_USE) {
     return res.status(503).json({
