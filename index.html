@@ -16314,20 +16314,33 @@ function labsShowSection(section) {
 function labsScrollTo(section) { labsShowSection(section); }
 
 // ── Gerbang akses konten (paywall) ───────────────────────────────
-// Eksplorasi daftar tetap gratis: buka menu Labs, lihat kurikulum modul,
-// dan telusuri Library boleh tanpa bayar. Tetapi MEMBUKA konten aktual
-// (menjalankan lab, menonton video/PPT modul, membuka isi Library)
-// memerlukan akses penuh.
+// Eksplorasi tetap bebas untuk SIAPA SAJA (termasuk yang belum daftar):
+// buka menu Labs, lihat kurikulum modul, dan telusuri Library boleh tanpa
+// daftar/login. Tetapi MEMBUKA konten aktual (menjalankan lab, menonton
+// video/PPT modul, membuka isi Library) butuh: (1) sudah DAFTAR/login, lalu
+// (2) sudah BAYAR/akses penuh.
 // esaContentUnlocked() → true bila member aktif (sudah bayar / akses penuh).
 function esaContentUnlocked() {
   if (typeof window.esaIsMemberActive === 'function') return !!window.esaIsMemberActive();
   return false;
 }
 window.esaContentUnlocked = esaContentUnlocked;
-// esaRequireAccess() → true bila boleh lanjut; bila belum, tampilkan modal
-// aktivasi/pembayaran lalu return false (pemanggil harus menghentikan aksi).
+// esaIsLoggedIn() → true bila pengunjung sudah daftar/login (punya akun).
+function esaIsLoggedIn() {
+  try { return !!JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null'); }
+  catch (e) { return false; }
+}
+window.esaIsLoggedIn = esaIsLoggedIn;
+// esaRequireAccess() → true bila boleh lanjut; bila belum:
+//  - belum daftar/login → tampilkan modal Daftar/Masuk
+//  - sudah login tapi belum bayar → tampilkan modal aktivasi/pembayaran
+// lalu return false (pemanggil harus menghentikan aksi).
 function esaRequireAccess() {
   if (esaContentUnlocked()) return true;
+  if (!esaIsLoggedIn() && typeof window.esaShowAuthModal === 'function') {
+    window.esaShowAuthModal();
+    return false;
+  }
   if (typeof window.esaShowActivationModal === 'function') { window.esaShowActivationModal(); }
   else if (typeof openPurchaseModal === 'function') { openPurchaseModal(); }
   return false;
@@ -21138,7 +21151,7 @@ function renderLevels(trackId) {
                   <strong>Level ini berbayar</strong>
                   Selesaikan pembayaran akses penuh untuk membuka semua modul.
                 </div>
-                <button class="paid-banner-btn" onclick="event.stopPropagation(); esaShowActivationModal();">Bayar — Buka Akses</button>
+                <button class="paid-banner-btn" onclick="event.stopPropagation(); esaRequireAccess();">Bayar — Buka Akses</button>
               </div>
             ` : `
               <button class="level-start-btn" onclick="event.stopPropagation(); startLevel('${lvl.id}', '${trackId}')">
@@ -21155,7 +21168,7 @@ function renderLevels(trackId) {
                   ? `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,0.12);color:#16a34a;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-left:8px;vertical-align:middle;">✓ Done · ${fmtDate(rec.lastDate)} · ${rec.bestScore}%</span>`
                   : '';
                 return `
-                <button class="module-card ${isLocked ? 'locked' : ''}" data-module-code="${m.code}" onclick="${isLocked ? 'esaShowActivationModal()' : `openModul('${m.code}', '${trackId}', '${lvl.id}')`}">
+                <button class="module-card ${isLocked ? 'locked' : ''}" data-module-code="${m.code}" onclick="${isLocked ? 'esaRequireAccess()' : `openModul('${m.code}', '${trackId}', '${lvl.id}')`}">
                   <span class="module-code">${m.code}</span>
                   <div>
                     <div class="module-title">${m.title}${isLocked ? ' <span class="module-lock-icon">🔒</span>' : ''}${moduleDoneBadge}</div>
@@ -30061,10 +30074,14 @@ window.esaShowProfile=showProfileModal;
 function hookSV(){
   if(typeof window.showView==="function"&&!window.__esaGateOn){
     window._origSV=window.showView;
-    // PUBLIC views (anyone can open without login)
-    var PUBLIC_VIEWS={home:1,about:1,'liveclass-schedule':1,faq:1,'expert-workshop':1};
+    // PUBLIC views (anyone can open without login) — termasuk view EKSPLORASI
+    // (kurikulum/jalur, Labs, Library) supaya pengunjung yang belum daftar pun
+    // bisa menelusuri. Akses KONTEN-nya tetap dikunci di level aksi (openModul/
+    // openSimulator/klik buku) lewat esaRequireAccess().
+    var PUBLIC_VIEWS={home:1,about:1,'liveclass-schedule':1,faq:1,'expert-workshop':1,
+      jalur:1,labs:1,referensi:1};
     // MEMBER-ONLY views (login + active member; non-member → activation prompt)
-    var MEMBER_VIEWS={talent:1,jobs:1,labs:1,sertifikasi:1,certification:1,referensi:1};
+    var MEMBER_VIEWS={talent:1,jobs:1,sertifikasi:1,certification:1};
     window.showView=function(v){
       if(PUBLIC_VIEWS[v])return window._origSV.apply(this,arguments);
       if(!getUser()){window._esaPending=v;buildModal();return;}
