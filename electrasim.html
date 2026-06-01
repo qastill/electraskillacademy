@@ -319,6 +319,31 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 </style>
 </head>
 <body>
+<!-- Gerbang akses: lab ini hanya untuk member berbayar. Menelusuri daftar lab
+     di situs utama gratis, tetapi membuka/menjalankan simulator butuh daftar +
+     bayar. Saat di-embed (iframe) oleh member aktif, guard otomatis lolos
+     karena localStorage sama-origin. -->
+<script>
+(function(){
+  function allowed(){
+    try{
+      var d=JSON.parse(localStorage.getItem('esa_data_v1')||'{}');var p=d&&d.profile;
+      if(!p||p.isBanned===true)return false;
+      if(p.subscriptionExpiresAt){var e=new Date(p.subscriptionExpiresAt);if(!isNaN(e.getTime())&&e<new Date())return false;}
+      return p.isPaid===true;
+    }catch(e){return false;}
+  }
+  if(allowed())return;
+  function gate(){
+    if(document.getElementById('esa-sim-gate'))return;
+    var o=document.createElement('div');o.id='esa-sim-gate';
+    o.style.cssText='position:fixed;inset:0;z-index:2147483647;background:rgba(10,12,24,0.96);display:flex;align-items:center;justify-content:center;padding:24px;font-family:Inter,system-ui,sans-serif;color:#f5f0e6;text-align:center;';
+    o.innerHTML='<div style="max-width:440px;background:#1a1d2e;border:1px solid rgba(212,175,106,0.35);border-radius:20px;padding:40px 32px;box-shadow:0 24px 80px rgba(0,0,0,0.6);"><div style="width:64px;height:64px;margin:0 auto 18px;background:linear-gradient(135deg,#d4af6a,#a07840);border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a1d2e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h2 style="font-size:1.3rem;margin:0 0 10px;">Lab ini untuk member</h2><p style="font-size:0.92rem;line-height:1.5;color:rgba(245,240,230,0.7);margin:0 0 22px;">Daftar lab bisa ditelusuri gratis, tetapi untuk membuka &amp; menjalankan simulator perlu <strong>daftar dan berlangganan</strong> akses penuh.</p><a href="/" target="_top" style="display:inline-block;background:linear-gradient(135deg,#d4af6a,#a07840);color:#1a1d2e;font-weight:700;text-decoration:none;padding:13px 24px;border-radius:10px;font-size:0.95rem;">Daftar &amp; Buka Akses →</a></div>';
+    document.body.appendChild(o);try{document.body.style.overflow='hidden';}catch(e){}
+  }
+  if(document.body)gate();else document.addEventListener('DOMContentLoaded',gate);
+})();
+</script>
 <div class="topbar"><div class="topbar-in">
   <div class="tb-brand" id="homeLink"><div class="bolt"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg></div><h1>Electra<span>Sim</span></h1></div>
   <button class="tb-back" id="backBtn">← Semua Jalur</button>
