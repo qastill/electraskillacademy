@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ElectraSim — 16 Simulator Spesialisasi Ketenagalistrikan</title>
+<title>ElectraSim — 16 Simulator Spesialisasi + 5 Aplikasi Pro (HOMER, ETAP, PVsyst, DIALux, Ecodial)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
@@ -244,6 +244,18 @@
 .tcard-cta{margin-top:11px;font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:#6a5734;font-weight:600;display:flex;align-items:center;gap:6px}
 .tcard-cta::after{content:'→'}
 
+.hub-sec{font-family:'Chakra Petch',sans-serif;font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold-soft);
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:6px 2px 14px}
+.hub-sec .bar{width:18px;height:3px;border-radius:3px;background:var(--gold);flex-shrink:0}
+.hub-sec small{flex-basis:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;letter-spacing:0;
+  text-transform:none;color:var(--txt-d);margin:4px 0 0 27px;font-weight:400}
+.hub-sec-pro{margin-top:30px}
+.hub-grid+.hub-sec{margin-top:34px}
+.tcard-app{position:absolute;top:12px;left:12px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.5px;
+  background:rgba(232,179,57,.92);color:#1a1206;padding:3px 8px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.tcard-pro .tcard-ic{background:linear-gradient(160deg,#0f1a2e 0%,#1d2b3a 50%,#3a4a2a 100%)}
+.tcard-pro .tcard-no{color:#8a7a4a}
+
 /* ===== sim framework ===== */
 .sim-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
 .sim-ic{width:52px;height:52px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;
@@ -354,8 +366,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 <div id="hubView" class="view">
   <div class="hub-hero">
     <div class="eyebrow">Electra Academy · Simulator</div>
-    <h1>16 Jalur <span>Spesialisasi</span> Ketenagalistrikan</h1>
-    <p>Pilih satu jalur karier untuk masuk ke simulator interaktifnya. Tiap simulator dibuat hands-on: sambungkan, atur parameter, periksa, dan lihat hasilnya secara langsung.</p>
+    <h1>16 Jalur <span>Spesialisasi</span> + 5 Aplikasi <span>Pro</span></h1>
+    <p>Pilih satu jalur karier untuk masuk ke simulator interaktifnya, atau coba <b>versi light</b> aplikasi industri populer — <b>HOMER, ETAP, PVsyst, DIALux, &amp; Ecodial</b>. Semua hands-on: atur parameter, lihat hasilnya langsung.</p>
   </div>
   <div class="hub-grid" id="hubGrid"></div>
 </div>
@@ -561,6 +573,154 @@ C.peakShave=(load24,battKWh,kW,threshold)=>{
 
 /* ---- 16 PLC ladder: start/stop seal-in ---- */
 C.ladderEval=(start,stop,prevCoil)=> (start||prevCoil)&&!stop;
+
+/* ==================================================================
+   APLIKASI PROFESIONAL — VERSI LIGHT (HOMER / ETAP / PVsyst / DIALux / Ecodial)
+   Model disederhanakan untuk edukasi; bukan pengganti software berlisensi.
+   ================================================================== */
+
+/* ---- PA1 HOMER Light: optimasi microgrid hibrida (PV + Baterai + Genset/Grid) ----
+   Semua biaya dalam Rupiah. NPC = Net Present Cost; COE = biaya energi Rp/kWh. */
+C.HOMER_PRICE={pv:14e6, batt:4e6, genset:5e6, conv:3e6,   // Rp per kWp / kWh / kW
+  pvOM:0.02, gensetOMjam:5000, dieselRp:13000, gridRp:1500, gensetEff:3.5}; // genset 3.5 kWh/L
+C.homer=(loadKWhDay,kWp,battKWh,gensetKW,psh,opt)=>{
+  opt=opt||{};const P=C.HOMER_PRICE;
+  const years=opt.years||20, disc=(opt.disc!=null?opt.disc:8)/100;
+  const grid=!!opt.grid, pr=0.78;
+  const annualLoad=loadKWhDay*365;
+  const pvGen=kWp*psh*365*pr;
+  // ~50% beban berlangsung siang (dilayani PV langsung); sisanya malam → baterai
+  const daytimeLoad=annualLoad*0.5;
+  const pvToLoad=Math.min(pvGen, daytimeLoad);
+  const excess=Math.max(0, pvGen-pvToLoad);            // surplus siang untuk mengisi baterai
+  const nightLoad=annualLoad-pvToLoad;
+  const battThru=battKWh*365*0.85*0.9;                 // siklus harian × DoD × eff bolak-balik
+  const battServed=Math.min(excess, battThru, nightLoad);
+  const renewServed=pvToLoad+battServed;
+  let deficit=Math.max(0, annualLoad-renewServed);
+  let gensetKWh=0, gridKWh=0;
+  if(grid){ gridKWh=deficit; }
+  else { gensetKWh=Math.min(deficit, gensetKW*8760*0.45); }   // genset rata2 45% load factor
+  const unmet=Math.max(0, deficit-gensetKWh-gridKWh);
+  const renewFrac=annualLoad>0?100*renewServed/annualLoad:0;
+  // biaya
+  const dieselL=gensetKWh/P.gensetEff;
+  const gensetHours=gensetKW>0?gensetKWh/(gensetKW*0.45):0;
+  const capital=kWp*P.pv + battKWh*P.batt + gensetKW*P.genset + Math.max(kWp,gensetKW)*P.conv;
+  const annualOM=kWp*P.pv*P.pvOM + gensetHours*P.gensetOMjam;
+  const annualFuel=dieselL*P.dieselRp + gridKWh*P.gridRp;
+  const annualOp=annualOM+annualFuel;
+  // NPC: capital + present value biaya operasi selama umur proyek
+  let pvFactor=0; for(let y=1;y<=years;y++) pvFactor+=1/Math.pow(1+disc,y);
+  const NPC=capital + annualOp*pvFactor;
+  // COE = annualized cost / beban tahunan
+  const crf=disc>0? (disc*Math.pow(1+disc,years))/(Math.pow(1+disc,years)-1) : 1/years;
+  const annualized=NPC*crf;
+  const COE=annualLoad>0? annualized/annualLoad : 0;
+  const co2=(dieselL*C.EF.diesel + gridKWh*C.EF.grid)/1000;  // ton/tahun
+  return {annualLoad,pvGen,pvToLoad,battServed,gensetKWh,gridKWh,unmet,renewFrac,
+    capital,annualOp,NPC,COE,co2,dieselL,
+    mix:[
+      {name:'PV→beban',val:Math.round(pvToLoad),color:'#e8b339'},
+      {name:'Baterai',val:Math.round(battServed),color:'#3ddc84'},
+      grid?{name:'Grid',val:Math.round(gridKWh),color:'#5b8cff'}:{name:'Genset',val:Math.round(gensetKWh),color:'#c9763b'},
+      {name:'Tak terlayani',val:Math.round(unmet),color:'#ff5d5d'},
+    ].filter(x=>x.val>0)};
+};
+
+/* ---- PA2 ETAP Light: load flow & short circuit jaringan radial ----
+   Source (MVAsc) → Trafo (kVA, Z%) → Kabel (mm2, L) → Bus beban (P,pf) */
+C.etap=(faultMVA,trafoKVA,Zpct,V,mm2,L,P_kW,pf)=>{
+  const cable=C.CABLE.find(c=>c.mm2===mm2)||C.CABLE[C.CABLE.length-1];
+  // ---- Load flow (drop tegangan ke bus beban) ----
+  const I=(P_kW*1000)/(Math.sqrt(3)*V*pf);
+  const Rline=(cable.R/1000)*L;                       // ohm
+  const Xline=0.08/1000*L;                            // reaktansi ~0.08 ohm/km
+  const vd=Math.sqrt(3)*I*(Rline*pf+Xline*Math.sin(Math.acos(pf)));
+  const vdPct=100*vd/V;
+  const Vbus=V-vd;
+  const loss=3*I*I*Rline/1000;                        // kW
+  // ---- Short circuit 3 fasa di bus beban (per-unit, basis = trafoKVA) ----
+  const Sbase=trafoKVA*1000;                          // VA
+  const Zbase=V*V/Sbase;                              // ohm
+  const Zsrc=Sbase/(faultMVA*1e6);                    // pu (impedansi sumber)
+  const Ztr=Zpct/100;                                 // pu
+  const Zcab=Math.sqrt(Rline*Rline+Xline*Xline)/Zbase;// pu
+  const Ztot=Zsrc+Ztr+Zcab;
+  const Ibase=Sbase/(Math.sqrt(3)*V);
+  const Isc=Ibase/Ztot;                               // A
+  const scMVA=Math.sqrt(3)*V*Isc/1e6;
+  return {I,vd,vdPct,Vbus,VbusPu:Vbus/V,loss,Isc:Isc/1000,scMVA,
+    Ztot,cableAmp:cable.amp,overload:I>cable.amp,
+    vdOK:vdPct<=5};
+};
+
+/* ---- PA3 PVsyst Light: yield & diagram rugi (loss diagram) ----
+   Mulai dari energi referensi POA → terapkan rugi berurutan → energi ke grid. */
+C.PVLOSS=[                                            // urutan, label, default %
+  {k:'soil',  lbl:'Soiling / kotoran',    d:3},
+  {k:'temp',  lbl:'Suhu modul',           d:7},
+  {k:'mis',   lbl:'Mismatch & toleransi', d:2},
+  {k:'dcohm', lbl:'Rugi kabel DC',        d:1.5},
+  {k:'inv',   lbl:'Efisiensi inverter',   d:3},
+  {k:'acohm', lbl:'Rugi kabel AC + trafo',d:1},
+  {k:'avail', lbl:'Ketersediaan sistem',  d:2},
+];
+C.pvsyst=(kWp,psh,losses)=>{
+  losses=losses||{};
+  const refYield=kWp*psh*365;                         // kWh referensi (POA, tanpa rugi)
+  let e=refYield;const steps=[{lbl:'Energi referensi (POA)',val:e,loss:0}];
+  C.PVLOSS.forEach(L=>{
+    const p=(losses[L.k]!=null?losses[L.k]:L.d)/100;
+    const lossKWh=e*p; e-=lossKWh;
+    steps.push({lbl:L.lbl,val:e,loss:lossKWh,pct:p*100,k:L.k});
+  });
+  const finalE=e;
+  const PR=refYield>0?finalE/refYield:0;               // performance ratio
+  const specYield=kWp>0?finalE/kWp:0;                  // kWh/kWp
+  return {refYield,finalE,PR,specYield,steps};
+};
+
+/* ---- PA4 DIALux Light: desain pencahayaan (metode lumen) ----
+   N = (E×A)/(Φ×UF×MF). Room index k = (L×W)/(Hm×(L+W)). */
+C.LUX_TARGET={kantor:350,kelas:300,gudang:150,industri:300,rumah:150,koridor:100,retail:500};
+C.lumen=(L,W,E,fluxLm,Hm,UF,MF,Plum)=>{
+  const A=L*W;
+  const k=(L*W)/(Hm*(L+W));                            // room index
+  const Ntheo=(E*A)/(fluxLm*UF*MF);
+  // bulatkan ke grid baris×kolom yang rapi
+  const cols=Math.max(1,Math.round(Math.sqrt(Ntheo*L/W)));
+  const rows=Math.max(1,Math.ceil(Ntheo/cols));
+  const N=rows*cols;
+  const Eavg=(N*fluxLm*UF*MF)/A;                        // lux tercapai
+  const totalW=N*Plum;
+  const Wm2=totalW/A;
+  return {A,k,Ntheo,N,rows,cols,Eavg,totalW,Wm2,ok:Eavg>=E};
+};
+
+/* ---- PA5 Ecodial Light: sizing pengaman & kabel instalasi ----
+   Ib (arus desain) → In (rating MCB/MCCB) → Iz (KHA kabel) → cek drop tegangan. */
+C.BREAKER=[6,10,16,20,25,32,40,50,63,80,100,125,160,200,250,315,400,500,630];
+C.ecodial=(P_kW,V,pf,phase,L,maxDropPct)=>{
+  maxDropPct=maxDropPct||5;
+  const Ib= phase==='3'? (P_kW*1000)/(Math.sqrt(3)*V*pf) : (P_kW*1000)/(V*pf);
+  const In=C.BREAKER.find(b=>b>=Ib)||C.BREAKER[C.BREAKER.length-1];
+  // kabel: KHA (Iz) harus >= In (faktor koreksi dianggap 1)
+  const cable=C.CABLE.find(c=>c.amp>=In)||C.CABLE[C.CABLE.length-1];
+  const Rline=(cable.R/1000)*L;
+  const vd= phase==='3'? Math.sqrt(3)*Ib*Rline*pf : 2*Ib*Rline*pf;
+  const vdPct=100*vd/V;
+  // jika drop > batas, naikkan ukuran kabel
+  let chosen=cable, vdc=vdPct, vdv=vd;
+  if(vdPct>maxDropPct){
+    for(const c of C.CABLE){ if(c.amp<In) continue;
+      const r=(c.R/1000)*L; const d= phase==='3'? Math.sqrt(3)*Ib*r*pf : 2*Ib*r*pf;
+      if(100*d/V<=maxDropPct){ chosen=c; vdc=100*d/V; vdv=d; break; }
+    }
+  }
+  return {Ib,In,cable:chosen,Iz:chosen.amp,vd:vdv,vdPct:vdc,
+    protOK:In>=Ib && chosen.amp>=In, dropOK:vdc<=maxDropPct};
+};
 
 if(typeof module!=='undefined'&&module.exports)module.exports=C;
 g.CALC=C;
@@ -1199,6 +1359,12 @@ const TRACKS=[
  {id:'t14',cat:'Hidrogen', title:'Hydrogen Energy', sub:'Green hydrogen via elektrolisis & fuel cell.', icon:'h2'},
  {id:'t15',cat:'BESS', title:'Baterai & BESS', sub:'Battery storage: peak shaving & integrasi grid.', icon:'batt'},
  {id:'t16',cat:'Otomasi', title:'Kontrol & Otomasi', sub:'PLC, HMI, SCADA — ladder logic start/stop.', icon:'plc'},
+ // ===== Aplikasi Profesional · Versi Light =====
+ {id:'pa1',cat:'HOMER',  title:'HOMER Light', app:'HOMER', sub:'Optimasi microgrid hibrida: PV + baterai + genset/grid → NPC, COE, fraksi EBT.', icon:'homer', pro:true},
+ {id:'pa2',cat:'ETAP',   title:'ETAP Light',  app:'ETAP',  sub:'Analisis sistem tenaga: load flow drop tegangan & arus hubung singkat radial.', icon:'etap', pro:true},
+ {id:'pa3',cat:'PVsyst', title:'PVsyst Light',app:'PVsyst',sub:'Simulasi PLTS: yield, performance ratio & diagram rugi (loss diagram) lengkap.', icon:'pvsyst', pro:true},
+ {id:'pa4',cat:'DIALux', title:'DIALux Light',app:'DIALux',sub:'Desain pencahayaan metode lumen: jumlah armatur, lux tercapai & W/m².', icon:'dialux', pro:true},
+ {id:'pa5',cat:'Ecodial',title:'Ecodial Light',app:'Ecodial',sub:'Sizing pengaman & kabel instalasi: Ib → MCB/MCCB → KHA kabel → drop tegangan.', icon:'ecodial', pro:true},
 ];
 const ICON={
  plug:'<path d="M9 7V3M15 7V3M7 7h10v4a5 5 0 01-5 5 5 5 0 01-5-5V7zM12 16v5"/>',
@@ -1217,6 +1383,11 @@ const ICON={
  h2:'<circle cx="7" cy="10" r="3"/><circle cx="17" cy="10" r="3"/><path d="M10 10h4M7 18h10"/><text x="12" y="22" font-size="5" text-anchor="middle" fill="currentColor" stroke="none">H2</text>',
  batt:'<path d="M3 8h16v8H3zM19 11h2v2h-2M7 8v8M9 11l-2 0M12 9l2 6 2-6"/>',
  plc:'<path d="M3 6h18v12H3zM6 12h3l1-3 2 6 1-3h5"/>',
+ homer:'<path d="M3 11l9-7 9 7M5 10v9h14v-9M9 19v-5h6v5"/><circle cx="12" cy="13" r="1.4"/>',
+ etap:'<path d="M4 4v16h16M8 16l3-4 3 3 4-6"/><circle cx="8" cy="16" r="1.3"/><circle cx="11" cy="12" r="1.3"/><circle cx="14" cy="15" r="1.3"/><circle cx="18" cy="9" r="1.3"/>',
+ pvsyst:'<rect x="3" y="5" width="18" height="11" rx="1"/><path d="M7 5l-1 11M12 5v11M17 5l1 11M3 9h18M3 13h18M9 20h6M12 16v4"/>',
+ dialux:'<path d="M9 18h6M10 21h4M12 2a6 6 0 00-4 10c1 1 1.5 2 1.5 3h5c0-1 .5-2 1.5-3a6 6 0 00-4-10z"/>',
+ ecodial:'<path d="M5 3v6M5 9a2.5 2.5 0 005 0 2.5 2.5 0 015 0 2.5 2.5 0 005 0M5 9v0M19 9v6M12 12v9M12 21h-3M12 21h3"/>',
 };
 
 /* ============ App shell / router ============ */
@@ -1245,20 +1416,30 @@ function openTrack(id){
   }
   window.scrollTo(0,0);
 }
-function buildHub(){
-  const grid=document.getElementById('hubGrid');
-  grid.innerHTML=TRACKS.map((t,i)=>`
-    <button class="tcard" data-t="${t.id}">
+function tcardHTML(t,i){
+  const proBadge=t.pro?`<span class="tcard-app">${t.app}</span>`:'';
+  const no=t.pro?`APP PRO · LIGHT`:`S${i+1} · JALUR ${String(i+1).padStart(2,'0')}`;
+  return `<button class="tcard${t.pro?' tcard-pro':''}" data-t="${t.id}">
       <div class="tcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON[t.icon]||''}</svg>
-        <span class="tcard-arrow">→</span></div>
+        ${proBadge}<span class="tcard-arrow">→</span></div>
       <div class="tcard-body">
-        <div class="tcard-no">S${i+1} · JALUR ${String(i+1).padStart(2,'0')}</div>
+        <div class="tcard-no">${no}</div>
         <div class="tcard-title">${t.title}</div>
         <div class="tcard-sub">${t.sub}</div>
         <div class="tcard-cta">Buka Simulator</div>
       </div>
-    </button>`).join('');
-  grid.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>openTrack(b.getAttribute('data-t'))));
+    </button>`;
+}
+function buildHub(){
+  const grid=document.getElementById('hubGrid');
+  const jalur=TRACKS.filter(t=>!t.pro), pro=TRACKS.filter(t=>t.pro);
+  let html=`<div class="hub-sec"><span class="bar"></span>16 Jalur Spesialisasi</div>`;
+  html+=`<div class="hub-grid">${jalur.map((t,i)=>tcardHTML(t,i)).join('')}</div>`;
+  html+=`<div class="hub-sec hub-sec-pro"><span class="bar"></span>Aplikasi Profesional · Versi Light
+    <small>Miniatur software industri (HOMER · ETAP · PVsyst · DIALux · Ecodial) untuk simulasi cepat & belajar konsep.</small></div>`;
+  html+=`<div class="hub-grid">${pro.map((t,i)=>tcardHTML(t,i)).join('')}</div>`;
+  grid.outerHTML=`<div id="hubGrid">${html}</div>`;
+  document.getElementById('hubGrid').querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>openTrack(b.getAttribute('data-t'))));
 }
 
 /* ============ UI kit ============ */
@@ -1691,6 +1872,168 @@ SIMS.t16=(host,t)=>{
   sBtn.addEventListener('touchend',e=>{e.preventDefault();start=false;draw();});
   document.getElementById('t16stop').addEventListener('click',()=>{stop=true;draw();stop=false;setTimeout(draw,150);});
   draw();
+};
+
+/* ============================================================
+   APLIKASI PROFESIONAL — VERSI LIGHT
+   ============================================================ */
+
+/* ---- PA1 HOMER Light: optimasi microgrid hibrida ---- */
+SIMS.pa1=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Susun sistem hibrida lalu lihat ekonomi & keandalannya — meniru alur kerja <b>HOMER</b>: ukur PV, baterai, dan sumber cadangan untuk biaya energi (COE) terendah.',
+    UI.slider('h_load','Beban harian',10,2000,400,10,'kWh/hari')+
+    UI.slider('h_pv','Kapasitas PV',0,1000,120,10,'kWp')+
+    UI.slider('h_bat','Baterai',0,2000,150,10,'kWh')+
+    UI.slider('h_gen','Genset',0,500,100,10,'kW')+
+    UI.slider('h_psh','Peak sun hours',3,6,4.5,0.1,'jam')+
+    UI.seg('h_src','Sumber cadangan',[{v:'gen',t:'Genset'},{v:'grid',t:'Grid PLN'}]),
+    `<div class="metrics">${UI.metric('Fraksi EBT','h_rf','%',1)}${UI.metric('COE','h_coe','Rp/kWh')}${UI.metric('Net Present Cost','h_npc','')}${UI.metric('Emisi CO₂','h_co2','t/th')}</div>
+     <div id="h_donut"></div><div class="note" id="h_note"></div>`);
+  let src='gen';
+  function upd(){const load=+v('h_load'),kWp=+v('h_pv'),bat=+v('h_bat'),gen=+v('h_gen'),psh=+v('h_psh');
+    setv('h_load',load);setv('h_pv',kWp);setv('h_bat',bat);setv('h_gen',gen);setv('h_psh',psh.toFixed(1));
+    const r=CALC.homer(load,kWp,bat,gen,psh,{grid:src==='grid'});
+    txt('h_rf',fmt(r.renewFrac,1));txt('h_coe',fmt(r.COE,0));txt('h_npc',Rp(r.NPC));txt('h_co2',fmt(r.co2,1));
+    document.getElementById('h_donut').innerHTML=donutSVG(r.mix);
+    let m=`Investasi awal ${Rp(r.capital)} · biaya operasi ${Rp(r.annualOp)}/tahun. `;
+    if(r.unmet>0) m+=`<b style="color:#ff5d5d">${fmt(100*r.unmet/r.annualLoad,1)}% beban tak terlayani</b> — tambah PV/baterai/genset.`;
+    else m+=`Semua beban terlayani. Naikkan PV & baterai untuk menekan COE & emisi.`;
+    document.getElementById('h_note').innerHTML=m;}
+  ['h_load','h_pv','h_bat','h_gen','h_psh'].forEach(bindInput(upd));
+  UI.bindSeg('h_src',x=>{src=x;upd();});upd();
+};
+
+/* ---- PA2 ETAP Light: load flow & short circuit ---- */
+SIMS.pa2=(host,t)=>{
+  const mm2opts=[16,35,70,120,185,240];let mm2=185;
+  host.innerHTML=UI.shell(t,'Model jaringan radial ala <b>ETAP</b>: sumber → trafo → kabel → bus beban. Hitung <b>drop tegangan (load flow)</b> dan <b>arus hubung singkat</b> di bus beban (400V).',
+    UI.slider('e_mva','Hubung singkat sumber',50,2000,500,50,'MVA')+
+    UI.slider('e_tr','Kapasitas trafo',100,2500,1000,50,'kVA')+
+    UI.slider('e_z','Impedansi trafo (Z)',4,8,5,0.5,'%')+
+    UI.slider('e_l','Panjang kabel',5,500,120,5,'m')+
+    UI.slider('e_p','Beban',10,1500,200,10,'kW')+
+    UI.slider('e_pf','Faktor daya',0.7,1,0.85,0.01,'')+
+    UI.seg('e_mm','Luas penampang kabel',mm2opts.map(x=>({v:x,t:x+''}))),
+    `<div id="e_sld"></div>
+     <div class="metrics">${UI.metric('Tegangan bus','e_vb','V',1)}${UI.metric('Drop tegangan','e_vd','%')}${UI.metric('Arus beban','e_i','A')}${UI.metric('Hubung singkat','e_sc','kA',1)}</div>
+     <div class="note" id="e_note"></div>`);
+  host.querySelectorAll('#e_mm button').forEach(b=>b.classList.toggle('on',+b.getAttribute('data-v')===mm2));
+  function etapSLD(r,mva,tr,z){const y=48;let s=`<svg viewBox="0 0 460 120" class="chart">`;
+    s+=`<text x="40" y="24" text-anchor="middle" font-size="8.5" fill="#8ea0b8">${mva} MVA</text>`;
+    s+=`<circle cx="40" cy="${y}" r="16" fill="#141b27" stroke="#5b8cff" stroke-width="2"/><text x="40" y="${y+4}" text-anchor="middle" font-size="9" fill="#9db4ff">GRID</text>`;
+    s+=`<line x1="56" y1="${y}" x2="105" y2="${y}" stroke="#5b6b82" stroke-width="2.5"/>`;
+    s+=`<circle cx="120" cy="${y-5}" r="11" fill="none" stroke="#e8b339" stroke-width="2"/><circle cx="120" cy="${y+5}" r="11" fill="none" stroke="#e8b339" stroke-width="2"/>`;
+    s+=`<text x="120" y="24" text-anchor="middle" font-size="8.5" fill="#8ea0b8">${tr}kVA·${z}%</text>`;
+    s+=`<line x1="135" y1="${y}" x2="205" y2="${y}" stroke="#c9763b" stroke-width="2.5"/>`;
+    s+=`<text x="170" y="${y-7}" text-anchor="middle" font-size="8.5" fill="#e89b5e">${mm2}mm² · ${r.cableAmp}A</text>`;
+    const bc=r.vdOK?'#3ddc84':'#ff5d5d';
+    s+=`<line x1="205" y1="${y-24}" x2="205" y2="${y+24}" stroke="${bc}" stroke-width="4"/>`;
+    s+=`<text x="205" y="${y+40}" text-anchor="middle" font-size="9" fill="${bc}">BUS ${fmt(r.Vbus,0)}V·${fmt(r.VbusPu*100,1)}%</text>`;
+    s+=`<line x1="205" y1="${y}" x2="255" y2="${y}" stroke="#5b6b82" stroke-width="2.5"/>`;
+    s+=`<path d="M255 ${y-10} l14 10 l-14 10 z" fill="#c9763b"/>`;
+    s+=`<text x="300" y="${y-2}" font-size="9" fill="#e7edf6">Iload ${fmt(r.I,0)}A</text>`;
+    s+=`<text x="300" y="${y+12}" font-size="9" fill="#ff9d9d">Isc ${fmt(r.Isc,1)}kA</text>`;
+    return s+'</svg>';}
+  function upd(){const mva=+v('e_mva'),tr=+v('e_tr'),z=+v('e_z'),L=+v('e_l'),P=+v('e_p'),pf=+v('e_pf');
+    setv('e_mva',mva);setv('e_tr',tr);setv('e_z',z);setv('e_l',L);setv('e_p',P);setv('e_pf',pf.toFixed(2));
+    const r=CALC.etap(mva,tr,z,400,mm2,L,P,pf);
+    txt('e_vb',fmt(r.Vbus,1));txt('e_vd',fmt(r.vdPct,2));txt('e_i',fmt(r.I,0));txt('e_sc',fmt(r.Isc,1));
+    document.getElementById('e_vd').parentElement.style.color=r.vdOK?'#3ddc84':'#ff5d5d';
+    document.getElementById('e_sld').innerHTML=etapSLD(r,mva,tr,z);
+    const n=[];n.push(r.vdOK?'✓ Drop tegangan ≤5% (IEC/SNI).':'⚠ Drop tegangan >5% — perbesar kabel atau perpendek jalur.');
+    if(r.overload) n.push(`<b style="color:#ff5d5d">Arus beban ${fmt(r.I,0)}A melebihi KHA kabel ${r.cableAmp}A.</b>`);
+    n.push(`Pilih pemutus dengan breaking capacity ≥ <b>${Math.ceil(r.Isc)} kA</b> (Isc ${fmt(r.Isc,1)}kA · ${fmt(r.scMVA,0)}MVA).`);
+    document.getElementById('e_note').innerHTML=n.join('<br>');}
+  ['e_mva','e_tr','e_z','e_l','e_p','e_pf'].forEach(bindInput(upd));
+  UI.bindSeg('e_mm',x=>{mm2=+x;upd();});upd();
+};
+
+/* ---- PA3 PVsyst Light: yield & loss diagram ---- */
+SIMS.pa3=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Hitung produksi PLTS & uraikan kerugiannya seperti <b>PVsyst</b> — dari energi referensi sampai energi yang benar-benar masuk grid (loss diagram).',
+    UI.slider('v_kwp','Kapasitas PV',1,5000,1000,10,'kWp')+
+    UI.slider('v_psh','Iradiasi (PSH)',3,6,4.5,0.1,'kWh/m²/hari')+
+    UI.slider('v_temp','Rugi suhu',2,15,7,0.5,'%')+
+    UI.slider('v_soil','Rugi soiling',0,10,3,0.5,'%')+
+    UI.slider('v_inv','Rugi inverter',1,8,3,0.5,'%'),
+    `<div class="metrics">${UI.metric('Performance Ratio','v_pr','',1)}${UI.metric('Specific yield','v_sy','kWh/kWp')}${UI.metric('Energi/tahun','v_e','MWh')}</div>
+     <div id="v_gauge"></div><div id="v_loss"></div>
+     <div class="note">Loss diagram: makin kecil total rugi, makin tinggi PR. PLTS yang baik biasanya PR 75–82%.</div>`);
+  function upd(){const kwp=+v('v_kwp'),psh=+v('v_psh'),temp=+v('v_temp'),soil=+v('v_soil'),inv=+v('v_inv');
+    setv('v_kwp',kwp);setv('v_psh',psh.toFixed(1));setv('v_temp',temp);setv('v_soil',soil);setv('v_inv',inv);
+    const r=CALC.pvsyst(kwp,psh,{temp,soil,inv});
+    txt('v_pr',fmt(r.PR*100,1)+'%');txt('v_sy',fmt(r.specYield,0));txt('v_e',fmt(r.finalE/1000,1));
+    document.getElementById('v_gauge').innerHTML=gaugeSVG(r.PR*100,'Performance Ratio');
+    const items=r.steps.slice(1).map(s=>({name:s.lbl.split(' ')[0].split('/')[0],val:Math.round(s.loss),lbl:fmt(s.pct,1)+'%',color:'#ff6b6b'}));
+    document.getElementById('v_loss').innerHTML='<div class="note" style="margin:6px 0 4px;color:#8ea0b8">Rincian rugi tahunan (kWh):</div>'+barsSVG(items,{h:140});}
+  ['v_kwp','v_psh','v_temp','v_soil','v_inv'].forEach(bindInput(upd));upd();
+};
+
+/* ---- PA4 DIALux Light: desain pencahayaan (metode lumen) ---- */
+SIMS.pa4=(host,t)=>{
+  let type='kantor';
+  host.innerHTML=UI.shell(t,'Rancang pencahayaan ruangan dengan <b>metode lumen</b> seperti <b>DIALux</b>: tentukan jumlah armatur untuk mencapai target lux.',
+    UI.slider('d_l','Panjang ruang',2,40,10,0.5,'m')+
+    UI.slider('d_w','Lebar ruang',2,30,8,0.5,'m')+
+    UI.slider('d_h','Tinggi pasang',2,8,3,0.1,'m')+
+    UI.slider('d_flux','Lumen per armatur',1000,12000,4000,100,'lm')+
+    UI.slider('d_p','Daya per armatur',10,120,36,2,'W')+
+    UI.seg('d_type','Jenis ruang',[{v:'kantor',t:'Kantor'},{v:'kelas',t:'Kelas'},{v:'industri',t:'Industri'},{v:'gudang',t:'Gudang'}]),
+    `<div class="metrics">${UI.metric('Jumlah armatur','d_n','unit',1)}${UI.metric('Lux tercapai','d_lux','lx')}${UI.metric('Tata letak','d_grid','')}${UI.metric('Daya/luas','d_wm2','W/m²')}</div>
+     <div id="d_room"></div><div class="note" id="d_note"></div>`);
+  function roomSVG(L,W,rows,cols){const sc=Math.min(300/L,170/W),w=L*sc,h=W*sc;
+    let s=`<svg viewBox="0 0 ${w+20} ${h+34}" class="chart">`;
+    s+=`<rect x="10" y="10" width="${w}" height="${h}" rx="4" fill="#0e1622" stroke="#33445f" stroke-width="2"/>`;
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const cx=10+(c+0.5)*w/cols,cy=10+(r+0.5)*h/rows;
+      s+=`<circle cx="${cx}" cy="${cy}" r="${Math.min(w/cols,h/rows)*0.32}" fill="#e8b339" opacity="0.14"/>`;
+      s+=`<rect x="${cx-6}" y="${cy-3}" width="12" height="6" rx="1.5" fill="#e8b339"/>`;}
+    s+=`<text x="${10+w/2}" y="${h+28}" text-anchor="middle" font-size="10" fill="#8ea0b8">${L}m × ${W}m · ${rows*cols} armatur (${rows}×${cols})</text>`;
+    return s+'</svg>';}
+  function upd(){const L=+v('d_l'),W=+v('d_w'),H=+v('d_h'),flux=+v('d_flux'),P=+v('d_p');
+    setv('d_l',L);setv('d_w',W);setv('d_h',H.toFixed(1));setv('d_flux',flux);setv('d_p',P);
+    const E=CALC.LUX_TARGET[type],Hm=Math.max(0.5,H-0.85),UF=0.5,MF=0.8;
+    const r=CALC.lumen(L,W,E,flux,Hm,UF,MF,P);
+    txt('d_n',r.N);txt('d_lux',fmt(r.Eavg,0));txt('d_grid',r.rows+'×'+r.cols);txt('d_wm2',fmt(r.Wm2,1));
+    document.getElementById('d_lux').parentElement.style.color=r.ok?'#3ddc84':'#ff5d5d';
+    document.getElementById('d_room').innerHTML=roomSVG(L,W,r.rows,r.cols);
+    document.getElementById('d_note').innerHTML=`Target ${E} lx · room index k=${fmt(r.k,2)} · UF ${UF} · MF ${MF}. ${r.ok?'<b style="color:#3ddc84">Memenuhi target.</b>':'Tingkatkan lumen/armatur agar memenuhi.'}`;}
+  ['d_l','d_w','d_h','d_flux','d_p'].forEach(bindInput(upd));
+  UI.bindSeg('d_type',x=>{type=x;upd();});upd();
+};
+
+/* ---- PA5 Ecodial Light: sizing pengaman & kabel ---- */
+SIMS.pa5=(host,t)=>{
+  let ph='3';
+  host.innerHTML=UI.shell(t,'Tentukan pengaman & kabel instalasi seperti <b>Ecodial</b>: dari arus desain (Ib) pilih rating MCB/MCCB (In) lalu KHA kabel (Iz) dengan cek drop tegangan. Syarat: Ib ≤ In ≤ Iz.',
+    UI.slider('c_p','Daya beban',1,400,50,1,'kW')+
+    UI.slider('c_pf','Faktor daya',0.7,1,0.9,0.01,'')+
+    UI.slider('c_l','Panjang kabel',5,300,60,5,'m')+
+    UI.slider('c_drop','Batas drop',2,8,5,0.5,'%')+
+    UI.seg('c_ph','Sistem',[{v:'3',t:'3 fasa 400V'},{v:'1',t:'1 fasa 230V'}]),
+    `<div class="metrics">${UI.metric('Arus desain Ib','c_ib','A',1)}${UI.metric('Pengaman In','c_in','A')}${UI.metric('Kabel','c_cab','mm²')}${UI.metric('Drop tegangan','c_vd','%')}</div>
+     <div id="c_sld"></div><div class="note" id="c_note"></div>`);
+  function ecoSLD(r,ph,V){const y=40;let s=`<svg viewBox="0 0 440 92" class="chart">`;
+    s+=`<text x="40" y="20" text-anchor="middle" font-size="8.5" fill="#8ea0b8">${ph==='3'?'3φ':'1φ'} ${V}V</text>`;
+    s+=`<circle cx="40" cy="${y}" r="14" fill="#141b27" stroke="#5b8cff" stroke-width="2"/><text x="40" y="${y+4}" text-anchor="middle" font-size="8" fill="#9db4ff">SUP</text>`;
+    s+=`<line x1="54" y1="${y}" x2="120" y2="${y}" stroke="#5b6b82" stroke-width="2.5"/>`;
+    const bc=r.protOK?'#3ddc84':'#ff5d5d';
+    s+=`<text x="145" y="${y-17}" text-anchor="middle" font-size="8.5" fill="#8ea0b8">MCB/MCCB</text>`;
+    s+=`<rect x="120" y="${y-13}" width="50" height="26" rx="4" fill="#1a2433" stroke="${bc}" stroke-width="2"/><text x="145" y="${y+4}" text-anchor="middle" font-size="11" fill="${bc}">${r.In}A</text>`;
+    s+=`<line x1="170" y1="${y}" x2="260" y2="${y}" stroke="#c9763b" stroke-width="3"/>`;
+    s+=`<text x="215" y="${y-8}" text-anchor="middle" font-size="8.5" fill="#e89b5e">${r.cable.mm2}mm² (${r.Iz}A)</text>`;
+    s+=`<text x="215" y="${y+17}" text-anchor="middle" font-size="8.5" fill="${r.dropOK?'#3ddc84':'#ff5d5d'}">ΔU ${fmt(r.vdPct,1)}%</text>`;
+    s+=`<text x="285" y="${y-17}" text-anchor="middle" font-size="8.5" fill="#8ea0b8">Ib ${fmt(r.Ib,0)}A</text>`;
+    s+=`<rect x="262" y="${y-13}" width="44" height="26" rx="4" fill="#1a2433" stroke="#33445f" stroke-width="2"/><text x="284" y="${y+5}" text-anchor="middle" font-size="12" fill="#e7edf6">⚙</text>`;
+    return s+'</svg>';}
+  function upd(){const P=+v('c_p'),pf=+v('c_pf'),L=+v('c_l'),drop=+v('c_drop');
+    setv('c_p',P);setv('c_pf',pf.toFixed(2));setv('c_l',L);setv('c_drop',drop);
+    const V=ph==='3'?400:230;const r=CALC.ecodial(P,V,pf,ph,L,drop);
+    txt('c_ib',fmt(r.Ib,1));txt('c_in',r.In);txt('c_cab',r.cable.mm2);txt('c_vd',fmt(r.vdPct,2));
+    document.getElementById('c_vd').parentElement.style.color=r.dropOK?'#3ddc84':'#ff5d5d';
+    document.getElementById('c_sld').innerHTML=ecoSLD(r,ph,V);
+    document.getElementById('c_note').innerHTML=`IEC 60364 — Ib ≤ In ≤ Iz: <b>${fmt(r.Ib,1)}A ≤ ${r.In}A ≤ ${r.Iz}A</b>. ${r.protOK&&r.dropOK?'<b style="color:#3ddc84">Konfigurasi valid.</b>':'<b style="color:#ff5d5d">Periksa kembali ukuran kabel/pengaman.</b>'}`;}
+  ['c_p','c_pf','c_l','c_drop'].forEach(bindInput(upd));
+  UI.bindSeg('c_ph',x=>{ph=x;upd();});upd();
 };
 
 /* ============ helpers ============ */
