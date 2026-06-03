@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ElectraSim — 16 Simulator Spesialisasi + 5 Aplikasi Pro (HOMER, ETAP, PVsyst, DIALux, Ecodial)</title>
+<title>ElectraSim — 16 Simulator Spesialisasi + 8 Aplikasi Pro (HOMER, ETAP, PVsyst, DIALux, Ecodial, pandapower, PyPSA, PLEXOS) + Peta Energi Indonesia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
@@ -366,8 +366,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 <div id="hubView" class="view">
   <div class="hub-hero">
     <div class="eyebrow">Electra Academy · Simulator</div>
-    <h1>16 Jalur <span>Spesialisasi</span> + 5 Aplikasi <span>Pro</span></h1>
-    <p>Pilih satu jalur karier untuk masuk ke simulator interaktifnya, atau coba <b>versi light</b> aplikasi industri populer — <b>HOMER, ETAP, PVsyst, DIALux, &amp; Ecodial</b>. Semua hands-on: atur parameter, lihat hasilnya langsung.</p>
+    <h1>16 Jalur <span>Spesialisasi</span> + 8 Aplikasi <span>Pro</span> + Peta Energi</h1>
+    <p>Pilih satu jalur karier untuk masuk ke simulator interaktifnya, coba <b>versi light</b> aplikasi industri populer — <b>HOMER, ETAP, PVsyst, DIALux, Ecodial, pandapower, PyPSA, &amp; PLEXOS</b> — atau jelajahi <b>peta PLTS & kelistrikan Indonesia</b>. Semua hands-on: atur parameter, lihat hasilnya langsung.</p>
   </div>
   <div class="hub-grid" id="hubGrid"></div>
 </div>
@@ -721,6 +721,89 @@ C.ecodial=(P_kW,V,pf,phase,L,maxDropPct)=>{
   return {Ib,In,cable:chosen,Iz:chosen.amp,vd:vdv,vdPct:vdc,
     protOK:In>=Ib && chosen.amp>=In, dropOK:vdc<=maxDropPct};
 };
+
+/* ---- PA6 pandapower Light: DC power flow jaringan mesh ----
+   Selesaikan B·θ = P (slack = bus 0). Aliran tiap saluran = (θf−θt)/x. */
+function gaussSolve(A,b){const n=b.length;const M=A.map((r,i)=>[...r,b[i]]);
+  for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;
+    [M[c],M[p]]=[M[p],M[c]];const piv=M[c][c]||1e-9;
+    for(let r=0;r<n;r++){if(r===c)continue;const f=M[r][c]/piv;for(let k=c;k<=n;k++)M[r][k]-=f*M[c][k];}}
+  return M.map((r,i)=>r[n]/(M[i][i]||1e-9));}
+C.dcpf=(n,lines,P)=>{
+  const B=Array.from({length:n},()=>new Array(n).fill(0));
+  lines.forEach(l=>{const b=1/l.x;B[l.f][l.f]+=b;B[l.t][l.t]+=b;B[l.f][l.t]-=b;B[l.t][l.f]-=b;});
+  const m=n-1;
+  const A=Array.from({length:m},(_,i)=>Array.from({length:m},(_,j)=>B[i+1][j+1]));
+  const rhs=P.slice(1);
+  const sol=m>0?gaussSolve(A,rhs):[];
+  const th=[0,...sol];
+  const flow=lines.map(l=>({f:l.f,t:l.t,x:l.x,mw:(th[l.f]-th[l.t])/l.x}));
+  const slack=-P.slice(1).reduce((a,b)=>a+b,0);
+  return {theta:th,flow,slack};
+};
+
+/* ---- PA7 PyPSA Light: dispatch biaya-minimum 24 jam (EBT + baterai + termal) ---- */
+C.LOAD24=[.55,.5,.48,.47,.48,.52,.6,.7,.8,.85,.88,.9,.92,.9,.88,.86,.88,.95,1,.98,.9,.8,.7,.6];
+C.SOLAR24=[0,0,0,0,0,.05,.15,.3,.5,.7,.85,.95,1,.95,.85,.7,.5,.3,.12,.02,0,0,0,0];
+C.pypsa=(peakMW,solarMW,windMW,battMWh,thermalCostRpMWh)=>{
+  const load=C.LOAD24.map(s=>s*peakMW);
+  const solar=C.SOLAR24.map(s=>s*solarMW);
+  const wind=load.map(()=>windMW*0.4);
+  let soc=battMWh*0.5;const battP=battMWh/4;
+  const thermal=[],curt=[],battOut=[],reServed=[];
+  for(let h=0;h<24;h++){
+    const re=solar[h]+wind[h];let net=load[h]-re,bo=0;
+    if(net>0){bo=Math.min(net,battP,soc);soc-=bo;net-=bo;}
+    else{const chg=Math.min(-net,battP,battMWh-soc);soc+=chg;net+=chg;}
+    const th=Math.max(0,net),cu=Math.max(0,-net);
+    thermal.push(th);curt.push(cu);battOut.push(bo);reServed.push(re-cu);
+  }
+  const Eload=load.reduce((a,b)=>a+b,0),Eth=thermal.reduce((a,b)=>a+b,0);
+  const Ebatt=battOut.reduce((a,b)=>a+b,0),Ere=reServed.reduce((a,b)=>a+b,0);
+  const Ecurt=curt.reduce((a,b)=>a+b,0);
+  return {load,solar,wind,thermal,battOut,Eload,Eth,Ebatt,Ere,Ecurt,
+    reShare:100*(Eload-Eth)/Eload, cost:Eth*thermalCostRpMWh, co2:Eth*0.85};
+};
+
+/* ---- PA8 PLEXOS Light: unit commitment & harga pasar (marginal price) ---- */
+C.plexos=(peakMW,units)=>{
+  const demand=C.LOAD24.map(s=>s*peakMW);
+  const sorted=[...units].map((u,i)=>({...u,i})).sort((a,b)=>a.cost-b.cost);
+  const price=[],genByUnit=units.map(()=>0);let totalCost=0,unmet=0;
+  demand.forEach(d=>{let rem=d,mp=0;
+    sorted.forEach(u=>{const g=Math.max(0,Math.min(u.cap,rem));if(g>0)mp=u.cost;rem-=g;totalCost+=g*u.cost;genByUnit[u.i]+=g;});
+    if(rem>0.01){unmet+=rem;mp=5000000;}
+    price.push(mp);});
+  const Edem=demand.reduce((a,b)=>a+b,0);
+  const peakPrice=price[C.LOAD24.indexOf(Math.max(...C.LOAD24))];
+  const marginalUnit=[...units].sort((a,b)=>a.cost-b.cost).reduce((acc,u)=>peakPrice>=u.cost?u.name:acc,'-');
+  return {demand,price,genByUnit,units,totalCost,Edem,unmet,
+    avgPrice:price.reduce((a,b)=>a+b,0)/24, peakPrice, marginalUnit};
+};
+
+/* ==================================================================
+   DATA PETA ENERGI INDONESIA (sumber: ESDM/BPS/PLN 2024 — estimasi publik)
+   ================================================================== */
+C.IDN_NAT={total_GW:101, fossil_GW:86, ebt_GW:15.1, plts_MW:244, pltsAtap_MW:324.3, pltsApung_MW:193, er_pct:99.8};
+C.IDN_PLTS=[ // x,y dalam viewBox 1000×440
+  {name:'PLTS Terapung Cirata', prov:'Jawa Barat', mwp:192, x:404, y:308, note:'Terapung terbesar se-ASEAN · 340.000 panel · diresmikan 2023'},
+  {name:'PLTS Likupang', prov:'Sulawesi Utara', mwp:21, x:650, y:158, note:'64.620 panel · menopang sistem Sulutgo'},
+  {name:'PLTS Atap Coca-Cola', prov:'Cikarang, Jawa Barat', mwp:7.2, x:392, y:300, note:'PLTS atap pabrik · diresmikan 2020'},
+  {name:'PLTS Oelpuah', prov:'Kupang, NTT', mwp:5, x:664, y:334, note:'22.008 panel · ~4–5% sistem Timor'},
+];
+C.IDN_PSH=[ // potensi penyinaran rata-rata (peak sun hours)
+  {reg:'Nusa Tenggara', psh:'5.0–5.8'},{reg:'Sulawesi Selatan', psh:'4.8–5.5'},
+  {reg:'Jawa', psh:'4.2–4.8'},{reg:'Sumatera', psh:'4.0–4.6'},{reg:'Kalimantan', psh:'3.8–4.5'},{reg:'Papua', psh:'4.2–5.0'},
+];
+C.IDN_SYS=[ // estimasi kapasitas sistem & rasio elektrifikasi
+  {name:'Jawa-Bali', x:432, y:312, capGW:70, er:'≈100%', note:'Sistem terbesar; geothermal, PLTA, PLTU & PLTS Cirata'},
+  {name:'Sumatera', x:205, y:165, capGW:12, er:'≈99,8%', note:'PLTA, PLTP (Sarulla), PLTU mulut tambang'},
+  {name:'Kalimantan', x:470, y:200, capGW:5, er:'≈99,7%', note:'PLTU, PLTG; interkoneksi Kalbar–Kaltim'},
+  {name:'Sulawesi', x:632, y:212, capGW:6, er:'≈99,5%', note:'PLTA Poso/Bakaru, panas bumi Lahendong'},
+  {name:'Nusa Tenggara', x:645, y:332, capGW:1.5, er:'NTT ≈96%', note:'Sistem terisolasi; PLTS & PLTD dominan'},
+  {name:'Maluku', x:762, y:215, capGW:0.8, er:'≈98%', note:'Banyak sistem kepulauan kecil terisolasi'},
+  {name:'Papua', x:900, y:235, capGW:0.9, er:'≈94%', note:'Rasio elektrifikasi terendah; PLTD & PLTA Orya/Genyem'},
+];
 
 if(typeof module!=='undefined'&&module.exports)module.exports=C;
 g.CALC=C;
@@ -1365,6 +1448,12 @@ const TRACKS=[
  {id:'pa3',cat:'PVsyst', title:'PVsyst Light',app:'PVsyst',sub:'Simulasi PLTS: yield, performance ratio & diagram rugi (loss diagram) lengkap.', icon:'pvsyst', pro:true},
  {id:'pa4',cat:'DIALux', title:'DIALux Light',app:'DIALux',sub:'Desain pencahayaan metode lumen: jumlah armatur, lux tercapai & W/m².', icon:'dialux', pro:true},
  {id:'pa5',cat:'Ecodial',title:'Ecodial Light',app:'Ecodial',sub:'Sizing pengaman & kabel instalasi: Ib → MCB/MCCB → KHA kabel → drop tegangan.', icon:'ecodial', pro:true},
+ {id:'pa6',cat:'pandapower',title:'pandapower Light',app:'pandapower',sub:'Power flow jaringan mesh: hitung sudut bus & aliran daya tiap saluran (DC load flow).', icon:'ppwr', pro:true},
+ {id:'pa7',cat:'PyPSA',title:'PyPSA Light',app:'PyPSA',sub:'Dispatch biaya-minimum 24 jam: bauran EBT + baterai + termal, share EBT & emisi.', icon:'pypsa', pro:true},
+ {id:'pa8',cat:'PLEXOS',title:'PLEXOS Light',app:'PLEXOS',sub:'Simulasi pasar listrik: unit commitment merit-order & harga marginal (SMP) per jam.', icon:'plexos', pro:true},
+ // ===== Peta Energi Indonesia =====
+ {id:'pa9',cat:'Peta PLTS',title:'Peta PLTS Indonesia', sub:'Sebaran PLTS utama (Cirata, Likupang, dll) & potensi penyinaran per wilayah.', icon:'mapsun', map:true},
+ {id:'pa10',cat:'Peta Listrik',title:'Peta Kelistrikan Indonesia', sub:'Kapasitas per sistem (Jawa-Bali, Sumatera, dll), rasio elektrifikasi & bauran fosil vs EBT.', icon:'mapbolt', map:true},
 ];
 const ICON={
  plug:'<path d="M9 7V3M15 7V3M7 7h10v4a5 5 0 01-5 5 5 5 0 01-5-5V7zM12 16v5"/>',
@@ -1388,6 +1477,11 @@ const ICON={
  pvsyst:'<rect x="3" y="5" width="18" height="11" rx="1"/><path d="M7 5l-1 11M12 5v11M17 5l1 11M3 9h18M3 13h18M9 20h6M12 16v4"/>',
  dialux:'<path d="M9 18h6M10 21h4M12 2a6 6 0 00-4 10c1 1 1.5 2 1.5 3h5c0-1 .5-2 1.5-3a6 6 0 00-4-10z"/>',
  ecodial:'<path d="M5 3v6M5 9a2.5 2.5 0 005 0 2.5 2.5 0 015 0 2.5 2.5 0 005 0M5 9v0M19 9v6M12 12v9M12 21h-3M12 21h3"/>',
+ ppwr:'<circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="5" cy="14" r="0"/><path d="M7 6h10M6 8l5 8M18 8l-5 8M5 8v4"/>',
+ pypsa:'<path d="M3 21V4M3 21h18M7 21v-6M11 21v-10M15 21v-4M19 21v-13"/>',
+ plexos:'<path d="M3 18h18M3 18V4M6 18l3-7 3 4 3-9 3 6"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="6" r="1"/>',
+ mapsun:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14"/><circle cx="12" cy="10" r="2.4"/><path d="M12 6.4v1M12 12.6v1M8.4 10h1M14.6 10h1"/>',
+ mapbolt:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14"/><path d="M13 7l-3 5h2.4l-.8 4 3.4-5H12z"/>',
 };
 
 /* ============ App shell / router ============ */
@@ -1417,11 +1511,11 @@ function openTrack(id){
   window.scrollTo(0,0);
 }
 function tcardHTML(t,i){
-  const proBadge=t.pro?`<span class="tcard-app">${t.app}</span>`:'';
-  const no=t.pro?`APP PRO · LIGHT`:`S${i+1} · JALUR ${String(i+1).padStart(2,'0')}`;
-  return `<button class="tcard${t.pro?' tcard-pro':''}" data-t="${t.id}">
+  const badge=t.app?`<span class="tcard-app">${t.app}</span>`:(t.map?`<span class="tcard-app">ESDM 2024</span>`:'');
+  const no=t.map?`PETA ENERGI · INDONESIA`:(t.pro?`APP PRO · LIGHT`:`S${i+1} · JALUR ${String(i+1).padStart(2,'0')}`);
+  return `<button class="tcard${(t.pro||t.map)?' tcard-pro':''}" data-t="${t.id}">
       <div class="tcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON[t.icon]||''}</svg>
-        ${proBadge}<span class="tcard-arrow">→</span></div>
+        ${badge}<span class="tcard-arrow">→</span></div>
       <div class="tcard-body">
         <div class="tcard-no">${no}</div>
         <div class="tcard-title">${t.title}</div>
@@ -1432,12 +1526,15 @@ function tcardHTML(t,i){
 }
 function buildHub(){
   const grid=document.getElementById('hubGrid');
-  const jalur=TRACKS.filter(t=>!t.pro), pro=TRACKS.filter(t=>t.pro);
+  const jalur=TRACKS.filter(t=>!t.pro&&!t.map), pro=TRACKS.filter(t=>t.pro), peta=TRACKS.filter(t=>t.map);
   let html=`<div class="hub-sec"><span class="bar"></span>16 Jalur Spesialisasi</div>`;
   html+=`<div class="hub-grid">${jalur.map((t,i)=>tcardHTML(t,i)).join('')}</div>`;
   html+=`<div class="hub-sec hub-sec-pro"><span class="bar"></span>Aplikasi Profesional · Versi Light
-    <small>Miniatur software industri (HOMER · ETAP · PVsyst · DIALux · Ecodial) untuk simulasi cepat & belajar konsep.</small></div>`;
+    <small>Miniatur software industri (HOMER · ETAP · PVsyst · DIALux · Ecodial · pandapower · PyPSA · PLEXOS) untuk simulasi cepat & belajar konsep.</small></div>`;
   html+=`<div class="hub-grid">${pro.map((t,i)=>tcardHTML(t,i)).join('')}</div>`;
+  html+=`<div class="hub-sec hub-sec-pro"><span class="bar"></span>Peta Energi Indonesia
+    <small>Sebaran PLTS & profil kelistrikan nasional. Data publik ESDM/BPS/PLN 2024 (estimasi, untuk edukasi).</small></div>`;
+  html+=`<div class="hub-grid">${peta.map((t,i)=>tcardHTML(t,i)).join('')}</div>`;
   grid.outerHTML=`<div id="hubGrid">${html}</div>`;
   document.getElementById('hubGrid').querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>openTrack(b.getAttribute('data-t'))));
 }
@@ -2034,6 +2131,159 @@ SIMS.pa5=(host,t)=>{
     document.getElementById('c_note').innerHTML=`IEC 60364 — Ib ≤ In ≤ Iz: <b>${fmt(r.Ib,1)}A ≤ ${r.In}A ≤ ${r.Iz}A</b>. ${r.protOK&&r.dropOK?'<b style="color:#3ddc84">Konfigurasi valid.</b>':'<b style="color:#ff5d5d">Periksa kembali ukuran kabel/pengaman.</b>'}`;}
   ['c_p','c_pf','c_l','c_drop'].forEach(bindInput(upd));
   UI.bindSeg('c_ph',x=>{ph=x;upd();});upd();
+};
+
+/* ---- PA6 pandapower Light: DC power flow jaringan mesh ---- */
+SIMS.pa6=(host,t)=>{
+  const pos=[{x:90,y:42,n:'B0·Slack'},{x:370,y:42,n:'B1'},{x:370,y:200,n:'B2'},{x:90,y:200,n:'B3'}];
+  const lineDef=[[0,1],[1,2],[2,3],[3,0],[1,3]];
+  host.innerHTML=UI.shell(t,'Hitung <b>power flow</b> jaringan jala-jala (mesh) ala <b>pandapower</b>. Daya dari slack & generator menyebar ke tiap saluran sesuai reaktansinya (hukum Kirchhoff arus & tegangan).',
+    UI.slider('n_l1','Beban Bus 1',0,100,40,5,'MW')+
+    UI.slider('n_l2','Beban Bus 2',0,100,50,5,'MW')+
+    UI.slider('n_l3','Beban Bus 3',0,100,30,5,'MW')+
+    UI.slider('n_g2','Generator Bus 2',0,150,30,5,'MW')+
+    UI.slider('n_x','Reaktansi saluran',0.05,0.5,0.2,0.05,'pu')+
+    UI.slider('n_lim','Kapasitas saluran',20,150,60,5,'MW'),
+    `<div id="n_net"></div>
+     <div class="metrics">${UI.metric('Suplai slack','n_sl','MW',1)}${UI.metric('Saluran terpadat','n_mx','%')}${UI.metric('Status','n_st','')}</div>
+     <div class="note" id="n_note"></div>`);
+  function netSVG(flow,P,lim){const W=460,H=250;let s=`<svg viewBox="0 0 ${W} ${H}" class="chart">`;
+    flow.forEach(f=>{const a=pos[f.f],b=pos[f.t],ld=Math.abs(f.mw)/lim;
+      const col=ld>1?'#ff5d5d':ld>0.7?'#ffd34d':'#3ddc84';
+      s+=`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${col}" stroke-width="${2+Math.min(ld,1.5)*4}"/>`;
+      const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+      s+=`<rect x="${mx-23}" y="${my-9}" width="46" height="18" rx="4" fill="#0e1622" stroke="${col}" stroke-width="1"/>`;
+      s+=`<text x="${mx}" y="${my+4}" text-anchor="middle" font-size="9.5" fill="${col}">${fmt(Math.abs(f.mw),0)}MW</text>`;});
+    pos.forEach((p,i)=>{s+=`<circle cx="${p.x}" cy="${p.y}" r="21" fill="#1a2433" stroke="${i===0?'#5b8cff':'#e8b339'}" stroke-width="2.5"/>`;
+      s+=`<text x="${p.x}" y="${p.y+3}" text-anchor="middle" font-size="9" fill="#e7edf6">${p.n}</text>`;
+      if(i>0)s+=`<text x="${p.x}" y="${p.y+(i<2?-28:36)}" text-anchor="middle" font-size="8.5" fill="#8ea0b8">${P[i]>0?'+':''}${fmt(P[i],0)}MW</text>`;});
+    return s+'</svg>';}
+  function upd(){const l1=+v('n_l1'),l2=+v('n_l2'),l3=+v('n_l3'),g2=+v('n_g2'),x=+v('n_x'),lim=+v('n_lim');
+    setv('n_l1',l1);setv('n_l2',l2);setv('n_l3',l3);setv('n_g2',g2);setv('n_x',x.toFixed(2));setv('n_lim',lim);
+    const P=[0,-l1,g2-l2,-l3];
+    const lines=lineDef.map(([f,tt])=>({f,t:tt,x}));
+    const r=CALC.dcpf(4,lines,P);
+    const mx=Math.max(...r.flow.map(f=>100*Math.abs(f.mw)/lim));
+    txt('n_sl',fmt(r.slack,1));txt('n_mx',fmt(mx,0));
+    txt('n_st',mx>100?'⚠ Overload':'✓ Aman');document.getElementById('n_st').parentElement.style.color=mx>100?'#ff5d5d':'#3ddc84';
+    document.getElementById('n_net').innerHTML=netSVG(r.flow,P,lim);
+    document.getElementById('n_note').innerHTML=`Total beban ${fmt(l1+l2+l3,0)} MW; generator bus 2 menyuplai ${fmt(g2,0)} MW sehingga slack hanya perlu ${fmt(r.slack,1)} MW. ${mx>100?'<b style="color:#ff5d5d">Ada saluran kelebihan beban</b> — kurangi beban, tambah generator, atau perkuat saluran.':'Semua saluran dalam batas aman.'}`;}
+  ['n_l1','n_l2','n_l3','n_g2','n_x','n_lim'].forEach(bindInput(upd));upd();
+};
+
+/* ---- PA7 PyPSA Light: dispatch biaya-minimum 24 jam ---- */
+SIMS.pa7=(host,t)=>{
+  host.innerHTML=UI.shell(t,'Cari dispatch <b>biaya-minimum</b> selama 24 jam ala <b>PyPSA</b>: EBT (surya + angin) diprioritaskan, baterai menggeser energi ke malam, termal menutup sisanya.',
+    UI.slider('y_pk','Beban puncak',50,1000,400,10,'MW')+
+    UI.slider('y_pv','Kapasitas surya',0,1500,500,10,'MW')+
+    UI.slider('y_wd','Kapasitas angin',0,500,100,10,'MW')+
+    UI.slider('y_bt','Baterai',0,2000,400,50,'MWh')+
+    UI.slider('y_tc','Biaya termal',300,2500,900,50,'rb Rp/MWh'),
+    `<div class="metrics">${UI.metric('Share EBT','y_re','%',1)}${UI.metric('Biaya operasi/hari','y_cost','')}${UI.metric('Emisi CO₂','y_co2','t/hari')}</div>
+     <div id="y_chart"></div><div id="y_donut"></div><div class="note" id="y_note"></div>`);
+  function upd(){const pk=+v('y_pk'),pv=+v('y_pv'),wd=+v('y_wd'),bt=+v('y_bt'),tc=+v('y_tc');
+    setv('y_pk',pk);setv('y_pv',pv);setv('y_wd',wd);setv('y_bt',bt);setv('y_tc',tc);
+    const r=CALC.pypsa(pk,pv,wd,bt,tc*1000);
+    txt('y_re',fmt(r.reShare,1));txt('y_cost',Rp(r.cost));txt('y_co2',fmt(r.co2,0));
+    document.getElementById('y_chart').innerHTML='<div class="note" style="margin:2px 0 4px;color:#8ea0b8">Profil 24 jam (MW):</div>'+lineSVG([
+      {name:'Beban',data:r.load,color:'#e7edf6'},{name:'Surya',data:r.solar,color:'#e8b339'},{name:'Termal',data:r.thermal,color:'#c9763b'}],{});
+    document.getElementById('y_donut').innerHTML=donutSVG([
+      {name:'EBT langsung',val:Math.round(r.Ere),color:'#3ddc84'},
+      {name:'Baterai',val:Math.round(r.Ebatt),color:'#5b8cff'},
+      {name:'Termal',val:Math.round(r.Eth),color:'#c9763b'}].filter(x=>x.val>0));
+    document.getElementById('y_note').innerHTML=`Energi harian ${fmt(r.Eload,0)} MWh · kurtailmen EBT ${fmt(r.Ecurt,0)} MWh. ${r.reShare>50?'<b style="color:#3ddc84">Sistem sudah didominasi EBT.</b>':'Tambah surya/baterai untuk menaikkan share EBT & menekan biaya termal.'}`;}
+  ['y_pk','y_pv','y_wd','y_bt','y_tc'].forEach(bindInput(upd));upd();
+};
+
+/* ---- PA8 PLEXOS Light: unit commitment & harga pasar ---- */
+SIMS.pa8=(host,t)=>{
+  const base=[
+    {name:'PLTA',cost:50000,color:'#5b8cff'},{name:'PLTU Batubara',cost:600000,color:'#8a6a4a'},
+    {name:'PLTP Panas Bumi',cost:700000,color:'#c9763b'},{name:'PLTGU Gas',cost:1200000,color:'#e8b339'},
+    {name:'PLTD Diesel',cost:2500000,color:'#ff6b6b'}];
+  host.innerHTML=UI.shell(t,'Simulasi pasar listrik ala <b>PLEXOS</b>: pembangkit di-<i>commit</i> berdasarkan <b>merit order</b> (termurah dulu). Harga pasar (SMP) tiap jam ditentukan unit termahal yang menyala.',
+    UI.slider('x_pk','Beban puncak',100,2000,1000,50,'MW')+
+    UI.slider('x_pa','Kapasitas PLTA',0,500,200,10,'MW')+
+    UI.slider('x_pu','Kapasitas PLTU',0,1500,600,50,'MW')+
+    UI.slider('x_pp','Kapasitas PLTP',0,500,150,10,'MW')+
+    UI.slider('x_pg','Kapasitas PLTGU',0,1500,800,50,'MW')+
+    UI.slider('x_pd','Kapasitas PLTD',0,500,200,10,'MW'),
+    `<div class="metrics">${UI.metric('SMP rata-rata','x_avg','Rp/MWh',1)}${UI.metric('SMP saat puncak','x_pkp','Rp/MWh')}${UI.metric('Biaya produksi/hari','x_cost','')}</div>
+     <div id="x_price"></div><div id="x_donut"></div><div class="note" id="x_note"></div>`);
+  function upd(){const pk=+v('x_pk'),caps=[+v('x_pa'),+v('x_pu'),+v('x_pp'),+v('x_pg'),+v('x_pd')];
+    setv('x_pk',pk);['x_pa','x_pu','x_pp','x_pg','x_pd'].forEach((id,i)=>setv(id,caps[i]));
+    const units=base.map((u,i)=>({...u,cap:caps[i]}));
+    const r=CALC.plexos(pk,units);
+    txt('x_avg',fmt(r.avgPrice,0));txt('x_pkp',fmt(r.peakPrice,0));txt('x_cost',Rp(r.totalCost));
+    document.getElementById('x_price').innerHTML='<div class="note" style="margin:2px 0 4px;color:#8ea0b8">Harga pasar 24 jam (Rp/MWh):</div>'+lineSVG([{name:'SMP',data:r.price,color:'#e8b339'}],{});
+    document.getElementById('x_donut').innerHTML=donutSVG(units.map((u,i)=>({name:u.name,val:Math.round(r.genByUnit[i]),color:u.color})).filter(x=>x.val>0));
+    let n=`Unit penentu harga saat puncak: <b style="color:#f3d27a">${r.marginalUnit}</b>. Energi harian ${fmt(r.Edem,0)} MWh.`;
+    if(r.unmet>0.01)n+=` <b style="color:#ff5d5d">Defisit ${fmt(r.unmet,0)} MWh</b> — tambah kapasitas.`;
+    document.getElementById('x_note').innerHTML=n;}
+  ['x_pk','x_pa','x_pu','x_pp','x_pg','x_pd'].forEach(bindInput(upd));upd();
+};
+
+/* ---- Peta dasar Indonesia (skematik) ---- */
+function idnBaseSVG(){return `
+  <path d="M120,60 L178,55 L208,96 L300,232 L296,276 L250,276 L150,118 L114,94 Z" fill="#16202f" stroke="#2c3e54" stroke-width="1.5"/>
+  <path d="M375,114 L560,120 L586,180 L560,256 L440,274 L380,226 L360,164 Z" fill="#16202f" stroke="#2c3e54" stroke-width="1.5"/>
+  <path d="M294,300 L520,292 L530,318 L300,332 L288,316 Z" fill="#16202f" stroke="#2c3e54" stroke-width="1.5"/>
+  <path d="M600,150 L662,150 L656,198 L692,228 L676,286 L640,286 L636,224 L606,224 L600,194 Z" fill="#16202f" stroke="#2c3e54" stroke-width="1.5"/>
+  <path d="M735,178 L796,184 L802,240 L740,250 L726,214 Z" fill="#16202f" stroke="#2c3e54" stroke-width="1.5"/>
+  <path d="M820,164 L986,186 L976,276 L900,300 L835,286 L820,224 Z" fill="#16202f" stroke="#2c3e54" stroke-width="1.5"/>
+  <ellipse cx="548" cy="324" rx="11" ry="6" fill="#16202f" stroke="#2c3e54" stroke-width="1.2"/>
+  <ellipse cx="585" cy="328" rx="14" ry="6" fill="#16202f" stroke="#2c3e54" stroke-width="1.2"/>
+  <ellipse cx="630" cy="330" rx="16" ry="7" fill="#16202f" stroke="#2c3e54" stroke-width="1.2"/>
+  <ellipse cx="672" cy="332" rx="14" ry="7" fill="#16202f" stroke="#2c3e54" stroke-width="1.2"/>
+  <text x="172" y="205" font-size="11" fill="#4a5d75">SUMATERA</text>
+  <text x="430" y="200" font-size="11" fill="#4a5d75">KALIMANTAN</text>
+  <text x="360" y="348" font-size="11" fill="#4a5d75">JAWA</text>
+  <text x="608" y="146" font-size="10" fill="#4a5d75">SULAWESI</text>
+  <text x="730" y="172" font-size="10" fill="#4a5d75">MALUKU</text>
+  <text x="878" y="178" font-size="11" fill="#4a5d75">PAPUA</text>
+  <text x="585" y="356" font-size="9" fill="#4a5d75">NUSA TENGGARA</text>`;}
+
+/* ---- PA9 Peta PLTS Indonesia ---- */
+SIMS.pa9=(host,t)=>{
+  const N=CALC.IDN_NAT,pts=CALC.IDN_PLTS;
+  host.innerHTML=UI.shell(t,'Sebaran <b>PLTS utama</b> di Indonesia & potensi penyinaran matahari per wilayah. Ketuk titik untuk detail.',
+    `<div class="metrics">${UI.metric('PLTS skala besar','p9a','MW',1)}${UI.metric('PLTS Atap','p9b','MW')}${UI.metric('PLTS Terapung','p9c','MW')}</div>
+     <div class="note"><b>Potensi penyinaran (PSH, jam/hari):</b><br>${CALC.IDN_PSH.map(p=>`${p.reg}: <b style="color:#f3d27a">${p.psh}</b>`).join(' · ')}</div>
+     <div class="note" style="font-size:11px;color:#5b6b82">Sumber: ESDM/BPS 2024 (estimasi publik untuk edukasi).</div>`,
+    `<div id="plts_map"></div><div class="note" id="plts_info">Ketuk salah satu titik PLTS pada peta untuk melihat detail.</div>`);
+  txt('p9a',fmt(N.plts_MW,0));txt('p9b',fmt(N.pltsAtap_MW,1));txt('p9c',fmt(N.pltsApung_MW,0));
+  let s=`<svg viewBox="0 0 1000 440" class="chart" style="width:100%">${idnBaseSVG()}`;
+  pts.forEach((p,i)=>{const r=8+Math.sqrt(p.mwp)*1.6;
+    s+=`<g class="tap" data-i="${i}" style="cursor:pointer"><circle cx="${p.x}" cy="${p.y}" r="${r}" fill="rgba(232,179,57,.22)" stroke="#e8b339" stroke-width="2"/><circle cx="${p.x}" cy="${p.y}" r="3.5" fill="#e8b339"/></g>`;});
+  s+='</svg>';
+  document.getElementById('plts_map').innerHTML=s;
+  const info=document.getElementById('plts_info');
+  document.getElementById('plts_map').querySelectorAll('[data-i]').forEach(el=>el.addEventListener('click',()=>{
+    const p=pts[+el.getAttribute('data-i')];
+    info.innerHTML=`<b style="color:#f3d27a">${p.name}</b> — ${p.prov}<br>Kapasitas <b>${p.mwp} MWp</b>. ${p.note||''}`;}));
+};
+
+/* ---- PA10 Peta Kelistrikan Indonesia ---- */
+SIMS.pa10=(host,t)=>{
+  const N=CALC.IDN_NAT,sys=CALC.IDN_SYS;
+  host.innerHTML=UI.shell(t,'Profil kelistrikan nasional: <b>kapasitas per sistem</b>, rasio elektrifikasi & bauran <b>fosil vs EBT</b>. Ketuk wilayah untuk detail.',
+    `<div class="metrics">${UI.metric('Kapasitas nasional','p10a','GW',1)}${UI.metric('Rasio elektrifikasi','p10b','%')}</div>
+     <div id="p10donut"></div>
+     <div class="note" style="font-size:11px;color:#5b6b82">Sumber: ESDM/PLN 2024. Kapasitas per sistem = estimasi publik.</div>`,
+    `<div id="el_map"></div><div class="note" id="el_info">Ketuk salah satu sistem kelistrikan (gelembung) pada peta.</div>`);
+  txt('p10a',fmt(N.total_GW,0));txt('p10b',fmt(N.er_pct,1));
+  document.getElementById('p10donut').innerHTML='<div class="note" style="margin:2px 0 2px;color:#8ea0b8">Bauran kapasitas nasional (GW):</div>'+donutSVG([
+    {name:'Fosil',val:N.fossil_GW,color:'#c9763b'},{name:'EBT',val:N.ebt_GW,color:'#3ddc84'}]);
+  const maxCap=Math.max(...sys.map(z=>z.capGW));
+  let s=`<svg viewBox="0 0 1000 440" class="chart" style="width:100%">${idnBaseSVG()}`;
+  sys.forEach((sy,i)=>{const r=11+Math.sqrt(sy.capGW/maxCap)*30;
+    s+=`<g class="tap" data-i="${i}" style="cursor:pointer"><circle cx="${sy.x}" cy="${sy.y}" r="${r}" fill="rgba(91,140,255,.20)" stroke="#5b8cff" stroke-width="2"/><text x="${sy.x}" y="${sy.y+3}" text-anchor="middle" font-size="10" fill="#cfe0ff">${sy.capGW}GW</text></g>`;});
+  s+='</svg>';
+  document.getElementById('el_map').innerHTML=s;
+  const info=document.getElementById('el_info');
+  document.getElementById('el_map').querySelectorAll('[data-i]').forEach(el=>el.addEventListener('click',()=>{
+    const sy=sys[+el.getAttribute('data-i')];
+    info.innerHTML=`<b style="color:#9db4ff">Sistem ${sy.name}</b><br>Kapasitas ≈ <b>${sy.capGW} GW</b> · Rasio elektrifikasi ${sy.er}<br>${sy.note}`;}));
 };
 
 /* ============ helpers ============ */
