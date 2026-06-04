@@ -445,6 +445,10 @@ if ('serviceWorker' in navigator) {
         </div>
       </a>
       <div class="nav-right-group">
+        <button class="nav-search-btn" type="button" onclick="esaOpenSearch()" aria-label="Cari modul">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <span>Cari</span>
+        </button>
         <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
         <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
@@ -17277,6 +17281,80 @@ else{setTimeout(init,200);}
       if (typeof window.esaToast === 'function') window.esaToast('Konfirmasi Terkirim ⏳', 'Pembayaran sedang diverifikasi admin. Akses dibuka setelah dikonfirmasi.', '⏳');
     }, 700);
   };
+})();
+</script>
+
+<!-- ================================================================
+     ESA MODULE SEARCH — command-palette untuk cari modul by keyword
+     ================================================================ -->
+<div id="esaSearchOverlay" class="esa-search-overlay" style="display:none" onclick="if(event.target===this)esaCloseSearch()">
+  <div class="esa-search-box" role="dialog" aria-modal="true" aria-label="Cari modul">
+    <div class="esa-search-head">
+      <svg class="esa-search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="esaSearchInput" type="search" autocomplete="off" spellcheck="false" placeholder="Cari modul, materi, atau kode — mis. trafo, K3, PLTS, 2.06…" oninput="esaRunSearch(this.value)" onkeydown="esaSearchKey(event)">
+      <button class="esa-search-close" type="button" onclick="esaCloseSearch()" aria-label="Tutup">✕</button>
+    </div>
+    <div id="esaSearchResults" class="esa-search-results"></div>
+    <div class="esa-search-foot"><kbd>↑</kbd><kbd>↓</kbd> pilih · <kbd>Enter</kbd> buka · <kbd>Esc</kbd> tutup · <kbd>Ctrl</kbd>+<kbd>K</kbd> buka pencarian</div>
+  </div>
+</div>
+<script>
+(function(){
+  'use strict';
+  var idx=null, hits=[], sel=0;
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function hi(s,terms){var out=esc(s);terms.forEach(function(t){if(!t)return;var re=new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');out=out.replace(re,'<mark>$1</mark>');});return out;}
+  function buildIndex(){
+    if(idx)return idx;var out=[];
+    try{
+      var CUR=(typeof CURRICULUM!=='undefined')?CURRICULUM:{};
+      Object.keys(CUR).forEach(function(key){
+        (CUR[key]||[]).forEach(function(m){
+          var common=(key==='L1'||key==='L2');
+          var trackId=key, levelId=common?key:(m.level||key);
+          var trackName=common?'Umum · semua jalur':((typeof TRACKS_META!=='undefined'&&TRACKS_META[key]&&TRACKS_META[key].name)||key);
+          out.push({code:m.code,title:m.title||'',category:m.category||'',trackId:trackId,levelId:levelId,trackName:trackName,
+            hay:(m.code+' '+(m.title||'')+' '+(m.category||'')+' '+trackName).toLowerCase()});
+        });
+      });
+    }catch(e){console.warn('[ESA] search index error',e);}
+    idx=out;return out;
+  }
+  window.esaRunSearch=function(q){
+    var data=buildIndex();q=(q||'').trim().toLowerCase();
+    var res=document.getElementById('esaSearchResults');if(!res)return;
+    if(!q){hits=[];res.innerHTML='<div class="esa-search-empty">Ketik kata kunci untuk mencari di '+data.length+' modul…</div>';return;}
+    var terms=q.split(/\s+/);
+    hits=data.filter(function(m){return terms.every(function(t){return m.hay.indexOf(t)>=0;});}).slice(0,40);
+    sel=0;
+    if(!hits.length){res.innerHTML='<div class="esa-search-empty">Tidak ada modul yang cocok dengan “'+esc(q)+'”.</div>';return;}
+    res.innerHTML=hits.map(function(m,i){
+      return '<button class="esa-search-item'+(i===0?' sel':'')+'" data-i="'+i+'" onmouseenter="esaSearchHover('+i+')" onclick="esaSearchOpen('+i+')">'+
+        '<span class="esa-search-code">'+esc(m.code)+'</span>'+
+        '<span class="esa-search-body"><span class="esa-search-title">'+hi(m.title,terms)+'</span>'+
+        '<span class="esa-search-meta">'+esc(m.category||'Umum')+' · '+esc(m.trackName)+'</span></span>'+
+        '<span class="esa-search-go">→</span></button>';
+    }).join('');
+  };
+  function paint(){var items=document.querySelectorAll('#esaSearchResults .esa-search-item');
+    for(var i=0;i<items.length;i++)items[i].classList.toggle('sel',i===sel);
+    if(items[sel])items[sel].scrollIntoView({block:'nearest'});}
+  window.esaSearchHover=function(i){sel=i;paint();};
+  window.esaSearchOpen=function(i){var m=hits[i];if(!m)return;esaCloseSearch();
+    try{if(typeof openModul==='function')openModul(m.code,m.trackId,m.levelId);}catch(e){console.warn('[ESA] openModul from search failed',e);}};
+  window.esaSearchKey=function(e){
+    if(e.key==='Escape'){esaCloseSearch();}
+    else if(e.key==='ArrowDown'){e.preventDefault();if(hits.length){sel=(sel+1)%hits.length;paint();}}
+    else if(e.key==='ArrowUp'){e.preventDefault();if(hits.length){sel=(sel-1+hits.length)%hits.length;paint();}}
+    else if(e.key==='Enter'){e.preventDefault();esaSearchOpen(sel);}
+  };
+  window.esaOpenSearch=function(){var o=document.getElementById('esaSearchOverlay');if(!o)return;
+    o.style.display='flex';document.body.style.overflow='hidden';
+    try{var n=document.querySelector('.nav');if(n)n.classList.remove('nav-open');}catch(e){}
+    var inp=document.getElementById('esaSearchInput');if(inp){inp.value='';esaRunSearch('');setTimeout(function(){inp.focus();},30);}};
+  window.esaCloseSearch=function(){var o=document.getElementById('esaSearchOverlay');if(o)o.style.display='none';document.body.style.overflow='';};
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&(e.key==='k'||e.key==='K')){e.preventDefault();esaOpenSearch();}});
 })();
 </script>
 

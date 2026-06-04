@@ -10240,3 +10240,86 @@ button:active:not(:disabled),
   .esa-game-stat-num { font-size: 1.7rem; }
   .esa-game-quick-btn { flex: 1; min-width: calc(50% - 4px); text-align: center; }
 }
+
+/* ================================================================
+   MODULE SEARCH — nav button + command-palette overlay
+   ================================================================ */
+.nav-search-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(201,169,110,0.08); border: 1px solid rgba(201,169,110,0.4);
+  color: var(--cream); font-family: var(--sans); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; border-radius: 999px;
+  padding: 8px 16px; cursor: pointer; transition: background .2s, border-color .2s;
+}
+.nav-search-btn:hover { background: rgba(201,169,110,0.18); border-color: var(--gold); }
+.nav-search-btn svg { width: 15px; height: 15px; }
+@media (max-width: 900px) {
+  .nav-search-btn {
+    width: 100%; justify-content: flex-start; border-radius: 0; border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05); padding: 15px 26px;
+    font-size: 14px; min-height: 48px; gap: 12px;
+  }
+}
+
+.esa-search-overlay {
+  position: fixed; inset: 0; z-index: 100000; display: none;
+  justify-content: center; align-items: flex-start; padding: 10vh 16px 16px;
+  background: rgba(8,10,18,0.72); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+}
+.esa-search-box {
+  width: 100%; max-width: 640px; background: #141826;
+  border: 1px solid rgba(201,169,110,0.3); border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6); overflow: hidden;
+  display: flex; flex-direction: column; max-height: 78vh;
+}
+.esa-search-head {
+  display: flex; align-items: center; gap: 12px; padding: 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.esa-search-ic { width: 20px; height: 20px; color: var(--gold); flex-shrink: 0; }
+#esaSearchInput {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--cream); font-family: var(--sans); font-size: 16px;
+}
+#esaSearchInput::placeholder { color: rgba(245,240,230,0.4); }
+.esa-search-close {
+  background: transparent; border: none; color: rgba(245,240,230,0.5);
+  font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 6px; line-height: 1;
+}
+.esa-search-close:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
+.esa-search-results { overflow-y: auto; padding: 6px; }
+.esa-search-empty {
+  padding: 28px 18px; text-align: center;
+  color: rgba(245,240,230,0.5); font-family: var(--sans); font-size: 14px;
+}
+.esa-search-item {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  background: transparent; border: none; border-radius: 10px; padding: 11px 12px;
+  cursor: pointer; color: var(--cream); font-family: var(--sans); transition: background .12s;
+}
+.esa-search-item.sel, .esa-search-item:hover { background: rgba(201,169,110,0.14); }
+.esa-search-code {
+  flex-shrink: 0; font-size: 11px; font-weight: 700; font-family: var(--sans);
+  letter-spacing: 0.04em; color: var(--gold); background: rgba(201,169,110,0.12);
+  border: 1px solid rgba(201,169,110,0.3); border-radius: 7px;
+  padding: 4px 8px; min-width: 48px; text-align: center;
+}
+.esa-search-body { flex: 1; min-width: 0; }
+.esa-search-title { display: block; font-size: 14px; font-weight: 600; line-height: 1.3; color: var(--cream); }
+.esa-search-title mark { background: rgba(201,169,110,0.32); color: #ffe9b8; border-radius: 3px; padding: 0 1px; }
+.esa-search-meta {
+  display: block; font-size: 11.5px; color: rgba(245,240,230,0.5); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.esa-search-go { flex-shrink: 0; color: rgba(201,169,110,0.6); font-size: 16px; }
+.esa-search-foot {
+  padding: 9px 16px; border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 11px; color: rgba(245,240,230,0.4); font-family: var(--sans);
+}
+.esa-search-foot kbd {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 1px 5px; font-family: var(--sans); font-size: 10px; margin: 0 1px;
+}
+@media (max-width: 600px) {
+  .esa-search-overlay { padding: 6vh 10px 10px; }
+}
