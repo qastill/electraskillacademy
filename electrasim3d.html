@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElectraSim 3D — 16 Simulator 360° Ketenagalistrikan (Three.js & Babylon.js)</title>
+<meta name="description" content="Lab simulator 3D/360° interaktif Electra Academy: satu simulator tiga dimensi untuk tiap jalur spesialisasi ketenagalistrikan, dibuat dengan Three.js & Babylon.js.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f17;--bg2:#10151f;--panel:#141b27;--panel2:#1a2433;
+  --line:#26344a;--line2:#33445f;--gold:#e8b339;--gold-d:#b8860b;--gold-soft:#f3d27a;
+  --copper:#c9763b;--txt:#e7edf6;--txt-d:#8ea0b8;--txt-dd:#5b6b82;
+  --ok:#3ddc84;--err:#ff5d5d;--r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);
+  background-image:radial-gradient(1100px 560px at 80% -10%,rgba(232,179,57,.06),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(201,118,59,.05),transparent 60%);overflow-x:hidden}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(11,15,23,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:11px 16px}
+.tb-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.bolt{width:38px;height:38px;border-radius:10px;background:linear-gradient(145deg,var(--gold),var(--gold-d));display:grid;place-items:center;box-shadow:0 6px 22px rgba(232,179,57,.35)}
+.bolt svg{width:20px;height:20px}
+.tb-brand h1{font-family:'Chakra Petch',sans-serif;font-size:19px;letter-spacing:.4px}
+.tb-brand h1 span{color:var(--gold)}
+.tb-3d{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--panel2);border:1px solid var(--line2);color:var(--gold-soft);padding:3px 7px;border-radius:6px;margin-left:4px}
+.tb-crumb{font-size:12.5px;color:var(--txt-d);font-family:'JetBrains Mono',monospace}
+.tb-back{margin-left:auto;display:none;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line2);color:var(--txt);font-family:inherit;font-size:13px;padding:8px 13px;border-radius:9px;cursor:pointer}
+.tb-back:hover{border-color:var(--gold-d)}
+.tb-link{font-size:12.5px;color:var(--txt-d);text-decoration:none;border:1px solid var(--line);padding:7px 11px;border-radius:8px}
+.tb-link:hover{color:var(--gold-soft);border-color:var(--gold-d)}
+
+.wrap{max-width:1240px;margin:0 auto;padding:18px 16px 70px}
+
+/* hub */
+.hero{padding:14px 4px 22px}
+.hero .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+.hero h2{font-family:'Playfair Display',Georgia,serif;font-size:32px;font-weight:800;line-height:1.06;margin:8px 0}
+.hero h2 span{color:var(--gold)}
+.hero p{color:var(--txt-d);font-size:14px;max-width:680px;line-height:1.55}
+@media(max-width:600px){.hero h2{font-size:25px}}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{position:relative;text-align:left;border:1px solid var(--line);border-radius:15px;overflow:hidden;cursor:pointer;background:linear-gradient(180deg,var(--panel),var(--bg2));transition:.18s;font-family:inherit;color:var(--txt);padding:0}
+.card:hover{transform:translateY(-4px);border-color:var(--gold-d);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.card-ic{height:96px;display:grid;place-items:center;font-size:42px;background:linear-gradient(160deg,#0f1a2e,#1d2b3a 55%,#3a4a2a)}
+.card-eng{position:absolute;top:10px;left:10px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;padding:3px 7px;border-radius:6px;letter-spacing:.4px}
+.eng-three{background:rgba(91,140,255,.9);color:#0a1228}
+.eng-babylon{background:rgba(232,179,57,.92);color:#1a1206}
+.card-arrow{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:#f3eee2;color:#1a1206;display:grid;place-items:center;font-weight:700;transition:.2s}
+.card:hover .card-arrow{background:var(--gold);transform:translateX(2px)}
+.card-body{padding:13px 14px 15px}
+.card-no{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.8px;color:var(--txt-dd)}
+.card-title{font-family:'Chakra Petch',sans-serif;font-size:15.5px;font-weight:600;margin:6px 0 6px;line-height:1.2}
+.card-sub{font-size:12px;color:var(--txt-d);line-height:1.5}
+
+.hub-sec{font-family:'Chakra Petch',sans-serif;font-size:13px;letter-spacing:1.1px;text-transform:uppercase;color:var(--gold-soft);display:flex;gap:9px;align-items:center;margin:6px 2px 14px}
+.hub-sec .bar{width:18px;height:3px;border-radius:3px;background:var(--gold)}
+.hub-note{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin:18px 0 22px;font-size:12.5px;color:var(--txt-d);line-height:1.6}
+.hub-note b{color:var(--gold-soft)}
+
+/* stage */
+#stage{display:none}
+.stage-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.stage-ic{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;font-size:26px;background:linear-gradient(145deg,var(--panel2),var(--bg2));border:1px solid var(--line2);flex-shrink:0}
+.stage-head h2{font-family:'Playfair Display',Georgia,serif;font-size:22px;line-height:1.1}
+.stage-head p{color:var(--txt-d);font-size:13px;line-height:1.5;margin-top:4px;max-width:720px}
+.stage-head p b{color:var(--gold-soft)}
+.stage-grid{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+@media(max-width:880px){.stage-grid{grid-template-columns:1fr}}
+.canvas-wrap{position:relative;background:#0b0f17;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;min-width:0}
+#stage3d{width:100%;height:60vh;min-height:380px;display:block;touch-action:none}
+@media(max-width:880px){#stage3d{height:46vh;min-height:300px}}
+.canvas-hint{position:absolute;bottom:10px;left:12px;font-size:11px;color:var(--txt-dd);background:rgba(11,15,23,.6);padding:5px 9px;border-radius:7px;pointer-events:none}
+.canvas-tools{position:absolute;top:10px;right:10px;display:flex;gap:7px}
+.ctool{background:rgba(20,27,39,.85);border:1px solid var(--line2);color:var(--txt);font-family:inherit;font-size:11.5px;padding:6px 10px;border-radius:8px;cursor:pointer}
+.ctool:hover{border-color:var(--gold-d);color:var(--gold-soft)}
+.ctool.on{background:var(--gold);color:#1a1206;border-color:var(--gold)}
+.loader3d{position:absolute;inset:0;display:grid;place-items:center;background:#0b0f17;z-index:5}
+.loader3d .ring{width:44px;height:44px;border:3px solid var(--line2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+.loader3d p{position:absolute;bottom:34%;font-size:12px;color:var(--txt-d)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.controls{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:15px}
+.controls h3{font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--txt-dd);margin-bottom:12px}
+.f3d{margin-bottom:13px}
+.f3d label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--txt-d);margin-bottom:6px}
+.f3d label b{color:var(--gold-soft);font-family:'JetBrains Mono',monospace}
+.f3d input[type=range]{width:100%;accent-color:var(--gold)}
+.btn3d{width:100%;background:var(--panel2);border:1px solid var(--line2);color:var(--txt);font-family:inherit;font-size:13px;font-weight:600;padding:10px;border-radius:9px;cursor:pointer;margin-bottom:9px;transition:.15s}
+.btn3d:hover{border-color:var(--gold-d);color:var(--gold-soft)}
+.btn3d.on{background:rgba(232,179,57,.16);border-color:var(--gold);color:var(--gold-soft)}
+.m3d{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line);font-size:12.5px;color:var(--txt-d)}
+.m3d b{color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:14px}
+.note3d{margin-top:12px;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font-size:11.5px;color:var(--txt-d);line-height:1.55}
+.note3d b{color:var(--gold-soft)}
+.errbox{background:var(--err);color:#2a0c0e;padding:14px;border-radius:10px;font-size:13px;margin:12px}
+</style>
+</head>
+<body>
+<!-- Gerbang akses: lab khusus member berbayar (sama dengan ElectraSim 2D). -->
+<script>
+(function(){
+  function allowed(){
+    try{
+      var d=JSON.parse(localStorage.getItem('esa_data_v1')||'{}');var p=d&&d.profile;
+      if(!p||p.isBanned===true)return false;
+      if(p.subscriptionExpiresAt){var e=new Date(p.subscriptionExpiresAt);if(!isNaN(e.getTime())&&e<new Date())return false;}
+      return p.isPaid===true;
+    }catch(e){return false;}
+  }
+  if(allowed())return;
+  function gate(){
+    if(document.getElementById('esa-sim-gate'))return;
+    var o=document.createElement('div');o.id='esa-sim-gate';
+    o.style.cssText='position:fixed;inset:0;z-index:2147483647;background:rgba(10,12,24,0.96);display:flex;align-items:center;justify-content:center;padding:24px;font-family:Inter,system-ui,sans-serif;color:#f5f0e6;text-align:center;';
+    o.innerHTML='<div style="max-width:440px;background:#1a1d2e;border:1px solid rgba(212,175,106,0.35);border-radius:20px;padding:40px 32px;box-shadow:0 24px 80px rgba(0,0,0,0.6);"><div style="width:64px;height:64px;margin:0 auto 18px;background:linear-gradient(135deg,#d4af6a,#a07840);border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a1d2e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h2 style="font-size:1.3rem;margin:0 0 10px;">Lab ini untuk member</h2><p style="font-size:0.92rem;line-height:1.5;color:rgba(245,240,230,0.7);margin:0 0 22px;">Daftar lab bisa ditelusuri gratis, tetapi untuk membuka &amp; menjalankan simulator perlu <strong>daftar dan berlangganan</strong> akses penuh.</p><a href="/" target="_top" style="display:inline-block;background:linear-gradient(135deg,#d4af6a,#a07840);color:#1a1d2e;font-weight:700;text-decoration:none;padding:13px 24px;border-radius:10px;font-size:0.95rem;">Daftar &amp; Buka Akses →</a></div>';
+    document.body.appendChild(o);try{document.body.style.overflow='hidden';}catch(e){}
+  }
+  if(document.body)gate();else document.addEventListener('DOMContentLoaded',gate);
+})();
+</script>
+
+<div class="topbar"><div class="topbar-in">
+  <div class="tb-brand" id="homeLink"><div class="bolt"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg></div><h1>Electra<span>Sim</span></h1><span class="tb-3d">3D · 360°</span></div>
+  <button class="tb-back" id="backBtn">← Semua Lab 3D</button>
+  <div class="tb-crumb" id="crumb" style="margin-left:auto">16 Lab 3D</div>
+  <a class="tb-link" href="electrasim.html">Versi 2D →</a>
+</div></div>
+
+<div class="wrap">
+  <!-- HUB -->
+  <div id="hub">
+    <div class="hero">
+      <div class="eyebrow">Electra Academy · Lab 3D / 360°</div>
+      <h2>16 Simulator <span>3D Interaktif</span> Ketenagalistrikan</h2>
+      <p>Satu simulator tiga dimensi untuk tiap jalur spesialisasi. Putar 360°, geser parameter, dan lihat peralatan listrik bekerja secara real-time. Dibangun dengan <b style="color:#9db4ff">Three.js</b> &amp; <b style="color:#f3d27a">Babylon.js</b> — WebGL berjalan langsung di browser.</p>
+    </div>
+    <div class="hub-sec"><span class="bar"></span>Pilih Simulator 3D</div>
+    <div class="grid" id="hubGrid"></div>
+    <div class="hub-note">🖱️ <b>Drag</b> untuk memutar kamera 360° · <b>scroll/cubit</b> untuk zoom · tombol <b>Putar otomatis</b> untuk rotasi otomatis. Model 3D disederhanakan untuk edukasi (bukan CAD presisi). Memerlukan browser dengan WebGL.</div>
+  </div>
+
+  <!-- STAGE -->
+  <div id="stage">
+    <div class="stage-head">
+      <div class="stage-ic" id="stIc">🧊</div>
+      <div><h2 id="stTitle">—</h2><p id="stSub"></p></div>
+    </div>
+    <div class="stage-grid">
+      <div class="canvas-wrap">
+        <div id="stage3d"></div>
+        <div class="canvas-tools">
+          <button class="ctool on" id="autoBtn">↻ Putar otomatis</button>
+          <button class="ctool" id="resetBtn">⤢ Reset</button>
+        </div>
+        <div class="canvas-hint">Drag untuk memutar · scroll untuk zoom</div>
+        <div class="loader3d" id="loader"><div class="ring"></div><p id="loadMsg">Memuat mesin 3D…</p></div>
+      </div>
+      <div class="controls"><h3 id="ctrlTitle">Kontrol</h3><div id="ctrl3d"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   ElectraSim 3D — framework Three.js + Babylon.js (lazy-loaded per kebutuhan)
+   ========================================================================= */
+const CDN={
+  three:'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+  babylon:'https://cdn.babylonjs.com/babylon.js'
+};
+const _scriptCache={};
+function loadScript(src){
+  if(_scriptCache[src])return _scriptCache[src];
+  _scriptCache[src]=new Promise((res,rej)=>{
+    const s=document.createElement('script');s.src=src;s.async=true;
+    s.onload=()=>res();s.onerror=()=>rej(new Error('Gagal memuat '+src));
+    document.head.appendChild(s);
+  });
+  return _scriptCache[src];
+}
+const ensureThree=()=>loadScript(CDN.three);
+const ensureBabylon=()=>loadScript(CDN.babylon);
+
+/* ---------- Three.js engine wrapper + orbit kamera (360°) ---------- */
+function mk3(host){
+  const W=host.clientWidth||800, H=host.clientHeight||440;
+  const scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x0b0f17);
+  scene.fog=new THREE.Fog(0x0b0f17,28,75);
+  const camera=new THREE.PerspectiveCamera(48,W/H,0.1,500);
+  const renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(W,H);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.shadowMap.enabled=true;
+  host.appendChild(renderer.domElement);
+  scene.add(new THREE.AmbientLight(0xb9c6dd,0.6));
+  const key=new THREE.DirectionalLight(0xffffff,0.95);key.position.set(8,14,9);scene.add(key);
+  const fill=new THREE.DirectionalLight(0x6f86b8,0.4);fill.position.set(-9,5,-7);scene.add(fill);
+  const target=new THREE.Vector3(0,1,0);
+  let radius=11,theta=0.75,phi=1.05,home={radius:11,theta:0.75,phi:1.05};
+  function applyCam(){
+    phi=Math.max(0.12,Math.min(Math.PI-0.12,phi));
+    camera.position.set(
+      target.x+radius*Math.sin(phi)*Math.cos(theta),
+      target.y+radius*Math.cos(phi),
+      target.z+radius*Math.sin(phi)*Math.sin(theta));
+    camera.lookAt(target);
+  }
+  applyCam();
+  const el=renderer.domElement;let drag=false,px=0,py=0;
+  const pt=e=>{const t=e.touches?e.touches[0]:e;return{x:t.clientX,y:t.clientY};};
+  const down=e=>{drag=true;const p=pt(e);px=p.x;py=p.y;};
+  const move=e=>{if(!drag)return;const p=pt(e);theta-=(p.x-px)*0.009;phi-=(p.y-py)*0.009;px=p.x;py=p.y;applyCam();};
+  const up=()=>{drag=false;};
+  el.addEventListener('mousedown',down);el.addEventListener('touchstart',down,{passive:true});
+  window.addEventListener('mousemove',move);window.addEventListener('touchmove',move,{passive:true});
+  window.addEventListener('mouseup',up);window.addEventListener('touchend',up);
+  const wheel=e=>{e.preventDefault();radius*=e.deltaY>0?1.08:0.92;radius=Math.max(3,Math.min(45,radius));applyCam();};
+  el.addEventListener('wheel',wheel,{passive:false});
+  const onResize=()=>{const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);};
+  window.addEventListener('resize',onResize);
+  const ctrl={engine:'three',scene,camera,renderer,THREE,autoRotate:true,
+    setCam(r,th,ph){if(r!=null)radius=r;if(th!=null)theta=th;if(ph!=null)phi=ph;home={radius,theta,phi};applyCam();},
+    reset(){radius=home.radius;theta=home.theta;phi=home.phi;applyCam();},
+    start(fn){this._fn=fn;const loop=()=>{this._raf=requestAnimationFrame(loop);if(this.autoRotate&&!drag){theta+=0.0028;applyCam();}if(this._fn)this._fn();renderer.render(scene,camera);};loop();},
+    dispose(){cancelAnimationFrame(this._raf);window.removeEventListener('mousemove',move);window.removeEventListener('touchmove',move);window.removeEventListener('mouseup',up);window.removeEventListener('touchend',up);window.removeEventListener('resize',onResize);
+      scene.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose());}});
+      renderer.dispose();if(el.parentNode)el.parentNode.removeChild(el);}
+  };
+  return ctrl;
+}
+/* helper primitif Three (pakai TS = scene aktif) */
+let TS=null;
+const _m=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.62,metalness:.18},o||{}));
+function add(mesh,x,y,z){mesh.position.set(x||0,y||0,z||0);TS.add(mesh);return mesh;}
+const bx=(w,h,d,c,o)=>new THREE.Mesh(new THREE.BoxGeometry(w,h,d),_m(c,o));
+const cy=(rt,rb,h,c,o)=>new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,(o&&o.seg)||24),_m(c,o));
+const sp=(r,c,o)=>new THREE.Mesh(new THREE.SphereGeometry(r,24,18),_m(c,o));
+const cn=(r,h,c,o)=>new THREE.Mesh(new THREE.ConeGeometry(r,h,(o&&o.seg)||20),_m(c,o));
+function ground(size,col){const s=size||50;const g=new THREE.Mesh(new THREE.PlaneGeometry(s,s),_m(col||0x0e1420,{metalness:0}));g.rotation.x=-Math.PI/2;TS.add(g);const grid=new THREE.GridHelper(s,Math.round(s/2),0x26344a,0x182234);grid.position.y=0.01;TS.add(grid);return g;}
+
+/* ---------- Babylon.js engine wrapper ---------- */
+function mkB(host){
+  const canvas=document.createElement('canvas');canvas.style.cssText='width:100%;height:100%;display:block;outline:none;touch-action:none';
+  host.appendChild(canvas);
+  const engine=new BABYLON.Engine(canvas,true,{preserveDrawingBuffer:true,stencil:true});
+  const scene=new BABYLON.Scene(engine);
+  scene.clearColor=new BABYLON.Color4(11/255,15/255,23/255,1);
+  const camera=new BABYLON.ArcRotateCamera('cam',Math.PI/3,Math.PI/2.6,13,new BABYLON.Vector3(0,1.2,0),scene);
+  camera.attachControl(canvas,true);
+  camera.lowerRadiusLimit=4;camera.upperRadiusLimit=46;camera.wheelPrecision=18;camera.panningSensibility=0;
+  camera.useAutoRotationBehavior=true;camera.autoRotationBehavior.idleRotationSpeed=0.25;
+  const hemi=new BABYLON.HemisphericLight('h',new BABYLON.Vector3(0.3,1,0.2),scene);hemi.intensity=0.85;hemi.groundColor=new BABYLON.Color3(.12,.15,.2);
+  const dir=new BABYLON.DirectionalLight('d',new BABYLON.Vector3(-0.6,-1,-0.5),scene);dir.intensity=0.65;dir.position=new BABYLON.Vector3(8,16,8);
+  engine.runRenderLoop(()=>{if(scene.activeCamera)scene.render();});
+  const onResize=()=>engine.resize();window.addEventListener('resize',onResize);
+  const ctrl={engine,scene,camera,BABYLON,autoRotate:true,
+    reset(){camera.alpha=Math.PI/3;camera.beta=Math.PI/2.6;camera.radius=13;},
+    dispose(){window.removeEventListener('resize',onResize);try{engine.stopRenderLoop();scene.dispose();engine.dispose();}catch(e){}if(canvas.parentNode)canvas.parentNode.removeChild(canvas);}
+  };
+  return ctrl;
+}
+function bmat(s,hex,o){const m=new BABYLON.StandardMaterial('m'+Math.random(),s);m.diffuseColor=BABYLON.Color3.FromHexString(hex);if(o&&o.emissive)m.emissiveColor=BABYLON.Color3.FromHexString(o.emissive);if(o&&o.alpha!=null)m.alpha=o.alpha;m.specularColor=new BABYLON.Color3(.15,.15,.15);return m;}
+
+/* ---------- mini UI kit untuk panel kontrol ---------- */
+function makeUI(host){
+  host.innerHTML='';
+  const api={
+    slider(label,min,max,val,step,oninput){
+      const w=document.createElement('div');w.className='f3d';
+      const l=document.createElement('label');const b=document.createElement('b');b.textContent=val;
+      l.append(document.createTextNode(label+' '));l.appendChild(b);
+      const i=document.createElement('input');i.type='range';i.min=min;i.max=max;i.value=val;i.step=step||1;
+      i.addEventListener('input',()=>{b.textContent=i.value;oninput(+i.value);});
+      w.appendChild(l);w.appendChild(i);host.appendChild(w);return i;
+    },
+    button(label,onclick,on){const b=document.createElement('button');b.className='btn3d'+(on?' on':'');b.textContent=label;b.onclick=()=>onclick(b);host.appendChild(b);return b;},
+    metric(label,val){const d=document.createElement('div');d.className='m3d';const s=document.createElement('span');s.textContent=label;const b=document.createElement('b');b.textContent=val;d.appendChild(s);d.appendChild(b);host.appendChild(d);return v=>{b.textContent=v;};},
+    note(html){const d=document.createElement('div');d.className='note3d';d.innerHTML=html;host.appendChild(d);return d;}
+  };
+  return api;
+}
+
+/* =========================================================================
+   REGISTRY 16 SIMULATOR 3D
+   ========================================================================= */
+const TRACKS3D=[
+ {id:'t1', icon:'🏢', engine:'three',   title:'Instalasi Bangunan', sub:'Ruangan 3D dengan lampu & sakelar — atur dimmer dan lihat iluminasi.'},
+ {id:'t2', icon:'⚙️', engine:'three',   title:'Industri: Motor Induksi', sub:'Motor 3 fasa berputar — atur kecepatan, start/stop, lihat rotor.'},
+ {id:'t3', icon:'🗼', engine:'three',   title:'Distribusi 20 kV', sub:'Tiang, konduktor & trafo distribusi — energize jaringan.'},
+ {id:'t4', icon:'⚡', engine:'three',   title:'Transmisi 150/500 kV', sub:'Menara transmisi & andongan (sag) konduktor — atur tegangan tarik.'},
+ {id:'t5', icon:'📊', engine:'three',   title:'Energy Data Science', sub:'Visualisasi 3D peramalan beban — atur tren pertumbuhan.'},
+ {id:'t6', icon:'🏬', engine:'three',   title:'Energy Auditor', sub:'Gedung 3D dengan heatmap konsumsi per lantai — naikkan efisiensi.'},
+ {id:'t7', icon:'🏭', engine:'three',   title:'Pembangkitan & EBT', sub:'Bauran pembangkit: turbin angin, PLTU, PLTS — geser share EBT.'},
+ {id:'t8', icon:'🔒', engine:'three',   title:'K3: LOTO Panel', sub:'Panel listrik dengan lock-out tag-out — kunci sebelum bekerja.'},
+ {id:'t9', icon:'🔌', engine:'three',   title:'Sales: Sizing Kabel', sub:'Penampang kabel & trafo membesar sesuai beban — pilih ukuran.'},
+ {id:'t10',icon:'☀️', engine:'babylon', title:'PV & Solar (Sun Path)', sub:'Array PLTS 3D + lintasan matahari 360° — atur kemiringan & waktu.'},
+ {id:'t11',icon:'🌱', engine:'three',   title:'Sustainability & Carbon', sub:'Emisi CO₂ vs penyerapan pohon — atur offset karbon.'},
+ {id:'t12',icon:'🔋', engine:'babylon', title:'EV & SPKLU', sub:'Mobil listrik mengisi daya di charger — atur daya, lihat SoC.'},
+ {id:'t13',icon:'♻️', engine:'three',   title:'Waste to Energy', sub:'PLTSa: insinerator & cerobong — atur ton sampah/hari.'},
+ {id:'t14',icon:'💧', engine:'babylon', title:'Hydrogen Electrolyzer', sub:'Elektrolisis air → gelembung H₂ & O₂ — atur daya elektroliser.'},
+ {id:'t15',icon:'🔋', engine:'babylon', title:'BESS Battery Storage', sub:'Kontainer baterai 3D dengan aliran charge/discharge — atur SoC.'},
+ {id:'t16',icon:'🤖', engine:'three',   title:'Kontrol & Otomasi', sub:'Konveyor + sensor + PLC — start/stop & atur kecepatan.'},
+];
+const SIMS3D={};
+
+/* ===== t1 Instalasi Bangunan (Three) ===== */
+SIMS3D.t1=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(11,0.8,1.0);
+  ground(40);
+  add(bx(8,0.2,6,0x1a2433),0,0.1,0);                 // lantai ruang
+  add(bx(8,0.15,6,0x222c3d),0,4,0);                  // plafon
+  const wallMat={roughness:.9,metalness:0};
+  add(bx(0.15,4,6,0x172030,wallMat),-4,2,0);
+  add(bx(8,4,0.15,0x172030,wallMat),0,2,-3);
+  const lampShade=add(cn(0.6,0.5,0x2a3445),0,3.55,0);lampShade.rotation.x=Math.PI;
+  const bulb=add(sp(0.28,0xffe9a8,{emissive:0xffd34d,emissiveIntensity:1}),0,3.15,0);
+  const lamp=new THREE.PointLight(0xffe6a0,1.2,22,2);lamp.position.set(0,3,0);TS.add(lamp);
+  add(bx(0.4,0.6,0.12,0x0e1622),-3.85,1.4,1.5);      // sakelar di dinding
+  const sw=add(bx(0.18,0.24,0.06,0xe8b339),-3.78,1.46,1.5);
+  // furnitur sederhana untuk skala
+  add(bx(1.6,0.8,0.9,0x3a4a63),2,0.6,1.2);
+  let on=true,bright=80;
+  function apply(){const f=on?bright/100:0;lamp.intensity=f*1.6;bulb.material.emissiveIntensity=on?bright/100:0.04;bulb.material.color.setHex(on?0xffe9a8:0x44484f);sw.position.y=on?1.46:1.34;mLux(Math.round(f*450)+' lx');mSt(on?'Menyala':'Mati');}
+  ui.slider('Kecerahan (dimmer)',5,100,80,5,v=>{bright=v;apply();});
+  ui.button('Saklar ON / OFF',()=>{on=!on;apply();});
+  const mLux=ui.metric('Iluminasi','—'),mSt=ui.metric('Status','—');
+  ui.note('Atur <b>dimmer</b> untuk mengubah intensitas cahaya & estimasi lux di bidang kerja. Drag untuk melihat tata ruang dari berbagai sudut.');
+  apply();return c;
+};
+
+/* ===== t2 Motor Induksi (Three) ===== */
+SIMS3D.t2=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(8,0.7,1.05);c.camera&&(c.scene.fog=null);
+  ground(40);
+  add(bx(4,0.5,2.2,0x141b27),0,0.25,0);              // base
+  add(bx(0.5,0.7,2.2,0x33445f),-1.4,0.85,0);         // terminal box side
+  const body=add(cy(0.95,0.95,2.6,0x46586f,{seg:32}),0.2,1.35,0);body.rotation.z=Math.PI/2;
+  // sirip pendingin
+  for(let i=0;i<10;i++){const f=add(cy(1.0,1.0,0.06,0x3a4a5f,{seg:32}),-1+ i*0.26,1.35,0);f.rotation.z=Math.PI/2;}
+  add(cy(0.55,0.55,0.5,0x2a3445,{seg:24}),1.7,1.35,0).rotation.z=Math.PI/2; // fan cover
+  const rotor=new THREE.Group();rotor.position.set(0.2,1.35,0);TS.add(rotor);
+  const shaft=cy(0.13,0.13,3.4,0xd6dce6,{seg:20});shaft.rotation.z=Math.PI/2;rotor.add(shaft);
+  for(let i=0;i<7;i++){const bl=bx(0.04,0.42,0.16,0xe8b339);bl.position.set(1.55,0,0);bl.rotation.x=i*Math.PI/3.5;rotor.add(bl);}
+  const pulley=cy(0.32,0.32,0.22,0xc9763b,{seg:24});pulley.rotation.z=Math.PI/2;pulley.position.set(-1.75,0,0);rotor.add(pulley);
+  let rpm=1200,run=true;
+  ui.slider('Kecepatan (rpm)',0,1500,1200,50,v=>{rpm=v;mRpm(v+' rpm');});
+  ui.button('Start / Stop',(b)=>{run=!run;b.classList.toggle('on',run);b.textContent=run?'■ Stop':'▶ Start';mSt(run?'Berjalan':'Berhenti');},true);
+  const mRpm=ui.metric('Putaran','1200 rpm'),mSt=ui.metric('Status','Berjalan'),mSlip=ui.metric('Slip (≈)','3.0 %');
+  ui.note('Motor induksi 3 fasa: <b>rotor</b> berputar saat distart. Naikkan rpm mendekati kecepatan sinkron (1500 rpm @ 4 kutub/50 Hz) → slip mengecil.');
+  c.start(()=>{if(run)rotor.rotation.x+=rpm/9000;mSlip(((1500-rpm)/1500*100).toFixed(1)+' %');});
+  return c;
+};
+
+/* ===== t3 Distribusi 20kV (Three) ===== */
+SIMS3D.t3=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(15,0.8,1.0);
+  ground(50);
+  function pole(x){const p=add(cy(0.16,0.22,7,0x6b7280,{seg:14}),x,3.5,0);
+    add(bx(2.6,0.18,0.18,0x4b5563),x,6.4,0);add(bx(2.0,0.16,0.16,0x4b5563),x,5.8,0);
+    return p;}
+  pole(-6);pole(6);
+  const condMat=()=>_m(0x222c3d,{metalness:.6});
+  const wires=[];const ys=[6.55,5.95],xo=[-1.2,0,1.2];
+  [6.55,5.95,6.55].forEach((y,i)=>{const off=[-1.1,0,1.1][i];
+    const w=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,12.2,8),condMat());w.rotation.z=Math.PI/2;w.position.set(0,6.25-Math.abs(off)*0,0);w.position.z=off;w.position.y=i===1?6.45:6.25;TS.add(w);wires.push(w);});
+  // trafo distribusi pada tiang
+  add(cy(0.7,0.7,1.4,0x55617a,{seg:20}),6,3.0,1.2);
+  add(bx(0.3,0.3,0.3,0x8a93a6),6,3.9,1.2);
+  // rumah pelanggan
+  add(bx(2,1.4,2,0x3a4a63),9,0.7,3);add(cn(1.6,1.1,0xc9763b,{seg:4}),9,2.1,3).rotation.y=Math.PI/4;
+  let live=true,load=60;
+  function apply(){const col=live?0xffd34d:0x222c3d;wires.forEach(w=>{w.material.color.setHex(col);w.material.emissive&&w.material.emissive.setHex(live?0x3a2f00:0);});mV(live?(20-load*0.02).toFixed(1)+' kV':'0 kV');mSt(live?'Bertegangan':'Padam');}
+  ui.button('Energize / Isolasi',(b)=>{live=!live;b.classList.toggle('on',live);apply();},true);
+  ui.slider('Beban penyulang',0,100,60,5,v=>{load=v;apply();});
+  const mV=ui.metric('Tegangan ujung','—'),mSt=ui.metric('Status','—');
+  ui.note('Jaringan distribusi 20 kV: tiga konduktor fasa + trafo distribusi menurunkan ke 220/380 V untuk pelanggan. Beban tinggi → drop tegangan di ujung.');
+  apply();return c;
+};
+
+/* ===== t4 Transmisi & sag (Three) ===== */
+SIMS3D.t4=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(20,0.8,0.95);
+  ground(60);
+  function tower(x){const g=new THREE.Group();g.position.x=x;TS.add(g);
+    const legs=[[-1.2,-1.2],[1.2,-1.2],[-1.2,1.2],[1.2,1.2]];
+    legs.forEach(([a,b])=>{const L=add(cy(0.12,0.18,11,0x8a93a6,{seg:8}),0,5.5,0);L.position.set(a*0.45,5.5,b*0.45);L.lookAt(new THREE.Vector3(a*0.05,11,b*0.05));g.add(L);TS.remove(L);g.add(L);});
+    for(let h=2;h<=10;h+=2){const br=bx(2.2-h*0.12,0.1,0.1,0x6b7280);br.position.y=h;g.add(br);const br2=br.clone();br2.rotation.y=Math.PI/2;g.add(br2);}
+    [9.5,8].forEach(yy=>{const arm=bx(5,0.16,0.16,0x6b7280);arm.position.y=yy;g.add(arm);});
+    return g;}
+  tower(-9);tower(9);
+  let sag=2.2,kv='150';const tubes=[];
+  function buildWires(){tubes.forEach(t=>{TS.remove(t);t.geometry.dispose();});tubes.length=0;
+    [[ -2.2,9.5],[0,8],[2.2,9.5]].forEach(([z,y])=>{
+      const curve=new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-9,y,z),new THREE.Vector3(0,y-sag,z),new THREE.Vector3(9,y,z)]);
+      const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,30,0.06,6,false),_m(0x2a3445,{metalness:.7}));
+      TS.add(tube);tubes.push(tube);});}
+  ui.slider('Tegangan tarik (kN)',10,90,45,5,v=>{sag=3.6-v/30;buildWires();mSag(sag.toFixed(2)+' m');});
+  ui.button('150 kV / 500 kV',(b)=>{kv=kv==='150'?'500':'150';b.textContent=kv+' kV';mKv(kv+' kV');},false);
+  const mSag=ui.metric('Andongan (sag)','—'),mKv=ui.metric('Tegangan','150 kV'),mCl=ui.metric('Clearance','—');
+  ui.note('Andongan (<b>sag</b>) konduktor turun bila tegangan tarik kecil/ suhu naik. Sag terlalu besar → jarak aman (clearance) ke tanah berkurang.');
+  buildWires();mSag(sag.toFixed(2)+' m');
+  c.start(()=>{mCl((11-2.2- (3.6-45/30)).toFixed(2));}); // statis tampil
+  return c;
+};
+
+/* ===== t5 Energy Data Science (Three) ===== */
+SIMS3D.t5=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(16,0.7,1.0);c.setCam(16,0.7,1.0);
+  ground(40);
+  const bars=[],n=12,base=[];
+  for(let i=0;i<n;i++){const b=add(bx(0.7,1,0.7,0x5b8cff,{emissive:0x10203f,emissiveIntensity:.4}),(i-n/2)*1.1+0.5,0.5,0);bars.push(b);base.push(2+Math.sin(i*0.6)*0.6);}
+  let growth=4,t=0;
+  ui.slider('Pertumbuhan beban (%/th)',0,12,4,1,v=>growth=v);
+  const mPk=ui.metric('Proyeksi puncak','—'),mGr=ui.metric('Tren','—');
+  ui.note('Tiap batang = peramalan beban bulanan. Naikkan <b>pertumbuhan</b> → tren menanjak (load forecasting untuk perencanaan kapasitas).');
+  c.start(()=>{t+=0.02;let pk=0;bars.forEach((b,i)=>{const h=base[i]*(1+growth/100*i*0.5)*(1+Math.sin(t+i)*0.05);b.scale.y=h;b.position.y=h*0.5;const r=Math.min(1,h/9);b.material.color.setRGB(0.36+r*0.5,0.55-r*0.3,1-r*0.7);pk=Math.max(pk,h);});mPk((pk*55).toFixed(0)+' MW');mGr('+'+growth+'%/th');});
+  return c;
+};
+
+/* ===== t6 Energy Auditor (Three) ===== */
+SIMS3D.t6=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(15,0.7,1.0);
+  ground(40);
+  const floors=[],n=7;
+  for(let i=0;i<n;i++){const f=add(bx(4,0.9,4,0xff5d5d,{emissive:0x200,emissiveIntensity:.3}),0,0.55+i*1.0,0);floors.push(f);
+    add(bx(4.05,0.06,4.05,0x0e1420),0,1.05+i*1.0,0);}
+  let eff=40;
+  function apply(){floors.forEach((f,i)=>{const use=(1-eff/100)*(0.6+i*0.06);const r=Math.min(1,use*1.4);f.material.color.setRGB(0.3+r*0.7,0.85-r*0.6,0.3);});mIdx(Math.round((1-eff/100)*210)+' kWh/m²');mEff(eff+'%');}
+  ui.slider('Tingkat efisiensi',0,90,40,5,v=>{eff=v;apply();});
+  const mIdx=ui.metric('Intensitas energi','—'),mEff=ui.metric('Efisiensi','—');
+  ui.note('Heatmap konsumsi energi per lantai (hijau = hemat, merah = boros). Naikkan <b>efisiensi</b> (retrofit, LED, HVAC) → IKE turun mendekati target ASEAN.');
+  apply();return c;
+};
+
+/* ===== t7 Pembangkitan & EBT (Three) ===== */
+SIMS3D.t7=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(17,0.75,1.0);
+  ground(50);
+  // PLTU cooling tower + cerobong
+  const tower=add(cy(1.6,2.2,4,0x55617a,{seg:28}),-6,2,-1);
+  const stack=add(cy(0.5,0.6,5,0x8a93a6,{seg:16}),-9,2.5,-1);
+  // turbin angin
+  const mast=add(cy(0.18,0.22,6,0xe7edf6),3,3,2);
+  const hub=add(sp(0.35,0xcfd6e0),3,6,2);
+  const blades=new THREE.Group();blades.position.set(3,6,2.3);TS.add(blades);
+  for(let i=0;i<3;i++){const bl=bx(0.12,3.2,0.5,0xf3f6fb);bl.position.y=1.6;const g=new THREE.Group();g.add(bl);g.rotation.z=i*2*Math.PI/3;blades.add(g);}
+  // PLTS
+  for(let i=0;i<3;i++)for(let j=0;j<3;j++){const p=add(bx(1.1,0.06,0.7,0x16306b,{emissive:0x0a1a3a,emissiveIntensity:.5}),7+i*1.3,0.5,-3+j*0.9);p.rotation.x=-0.5;}
+  let ebt=40;
+  function apply(){const f=ebt/100;stack.material.emissive=new THREE.Color(0x000000);tower.material.color.setRGB(0.33+(1-f)*0.3,0.38,0.48);mShare(ebt+'%');mCo2((1-f)*0.85).toFixed(2)+'';mCo2(((1-f)*620).toFixed(0)+' g/kWh');}
+  ui.slider('Bauran EBT',0,100,40,5,v=>{ebt=v;apply();});
+  const mShare=ui.metric('Share EBT','—'),mCo2=ui.metric('Intensitas CO₂','—');
+  ui.note('Bauran pembangkitan: PLTU (termal) + PLTB (angin) + PLTS (surya). Naikkan <b>share EBT</b> → faktor emisi grid (g CO₂/kWh) turun.');
+  c.start(()=>{const spd=0.01+ebt/100*0.06;blades.rotation.z+=spd;});
+  apply();return c;
+};
+
+/* ===== t8 K3 LOTO (Three) ===== */
+SIMS3D.t8=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(9,0.7,1.05);
+  ground(30);
+  add(bx(3,4.5,1,0x2a3445),0,2.4,0);                 // panel
+  add(bx(2.6,4.1,0.1,0x141b27),0,2.4,0.5);
+  const handle=add(bx(0.4,1.0,0.3,0xe8b339),-0.7,3.2,0.65);
+  const lamp=add(sp(0.18,0xff5d5d,{emissive:0xff5d5d,emissiveIntensity:1}),0.8,4.1,0.65);
+  const lock=add(cy(0.18,0.18,0.12,0x3ddc84,{seg:18}),-0.7,3.9,0.8);lock.rotation.x=Math.PI/2;lock.visible=false;
+  const shackle=add(new THREE.Mesh(new THREE.TorusGeometry(0.12,0.04,8,16),_m(0xcfd6e0)),-0.7,4.0,0.8);shackle.visible=false;
+  let energized=true,locked=false;
+  function apply(){
+    if(locked){handle.position.y=2.6;handle.material.color.setHex(0x3ddc84);energized=false;}
+    else handle.material.color.setHex(0xe8b339);
+    lamp.material.color.setHex(energized?0xff5d5d:0x1f4a2c);lamp.material.emissive.setHex(energized?0xff5d5d:0x0a2a16);
+    lock.visible=shackle.visible=locked;
+    mEn(energized?'⚠ BERTEGANGAN':'✓ Aman (mati)');mLk(locked?'Terkunci (LOTO)':'Belum dikunci');}
+  ui.button('Buka / Tutup pemutus',()=>{if(locked){alert('Tidak bisa: pemutus sudah dikunci LOTO. Lepas gembok dulu.');return;}energized=!energized;handle.position.y=energized?3.2:2.6;apply();});
+  ui.button('Pasang / Lepas gembok (LOTO)',(b)=>{if(energized&&!locked){alert('Matikan pemutus dulu sebelum memasang gembok!');return;}locked=!locked;b.classList.toggle('on',locked);apply();},false);
+  const mEn=ui.metric('Energi','—'),mLk=ui.metric('Gembok','—');
+  ui.note('Prosedur <b>LOTO</b>: matikan pemutus → pasang gembok & label → verifikasi tegangan nol. Selama terkunci, pemutus tak bisa ditutup kembali.');
+  apply();return c;
+};
+
+/* ===== t9 Sales: sizing kabel (Three) ===== */
+SIMS3D.t9=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(10,0.7,1.0);
+  ground(30);
+  add(bx(2,2,2,0x55617a),-3.5,1,0);                  // trafo box
+  add(cy(0.2,0.2,1.2,0x8a93a6,{seg:12}),-3.5,2.6,0);
+  const insul=add(cy(1.6,1.6,3.2,0x1a2433,{seg:40,alpha:1,transparent:true,opacity:.25}),2,1.6,0);insul.rotation.z=Math.PI/2;
+  const cond=add(cy(0.6,0.6,3.4,0xc9763b,{seg:40,metalness:.6}),2,1.6,0);cond.rotation.z=Math.PI/2;
+  const CABLE=[{mm2:16,a:82,r:.6},{mm2:35,a:135,r:.85},{mm2:70,a:207,r:1.1},{mm2:120,a:292,r:1.35},{mm2:185,a:382,r:1.6},{mm2:240,a:453,r:1.85}];
+  let load=120;
+  function pick(I){const need=I*1.25;return CABLE.find(c=>c.a>=need)||CABLE[CABLE.length-1];}
+  function apply(){const I=load*1000/(Math.sqrt(3)*400*0.85);const cab=pick(I);
+    cond.scale.set(cab.r/0.9,1,cab.r/0.9);insul.scale.set((cab.r+0.5)/1.0,1,(cab.r+0.5)/1.0);
+    const trafo=[100,160,200,250,315,400,500,630].find(t=>t>=load/0.85*1.25)||630;
+    mI(I.toFixed(0)+' A');mC(cab.mm2+' mm²');mT(trafo+' kVA');}
+  ui.slider('Beban (kW)',10,400,120,10,v=>{load=v;apply();});
+  const mI=ui.metric('Arus desain','—'),mC=ui.metric('Kabel terpilih','—'),mT=ui.metric('Trafo','—');
+  ui.note('Beban naik → arus naik → penampang kabel (mm²) & rating trafo (kVA) ikut membesar. Konduktor tembaga ditampilkan membesar secara nyata.');
+  apply();return c;
+};
+
+/* ===== t11 Sustainability & Carbon (Three) ===== */
+SIMS3D.t11=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(15,0.75,1.0);
+  ground(40);
+  add(bx(3,2.5,2,0x55617a),-5,1.25,0);               // pabrik
+  const stack=add(cy(0.4,0.5,2.5,0x8a93a6,{seg:14}),-5.8,3,0);
+  const puffs=[];for(let i=0;i<14;i++){const p=add(sp(0.4,0x6b7280,{transparent:true,opacity:.7}),-5.8,4.3,0);p.userData={t:i/14};puffs.push(p);}
+  const trees=[];function makeTrees(k){trees.forEach(t=>TS.remove(t));trees.length=0;for(let i=0;i<k;i++){const g=new THREE.Group();g.add(add(cy(0.12,0.16,0.7,0x6b4f2a),0,0.35,0));TS.remove(g.children[0]);g.add(g.children[0]);const cone=cn(0.6,1.4,0x2f8f4f);cone.position.y=1.1;g.add(cone);g.position.set(2+ (i%6)*1.3, 0,(Math.floor(i/6))*1.3-1);TS.add(g);trees.push(g);}}
+  let offset=30;
+  function apply(){const rate=1-offset/100;puffs.forEach(p=>p.visible=p.userData.t< (0.3+rate*0.7));makeTrees(Math.round(offset/100*18));mNet(((1-offset/100)*1200).toFixed(0)+' tCO₂/th');mOff(offset+'%');}
+  ui.slider('Offset / penyerapan',0,100,30,5,v=>{offset=v;apply();});
+  const mNet=ui.metric('Emisi neto','—'),mOff=ui.metric('Offset','—');
+  ui.note('Emisi pabrik (asap) vs penyerapan karbon (pohon/reboisasi & EBT). Naikkan <b>offset</b> → asap berkurang, tegakan pohon bertambah, menuju net-zero.');
+  c.start(()=>{puffs.forEach(p=>{if(!p.visible)return;p.userData.t+=0.006;if(p.userData.t>1)p.userData.t=0;const t=p.userData.t;p.position.y=4.3+t*4;p.position.x=-5.8+t*2;p.scale.setScalar(0.5+t*1.6);p.material.opacity=0.7*(1-t);});});
+  apply();return c;
+};
+
+/* ===== t13 Waste to Energy (Three) ===== */
+SIMS3D.t13=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(16,0.75,1.0);
+  ground(45);
+  add(bx(5,3,4,0x46586f),0,1.5,0);                   // gedung
+  add(bx(2,2,2,0x33445f),-2,1,3);                    // bunker sampah
+  const stack=add(cy(0.6,0.8,6,0x8a93a6,{seg:18}),3,3,-0.5);
+  const flame=add(cn(0.7,1.4,0xff7a18,{emissive:0xff5d00,emissiveIntensity:1}),-2,2.4,3);
+  // turbin/genset indikator
+  const gen=add(cy(0.6,0.6,1.6,0xe8b339,{seg:20}),2,1.0,1.8);gen.rotation.z=Math.PI/2;
+  let tons=1000;
+  function apply(){const mw=tons*1000*10*0.22/3600/24;flame.scale.setScalar(0.6+tons/3000);mMW(mw.toFixed(1)+' MW');mHome(Math.round(mw*1000/1.25)+' rumah');mT(tons+' ton/hari');}
+  ui.slider('Sampah masuk',200,3000,1000,100,v=>{tons=v;apply();});
+  const mMW=ui.metric('Daya listrik','—'),mHome=ui.metric('Setara','—'),mT=ui.metric('Input','—');
+  ui.note('PLTSa membakar sampah (LHV ~10 MJ/kg) → uap → turbin. Makin banyak ton/hari → nyala tungku & output MW membesar.');
+  c.start(()=>{gen.rotation.x+=0.1+tons/20000;flame.material.emissiveIntensity=0.8+Math.sin(Date.now()*0.01)*0.2;});
+  apply();return c;
+};
+
+/* ===== t16 Kontrol & Otomasi (Three) ===== */
+SIMS3D.t16=(host,ui)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(13,0.7,1.0);
+  ground(40);
+  add(bx(10,0.5,2,0x2a3445),0,0.6,0);                // konveyor
+  for(let i=0;i<2;i++)add(cy(0.5,0.5,2,0x55617a,{seg:20}),-4.5+i*9,0.6,0).rotation.x=Math.PI/2;
+  add(bx(1.2,2,1,0x141b27),5.5,1.5,0);               // panel PLC
+  const plcLed=add(sp(0.12,0x3ddc84,{emissive:0x3ddc84,emissiveIntensity:1}),5.5,2.2,0.55);
+  add(bx(0.3,0.8,0.3,0xe8b339),-5.5,1.4,0.9);        // sensor tiang
+  const boxes=[];for(let i=0;i<5;i++){const b=add(bx(0.9,0.9,0.9,0xc9763b),-4.5+i*2.2,1.3,0);boxes.push(b);}
+  let run=true,speed=5;
+  ui.button('Start / Stop',(b)=>{run=!run;b.classList.toggle('on',run);b.textContent=run?'■ Stop':'▶ Start';plcLed.material.color.setHex(run?0x3ddc84:0xff5d5d);plcLed.material.emissive.setHex(run?0x3ddc84:0xff5d5d);mSt(run?'RUN':'STOP');},true);
+  ui.slider('Kecepatan konveyor',1,12,5,1,v=>{speed=v;mSp(v+'');});
+  const mSt=ui.metric('Status PLC','RUN'),mSp=ui.metric('Kecepatan','5'),mCnt=ui.metric('Terhitung','0');let count=0,last=0;
+  ui.note('Konveyor digerakkan motor via <b>PLC</b>. Sensor menghitung objek yang lewat. Start/stop & atur kecepatan — LED hijau = RUN, merah = STOP.');
+  c.start(()=>{if(!run)return;boxes.forEach(b=>{b.position.x+=speed*0.01;if(b.position.x>5){b.position.x=-5;count++;mCnt(count+'');}});});
+  return c;
+};
+
+/* ===== t10 PV & Solar — Babylon (sun path 360°) ===== */
+SIMS3D.t10=(host,ui)=>{
+  const c=mkB(host);const s=c.scene,B=BABYLON;
+  const gnd=B.MeshBuilder.CreateGround('g',{width:40,height:40},s);gnd.material=bmat(s,'#0e1420');
+  // array panel
+  const panels=[];const pmat=bmat(s,'#16306b',{emissive:'#0a1a3a'});
+  for(let i=0;i<4;i++)for(let j=0;j<3;j++){const p=B.MeshBuilder.CreateBox('p',{width:2.2,height:0.08,depth:1.3},s);p.position.set(i*2.6-3.9,0.9,j*1.7-1.7);p.material=pmat;panels.push(p);}
+  // matahari
+  const sun=B.MeshBuilder.CreateSphere('sun',{diameter:1.4},s);sun.material=bmat(s,'#ffd34d',{emissive:'#ffcc33'});
+  const sunLight=new B.DirectionalLight('sl',new B.Vector3(0,-1,0),s);sunLight.intensity=1.2;
+  let tilt=20,hour=12,auto=true;
+  function update(){
+    const a=(hour-6)/12*Math.PI;                     // 6→18 jam = 0→π
+    const sx=Math.cos(a)*-12, sy=Math.sin(a)*12, sz=-3;
+    sun.position.set(sx,Math.max(0.5,sy),sz);
+    sunLight.direction=new B.Vector3(-sx,-Math.max(0.5,sy),-sz).normalize();
+    const tr=tilt*Math.PI/180;panels.forEach(p=>p.rotation.x=-tr);
+    // output = max(0, dot(sunDir, panelNormal)) * faktor siang
+    const sunDir=new B.Vector3(sx,Math.max(0.01,sy),sz).normalize();
+    const nrm=new B.Vector3(0,Math.cos(tr),-Math.sin(tr));
+    const dot=Math.max(0,B.Vector3.Dot(sunDir,nrm));
+    const day=sy>0?1:0;const out=dot*day;
+    pmat.emissiveColor=new B.Color3(0.04+out*0.5,0.1+out*0.5,0.22+out*0.3);
+    mOut((out*100).toFixed(0)+' %');mIrr((out*1000).toFixed(0)+' W/m²');mH(hour.toFixed(0)+':00');
+  }
+  ui.slider('Kemiringan panel (tilt)',0,60,20,5,v=>{tilt=v;update();});
+  ui.slider('Waktu (jam)',6,18,12,1,v=>{hour=v;auto=false;update();});
+  ui.button('Animasi matahari',(b)=>{auto=!auto;b.classList.toggle('on',auto);},true);
+  const mOut=ui.metric('Output relatif','—'),mIrr=ui.metric('Iradiansi efektif','—'),mH=ui.metric('Jam','—');
+  ui.note('Lintasan <b>matahari</b> bergerak 360° dari timur (06:00) ke barat (18:00). Output maksimum saat sinar tegak lurus panel — atur tilt optimal.');
+  s.onBeforeRenderObservable.add(()=>{if(auto){hour+=0.02;if(hour>18)hour=6;update();}});
+  update();return c;
+};
+
+/* ===== t12 EV & SPKLU — Babylon ===== */
+SIMS3D.t12=(host,ui)=>{
+  const c=mkB(host);const s=c.scene,B=BABYLON;
+  B.MeshBuilder.CreateGround('g',{width:36,height:36},s).material=bmat(s,'#0e1420');
+  // mobil
+  const car=new B.TransformNode('car',s);
+  const body=B.MeshBuilder.CreateBox('b',{width:4.2,height:0.9,depth:1.9},s);body.position.y=1;body.material=bmat(s,'#2f6fe0');body.parent=car;
+  const cab=B.MeshBuilder.CreateBox('c',{width:2.2,height:0.85,depth:1.7},s);cab.position.set(-0.2,1.75,0);cab.material=bmat(s,'#9db4ff',{alpha:0.85});cab.parent=car;
+  [[-1.3,0.9],[1.3,0.9],[-1.3,-0.9],[1.3,-0.9]].forEach(([x,z])=>{const w=B.MeshBuilder.CreateCylinder('w',{diameter:0.9,height:0.4},s);w.rotation.x=Math.PI/2;w.position.set(x,0.5,z);w.material=bmat(s,'#15171f');w.parent=car;});
+  car.position.x=-1.5;
+  // charger
+  const pyl=B.MeshBuilder.CreateBox('py',{width:0.6,height:2.4,depth:0.6},s);pyl.position.set(4,1.2,1.5);pyl.material=bmat(s,'#1a2433');
+  const screen=B.MeshBuilder.CreateBox('sc',{width:0.5,height:0.7,depth:0.05},s);screen.position.set(4,1.7,1.18);screen.material=bmat(s,'#3ddc84',{emissive:'#1f6b3a'});
+  // kabel pulsa
+  const pulse=B.MeshBuilder.CreateSphere('pl',{diameter:0.22},s);pulse.material=bmat(s,'#3ddc84',{emissive:'#3ddc84'});
+  let kw=22,soc=20,charging=true;
+  function update(){const t=Math.min(1,soc/100);screen.material.emissiveColor=new B.Color3(0.1+(1-t)*0.4,0.2+t*0.5,0.1);mSoc(soc.toFixed(0)+' %');mKw(kw+' kW');const battKWh=50;const need=(80-soc)/100*battKWh;mEta(soc>=80?'Penuh (80%)':((need/kw)*60).toFixed(0)+' menit ke 80%');}
+  ui.slider('Daya charger (kW)',7,150,22,1,v=>{kw=v;update();});
+  ui.button('Mulai / Jeda mengisi',(b)=>{charging=!charging;b.classList.toggle('on',charging);},true);
+  ui.button('Reset SoC',()=>{soc=20;update();});
+  const mSoc=ui.metric('State of Charge','—'),mKw=ui.metric('Daya','—'),mEta=ui.metric('Estimasi','—');
+  ui.note('Mobil listrik mengisi via SPKLU. Daya tinggi → pengisian cepat (taper di atas 80%). Gelembung hijau = aliran energi dari charger ke baterai.');
+  let pp=0;
+  s.onBeforeRenderObservable.add(()=>{const dt=s.getEngine().getDeltaTime()/1000;
+    if(charging&&soc<100){const rate=soc<80?kw:kw*0.4;soc=Math.min(100,soc+rate/50*dt);update();}
+    pp=(pp+dt*0.6)%1;const ax=4-(4-(-1.5))*pp;pulse.position.set(ax,1.6-pp*0.5,1.0);pulse.isVisible=charging;});
+  update();return c;
+};
+
+/* ===== t14 Hydrogen Electrolyzer — Babylon ===== */
+SIMS3D.t14=(host,ui)=>{
+  const c=mkB(host);const s=c.scene,B=BABYLON;
+  B.MeshBuilder.CreateGround('g',{width:30,height:30},s).material=bmat(s,'#0e1420');
+  const tank=B.MeshBuilder.CreateCylinder('tk',{diameter:5,height:5,tessellation:40},s);tank.position.y=2.6;tank.material=bmat(s,'#9db4ff',{alpha:0.18});
+  const water=B.MeshBuilder.CreateCylinder('w',{diameter:4.8,height:4.2,tessellation:40},s);water.position.y=2.3;water.material=bmat(s,'#1f6fae',{alpha:0.5});
+  // elektroda
+  const an=B.MeshBuilder.CreateBox('an',{width:0.3,height:3.6,depth:0.3},s);an.position.set(-1.1,2.4,0);an.material=bmat(s,'#c9763b');
+  const ca=B.MeshBuilder.CreateBox('ca',{width:0.3,height:3.6,depth:0.3},s);ca.position.set(1.1,2.4,0);ca.material=bmat(s,'#cfd6e0');
+  const h2=[],o2=[];
+  for(let i=0;i<24;i++){const b=B.MeshBuilder.CreateSphere('h',{diameter:0.22},s);b.material=bmat(s,'#3ddc84',{emissive:'#1f6b3a'});b.position.set(1.1+(Math.random()-.5)*0.5,0.6+Math.random()*4,(Math.random()-.5)*0.5);h2.push(b);}
+  for(let i=0;i<16;i++){const b=B.MeshBuilder.CreateSphere('o',{diameter:0.2},s);b.material=bmat(s,'#5b8cff',{emissive:'#1a3a7a'});b.position.set(-1.1+(Math.random()-.5)*0.5,0.6+Math.random()*4,(Math.random()-.5)*0.5);o2.push(b);}
+  let mw=10;
+  function update(){const kg=mw*1000*24*0.65/52;mKg(kg.toFixed(0)+' kg/hari');mW2((kg*9).toFixed(0)+' L/hari');mP(mw+' MW');}
+  ui.slider('Daya elektroliser (MW)',1,50,10,1,v=>{mw=v;update();});
+  const mKg=ui.metric('Produksi H₂','—'),mW2=ui.metric('Air dibutuhkan','—'),mP=ui.metric('Daya','—');
+  ui.note('Elektrolisis air: katoda menghasilkan <b style="color:#3ddc84">H₂</b> (gelembung hijau, 2×), anoda <b style="color:#5b8cff">O₂</b> (biru). Daya naik → laju gelembung naik.');
+  s.onBeforeRenderObservable.add(()=>{const sp=0.01+mw/50*0.06;const upd=arr=>arr.forEach(b=>{b.position.y+=sp*(1+Math.random()*0.4);if(b.position.y>4.6){b.position.y=0.6;}});upd(h2);upd(o2);});
+  update();return c;
+};
+
+/* ===== t15 BESS — Babylon ===== */
+SIMS3D.t15=(host,ui)=>{
+  const c=mkB(host);const s=c.scene,B=BABYLON;
+  B.MeshBuilder.CreateGround('g',{width:32,height:32},s).material=bmat(s,'#0e1420');
+  // kontainer
+  const cont=B.MeshBuilder.CreateBox('ct',{width:8,height:3.2,depth:3},s);cont.position.y=1.7;cont.material=bmat(s,'#33445f');
+  // rak modul baterai (LED)
+  const mods=[];const mmat=bmat(s,'#3ddc84',{emissive:'#1f6b3a'});
+  for(let r=0;r<3;r++)for(let col=0;col<8;col++){const m=B.MeshBuilder.CreateBox('m',{width:0.7,height:0.7,depth:0.2},s);m.position.set(col*0.9-3.15,0.9+r*0.95,1.55);m.material=mmat;mods.push(m);}
+  // panah aliran
+  const arrow=B.MeshBuilder.CreateCylinder('ar',{diameterTop:0,diameterBottom:0.5,height:1,tessellation:4},s);arrow.position.set(0,4.4,0);arrow.material=bmat(s,'#e8b339',{emissive:'#7a5a00'});
+  let soc=60,mode=1; // 1=charge,-1=discharge,0=idle
+  function update(){const lit=Math.round(soc/100*24);mods.forEach((m,i)=>{m.material=i<lit?mmat:bmat(s,'#1a2433');});
+    arrow.rotation.z=mode===1?0:Math.PI;arrow.isVisible=mode!==0;arrow.material=bmat(s,mode===1?'#3ddc84':'#ff9d4d',{emissive:mode===1?'#1f6b3a':'#7a3a00'});
+    mSoc(soc.toFixed(0)+' %');mMode(mode===1?'⬆ Charging':mode===-1?'⬇ Discharging':'Idle');mE((soc/100*4).toFixed(2)+' MWh');}
+  ui.button('Charge / Discharge / Idle',(b)=>{mode=mode===1?-1:mode===-1?0:1;update();});
+  ui.slider('State of Charge',0,100,60,5,v=>{soc=v;update();});
+  const mSoc=ui.metric('SoC','—'),mMode=ui.metric('Mode','—'),mE=ui.metric('Energi','—');
+  ui.note('Kontainer <b>BESS</b> (kapasitas ~4 MWh). Modul menyala sesuai SoC. Mode charge mengisi dari grid/PV (peak shaving), discharge menyuplai saat beban puncak.');
+  s.onBeforeRenderObservable.add(()=>{const dt=s.getEngine().getDeltaTime()/1000;if(mode!==0){soc=Math.max(0,Math.min(100,soc+mode*4*dt));if(soc<=0||soc>=100)mode=0;update();}arrow.position.y=4.2+Math.sin(Date.now()*0.005)*0.2;});
+  update();return c;
+};
+
+/* =========================================================================
+   ROUTER / lifecycle
+   ========================================================================= */
+let current=null;
+const $=id=>document.getElementById(id);
+function buildHub(){
+  $('hubGrid').innerHTML=TRACKS3D.map((t,i)=>`
+    <button class="card" data-id="${t.id}">
+      <div class="card-ic">${t.icon}
+        <span class="card-eng ${t.engine==='three'?'eng-three':'eng-babylon'}">${t.engine==='three'?'Three.js':'Babylon.js'}</span>
+        <span class="card-arrow">→</span></div>
+      <div class="card-body">
+        <div class="card-no">LAB 3D · ${String(i+1).padStart(2,'0')}</div>
+        <div class="card-title">${t.title}</div>
+        <div class="card-sub">${t.sub}</div>
+      </div>
+    </button>`).join('');
+  $('hubGrid').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>openSim(b.getAttribute('data-id'))));
+}
+function showHub(){
+  if(current&&current.dispose){current.dispose();current=null;}
+  $('hub').style.display='block';$('stage').style.display='none';$('backBtn').style.display='none';
+  $('crumb').textContent='16 Lab 3D';window.scrollTo(0,0);
+}
+async function openSim(id){
+  const t=TRACKS3D.find(x=>x.id===id);if(!t)return;
+  if(current&&current.dispose){current.dispose();current=null;}
+  $('hub').style.display='none';$('stage').style.display='block';$('backBtn').style.display='inline-flex';
+  $('crumb').textContent=t.title;$('stIc').textContent=t.icon;$('stTitle').textContent=t.title;
+  $('stSub').innerHTML=t.sub+`  <span style="color:#5b6b82">· ${t.engine==='three'?'Three.js':'Babylon.js'}</span>`;
+  $('ctrlTitle').textContent='Kontrol';
+  const host=$('stage3d');host.innerHTML='';
+  const loader=$('loader');loader.style.display='grid';$('loadMsg').textContent='Memuat mesin '+(t.engine==='three'?'Three.js':'Babylon.js')+'…';
+  $('autoBtn').classList.add('on');
+  window.scrollTo(0,0);
+  try{
+    if(t.engine==='three')await ensureThree();else await ensureBabylon();
+    const ui=makeUI($('ctrl3d'));
+    // tunggu layout agar clientWidth benar
+    await new Promise(r=>requestAnimationFrame(r));
+    current=SIMS3D[id](host,ui);
+    loader.style.display='none';
+  }catch(e){
+    loader.style.display='none';
+    host.innerHTML='<div class="errbox">Gagal memuat simulator 3D: '+(e&&e.message||e)+'.<br>Pastikan browser mendukung WebGL & koneksi internet aktif (library dimuat dari CDN).</div>';
+    console.error(e);
+  }
+}
+function toggleAuto(){
+  if(!current)return;const b=$('autoBtn');
+  if(current.engine==='three'){current.autoRotate=!current.autoRotate;b.classList.toggle('on',current.autoRotate);}
+  else{current.camera.useAutoRotationBehavior=!current.camera.useAutoRotationBehavior;b.classList.toggle('on',current.camera.useAutoRotationBehavior);}
+}
+$('backBtn').addEventListener('click',showHub);
+$('homeLink').addEventListener('click',showHub);
+$('autoBtn').addEventListener('click',toggleAuto);
+$('resetBtn').addEventListener('click',()=>{if(current&&current.reset)current.reset();});
+buildHub();showHub();
+</script>
+</body>
+</html>
