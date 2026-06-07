@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ElectraSim 3D — 16 Simulator 360° Ketenagalistrikan (Three.js & Babylon.js)</title>
-<meta name="description" content="Lab simulator 3D/360° interaktif Electra Academy: satu simulator tiga dimensi untuk tiap jalur spesialisasi ketenagalistrikan, dibuat dengan Three.js & Babylon.js.">
+<title>ElectraSim 3D — Lab Praktik Ketenagalistrikan Online (Wiring 1/3 Fasa, Gardu, & 16 Lab 3D)</title>
+<meta name="description" content="Praktik ketenagalistrikan tanpa ke lapangan: rangkai instalasi 1 & 3 fasa, operasikan gardu 20 kV, lengkap dengan teori, langkah terpandu & validasi otomatis. Plus 16 lab visualisasi 3D/360° Electra Academy (Three.js & Babylon.js).">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
@@ -101,6 +101,59 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .note3d{margin-top:12px;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font-size:11.5px;color:var(--txt-d);line-height:1.55}
 .note3d b{color:var(--gold-soft)}
 .errbox{background:var(--err);color:#2a0c0e;padding:14px;border-radius:10px;font-size:13px;margin:12px}
+
+/* ===== educational layer: tabs, theory, guided steps ===== */
+.tabs3d{display:flex;gap:4px;margin:-3px -3px 14px;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:4px}
+.tab3d{flex:1;background:transparent;border:0;color:var(--txt-d);font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.5px;padding:8px 4px;border-radius:8px;cursor:pointer;text-transform:uppercase}
+.tab3d.on{background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206}
+.tab3d:not(.on):hover{color:var(--gold-soft)}
+.pane3d{display:none}.pane3d.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+.edu-obj{list-style:none;margin:0 0 14px;padding:0}
+.edu-obj li{position:relative;padding:5px 0 5px 22px;font-size:12.5px;color:var(--txt-d);line-height:1.5}
+.edu-obj li::before{content:'✓';position:absolute;left:0;top:5px;color:var(--gold);font-weight:700}
+.edu-h{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--gold-soft);margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.edu-h:first-child{margin-top:0}
+.edu-h .bar{width:14px;height:3px;border-radius:3px;background:var(--gold)}
+.edu-txt{font-size:12.5px;color:var(--txt-d);line-height:1.65}
+.edu-txt b{color:var(--txt)}.edu-txt .hl{color:var(--gold-soft)}
+.edu-formula{background:var(--bg);border:1px solid var(--line2);border-left:3px solid var(--gold);border-radius:9px;padding:10px 12px;margin:10px 0;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold-soft);line-height:1.7;overflow-x:auto}
+.edu-insight{background:linear-gradient(160deg,rgba(232,179,57,.1),rgba(201,118,59,.06));border:1px solid var(--gold-d);border-radius:11px;padding:12px 14px;margin-top:14px;font-size:12px;color:var(--txt-d);line-height:1.6}
+.edu-insight b{color:var(--gold-soft)}
+.edu-insight .lbl{display:block;font-family:'Chakra Petch',sans-serif;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+
+/* guided steps checklist */
+.task3d{background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:11px 13px;margin-bottom:13px;font-size:12.5px;color:var(--txt);line-height:1.5}
+.task3d .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.8px;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:4px}
+.steps3d{list-style:none;margin:0;padding:0;counter-reset:st}
+.steps3d li{position:relative;padding:9px 10px 9px 38px;margin-bottom:7px;border:1px solid var(--line);border-radius:9px;font-size:12.5px;color:var(--txt-d);line-height:1.45;background:var(--bg2);transition:.18s;counter-increment:st}
+.steps3d li::before{content:counter(st);position:absolute;left:9px;top:50%;transform:translateY(-50%);width:21px;height:21px;border-radius:50%;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;background:var(--panel2);color:var(--txt-dd);border:1px solid var(--line2)}
+.steps3d li.done{border-color:var(--ok);color:var(--txt);background:rgba(61,220,132,.08)}
+.steps3d li.done::before{content:'✓';background:var(--ok);color:#062a14;border-color:var(--ok)}
+.steps3d li.active{border-color:var(--gold);background:rgba(232,179,57,.08)}
+.steps3d li.active::before{background:var(--gold);color:#1a1206;border-color:var(--gold)}
+.banner3d{display:none;margin-top:12px;padding:11px 13px;border-radius:10px;font-size:12.5px;line-height:1.5;font-weight:500}
+.banner3d.show{display:block;animation:fade .2s}
+.banner3d.ok{background:rgba(61,220,132,.14);border:1px solid var(--ok);color:#9affc4}
+.banner3d.err{background:rgba(255,93,93,.14);border:1px solid var(--err);color:#ffb0b0}
+.banner3d.info{background:rgba(91,140,255,.12);border:1px solid #4663a8;color:#b7c8ff}
+.banner3d b{color:#fff}
+
+/* wiring palette + legend */
+.wpal{display:flex;gap:6px;margin-bottom:10px}
+.wpal button{flex:1;border:1px solid var(--line2);background:var(--bg2);color:var(--txt-d);font-family:inherit;font-size:11px;font-weight:600;padding:8px 4px;border-radius:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px}
+.wpal button .sw{width:20px;height:5px;border-radius:3px}
+.wpal button.on{border-color:var(--gold);color:var(--txt);background:rgba(232,179,57,.12)}
+.canvas-badge{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:4px;pointer-events:none}
+.cbadge{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:rgba(11,15,23,.7);border:1px solid var(--line2);color:var(--txt-d);padding:4px 8px;border-radius:7px}
+.cbadge b{color:var(--gold-soft)}
+
+/* hub category sections */
+.hub-cat{margin:8px 0 6px}
+.hub-pill{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.6px;background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;padding:4px 10px;border-radius:20px;font-weight:700;margin-bottom:4px}
+.card.feat{border-color:var(--gold-d);box-shadow:0 0 0 1px rgba(232,179,57,.18)}
+.card .card-tag{position:absolute;top:10px;right:46px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;background:rgba(61,220,132,.9);color:#062a14;padding:3px 7px;border-radius:6px;letter-spacing:.4px}
 </style>
 </head>
 <body>
@@ -130,7 +183,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="topbar"><div class="topbar-in">
   <div class="tb-brand" id="homeLink"><div class="bolt"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg></div><h1>Electra<span>Sim</span></h1><span class="tb-3d">3D · 360°</span></div>
   <button class="tb-back" id="backBtn">← Semua Lab 3D</button>
-  <div class="tb-crumb" id="crumb" style="margin-left:auto">16 Lab 3D</div>
+  <div class="tb-crumb" id="crumb" style="margin-left:auto">Lab Praktik 3D</div>
   <a class="tb-link" href="electrasim.html">Versi 2D →</a>
 </div></div>
 
@@ -138,13 +191,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   <!-- HUB -->
   <div id="hub">
     <div class="hero">
-      <div class="eyebrow">Electra Academy · Lab 3D / 360°</div>
-      <h2>16 Simulator <span>3D Interaktif</span> Ketenagalistrikan</h2>
-      <p>Satu simulator tiga dimensi untuk tiap jalur spesialisasi. Putar 360°, geser parameter, dan lihat peralatan listrik bekerja secara real-time. Dibangun dengan <b style="color:#9db4ff">Three.js</b> &amp; <b style="color:#f3d27a">Babylon.js</b> — WebGL berjalan langsung di browser.</p>
+      <div class="eyebrow">Electra Academy · Lab Praktik 3D / 360°</div>
+      <h2>Praktik Ketenagalistrikan <span>Tanpa ke Lapangan</span></h2>
+      <p>Latih keterampilan nyata secara online: <b style="color:#f3d27a">rangkai instalasi 1 &amp; 3 fasa</b>, <b style="color:#f3d27a">operasikan gardu</b>, dan jalankan peralatan listrik dalam 3D. Setiap lab dilengkapi <b style="color:#9db4ff">teori, langkah terpandu, dan validasi otomatis</b> — pegang materi sambil mempraktikkannya. Dibangun dengan Three.js &amp; Babylon.js (WebGL).</p>
     </div>
-    <div class="hub-sec"><span class="bar"></span>Pilih Simulator 3D</div>
-    <div class="grid" id="hubGrid"></div>
-    <div class="hub-note">🖱️ <b>Drag</b> untuk memutar kamera 360° · <b>scroll/cubit</b> untuk zoom · tombol <b>Putar otomatis</b> untuk rotasi otomatis. Model 3D disederhanakan untuk edukasi (bukan CAD presisi). Memerlukan browser dengan WebGL.</div>
+    <div id="hubGrid"></div>
+    <div class="hub-note">🖱️ <b>Drag</b> memutar kamera 360° · <b>scroll/cubit</b> zoom · pada lab praktik <b>klik terminal/peralatan</b> untuk merangkai &amp; mengoperasikan. Buka tab <b>Teori</b> untuk materi dan tab <b>Latihan</b> untuk langkah terpandu. Model disederhanakan untuk edukasi (bukan CAD presisi) &amp; tidak menggantikan prosedur K3 di lapangan.</div>
   </div>
 
   <!-- STAGE -->
@@ -163,7 +215,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="canvas-hint">Drag untuk memutar · scroll untuk zoom</div>
         <div class="loader3d" id="loader"><div class="ring"></div><p id="loadMsg">Memuat mesin 3D…</p></div>
       </div>
-      <div class="controls"><h3 id="ctrlTitle">Kontrol</h3><div id="ctrl3d"></div></div>
+      <div class="controls">
+        <div class="tabs3d">
+          <button class="tab3d on" data-pane="ctrl3d">Kontrol</button>
+          <button class="tab3d" data-pane="theory3d">Teori</button>
+          <button class="tab3d" data-pane="steps3d">Latihan</button>
+        </div>
+        <div class="pane3d on" id="ctrl3d"></div>
+        <div class="pane3d" id="theory3d"></div>
+        <div class="pane3d" id="steps3d"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -172,22 +233,37 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 /* =========================================================================
    ElectraSim 3D — framework Three.js + Babylon.js (lazy-loaded per kebutuhan)
    ========================================================================= */
+/* Tiap library punya beberapa mirror CDN — bila satu gagal/diblokir, coba berikutnya
+   (mencegah lab "tidak bisa dibuka" hanya karena satu CDN bermasalah). */
 const CDN={
-  three:'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
-  babylon:'https://cdn.babylonjs.com/babylon.js'
+  three:['https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+         'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js',
+         'https://unpkg.com/three@0.128.0/build/three.min.js'],
+  babylon:['https://cdn.babylonjs.com/babylon.js',
+           'https://cdn.jsdelivr.net/npm/babylonjs@6.49.0/babylon.min.js',
+           'https://unpkg.com/babylonjs@6.49.0/babylon.js']
 };
 const _scriptCache={};
-function loadScript(src){
-  if(_scriptCache[src])return _scriptCache[src];
-  _scriptCache[src]=new Promise((res,rej)=>{
+function loadOne(src){
+  return new Promise((res,rej)=>{
     const s=document.createElement('script');s.src=src;s.async=true;
     s.onload=()=>res();s.onerror=()=>rej(new Error('Gagal memuat '+src));
     document.head.appendChild(s);
   });
-  return _scriptCache[src];
 }
-const ensureThree=()=>loadScript(CDN.three);
-const ensureBabylon=()=>loadScript(CDN.babylon);
+function loadWithFallback(key,ready){
+  if(_scriptCache[key])return _scriptCache[key];
+  _scriptCache[key]=(async()=>{
+    let err;
+    for(const url of CDN[key]){
+      try{await loadOne(url);if(!ready||ready())return;}catch(e){err=e;}
+    }
+    throw err||new Error('Semua CDN '+key+' gagal');
+  })();
+  return _scriptCache[key];
+}
+const ensureThree=()=>loadWithFallback('three',()=>typeof THREE!=='undefined');
+const ensureBabylon=()=>loadWithFallback('babylon',()=>typeof BABYLON!=='undefined');
 
 /* ---------- Three.js engine wrapper + orbit kamera (360°) ---------- */
 function mk3(host){
@@ -214,11 +290,21 @@ function mk3(host){
     camera.lookAt(target);
   }
   applyCam();
-  const el=renderer.domElement;let drag=false,px=0,py=0;
+  const el=renderer.domElement;let drag=false,px=0,py=0,dx0=0,dy0=0,moved=0;
   const pt=e=>{const t=e.touches?e.touches[0]:e;return{x:t.clientX,y:t.clientY};};
-  const down=e=>{drag=true;const p=pt(e);px=p.x;py=p.y;};
-  const move=e=>{if(!drag)return;const p=pt(e);theta-=(p.x-px)*0.009;phi-=(p.y-py)*0.009;px=p.x;py=p.y;applyCam();};
-  const up=()=>{drag=false;};
+  const down=e=>{drag=true;const p=pt(e);px=p.x;py=p.y;dx0=p.x;dy0=p.y;moved=0;};
+  const move=e=>{if(!drag)return;const p=pt(e);theta-=(p.x-px)*0.009;phi-=(p.y-py)*0.009;px=p.x;py=p.y;moved+=Math.abs(p.x-dx0)+Math.abs(p.y-dy0);applyCam();};
+  // raycaster untuk interaksi klik (rangkai kabel / operasikan peralatan)
+  const ray=new THREE.Raycaster();const ndc=new THREE.Vector2();
+  function pickAt(cx,cy){
+    if(!ctrl.pickables||!ctrl.pickables.length||!ctrl.onPick)return;
+    const r=el.getBoundingClientRect();
+    ndc.x=((cx-r.left)/r.width)*2-1;ndc.y=-((cy-r.top)/r.height)*2+1;
+    ray.setFromCamera(ndc,camera);
+    const hits=ray.intersectObjects(ctrl.pickables,true);
+    if(hits.length){let o=hits[0].object;while(o&&o.userData&&o.userData.pickId==null&&o.parent)o=o.parent;ctrl.onPick(o&&o.userData?o.userData.pickId:null,o);}
+  }
+  const up=e=>{if(drag&&moved<7){const p=e.changedTouches?e.changedTouches[0]:e;pickAt(p.clientX,p.clientY);}drag=false;};
   el.addEventListener('mousedown',down);el.addEventListener('touchstart',down,{passive:true});
   window.addEventListener('mousemove',move);window.addEventListener('touchmove',move,{passive:true});
   window.addEventListener('mouseup',up);window.addEventListener('touchend',up);
@@ -226,14 +312,19 @@ function mk3(host){
   el.addEventListener('wheel',wheel,{passive:false});
   const onResize=()=>{const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);};
   window.addEventListener('resize',onResize);
-  const ctrl={engine:'three',scene,camera,renderer,THREE,autoRotate:true,
+  const ctrl={engine:'three',scene,camera,renderer,THREE,autoRotate:true,pickables:[],onPick:null,
     setCam(r,th,ph){if(r!=null)radius=r;if(th!=null)theta=th;if(ph!=null)phi=ph;home={radius,theta,phi};applyCam();},
     reset(){radius=home.radius;theta=home.theta;phi=home.phi;applyCam();},
-    start(fn){this._fn=fn;const loop=()=>{this._raf=requestAnimationFrame(loop);if(this.autoRotate&&!drag){theta+=0.0028;applyCam();}if(this._fn)this._fn();renderer.render(scene,camera);};loop();},
-    dispose(){cancelAnimationFrame(this._raf);window.removeEventListener('mousemove',move);window.removeEventListener('touchmove',move);window.removeEventListener('mouseup',up);window.removeEventListener('touchend',up);window.removeEventListener('resize',onResize);
+    start(fn){this._fn=fn;}, // daftarkan hook per-frame (opsional) — loop render selalu jalan
+    dispose(){this._alive=false;cancelAnimationFrame(this._raf);window.removeEventListener('mousemove',move);window.removeEventListener('touchmove',move);window.removeEventListener('mouseup',up);window.removeEventListener('touchend',up);window.removeEventListener('resize',onResize);
       scene.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose());}});
       renderer.dispose();if(el.parentNode)el.parentNode.removeChild(el);}
   };
+  // loop render selalu aktif selama sim hidup (jadi sim statis pun tetap tampil)
+  ctrl._alive=true;
+  (function loop(){if(!ctrl._alive)return;ctrl._raf=requestAnimationFrame(loop);
+    if(ctrl.autoRotate&&!drag){theta+=0.0028;applyCam();}
+    if(ctrl._fn)ctrl._fn();renderer.render(scene,camera);})();
   return ctrl;
 }
 /* helper primitif Three (pakai TS = scene aktif) */
@@ -245,6 +336,35 @@ const cy=(rt,rb,h,c,o)=>new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,(o&&o.
 const sp=(r,c,o)=>new THREE.Mesh(new THREE.SphereGeometry(r,24,18),_m(c,o));
 const cn=(r,h,c,o)=>new THREE.Mesh(new THREE.ConeGeometry(r,h,(o&&o.seg)||20),_m(c,o));
 function ground(size,col){const s=size||50;const g=new THREE.Mesh(new THREE.PlaneGeometry(s,s),_m(col||0x0e1420,{metalness:0}));g.rotation.x=-Math.PI/2;TS.add(g);const grid=new THREE.GridHelper(s,Math.round(s/2),0x26344a,0x182234);grid.position.y=0.01;TS.add(grid);return g;}
+
+/* ---- helper interaktif: terminal yang bisa diklik, kabel, & label teks ---- */
+function label3d(text,x,y,z,scale){
+  const cv=document.createElement('canvas');cv.width=256;cv.height=64;const g=cv.getContext('2d');
+  g.fillStyle='rgba(11,15,23,0.82)';g.strokeStyle='#33445f';g.lineWidth=4;
+  roundRect(g,4,4,248,56,12);g.fill();g.stroke();
+  g.fillStyle='#f3d27a';g.font='600 30px "JetBrains Mono",monospace';g.textAlign='center';g.textBaseline='middle';
+  g.fillText(text,128,34);
+  const tex=new THREE.CanvasTexture(cv);tex.minFilter=THREE.LinearFilter;
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:false,transparent:true}));
+  sp.scale.set((scale||1)*1.6,(scale||1)*0.4,1);sp.position.set(x,y,z);TS.add(sp);return sp;
+}
+function roundRect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+// terminal: bola kecil yang bisa dipilih; type menentukan warna highlight
+function terminal(id,x,y,z,type){
+  const m=new THREE.Mesh(new THREE.SphereGeometry(0.16,18,14),new THREE.MeshStandardMaterial({color:0xcfd6e0,emissive:0x101418,roughness:.4,metalness:.5}));
+  m.position.set(x,y,z);m.userData={pickId:id,type:type||'L',term:true};TS.add(m);return m;
+}
+const WIRECOL={L:0x9a5a2b,N:0x3a7bd5,PE:0xc9d92f,R:0x8a4a2b,S:0xb0b0b0,T:0x9a5a2b,bare:0xcfd6e0};
+// kabel melengkung antara dua titik
+function wire(p1,p2,colorHex){
+  const a=p1.clone?p1.clone():new THREE.Vector3(p1.x,p1.y,p1.z);
+  const b=p2.clone?p2.clone():new THREE.Vector3(p2.x,p2.y,p2.z);
+  const mid=a.clone().add(b).multiplyScalar(.5);mid.y-=a.distanceTo(b)*0.18;
+  const curve=new THREE.CatmullRomCurve3([a,mid,b]);
+  const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,16,0.055,7,false),
+    new THREE.MeshStandardMaterial({color:colorHex,roughness:.5,metalness:.1,emissive:0x000000}));
+  TS.add(tube);return tube;
+}
 
 /* ---------- Babylon.js engine wrapper ---------- */
 function mkB(host){
@@ -284,6 +404,14 @@ function makeUI(host){
     button(label,onclick,on){const b=document.createElement('button');b.className='btn3d'+(on?' on':'');b.textContent=label;b.onclick=()=>onclick(b);host.appendChild(b);return b;},
     metric(label,val){const d=document.createElement('div');d.className='m3d';const s=document.createElement('span');s.textContent=label;const b=document.createElement('b');b.textContent=val;d.appendChild(s);d.appendChild(b);host.appendChild(d);return v=>{b.textContent=v;};},
     note(html){const d=document.createElement('div');d.className='note3d';d.innerHTML=html;host.appendChild(d);return d;}
+    ,palette(opts,onpick){
+      const w=document.createElement('div');w.className='wpal';const btns=[];
+      opts.forEach((o,i)=>{const b=document.createElement('button');b.className=i===0?'on':'';
+        b.innerHTML='<span class="sw" style="background:'+o.color+'"></span>'+o.label;
+        b.onclick=()=>{btns.forEach(x=>x.classList.remove('on'));b.classList.add('on');onpick(o.type);};
+        btns.push(b);w.appendChild(b);});
+      host.appendChild(w);if(opts[0])onpick(opts[0].type);return w;
+    }
   };
   return api;
 }
@@ -292,6 +420,9 @@ function makeUI(host){
    REGISTRY 16 SIMULATOR 3D
    ========================================================================= */
 const TRACKS3D=[
+ {id:'w1', icon:'🏠', engine:'three', cat:'praktik', title:'Wiring Instalasi 1 Fasa', sub:'Rangkai sendiri: MCB → saklar → lampu → stop kontak → arde. Klik terminal untuk menarik kabel, lalu beri tegangan & uji.'},
+ {id:'w3', icon:'🔁', engine:'three', cat:'praktik', title:'Wiring 3 Fasa (Bintang/Segitiga)', sub:'Sambung motor 3 fasa di terminal box — pilih hubungan Y atau Δ dengan benar, lalu jalankan motor.'},
+ {id:'g1', icon:'🏭', engine:'three', cat:'praktik', title:'Operasi Gardu 20 kV', sub:'Manuver PMT–PMS–PMS Tanah sesuai urutan & interlock untuk membebaskan / memberi tegangan penyulang.'},
  {id:'t1', icon:'🏢', engine:'three',   title:'Instalasi Bangunan', sub:'Ruangan 3D dengan lampu & sakelar — atur dimmer dan lihat iluminasi.'},
  {id:'t2', icon:'⚙️', engine:'three',   title:'Industri: Motor Induksi', sub:'Motor 3 fasa berputar — atur kecepatan, start/stop, lihat rotor.'},
  {id:'t3', icon:'🗼', engine:'three',   title:'Distribusi 20 kV', sub:'Tiang, konduktor & trafo distribusi — energize jaringan.'},
@@ -310,6 +441,321 @@ const TRACKS3D=[
  {id:'t16',icon:'🤖', engine:'three',   title:'Kontrol & Otomasi', sub:'Konveyor + sensor + PLC — start/stop & atur kecepatan.'},
 ];
 const SIMS3D={};
+
+/* =========================================================================
+   EDU — materi teori, tujuan belajar, langkah latihan & insight tiap lab
+   ========================================================================= */
+const EDU={
+ w1:{
+  obj:['Mengenal komponen instalasi 1 fasa (MCB, saklar, lampu, stop kontak, arde)',
+       'Menerapkan kode warna PUIL: fasa, netral, dan pembumian',
+       'Merangkai instalasi yang aman & menghindari hubung singkat'],
+  theory:`<div class="edu-h"><span class="bar"></span>Instalasi Listrik 1 Fasa</div>
+   <p class="edu-txt">Instalasi rumah memakai <b>1 fasa</b>: dua penghantar pembawa arus — <span class="hl">Fasa (L)</span> dan <span class="hl">Netral (N)</span> — plus penghantar pengaman <span class="hl">Pembumian (PE)</span>. Tegangan kerja <b>220&nbsp;V</b> antara L dan N.</p>
+   <div class="edu-h"><span class="bar"></span>Kode Warna (PUIL 2011)</div>
+   <p class="edu-txt">• Fasa: <b style="color:#c98a4a">cokelat / hitam / abu-abu</b><br>• Netral: <b style="color:#5b8cff">biru</b><br>• Pembumian (PE): <b style="color:#c9d92f">loreng kuning-hijau</b></p>
+   <div class="edu-h"><span class="bar"></span>Urutan Rangkaian</div>
+   <p class="edu-txt">Fasa masuk <b>MCB</b> (proteksi) → dari MCB ke <b>saklar</b> → saklar memutus/menyambung fasa ke <b>lampu</b>. Netral langsung ke lampu &amp; stop kontak. Stop kontak wajib mendapat <b>L, N, dan PE</b>.</p>
+   <div class="edu-formula">P = V × I × cos φ  →  contoh lampu 18 W @220 V ⇒ I ≈ 0,08 A
+MCB rumah lazim: 2 A / 4 A / 6 A / 10 A / 16 A</div>`,
+  insight:`<span class="lbl">⚠ Insight Lapangan</span><b>Saklar selalu memutus FASA, bukan netral.</b> Bila saklar dipasang di netral, lampu tetap padam tetapi fitting <b>masih bertegangan</b> — berbahaya saat mengganti lampu. Pembumian stop kontak menyelamatkan nyawa saat terjadi kebocoran arus ke bodi peralatan.`,
+  task:'Rangkai instalasi 1 fasa yang lengkap & aman, lalu beri tegangan dan uji saklar hingga lampu menyala.',
+  steps:['Pilih warna <b>Fasa</b>, tarik kabel dari <b>L sumber</b> ke <b>input MCB</b>.',
+         'Dari <b>output MCB</b>, tarik fasa ke <b>saklar (input)</b> dan ke <b>stop kontak (L)</b>.',
+         'Tarik kabel dari <b>output saklar</b> ke terminal <b>L lampu</b>.',
+         'Pilih warna <b>Netral</b>, hubungkan <b>N sumber</b> ke <b>lampu</b> dan <b>stop kontak</b>.',
+         'Pilih warna <b>Arde</b>, hubungkan <b>PE sumber</b> ke <b>PE stop kontak</b>.',
+         'Tekan <b>Beri Tegangan</b>, lalu <b>Uji Saklar</b> — lampu harus menyala.']
+ },
+ w3:{
+  obj:['Memahami sistem 3 fasa (R-S-T-N-PE) dan tegangan 380/220 V',
+       'Membedakan hubungan Bintang (Y) dan Segitiga (Δ) pada motor',
+       'Menyambung terminal box motor dengan benar lalu menjalankannya'],
+  theory:`<div class="edu-h"><span class="bar"></span>Sistem 3 Fasa</div>
+   <p class="edu-txt">Tiga fasa <span class="hl">R, S, T</span> berbeda sudut 120°. Tegangan antar-fasa (line) <b>380–400 V</b>, fasa-netral <b>220–230 V</b>. Dipakai untuk daya besar &amp; motor industri.</p>
+   <div class="edu-h"><span class="bar"></span>Bintang (Y) vs Segitiga (Δ)</div>
+   <p class="edu-txt"><b>Bintang (Y):</b> ujung U2-V2-W2 disatukan (titik bintang); tiap belitan menerima tegangan fasa (≈230 V). Arus start kecil → dipakai saat <b>start</b>.<br><b>Segitiga (Δ):</b> belitan disambung ujung-ke-ujung membentuk segitiga; tiap belitan menerima tegangan line (≈400 V). Torsi &amp; daya penuh → dipakai saat <b>jalan normal</b>.</p>
+   <div class="edu-formula">Y:  V_belitan = V_line / √3        I_line = I_belitan
+Δ:  V_belitan = V_line            I_line = √3 × I_belitan
+Daya Δ ≈ 3× daya Y  (dasar starter bintang-segitiga)</div>`,
+  insight:`<span class="lbl">⚠ Insight Lapangan</span>Pada <b>starter Y-Δ</b>, motor distart hubungan <b>Bintang</b> (arus start turun ~⅓) lalu dipindah ke <b>Segitiga</b> untuk beban penuh. Salah menyambung Δ saat seharusnya Y dapat membakar belitan karena over-voltage.`,
+  task:'Pilih konfigurasi target (Bintang/Segitiga), sambung jumper terminal box & suplai R-S-T dengan benar, lalu jalankan motor.',
+  steps:['Pilih konfigurasi target: <b>Bintang (Y)</b> atau <b>Segitiga (Δ)</b>.',
+         'Hubungkan suplai <b>R→U1, S→V1, T→W1</b>.',
+         'Pasang jumper sesuai konfigurasi (Y: satukan U2-V2-W2; Δ: U1-W2, V1-U2, W1-V2).',
+         'Tekan <b>Jalankan Motor</b> — bila benar rotor berputar &amp; metrik tegangan sesuai.']
+ },
+ g1:{
+  obj:['Memahami fungsi PMT (CB), PMS (pemisah) & PMS Tanah (pembumian)',
+       'Menjalankan urutan manuver pembebasan tegangan yang benar',
+       'Menerapkan sistem interlock untuk keselamatan operasi gardu'],
+  theory:`<div class="edu-h"><span class="bar"></span>Peralatan Hubung Gardu</div>
+   <p class="edu-txt"><b>PMT / CB</b> (Pemutus Tenaga): memutus &amp; menyambung <b>arus beban dan gangguan</b> (punya pemadam busur).<br><b>PMS</b> (Pemisah/Disconnector): membuat <b>pemisahan tampak (visible isolation)</b>, <span class="hl">hanya boleh dioperasikan tanpa arus</span>.<br><b>PMS Tanah</b> (Pembumian): menghubungkan penghantar ke tanah agar aman dikerjakan.</p>
+   <div class="edu-h"><span class="bar"></span>Urutan Manuver (Interlock)</div>
+   <p class="edu-txt"><b>Membebaskan tegangan:</b> Buka <b>PMT</b> → Buka <b>PMS</b> → Masuk <b>PMS Tanah</b>.<br><b>Memberi tegangan:</b> Buka <b>PMS Tanah</b> → Masuk <b>PMS</b> → Masuk <b>PMT</b>.</p>
+   <div class="edu-formula">ATURAN INTERLOCK:
+• PMS tak boleh dibuka/ditutup saat PMT masuk (ada arus → busur)
+• PMS Tanah tak boleh masuk bila PMS masih masuk (masih bertegangan)
+• PMT tak boleh masuk bila PMS Tanah terpasang</div>`,
+  insight:`<span class="lbl">⚠ Insight Lapangan</span>Mengoperasikan <b>PMS dalam keadaan berbeban</b> adalah kesalahan fatal — timbul busur api besar yang membahayakan operator. Inilah alasan urutan &amp; interlock wajib: <b>matikan arus (PMT) dulu, baru pisahkan (PMS), baru tanahkan</b>. Sebelum bekerja: pastikan bebas tegangan &amp; sudah dibumikan.`,
+  task:'TUGAS: Bebaskan tegangan penyulang untuk pemeliharaan dengan urutan manuver yang benar. (Klik peralatan atau tombol untuk mengoperasikan.)',
+  steps:['Buka <b>PMT</b> (memutus arus beban).',
+         'Buka <b>PMS</b> (pemisahan tampak — hanya saat tanpa arus).',
+         'Masuk <b>PMS Tanah</b> (membumikan penghantar agar aman).']
+ }
+};
+/* insight ringkas untuk 16 lab visualisasi lama (agar tiap lab punya "insight") */
+const EDU_BRIEF={
+ t1:['Iluminasi & Dimmer','Lampu hemat (LED) memberi lux tinggi dengan watt kecil. Dimmer mengatur fluks cahaya — penting untuk kenyamanan & efisiensi energi.','E (lux) = Φ (lumen) / A (m²)'],
+ t2:['Motor Induksi 3 Fasa','Rotor selalu berputar lebih lambat dari medan stator — selisihnya disebut slip. Tanpa slip tak ada torsi.','n_s = 120·f / p ; slip = (n_s − n)/n_s'],
+ t3:['Distribusi 20 kV','Tegangan menengah 20 kV disalurkan lewat penyulang, lalu trafo distribusi menurunkan ke 380/220 V. Beban tinggi → drop tegangan di ujung.','ΔV ≈ I·(R·cosφ + X·sinφ)·L'],
+ t4:['Transmisi & Andongan','Konduktor melengkung (sag) karena berat & suhu. Sag terlalu besar mengurangi jarak aman ke tanah.','sag ≈ w·L² / (8·T)'],
+ t5:['Peramalan Beban','Perencanaan kapasitas butuh proyeksi beban puncak bertahun-tahun agar investasi tepat waktu.','Beban(t) = Beban₀·(1+g)^t'],
+ t6:['Audit Energi','Intensitas Konsumsi Energi (IKE) mengukur kWh per m² per tahun; retrofit LED & HVAC menurunkannya.','IKE = kWh / (m²·tahun)'],
+ t7:['Bauran Pembangkitan','Makin tinggi porsi EBT (surya, angin), makin rendah faktor emisi grid (g CO₂/kWh).','FE_grid = Σ(E·FE) / Σ E'],
+ t8:['K3 — LOTO','Lock-Out Tag-Out: kunci & beri label sumber energi sebelum bekerja, verifikasi tegangan nol.','Prinsip: Isolate → Lock → Tag → Verify'],
+ t9:['Sizing Kabel & Trafo','Penampang kabel dipilih dari arus desain (≥125% arus beban) + susut tegangan & KHA.','I = P / (√3·V·cosφ)'],
+ t10:['PV & Lintasan Matahari','Energi panel maksimum saat sinar tegak lurus permukaan; sudut tilt optimal ≈ lintang lokasi.','E = G·A·η·cos θ'],
+ t11:['Karbon & Net-Zero','Net emisi = emisi − penyerapan (pohon/EBT). Offset menuju target net-zero.','Net = Emisi − Serapan'],
+ t12:['EV & SPKLU','Daya charger menentukan kecepatan isi; di atas ~80% arus di-taper untuk lindungi baterai.','t ≈ (ΔSoC·kWh) / P_charge'],
+ t13:['Waste to Energy','PLTSa membakar sampah (LHV ~10 MJ/kg) jadi uap → turbin. Lebih banyak ton/hari → MW naik.','P ≈ ṁ·LHV·η'],
+ t14:['Hidrogen Hijau','Elektrolisis air pakai listrik EBT menghasilkan H₂ bersih (≈52 kWh/kg).','2H₂O → 2H₂ + O₂'],
+ t15:['BESS','Baterai menyimpan energi untuk peak shaving & stabilisasi grid; dijaga pada rentang SoC sehat.','E = P × t (MWh)'],
+ t16:['Kontrol & Otomasi','PLC membaca sensor & menggerakkan aktuator (konveyor) sesuai program — dasar otomasi industri.','Input → Logika (PLC) → Output']
+};
+
+/* helper: dipakai sim interaktif — pasangan terminal tak berurut */
+function _k(a,b){return [a,b].sort().join('|');}
+
+/* ===== w1 — Wiring Instalasi 1 Fasa (interaktif) ===== */
+SIMS3D.w1=(host,ui,edu)=>{
+  const c=mk3(host);TS=c.scene;c.autoRotate=false;c.scene.fog=null;c.setCam(13,0,1.18);
+  ground(34,0x0e1420);
+  add(bx(15,9,0.4,0x10151f),0,4.2,-0.35);add(bx(15.3,9.3,0.1,0x26344a),0,4.2,-0.55);
+  const Z=0.6,terms={},termList=[];
+  const mkT=(id,x,y,type)=>{const m=terminal(id,x,y,Z,type);terms[id]=m;termList.push(m);return m;};
+  const box=(x,y,w,h,col)=>add(bx(w,h,0.7,col),x,y,0.18);
+  const txt=(t,x,y)=>label3d(t,x,y,Z+0.25,0.85);
+  // SUPLAI
+  box(-5.8,4.4,1.8,3.6,0x33445f);txt('SUPLAI',-5.8,6.5);
+  mkT('src_L',-5.8,5.0,'L');txt('L',-6.9,5.0);
+  mkT('src_N',-5.8,4.1,'N');txt('N',-6.9,4.1);
+  mkT('src_PE',-5.8,3.2,'PE');txt('PE',-7.0,3.2);
+  // MCB
+  box(-2.8,5.4,1.3,1.8,0x2a3445);txt('MCB',-2.8,6.6);
+  mkT('mcb_in',-2.8,6.0,'L');mkT('mcb_out',-2.8,4.8,'L');
+  // SAKLAR
+  box(0.1,4.6,1.3,1.6,0x2a3445);txt('SAKLAR',0.1,5.7);
+  mkT('sw_in',0.1,5.1,'L');mkT('sw_out',0.1,4.0,'L');
+  // LAMPU
+  box(3.2,5.6,1.2,0.9,0x55617a);txt('LAMPU',3.2,6.6);
+  const bulb=add(sp(0.5,0x44484f,{emissive:0x0a0a0a,emissiveIntensity:1}),3.2,5.3,0.5);
+  const lampLight=new THREE.PointLight(0xffe6a0,0,18,2);lampLight.position.set(3.2,5.3,3);TS.add(lampLight);
+  mkT('lmp_L',2.6,4.6,'L');mkT('lmp_N',3.8,4.6,'N');
+  // STOP KONTAK
+  box(5.9,3.4,1.7,2.0,0x2a3445);txt('STOP KONTAK',5.9,4.8);
+  const skLed=add(sp(0.2,0x442222,{emissive:0x110505,emissiveIntensity:1}),5.9,4.2,0.55);
+  mkT('sk_L',5.3,3.0,'L');mkT('sk_N',6.5,3.0,'N');mkT('sk_PE',5.9,2.2,'PE');
+
+  const required=[['src_L','mcb_in'],['mcb_out','sw_in'],['sw_out','lmp_L'],['src_N','lmp_N'],['mcb_out','sk_L'],['src_N','sk_N'],['src_PE','sk_PE']];
+  const stepGroups=[[0],[1,4],[2],[3,5],[6]];
+  const tType=id=>terms[id].userData.type;
+  let curType='L',sel=null,conns=[],energized=false,swOn=false;
+  const same=cn=>tType(cn.a)===tType(cn.b);
+  const faults=()=>conns.filter(cn=>!same(cn));
+  const validReq=()=>required.filter(r=>conns.some(cn=>cn.k===_k(r[0],r[1])&&same(cn)));
+
+  function evaluate(){
+    stepGroups.forEach((g,i)=>edu.step(i,g.every(idx=>conns.some(cn=>cn.k===_k(required[idx][0],required[idx][1])&&same(cn)))));
+    mProg(validReq().length+' / '+required.length);
+    const wrongCol=conns.filter(cn=>{const ok=required.some(r=>_k(r[0],r[1])===cn.k);return ok&&same(cn)&&cn.type!==tType(cn.a);}).length;
+    if(faults().length)mWarn(faults().length+' kabel salah (fasa↔netral)');
+    else if(wrongCol)mWarn(wrongCol+' kabel salah warna');
+    else mWarn('—');
+  }
+  function addConn(a,b){
+    if(conns.some(cn=>cn.k===_k(a,b))){edu.banner('info','Kabel itu sudah terpasang.');return;}
+    const t=wire(terms[a].position,terms[b].position,WIRECOL[curType]);
+    conns.push({a,b,k:_k(a,b),type:curType,tube:t});evaluate();
+  }
+  c.pickables=termList;
+  c.onPick=(id)=>{if(id==null||!terms[id])return;
+    if(sel===null){sel=id;terms[id].material.emissive.setHex(0xe8b339);return;}
+    if(sel===id){terms[id].material.emissive.setHex(0x101418);sel=null;return;}
+    terms[sel].material.emissive.setHex(0x101418);addConn(sel,id);sel=null;};
+
+  ui.palette([{label:'Fasa',type:'L',color:'#b06a30'},{label:'Netral',type:'N',color:'#3a7bd5'},{label:'Arde',type:'PE',color:'#c9d92f'}],t=>curType=t);
+  ui.button('⚡ Beri Tegangan & Uji',()=>{
+    if(faults().length){energized=false;bulb.material.color.setHex(0xff3b3b);bulb.material.emissive.setHex(0x550000);
+      edu.banner('err','<b>HUBUNG SINGKAT!</b> Ada kabel yang menghubungkan fasa langsung ke netral/arde tanpa beban. MCB trip. Lepas kabel itu lalu coba lagi.');return;}
+    if(validReq().length<required.length){edu.banner('info','Instalasi belum lengkap — baru <b>'+validReq().length+' / '+required.length+'</b> sambungan benar. Selesaikan dulu semua langkah.');return;}
+    energized=true;edu.step(5,true);skLed.material.color.setHex(0x33ff88);skLed.material.emissive.setHex(0x114422);
+    edu.banner('ok','<b>Instalasi BENAR & bertegangan.</b> Stop kontak sudah live + ter-arde. Tekan <b>Uji Saklar</b> untuk menyalakan lampu.');mStat('Bertegangan');
+  });
+  ui.button('💡 Uji Saklar (ON/OFF)',(b)=>{if(!energized){edu.banner('info','Beri tegangan dulu sebelum menguji saklar.');return;}
+    swOn=!swOn;b.classList.toggle('on',swOn);bulb.material.color.setHex(swOn?0xffe9a8:0x44484f);bulb.material.emissive.setHex(swOn?0xffd34d:0x0a0a0a);lampLight.intensity=swOn?1.6:0;mStat(swOn?'Lampu menyala':'Lampu padam');});
+  ui.button('↶ Hapus Kabel Terakhir',()=>{const last=conns.pop();if(last){TS.remove(last.tube);last.tube.geometry.dispose();}if(sel){terms[sel].material.emissive.setHex(0x101418);sel=null;}evaluate();});
+  ui.button('🗑 Reset Rangkaian',()=>{conns.forEach(cn=>{TS.remove(cn.tube);cn.tube.geometry.dispose();});conns=[];energized=swOn=false;bulb.material.color.setHex(0x44484f);bulb.material.emissive.setHex(0x0a0a0a);lampLight.intensity=0;skLed.material.color.setHex(0x442222);skLed.material.emissive.setHex(0x110505);edu.clearBanner();mStat('—');evaluate();});
+  const mProg=ui.metric('Sambungan benar','0 / 7'),mWarn=ui.metric('Peringatan','—'),mStat=ui.metric('Status','—');
+  ui.note('Klik <b>satu terminal</b> lalu <b>terminal lain</b> untuk menarik kabel (warna sesuai palet di atas). Buka tab <b>Teori</b> & <b>Latihan</b> untuk panduan.');
+  evaluate();return c;
+};
+
+/* ===== w3 — Wiring 3 Fasa: Bintang / Segitiga (interaktif) ===== */
+SIMS3D.w3=(host,ui,edu)=>{
+  const c=mk3(host);TS=c.scene;c.autoRotate=false;c.scene.fog=null;c.setCam(13,0.2,1.15);
+  ground(34,0x0e1420);
+  add(bx(15,9,0.4,0x10151f),0,4,-0.35);add(bx(15.3,9.3,0.1,0x26344a),0,4,-0.55);
+  const Z=0.6,terms={},termList=[];
+  const mkT=(id,x,y,type)=>{const m=terminal(id,x,y,Z,type);terms[id]=m;termList.push(m);return m;};
+  const box=(x,y,w,h,col)=>add(bx(w,h,0.7,col),x,y,0.18);
+  const txt=(t,x,y)=>label3d(t,x,y,Z+0.25,0.8);
+  // suplai R S T
+  box(-5.6,4.5,1.7,3.8,0x33445f);txt('SUPLAI 3Ø',-5.6,6.7);
+  mkT('R',-5.6,5.3,'R');txt('R',-6.6,5.3);mkT('S',-5.6,4.4,'S');txt('S',-6.6,4.4);mkT('T',-5.6,3.5,'T');txt('T',-6.6,3.5);
+  // terminal box motor (atas: U1 V1 W1 ; bawah: W2 U2 V2)
+  box(2.6,4.3,4.4,2.6,0x222c3d);txt('TERMINAL BOX',2.6,5.95);
+  mkT('U1',1.2,4.9,'m');txt('U1',1.2,5.5);mkT('V1',2.6,4.9,'m');txt('V1',2.6,5.5);mkT('W1',4.0,4.9,'m');txt('W1',4.0,5.5);
+  mkT('W2',1.2,3.6,'m');txt('W2',1.2,3.1);mkT('U2',2.6,3.6,'m');txt('U2',2.6,3.1);mkT('V2',4.0,3.6,'m');txt('V2',4.0,3.1);
+  // motor + rotor
+  const mbody=add(cy(0.95,0.95,2.0,0x46586f,{seg:28}),5.2,1.6,1.6);mbody.rotation.z=Math.PI/2;
+  const rotor=new THREE.Group();rotor.position.set(5.2,1.6,1.6);TS.add(rotor);
+  const shaft=cy(0.12,0.12,2.6,0xd6dce6,{seg:16});shaft.rotation.z=Math.PI/2;rotor.add(shaft);
+  for(let i=0;i<6;i++){const bl=bx(0.05,0.4,0.14,0xe8b339);bl.position.set(1.15,0,0);bl.rotation.x=i*Math.PI/3;rotor.add(bl);}
+
+  const SUP=[['R','U1'],['S','V1'],['T','W1']];
+  const CFG={ Y:{links:[['U2','V2'],['V2','W2']],name:'Bintang (Y)'}, D:{links:[['U1','W2'],['V1','U2'],['W1','V2']],name:'Segitiga (Δ)'} };
+  let target='Y',curType='R',sel=null,conns=[],running=false;
+  function reqFor(){return SUP.concat(CFG[target].links);}
+  function present(r){return conns.some(cn=>cn.k===_k(r[0],r[1]));}
+  function evaluate(){
+    const req=reqFor();const okSup=SUP.every(present);
+    const okLink=CFG[target].links.every(present);
+    // jumper salah = link dari konfigurasi lawan
+    const other=target==='Y'?'D':'Y';const wrong=CFG[other].links.some(present);
+    edu.step(0,true);edu.step(1,okSup);edu.step(2,okLink&&!wrong);
+    mCfg(CFG[target].name);mProg((req.filter(present).length)+' / '+req.length);
+  }
+  function addConn(a,b){if(a===b)return;if(conns.some(cn=>cn.k===_k(a,b))){edu.banner('info','Jumper itu sudah ada.');return;}
+    const t=wire(terms[a].position,terms[b].position,WIRECOL[curType]||0xcfd6e0);conns.push({a,b,k:_k(a,b),tube:t});evaluate();}
+  c.pickables=termList;
+  c.onPick=(id)=>{if(id==null||!terms[id])return;
+    if(sel===null){sel=id;terms[id].material.emissive.setHex(0xe8b339);return;}
+    if(sel===id){terms[id].material.emissive.setHex(0x101418);sel=null;return;}
+    terms[sel].material.emissive.setHex(0x101418);addConn(sel,id);sel=null;};
+
+  ui.palette([{label:'R',type:'R',color:'#b06a30'},{label:'S',type:'S',color:'#b0b0b0'},{label:'T',type:'T',color:'#8a4a2b'},{label:'Jumper',type:'bare',color:'#cfd6e0'}],t=>curType=t);
+  const bY=ui.button('◆ Target: Bintang (Y)',(b)=>{target='Y';bY.classList.add('on');bD.classList.remove('on');edu.clearBanner();evaluate();},true);
+  const bD=ui.button('▲ Target: Segitiga (Δ)',(b)=>{target='D';bD.classList.add('on');bY.classList.remove('on');edu.clearBanner();evaluate();},false);
+  ui.button('▶ Jalankan Motor',()=>{
+    const okSup=SUP.every(present),okLink=CFG[target].links.every(present);
+    const other=target==='Y'?'D':'Y';const wrong=CFG[other].links.some(present);
+    if(!okSup){edu.banner('info','Suplai R-S-T belum tersambung lengkap ke U1-V1-W1.');return;}
+    if(wrong){edu.banner('err','<b>Jumper salah!</b> Ada sambungan milik konfigurasi lain. Periksa kembali pola '+CFG[target].name+'.');running=false;return;}
+    if(!okLink){edu.banner('info','Jumper '+CFG[target].name+' belum lengkap.');return;}
+    running=true;edu.step(3,true);
+    if(target==='Y')edu.banner('ok','<b>Hubungan Bintang aktif.</b> Tiap belitan ≈230 V, arus start kecil. Motor berputar — cocok untuk start.');
+    else edu.banner('ok','<b>Hubungan Segitiga aktif.</b> Tiap belitan ≈400 V, torsi & daya penuh. Motor berputar — mode jalan normal.');
+    mV(target==='Y'?'400 V line · 230 V belitan':'400 V line · 400 V belitan');mStat('Berjalan');
+  });
+  ui.button('↶ Hapus Jumper Terakhir',()=>{const last=conns.pop();if(last){TS.remove(last.tube);last.tube.geometry.dispose();}if(sel){terms[sel].material.emissive.setHex(0x101418);sel=null;}running=false;mStat('Berhenti');evaluate();});
+  ui.button('🗑 Reset',()=>{conns.forEach(cn=>{TS.remove(cn.tube);cn.tube.geometry.dispose();});conns=[];running=false;edu.clearBanner();mStat('—');mV('—');evaluate();});
+  const mCfg=ui.metric('Target','Bintang (Y)'),mProg=ui.metric('Sambungan','0 / 5'),mV=ui.metric('Tegangan','—'),mStat=ui.metric('Status','—');
+  ui.note('Pilih target Y/Δ, lalu klik dua terminal untuk membuat jumper. Gunakan palet R/S/T untuk suplai dan <b>Jumper</b> untuk antar-terminal motor.');
+  evaluate();c.start(()=>{if(running)rotor.rotation.x+=(target==='D'?0.16:0.10);});return c;
+};
+
+/* ===== g1 — Operasi Gardu 20 kV: manuver PMT/PMS/PMS-Tanah (interaktif) ===== */
+SIMS3D.g1=(host,ui,edu)=>{
+  const c=mk3(host);TS=c.scene;c.autoRotate=false;c.scene.fog=null;c.setCam(14,0.25,1.05);
+  ground(34,0x0e1420);
+  add(bx(11,10,0.4,0x10151f),0,5,-0.4);
+  const txt=(t,x,y)=>label3d(t,x,y,0.7,0.95);
+  // busbar atas
+  const busbar=add(bx(8,0.4,0.4,0xe8b339,{emissive:0x3a2c00}),0,9,0.2);txt('BUSBAR 20 kV',0,9.7);
+  // konduktor (segmen yang bisa diwarnai sesuai status)
+  function seg(x,y1,y2){const m=add(cy(0.12,0.12,Math.abs(y2-y1),0x556,{seg:10}),x,(y1+y2)/2,0.2);return m;}
+  const cBus=seg(0,8.8,7.6);      // busbar -> PMS
+  const cPmsPmt=seg(0,6.4,4.8);   // PMS -> PMT
+  const cPmtOut=seg(0,3.2,1.4);   // PMT -> feeder
+  const cEarth=add(cy(0.1,0.1,1.6,0x3ddc84,{seg:10}),1.6,3.6,0.2);cEarth.rotation.z=-0.5; // cabang ke PMS tanah (visual)
+  // PMS (pemisah) — pisau berputar
+  add(sp(0.18,0xcfd6e0),0,7.6,0.3);add(sp(0.18,0xcfd6e0),0,6.4,0.3);
+  const pmsBlade=add(cy(0.09,0.09,1.2,0xff5d5d,{seg:8}),0,7.0,0.35);txt('PMS',-1.9,7.0);
+  // PMT (pemutus tenaga) — kotak + indikator
+  const pmtBox=add(bx(1.6,1.6,0.8,0x2a3445),0,4.0,0.3);txt('PMT (CB)',-2.0,4.0);
+  const pmtLed=add(sp(0.22,0xff5d5d,{emissive:0xff3b3b,emissiveIntensity:1}),0,4.0,0.75);
+  // PMS Tanah — pisau ke arah ground simbol
+  add(sp(0.16,0xcfd6e0),1.0,3.6,0.3);
+  const earthBlade=add(cy(0.08,0.08,1.1,0x888,{seg:8}),1.55,3.1,0.35);txt('PMS TANAH',3.0,3.1);
+  add(bx(1.2,0.2,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,2.2,0.2); // simbol bumi
+  add(bx(0.8,0.2,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,1.95,0.2);
+  add(bx(0.4,0.2,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,1.7,0.2);
+  // feeder / trafo
+  add(bx(2.2,1.6,1.2,0x55617a),0,0.9,0.2);txt('PENYULANG',0,0.1);
+  // klik target tak terlihat di posisi tiap alat
+  const hit=(id,x,y)=>{const m=add(sp(0.9,0xffffff,{transparent:true,opacity:0}),x,y,0.5);m.userData={pickId:id};return m;};
+  c.pickables=[hit('pmt',0,4.0),hit('pms',0,7.0),hit('tanah',1.6,3.1)];
+
+  // state: true=masuk(closed)
+  let st={pmt:true,pms:true,tanah:false},goal='off',doneSeq=[];
+  function energizedFeeder(){return st.pms&&st.pmt&&!st.tanah;}
+  function refresh(){
+    // posisi/visual
+    pmsBlade.rotation.z=st.pms?0:1.1;pmsBlade.material.color.setHex(st.pms?0xff5d5d:0x556070);
+    earthBlade.rotation.z=st.tanah?0:1.1;earthBlade.material.color.setHex(st.tanah?0x3ddc84:0x556070);
+    pmtBox.material.color.setHex(st.pmt?0x3a2c00:0x2a3445);
+    const live=st.pmt;pmtLed.material.color.setHex(live?0xff5d5d:0x33ff88);pmtLed.material.emissive.setHex(live?0xff3b3b:0x114422);
+    const en=energizedFeeder();
+    const liveCol=0xffd34d,deadCol=0x556070,earthCol=0x3ddc84;
+    cBus.material.color.setHex(st.pms?liveCol:liveCol); // busbar selalu bertegangan
+    cBus.material.emissive&&cBus.material.emissive.setHex(0x3a2c00);
+    cPmsPmt.material.color.setHex(st.pms?liveCol:deadCol);
+    cPmtOut.material.color.setHex(en?liveCol:(st.tanah?earthCol:deadCol));
+    cEarth.material.color.setHex(st.tanah?earthCol:0x33445f);
+    mPmt(st.pmt?'MASUK':'BUKA');mPms(st.pms?'MASUK':'BUKA');mTan(st.tanah?'TERPASANG':'lepas');
+    mFeed(en?'⚠ BERTEGANGAN':(st.tanah?'✓ AMAN — DITANAHKAN':'bebas tegangan'));
+  }
+  function op(dev){
+    if(dev==='pms'){
+      if(st.pmt){edu.banner('err','<b>INTERLOCK.</b> PMS tak boleh dioperasikan saat PMT masih MASUK — memutus arus beban dengan PMS menimbulkan busur api. Buka PMT dulu.');return;}
+      if(!st.pms){ if(st.tanah){edu.banner('err','<b>INTERLOCK.</b> Lepas PMS Tanah dulu sebelum menutup PMS.');return;} }
+      st.pms=!st.pms;mark();
+    } else if(dev==='pmt'){
+      if(st.tanah){edu.banner('err','<b>INTERLOCK.</b> PMT tak boleh MASUK saat PMS Tanah terpasang.');return;}
+      if(!st.pmt&&!st.pms){edu.banner('err','<b>Urutan salah.</b> Tutup PMS dulu sebelum memasukkan PMT (saat memberi tegangan).');return;}
+      st.pmt=!st.pmt;mark();
+    } else if(dev==='tanah'){
+      if(!st.tanah){ if(st.pms){edu.banner('err','<b>INTERLOCK.</b> PMS Tanah tak boleh masuk saat PMS masih MASUK (penghantar masih mungkin bertegangan). Buka PMS dulu.');return;} }
+      st.tanah=!st.tanah;mark();
+    }
+    refresh();checkGoal();
+  }
+  function mark(){edu.clearBanner();}
+  function checkGoal(){
+    if(goal==='off'){
+      edu.step(0,!st.pmt);edu.step(1,!st.pmt&&!st.pms);edu.step(2,!st.pmt&&!st.pms&&st.tanah);
+      if(!st.pmt&&!st.pms&&st.tanah)edu.banner('ok','<b>PENYULANG AMAN.</b> Tegangan dibebaskan & penghantar sudah dibumikan — siap dikerjakan. Klik "Beri Tegangan Kembali" untuk latihan urutan sebaliknya.');
+    } else {
+      edu.step(0,!st.tanah);edu.step(1,!st.tanah&&st.pms);edu.step(2,!st.tanah&&st.pms&&st.pmt);
+      if(energizedFeeder())edu.banner('ok','<b>PENYULANG BERTEGANGAN KEMBALI.</b> Urutan memberi tegangan benar: lepas pentanahan → masuk PMS → masuk PMT.');
+    }
+  }
+  c.onPick=(id)=>{if(id)op(id);};
+  ui.button('🔴 Buka / Masuk PMT',()=>op('pmt'));
+  ui.button('🔶 Buka / Masuk PMS',()=>op('pms'));
+  ui.button('🟢 Pasang / Lepas PMS Tanah',()=>op('tanah'));
+  const bGoal=ui.button('🔁 Ganti Tugas: Beri Tegangan Kembali',()=>{
+    goal=goal==='off'?'on':'off';edu.clearBanner();
+    bGoal.textContent=goal==='off'?'🔁 Ganti Tugas: Beri Tegangan Kembali':'🔁 Ganti Tugas: Bebaskan Tegangan';
+    if(goal==='off')edu.setLatihan(EDU.g1.task,EDU.g1.steps);
+    else edu.setLatihan('TUGAS: Beri tegangan penyulang kembali (urutan kebalikan).',['Lepas <b>PMS Tanah</b>.','Masuk <b>PMS</b>.','Masuk <b>PMT</b>.']);
+    checkGoal();
+  });
+  const mPmt=ui.metric('PMT','—'),mPms=ui.metric('PMS','—'),mTan=ui.metric('PMS Tanah','—'),mFeed=ui.metric('Penyulang','—');
+  ui.note('Klik peralatan di gambar atau tombol di atas. Interlock akan mencegah manuver berbahaya & menjelaskan alasannya.');
+  refresh();checkGoal();return c;
+};
 
 /* ===== t1 Instalasi Bangunan (Three) ===== */
 SIMS3D.t1=(host,ui)=>{
@@ -676,24 +1122,69 @@ SIMS3D.t15=(host,ui)=>{
    ========================================================================= */
 let current=null;
 const $=id=>document.getElementById(id);
-function buildHub(){
-  $('hubGrid').innerHTML=TRACKS3D.map((t,i)=>`
-    <button class="card" data-id="${t.id}">
+function cardHTML(t,i){
+  const feat=t.cat==='praktik';
+  return `<button class="card${feat?' feat':''}" data-id="${t.id}">
       <div class="card-ic">${t.icon}
         <span class="card-eng ${t.engine==='three'?'eng-three':'eng-babylon'}">${t.engine==='three'?'Three.js':'Babylon.js'}</span>
+        ${feat?'<span class="card-tag">INTERAKTIF</span>':''}
         <span class="card-arrow">→</span></div>
       <div class="card-body">
-        <div class="card-no">LAB 3D · ${String(i+1).padStart(2,'0')}</div>
+        <div class="card-no">${feat?'PRAKTIK':'LAB 3D'} · ${String(i).padStart(2,'0')}</div>
         <div class="card-title">${t.title}</div>
         <div class="card-sub">${t.sub}</div>
       </div>
-    </button>`).join('');
+    </button>`;
+}
+function buildHub(){
+  const praktik=TRACKS3D.filter(t=>t.cat==='praktik');
+  const lab=TRACKS3D.filter(t=>t.cat!=='praktik');
+  let html='';
+  html+=`<div class="hub-cat"><span class="hub-pill">⚡ PRAKTIK INTERAKTIF</span></div>
+    <div class="hub-sec"><span class="bar"></span>Rangkai &amp; operasikan sendiri — dengan validasi otomatis</div>
+    <div class="grid">${praktik.map((t,i)=>cardHTML(t,i+1)).join('')}</div>`;
+  html+=`<div class="hub-cat" style="margin-top:26px"></div>
+    <div class="hub-sec"><span class="bar"></span>Lab Visualisasi 3D — eksplorasi parameter</div>
+    <div class="grid">${lab.map((t,i)=>cardHTML(t,i+1)).join('')}</div>`;
+  $('hubGrid').innerHTML=html;
   $('hubGrid').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>openSim(b.getAttribute('data-id'))));
 }
 function showHub(){
   if(current&&current.dispose){current.dispose();current=null;}
   $('hub').style.display='block';$('stage').style.display='none';$('backBtn').style.display='none';
-  $('crumb').textContent='16 Lab 3D';window.scrollTo(0,0);
+  $('crumb').textContent='Lab Praktik 3D';window.scrollTo(0,0);
+}
+function switchPane(pane){
+  document.querySelectorAll('.tab3d').forEach(b=>b.classList.toggle('on',b.dataset.pane===pane));
+  document.querySelectorAll('.pane3d').forEach(p=>p.classList.toggle('on',p.id===pane));
+}
+// bangun panel Teori + Latihan dan kembalikan controller "edu" untuk dipakai sim
+function buildEdu(id){
+  const E=EDU[id], theoryEl=$('theory3d'), stepsEl=$('steps3d');
+  // ---- Teori ----
+  if(E){
+    let h='<div class="edu-h"><span class="bar"></span>Tujuan Belajar</div><ul class="edu-obj">'+E.obj.map(o=>'<li>'+o+'</li>').join('')+'</ul>';
+    h+=E.theory;
+    h+='<div class="edu-insight">'+E.insight+'</div>';
+    theoryEl.innerHTML=h;
+  } else {
+    const b=EDU_BRIEF[id];
+    theoryEl.innerHTML=b?`<div class="edu-h"><span class="bar"></span>${b[0]}</div><p class="edu-txt">${b[1]}</p><div class="edu-formula">${b[2]}</div><div class="edu-insight"><span class="lbl">💡 Insight</span>Geser parameter di tab <b>Kontrol</b> dan amati perubahannya secara real-time di model 3D.</div>`:'<p class="edu-txt">Materi untuk lab ini sedang disiapkan.</p>';
+  }
+  // ---- Latihan / langkah ----
+  function renderSteps(task,steps){
+    if(!steps){stepsEl.innerHTML='<div class="task3d">Lab ini bersifat eksplorasi bebas — tidak ada langkah wajib. Geser parameter di tab <b>Kontrol</b> dan baca <b>Teori</b> untuk memahami fenomenanya.</div>';return;}
+    stepsEl.innerHTML='<div class="task3d"><span class="lbl">🎯 Tugas</span>'+task+'</div><ul class="steps3d">'+steps.map(s=>'<li>'+s+'</li>').join('')+'</ul><div class="banner3d" id="banner3d"></div>';
+  }
+  renderSteps(E&&E.task, E&&E.steps);
+  const edu={
+    step(i,done){const li=stepsEl.querySelectorAll('.steps3d li')[i];if(li)li.classList.toggle('done',!!done);},
+    active(i){stepsEl.querySelectorAll('.steps3d li').forEach((li,idx)=>li.classList.toggle('active',idx===i));},
+    banner(type,msg){const b=$('banner3d');if(!b)return;b.className='banner3d show '+type;b.innerHTML=msg;},
+    clearBanner(){const b=$('banner3d');if(b)b.className='banner3d';},
+    setLatihan(task,steps){renderSteps(task,steps);}
+  };
+  return edu;
 }
 async function openSim(id){
   const t=TRACKS3D.find(x=>x.id===id);if(!t)return;
@@ -701,17 +1192,20 @@ async function openSim(id){
   $('hub').style.display='none';$('stage').style.display='block';$('backBtn').style.display='inline-flex';
   $('crumb').textContent=t.title;$('stIc').textContent=t.icon;$('stTitle').textContent=t.title;
   $('stSub').innerHTML=t.sub+`  <span style="color:#5b6b82">· ${t.engine==='three'?'Three.js':'Babylon.js'}</span>`;
-  $('ctrlTitle').textContent='Kontrol';
+  switchPane('ctrl3d');
   const host=$('stage3d');host.innerHTML='';
   const loader=$('loader');loader.style.display='grid';$('loadMsg').textContent='Memuat mesin '+(t.engine==='three'?'Three.js':'Babylon.js')+'…';
   $('autoBtn').classList.add('on');
+  // hint interaksi berbeda untuk lab praktik
+  const hintEl=document.querySelector('.canvas-hint');if(hintEl)hintEl.textContent=t.cat==='praktik'?'Klik terminal/peralatan untuk merangkai · drag memutar · scroll zoom':'Drag untuk memutar · scroll untuk zoom';
   window.scrollTo(0,0);
   try{
     if(t.engine==='three')await ensureThree();else await ensureBabylon();
     const ui=makeUI($('ctrl3d'));
+    const edu=buildEdu(id);
     // tunggu layout agar clientWidth benar
     await new Promise(r=>requestAnimationFrame(r));
-    current=SIMS3D[id](host,ui);
+    current=SIMS3D[id](host,ui,edu);
     loader.style.display='none';
   }catch(e){
     loader.style.display='none';
@@ -728,6 +1222,7 @@ $('backBtn').addEventListener('click',showHub);
 $('homeLink').addEventListener('click',showHub);
 $('autoBtn').addEventListener('click',toggleAuto);
 $('resetBtn').addEventListener('click',()=>{if(current&&current.reset)current.reset();});
+document.querySelectorAll('.tab3d').forEach(b=>b.addEventListener('click',()=>switchPane(b.dataset.pane)));
 buildHub();showHub();
 </script>
 </body>
