@@ -154,6 +154,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .hub-pill{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.6px;background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;padding:4px 10px;border-radius:20px;font-weight:700;margin-bottom:4px}
 .card.feat{border-color:var(--gold-d);box-shadow:0 0 0 1px rgba(232,179,57,.18)}
 .card .card-tag{position:absolute;top:10px;right:46px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;background:rgba(61,220,132,.9);color:#062a14;padding:3px 7px;border-radius:6px;letter-spacing:.4px}
+
+/* info hotspot popup di kanvas */
+.info3d{position:absolute;left:12px;bottom:46px;max-width:310px;background:rgba(13,18,26,.95);border:1px solid var(--gold-d);border-radius:12px;padding:13px 16px 14px;display:none;box-shadow:0 14px 36px rgba(0,0,0,.55);animation:fade .2s}
+.info3d.show{display:block}
+.info3d h4{font-family:'Chakra Petch',sans-serif;font-size:13.5px;color:var(--gold-soft);margin-bottom:6px;letter-spacing:.4px;padding-right:16px}
+.info3d p{font-size:12px;color:var(--txt-d);line-height:1.6}
+.info3d .x{position:absolute;top:7px;right:11px;cursor:pointer;color:var(--txt-dd);font-size:18px;line-height:1}
+.info3d .x:hover{color:var(--gold)}
+.canvas-hint .ic{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -213,6 +222,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           <button class="ctool" id="resetBtn">⤢ Reset</button>
         </div>
         <div class="canvas-hint">Drag untuk memutar · scroll untuk zoom</div>
+        <div class="info3d" id="info3d"><span class="x" id="infoX">×</span><h4 id="infoT"></h4><p id="infoD"></p></div>
         <div class="loader3d" id="loader"><div class="ring"></div><p id="loadMsg">Memuat mesin 3D…</p></div>
       </div>
       <div class="controls">
@@ -269,16 +279,36 @@ const ensureBabylon=()=>loadWithFallback('babylon',()=>typeof BABYLON!=='undefin
 function mk3(host){
   const W=host.clientWidth||800, H=host.clientHeight||440;
   const scene=new THREE.Scene();
-  scene.background=new THREE.Color(0x0b0f17);
-  scene.fog=new THREE.Fog(0x0b0f17,28,75);
-  const camera=new THREE.PerspectiveCamera(48,W/H,0.1,500);
+  scene.background=new THREE.Color(0x0c1017);
+  const camera=new THREE.PerspectiveCamera(46,W/H,0.1,500);
   const renderer=new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(W,H);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.enabled=true;try{renderer.shadowMap.type=THREE.PCFSoftShadowMap;}catch(e){}
+  // pewarnaan & tone-mapping sinematik agar logam/plastik tampak realistis
+  try{renderer.outputEncoding=THREE.sRGBEncoding;}catch(e){}
+  try{renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.06;}catch(e){}
   host.appendChild(renderer.domElement);
-  scene.add(new THREE.AmbientLight(0xb9c6dd,0.6));
-  const key=new THREE.DirectionalLight(0xffffff,0.95);key.position.set(8,14,9);scene.add(key);
-  const fill=new THREE.DirectionalLight(0x6f86b8,0.4);fill.position.set(-9,5,-7);scene.add(fill);
+  // environment map prosedural (studio) → memberi pantulan halus pada material PBR
+  try{
+    const envScene=new THREE.Scene();
+    const grad=new THREE.Mesh(new THREE.SphereGeometry(60,24,16),
+      new THREE.MeshBasicMaterial({side:THREE.BackSide,vertexColors:true}));
+    const g=grad.geometry,pos=g.attributes.position,col=[];
+    for(let i=0;i<pos.count;i++){const y=pos.getY(i)/60;const t=(y+1)/2;
+      col.push(0.10+t*0.55,0.13+t*0.60,0.18+t*0.66);}
+    g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    envScene.add(grad);
+    const pmrem=new THREE.PMREMGenerator(renderer);pmrem.compileEquirectangularShader();
+    scene.environment=pmrem.fromScene(envScene,0,0.1,80).texture;
+  }catch(e){scene.environment=null;}
+  // rig pencahayaan studio: key (bayangan) + fill + rim
+  scene.add(new THREE.HemisphereLight(0xc5d6ff,0x1a2230,0.55));
+  const key=new THREE.DirectionalLight(0xfff4e2,2.0);key.position.set(10,18,12);
+  key.castShadow=true;key.shadow.mapSize.set(2048,2048);
+  const sc=key.shadow.camera;sc.near=1;sc.far=80;sc.left=sc.bottom=-26;sc.right=sc.top=26;key.shadow.bias=-0.0004;
+  scene.add(key);
+  const fill=new THREE.DirectionalLight(0x9fb6e8,0.55);fill.position.set(-12,7,-6);scene.add(fill);
+  const rim=new THREE.DirectionalLight(0xffe2b0,0.7);rim.position.set(-8,9,-14);scene.add(rim);
   const target=new THREE.Vector3(0,1,0);
   let radius=11,theta=0.75,phi=1.05,home={radius:11,theta:0.75,phi:1.05};
   function applyCam(){
@@ -302,7 +332,10 @@ function mk3(host){
     ndc.x=((cx-r.left)/r.width)*2-1;ndc.y=-((cy-r.top)/r.height)*2+1;
     ray.setFromCamera(ndc,camera);
     const hits=ray.intersectObjects(ctrl.pickables,true);
-    if(hits.length){let o=hits[0].object;while(o&&o.userData&&o.userData.pickId==null&&o.parent)o=o.parent;ctrl.onPick(o&&o.userData?o.userData.pickId:null,o);}
+    if(!hits.length)return;
+    let o=hits[0].object;while(o&&o.userData&&o.userData.pickId==null&&!o.userData.info&&o.parent)o=o.parent;
+    if(o&&o.userData&&o.userData.info){if(ctrl.onInfo)ctrl.onInfo(o.userData.info);return;}
+    if(ctrl.onPick)ctrl.onPick(o&&o.userData?o.userData.pickId:null,o);
   }
   const up=e=>{if(drag&&moved<7){const p=e.changedTouches?e.changedTouches[0]:e;pickAt(p.clientX,p.clientY);}drag=false;};
   el.addEventListener('mousedown',down);el.addEventListener('touchstart',down,{passive:true});
@@ -312,7 +345,7 @@ function mk3(host){
   el.addEventListener('wheel',wheel,{passive:false});
   const onResize=()=>{const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);};
   window.addEventListener('resize',onResize);
-  const ctrl={engine:'three',scene,camera,renderer,THREE,autoRotate:true,pickables:[],onPick:null,
+  const ctrl={engine:'three',scene,camera,renderer,THREE,autoRotate:true,pickables:[],onPick:null,onInfo:null,
     setCam(r,th,ph){if(r!=null)radius=r;if(th!=null)theta=th;if(ph!=null)phi=ph;home={radius,theta,phi};applyCam();},
     reset(){radius=home.radius;theta=home.theta;phi=home.phi;applyCam();},
     start(fn){this._fn=fn;}, // daftarkan hook per-frame (opsional) — loop render selalu jalan
@@ -329,13 +362,136 @@ function mk3(host){
 }
 /* helper primitif Three (pakai TS = scene aktif) */
 let TS=null;
-const _m=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.62,metalness:.18},o||{}));
-function add(mesh,x,y,z){mesh.position.set(x||0,y||0,z||0);TS.add(mesh);return mesh;}
+const _m=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.62,metalness:.18,envMapIntensity:1},o||{}));
+function add(mesh,x,y,z){mesh.position.set(x||0,y||0,z||0);if(mesh.traverse)mesh.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});TS.add(mesh);return mesh;}
 const bx=(w,h,d,c,o)=>new THREE.Mesh(new THREE.BoxGeometry(w,h,d),_m(c,o));
 const cy=(rt,rb,h,c,o)=>new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,(o&&o.seg)||24),_m(c,o));
 const sp=(r,c,o)=>new THREE.Mesh(new THREE.SphereGeometry(r,24,18),_m(c,o));
 const cn=(r,h,c,o)=>new THREE.Mesh(new THREE.ConeGeometry(r,h,(o&&o.seg)||20),_m(c,o));
-function ground(size,col){const s=size||50;const g=new THREE.Mesh(new THREE.PlaneGeometry(s,s),_m(col||0x0e1420,{metalness:0}));g.rotation.x=-Math.PI/2;TS.add(g);const grid=new THREE.GridHelper(s,Math.round(s/2),0x26344a,0x182234);grid.position.y=0.01;TS.add(grid);return g;}
+function ground(size,col){const s=size||50;
+  const g=new THREE.Mesh(new THREE.PlaneGeometry(s,s),new THREE.MeshStandardMaterial({color:col||0x12161d,roughness:.95,metalness:0.02,envMapIntensity:.5}));
+  g.rotation.x=-Math.PI/2;g.receiveShadow=true;TS.add(g);
+  const grid=new THREE.GridHelper(s,Math.round(s/2),0x2c3c54,0x1b2533);grid.position.y=0.012;grid.material.transparent=true;grid.material.opacity=.45;TS.add(grid);return g;}
+
+/* ===================== PUSTAKA MATERIAL & MODEL REALISTIS (PBR) ===================== */
+function std(color,rough,metal,extra){
+  const m=new THREE.MeshStandardMaterial({color:color,roughness:rough,metalness:metal,envMapIntensity:(extra&&extra.env)||1});
+  if(extra){if(extra.emissive!=null){m.emissive=new THREE.Color(extra.emissive);m.emissiveIntensity=extra.emissiveI||1;}
+    if(extra.opacity!=null){m.transparent=true;m.opacity=extra.opacity;}if(extra.map){m.map=extra.map;}}
+  return m;
+}
+const MAT={
+  steel:c=>std(c||0x9aa3ad,.4,.92,{env:1.15}), darksteel:c=>std(c||0x394049,.5,.82,{env:.95}),
+  paintBlue:()=>std(0x2f5aa0,.45,.32,{env:.8}), paintGray:c=>std(c||0x707b88,.5,.28,{env:.7}),
+  paintGreen:()=>std(0x3f5d4a,.5,.3,{env:.7}),
+  copper:()=>std(0xb5703a,.3,1,{env:1.25}), brass:()=>std(0xc9a24a,.3,1,{env:1.25}), alu:()=>std(0xc2c9d2,.36,.9,{env:1.1}),
+  plasticW:()=>std(0xe9ecf0,.4,.04,{env:.5}), plasticD:c=>std(c||0x1b1f27,.48,.06,{env:.5}),
+  rubber:()=>std(0x141619,.85,0,{env:.3}), porcelain:c=>std(c==null?0xb78a5e:c,.32,.03,{env:.65}),
+  glass:()=>std(0x9fd0ff,.06,.1,{opacity:.3,env:1.4}),
+  ledG:on=>std(on?0x33ff88:0x0c2418,.4,0,{emissive:on?0x2bd66f:0x05130b,emissiveI:on?1.3:.2}),
+  ledR:on=>std(on?0xff4d4d:0x2a0c0c,.4,0,{emissive:on?0xff3b3b:0x120404,emissiveI:on?1.3:.2})
+};
+function meshP(geo,mat,x,y,z){const m=new THREE.Mesh(geo,mat);if(x!=null)m.position.set(x,y||0,z||0);return m;}
+// tekstur teks/nameplate sederhana (canvas)
+function textTex(str,bg,fg){const cv=document.createElement('canvas');cv.width=256;cv.height=64;const g=cv.getContext('2d');
+  g.fillStyle=bg||'#eef1f4';g.fillRect(0,0,256,64);g.fillStyle=fg||'#15181d';g.font='700 30px monospace';g.textAlign='center';g.textBaseline='middle';g.fillText(str,128,34);
+  const t=new THREE.CanvasTexture(cv);t.anisotropy=4;return t;}
+function plateTex(title,lines){const cv=document.createElement('canvas');cv.width=256;cv.height=160;const g=cv.getContext('2d');
+  g.fillStyle='#b9bec6';g.fillRect(0,0,256,160);g.strokeStyle='#5a6473';g.lineWidth=7;g.strokeRect(7,7,242,146);
+  g.fillStyle='#15181d';g.font='700 27px sans-serif';g.textAlign='center';g.fillText(title,128,40);
+  g.font='500 19px monospace';let y=76;(lines||[]).forEach(l=>{g.fillText(l,128,y);y+=26;});
+  const t=new THREE.CanvasTexture(cv);t.anisotropy=4;return t;}
+// info hotspot ("i") yang bisa diklik → memunculkan keterangan komponen
+function infoPin(x,y,z,title,desc){
+  const cv=document.createElement('canvas');cv.width=cv.height=64;const g=cv.getContext('2d');
+  g.fillStyle='rgba(232,179,57,.96)';g.beginPath();g.arc(32,32,27,0,7);g.fill();
+  g.strokeStyle='#1a1206';g.lineWidth=3;g.stroke();
+  g.fillStyle='#1a1206';g.font='700 40px Georgia,serif';g.textAlign='center';g.textBaseline='middle';g.fillText('i',32,35);
+  const tex=new THREE.CanvasTexture(cv);
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:false,transparent:true}));
+  s.scale.set(0.5,0.5,1);s.position.set(x,y,z);s.userData={info:{title:title,desc:desc}};TS.add(s);return s;
+}
+// sekrup terminal kuningan
+function screw(x,y,z){const g=new THREE.Group();
+  const head=meshP(new THREE.CylinderGeometry(0.09,0.09,0.05,16),MAT.brass(),0,0,0);head.rotation.x=Math.PI/2;g.add(head);
+  const slot=meshP(new THREE.BoxGeometry(0.12,0.02,0.03),MAT.darksteel(),0,0,0.03);g.add(slot);
+  g.position.set(x,y,z);return g;}
+// isolator porselen (bushing)
+function buildBushing(h,r,col){const g=new THREE.Group();const por=MAT.porcelain(col);r=r||0.14;
+  const n=Math.max(3,Math.round(h/0.26));
+  for(let i=0;i<n;i++){const sh=meshP(new THREE.CylinderGeometry(r+0.05,r+0.11,0.13,20),por,0,i*(h/n),0);g.add(sh);}
+  g.add(meshP(new THREE.CylinderGeometry(r*0.4,r*0.4,h*0.5,12),MAT.brass(),0,h+0.08,0));
+  g.add(meshP(new THREE.SphereGeometry(0.085,14,10),MAT.brass(),0,h+0.3,0));
+  return g;}
+
+/* ---- motor induksi 3 fasa realistis (return group; userData.rotor untuk diputar) ---- */
+function buildMotor(){
+  const g=new THREE.Group(),blue=MAT.paintBlue(),alu=MAT.alu(),steel=MAT.steel(),black=MAT.plasticD();
+  const body=meshP(new THREE.CylinderGeometry(0.95,0.95,2.4,40),blue,0,1.5,0);body.rotation.z=Math.PI/2;g.add(body);
+  for(let i=0;i<16;i++){const f=meshP(new THREE.CylinderGeometry(1.07,1.07,0.05,40),blue,-1.1+i*0.146,1.5,0);f.rotation.z=Math.PI/2;g.add(f);}
+  [-1.35,1.35].forEach(x=>{const e=meshP(new THREE.CylinderGeometry(0.82,0.95,0.5,40),alu,x,1.5,0);e.rotation.z=Math.PI/2;g.add(e);});
+  const fc=meshP(new THREE.CylinderGeometry(0.92,0.72,0.5,40),black,-1.92,1.5,0);fc.rotation.z=Math.PI/2;g.add(fc);
+  for(let i=0;i<16;i++){const a=i/16*Math.PI*2;const s=meshP(new THREE.BoxGeometry(0.04,0.46,0.1),MAT.darksteel(),-2.17,1.5+Math.cos(a)*0.55,Math.sin(a)*0.55);s.rotation.x=a;g.add(s);}
+  const rotor=new THREE.Group();rotor.position.set(0,1.5,0);g.add(rotor);
+  const shaft=meshP(new THREE.CylinderGeometry(0.17,0.17,3.7,20),steel,0,0,0);shaft.rotation.z=Math.PI/2;rotor.add(shaft);
+  rotor.add(meshP(new THREE.BoxGeometry(0.5,0.06,0.06),MAT.steel(),1.6,0.12,0)); // pasak (key)
+  const tb=meshP(new THREE.BoxGeometry(1.15,0.55,0.95),black,0,2.45,0);g.add(tb);
+  g.add(meshP(new THREE.BoxGeometry(1.0,0.1,0.82),MAT.darksteel(),0,2.74,0));
+  const np=meshP(new THREE.PlaneGeometry(0.95,0.5),std(0xc9cdd3,.3,.85,{env:1,map:plateTex('3~ MOTOR',['380/660V Δ/Y','1450 rpm','7.5 kW · IE3'])}),0,1.5,0.965);g.add(np);
+  [-0.95,0.95].forEach(x=>g.add(meshP(new THREE.BoxGeometry(0.55,0.5,1.9),blue,x,0.28,0)));
+  g.add(meshP(new THREE.BoxGeometry(3.5,0.18,2.3),MAT.darksteel(),0,0.09,0));
+  const eye=meshP(new THREE.TorusGeometry(0.15,0.045,10,20),steel,0,2.95,0);g.add(eye);
+  g.userData.rotor=rotor;return g;
+}
+/* ---- trafo distribusi realistis ---- */
+function buildTransformer(){
+  const g=new THREE.Group(),gray=MAT.paintGray(0x5d6a64);
+  g.add(meshP(new THREE.BoxGeometry(2.6,2.4,1.8),MAT.paintGray(0x55625b),0,1.5,0));
+  [-1,1].forEach(sx=>{for(let i=0;i<7;i++)g.add(meshP(new THREE.BoxGeometry(0.2,2.0,0.12),MAT.paintGray(0x4c594f),sx*1.45,1.5,-0.66+i*0.22));});
+  const cons=meshP(new THREE.CylinderGeometry(0.32,0.32,1.7,24),gray,0,3.05,-0.55);cons.rotation.z=Math.PI/2;g.add(cons);
+  g.add(meshP(new THREE.BoxGeometry(2.74,0.16,1.94),MAT.darksteel(),0,2.78,0));
+  const hv=[];[-0.7,0,0.7].forEach(x=>{const b=buildBushing(1.05,0.15,0xb78a5e);b.position.set(x,2.86,0.45);g.add(b);hv.push(b);});
+  [-0.75,-0.25,0.25,0.75].forEach(x=>{const b=buildBushing(0.55,0.11,0xcdd3d8);b.position.set(x,2.86,-0.5);g.add(b);});
+  g.add(meshP(new THREE.BoxGeometry(2.9,0.22,2.0),MAT.darksteel(),0,0.2,0));
+  g.add(meshP(new THREE.PlaneGeometry(0.85,0.55),std(0xc9cdd3,.3,.85,{env:1,map:plateTex('TRAFO DIST.',['20kV/400V','160 kVA','Dyn5'])}),0,1.35,0.915));
+  g.userData.hv=hv;return g;
+}
+/* ---- MCB (miniature circuit breaker) di rel DIN ---- */
+function buildMCB(poles){poles=poles||1;const g=new THREE.Group(),w=0.44*poles;
+  g.add(meshP(new THREE.BoxGeometry(w,1.5,0.95),MAT.plasticW(),0,0.75,0));
+  g.add(meshP(new THREE.BoxGeometry(w*0.96,0.66,0.06),MAT.plasticD(0xe2e5ea),0,0.78,0.47));
+  const lever=meshP(new THREE.BoxGeometry(0.18*poles,0.34,0.2),MAT.plasticD(0x222630),0,0.95,0.55);g.add(lever);
+  g.add(meshP(new THREE.PlaneGeometry(w*0.78,0.22),std(0xf4f6f8,.45,0,{map:textTex(poles===3?'C16 3P':'C16','#f4f6f8')}),0,1.2,0.495));
+  for(let p=0;p<poles;p++){const x=-w/2+0.22+p*0.44;[1.46,0.06].forEach(y=>g.add(screw(x,y,0.46)));}
+  g.add(meshP(new THREE.BoxGeometry(w+0.05,0.18,0.5),MAT.steel(),0,-0.02,-0.1)); // klip rel DIN
+  g.userData.lever=lever;return g;}
+/* ---- saklar dinding ---- */
+function buildWallSwitch(){const g=new THREE.Group();
+  g.add(meshP(new THREE.BoxGeometry(1.0,1.4,0.12),MAT.plasticW(),0,0,0.06));
+  g.add(meshP(new THREE.BoxGeometry(0.72,0.98,0.1),MAT.plasticD(0xdde1e7),0,0,0.13));
+  const rocker=meshP(new THREE.BoxGeometry(0.52,0.82,0.16),MAT.plasticW(),0,0,0.2);rocker.rotation.x=0.14;g.add(rocker);
+  g.add(screw(0,0.6,0.1));g.add(screw(0,-0.6,0.1));
+  g.userData.rocker=rocker;return g;}
+/* ---- stop kontak ---- */
+function buildSocket(){const g=new THREE.Group();
+  g.add(meshP(new THREE.BoxGeometry(1.15,1.15,0.12),MAT.plasticW(),0,0,0.06));
+  const face=meshP(new THREE.CylinderGeometry(0.44,0.44,0.1,28),MAT.plasticW(),0,0,0.16);face.rotation.x=Math.PI/2;g.add(face);
+  [-0.16,0.16].forEach(x=>{const h=meshP(new THREE.CylinderGeometry(0.05,0.05,0.14,12),MAT.plasticD(0x0c0e12),x,0,0.2);h.rotation.x=Math.PI/2;g.add(h);});
+  [-0.36,0.36].forEach(x=>g.add(meshP(new THREE.BoxGeometry(0.07,0.18,0.05),MAT.steel(),x,0,0.19)));
+  return g;}
+/* ---- meter/kWh (sumber instalasi) ---- */
+function buildMeter(){const g=new THREE.Group();
+  g.add(meshP(new THREE.BoxGeometry(1.7,2.5,0.7),MAT.plasticW(),0,0,0.35));
+  g.add(meshP(new THREE.PlaneGeometry(1.1,0.55),std(0x07140d,.3,0,{emissive:0x0a2418,emissiveI:.5}),0,0.6,0.71));
+  g.add(meshP(new THREE.PlaneGeometry(0.95,0.32),std(0x103a22,.4,0,{emissive:0x2fa35f,emissiveI:.5,map:textTex('001284 kWh','#0c2a1a','#9fffcf')}),0,0.6,0.715));
+  g.add(meshP(new THREE.BoxGeometry(1.55,0.75,0.42),MAT.plasticD(0xb9bfc7),0,-0.9,0.5));
+  return g;}
+/* ---- kubikel/switchgear gardu ---- */
+function buildCubicle(){const g=new THREE.Group();
+  g.add(meshP(new THREE.BoxGeometry(3.0,6.2,2.2),MAT.paintGray(0x8f9ca8),0,3.1,-0.8));
+  g.add(meshP(new THREE.BoxGeometry(2.6,2.1,0.08),MAT.plasticD(0x1f252d),0,4.2,0.32));
+  for(let i=0;i<6;i++)g.add(meshP(new THREE.BoxGeometry(2.2,0.07,0.05),MAT.darksteel(),0,0.8+i*0.22,0.32));
+  return g;}
 
 /* ---- helper interaktif: terminal yang bisa diklik, kabel, & label teks ---- */
 function label3d(text,x,y,z,scale){
@@ -349,10 +505,15 @@ function label3d(text,x,y,z,scale){
   sp.scale.set((scale||1)*1.6,(scale||1)*0.4,1);sp.position.set(x,y,z);TS.add(sp);return sp;
 }
 function roundRect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
-// terminal: bola kecil yang bisa dipilih; type menentukan warna highlight
+// terminal: sekrup kuningan yang bisa diklik & disorot (highlight via material.emissive)
 function terminal(id,x,y,z,type){
-  const m=new THREE.Mesh(new THREE.SphereGeometry(0.16,18,14),new THREE.MeshStandardMaterial({color:0xcfd6e0,emissive:0x101418,roughness:.4,metalness:.5}));
-  m.position.set(x,y,z);m.userData={pickId:id,type:type||'L',term:true};TS.add(m);return m;
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.16,0.16,20),
+    new THREE.MeshStandardMaterial({color:0xc9a24a,emissive:0x1a1206,emissiveIntensity:1,roughness:.3,metalness:1,envMapIntensity:1.2}));
+  m.rotation.x=Math.PI/2;m.position.set(x,y,z);m.castShadow=true;m.userData={pickId:id,type:type||'L',term:true};
+  // alur sekrup (dekoratif, ikut terpilih lewat parent)
+  const slot=new THREE.Mesh(new THREE.BoxGeometry(0.18,0.03,0.04),new THREE.MeshStandardMaterial({color:0x4a3a1a,roughness:.6}));
+  slot.position.set(0,0.085,0);m.add(slot);
+  TS.add(m);return m;
 }
 const WIRECOL={L:0x9a5a2b,N:0x3a7bd5,PE:0xc9d92f,R:0x8a4a2b,S:0xb0b0b0,T:0x9a5a2b,bare:0xcfd6e0};
 // kabel melengkung antara dua titik
@@ -361,9 +522,9 @@ function wire(p1,p2,colorHex){
   const b=p2.clone?p2.clone():new THREE.Vector3(p2.x,p2.y,p2.z);
   const mid=a.clone().add(b).multiplyScalar(.5);mid.y-=a.distanceTo(b)*0.18;
   const curve=new THREE.CatmullRomCurve3([a,mid,b]);
-  const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,16,0.055,7,false),
-    new THREE.MeshStandardMaterial({color:colorHex,roughness:.5,metalness:.1,emissive:0x000000}));
-  TS.add(tube);return tube;
+  const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,20,0.07,10,false),
+    new THREE.MeshStandardMaterial({color:colorHex,roughness:.42,metalness:.05,envMapIntensity:.7}));
+  tube.castShadow=true;TS.add(tube);return tube;
 }
 
 /* ---------- Babylon.js engine wrapper ---------- */
@@ -529,33 +690,41 @@ function _k(a,b){return [a,b].sort().join('|');}
 
 /* ===== w1 — Wiring Instalasi 1 Fasa (interaktif) ===== */
 SIMS3D.w1=(host,ui,edu)=>{
-  const c=mk3(host);TS=c.scene;c.autoRotate=false;c.scene.fog=null;c.setCam(13,0,1.18);
-  ground(34,0x0e1420);
-  add(bx(15,9,0.4,0x10151f),0,4.2,-0.35);add(bx(15.3,9.3,0.1,0x26344a),0,4.2,-0.55);
-  const Z=0.6,terms={},termList=[];
+  const c=mk3(host);TS=c.scene;c.autoRotate=false;c.setCam(15,0,1.14);
+  ground(34,0x141923);
+  // papan instalasi (panel) + bingkai
+  add(bx(15,9,0.4,0x8b939d),0,4.2,-0.4);add(bx(15.4,9.4,0.12,0x3a424d),0,4.2,-0.62);
+  const Z=0.75,terms={},termList=[],infoPins=[];
   const mkT=(id,x,y,type)=>{const m=terminal(id,x,y,Z,type);terms[id]=m;termList.push(m);return m;};
   const box=(x,y,w,h,col)=>add(bx(w,h,0.7,col),x,y,0.18);
-  const txt=(t,x,y)=>label3d(t,x,y,Z+0.25,0.85);
-  // SUPLAI
-  box(-5.8,4.4,1.8,3.6,0x33445f);txt('SUPLAI',-5.8,6.5);
-  mkT('src_L',-5.8,5.0,'L');txt('L',-6.9,5.0);
-  mkT('src_N',-5.8,4.1,'N');txt('N',-6.9,4.1);
-  mkT('src_PE',-5.8,3.2,'PE');txt('PE',-7.0,3.2);
+  const txt=(t,x,y)=>label3d(t,x,y,Z+0.4,0.8);
+  const pin=(x,y,t,d)=>infoPins.push(infoPin(x,y,1.0,t,d));
+  // SUPLAI / kWh meter
+  add(buildMeter(),-5.8,4.0,0.0);txt('SUPLAI / kWh',-5.8,6.6);
+  mkT('src_L',-5.8,5.0,'L');txt('L',-7.0,5.0);
+  mkT('src_N',-5.8,4.1,'N');txt('N',-7.0,4.1);
+  mkT('src_PE',-5.8,3.2,'PE');txt('PE',-7.1,3.2);
+  pin(-5.8,5.8,'kWh Meter / Sumber','Titik suplai dari PLN: menyediakan Fasa (L), Netral (N), dan Pembumian (PE). kWh meter mencatat energi (kWh) yang dipakai pelanggan.');
   // MCB
-  box(-2.8,5.4,1.3,1.8,0x2a3445);txt('MCB',-2.8,6.6);
+  const mcb=buildMCB(1);add(mcb,-2.8,4.65,0.0);txt('MCB',-2.8,6.7);
   mkT('mcb_in',-2.8,6.0,'L');mkT('mcb_out',-2.8,4.8,'L');
+  pin(-2.8,6.45,'MCB (Miniature Circuit Breaker)','Pengaman arus lebih & hubung singkat. Bila arus melebihi rating (mis. C16 = 16 A) atau terjadi korslet, MCB trip otomatis memutus rangkaian.');
   // SAKLAR
-  box(0.1,4.6,1.3,1.6,0x2a3445);txt('SAKLAR',0.1,5.7);
+  const sw=buildWallSwitch();add(sw,0.1,4.55,0.0);txt('SAKLAR',0.1,5.8);
   mkT('sw_in',0.1,5.1,'L');mkT('sw_out',0.1,4.0,'L');
-  // LAMPU
-  box(3.2,5.6,1.2,0.9,0x55617a);txt('LAMPU',3.2,6.6);
-  const bulb=add(sp(0.5,0x44484f,{emissive:0x0a0a0a,emissiveIntensity:1}),3.2,5.3,0.5);
-  const lampLight=new THREE.PointLight(0xffe6a0,0,18,2);lampLight.position.set(3.2,5.3,3);TS.add(lampLight);
+  pin(0.1,5.55,'Saklar','Memutus/menyambung penghantar FASA menuju lampu. Dipasang di sisi fasa agar fitting lampu bebas tegangan saat saklar OFF — aman saat ganti lampu.');
+  // LAMPU (fitting + bohlam)
+  add(meshP(new THREE.CylinderGeometry(0.5,0.4,0.3,24),MAT.plasticW(),0,0,0),3.2,5.95,0.2);
+  const bulb=add(sp(0.46,0x4a4f57,{emissive:0x0a0a0a,emissiveIntensity:1,roughness:.25,metalness:0}),3.2,5.4,0.55);
+  const lampLight=new THREE.PointLight(0xffe6a0,0,20,2);lampLight.position.set(3.2,5.4,3);TS.add(lampLight);
+  txt('LAMPU',3.2,6.6);
   mkT('lmp_L',2.6,4.6,'L');mkT('lmp_N',3.8,4.6,'N');
+  pin(3.2,6.4,'Lampu / Beban','Menyala bila mendapat fasa (lewat saklar) dan netral. Daya tipikal LED 5–18 W; arus kecil (P = V·I·cos φ).');
   // STOP KONTAK
-  box(5.9,3.4,1.7,2.0,0x2a3445);txt('STOP KONTAK',5.9,4.8);
-  const skLed=add(sp(0.2,0x442222,{emissive:0x110505,emissiveIntensity:1}),5.9,4.2,0.55);
-  mkT('sk_L',5.3,3.0,'L');mkT('sk_N',6.5,3.0,'N');mkT('sk_PE',5.9,2.2,'PE');
+  add(buildSocket(),5.9,3.55,0.0);txt('STOP KONTAK',5.9,5.0);
+  const skLed=add(sp(0.16,0x442222,{emissive:0x110505,emissiveIntensity:1}),5.9,4.5,0.55);
+  mkT('sk_L',5.3,2.9,'L');mkT('sk_N',6.5,2.9,'N');mkT('sk_PE',5.9,2.2,'PE');
+  pin(5.9,4.9,'Stop Kontak','Wajib 3 penghantar: L, N, dan PE. Pembumian (PE) mengamankan pengguna bila bodi peralatan bocor arus ke casing.');
 
   const required=[['src_L','mcb_in'],['mcb_out','sw_in'],['sw_out','lmp_L'],['src_N','lmp_N'],['mcb_out','sk_L'],['src_N','sk_N'],['src_PE','sk_PE']];
   const stepGroups=[[0],[1,4],[2],[3,5],[6]];
@@ -578,11 +747,11 @@ SIMS3D.w1=(host,ui,edu)=>{
     const t=wire(terms[a].position,terms[b].position,WIRECOL[curType]);
     conns.push({a,b,k:_k(a,b),type:curType,tube:t});evaluate();
   }
-  c.pickables=termList;
+  c.pickables=termList.concat(infoPins);
   c.onPick=(id)=>{if(id==null||!terms[id])return;
     if(sel===null){sel=id;terms[id].material.emissive.setHex(0xe8b339);return;}
-    if(sel===id){terms[id].material.emissive.setHex(0x101418);sel=null;return;}
-    terms[sel].material.emissive.setHex(0x101418);addConn(sel,id);sel=null;};
+    if(sel===id){terms[id].material.emissive.setHex(0x1a1206);sel=null;return;}
+    terms[sel].material.emissive.setHex(0x1a1206);addConn(sel,id);sel=null;};
 
   ui.palette([{label:'Fasa',type:'L',color:'#b06a30'},{label:'Netral',type:'N',color:'#3a7bd5'},{label:'Arde',type:'PE',color:'#c9d92f'}],t=>curType=t);
   ui.button('⚡ Beri Tegangan & Uji',()=>{
@@ -594,7 +763,7 @@ SIMS3D.w1=(host,ui,edu)=>{
   });
   ui.button('💡 Uji Saklar (ON/OFF)',(b)=>{if(!energized){edu.banner('info','Beri tegangan dulu sebelum menguji saklar.');return;}
     swOn=!swOn;b.classList.toggle('on',swOn);bulb.material.color.setHex(swOn?0xffe9a8:0x44484f);bulb.material.emissive.setHex(swOn?0xffd34d:0x0a0a0a);lampLight.intensity=swOn?1.6:0;mStat(swOn?'Lampu menyala':'Lampu padam');});
-  ui.button('↶ Hapus Kabel Terakhir',()=>{const last=conns.pop();if(last){TS.remove(last.tube);last.tube.geometry.dispose();}if(sel){terms[sel].material.emissive.setHex(0x101418);sel=null;}evaluate();});
+  ui.button('↶ Hapus Kabel Terakhir',()=>{const last=conns.pop();if(last){TS.remove(last.tube);last.tube.geometry.dispose();}if(sel){terms[sel].material.emissive.setHex(0x1a1206);sel=null;}evaluate();});
   ui.button('🗑 Reset Rangkaian',()=>{conns.forEach(cn=>{TS.remove(cn.tube);cn.tube.geometry.dispose();});conns=[];energized=swOn=false;bulb.material.color.setHex(0x44484f);bulb.material.emissive.setHex(0x0a0a0a);lampLight.intensity=0;skLed.material.color.setHex(0x442222);skLed.material.emissive.setHex(0x110505);edu.clearBanner();mStat('—');evaluate();});
   const mProg=ui.metric('Sambungan benar','0 / 7'),mWarn=ui.metric('Peringatan','—'),mStat=ui.metric('Status','—');
   ui.note('Klik <b>satu terminal</b> lalu <b>terminal lain</b> untuk menarik kabel (warna sesuai palet di atas). Buka tab <b>Teori</b> & <b>Latihan</b> untuk panduan.');
@@ -603,25 +772,31 @@ SIMS3D.w1=(host,ui,edu)=>{
 
 /* ===== w3 — Wiring 3 Fasa: Bintang / Segitiga (interaktif) ===== */
 SIMS3D.w3=(host,ui,edu)=>{
-  const c=mk3(host);TS=c.scene;c.autoRotate=false;c.scene.fog=null;c.setCam(13,0.2,1.15);
-  ground(34,0x0e1420);
-  add(bx(15,9,0.4,0x10151f),0,4,-0.35);add(bx(15.3,9.3,0.1,0x26344a),0,4,-0.55);
-  const Z=0.6,terms={},termList=[];
+  const c=mk3(host);TS=c.scene;c.autoRotate=false;c.setCam(16,0.35,1.12);
+  ground(34,0x141923);
+  add(bx(15,9,0.4,0x8b939d),-1.5,4.2,-0.4);add(bx(15.4,9.4,0.12,0x3a424d),-1.5,4.2,-0.62);
+  const Z=0.75,terms={},termList=[],infoPins=[];
   const mkT=(id,x,y,type)=>{const m=terminal(id,x,y,Z,type);terms[id]=m;termList.push(m);return m;};
   const box=(x,y,w,h,col)=>add(bx(w,h,0.7,col),x,y,0.18);
-  const txt=(t,x,y)=>label3d(t,x,y,Z+0.25,0.8);
-  // suplai R S T
-  box(-5.6,4.5,1.7,3.8,0x33445f);txt('SUPLAI 3Ø',-5.6,6.7);
-  mkT('R',-5.6,5.3,'R');txt('R',-6.6,5.3);mkT('S',-5.6,4.4,'S');txt('S',-6.6,4.4);mkT('T',-5.6,3.5,'T');txt('T',-6.6,3.5);
+  const txt=(t,x,y)=>label3d(t,x,y,Z+0.4,0.78);
+  const pin=(x,y,z,t,d)=>infoPins.push(infoPin(x,y,z,t,d));
+  // suplai R S T (busbar 3 fasa) + MCB 3 pole
+  add(buildMeter(),-6.4,4.0,0.0);txt('SUPLAI 3Ø',-6.4,6.6);
+  mkT('R',-6.4,5.2,'R');txt('R',-7.5,5.2);mkT('S',-6.4,4.3,'S');txt('S',-7.5,4.3);mkT('T',-6.4,3.4,'T');txt('T',-7.5,3.4);
+  add(buildMCB(3),-3.6,4.65,0.0);txt('MCB 3P',-3.6,6.7);
+  pin(-6.4,5.9,1.0,'Suplai 3 Fasa (R-S-T)','Tiga fasa beda sudut 120°. Tegangan antar-fasa (line) ≈380–400 V, fasa-netral ≈220–230 V. Dipakai untuk motor & beban daya besar.');
+  pin(-3.6,6.45,1.0,'MCB 3 Pole','Memutus ketiga fasa serentak saat gangguan. Wajib untuk proteksi motor & instalasi 3 fasa.');
   // terminal box motor (atas: U1 V1 W1 ; bawah: W2 U2 V2)
-  box(2.6,4.3,4.4,2.6,0x222c3d);txt('TERMINAL BOX',2.6,5.95);
-  mkT('U1',1.2,4.9,'m');txt('U1',1.2,5.5);mkT('V1',2.6,4.9,'m');txt('V1',2.6,5.5);mkT('W1',4.0,4.9,'m');txt('W1',4.0,5.5);
-  mkT('W2',1.2,3.6,'m');txt('W2',1.2,3.1);mkT('U2',2.6,3.6,'m');txt('U2',2.6,3.1);mkT('V2',4.0,3.6,'m');txt('V2',4.0,3.1);
-  // motor + rotor
-  const mbody=add(cy(0.95,0.95,2.0,0x46586f,{seg:28}),5.2,1.6,1.6);mbody.rotation.z=Math.PI/2;
-  const rotor=new THREE.Group();rotor.position.set(5.2,1.6,1.6);TS.add(rotor);
-  const shaft=cy(0.12,0.12,2.6,0xd6dce6,{seg:16});shaft.rotation.z=Math.PI/2;rotor.add(shaft);
-  for(let i=0;i<6;i++){const bl=bx(0.05,0.4,0.14,0xe8b339);bl.position.set(1.15,0,0);bl.rotation.x=i*Math.PI/3;rotor.add(bl);}
+  add(meshP(new THREE.BoxGeometry(4.4,2.6,0.5),MAT.plasticD(0x20262e),0,0,0),2.6,4.3,0.2);
+  add(meshP(new THREE.BoxGeometry(4.0,2.2,0.06),MAT.darksteel(),0,0,0),2.6,4.3,0.46);
+  txt('TERMINAL BOX',2.6,6.0);
+  mkT('U1',1.2,4.9,'m');txt('U1',1.2,5.45);mkT('V1',2.6,4.9,'m');txt('V1',2.6,5.45);mkT('W1',4.0,4.9,'m');txt('W1',4.0,5.45);
+  mkT('W2',1.2,3.6,'m');txt('W2',1.2,3.15);mkT('U2',2.6,3.6,'m');txt('U2',2.6,3.15);mkT('V2',4.0,3.6,'m');txt('V2',4.0,3.15);
+  pin(2.6,6.4,1.0,'Terminal Box Motor','6 ujung belitan: U1-V1-W1 (atas) & W2-U2-V2 (bawah). Pola jumper menentukan hubungan Bintang (Y) atau Segitiga (Δ).');
+  // motor 3 fasa realistis (di depan papan)
+  const motor=add(buildMotor(),5.6,0,2.6);motor.rotation.y=-0.5;
+  const rotor=motor.userData.rotor;
+  pin(5.6,3.4,3.6,'Motor Induksi 3 Fasa','Rotor sangkar tupai berputar mengikuti medan putar stator. Hubungan Y untuk start (arus kecil), Δ untuk jalan (torsi penuh).');
 
   const SUP=[['R','U1'],['S','V1'],['T','W1']];
   const CFG={ Y:{links:[['U2','V2'],['V2','W2']],name:'Bintang (Y)'}, D:{links:[['U1','W2'],['V1','U2'],['W1','V2']],name:'Segitiga (Δ)'} };
@@ -638,11 +813,11 @@ SIMS3D.w3=(host,ui,edu)=>{
   }
   function addConn(a,b){if(a===b)return;if(conns.some(cn=>cn.k===_k(a,b))){edu.banner('info','Jumper itu sudah ada.');return;}
     const t=wire(terms[a].position,terms[b].position,WIRECOL[curType]||0xcfd6e0);conns.push({a,b,k:_k(a,b),tube:t});evaluate();}
-  c.pickables=termList;
+  c.pickables=termList.concat(infoPins);
   c.onPick=(id)=>{if(id==null||!terms[id])return;
     if(sel===null){sel=id;terms[id].material.emissive.setHex(0xe8b339);return;}
-    if(sel===id){terms[id].material.emissive.setHex(0x101418);sel=null;return;}
-    terms[sel].material.emissive.setHex(0x101418);addConn(sel,id);sel=null;};
+    if(sel===id){terms[id].material.emissive.setHex(0x1a1206);sel=null;return;}
+    terms[sel].material.emissive.setHex(0x1a1206);addConn(sel,id);sel=null;};
 
   ui.palette([{label:'R',type:'R',color:'#b06a30'},{label:'S',type:'S',color:'#b0b0b0'},{label:'T',type:'T',color:'#8a4a2b'},{label:'Jumper',type:'bare',color:'#cfd6e0'}],t=>curType=t);
   const bY=ui.button('◆ Target: Bintang (Y)',(b)=>{target='Y';bY.classList.add('on');bD.classList.remove('on');edu.clearBanner();evaluate();},true);
@@ -658,7 +833,7 @@ SIMS3D.w3=(host,ui,edu)=>{
     else edu.banner('ok','<b>Hubungan Segitiga aktif.</b> Tiap belitan ≈400 V, torsi & daya penuh. Motor berputar — mode jalan normal.');
     mV(target==='Y'?'400 V line · 230 V belitan':'400 V line · 400 V belitan');mStat('Berjalan');
   });
-  ui.button('↶ Hapus Jumper Terakhir',()=>{const last=conns.pop();if(last){TS.remove(last.tube);last.tube.geometry.dispose();}if(sel){terms[sel].material.emissive.setHex(0x101418);sel=null;}running=false;mStat('Berhenti');evaluate();});
+  ui.button('↶ Hapus Jumper Terakhir',()=>{const last=conns.pop();if(last){TS.remove(last.tube);last.tube.geometry.dispose();}if(sel){terms[sel].material.emissive.setHex(0x1a1206);sel=null;}running=false;mStat('Berhenti');evaluate();});
   ui.button('🗑 Reset',()=>{conns.forEach(cn=>{TS.remove(cn.tube);cn.tube.geometry.dispose();});conns=[];running=false;edu.clearBanner();mStat('—');mV('—');evaluate();});
   const mCfg=ui.metric('Target','Bintang (Y)'),mProg=ui.metric('Sambungan','0 / 5'),mV=ui.metric('Tegangan','—'),mStat=ui.metric('Status','—');
   ui.note('Pilih target Y/Δ, lalu klik dua terminal untuk membuat jumper. Gunakan palet R/S/T untuk suplai dan <b>Jumper</b> untuk antar-terminal motor.');
@@ -668,34 +843,44 @@ SIMS3D.w3=(host,ui,edu)=>{
 /* ===== g1 — Operasi Gardu 20 kV: manuver PMT/PMS/PMS-Tanah (interaktif) ===== */
 SIMS3D.g1=(host,ui,edu)=>{
   const c=mk3(host);TS=c.scene;c.autoRotate=false;c.scene.fog=null;c.setCam(14,0.25,1.05);
-  ground(34,0x0e1420);
-  add(bx(11,10,0.4,0x10151f),0,5,-0.4);
-  const txt=(t,x,y)=>label3d(t,x,y,0.7,0.95);
-  // busbar atas
-  const busbar=add(bx(8,0.4,0.4,0xe8b339,{emissive:0x3a2c00}),0,9,0.2);txt('BUSBAR 20 kV',0,9.7);
-  // konduktor (segmen yang bisa diwarnai sesuai status)
-  function seg(x,y1,y2){const m=add(cy(0.12,0.12,Math.abs(y2-y1),0x556,{seg:10}),x,(y1+y2)/2,0.2);return m;}
-  const cBus=seg(0,8.8,7.6);      // busbar -> PMS
-  const cPmsPmt=seg(0,6.4,4.8);   // PMS -> PMT
-  const cPmtOut=seg(0,3.2,1.4);   // PMT -> feeder
-  const cEarth=add(cy(0.1,0.1,1.6,0x3ddc84,{seg:10}),1.6,3.6,0.2);cEarth.rotation.z=-0.5; // cabang ke PMS tanah (visual)
-  // PMS (pemisah) — pisau berputar
-  add(sp(0.18,0xcfd6e0),0,7.6,0.3);add(sp(0.18,0xcfd6e0),0,6.4,0.3);
-  const pmsBlade=add(cy(0.09,0.09,1.2,0xff5d5d,{seg:8}),0,7.0,0.35);txt('PMS',-1.9,7.0);
-  // PMT (pemutus tenaga) — kotak + indikator
-  const pmtBox=add(bx(1.6,1.6,0.8,0x2a3445),0,4.0,0.3);txt('PMT (CB)',-2.0,4.0);
-  const pmtLed=add(sp(0.22,0xff5d5d,{emissive:0xff3b3b,emissiveIntensity:1}),0,4.0,0.75);
-  // PMS Tanah — pisau ke arah ground simbol
-  add(sp(0.16,0xcfd6e0),1.0,3.6,0.3);
-  const earthBlade=add(cy(0.08,0.08,1.1,0x888,{seg:8}),1.55,3.1,0.35);txt('PMS TANAH',3.0,3.1);
-  add(bx(1.2,0.2,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,2.2,0.2); // simbol bumi
-  add(bx(0.8,0.2,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,1.95,0.2);
-  add(bx(0.4,0.2,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,1.7,0.2);
-  // feeder / trafo
-  add(bx(2.2,1.6,1.2,0x55617a),0,0.9,0.2);txt('PENYULANG',0,0.1);
+  ground(34,0x141923);
+  const cub=add(buildCubicle(),0,0,-1.2);cub.scale.set(1.65,1.5,1.2);
+  const txt=(t,x,y)=>label3d(t,x,y,0.85,0.9);
+  // busbar atas + isolator porselen
+  const busbar=add(bx(8,0.4,0.4,0xb5703a,{metalness:1,roughness:.35}),0,9,0.2);txt('BUSBAR 20 kV',0,9.9);
+  [-2.6,2.6].forEach(x=>add(buildBushing(0.85,0.14,0xb78a5e),x,9.2,0.2));
+  // konduktor (segmen yang bisa diwarnai sesuai status energi)
+  function seg(x,y1,y2){const m=add(cy(0.1,0.1,Math.abs(y2-y1),0x99a0aa,{seg:12,metalness:.9,roughness:.4}),x,(y1+y2)/2,0.2);return m;}
+  const cBus=seg(0,8.8,7.6);
+  const cPmsPmt=seg(0,6.4,4.8);
+  const cPmtOut=seg(0,3.2,1.4);
+  const cEarth=add(cy(0.09,0.09,1.6,0x3ddc84,{seg:12}),1.6,3.6,0.2);cEarth.rotation.z=-0.5;
+  // kontak & pisau PMS
+  add(sp(0.16,0xc9a24a,{metalness:1,roughness:.3}),0,7.6,0.3);add(sp(0.16,0xc9a24a,{metalness:1,roughness:.3}),0,6.4,0.3);
+  const pmsBlade=add(cy(0.08,0.08,1.2,0xff5d5d,{seg:10}),0,7.0,0.35);txt('PMS',-1.8,7.2);
+  // PMT — enklosur logam + jendela indikator
+  const pmtBox=add(bx(1.9,1.9,1.1,0x6b7785,{metalness:.45,roughness:.5}),0,4.0,0.3);txt('PMT (CB)',-2.2,4.3);
+  add(bx(0.8,0.55,0.06,0x10151f),0,4.5,0.88);
+  const pmtLed=add(sp(0.17,0xff5d5d,{emissive:0xff3b3b,emissiveIntensity:1}),0,4.5,0.92);
+  // PMS Tanah + simbol pembumian
+  add(sp(0.14,0xc9a24a,{metalness:1,roughness:.3}),1.0,3.6,0.3);
+  const earthBlade=add(cy(0.07,0.07,1.1,0x888888,{seg:10}),1.55,3.1,0.35);txt('PMS TANAH',3.2,3.1);
+  add(bx(1.2,0.16,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,2.2,0.2);
+  add(bx(0.8,0.16,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,1.98,0.2);
+  add(bx(0.4,0.16,0.6,0x3ddc84,{emissive:0x0a3a1c}),2.4,1.76,0.2);
+  // penyulang → trafo distribusi
+  const trafo=add(buildTransformer(),0,-0.1,1.3);trafo.scale.set(0.66,0.66,0.66);
+  txt('PENYULANG → TRAFO',0,0.25);
+  // info hotspots
+  const infoPins=[];const pin=(x,y,z,t,d)=>infoPins.push(infoPin(x,y,z,t,d));
+  pin(2.9,9.2,0.6,'Busbar 20 kV','Rel daya tegangan menengah, selalu bertegangan dari sisi incoming. Semua penyulang mengambil daya dari sini.');
+  pin(0.85,7.1,0.6,'PMS (Pemisah)','Disconnector untuk pemisahan TAMPAK. Hanya boleh dioperasikan TANPA arus — tidak punya pemadam busur.');
+  pin(1.2,4.7,0.95,'PMT / CB (Pemutus Tenaga)','Memutus & menyambung arus beban dan gangguan, dilengkapi pemadam busur. Indikator merah=bertegangan, hijau=aman.');
+  pin(2.7,3.7,0.6,'PMS Tanah (Pembumian)','Menghubungkan penghantar ke tanah agar aman dikerjakan. Hanya boleh masuk setelah dipastikan bebas tegangan.');
+  pin(1.3,1.4,1.7,'Penyulang → Trafo','Trafo distribusi menurunkan 20 kV → 400/230 V. Inilah beban yang dibebaskan/diberi tegangan saat manuver.');
   // klik target tak terlihat di posisi tiap alat
-  const hit=(id,x,y)=>{const m=add(sp(0.9,0xffffff,{transparent:true,opacity:0}),x,y,0.5);m.userData={pickId:id};return m;};
-  c.pickables=[hit('pmt',0,4.0),hit('pms',0,7.0),hit('tanah',1.6,3.1)];
+  const hit=(id,x,y)=>{const m=add(sp(0.95,0xffffff,{transparent:true,opacity:0}),x,y,0.5);m.userData={pickId:id};return m;};
+  c.pickables=[hit('pmt',0,4.0),hit('pms',0,7.0),hit('tanah',1.6,3.1)].concat(infoPins);
 
   // state: true=masuk(closed)
   let st={pmt:true,pms:true,tanah:false},goal='off',doneSeq=[];
@@ -783,24 +968,23 @@ SIMS3D.t1=(host,ui)=>{
 };
 
 /* ===== t2 Motor Induksi (Three) ===== */
-SIMS3D.t2=(host,ui)=>{
-  const c=mk3(host);TS=c.scene;c.setCam(8,0.7,1.05);c.camera&&(c.scene.fog=null);
-  ground(40);
-  add(bx(4,0.5,2.2,0x141b27),0,0.25,0);              // base
-  add(bx(0.5,0.7,2.2,0x33445f),-1.4,0.85,0);         // terminal box side
-  const body=add(cy(0.95,0.95,2.6,0x46586f,{seg:32}),0.2,1.35,0);body.rotation.z=Math.PI/2;
-  // sirip pendingin
-  for(let i=0;i<10;i++){const f=add(cy(1.0,1.0,0.06,0x3a4a5f,{seg:32}),-1+ i*0.26,1.35,0);f.rotation.z=Math.PI/2;}
-  add(cy(0.55,0.55,0.5,0x2a3445,{seg:24}),1.7,1.35,0).rotation.z=Math.PI/2; // fan cover
-  const rotor=new THREE.Group();rotor.position.set(0.2,1.35,0);TS.add(rotor);
-  const shaft=cy(0.13,0.13,3.4,0xd6dce6,{seg:20});shaft.rotation.z=Math.PI/2;rotor.add(shaft);
-  for(let i=0;i<7;i++){const bl=bx(0.04,0.42,0.16,0xe8b339);bl.position.set(1.55,0,0);bl.rotation.x=i*Math.PI/3.5;rotor.add(bl);}
-  const pulley=cy(0.32,0.32,0.22,0xc9763b,{seg:24});pulley.rotation.z=Math.PI/2;pulley.position.set(-1.75,0,0);rotor.add(pulley);
+SIMS3D.t2=(host,ui,edu)=>{
+  const c=mk3(host);TS=c.scene;c.setCam(8,0.7,1.05);
+  ground(40,0x141923);
+  const motor=add(buildMotor(),0,0,0);
+  const rotor=motor.userData.rotor;
+  const pins=[
+    infoPin(0,3.3,0,'Rumah Stator & Sirip','Inti besi + belitan 3 fasa membangkitkan medan putar. Sirip alumunium membuang panas.'),
+    infoPin(-2.2,1.5,0,'Kipas Pendingin','Di poros belakang, menarik udara melewati sirip untuk pendinginan (TEFC).'),
+    infoPin(0,2.9,0,'Terminal Box','Tempat menyambung suplai R-S-T dan menentukan hubungan Bintang/Segitiga.'),
+    infoPin(1.9,1.6,0,'Poros (Shaft)','Mengeluarkan tenaga mekanik ke beban (pompa, konveyor, dsb) lewat kopling/puli.')
+  ];
+  c.pickables=pins;
   let rpm=1200,run=true;
   ui.slider('Kecepatan (rpm)',0,1500,1200,50,v=>{rpm=v;mRpm(v+' rpm');});
   ui.button('Start / Stop',(b)=>{run=!run;b.classList.toggle('on',run);b.textContent=run?'■ Stop':'▶ Start';mSt(run?'Berjalan':'Berhenti');},true);
   const mRpm=ui.metric('Putaran','1200 rpm'),mSt=ui.metric('Status','Berjalan'),mSlip=ui.metric('Slip (≈)','3.0 %');
-  ui.note('Motor induksi 3 fasa: <b>rotor</b> berputar saat distart. Naikkan rpm mendekati kecepatan sinkron (1500 rpm @ 4 kutub/50 Hz) → slip mengecil.');
+  ui.note('Motor induksi 3 fasa: <b>rotor</b> berputar saat distart. Klik ikon <b style="color:#e8b339">i</b> pada model untuk keterangan tiap bagian.');
   c.start(()=>{if(run)rotor.rotation.x+=rpm/9000;mSlip(((1500-rpm)/1500*100).toFixed(1)+' %');});
   return c;
 };
@@ -817,11 +1001,16 @@ SIMS3D.t3=(host,ui)=>{
   const wires=[];const ys=[6.55,5.95],xo=[-1.2,0,1.2];
   [6.55,5.95,6.55].forEach((y,i)=>{const off=[-1.1,0,1.1][i];
     const w=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,12.2,8),condMat());w.rotation.z=Math.PI/2;w.position.set(0,6.25-Math.abs(off)*0,0);w.position.z=off;w.position.y=i===1?6.45:6.25;TS.add(w);wires.push(w);});
-  // trafo distribusi pada tiang
-  add(cy(0.7,0.7,1.4,0x55617a,{seg:20}),6,3.0,1.2);
-  add(bx(0.3,0.3,0.3,0x8a93a6),6,3.9,1.2);
+  // trafo distribusi (gardu tiang) realistis
+  const trafo=add(buildTransformer(),6.2,0,2.6);trafo.scale.set(0.8,0.8,0.8);trafo.rotation.y=-0.4;
   // rumah pelanggan
-  add(bx(2,1.4,2,0x3a4a63),9,0.7,3);add(cn(1.6,1.1,0xc9763b,{seg:4}),9,2.1,3).rotation.y=Math.PI/4;
+  add(bx(2,1.4,2,0x6b7480),9.5,0.7,4);add(cn(1.6,1.1,0xb5552b,{seg:4}),9.5,2.1,4).rotation.y=Math.PI/4;
+  const pins=[
+    infoPin(0,7.4,0,'Konduktor Fasa 20 kV','Tiga penghantar fasa SUTM. Menyala kuning saat bertegangan; beban tinggi → drop tegangan di ujung.'),
+    infoPin(6.2,3.0,2.6,'Trafo Distribusi','Menurunkan 20 kV → 400/230 V (Dyn5). Bushing porselen memisahkan terminal bertegangan dari tangki.'),
+    infoPin(9.5,2.4,4,'Pelanggan','Menerima 220/380 V melalui SR (sambungan rumah) & kWh meter.')
+  ];
+  c.pickables=pins;
   let live=true,load=60;
   function apply(){const col=live?0xffd34d:0x222c3d;wires.forEach(w=>{w.material.color.setHex(col);w.material.emissive&&w.material.emissive.setHex(live?0x3a2f00:0);});mV(live?(20-load*0.02).toFixed(1)+' kV':'0 kV');mSt(live?'Bertegangan':'Padam');}
   ui.button('Energize / Isolasi',(b)=>{live=!live;b.classList.toggle('on',live);apply();},true);
@@ -902,7 +1091,7 @@ SIMS3D.t7=(host,ui)=>{
   // PLTS
   for(let i=0;i<3;i++)for(let j=0;j<3;j++){const p=add(bx(1.1,0.06,0.7,0x16306b,{emissive:0x0a1a3a,emissiveIntensity:.5}),7+i*1.3,0.5,-3+j*0.9);p.rotation.x=-0.5;}
   let ebt=40;
-  function apply(){const f=ebt/100;stack.material.emissive=new THREE.Color(0x000000);tower.material.color.setRGB(0.33+(1-f)*0.3,0.38,0.48);mShare(ebt+'%');mCo2((1-f)*0.85).toFixed(2)+'';mCo2(((1-f)*620).toFixed(0)+' g/kWh');}
+  function apply(){const f=ebt/100;tower.material.color.setRGB(0.33+(1-f)*0.3,0.38,0.48);mShare(ebt+'%');mCo2(((1-f)*620).toFixed(0)+' g/kWh');}
   ui.slider('Bauran EBT',0,100,40,5,v=>{ebt=v;apply();});
   const mShare=ui.metric('Share EBT','—'),mCo2=ui.metric('Intensitas CO₂','—');
   ui.note('Bauran pembangkitan: PLTU (termal) + PLTB (angin) + PLTS (surya). Naikkan <b>share EBT</b> → faktor emisi grid (g CO₂/kWh) turun.');
@@ -1196,8 +1385,9 @@ async function openSim(id){
   const host=$('stage3d');host.innerHTML='';
   const loader=$('loader');loader.style.display='grid';$('loadMsg').textContent='Memuat mesin '+(t.engine==='three'?'Three.js':'Babylon.js')+'…';
   $('autoBtn').classList.add('on');
+  hideInfo();
   // hint interaksi berbeda untuk lab praktik
-  const hintEl=document.querySelector('.canvas-hint');if(hintEl)hintEl.textContent=t.cat==='praktik'?'Klik terminal/peralatan untuk merangkai · drag memutar · scroll zoom':'Drag untuk memutar · scroll untuk zoom';
+  const hintEl=document.querySelector('.canvas-hint');if(hintEl)hintEl.innerHTML=t.cat==='praktik'?'Klik <b style="color:#e8b339">terminal/peralatan</b> untuk merangkai · klik <span class="ic">ⓘ</span> untuk info · drag memutar':'Klik <span class="ic">ⓘ</span> untuk info komponen · drag memutar · scroll zoom';
   window.scrollTo(0,0);
   try{
     if(t.engine==='three')await ensureThree();else await ensureBabylon();
@@ -1206,6 +1396,7 @@ async function openSim(id){
     // tunggu layout agar clientWidth benar
     await new Promise(r=>requestAnimationFrame(r));
     current=SIMS3D[id](host,ui,edu);
+    if(current&&current.engine==='three')current.onInfo=showInfo;
     loader.style.display='none';
   }catch(e){
     loader.style.display='none';
@@ -1218,10 +1409,13 @@ function toggleAuto(){
   if(current.engine==='three'){current.autoRotate=!current.autoRotate;b.classList.toggle('on',current.autoRotate);}
   else{current.camera.useAutoRotationBehavior=!current.camera.useAutoRotationBehavior;b.classList.toggle('on',current.camera.useAutoRotationBehavior);}
 }
+function showInfo(info){if(!info)return;$('infoT').textContent=info.title||'';$('infoD').textContent=info.desc||'';$('info3d').classList.add('show');}
+function hideInfo(){const e=$('info3d');if(e)e.classList.remove('show');}
 $('backBtn').addEventListener('click',showHub);
 $('homeLink').addEventListener('click',showHub);
 $('autoBtn').addEventListener('click',toggleAuto);
 $('resetBtn').addEventListener('click',()=>{if(current&&current.reset)current.reset();});
+$('infoX').addEventListener('click',hideInfo);
 document.querySelectorAll('.tab3d').forEach(b=>b.addEventListener('click',()=>switchPane(b.dataset.pane)));
 buildHub();showHub();
 </script>
