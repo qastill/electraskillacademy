@@ -4487,6 +4487,35 @@ const SIMULATORS = [
   { id: 'encoder-motion', jalur: 'S16', category: 'Otomasi · Motion', name: 'Encoder & Motion Resolution', desc: 'Resolusi posisi servo/stepper dari PPR & decoding; frekuensi pulsa pada kecepatan target.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.motor, working: true }
 ];
 
+// ElectraSim 3D — simulator 3D/360° (Three.js & Babylon.js) per jalur spesialisasi.
+// Di-embed langsung di dalam app: electrasim3d.html?embed=1&sim=tN (kamera orbit 360°,
+// geser parameter, real-time). Satu lab 3D untuk tiap jalur S1..S16.
+[
+  { j:'S1',  sim:'t1',  name:'Instalasi Bangunan 3D — Ruangan & Pencahayaan', cat:'Instalasi · Lab 3D',     icon:SIM_ICONS.bulb,    eng:'Three.js' },
+  { j:'S2',  sim:'t2',  name:'Motor Induksi 3D — Rotor & Starter',           cat:'Industri · Lab 3D',      icon:SIM_ICONS.motor,   eng:'Three.js' },
+  { j:'S3',  sim:'t3',  name:'Distribusi 20 kV 3D — Tiang, Konduktor & Trafo', cat:'Distribusi · Lab 3D',  icon:SIM_ICONS.grid,    eng:'Three.js' },
+  { j:'S4',  sim:'t4',  name:'Transmisi 3D — Menara & Andongan (Sag)',       cat:'Transmisi · Lab 3D',     icon:SIM_ICONS.shield,  eng:'Three.js' },
+  { j:'S5',  sim:'t5',  name:'Energy Data Science 3D — Peramalan Beban',     cat:'Data · Lab 3D',          icon:SIM_ICONS.data,    eng:'Three.js' },
+  { j:'S6',  sim:'t6',  name:'Energy Auditor 3D — Heatmap Gedung',           cat:'Audit · Lab 3D',         icon:SIM_ICONS.audit,   eng:'Three.js' },
+  { j:'S7',  sim:'t7',  name:'Pembangkitan & EBT 3D — Bauran Pembangkit',    cat:'Pembangkitan · Lab 3D',  icon:SIM_ICONS.pv,      eng:'Three.js' },
+  { j:'S8',  sim:'t8',  name:'K3 LOTO 3D — Lock-Out Tag-Out Panel',          cat:'K3 · Lab 3D',            icon:SIM_ICONS.shield,  eng:'Three.js' },
+  { j:'S9',  sim:'t9',  name:'Sales Sizing 3D — Penampang Kabel & Trafo',    cat:'Sales · Lab 3D',         icon:SIM_ICONS.cable,   eng:'Three.js' },
+  { j:'S10', sim:'t10', name:'PV & Solar 3D — Lintasan Matahari 360°',       cat:'Solar · Lab 3D',         icon:SIM_ICONS.pv,      eng:'Babylon.js' },
+  { j:'S11', sim:'t11', name:'Sustainability 3D — Emisi vs Penyerapan',      cat:'Karbon · Lab 3D',        icon:SIM_ICONS.audit,   eng:'Three.js' },
+  { j:'S12', sim:'t12', name:'EV & SPKLU 3D — Mobil & Pengisian',            cat:'EV · Lab 3D',            icon:SIM_ICONS.battery, eng:'Babylon.js' },
+  { j:'S13', sim:'t13', name:'Waste to Energy 3D — Insinerator & Cerobong',  cat:'WtE · Lab 3D',           icon:SIM_ICONS.grid,    eng:'Three.js' },
+  { j:'S14', sim:'t14', name:'Hydrogen 3D — Elektroliser H₂/O₂',             cat:'Hidrogen · Lab 3D',      icon:SIM_ICONS.battery, eng:'Babylon.js' },
+  { j:'S15', sim:'t15', name:'BESS 3D — Kontainer Baterai & Aliran',         cat:'BESS · Lab 3D',          icon:SIM_ICONS.battery, eng:'Babylon.js' },
+  { j:'S16', sim:'t16', name:'Kontrol & Otomasi 3D — Konveyor & PLC',        cat:'Otomasi · Lab 3D',       icon:SIM_ICONS.motor,   eng:'Three.js' }
+].forEach(o => {
+  SIMULATORS.push({
+    id: 'sim3d-' + o.sim, jalur: o.j, category: o.cat, name: o.name,
+    desc: 'Simulator 3D / 360° interaktif (' + o.eng + '): putar kamera 360°, geser parameter, dan lihat peralatan listrik bekerja real-time langsung di dalam aplikasi.',
+    level: 'Profesional', duration: '~15 menit', icon: o.icon, working: true,
+    embed: 'electrasim3d.html?embed=1&sim=' + o.sim
+  });
+});
+
 // Wiring Trainer interaktif (VoltaSim) — ditempelkan di tiap spesialisasi S1..S16.
 // Lab praktik merangkai instalasi: sambung terminal, periksa, jalankan simulasi + tutorial & panduan langkah.
 ['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12','S13','S14','S15','S16'].forEach(j => {
