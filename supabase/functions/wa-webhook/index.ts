@@ -23,7 +23,7 @@ const FOLLOWUP_SECRET = env("FOLLOWUP_SECRET");
 const DEEPSEEK_API_KEY = env("DEEPSEEK_API_KEY");
 const FONNTE_TOKEN = env("FONNTE_TOKEN");
 const ADMIN_WA = env("ADMIN_WA", "6285121532407");
-const ADMIN_PHONES = env("ADMIN_PHONES", "");
+const ADMIN_PHONES = env("ADMIN_PHONES", "6285260409720");
 const PROGRAM_NAME = env("PROGRAM_NAME", "Electra Skill Academy");
 const AUTOREPLY = env("AUTOREPLY", "true").toLowerCase() !== "false";
 const DRY = () => (Deno.env.get("DRY_RUN") ?? "true").toLowerCase() !== "false";
