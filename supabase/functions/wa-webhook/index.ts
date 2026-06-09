@@ -23,7 +23,7 @@ const FOLLOWUP_SECRET = env("FOLLOWUP_SECRET");
 const DEEPSEEK_API_KEY = env("DEEPSEEK_API_KEY");
 const FONNTE_TOKEN = env("FONNTE_TOKEN");
 const ADMIN_WA = env("ADMIN_WA", "6285121532407");
-const ADMIN_PHONES = env("ADMIN_PHONES", "");
+const ADMIN_PHONES = env("ADMIN_PHONES", "6285260409720");
 const PROGRAM_NAME = env("PROGRAM_NAME", "Electra Skill Academy");
 const AUTOREPLY = env("AUTOREPLY", "true").toLowerCase() !== "false";
 const DRY = () => (Deno.env.get("DRY_RUN") ?? "true").toLowerCase() !== "false";
@@ -92,7 +92,7 @@ async function handleAdminCommand(text: string): Promise<string> {
 }
 
 async function aiReply(userMsg: string, ctx: { name: string; status: string; history: string }): Promise<string> {
-  const fallback = `Halo${ctx.name ? " " + ctx.name : ""}! 🙏 Terima kasih sudah menghubungi ${PROGRAM_NAME}. Admin akan segera membantu: https://wa.me/${ADMIN_WA}`;
+  const fallback = "[SKIP]"; // tidak paham → jangan balas
   if (!DEEPSEEK_API_KEY) return fallback;
   try {
     const r = await fetch("https://api.deepseek.com/chat/completions", {
@@ -106,7 +106,10 @@ async function aiReply(userMsg: string, ctx: { name: string; status: string; his
             `Jawab Bahasa Indonesia, ramah, ringkas (maks 5 kalimat), jujur. Status penanya: ${ctx.status}. Nama: ${ctx.name || "(?)"} . ` +
             `Bantu pertanyaan umum (daftar, cara belajar, isi program, aktivasi, sertifikat). ` +
             `Untuk HARGA pasti, metode/refund pembayaran, jadwal workshop, atau hal di luar pengetahuanmu: arahkan ke admin https://wa.me/${ADMIN_WA}. ` +
-            `Jangan mengarang harga/janji. Jangan ulang sapaan kalau sudah pernah. 1 emoji secukupnya.` },
+            `Jangan mengarang harga/janji. Jangan ulang sapaan kalau sudah pernah. 1 emoji secukupnya. ` +
+            `PENTING: jangan mengarang. (a) Jika pesan hanya basa-basi/sapaan/ucapan terima kasih yang tidak butuh jawaban → balas PERSIS: [SKIP]. ` +
+            `(b) Jika pesan adalah PERTANYAAN atau permintaan serius yang kamu tidak yakin, di luar pengetahuanmu, soal harga pasti/pembayaran/komplain, atau butuh keputusan manusia → balas PERSIS: [ASK] (akan diteruskan ke admin). ` +
+            `(c) Selain itu, jawab langsung dengan benar.` },
           { role: "user", content: `Riwayat:\n${ctx.history || "(belum ada)"}\n\nPesan masuk: ${userMsg}` },
         ],
       }),
@@ -158,14 +161,40 @@ Deno.serve(async (req) => {
 
   if (!AUTOREPLY) return json({ ok: true, logged: true, autoreply: false });
 
+  // Identifikasi pengirim — HANYA layani kontak yang sudah ada datanya.
   const tail = phone.slice(-8);
   const { data: parts } = await sb.from("participants").select("email,name,phone,is_active");
   const me = (parts ?? []).find((x) => (x.phone || "").replace(/\D/g, "").endsWith(tail));
+  let known = !!me;
+  if (!known) {
+    const { count } = await sb.from("broadcast_log").select("id", { count: "exact", head: true }).eq("target_phone", phone);
+    known = (count ?? 0) > 0; // pernah kita hubungi (mis. dari spreadsheet/broadcast)
+  }
+  if (!known) return json({ ok: true, ignored: "nomor tidak dikenal — tidak dibalas" });
 
   const { data: hist } = await sb.from("wa_messages").select("direction,message").eq("phone", phone).order("created_at", { ascending: false }).limit(6);
   const history = (hist ?? []).reverse().map((h) => `${h.direction === "in" ? "User" : "Sunarto"}: ${h.message}`).join("\n");
-  const status = me ? (me.is_active ? "sudah terdaftar & AKTIF (sudah bayar)" : "sudah daftar tapi BELUM aktif/bayar") : "belum terdaftar / tamu";
+  const status = me ? (me.is_active ? "sudah terdaftar & AKTIF (sudah bayar)" : "sudah daftar tapi BELUM aktif/bayar") : "calon peserta (sudah kami hubungi, belum daftar akun)";
   const reply = await aiReply(text, { name: (me?.name ?? "").split(" ")[0], status, history });
+
+  const up = (reply || "").toUpperCase();
+
+  // [ASK] → eskalasi ke admin untuk dijawab manual (Sunarto tidak yakin).
+  if (up.includes("[ASK]")) {
+    const ownerRaw = (ADMIN_PHONES.split(",")[0] || "").trim() || ADMIN_WA;
+    const owner = normalizePhone(ownerRaw) || ownerRaw;
+    const who = me?.name || "Kontak";
+    const note = `❓ *Perlu dijawab manual*\nSunarto tidak yakin menjawab pertanyaan ini.\n\nDari: ${who} (${phone})\nPesan: "${text}"\n\nBalas langsung: https://wa.me/${phone}`;
+    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(diteruskan ke admin untuk dijawab manual)", handled_by: "escalated" });
+    if (!DRY() && FONNTE_TOKEN) await sendFonnte(owner, note);
+    return json({ ok: true, escalated: true, to: owner });
+  }
+
+  // [SKIP] / kosong → basa-basi atau tak perlu jawaban → didiamkan.
+  if (!reply || up.includes("[SKIP]")) {
+    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(tidak dibalas — basa-basi/tidak perlu jawaban)", handled_by: "ai-skip" });
+    return json({ ok: true, skipped: "tidak perlu balas" });
+  }
 
   await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: reply, handled_by: "ai" });
   let providerResp: unknown = "dry_run";
