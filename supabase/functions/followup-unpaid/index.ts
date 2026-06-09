@@ -62,10 +62,17 @@ function normalizePhone(raw: string): string | null {
 async function draftMessage(p: { name: string; join_date?: string }): Promise<string> {
   const firstName = (p.name || "Kak").split(" ")[0];
   const fallback =
-    `Halo ${firstName}! 👋 Terima kasih sudah mendaftar di ${PROGRAM_NAME}. ` +
-    `Akun kamu sudah siap, tinggal satu langkah lagi untuk aktivasi penuh dan mulai belajar ` +
-    `materi kelistrikan + akses sertifikat. Ada yang bisa kami bantu soal aktivasi/pembayaran? ` +
-    `Balas chat ini atau hubungi admin: https://wa.me/${ADMIN_WA}\n\n` +
+    `Halo Kak ${firstName}! 👋\n\n` +
+    `Terima kasih sudah mendaftar di *${PROGRAM_NAME}* — akademi kelistrikan online berbasis praktik nyata 🙌\n\n` +
+    `Di *electraacademy.com* kamu bisa akses:\n` +
+    `⚡ 16+ Simulator praktik (wiring 1 & 3 fasa, gardu 20kV, capacitor bank, lab 3D) — dilengkapi AI Assistant\n` +
+    `📚 Video pembelajaran + kuis pemahaman per spesialisasi\n` +
+    `🎓 Sertifikat resmi tiap menyelesaikan jalur\n` +
+    `🗺️ Peta karir & info lowongan kerja kelistrikan dari partner industri\n` +
+    `🔴 Sesi live bersama praktisi\n\n` +
+    `Akun belajarmu sudah siap diaktifkan. Ada yang bisa kami bantu untuk mulai atau soal aktivasi? Balas chat ini ya 😊\n` +
+    `🌐 Buka: https://electraacademy.com\n` +
+    `💬 Admin: https://wa.me/${ADMIN_WA}\n\n` +
     `(Balas STOP kalau tidak ingin menerima pesan lagi.)`;
 
   if (!DEEPSEEK_API_KEY) return fallback;
@@ -80,18 +87,20 @@ async function draftMessage(p: { name: string; join_date?: string }): Promise<st
       body: JSON.stringify({
         model: "deepseek-chat",
         temperature: 0.7,
-        max_tokens: 320,
+        max_tokens: 500,
         messages: [
           {
             role: "system",
             content:
-              `Kamu admin ${PROGRAM_NAME} (akademi kelistrikan online untuk teknisi & engineer). ` +
+              `Kamu admin ${PROGRAM_NAME} (akademi kelistrikan online berbasis praktik nyata untuk teknisi & engineer). ` +
               `Tulis SATU pesan WhatsApp follow-up yang ramah, personal, dan sopan dalam Bahasa Indonesia ` +
               `untuk calon peserta yang sudah daftar tapi belum aktivasi/bayar. ` +
-              `Aturan: sapa nama depannya; singkat (maks 4 kalimat); hangat, tidak memaksa, tidak lebay; ` +
-              `sebut manfaat (akses modul + sertifikat); ajakan halus untuk menyelesaikan aktivasi; ` +
-              `sertakan link admin https://wa.me/${ADMIN_WA}; akhiri dengan opsi "Balas STOP untuk berhenti". ` +
-              `Pakai maksimal 1-2 emoji. Jangan pakai placeholder, langsung pesan jadi.`,
+              `Aturan: sapa nama depannya; hangat, tidak memaksa. ` +
+              `Sebutkan website *electraacademy.com* dan highlight fiturnya pakai bullet beremoji: ` +
+              `16+ simulator praktik (wiring 1 & 3 fasa, gardu 20kV, capacitor bank, lab 3D) + AI Assistant; ` +
+              `video pembelajaran + kuis; sertifikat resmi; peta karir & lowongan kerja kelistrikan; sesi live. ` +
+              `Tutup dengan ajakan halus menyelesaikan aktivasi, link https://electraacademy.com, link admin https://wa.me/${ADMIN_WA}, ` +
+              `dan opsi "Balas STOP untuk berhenti". Maksimal 8-10 baris. Jangan pakai placeholder, langsung pesan jadi.`,
           },
           {
             role: "user",
