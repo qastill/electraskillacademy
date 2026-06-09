@@ -67,5 +67,18 @@ mencatat ke `wa_messages`, dan menghormati "STOP" (masuk `wa_optout`).
 ## Go-live (mengaktifkan pengiriman nyata)
 Set `DRY_RUN=false` di Secrets. Untuk `wa-webhook` pastikan device Fonnte connected.
 
+## 5. Menyuruh Sunarto lewat WhatsApp (perintah admin)
+Dari nomor admin (`ADMIN_WA` / `ADMIN_PHONES`), chat ke nomor Sunarto:
+- `/laporan` — kirim laporan harian
+- `/followup` — jalankan follow-up belum bayar
+- `/broadcast active: Halo {nama}! ...` — broadcast (segment all|active|inactive)
+- `/help` — daftar perintah
+
+## 6. Panel Admin Web — `admin-sunarto.html`
+Buka `https://<domain-anda>/admin-sunarto.html`, masukkan `FOLLOWUP_SECRET` sekali.
+Berisi: ringkasan (total/aktif/belum bayar/follow-up/opt-out), tombol Kirim Laporan
+& Jalankan Follow-up, form Broadcast, dan tabel pantauan (percakapan, follow-up,
+broadcast). Ditenagai Edge Function `sunarto-admin` (CORS aktif).
+
 ## Tabel
 `followup_log`, `broadcast_log`, `wa_messages`, `wa_optout`.

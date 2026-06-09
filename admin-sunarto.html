@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Panel Admin · Sunarto 🤖</title>
+<style>
+  :root{--bg:#0c1017;--card:#141a24;--line:#222c3a;--gold:#c9a96e;--ink:#e8edf3;--mut:#8b97a7;--ok:#3ecf8e;--bad:#ef6b6b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:24px;max-width:980px;margin:0 auto}
+  h1{font-size:20px;margin:0 0 4px}.sub{color:var(--mut);font-size:13px;margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+  label{display:block;font-size:12px;color:var(--mut);margin:0 0 6px;text-transform:uppercase;letter-spacing:.05em}
+  input,select,textarea{width:100%;background:#0b0f17;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit}
+  textarea{min-height:90px;resize:vertical}
+  button{background:var(--gold);color:#1a1206;border:0;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:14px}
+  button.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  button:disabled{opacity:.5;cursor:wait}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
+  .stat{background:#0b0f17;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .stat b{display:block;font-size:24px;color:var(--gold)}.stat span{font-size:11px;color:var(--mut);text-transform:uppercase}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase}
+  .pill{font-size:11px;padding:2px 8px;border-radius:20px}
+  .pill.sent,.pill.ai{background:rgba(62,207,142,.15);color:var(--ok)}
+  .pill.failed{background:rgba(239,107,107,.15);color:var(--bad)}
+  .pill.dry_run,.pill.in{background:rgba(201,169,110,.15);color:var(--gold)}
+  .msg{color:var(--mut);font-size:13px;margin-top:8px;min-height:1em}
+  h2{font-size:14px;margin:0 0 12px;color:var(--gold)}
+  .tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .tabs button{background:#0b0f17;color:var(--mut);border:1px solid var(--line);font-weight:500;padding:6px 14px}
+  .tabs button.on{color:var(--gold);border-color:var(--gold)}
+</style>
+</head>
+<body>
+  <h1>🤖 Panel Admin Sunarto</h1>
+  <p class="sub">Kontrol & pantau AI agent Electra Skill Academy.</p>
+
+  <!-- Login -->
+  <div class="card" id="loginCard">
+    <label for="secret">Secret (FOLLOWUP_SECRET)</label>
+    <div class="row">
+      <input type="password" id="secret" placeholder="paste secret..." style="flex:1;min-width:220px">
+      <button onclick="saveSecret()">Masuk</button>
+    </div>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+
+  <div id="app" style="display:none">
+    <!-- Stats -->
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">📊 Ringkasan</h2>
+        <button class="ghost" onclick="loadStats()">⟳ Refresh</button>
+      </div>
+      <div class="stats" id="statsBox" style="margin-top:14px"></div>
+    </div>
+
+    <!-- Aksi cepat -->
+    <div class="card">
+      <h2>⚡ Suruh Sunarto</h2>
+      <div class="row">
+        <button onclick="act('report')">📊 Kirim Laporan ke WA admin</button>
+        <button onclick="act('followup')">📩 Jalankan Follow-up</button>
+      </div>
+      <div class="msg" id="actMsg"></div>
+    </div>
+
+    <!-- Broadcast -->
+    <div class="card">
+      <h2>📢 Broadcast</h2>
+      <label>Segmen</label>
+      <select id="seg" style="margin-bottom:10px">
+        <option value="active">Member aktif (sudah bayar)</option>
+        <option value="inactive">Belum bayar</option>
+        <option value="all">Semua</option>
+      </select>
+      <label>Pesan (pakai {nama} untuk sapaan)</label>
+      <textarea id="bcMsg" placeholder="Halo {nama}! Modul baru sudah tayang 🎉"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button onclick="broadcast()">Kirim Broadcast</button>
+      </div>
+      <div class="msg" id="bcResult"></div>
+    </div>
+
+    <!-- Monitoring -->
+    <div class="card">
+      <div class="tabs">
+        <button class="on" onclick="tab('chats',this)">💬 Percakapan</button>
+        <button onclick="tab('fu',this)">📩 Follow-up</button>
+        <button onclick="tab('bc',this)">📢 Broadcast</button>
+      </div>
+      <div id="tableBox"></div>
+    </div>
+  </div>
+
+<script>
+const FN = "https://osjdzroehpquegtvktvt.supabase.co/functions/v1/sunarto-admin";
+let SECRET = localStorage.getItem("sunarto_secret") || "";
+let DATA = {};
+
+function saveSecret(){
+  const v = document.getElementById("secret").value.trim();
+  if(!v){ document.getElementById("loginMsg").textContent="Secret kosong."; return; }
+  SECRET = v; localStorage.setItem("sunarto_secret", v);
+  init();
+}
+async function api(action, extra){
+  const r = await fetch(FN, { method:"POST",
+    headers:{ "content-type":"application/json", "x-followup-secret":SECRET },
+    body: JSON.stringify(Object.assign({action}, extra||{})) });
+  if(r.status===401) throw new Error("Secret salah / tidak diterima.");
+  return await r.json();
+}
+async function init(){
+  try{ await loadStats(); document.getElementById("loginCard").style.display="none"; document.getElementById("app").style.display="block"; }
+  catch(e){ document.getElementById("loginMsg").textContent = e.message; }
+}
+async function loadStats(){
+  const d = await api("stats"); DATA = d;
+  const s = d.stats||{};
+  document.getElementById("statsBox").innerHTML =
+    card(s.total,"Total") + card(s.active,"Aktif/Bayar") + card(s.inactive,"Belum Bayar") +
+    card(s.followup_today,"Follow-up Hari Ini") + card(s.optout,"Opt-out");
+  renderTab(currentTab);
+}
+function card(n,l){ return `<div class="stat"><b>${n??0}</b><span>${l}</span></div>`; }
+async function act(action){
+  const m=document.getElementById("actMsg"); m.textContent="⏳ Menjalankan...";
+  try{ const r=await api(action);
+    m.textContent = action==="report" ? (r.dry_run?"📊 (DRY-RUN) laporan disiapkan.":"📊 Laporan dikirim ke WA admin.")
+      : `📩 Follow-up: kandidat ${r.candidates??"?"}, diproses ${r.sent_or_previewed??"?"}${r.dry_run?" (DRY-RUN)":""}.`;
+    loadStats();
+  }catch(e){ m.textContent="❌ "+e.message; }
+}
+async function broadcast(){
+  const message=document.getElementById("bcMsg").value.trim();
+  const segment=document.getElementById("seg").value;
+  const m=document.getElementById("bcResult");
+  if(!message){ m.textContent="Pesan kosong."; return; }
+  if(!confirm("Kirim broadcast ke segmen '"+segment+"'?")) return;
+  m.textContent="⏳ Mengirim...";
+  try{ const r=await api("broadcast",{segment,message});
+    m.textContent=`📢 Selesai. Target ${r.total??"?"}, terkirim ${r.sent_or_previewed??"?"}${r.dry_run?" (DRY-RUN)":""}.`;
+    loadStats();
+  }catch(e){ m.textContent="❌ "+e.message; }
+}
+let currentTab="chats";
+function tab(t,btn){ currentTab=t; document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("on")); btn.classList.add("on"); renderTab(t); }
+function esc(s){ return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function renderTab(t){
+  const box=document.getElementById("tableBox"); if(!DATA.stats) return;
+  if(t==="chats"){
+    const rows=(DATA.last_chats||[]).map(c=>`<tr><td>${esc(c.phone)}</td><td><span class="pill ${c.direction==='in'?'in':'ai'}">${c.direction==='in'?'masuk':'Sunarto'}</span></td><td>${esc(c.message).slice(0,120)}</td><td>${new Date(c.created_at).toLocaleString('id-ID')}</td></tr>`).join("");
+    box.innerHTML=`<table><tr><th>Nomor</th><th>Arah</th><th>Pesan</th><th>Waktu</th></tr>${rows||'<tr><td colspan=4>Belum ada</td></tr>'}</table>`;
+  } else if(t==="fu"){
+    const rows=(DATA.last_followups||[]).map(c=>`<tr><td>${esc(c.participant_email)}</td><td>#${c.attempt_no}</td><td><span class="pill ${c.status}">${c.status}</span></td><td>${new Date(c.created_at).toLocaleString('id-ID')}</td></tr>`).join("");
+    box.innerHTML=`<table><tr><th>Email</th><th>Ke-</th><th>Status</th><th>Waktu</th></tr>${rows||'<tr><td colspan=4>Belum ada</td></tr>'}</table>`;
+  } else {
+    const rows=(DATA.last_broadcasts||[]).map(c=>`<tr><td>${esc(c.target_phone)}</td><td>${esc(c.segment)}</td><td><span class="pill ${c.status}">${c.status}</span></td><td>${new Date(c.created_at).toLocaleString('id-ID')}</td></tr>`).join("");
+    box.innerHTML=`<table><tr><th>Nomor</th><th>Segmen</th><th>Status</th><th>Waktu</th></tr>${rows||'<tr><td colspan=4>Belum ada</td></tr>'}</table>`;
+  }
+}
+// auto-login kalau secret sudah tersimpan
+if(SECRET){ document.getElementById("secret").value=SECRET; init(); }
+</script>
+</body>
+</html>
