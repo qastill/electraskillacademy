@@ -13,7 +13,8 @@ const SUPABASE_URL = env("SUPABASE_URL");
 const SERVICE_ROLE = env("SUPABASE_SERVICE_ROLE_KEY");
 const FOLLOWUP_SECRET = env("FOLLOWUP_SECRET");
 const FONNTE_TOKEN = env("FONNTE_TOKEN");
-const ADMIN_WA = env("ADMIN_WA", "6285121532407");
+// Penerima laporan = nomor admin/owner (default: Qastil 0852-6040-9720). Ganti via env REPORT_WA.
+const ADMIN_WA = env("REPORT_WA", "6285260409720");
 const DRY_RUN = env("DRY_RUN", "true").toLowerCase() !== "false";
 const PROGRAM_NAME = env("PROGRAM_NAME", "Electra Skill Academy");
 
