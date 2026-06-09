@@ -150,6 +150,9 @@ Deno.serve(async (req) => {
 
   if (error) return json({ error: "query participants failed", detail: error.message }, 500);
 
+  // Daftar opt-out (orang yang balas STOP) — jangan di-follow-up lagi.
+  const optout = new Set(((await sb.from("wa_optout").select("phone")).data ?? []).map((o) => o.phone));
+
   const now = Date.now();
   const minGapMs = MIN_DAYS_BETWEEN * 24 * 60 * 60 * 1000;
   const results: Array<Record<string, unknown>> = [];
@@ -161,6 +164,10 @@ Deno.serve(async (req) => {
     const phone = normalizePhone(p.phone ?? "");
     if (!phone) {
       results.push({ email: p.email, skipped: "phone tidak valid" });
+      continue;
+    }
+    if (optout.has(phone)) {
+      results.push({ email: p.email, skipped: "opt-out (balas STOP)" });
       continue;
     }
 
