@@ -1,18 +1,13 @@
 // Edge Function: wa-webhook
-// Chatbot WhatsApp 2 arah "Sunarto" + PERINTAH ADMIN.
-// - Pesan masuk dari customer  → dibalas otomatis oleh AI (DeepSeek).
-// - Pesan masuk dari ADMIN yang diawali "/" → dijalankan sebagai perintah:
-//     /help            → daftar perintah
-//     /laporan         → kirim laporan harian ke WA admin
-//     /followup        → jalankan follow-up customer belum bayar
-//     /broadcast <segment>: <pesan>   (segment: all|active|inactive)
+// Chatbot WhatsApp 2 arah "Sunarto" + PERINTAH/AJARAN ADMIN.
+// - Admin (ADMIN_PHONES) → kirim perintah/instruksi/arahan bahasa natural.
+// - Customer (kontak yang ada datanya) → DEFAULT hanya sapaan awal 1x, sisanya
+//   ditangani admin manual (set AI_ANSWER=true untuk balas penuh via AI).
 // - "STOP" → opt-out.
 //
-// Webhook Fonnte (Device → Edit → Webhook):
-//   https://osjdzroehpquegtvktvt.supabase.co/functions/v1/wa-webhook?token=<FOLLOWUP_SECRET>
-//
-// ENV: FOLLOWUP_SECRET, DEEPSEEK_API_KEY, FONNTE_TOKEN, ADMIN_WA, PROGRAM_NAME,
-//      AUTOREPLY ("true"), ADMIN_PHONES (opsional, dipisah koma), DRY_RUN.
+// Webhook Fonnte: .../wa-webhook?token=<FOLLOWUP_SECRET>
+// ENV: FOLLOWUP_SECRET, DEEPSEEK_API_KEY, FONNTE_TOKEN, ADMIN_WA, ADMIN_PHONES,
+//      PROGRAM_NAME, AUTOREPLY, AI_ANSWER ("false" default), DRY_RUN.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -39,7 +34,6 @@ function normalizePhone(raw: string): string | null {
   else if (d.startsWith("8")) d = "62" + d; else if (d.length >= 8) d = "62" + d; else return null;
   return d.length >= 10 && d.length <= 15 ? d : null;
 }
-// Nomor admin manusia (penerima eskalasi & boleh kirim perintah).
 const ownerPhones = ADMIN_PHONES.split(",").map((x) => normalizePhone(x) || "").filter(Boolean);
 const adminSet = new Set([normalizePhone(ADMIN_WA) || "", ...ownerPhones].filter(Boolean));
 
@@ -52,7 +46,6 @@ async function sendFonnte(target: string, message: string) {
   try { return await r.json(); } catch { return await r.text(); }
 }
 
-// Panggil Edge Function saudara (daily-report / followup-unpaid / broadcast).
 async function callFn(name: string, body: Record<string, unknown> = {}) {
   const r = await fetch(`${SUPABASE_URL}/functions/v1/${name}`, {
     method: "POST",
@@ -62,38 +55,6 @@ async function callFn(name: string, body: Record<string, unknown> = {}) {
   return await r.json().catch(() => ({}));
 }
 
-const HELP =
-  "🤖 *Perintah Sunarto:*\n" +
-  "/laporan — kirim laporan harian\n" +
-  "/followup — follow-up customer belum bayar\n" +
-  "/broadcast <segment>: <pesan> — kirim pengumuman\n" +
-  "   segment: all | active | inactive · pakai {nama} utk sapaan\n" +
-  "   contoh: /broadcast active: Halo {nama}! Modul baru tayang 🎉\n" +
-  "/help — bantuan";
-
-async function handleAdminCommand(text: string): Promise<string> {
-  const t = text.trim();
-  const lower = t.toLowerCase();
-  if (lower === "/help" || lower === "/start") return HELP;
-  if (lower === "/laporan") {
-    const r = await callFn("daily-report");
-    return (r as any)?.dry_run ? "📊 (DRY-RUN) Laporan disiapkan — set DRY_RUN=false untuk benar-benar kirim." : "📊 Laporan harian dikirim ke WA admin.";
-  }
-  if (lower === "/followup") {
-    const r: any = await callFn("followup-unpaid");
-    return `📩 Follow-up selesai. Kandidat: ${r?.candidates ?? "?"}, diproses: ${r?.sent_or_previewed ?? "?"}${r?.dry_run ? " (DRY-RUN)" : ""}.`;
-  }
-  if (lower.startsWith("/broadcast")) {
-    const rest = t.slice("/broadcast".length).trim();
-    const m = rest.match(/^(all|active|inactive)\s*:\s*([\s\S]+)/i);
-    if (!m) return "Format: /broadcast <all|active|inactive>: <pesan>\nContoh: /broadcast active: Halo {nama}!";
-    const r: any = await callFn("broadcast", { segment: m[1].toLowerCase(), message: m[2].trim() });
-    return `📢 Broadcast (${m[1].toLowerCase()}) selesai. Target: ${r?.total ?? "?"}, terkirim: ${r?.sent_or_previewed ?? "?"}${r?.dry_run ? " (DRY-RUN)" : ""}.`;
-  }
-  return "Perintah tidak dikenali.\n\n" + HELP;
-}
-
-// Pahami instruksi admin dalam bahasa natural (tanpa "/").
 async function adminIntent(text: string): Promise<{ action: string; segment?: string; message?: string; note?: string }> {
   const low = text.toLowerCase();
   const kw = (): { action: string; segment?: string; message?: string; note?: string } => {
@@ -113,13 +74,13 @@ async function adminIntent(text: string): Promise<{ action: string; segment?: st
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content:
-            `Ubah instruksi admin menjadi JSON. Field: "action" (salah satu: report, followup, broadcast, remember, none), ` +
-            `"segment" (all|active|inactive — hanya untuk broadcast, default all), ` +
-            `"message" (isi pengumuman lengkap — hanya untuk broadcast; boleh pakai {nama}), ` +
-            `"note" (kebijakan/fakta yang harus diingat — hanya untuk remember, tulis ringkas & jelas). ` +
-            `report=kirim laporan harian. followup=follow-up yang belum bayar. broadcast=kirim pengumuman ke member. ` +
-            `remember=admin memberi arahan/kebijakan/fakta untuk dipakai Sunarto saat menjawab customer (mis. "kalau ada yang tanya sertifikat seminar, arahkan ke web"). ` +
-            `Jika hanya basa-basi/tidak jelas, action=none. Balas HANYA JSON.` },
+            `Ubah instruksi admin menjadi JSON. Field: "action" (report, followup, broadcast, remember, none), ` +
+            `"segment" (all|active|inactive — hanya broadcast, default all), ` +
+            `"message" (isi pengumuman — hanya broadcast; boleh {nama}), ` +
+            `"note" (kebijakan/fakta ringkas — hanya remember). ` +
+            `report=kirim laporan harian. followup=follow-up belum bayar. broadcast=pengumuman ke member. ` +
+            `remember=arahan/kebijakan untuk dipakai Sunarto saat menjawab customer. ` +
+            `Jika basa-basi/tidak jelas, action=none. Balas HANYA JSON.` },
           { role: "user", content: text },
         ],
       }),
@@ -132,6 +93,19 @@ async function adminIntent(text: string): Promise<{ action: string; segment?: st
 }
 
 async function runAdminInstruction(text: string, sb: any, fromPhone: string): Promise<string> {
+  const t = text.trim();
+  if (/^\/?(daftar catatan|lihat catatan|catatan)$/i.test(t)) {
+    const { data } = await sb.from("sunarto_kb").select("id,note").eq("active", true).order("created_at", { ascending: false }).limit(20);
+    if (!data?.length) return "Belum ada catatan/kebijakan tersimpan.";
+    return "📒 *Catatan Sunarto:*\n" + data.map((k: any) => `#${k.id} ${k.note}`).join("\n");
+  }
+  const lupa = t.match(/^lupakan:?\s*(.+)/i);
+  if (lupa) {
+    const kw = lupa[1].trim();
+    const { data } = await sb.from("sunarto_kb").select("id").eq("active", true).ilike("note", `%${kw}%`);
+    if (data?.length) { await sb.from("sunarto_kb").update({ active: false }).in("id", data.map((x: any) => x.id)); return `🗑️ ${data.length} catatan memuat "${kw}" dihapus.`; }
+    return `Tidak ada catatan yang memuat "${kw}".`;
+  }
   const it = await adminIntent(text);
   if (it.action === "report") { await callFn("daily-report"); return "📊 Oke, laporan harian dikirim ke WA admin."; }
   if (it.action === "followup") {
@@ -139,7 +113,7 @@ async function runAdminInstruction(text: string, sb: any, fromPhone: string): Pr
     return `📩 Oke, follow-up dijalankan. Kandidat: ${r?.candidates ?? "?"}, diproses: ${r?.sent_or_previewed ?? "?"}.`;
   }
   if (it.action === "broadcast") {
-    if (!it.message) return "Baik. Sebutkan isi pengumumannya ya. Contoh: \"broadcast ke member aktif: Halo {nama}, modul baru sudah tayang!\"";
+    if (!it.message) return "Baik. Sebutkan isi pengumumannya. Contoh: broadcast ke member aktif: Halo {nama}, modul baru tayang!";
     const seg = (it.segment || "all").toLowerCase();
     const r: any = await callFn("broadcast", { segment: seg, message: it.message });
     return `📢 Oke, broadcast (${seg}) terkirim ke ${r?.sent_or_previewed ?? "?"} dari ${r?.total ?? "?"} member.`;
@@ -147,26 +121,13 @@ async function runAdminInstruction(text: string, sb: any, fromPhone: string): Pr
   if (it.action === "remember") {
     const note = (it.note || text).trim();
     await sb.from("sunarto_kb").insert({ note, created_by: fromPhone });
-    return `📝 Siap, sudah saya catat & akan saya pakai saat menjawab:\n"${note}"\n\n(Ketik "lupakan: <kata>" untuk hapus, atau "daftar catatan" untuk lihat semua.)`;
+    return `📝 Siap, sudah saya catat & akan saya pakai saat menjawab customer:\n"${note}"\n\n(Ketik "daftar catatan" untuk lihat semua, atau "lupakan: <kata>" untuk hapus.)`;
   }
-  // Perintah lihat/hapus catatan.
-  if (/^daftar catatan|lihat catatan|catatan$/i.test(text.trim())) {
-    const { data } = await sb.from("sunarto_kb").select("id,note").eq("active", true).order("created_at", { ascending: false }).limit(20);
-    if (!data?.length) return "Belum ada catatan/kebijakan tersimpan.";
-    return "📒 *Catatan Sunarto:*\n" + data.map((k: any) => `#${k.id} ${k.note}`).join("\n");
-  }
-  const lupa = text.trim().match(/^lupakan:?\s*(.+)/i);
-  if (lupa) {
-    const kw = lupa[1].trim();
-    const { data } = await sb.from("sunarto_kb").select("id").eq("active", true).ilike("note", `%${kw}%`);
-    if (data?.length) { await sb.from("sunarto_kb").update({ active: false }).in("id", data.map((x: any) => x.id)); return `🗑️ ${data.length} catatan yang memuat "${kw}" dihapus.`; }
-    return `Tidak ada catatan yang memuat "${kw}".`;
-  }
-  return "Siap 🙌 Saya bisa bantu: *kirim laporan*, *follow-up yang belum bayar*, *broadcast*, atau menerima *arahan/kebijakan* (mis. \"kalau ada yang tanya sertifikat seminar, arahkan ke web\"). Tulis saja instruksinya.";
+  return "Siap 🙌 Saya bisa: *kirim laporan*, *follow-up belum bayar*, *broadcast*, atau menerima *arahan/kebijakan* (mis. \"kalau ada yang tanya sertifikat seminar, arahkan ke web\"). Tulis instruksinya.";
 }
 
 async function aiReply(userMsg: string, ctx: { name: string; status: string; history: string; kb: string }): Promise<string> {
-  const fallback = "[SKIP]"; // tidak paham → jangan balas
+  const fallback = "[SKIP]";
   if (!DEEPSEEK_API_KEY) return fallback;
   try {
     const r = await fetch("https://api.deepseek.com/chat/completions", {
@@ -176,15 +137,11 @@ async function aiReply(userMsg: string, ctx: { name: string; status: string; his
         model: "deepseek-chat", temperature: 0.6, max_tokens: 380,
         messages: [
           { role: "system", content:
-            `Kamu "Sunarto", asisten admin WhatsApp ${PROGRAM_NAME} — akademi kelistrikan online untuk teknisi & engineer (modul + kuis + sertifikat). ` +
-            `Jawab Bahasa Indonesia, ramah, ringkas (maks 5 kalimat), jujur. Status penanya: ${ctx.status}. Nama: ${ctx.name || "(?)"} . ` +
-            `Bantu pertanyaan umum (daftar, cara belajar, isi program, aktivasi, sertifikat). ` +
-            `Untuk HARGA pasti, metode/refund pembayaran, jadwal workshop, atau hal di luar pengetahuanmu: arahkan ke admin https://wa.me/${ADMIN_WA}. ` +
-            (ctx.kb ? `ARAHAN/KEBIJAKAN dari admin (WAJIB dipatuhi): ${ctx.kb}. ` : "") +
-            `Jangan mengarang harga/janji. Jangan ulang sapaan kalau sudah pernah. 1 emoji secukupnya. ` +
-            `PENTING: jangan mengarang. (a) Jika pesan hanya basa-basi/sapaan/ucapan terima kasih yang tidak butuh jawaban → balas PERSIS: [SKIP]. ` +
-            `(b) Jika pesan adalah PERTANYAAN atau permintaan serius yang kamu tidak yakin, di luar pengetahuanmu, soal harga pasti/pembayaran/komplain, atau butuh keputusan manusia → balas PERSIS: [ASK] (akan diteruskan ke admin). ` +
-            `(c) Selain itu, jawab langsung dengan benar.` },
+            `Kamu "Sunarto", asisten admin WhatsApp ${PROGRAM_NAME} — akademi kelistrikan online untuk teknisi & engineer. ` +
+            `Jawab Bahasa Indonesia, ramah, ringkas, jujur. Status penanya: ${ctx.status}. Nama: ${ctx.name || "(?)"} . ` +
+            `Untuk HARGA/pembayaran/jadwal/hal di luar pengetahuanmu: arahkan ke admin https://wa.me/${ADMIN_WA}. ` +
+            (ctx.kb ? `ARAHAN/KEBIJAKAN admin (WAJIB dipatuhi): ${ctx.kb}. ` : "") +
+            `Jangan mengarang. (a) basa-basi → [SKIP]. (b) pertanyaan serius/tak yakin → [ASK]. (c) selain itu jawab benar.` },
           { role: "user", content: `Riwayat:\n${ctx.history || "(belum ada)"}\n\nPesan masuk: ${userMsg}` },
         ],
       }),
@@ -192,7 +149,7 @@ async function aiReply(userMsg: string, ctx: { name: string; status: string; his
     if (!r.ok) return fallback;
     const d = await r.json();
     const msg = d?.choices?.[0]?.message?.content?.trim();
-    return msg && msg.length > 5 ? msg : fallback;
+    return msg && msg.length > 2 ? msg : fallback;
   } catch { return fallback; }
 }
 
@@ -217,10 +174,9 @@ Deno.serve(async (req) => {
   const sb = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
   await sb.from("wa_messages").insert({ phone, direction: "in", message: text, handled_by: "system" });
 
-  // PERINTAH ADMIN (sender = admin & diawali '/').
-  // Admin: jalankan instruksi langsung (slash command ATAU bahasa natural).
+  // Admin → jalankan instruksi (slash atau bahasa natural).
   if (adminSet.has(phone)) {
-    const reply = text.startsWith("/") ? await handleAdminCommand(text) : await runAdminInstruction(text, sb, phone);
+    const reply = await runAdminInstruction(text.replace(/^\/(laporan|followup|broadcast|help|start)\b/i, (m) => m.slice(1)), sb, phone);
     await sb.from("wa_messages").insert({ phone, direction: "out", message: reply, handled_by: "admin" });
     if (!DRY() && FONNTE_TOKEN) await sendFonnte(phone, reply);
     return json({ ok: true, admin: true, reply });
@@ -237,42 +193,54 @@ Deno.serve(async (req) => {
 
   if (!AUTOREPLY) return json({ ok: true, logged: true, autoreply: false });
 
-  // Identifikasi pengirim — HANYA layani kontak yang sudah ada datanya.
+  // HANYA layani kontak yang sudah ada datanya.
   const tail = phone.slice(-8);
   const { data: parts } = await sb.from("participants").select("email,name,phone,is_active");
   const me = (parts ?? []).find((x) => (x.phone || "").replace(/\D/g, "").endsWith(tail));
   let known = !!me;
   if (!known) {
     const { count } = await sb.from("broadcast_log").select("id", { count: "exact", head: true }).eq("target_phone", phone);
-    known = (count ?? 0) > 0; // pernah kita hubungi (mis. dari spreadsheet/broadcast)
+    known = (count ?? 0) > 0;
   }
   if (!known) return json({ ok: true, ignored: "nomor tidak dikenal — tidak dibalas" });
 
+  // Mode auto-reply: DEFAULT hanya sapaan awal (1x). Set AI_ANSWER=true untuk balas penuh via AI.
+  const AI_ANSWER = (Deno.env.get("AI_ANSWER") ?? "false").toLowerCase() === "true";
+  if (!AI_ANSWER) {
+    const targets = ownerPhones.length ? ownerPhones : [normalizePhone(ADMIN_WA) || ADMIN_WA];
+    const { count: inCount } = await sb.from("wa_messages").select("id", { count: "exact", head: true }).eq("phone", phone).eq("direction", "in");
+    if ((inCount ?? 1) <= 1) {
+      const nm = me?.name ? " " + me.name.split(" ")[0] : "";
+      const greet = `Halo${nm}! 🙏 Terima kasih sudah menghubungi *${PROGRAM_NAME}*. Pesanmu sudah kami terima, admin kami akan segera membantu ya 😊\n\nSambil menunggu, lihat-lihat program & fitur kami di 🌐 https://electraacademy.com`;
+      await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: greet, handled_by: "greeting" });
+      const note = `🔔 *Chat baru masuk*\nDari: ${me?.name || "Kontak"} (${phone})\nPesan: "${text}"\n\nBalas langsung: https://wa.me/${phone}`;
+      if (!DRY() && FONNTE_TOKEN) { await sendFonnte(phone, greet); for (const t of targets) await sendFonnte(t, note); }
+      return json({ ok: true, greeted: true });
+    }
+    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(auto-reply mati — menunggu balasan admin)", handled_by: "silent" });
+    return json({ ok: true, silent: true });
+  }
+
+  // AI_ANSWER=true → balas penuh via AI.
   const { data: hist } = await sb.from("wa_messages").select("direction,message").eq("phone", phone).order("created_at", { ascending: false }).limit(6);
   const history = (hist ?? []).reverse().map((h) => `${h.direction === "in" ? "User" : "Sunarto"}: ${h.message}`).join("\n");
   const status = me ? (me.is_active ? "sudah terdaftar & AKTIF (sudah bayar)" : "sudah daftar tapi BELUM aktif/bayar") : "calon peserta (sudah kami hubungi, belum daftar akun)";
   const { data: kbRows } = await sb.from("sunarto_kb").select("note").eq("active", true).order("created_at", { ascending: false }).limit(20);
   const kb = (kbRows ?? []).map((k: any) => k.note).join(" | ");
   const reply = await aiReply(text, { name: (me?.name ?? "").split(" ")[0], status, history, kb });
-
   const up = (reply || "").toUpperCase();
 
-  // [ASK] → eskalasi ke admin untuk dijawab manual (Sunarto tidak yakin).
   if (up.includes("[ASK]")) {
     const targets = ownerPhones.length ? ownerPhones : [normalizePhone(ADMIN_WA) || ADMIN_WA];
-    const who = me?.name || "Kontak";
-    const note = `❓ *Perlu dijawab manual*\nSunarto tidak yakin menjawab pertanyaan ini.\n\nDari: ${who} (${phone})\nPesan: "${text}"\n\nBalas langsung: https://wa.me/${phone}`;
-    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(diteruskan ke admin untuk dijawab manual)", handled_by: "escalated" });
+    const note = `❓ *Perlu dijawab manual*\nDari: ${me?.name || "Kontak"} (${phone})\nPesan: "${text}"\n\nBalas langsung: https://wa.me/${phone}`;
+    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(diteruskan ke admin)", handled_by: "escalated" });
     if (!DRY() && FONNTE_TOKEN) { for (const t of targets) await sendFonnte(t, note); }
     return json({ ok: true, escalated: true, to: targets });
   }
-
-  // [SKIP] / kosong → basa-basi atau tak perlu jawaban → didiamkan.
   if (!reply || up.includes("[SKIP]")) {
-    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(tidak dibalas — basa-basi/tidak perlu jawaban)", handled_by: "ai-skip" });
-    return json({ ok: true, skipped: "tidak perlu balas" });
+    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(tidak dibalas)", handled_by: "ai-skip" });
+    return json({ ok: true, skipped: true });
   }
-
   await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: reply, handled_by: "ai" });
   let providerResp: unknown = "dry_run";
   if (!DRY()) { if (!FONNTE_TOKEN) return json({ error: "FONNTE_TOKEN belum di-set" }, 400); providerResp = await sendFonnte(phone, reply); }
