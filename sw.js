@@ -6,7 +6,7 @@
 //
 // VERSION bumping akan invalidate cache lama. Bump saat deploy major change.
 
-const VERSION = 'esa-v1.2.0';
+const VERSION = 'esa-v1.3.0';
 const STATIC_CACHE = `${VERSION}-static`;
 const DYNAMIC_CACHE = `${VERSION}-dynamic`;
 
@@ -67,6 +67,23 @@ self.addEventListener('fetch', (e) => {
   // supabase-config.js juga selalu fresh
   if (url.pathname.endsWith('/supabase-config.js')) {
     e.respondWith(fetch(req).catch(() => caches.match(req)));
+    return;
+  }
+
+  // /data/*.js (module-media.js, books.js) → NETWORK-FIRST.
+  // Data ini sering di-update (tambah video/PPT modul). Cache-first bikin
+  // pengunjung lama dapat data basi → modul baru tampil "belum di-upload".
+  // Network-first: selalu ambil versi terbaru, fallback ke cache saat offline.
+  if (url.pathname.startsWith('/data/') && url.pathname.endsWith('.js')) {
+    e.respondWith(
+      fetch(req).then(res => {
+        if (res && res.status === 200 && res.type === 'basic') {
+          const cloned = res.clone();
+          caches.open(DYNAMIC_CACHE).then(c => c.put(req, cloned));
+        }
+        return res;
+      }).catch(() => caches.match(req).then(r => r || new Response('Offline', { status: 503 })))
+    );
     return;
   }
 
