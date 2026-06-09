@@ -94,12 +94,13 @@ async function handleAdminCommand(text: string): Promise<string> {
 }
 
 // Pahami instruksi admin dalam bahasa natural (tanpa "/").
-async function adminIntent(text: string): Promise<{ action: string; segment?: string; message?: string }> {
+async function adminIntent(text: string): Promise<{ action: string; segment?: string; message?: string; note?: string }> {
   const low = text.toLowerCase();
-  const kw = () => {
+  const kw = (): { action: string; segment?: string; message?: string; note?: string } => {
     if (/lapor/.test(low)) return { action: "report" };
-    if (/follow\s?up|tagih|belum bayar|ingatkan/.test(low)) return { action: "followup" };
+    if (/follow\s?up|tagih|belum bayar/.test(low)) return { action: "followup" };
     if (/broadcast|umumkan|pengumuman|kirim ke semua|blast|siarkan/.test(low)) return { action: "broadcast" };
+    if (/ingat|catat|kalau ada yang tanya|jika ada yang tanya|arahkan|mulai sekarang|kebijakan|aturan/.test(low)) return { action: "remember", note: text };
     return { action: "none" };
   };
   if (!DEEPSEEK_API_KEY) return kw();
@@ -112,11 +113,13 @@ async function adminIntent(text: string): Promise<{ action: string; segment?: st
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content:
-            `Ubah instruksi admin menjadi JSON. Field: "action" (salah satu: report, followup, broadcast, none), ` +
+            `Ubah instruksi admin menjadi JSON. Field: "action" (salah satu: report, followup, broadcast, remember, none), ` +
             `"segment" (all|active|inactive — hanya untuk broadcast, default all), ` +
-            `"message" (isi pengumuman lengkap — hanya untuk broadcast; boleh pakai {nama}). ` +
+            `"message" (isi pengumuman lengkap — hanya untuk broadcast; boleh pakai {nama}), ` +
+            `"note" (kebijakan/fakta yang harus diingat — hanya untuk remember, tulis ringkas & jelas). ` +
             `report=kirim laporan harian. followup=follow-up yang belum bayar. broadcast=kirim pengumuman ke member. ` +
-            `Jika bukan instruksi jelas, action=none. Balas HANYA JSON.` },
+            `remember=admin memberi arahan/kebijakan/fakta untuk dipakai Sunarto saat menjawab customer (mis. "kalau ada yang tanya sertifikat seminar, arahkan ke web"). ` +
+            `Jika hanya basa-basi/tidak jelas, action=none. Balas HANYA JSON.` },
           { role: "user", content: text },
         ],
       }),
@@ -128,7 +131,7 @@ async function adminIntent(text: string): Promise<{ action: string; segment?: st
   } catch { return kw(); }
 }
 
-async function runAdminInstruction(text: string): Promise<string> {
+async function runAdminInstruction(text: string, sb: any, fromPhone: string): Promise<string> {
   const it = await adminIntent(text);
   if (it.action === "report") { await callFn("daily-report"); return "📊 Oke, laporan harian dikirim ke WA admin."; }
   if (it.action === "followup") {
@@ -141,10 +144,28 @@ async function runAdminInstruction(text: string): Promise<string> {
     const r: any = await callFn("broadcast", { segment: seg, message: it.message });
     return `📢 Oke, broadcast (${seg}) terkirim ke ${r?.sent_or_previewed ?? "?"} dari ${r?.total ?? "?"} member.`;
   }
-  return "Siap 🙌 Saya bisa bantu: *kirim laporan*, *follow-up yang belum bayar*, atau *broadcast ke member*. Tulis saja instruksinya, contoh: \"broadcast ke aktif: Halo {nama}, ada kelas baru!\"";
+  if (it.action === "remember") {
+    const note = (it.note || text).trim();
+    await sb.from("sunarto_kb").insert({ note, created_by: fromPhone });
+    return `📝 Siap, sudah saya catat & akan saya pakai saat menjawab:\n"${note}"\n\n(Ketik "lupakan: <kata>" untuk hapus, atau "daftar catatan" untuk lihat semua.)`;
+  }
+  // Perintah lihat/hapus catatan.
+  if (/^daftar catatan|lihat catatan|catatan$/i.test(text.trim())) {
+    const { data } = await sb.from("sunarto_kb").select("id,note").eq("active", true).order("created_at", { ascending: false }).limit(20);
+    if (!data?.length) return "Belum ada catatan/kebijakan tersimpan.";
+    return "📒 *Catatan Sunarto:*\n" + data.map((k: any) => `#${k.id} ${k.note}`).join("\n");
+  }
+  const lupa = text.trim().match(/^lupakan:?\s*(.+)/i);
+  if (lupa) {
+    const kw = lupa[1].trim();
+    const { data } = await sb.from("sunarto_kb").select("id").eq("active", true).ilike("note", `%${kw}%`);
+    if (data?.length) { await sb.from("sunarto_kb").update({ active: false }).in("id", data.map((x: any) => x.id)); return `🗑️ ${data.length} catatan yang memuat "${kw}" dihapus.`; }
+    return `Tidak ada catatan yang memuat "${kw}".`;
+  }
+  return "Siap 🙌 Saya bisa bantu: *kirim laporan*, *follow-up yang belum bayar*, *broadcast*, atau menerima *arahan/kebijakan* (mis. \"kalau ada yang tanya sertifikat seminar, arahkan ke web\"). Tulis saja instruksinya.";
 }
 
-async function aiReply(userMsg: string, ctx: { name: string; status: string; history: string }): Promise<string> {
+async function aiReply(userMsg: string, ctx: { name: string; status: string; history: string; kb: string }): Promise<string> {
   const fallback = "[SKIP]"; // tidak paham → jangan balas
   if (!DEEPSEEK_API_KEY) return fallback;
   try {
@@ -159,6 +180,7 @@ async function aiReply(userMsg: string, ctx: { name: string; status: string; his
             `Jawab Bahasa Indonesia, ramah, ringkas (maks 5 kalimat), jujur. Status penanya: ${ctx.status}. Nama: ${ctx.name || "(?)"} . ` +
             `Bantu pertanyaan umum (daftar, cara belajar, isi program, aktivasi, sertifikat). ` +
             `Untuk HARGA pasti, metode/refund pembayaran, jadwal workshop, atau hal di luar pengetahuanmu: arahkan ke admin https://wa.me/${ADMIN_WA}. ` +
+            (ctx.kb ? `ARAHAN/KEBIJAKAN dari admin (WAJIB dipatuhi): ${ctx.kb}. ` : "") +
             `Jangan mengarang harga/janji. Jangan ulang sapaan kalau sudah pernah. 1 emoji secukupnya. ` +
             `PENTING: jangan mengarang. (a) Jika pesan hanya basa-basi/sapaan/ucapan terima kasih yang tidak butuh jawaban → balas PERSIS: [SKIP]. ` +
             `(b) Jika pesan adalah PERTANYAAN atau permintaan serius yang kamu tidak yakin, di luar pengetahuanmu, soal harga pasti/pembayaran/komplain, atau butuh keputusan manusia → balas PERSIS: [ASK] (akan diteruskan ke admin). ` +
@@ -198,7 +220,7 @@ Deno.serve(async (req) => {
   // PERINTAH ADMIN (sender = admin & diawali '/').
   // Admin: jalankan instruksi langsung (slash command ATAU bahasa natural).
   if (adminSet.has(phone)) {
-    const reply = text.startsWith("/") ? await handleAdminCommand(text) : await runAdminInstruction(text);
+    const reply = text.startsWith("/") ? await handleAdminCommand(text) : await runAdminInstruction(text, sb, phone);
     await sb.from("wa_messages").insert({ phone, direction: "out", message: reply, handled_by: "admin" });
     if (!DRY() && FONNTE_TOKEN) await sendFonnte(phone, reply);
     return json({ ok: true, admin: true, reply });
@@ -229,7 +251,9 @@ Deno.serve(async (req) => {
   const { data: hist } = await sb.from("wa_messages").select("direction,message").eq("phone", phone).order("created_at", { ascending: false }).limit(6);
   const history = (hist ?? []).reverse().map((h) => `${h.direction === "in" ? "User" : "Sunarto"}: ${h.message}`).join("\n");
   const status = me ? (me.is_active ? "sudah terdaftar & AKTIF (sudah bayar)" : "sudah daftar tapi BELUM aktif/bayar") : "calon peserta (sudah kami hubungi, belum daftar akun)";
-  const reply = await aiReply(text, { name: (me?.name ?? "").split(" ")[0], status, history });
+  const { data: kbRows } = await sb.from("sunarto_kb").select("note").eq("active", true).order("created_at", { ascending: false }).limit(20);
+  const kb = (kbRows ?? []).map((k: any) => k.note).join(" | ");
+  const reply = await aiReply(text, { name: (me?.name ?? "").split(" ")[0], status, history, kb });
 
   const up = (reply || "").toUpperCase();
 
