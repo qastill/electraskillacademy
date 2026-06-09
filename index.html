@@ -15392,6 +15392,17 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     window.addEventListener('resize', esaUpdateStickyMobileCTA);
     // 4. Referral widget — dihilangkan dari main page
     // setTimeout(esaLoadReferralWidget, 800);
+    // 5. Paksa user lama (mis. login Google sebelum No. HP diwajibkan) untuk
+    //    melengkapi No. HP/WA. Modal "Lengkapi Profil" bersifat blocking.
+    //    Hanya untuk user yang sudah login (punya email) & bukan admin.
+    try {
+      const _p = state.profile;
+      const _isAdmin = _p && _p.email && typeof window.esaIsAdminEmail === 'function' && window.esaIsAdminEmail(_p.email);
+      const _phoneOk = _p && _p.phone && _p.phone !== '-' && String(_p.phone).replace(/\D/g, '').length >= 8;
+      if (_p && _p.email && !_isAdmin && !_phoneOk && typeof window.esaShowProfileCompletion === 'function') {
+        setTimeout(window.esaShowProfileCompletion, 1200);
+      }
+    } catch (e) {}
     // 5. Deep-link ?modul=CODE&track=X&level=Y → auto-open modul (dari peta-karir.html)
     try {
       const params = new URL(window.location.href).searchParams;
@@ -15720,10 +15731,14 @@ function handleCred(resp){
       // Clear stashed biodata setelah berhasil di-merge
       try{ delete window._esaPendingBiodata; }catch(e){ window._esaPendingBiodata=null; }
 
-      // Sync ke Supabase — email tercatat di tabel `participants` segera
-      // setelah login Google. INSERT dgn unique(email) → dupes otomatis
-      // di-skip server-side (kode 23505).
-      if(typeof window.esaSyncParticipant==='function'){
+      // Sync ke Supabase — HANYA kalau No. HP sudah terisi (atau user admin).
+      // Tanpa ini, login Google membuat baris participant ber-phone '-' sebelum
+      // user mengisi HP; kalau user menutup tab saat modal "Lengkapi Profil"
+      // (blocking) muncul, tercipta record hantu tanpa HP. Sync sebenarnya
+      // dilakukan oleh esaSaveProfile() setelah HP diisi.
+      var _isAdminG=(typeof window.esaIsAdminEmail==='function')&&window.esaIsAdminEmail(email);
+      var _hasPhoneG=data.profile.phone&&data.profile.phone!=='-';
+      if((_hasPhoneG||_isAdminG)&&typeof window.esaSyncParticipant==='function'){
         window.esaSyncParticipant(data.profile, data.promoCode||null);
       }
 
@@ -16357,7 +16372,11 @@ function handleSupabaseAuthEvent(event, session){
     writeESAData(data);
     try{ delete window._esaPendingBiodata; }catch(e){ window._esaPendingBiodata=null; }
 
-    if(typeof window.esaSyncParticipant==='function'){
+    // Sync participant HANYA kalau No. HP sudah terisi (atau admin) — cegah
+    // record hantu tanpa HP. Sync final via esaSaveProfile() setelah HP diisi.
+    var _isAdminO=(typeof window.esaIsAdminEmail==='function')&&window.esaIsAdminEmail(email);
+    var _hasPhoneO=data.profile.phone&&data.profile.phone!=='-';
+    if((_hasPhoneO||_isAdminO)&&typeof window.esaSyncParticipant==='function'){
       window.esaSyncParticipant(data.profile, data.promoCode||null);
     }
     // Sync member status dari server + admin auto-aktivasi
