@@ -107,7 +107,9 @@ async function aiReply(userMsg: string, ctx: { name: string; status: string; his
             `Bantu pertanyaan umum (daftar, cara belajar, isi program, aktivasi, sertifikat). ` +
             `Untuk HARGA pasti, metode/refund pembayaran, jadwal workshop, atau hal di luar pengetahuanmu: arahkan ke admin https://wa.me/${ADMIN_WA}. ` +
             `Jangan mengarang harga/janji. Jangan ulang sapaan kalau sudah pernah. 1 emoji secukupnya. ` +
-            `PENTING: jika kamu TIDAK yakin jawabannya, pertanyaan tidak jelas, atau di luar topik Electra/kelistrikan — JANGAN mengarang dan JANGAN menjawab; balas PERSIS dengan teks: [SKIP] (tanpa kata lain).` },
+            `PENTING: jangan mengarang. (a) Jika pesan hanya basa-basi/sapaan/ucapan terima kasih yang tidak butuh jawaban → balas PERSIS: [SKIP]. ` +
+            `(b) Jika pesan adalah PERTANYAAN atau permintaan serius yang kamu tidak yakin, di luar pengetahuanmu, soal harga pasti/pembayaran/komplain, atau butuh keputusan manusia → balas PERSIS: [ASK] (akan diteruskan ke admin). ` +
+            `(c) Selain itu, jawab langsung dengan benar.` },
           { role: "user", content: `Riwayat:\n${ctx.history || "(belum ada)"}\n\nPesan masuk: ${userMsg}` },
         ],
       }),
@@ -175,10 +177,23 @@ Deno.serve(async (req) => {
   const status = me ? (me.is_active ? "sudah terdaftar & AKTIF (sudah bayar)" : "sudah daftar tapi BELUM aktif/bayar") : "calon peserta (sudah kami hubungi, belum daftar akun)";
   const reply = await aiReply(text, { name: (me?.name ?? "").split(" ")[0], status, history });
 
-  // Jangan balas hal yang tidak dipahami / di luar topik (AI mengembalikan [SKIP]).
-  if (!reply || reply.toUpperCase().includes("[SKIP]")) {
-    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(tidak dibalas — di luar pemahaman/data)", handled_by: "ai-skip" });
-    return json({ ok: true, skipped: "AI tidak yakin / di luar topik" });
+  const up = (reply || "").toUpperCase();
+
+  // [ASK] → eskalasi ke admin untuk dijawab manual (Sunarto tidak yakin).
+  if (up.includes("[ASK]")) {
+    const ownerRaw = (ADMIN_PHONES.split(",")[0] || "").trim() || ADMIN_WA;
+    const owner = normalizePhone(ownerRaw) || ownerRaw;
+    const who = me?.name || "Kontak";
+    const note = `❓ *Perlu dijawab manual*\nSunarto tidak yakin menjawab pertanyaan ini.\n\nDari: ${who} (${phone})\nPesan: "${text}"\n\nBalas langsung: https://wa.me/${phone}`;
+    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(diteruskan ke admin untuk dijawab manual)", handled_by: "escalated" });
+    if (!DRY() && FONNTE_TOKEN) await sendFonnte(owner, note);
+    return json({ ok: true, escalated: true, to: owner });
+  }
+
+  // [SKIP] / kosong → basa-basi atau tak perlu jawaban → didiamkan.
+  if (!reply || up.includes("[SKIP]")) {
+    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(tidak dibalas — basa-basi/tidak perlu jawaban)", handled_by: "ai-skip" });
+    return json({ ok: true, skipped: "tidak perlu balas" });
   }
 
   await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: reply, handled_by: "ai" });
