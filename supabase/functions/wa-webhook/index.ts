@@ -92,7 +92,7 @@ async function handleAdminCommand(text: string): Promise<string> {
 }
 
 async function aiReply(userMsg: string, ctx: { name: string; status: string; history: string }): Promise<string> {
-  const fallback = `Halo${ctx.name ? " " + ctx.name : ""}! 🙏 Terima kasih sudah menghubungi ${PROGRAM_NAME}. Admin akan segera membantu: https://wa.me/${ADMIN_WA}`;
+  const fallback = "[SKIP]"; // tidak paham → jangan balas
   if (!DEEPSEEK_API_KEY) return fallback;
   try {
     const r = await fetch("https://api.deepseek.com/chat/completions", {
@@ -106,7 +106,8 @@ async function aiReply(userMsg: string, ctx: { name: string; status: string; his
             `Jawab Bahasa Indonesia, ramah, ringkas (maks 5 kalimat), jujur. Status penanya: ${ctx.status}. Nama: ${ctx.name || "(?)"} . ` +
             `Bantu pertanyaan umum (daftar, cara belajar, isi program, aktivasi, sertifikat). ` +
             `Untuk HARGA pasti, metode/refund pembayaran, jadwal workshop, atau hal di luar pengetahuanmu: arahkan ke admin https://wa.me/${ADMIN_WA}. ` +
-            `Jangan mengarang harga/janji. Jangan ulang sapaan kalau sudah pernah. 1 emoji secukupnya.` },
+            `Jangan mengarang harga/janji. Jangan ulang sapaan kalau sudah pernah. 1 emoji secukupnya. ` +
+            `PENTING: jika kamu TIDAK yakin jawabannya, pertanyaan tidak jelas, atau di luar topik Electra/kelistrikan — JANGAN mengarang dan JANGAN menjawab; balas PERSIS dengan teks: [SKIP] (tanpa kata lain).` },
           { role: "user", content: `Riwayat:\n${ctx.history || "(belum ada)"}\n\nPesan masuk: ${userMsg}` },
         ],
       }),
@@ -158,14 +159,27 @@ Deno.serve(async (req) => {
 
   if (!AUTOREPLY) return json({ ok: true, logged: true, autoreply: false });
 
+  // Identifikasi pengirim — HANYA layani kontak yang sudah ada datanya.
   const tail = phone.slice(-8);
   const { data: parts } = await sb.from("participants").select("email,name,phone,is_active");
   const me = (parts ?? []).find((x) => (x.phone || "").replace(/\D/g, "").endsWith(tail));
+  let known = !!me;
+  if (!known) {
+    const { count } = await sb.from("broadcast_log").select("id", { count: "exact", head: true }).eq("target_phone", phone);
+    known = (count ?? 0) > 0; // pernah kita hubungi (mis. dari spreadsheet/broadcast)
+  }
+  if (!known) return json({ ok: true, ignored: "nomor tidak dikenal — tidak dibalas" });
 
   const { data: hist } = await sb.from("wa_messages").select("direction,message").eq("phone", phone).order("created_at", { ascending: false }).limit(6);
   const history = (hist ?? []).reverse().map((h) => `${h.direction === "in" ? "User" : "Sunarto"}: ${h.message}`).join("\n");
-  const status = me ? (me.is_active ? "sudah terdaftar & AKTIF (sudah bayar)" : "sudah daftar tapi BELUM aktif/bayar") : "belum terdaftar / tamu";
+  const status = me ? (me.is_active ? "sudah terdaftar & AKTIF (sudah bayar)" : "sudah daftar tapi BELUM aktif/bayar") : "calon peserta (sudah kami hubungi, belum daftar akun)";
   const reply = await aiReply(text, { name: (me?.name ?? "").split(" ")[0], status, history });
+
+  // Jangan balas hal yang tidak dipahami / di luar topik (AI mengembalikan [SKIP]).
+  if (!reply || reply.toUpperCase().includes("[SKIP]")) {
+    await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(tidak dibalas — di luar pemahaman/data)", handled_by: "ai-skip" });
+    return json({ ok: true, skipped: "AI tidak yakin / di luar topik" });
+  }
 
   await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: reply, handled_by: "ai" });
   let providerResp: unknown = "dry_run";
