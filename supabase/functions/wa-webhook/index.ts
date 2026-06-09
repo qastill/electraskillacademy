@@ -23,7 +23,7 @@ const FOLLOWUP_SECRET = env("FOLLOWUP_SECRET");
 const DEEPSEEK_API_KEY = env("DEEPSEEK_API_KEY");
 const FONNTE_TOKEN = env("FONNTE_TOKEN");
 const ADMIN_WA = env("ADMIN_WA", "6285121532407");
-const ADMIN_PHONES = env("ADMIN_PHONES", "6285260409720");
+const ADMIN_PHONES = env("ADMIN_PHONES", "6285260409720,6285334152284");
 const PROGRAM_NAME = env("PROGRAM_NAME", "Electra Skill Academy");
 const AUTOREPLY = env("AUTOREPLY", "true").toLowerCase() !== "false";
 const DRY = () => (Deno.env.get("DRY_RUN") ?? "true").toLowerCase() !== "false";
@@ -39,7 +39,9 @@ function normalizePhone(raw: string): string | null {
   else if (d.startsWith("8")) d = "62" + d; else if (d.length >= 8) d = "62" + d; else return null;
   return d.length >= 10 && d.length <= 15 ? d : null;
 }
-const adminSet = new Set([ADMIN_WA, ...ADMIN_PHONES.split(",")].map((x) => normalizePhone(x) || "").filter(Boolean));
+// Nomor admin manusia (penerima eskalasi & boleh kirim perintah).
+const ownerPhones = ADMIN_PHONES.split(",").map((x) => normalizePhone(x) || "").filter(Boolean);
+const adminSet = new Set([normalizePhone(ADMIN_WA) || "", ...ownerPhones].filter(Boolean));
 
 async function sendFonnte(target: string, message: string) {
   const r = await fetch("https://api.fonnte.com/send", {
@@ -181,13 +183,12 @@ Deno.serve(async (req) => {
 
   // [ASK] → eskalasi ke admin untuk dijawab manual (Sunarto tidak yakin).
   if (up.includes("[ASK]")) {
-    const ownerRaw = (ADMIN_PHONES.split(",")[0] || "").trim() || ADMIN_WA;
-    const owner = normalizePhone(ownerRaw) || ownerRaw;
+    const targets = ownerPhones.length ? ownerPhones : [normalizePhone(ADMIN_WA) || ADMIN_WA];
     const who = me?.name || "Kontak";
     const note = `❓ *Perlu dijawab manual*\nSunarto tidak yakin menjawab pertanyaan ini.\n\nDari: ${who} (${phone})\nPesan: "${text}"\n\nBalas langsung: https://wa.me/${phone}`;
     await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(diteruskan ke admin untuk dijawab manual)", handled_by: "escalated" });
-    if (!DRY() && FONNTE_TOKEN) await sendFonnte(owner, note);
-    return json({ ok: true, escalated: true, to: owner });
+    if (!DRY() && FONNTE_TOKEN) { for (const t of targets) await sendFonnte(t, note); }
+    return json({ ok: true, escalated: true, to: targets });
   }
 
   // [SKIP] / kosong → basa-basi atau tak perlu jawaban → didiamkan.
