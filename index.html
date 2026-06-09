@@ -493,8 +493,7 @@ if ('serviceWorker' in navigator) {
 <!-- USER PROGRESS PANEL (shown when profile exists) -->
 <div id="esa-home-progress-panel" class="esa-home-progress" style="display:none;"></div>
 
-<!-- REFERRAL DASHBOARD WIDGET (shown when logged-in) -->
-<div id="esa-referral-widget" style="display:none;"></div>
+<!-- REFERRAL DASHBOARD WIDGET — dihilangkan dari main page -->
 
 
   <section class="practices-section" id="practices">
@@ -15349,7 +15348,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         if (view === 'home') {
           updateHomeProgress();
           if (typeof window.esaUpdateStickyMobileCTA === 'function') window.esaUpdateStickyMobileCTA();
-          if (typeof window.esaLoadReferralWidget === 'function') window.esaLoadReferralWidget();
+          // Referral widget dihilangkan dari main page
         }
         if (view === 'talent' && typeof renderTalents === 'function') renderTalents();
         if (view === 'liveclass-schedule' && typeof renderLiveClassSchedulePage === 'function') renderLiveClassSchedulePage();
@@ -15386,8 +15385,8 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     // 3. Sticky mobile CTA (mobile + non-logged-in)
     esaUpdateStickyMobileCTA();
     window.addEventListener('resize', esaUpdateStickyMobileCTA);
-    // 4. Referral widget (kalau sudah login)
-    setTimeout(esaLoadReferralWidget, 800);
+    // 4. Referral widget — dihilangkan dari main page
+    // setTimeout(esaLoadReferralWidget, 800);
     // 5. Deep-link ?modul=CODE&track=X&level=Y → auto-open modul (dari peta-karir.html)
     try {
       const params = new URL(window.location.href).searchParams;
