@@ -556,7 +556,7 @@ function wire(p1,p2,colorHex){
 function mkB(host){
   const canvas=document.createElement('canvas');canvas.style.cssText='width:100%;height:100%;display:block;outline:none;touch-action:none';
   host.appendChild(canvas);
-  const engine=new BABYLON.Engine(canvas,true,{preserveDrawingBuffer:true,stencil:true});
+  const engine=new BABYLON.Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true});
   const scene=new BABYLON.Scene(engine);
   scene.clearColor=new BABYLON.Color4(11/255,15/255,23/255,1);
   const camera=new BABYLON.ArcRotateCamera('cam',Math.PI/3,Math.PI/2.6,13,new BABYLON.Vector3(0,1.2,0),scene);
@@ -1342,6 +1342,9 @@ SIMS3D.t15=(host,ui)=>{
    ========================================================================= */
 let current=null;
 const $=id=>document.getElementById(id);
+// Saat halaman/iframe dibongkar (mis. modal di index.html ditutup → iframe dihapus),
+// bongkar simulator aktif agar konteks WebGL & memori GPU langsung dilepas.
+window.addEventListener('pagehide',()=>{if(current&&current.dispose){try{current.dispose();}catch(e){}current=null;}});
 function cardHTML(t,i){
   const feat=t.cat==='praktik';
   return `<button class="card${feat?' feat':''}" data-id="${t.id}">

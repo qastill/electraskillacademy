@@ -5562,6 +5562,11 @@ function closeSimulator() {
   const modal = document.getElementById('sim-modal');
   if (modal) modal.classList.remove('active');
   document.body.style.overflow = '';
+  // PENTING: kosongkan isi modal agar iframe simulator 3D (WebGL) benar-benar
+  // dibongkar. Tanpa ini, iframe tetap hidup di DOM & loop render WebGL terus
+  // jalan di latar (PowerSaveBlocker aktif, memori GPU tertahan) → Chrome crash.
+  const content = document.getElementById('sim-modal-content');
+  if (content) content.innerHTML = '';
 }
 
 // =================== SIMULATOR 1: Ohm's Law ===================
