@@ -23,7 +23,7 @@ const FOLLOWUP_SECRET = env("FOLLOWUP_SECRET");
 const DEEPSEEK_API_KEY = env("DEEPSEEK_API_KEY");
 const FONNTE_TOKEN = env("FONNTE_TOKEN");
 const ADMIN_WA = env("ADMIN_WA", "6285121532407");
-const ADMIN_PHONES = env("ADMIN_PHONES", "6285260409720");
+const ADMIN_PHONES = env("ADMIN_PHONES", "6285260409720,6285334152284");
 const PROGRAM_NAME = env("PROGRAM_NAME", "Electra Skill Academy");
 const AUTOREPLY = env("AUTOREPLY", "true").toLowerCase() !== "false";
 const DRY = () => (Deno.env.get("DRY_RUN") ?? "true").toLowerCase() !== "false";
@@ -39,7 +39,9 @@ function normalizePhone(raw: string): string | null {
   else if (d.startsWith("8")) d = "62" + d; else if (d.length >= 8) d = "62" + d; else return null;
   return d.length >= 10 && d.length <= 15 ? d : null;
 }
-const adminSet = new Set([ADMIN_WA, ...ADMIN_PHONES.split(",")].map((x) => normalizePhone(x) || "").filter(Boolean));
+// Nomor admin manusia (penerima eskalasi & boleh kirim perintah).
+const ownerPhones = ADMIN_PHONES.split(",").map((x) => normalizePhone(x) || "").filter(Boolean);
+const adminSet = new Set([normalizePhone(ADMIN_WA) || "", ...ownerPhones].filter(Boolean));
 
 async function sendFonnte(target: string, message: string) {
   const r = await fetch("https://api.fonnte.com/send", {
@@ -89,6 +91,57 @@ async function handleAdminCommand(text: string): Promise<string> {
     return `📢 Broadcast (${m[1].toLowerCase()}) selesai. Target: ${r?.total ?? "?"}, terkirim: ${r?.sent_or_previewed ?? "?"}${r?.dry_run ? " (DRY-RUN)" : ""}.`;
   }
   return "Perintah tidak dikenali.\n\n" + HELP;
+}
+
+// Pahami instruksi admin dalam bahasa natural (tanpa "/").
+async function adminIntent(text: string): Promise<{ action: string; segment?: string; message?: string }> {
+  const low = text.toLowerCase();
+  const kw = () => {
+    if (/lapor/.test(low)) return { action: "report" };
+    if (/follow\s?up|tagih|belum bayar|ingatkan/.test(low)) return { action: "followup" };
+    if (/broadcast|umumkan|pengumuman|kirim ke semua|blast|siarkan/.test(low)) return { action: "broadcast" };
+    return { action: "none" };
+  };
+  if (!DEEPSEEK_API_KEY) return kw();
+  try {
+    const r = await fetch("https://api.deepseek.com/chat/completions", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${DEEPSEEK_API_KEY}` },
+      body: JSON.stringify({
+        model: "deepseek-chat", temperature: 0, max_tokens: 300,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content:
+            `Ubah instruksi admin menjadi JSON. Field: "action" (salah satu: report, followup, broadcast, none), ` +
+            `"segment" (all|active|inactive — hanya untuk broadcast, default all), ` +
+            `"message" (isi pengumuman lengkap — hanya untuk broadcast; boleh pakai {nama}). ` +
+            `report=kirim laporan harian. followup=follow-up yang belum bayar. broadcast=kirim pengumuman ke member. ` +
+            `Jika bukan instruksi jelas, action=none. Balas HANYA JSON.` },
+          { role: "user", content: text },
+        ],
+      }),
+    });
+    if (!r.ok) return kw();
+    const d = await r.json();
+    const j = JSON.parse(d?.choices?.[0]?.message?.content || "{}");
+    return j && j.action ? j : kw();
+  } catch { return kw(); }
+}
+
+async function runAdminInstruction(text: string): Promise<string> {
+  const it = await adminIntent(text);
+  if (it.action === "report") { await callFn("daily-report"); return "📊 Oke, laporan harian dikirim ke WA admin."; }
+  if (it.action === "followup") {
+    const r: any = await callFn("followup-unpaid");
+    return `📩 Oke, follow-up dijalankan. Kandidat: ${r?.candidates ?? "?"}, diproses: ${r?.sent_or_previewed ?? "?"}.`;
+  }
+  if (it.action === "broadcast") {
+    if (!it.message) return "Baik. Sebutkan isi pengumumannya ya. Contoh: \"broadcast ke member aktif: Halo {nama}, modul baru sudah tayang!\"";
+    const seg = (it.segment || "all").toLowerCase();
+    const r: any = await callFn("broadcast", { segment: seg, message: it.message });
+    return `📢 Oke, broadcast (${seg}) terkirim ke ${r?.sent_or_previewed ?? "?"} dari ${r?.total ?? "?"} member.`;
+  }
+  return "Siap 🙌 Saya bisa bantu: *kirim laporan*, *follow-up yang belum bayar*, atau *broadcast ke member*. Tulis saja instruksinya, contoh: \"broadcast ke aktif: Halo {nama}, ada kelas baru!\"";
 }
 
 async function aiReply(userMsg: string, ctx: { name: string; status: string; history: string }): Promise<string> {
@@ -143,11 +196,12 @@ Deno.serve(async (req) => {
   await sb.from("wa_messages").insert({ phone, direction: "in", message: text, handled_by: "system" });
 
   // PERINTAH ADMIN (sender = admin & diawali '/').
-  if (adminSet.has(phone) && text.startsWith("/")) {
-    const reply = await handleAdminCommand(text);
+  // Admin: jalankan instruksi langsung (slash command ATAU bahasa natural).
+  if (adminSet.has(phone)) {
+    const reply = text.startsWith("/") ? await handleAdminCommand(text) : await runAdminInstruction(text);
     await sb.from("wa_messages").insert({ phone, direction: "out", message: reply, handled_by: "admin" });
     if (!DRY() && FONNTE_TOKEN) await sendFonnte(phone, reply);
-    return json({ ok: true, admin_command: true, reply });
+    return json({ ok: true, admin: true, reply });
   }
 
   // Opt-out.
@@ -181,13 +235,12 @@ Deno.serve(async (req) => {
 
   // [ASK] → eskalasi ke admin untuk dijawab manual (Sunarto tidak yakin).
   if (up.includes("[ASK]")) {
-    const ownerRaw = (ADMIN_PHONES.split(",")[0] || "").trim() || ADMIN_WA;
-    const owner = normalizePhone(ownerRaw) || ownerRaw;
+    const targets = ownerPhones.length ? ownerPhones : [normalizePhone(ADMIN_WA) || ADMIN_WA];
     const who = me?.name || "Kontak";
     const note = `❓ *Perlu dijawab manual*\nSunarto tidak yakin menjawab pertanyaan ini.\n\nDari: ${who} (${phone})\nPesan: "${text}"\n\nBalas langsung: https://wa.me/${phone}`;
     await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(diteruskan ke admin untuk dijawab manual)", handled_by: "escalated" });
-    if (!DRY() && FONNTE_TOKEN) await sendFonnte(owner, note);
-    return json({ ok: true, escalated: true, to: owner });
+    if (!DRY() && FONNTE_TOKEN) { for (const t of targets) await sendFonnte(t, note); }
+    return json({ ok: true, escalated: true, to: targets });
   }
 
   // [SKIP] / kosong → basa-basi atau tak perlu jawaban → didiamkan.
