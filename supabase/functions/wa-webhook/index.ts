@@ -93,6 +93,57 @@ async function handleAdminCommand(text: string): Promise<string> {
   return "Perintah tidak dikenali.\n\n" + HELP;
 }
 
+// Pahami instruksi admin dalam bahasa natural (tanpa "/").
+async function adminIntent(text: string): Promise<{ action: string; segment?: string; message?: string }> {
+  const low = text.toLowerCase();
+  const kw = () => {
+    if (/lapor/.test(low)) return { action: "report" };
+    if (/follow\s?up|tagih|belum bayar|ingatkan/.test(low)) return { action: "followup" };
+    if (/broadcast|umumkan|pengumuman|kirim ke semua|blast|siarkan/.test(low)) return { action: "broadcast" };
+    return { action: "none" };
+  };
+  if (!DEEPSEEK_API_KEY) return kw();
+  try {
+    const r = await fetch("https://api.deepseek.com/chat/completions", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${DEEPSEEK_API_KEY}` },
+      body: JSON.stringify({
+        model: "deepseek-chat", temperature: 0, max_tokens: 300,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content:
+            `Ubah instruksi admin menjadi JSON. Field: "action" (salah satu: report, followup, broadcast, none), ` +
+            `"segment" (all|active|inactive — hanya untuk broadcast, default all), ` +
+            `"message" (isi pengumuman lengkap — hanya untuk broadcast; boleh pakai {nama}). ` +
+            `report=kirim laporan harian. followup=follow-up yang belum bayar. broadcast=kirim pengumuman ke member. ` +
+            `Jika bukan instruksi jelas, action=none. Balas HANYA JSON.` },
+          { role: "user", content: text },
+        ],
+      }),
+    });
+    if (!r.ok) return kw();
+    const d = await r.json();
+    const j = JSON.parse(d?.choices?.[0]?.message?.content || "{}");
+    return j && j.action ? j : kw();
+  } catch { return kw(); }
+}
+
+async function runAdminInstruction(text: string): Promise<string> {
+  const it = await adminIntent(text);
+  if (it.action === "report") { await callFn("daily-report"); return "📊 Oke, laporan harian dikirim ke WA admin."; }
+  if (it.action === "followup") {
+    const r: any = await callFn("followup-unpaid");
+    return `📩 Oke, follow-up dijalankan. Kandidat: ${r?.candidates ?? "?"}, diproses: ${r?.sent_or_previewed ?? "?"}.`;
+  }
+  if (it.action === "broadcast") {
+    if (!it.message) return "Baik. Sebutkan isi pengumumannya ya. Contoh: \"broadcast ke member aktif: Halo {nama}, modul baru sudah tayang!\"";
+    const seg = (it.segment || "all").toLowerCase();
+    const r: any = await callFn("broadcast", { segment: seg, message: it.message });
+    return `📢 Oke, broadcast (${seg}) terkirim ke ${r?.sent_or_previewed ?? "?"} dari ${r?.total ?? "?"} member.`;
+  }
+  return "Siap 🙌 Saya bisa bantu: *kirim laporan*, *follow-up yang belum bayar*, atau *broadcast ke member*. Tulis saja instruksinya, contoh: \"broadcast ke aktif: Halo {nama}, ada kelas baru!\"";
+}
+
 async function aiReply(userMsg: string, ctx: { name: string; status: string; history: string }): Promise<string> {
   const fallback = "[SKIP]"; // tidak paham → jangan balas
   if (!DEEPSEEK_API_KEY) return fallback;
@@ -145,11 +196,12 @@ Deno.serve(async (req) => {
   await sb.from("wa_messages").insert({ phone, direction: "in", message: text, handled_by: "system" });
 
   // PERINTAH ADMIN (sender = admin & diawali '/').
-  if (adminSet.has(phone) && text.startsWith("/")) {
-    const reply = await handleAdminCommand(text);
+  // Admin: jalankan instruksi langsung (slash command ATAU bahasa natural).
+  if (adminSet.has(phone)) {
+    const reply = text.startsWith("/") ? await handleAdminCommand(text) : await runAdminInstruction(text);
     await sb.from("wa_messages").insert({ phone, direction: "out", message: reply, handled_by: "admin" });
     if (!DRY() && FONNTE_TOKEN) await sendFonnte(phone, reply);
-    return json({ ok: true, admin_command: true, reply });
+    return json({ ok: true, admin: true, reply });
   }
 
   // Opt-out.
