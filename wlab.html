@@ -2169,5 +2169,6 @@ loadLab(LABS[want]?want:Object.keys(LABS)[0]);
 /* expose for tests */
 if(typeof window!=='undefined'){window.__WLAB={validate,autoWireNets:()=>{wires=[];LAB.nets.forEach(nt=>{for(let i=1;i<nt.t.length;i++)wires.push({a:nt.t[0],b:nt.t[i]});});return validate();},loadLab,LABS};}
 </script>
+<script src="/sim-assistant.js" data-sim="wlab"></script>
 </body>
 </html>
