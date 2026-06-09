@@ -24,7 +24,7 @@ select cron.schedule(
     url     := 'https://osjdzroehpquegtvktvt.supabase.co/functions/v1/followup-unpaid',
     headers := jsonb_build_object(
       'content-type', 'application/json',
-      'x-followup-secret', '<FOLLOWUP_SECRET>'
+      'x-followup-secret', '<3450d6ff030fbee05c9ce9b776f3cbdf>'
     ),
     body    := '{}'::jsonb
   );
