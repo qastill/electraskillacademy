@@ -22,28 +22,53 @@
 
   #map{ position:fixed; top:48px; left:0; right:0; bottom:0; }
 
-  .panel{ position:fixed; top:62px; left:14px; z-index:1500; width:296px; max-width:calc(100vw - 28px);
-    background:rgba(16,19,34,0.93); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
-    border:1px solid var(--line); border-radius:14px; padding:16px; box-shadow:0 12px 32px rgba(0,0,0,0.45);
-    max-height:calc(100vh - 80px); overflow-y:auto; }
-  .panel h1{ font-size:16px; color:#fff; } .panel h1 b{ color:var(--gold); }
-  .panel .sub{ font-size:11.5px; color:var(--mute); margin:3px 0 12px; line-height:1.45; }
-  .panel h4{ font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin:14px 0 8px;
-    border-top:1px solid var(--line); padding-top:12px; }
-  .quick{ display:flex; gap:8px; margin-bottom:8px; }
-  .quick button{ flex:1; padding:8px; border-radius:8px; border:1px solid var(--line); background:#191d33; color:var(--ink); cursor:pointer; font-size:12.5px; font-weight:600; }
-  .quick button:hover{ border-color:var(--gold); }
-  select, input[type=search]{ width:100%; padding:8px 10px; border-radius:8px; background:#0e1120; color:var(--ink);
-    border:1px solid var(--line); font-size:13px; }
-  .row{ display:flex; align-items:center; gap:8px; padding:4px 0; font-size:13px; cursor:pointer; }
-  .row input{ accent-color:var(--gold); width:15px; height:15px; }
-  .legend{ display:flex; flex-wrap:wrap; gap:5px 10px; font-size:11px; color:#bcc; }
-  .legend span{ display:inline-flex; align-items:center; gap:5px; } .legend i{ width:10px; height:10px; border-radius:2px; }
-  .readout{ font-size:11px; color:var(--mute); margin-top:10px; }
-  .btn-mix{ width:100%; margin-top:12px; padding:9px; border:none; border-radius:9px; cursor:pointer;
-    background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#1a1d2e; font-weight:700; font-size:12.5px; }
-  .btn-src{ width:100%; margin-top:8px; padding:9px; border:1px solid var(--line); border-radius:9px; cursor:pointer;
-    background:#191d33; color:var(--ink); font-weight:600; font-size:12.5px; } .btn-src:hover{ border-color:var(--gold); }
+  .panel{ position:fixed; top:62px; left:14px; z-index:1500; width:288px; max-width:calc(100vw - 28px);
+    background:rgba(15,18,32,0.9); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+    border:1px solid var(--line); border-radius:16px; padding:18px; box-shadow:0 16px 40px rgba(0,0,0,0.5);
+    max-height:calc(100vh - 80px); overflow-y:auto; transition:transform .35s cubic-bezier(.16,1,.3,1), opacity .3s; }
+  .panel.hidden{ transform:translateX(calc(-100% - 24px)); opacity:0; pointer-events:none; }
+  .panel h1{ font-size:17px; color:#fff; font-weight:700; padding-right:24px; } .panel h1 b{ color:var(--gold); }
+  .panel .sub{ font-size:11.5px; color:var(--mute); margin:4px 0 14px; line-height:1.5; } .panel .sub b{ color:#cdd3e4; font-weight:600; }
+  .panel-hide{ position:absolute; top:14px; right:14px; width:24px; height:24px; border-radius:7px; cursor:pointer;
+    background:rgba(255,255,255,0.06); border:1px solid var(--line); color:var(--mute); font-size:16px; line-height:1;
+    display:flex; align-items:center; justify-content:center; } .panel-hide:hover{ color:#fff; border-color:var(--gold); }
+  .panel-show{ position:fixed; top:62px; left:14px; z-index:1500; width:44px; height:44px; border-radius:12px; cursor:pointer;
+    background:rgba(15,18,32,0.92); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border:1px solid var(--line);
+    color:var(--gold); font-size:18px; display:none; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(0,0,0,0.4); }
+  .panel-show.show{ display:flex; } .panel-show:hover{ border-color:var(--gold); }
+
+  .seg{ display:flex; gap:6px; background:#0c0f1d; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:9px; }
+  .seg-btn{ flex:1; padding:8px; border-radius:7px; border:none; background:transparent; color:var(--mute); cursor:pointer; font-size:12.5px; font-weight:600; transition:.2s; }
+  .seg-btn:hover{ color:var(--ink); } .seg-btn.active{ background:rgba(212,175,106,0.16); color:var(--gold); }
+  select{ width:100%; padding:9px 11px; border-radius:10px; background:#0c0f1d; color:var(--ink);
+    border:1px solid var(--line); font-size:13px; cursor:pointer; } select:hover{ border-color:rgba(212,175,106,.4); }
+
+  .toggles{ margin:14px 0 4px; border-top:1px solid var(--line); padding-top:6px; }
+  .tg{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; font-size:13px; cursor:pointer; }
+  .tg-lab{ color:var(--ink); } .tg input{ position:absolute; opacity:0; pointer-events:none; }
+  .tg .sw{ width:38px; height:21px; border-radius:999px; background:#2a2f48; position:relative; flex-shrink:0; transition:background .2s; }
+  .tg .sw::after{ content:''; position:absolute; top:2.5px; left:2.5px; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform .2s; }
+  .tg input:checked + .sw{ background:var(--gold); } .tg input:checked + .sw::after{ transform:translateX(17px); }
+  .tg.sub-tg{ padding-left:16px; max-height:0; padding-top:0; padding-bottom:0; overflow:hidden; opacity:0; transition:.25s; }
+  .tg.sub-tg.on{ max-height:44px; padding-top:8px; padding-bottom:8px; opacity:1; }
+  .tg.sub-tg .tg-lab{ color:var(--mute); }
+
+  .acc{ border-top:1px solid var(--line); margin-top:10px; padding-top:6px; }
+  .acc summary{ list-style:none; cursor:pointer; font-size:11px; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--gold); padding:6px 0; user-select:none; display:flex; align-items:center; gap:6px; }
+  .acc summary::-webkit-details-marker{ display:none; }
+  .acc summary::after{ content:'▾'; margin-left:auto; transition:transform .2s; color:var(--mute); }
+  .acc[open] summary::after{ transform:rotate(180deg); }
+  .legend{ display:flex; flex-wrap:wrap; gap:6px 12px; font-size:11px; color:#aeb4c8; padding:4px 0 2px; }
+  .legend span{ display:inline-flex; align-items:center; gap:5px; } .legend i{ width:10px; height:10px; border-radius:3px; }
+  .legend-grid{ border-top:1px dashed var(--line); margin-top:6px; padding-top:8px; }
+  .readout{ font-size:11px; color:var(--mute); margin-top:12px; text-align:center; }
+  .actions{ display:flex; flex-direction:column; gap:8px; margin-top:14px; }
+  .btn-mix{ width:100%; padding:11px; border:none; border-radius:10px; cursor:pointer;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#1a1d2e; font-weight:700; font-size:12.5px; transition:transform .2s,box-shadow .2s; }
+  .btn-mix:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(212,175,106,.3); }
+  .btn-src{ width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; cursor:pointer;
+    background:transparent; color:var(--ink); font-weight:600; font-size:12.5px; transition:.2s; } .btn-src:hover{ border-color:var(--gold); color:#fff; }
   .srcgrid{ display:grid; gap:10px; }
   .srccard{ display:flex; gap:12px; align-items:flex-start; background:#0e1120; border:1px solid var(--line);
     border-radius:11px; padding:13px 14px; text-decoration:none; transition:border-color .2s,transform .2s; }
@@ -93,7 +118,7 @@
   .spin{ width:34px; height:34px; border:3px solid rgba(212,175,106,0.25); border-top-color:var(--gold); border-radius:50%; animation:sp .9s linear infinite; }
   @keyframes sp{ to{ transform:rotate(360deg); } }
   #errbox{ position:fixed; inset:48px 0 0 0; z-index:1900; display:none; align-items:center; justify-content:center; background:#080a12; color:#cdd; padding:30px; text-align:center; }
-  @media(max-width:560px){ .panel{ width:calc(100vw - 28px); max-height:44vh; } #detail{ width:calc(100vw - 28px); top:auto; bottom:14px; } }
+  @media(max-width:560px){ .panel{ width:calc(100vw - 28px); max-height:62vh; } #detail{ width:calc(100vw - 28px); top:auto; bottom:14px; } }
 </style>
 </head>
 <body>
@@ -107,35 +132,39 @@
 
 <div id="map"></div>
 
-<div class="panel">
+<div class="panel" id="panel">
+  <button class="panel-hide" id="panelHide" title="Sembunyikan panel" aria-label="Sembunyikan panel">‹</button>
   <h1>World <b>Electricity</b> Maps</h1>
-  <div class="sub">34.900+ pembangkit listrik di 167 negara. Warna = bahan bakar, ukuran = kapasitas. Klik titik untuk detail, atau filter per negara.</div>
+  <div class="sub">34.900+ pembangkit di 167 negara. <b>Warna</b> = bahan bakar, <b>ukuran</b> = kapasitas.</div>
 
-  <h4>Wilayah</h4>
-  <div class="quick">
-    <button onclick="selectCountry('')">🌍 Dunia</button>
-    <button onclick="selectCountry('IDN')">🇮🇩 Indonesia</button>
+  <div class="seg">
+    <button class="seg-btn active" data-region="" onclick="selectCountry('')">🌍 Dunia</button>
+    <button class="seg-btn" data-region="IDN" onclick="selectCountry('IDN')">🇮🇩 Indonesia</button>
   </div>
-  <select id="country"></select>
+  <select id="country" aria-label="Pilih negara"></select>
 
-  <h4>Bahan bakar</h4>
-  <label class="row"><input type="checkbox" id="ebt-only"> 🌱 Hanya EBT (terbarukan)</label>
-  <div class="legend" id="legend"></div>
-
-  <h4>Jaringan interkoneksi</h4>
-  <label class="row"><input type="checkbox" id="grid"> ⚡ Tampilkan interkoneksi grid</label>
-  <label class="row"><input type="checkbox" id="grid-planned"> ➕ Termasuk rencana (planned)</label>
-  <div class="legend" style="margin-top:4px;">
-    <span><i style="background:#d4af6a"></i>Existing</span><span><i style="background:#5a8cd0"></i>Rencana</span>
+  <div class="toggles">
+    <label class="tg"><span class="tg-lab">🌱 Hanya EBT (terbarukan)</span><input type="checkbox" id="ebt-only"><span class="sw"></span></label>
+    <label class="tg"><span class="tg-lab">⚡ Interkoneksi grid</span><input type="checkbox" id="grid"><span class="sw"></span></label>
+    <label class="tg sub-tg" id="planned-row"><span class="tg-lab">➕ Termasuk rencana</span><input type="checkbox" id="grid-planned"><span class="sw"></span></label>
+    <label class="tg"><span class="tg-lab">⛰️ Mode 3D (kolom)</span><input type="checkbox" id="mode3d"><span class="sw"></span></label>
   </div>
 
-  <h4>Tampilan</h4>
-  <label class="row"><input type="checkbox" id="mode3d"> ⛰️ Mode 3D (kolom kapasitas)</label>
+  <details class="acc">
+    <summary>🎨 Legenda &amp; keterangan</summary>
+    <div class="legend" id="legend"></div>
+    <div class="legend legend-grid">
+      <span><i style="background:#d4af6a"></i>Grid existing</span><span><i style="background:#5a8cd0"></i>Grid rencana</span>
+    </div>
+  </details>
 
-  <button class="btn-mix" onclick="showMix()">📊 Bauran Energi (insight)</button>
-  <button class="btn-src" onclick="showSources()">🔗 Sumber &amp; layer eksternal</button>
+  <div class="actions">
+    <button class="btn-mix" onclick="showMix()">📊 Insight bauran energi</button>
+    <button class="btn-src" onclick="showSources()">🔗 Sumber &amp; layer</button>
+  </div>
   <div class="readout" id="readout">memuat data…</div>
 </div>
+<button class="panel-show" id="panelShow" title="Tampilkan kontrol" aria-label="Tampilkan kontrol">☰</button>
 
 <div id="detail">
   <button class="close" onclick="document.getElementById('detail').classList.remove('show')">×</button>
@@ -213,7 +242,7 @@ const JALUR_LABEL={S7:'Pembangkitan & Renewable',S10:'PV & Solar Engineer',S13:'
   sel.innerHTML='<option value="">🌍 Semua negara ('+PLANTS.length.toLocaleString('id-ID')+')</option>'
     + Object.keys(COUNTRIES).sort((a,b)=>COUNTRIES[a].localeCompare(COUNTRIES[b]))
        .map(c=>`<option value="${c}">${COUNTRIES[c]} (${(counts[c]||0).toLocaleString('id-ID')})</option>`).join('');
-  sel.addEventListener('change',()=>{ state.country=sel.value; refresh(true); });
+  sel.addEventListener('change',()=>{ state.country=sel.value; syncSeg(); refresh(true); });
 })();
 
 // ============================================================
@@ -248,7 +277,18 @@ setTimeout(()=>{ if(_loaded)return; document.getElementById('loading').style.dis
 document.getElementById('ebt-only').addEventListener('change',e=>{ state.ebtOnly=e.target.checked; refresh(false); });
 document.getElementById('mode3d').addEventListener('change',e=>{ state.mode3d=e.target.checked;
   map.easeTo({pitch: state.mode3d?55:0, duration:600}); refresh(false); });
-document.getElementById('grid').addEventListener('change',e=>{ state.grid=e.target.checked; refresh(false); });
+document.getElementById('grid').addEventListener('change',e=>{ state.grid=e.target.checked;
+  document.getElementById('planned-row').classList.toggle('on', e.target.checked); refresh(false); });
+// Panel hide/show
+document.getElementById('panelHide').addEventListener('click',()=>{
+  document.getElementById('panel').classList.add('hidden');
+  document.getElementById('panelShow').classList.add('show'); });
+document.getElementById('panelShow').addEventListener('click',()=>{
+  document.getElementById('panel').classList.remove('hidden');
+  document.getElementById('panelShow').classList.remove('show'); });
+// Sinkron tombol segmen Dunia/Indonesia dengan negara aktif
+function syncSeg(){ document.querySelectorAll('.seg-btn').forEach(b=>
+  b.classList.toggle('active', b.dataset.region===state.country)); }
 document.getElementById('grid-planned').addEventListener('change',e=>{ state.gridPlanned=e.target.checked; refresh(false); });
 
 function currentArcs(){
@@ -310,7 +350,7 @@ function refresh(fly){
     map.easeTo({center:[20,25],zoom:1.4,duration:800});
   }
 }
-function selectCountry(c){ state.country=c; document.getElementById('country').value=c; refresh(true); }
+function selectCountry(c){ state.country=c; document.getElementById('country').value=c; syncSeg(); refresh(true); }
 
 // ============================================================
 // DETAIL
