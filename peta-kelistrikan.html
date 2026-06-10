@@ -7,6 +7,8 @@
 <meta name="description" content="Peta interaktif sistem tenaga listrik Indonesia — pembangkit, gardu induk, transmisi. 8 region nasional.">
 <meta name="author" content="Electra Skill Academy">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
 <style>
   /* ===== ELECTRA NAV BAR ===== */
   :root {
@@ -295,6 +297,60 @@
   @media (max-width: 400px) {
     .electra-nav .brand span { display: none; }
   }
+
+  /* ===== Tombol "Bauran Energi" (aksen) ===== */
+  .sidebar button.action.action-energy {
+    background: linear-gradient(135deg, #d4af6a, #a07840);
+    color: #1a1d2e; font-weight: 700; border: none;
+  }
+  .sidebar button.action.action-energy:hover { filter: brightness(1.06); }
+
+  /* ===== "Pelajari di Jalur terkait" di panel detail ===== */
+  .dp-jalur { margin-top: 14px; }
+  .dp-jalur-link {
+    display: flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #1a1d2e, #2d3148);
+    color: #f0d080; text-decoration: none;
+    padding: 11px 14px; border-radius: 9px;
+    font-size: 13px; font-weight: 600;
+    border: 1px solid rgba(212,175,106,0.35);
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  }
+  .dp-jalur-link:hover {
+    transform: translateY(-1px);
+    border-color: #d4af6a;
+    box-shadow: 0 6px 18px rgba(26,29,46,0.28);
+  }
+  .dp-jalur-link strong { color: #fff; }
+  .dp-jalur-link .arr { margin-left: auto; transition: transform 0.2s; }
+  .dp-jalur-link:hover .arr { transform: translateX(4px); }
+  .dp-jalur-note { font-size: 11px; color: #777; margin-top: 6px; line-height: 1.4; }
+
+  /* ===== Dashboard Bauran Energi Nasional ===== */
+  .mix-split { margin-bottom: 18px; }
+  .mix-split-bar {
+    display: flex; height: 22px; border-radius: 6px; overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); background: #eee;
+  }
+  .mix-split-seg.ebt { background: #2ca02c; }
+  .mix-split-seg.fosil { background: #5a5a5a; }
+  .mix-split-legend {
+    display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 10px; font-size: 12.5px; color: #333;
+  }
+  .mix-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+  .mix-list { display: flex; flex-direction: column; gap: 11px; }
+  .mix-row-head { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: #222; }
+  .mix-name { flex: 1; min-width: 0; }
+  .mix-tag {
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.04em;
+    padding: 2px 7px; border-radius: 100px; text-transform: uppercase;
+  }
+  .mix-tag-ebt { background: rgba(44,160,44,0.15); color: #1e7a1e; }
+  .mix-tag-fosil { background: rgba(90,90,90,0.15); color: #555; }
+  .mix-tag-na { background: rgba(0,0,0,0.06); color: #888; }
+  .mix-bar-track { height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; margin: 5px 0 4px; }
+  .mix-bar { height: 100%; border-radius: 4px; min-width: 2px; }
+  .mix-row-meta { font-size: 11px; color: #777; }
 </style>
 </head>
 <body>
@@ -428,6 +484,12 @@
   </div>
 
   <div class="section">
+    <button class="action action-energy" onclick="showEnergyMix()">
+      ⚡ Bauran Energi Nasional
+    </button>
+  </div>
+
+  <div class="section">
     <button class="action" onclick="document.getElementById('about-modal').classList.add('show')">
       ℹ Tentang peta &amp; sumber data
     </button>
@@ -509,6 +571,7 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="peta-kelistrikan/data_jamali.js"></script>
 <script src="peta-kelistrikan/data_sumatra.js"></script>
 <script src="peta-kelistrikan/data_kalimantan.js"></script>
@@ -542,6 +605,17 @@ document.getElementById('basemap-select').addEventListener('change', e => {
 
 // Shared canvas renderer untuk semua garis transmisi
 const lineRenderer = L.canvas({ padding: 0.5 });
+
+// Marker clustering untuk titik pembangkit + gardu induk (anti-lag saat zoom-out).
+// Garis transmisi tetap di canvas renderer (tidak di-cluster).
+const clusterGroup = L.markerClusterGroup({
+  chunkedLoading: true,
+  maxClusterRadius: 55,
+  disableClusteringAtZoom: 12,
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  removeOutsideVisibleBounds: true,
+}).addTo(map);
 
 // ============================================================
 // ZOOM-DRIVEN VISUAL CONFIG
@@ -742,6 +816,39 @@ function appendConnections(body, lines) {
   body.appendChild(div);
 }
 
+// --- "Pelajari di Jalur terkait" — jembatan peta → kurikulum Electra Academy
+const JALUR_LABEL = {
+  S3: 'Distribusi', S4: 'Transmisi', S7: 'Pembangkitan & Renewable',
+  S10: 'PV & Solar Engineer', S13: 'Waste to Energy',
+};
+const PLANT_JALUR = {
+  'PLTS': 'S10',            // surya → PV & Solar
+  'PLTSa': 'S13',           // sampah → Waste to Energy
+  'PLTU': 'S7', 'PLTGU': 'S7', 'PLTG': 'S7', 'PLTMG': 'S7', 'PLTD': 'S7',
+  'PLTA': 'S7', 'PLTM': 'S7', 'PLTMH': 'S7', 'PLTP': 'S7', 'PLTB': 'S7',
+  'PLT Biomas': 'S7', 'PLT Biomass': 'S7', 'PLTBg': 'S7',
+};
+function relatedJalur(ft) {
+  if (ft.kind === 'trm') return 'S4';
+  if (ft.kind === 'sub') {
+    const parts = (ft.props.voltage || '').split('/').map(x => parseInt(x)).filter(x => !isNaN(x));
+    const maxV = parts.length ? Math.max(...parts) : 0;
+    return maxV >= 275 ? 'S4' : 'S3';   // GITET 500/275 → transmisi, selebihnya → distribusi
+  }
+  return PLANT_JALUR[ft.props.type] || 'S7';
+}
+function appendJalurLink(body, ft) {
+  const id = relatedJalur(ft);
+  const label = JALUR_LABEL[id] || 'Karir Kelistrikan';
+  const wrap = document.createElement('div');
+  wrap.className = 'dp-jalur';
+  wrap.innerHTML = `<a class="dp-jalur-link" href="index.html?jalur=${id}">
+      🎓 Pelajari di Jalur <strong>${label}</strong> <span class="arr">→</span>
+    </a>
+    <div class="dp-jalur-note">Buka kurikulum &amp; modul terkait di Electra Skill Academy.</div>`;
+  body.appendChild(wrap);
+}
+
 function showDetail(ft) {
   const p = ft.props;
   const body = document.getElementById('dp-body');
@@ -763,6 +870,7 @@ function showDetail(ft) {
     body.innerHTML = trmDetailHTML(p);
     clearHighlight();
   }
+  appendJalurLink(body, ft);
   document.getElementById('detail-panel').classList.add('open');
 }
 function closeDetail() {
@@ -887,6 +995,7 @@ function applyFilters() {
   const province = document.getElementById('f-province').value;
 
   let shown = 0;
+  const clusterAdd = [], clusterRemove = [];
   for (const ft of features) {
     let layerVis;
     if (ft.kind === 'trm') {
@@ -902,12 +1011,19 @@ function applyFilters() {
       && (ft.kind !== 'gen' || typesOn.has(ft.props.type))
       && passProvince(ft, province);
     if (vis !== ft.visible) {
-      if (vis) ft.layer.addTo(map);
-      else map.removeLayer(ft.layer);
+      if (ft.kind === 'trm') {
+        // Garis transmisi: langsung ke map (canvas renderer)
+        if (vis) ft.layer.addTo(map); else map.removeLayer(ft.layer);
+      } else {
+        // Titik (GI/pembangkit): kumpulkan untuk batch add/remove ke cluster group
+        (vis ? clusterAdd : clusterRemove).push(ft.layer);
+      }
       ft.visible = vis;
     }
     if (vis) shown++;
   }
+  if (clusterRemove.length) clusterGroup.removeLayers(clusterRemove);
+  if (clusterAdd.length) clusterGroup.addLayers(clusterAdd);
   updateReadout(shown);
 }
 
@@ -960,8 +1076,13 @@ function selectSearchResult(ft) {
   document.getElementById('search-results').innerHTML = '';
   document.getElementById('search-input').value = ft.props.name;
   const ll = ft.layer.getLatLng();
+  if (!ft.visible) {
+    if (ft.kind === 'trm') ft.layer.addTo(map);
+    else clusterGroup.addLayer(ft.layer);
+    ft.visible = true;
+  }
+  // zoom 13 > disableClusteringAtZoom (12) → marker pasti tampil individual
   map.setView(ll, 13);
-  if (!ft.visible) { ft.layer.addTo(map); ft.visible = true; }
   showDetail(ft);
 }
 
@@ -1165,6 +1286,87 @@ document.querySelectorAll('.region-stats').forEach(btn => {
     document.getElementById('stats-modal').classList.add('show');
   });
 });
+
+// ============================================================
+// BAURAN ENERGI NASIONAL (EBT vs Fosil) — dashboard ringkas
+// ============================================================
+const EBT_TYPES = new Set([
+  'PLTA','PLTM','PLTMH','PLTP','PLTS','PLTB','PLTSa',
+  'PLT Biomas','PLT Biomass','PLTBg','PLTAL','PLTGL','PLTBm',
+]);
+function isEBT(type) { return EBT_TYPES.has(type); }
+
+function computeNationalMix() {
+  const byType = {};
+  let totalMW = 0, totalUnits = 0, ebtMW = 0, fosilMW = 0;
+  for (const k of REGION_KEYS) {
+    const data = REGIONS[k];
+    if (!data || !data.generators) continue;
+    for (const f of data.generators.features) {
+      const t = f.properties.type || 'Unknown';
+      const mw = parseFloat(f.properties.capacity_mw) || 0;
+      if (!byType[t]) byType[t] = { count: 0, mw: 0 };
+      byType[t].count++; byType[t].mw += mw;
+      totalMW += mw; totalUnits++;
+      if (isEBT(t)) ebtMW += mw; else if (t !== 'Unknown') fosilMW += mw;
+    }
+  }
+  return { byType, totalMW, totalUnits, ebtMW, fosilMW };
+}
+
+function renderEnergyMixHTML() {
+  const m = computeNationalMix();
+  const fmt = n => Math.round(n).toLocaleString('id-ID');
+  const pct = v => m.totalMW ? (v / m.totalMW * 100) : 0;
+  const ebtPct = pct(m.ebtMW), fosilPct = pct(m.fosilMW);
+  const rows = Object.entries(m.byType)
+    .sort((a, b) => b[1].mw - a[1].mw)
+    .map(([t, v]) => {
+      const color = PLANT_COLORS[t] || '#999';
+      const desc = PLANT_DESC[t] || '';
+      const share = pct(v.mw);
+      const tag = isEBT(t) ? 'EBT' : (t === 'Unknown' ? '—' : 'Fosil');
+      return `<div class="mix-row">
+        <div class="mix-row-head">
+          <span class="mix-dot" style="background:${color}"></span>
+          <span class="mix-name"><strong>${t}</strong>${desc ? ' · ' + desc : ''}</span>
+          <span class="mix-tag mix-tag-${tag === 'EBT' ? 'ebt' : (tag === 'Fosil' ? 'fosil' : 'na')}">${tag}</span>
+        </div>
+        <div class="mix-bar-track"><div class="mix-bar" style="width:${share.toFixed(1)}%;background:${color}"></div></div>
+        <div class="mix-row-meta">${fmt(v.mw)} MW · ${v.count} unit · ${share.toFixed(1)}%</div>
+      </div>`;
+    }).join('');
+
+  return `
+    <h2>Bauran Energi Nasional</h2>
+    <p>Komposisi kapasitas terpasang (ter-parse) dari <strong>${m.totalUnits.toLocaleString('id-ID')}</strong>
+       pembangkit di 8 region. Total: <strong>${fmt(m.totalMW)} MW</strong>.</p>
+
+    <h3>EBT vs Fosil</h3>
+    <div class="mix-split">
+      <div class="mix-split-bar">
+        <div class="mix-split-seg ebt" style="width:${ebtPct.toFixed(1)}%" title="EBT"></div>
+        <div class="mix-split-seg fosil" style="width:${fosilPct.toFixed(1)}%" title="Fosil"></div>
+      </div>
+      <div class="mix-split-legend">
+        <span><span class="mix-dot" style="background:#2ca02c"></span> EBT — <strong>${fmt(m.ebtMW)} MW</strong> (${ebtPct.toFixed(1)}%)</span>
+        <span><span class="mix-dot" style="background:#5a5a5a"></span> Fosil — <strong>${fmt(m.fosilMW)} MW</strong> (${fosilPct.toFixed(1)}%)</span>
+      </div>
+      <div class="note">EBT = PLTA, PLTM/MH, PLTP, PLTS, PLTB, PLTSa, biomassa &amp; biogas. Fosil = PLTU, PLTGU, PLTG, PLTMG, PLTD.</div>
+    </div>
+
+    <h3>Per jenis pembangkit</h3>
+    <div class="mix-list">${rows}</div>
+
+    <a class="dp-jalur-link" href="index.html?jalur=S7" style="margin-top:14px;">
+      🎓 Pelajari Jalur <strong>Pembangkitan &amp; Renewable</strong> <span class="arr">→</span></a>
+    <button class="close" onclick="document.getElementById('stats-modal').classList.remove('show')">Tutup</button>
+  `;
+}
+function showEnergyMix() {
+  document.getElementById('stats-content').innerHTML = renderEnergyMixHTML();
+  document.getElementById('stats-modal').classList.add('show');
+}
 
 document.querySelectorAll('.sidebar .section.collapsible h4').forEach(h =>
   h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed')));
