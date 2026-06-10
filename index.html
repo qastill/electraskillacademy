@@ -16269,14 +16269,15 @@ window.esaShowProfile=showProfileModal;
 function hookSV(){
   if(typeof window.showView==="function"&&!window.__esaGateOn){
     window._origSV=window.showView;
-    // PUBLIC views (anyone can open without login). Jalur kurikulum, Labs, dan
-    // Library TIDAK publik — dikunci untuk pengunjung yang belum punya akses:
-    //   • jalur     → wajib login (di bawah, lewat getUser())
-    //   • labs      → wajib login + member aktif (sudah daftar & bayar)
-    //   • referensi → wajib login + member aktif
-    var PUBLIC_VIEWS={home:1,about:1,'liveclass-schedule':1,faq:1,'expert-workshop':1};
+    // PUBLIC views — siapa pun boleh MENJELAJAH menu tanpa login, termasuk
+    // kurikulum/jalur, Labs, dan Library. Tujuannya: pengunjung bisa eksplorasi
+    // dulu (lihat daftar modul, lab, dan buku yang tersedia) sebelum memutuskan
+    // bayar. Lock-nya ADA di level KONTEN — saat membuka modul / menjalankan
+    // simulator / klik buku — lewat esaRequireAccess(), BUKAN di pintu menu.
+    var PUBLIC_VIEWS={home:1,about:1,'liveclass-schedule':1,faq:1,'expert-workshop':1,
+      jalur:1,labs:1,referensi:1};
     // MEMBER-ONLY views (login + active member; non-member → activation prompt)
-    var MEMBER_VIEWS={talent:1,jobs:1,labs:1,sertifikasi:1,certification:1,referensi:1};
+    var MEMBER_VIEWS={talent:1,jobs:1,sertifikasi:1,certification:1};
     window.showView=function(v){
       if(PUBLIC_VIEWS[v])return window._origSV.apply(this,arguments);
       if(!getUser()){window._esaPending=v;buildModal();return;}
