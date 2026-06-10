@@ -15576,6 +15576,18 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           }
         }, 500);
       }
+      // 5b. Deep-link ?jalur=Sx → buka jalur karir (dari Peta Kelistrikan "Pelajari di Jalur")
+      const jalurId = params.get('jalur');
+      if (jalurId && typeof window.openJalur === 'function') {
+        setTimeout(() => {
+          try { window.openJalur(jalurId); } catch(e) { console.warn('[ESA] deep-link openJalur failed:', e); }
+          if (history.replaceState) {
+            const u = new URL(window.location.href);
+            u.searchParams.delete('jalur');
+            history.replaceState({}, '', u.toString());
+          }
+        }, 500);
+      }
     } catch(e) { /* fail-soft */ }
 
     // Hook "Start Journey" CTA → show login modal if not logged in, then scroll
