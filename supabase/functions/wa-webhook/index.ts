@@ -204,19 +204,19 @@ Deno.serve(async (req) => {
   }
   if (!known) return json({ ok: true, ignored: "nomor tidak dikenal — tidak dibalas" });
 
-  // Mode auto-reply: DEFAULT hanya sapaan awal (1x). Set AI_ANSWER=true untuk balas penuh via AI.
+  // Mode default: TIDAK ada balasan otomatis ke customer. Hanya teruskan ke admin.
   const AI_ANSWER = (Deno.env.get("AI_ANSWER") ?? "false").toLowerCase() === "true";
   if (!AI_ANSWER) {
     const targets = ownerPhones.length ? ownerPhones : [normalizePhone(ADMIN_WA) || ADMIN_WA];
     const { count: inCount } = await sb.from("wa_messages").select("id", { count: "exact", head: true }).eq("phone", phone).eq("direction", "in");
     if ((inCount ?? 1) <= 1) {
-      const nm = me?.name ? " " + me.name.split(" ")[0] : "";
-      const greet = `Halo${nm}! 🙏 Terima kasih sudah menghubungi *${PROGRAM_NAME}*. Pesanmu sudah kami terima, admin kami akan segera membantu ya 😊\n\nSambil menunggu, lihat-lihat program & fitur kami di 🌐 https://electraacademy.com`;
-      await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: greet, handled_by: "greeting" });
+      // Kontak pertama → beri tahu admin agar membalas manual (TANPA pesan ke customer).
       const note = `🔔 *Chat baru masuk*\nDari: ${me?.name || "Kontak"} (${phone})\nPesan: "${text}"\n\nBalas langsung: https://wa.me/${phone}`;
-      if (!DRY() && FONNTE_TOKEN) { await sendFonnte(phone, greet); for (const t of targets) await sendFonnte(t, note); }
-      return json({ ok: true, greeted: true });
+      await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(diteruskan ke admin — auto-reply mati)", handled_by: "forwarded" });
+      if (!DRY() && FONNTE_TOKEN) { for (const t of targets) await sendFonnte(t, note); }
+      return json({ ok: true, forwarded: true });
     }
+    // Pesan lanjutan → diam, admin yang membalas.
     await sb.from("wa_messages").insert({ phone, participant_email: me?.email ?? null, direction: "out", message: "(auto-reply mati — menunggu balasan admin)", handled_by: "silent" });
     return json({ ok: true, silent: true });
   }
