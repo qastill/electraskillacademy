@@ -486,8 +486,12 @@ if ('serviceWorker' in navigator) {
         </h1>
         <a href="#practices" class="hero-cta">Start Journey</a>
         <button class="hero-daftar-btn" onclick="esaShowAuthModal()" style="display:inline-flex;align-items:center;justify-content:center;padding:22px 44px;background:transparent;color:#c9a96e;border:2px solid rgba(201,169,110,0.6);font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;margin-left:16px;border-radius:0;" onmouseover="this.style.background='rgba(201,169,110,0.12)';this.style.borderColor='#c9a96e'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(201,169,110,0.6)'">Daftar / Masuk</button>
-        <div style="margin-top:18px;text-align:center;">
-          <a href="peta-kelistrikan.html" style="display:inline-flex;align-items:center;gap:8px;color:rgba(245,240,230,0.55);font-size:12px;letter-spacing:0.08em;text-decoration:none;padding:6px 14px;border:1px solid rgba(245,240,230,0.15);border-radius:999px;transition:all 0.2s;" onmouseover="this.style.color='#d4af6a';this.style.borderColor='rgba(212,175,106,0.4)'" onmouseout="this.style.color='rgba(245,240,230,0.55)';this.style.borderColor='rgba(245,240,230,0.15)'">🗺️ Jelajahi Peta Kelistrikan Indonesia →</a>
+        <div class="hero-peta-wrap">
+          <a href="peta-kelistrikan.html" class="hero-peta-btn">
+            <span class="hero-peta-flag" aria-hidden="true"></span>
+            Jelajahi Peta Kelistrikan Indonesia
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
       </div>
     </div>

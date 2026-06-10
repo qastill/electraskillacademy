@@ -530,6 +530,57 @@ body {
 .practice-card:hover .practice-cta svg { transform: translateX(5px); }
 
 /* ================================================
+   HERO · TOMBOL PETA KELISTRIKAN (merah-putih)
+================================================ */
+.hero-peta-wrap {
+  margin-top: 26px;
+  display: flex;
+  justify-content: flex-start;
+}
+.hero-peta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 24px;
+  background: #ffffff;
+  color: #c8102e;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 2px solid #e60012;
+  box-shadow: 0 8px 24px rgba(230, 0, 18, 0.35);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+.hero-peta-btn:hover {
+  background: #e60012;
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(230, 0, 18, 0.5);
+}
+.hero-peta-btn svg { transition: transform 0.3s ease; }
+.hero-peta-btn:hover svg { transform: translateX(5px); }
+/* Chip bendera Merah-Putih */
+.hero-peta-flag {
+  width: 22px;
+  height: 15px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  background: linear-gradient(#e60012 0 50%, #ffffff 50% 100%);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.hero-peta-btn:hover .hero-peta-flag { border-color: rgba(255, 255, 255, 0.55); }
+@media (max-width: 640px) {
+  .hero-peta-wrap { justify-content: center; margin-top: 22px; }
+  .hero-peta-btn { font-size: 12px; padding: 12px 20px; }
+}
+
+/* ================================================
    PETA KELISTRIKAN · FEATURE BANNER
 ================================================ */
 .petakel-banner {
