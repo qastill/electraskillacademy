@@ -1769,11 +1769,12 @@ if ('serviceWorker' in navigator) {
       <div class="lab-launch-head">
         <div>
           <div class="lab-section-eyebrow">Digital Simulator Lab</div>
-          <h2 class="lab-launch-title">16 Jalur Spesialisasi — <span class="italic">terklasifikasi rapi</span></h2>
+          <h2 class="lab-launch-title">16 Jalur Spesialisasi — <span class="italic">100% hands-on</span></h2>
+          <p style="margin:10px 0 0;max-width:620px;font-size:0.93rem;line-height:1.65;color:var(--ink-soft,#5a5d6e);">Semua lab di sini melatih tangan, bukan sekadar slide: merangkai wiring instalasi &amp; panel, mengisolasi gangguan jaringan, menyusun beban 3 fasa, drill prosedur LOTO. Tiap lab dilengkapi teori singkat, panduan langkah, validasi otomatis, dan <strong>AI Tutor</strong> yang siap ditanya.</p>
         </div>
         <div class="lab-chips">
-          <button class="lab-chip active" data-set="spec" onclick="labShowSet('spec')">16 Spesialisasi</button>
-          <button class="lab-chip" data-set="bonus" onclick="labShowSet('bonus')">Dasar &amp; Tools</button>
+          <span class="lab-chip active" id="lab-count-chip">Lab Hands-on</span>
+          <span class="lab-chip" style="cursor:default;">⚡ 100% Interaktif</span>
         </div>
       </div>
       <a class="electrasim-feature" href="electrasim.html" target="_blank" rel="noopener" onclick="if(!window.esaRequireAccess()){event.preventDefault();return false;}">
@@ -1783,7 +1784,7 @@ if ('serviceWorker' in navigator) {
         <span class="electrasim-feature-body">
           <span class="electrasim-feature-eyebrow">Baru · Lab Unggulan</span>
           <span class="electrasim-feature-title">ElectraSim — 16 Simulator Spesialisasi</span>
-          <span class="electrasim-feature-sub">Wiring trainer interaktif (1φ · 3φ · instalasi rumah) plus 15 simulator per jalur karier: motor &amp; starter, fault isolation, proteksi relai, dispatch, PV, BESS, EV, hidrogen, LOTO, PLC ladder, dan lainnya.</span>
+          <span class="electrasim-feature-sub">Wiring trainer interaktif (1φ · 3φ · instalasi rumah) plus 15 simulator per jalur karier: motor &amp; starter, fault isolation, proteksi relai, dispatch, PV, BESS, EV, hidrogen, LOTO, PLC ladder, dan lainnya. Dilengkapi AI Tutor — tanya apa saja sambil praktik.</span>
           <span class="electrasim-feature-cta">Buka ElectraSim →</span>
         </span>
       </a>
@@ -1794,12 +1795,12 @@ if ('serviceWorker' in navigator) {
         <span class="electrasim-feature-body">
           <span class="electrasim-feature-eyebrow">Baru · Lab 3D / 360°</span>
           <span class="electrasim-feature-title">ElectraSim 3D — 16 Simulator 360°</span>
-          <span class="electrasim-feature-sub">Simulator tiga dimensi untuk tiap jalur spesialisasi: motor induksi, menara transmisi, lintasan matahari PLTS, EV charging, elektroliser hidrogen, BESS, konveyor PLC, dan lainnya. Putar 360°, geser parameter, lihat real-time. Dibangun dengan Three.js &amp; Babylon.js.</span>
+          <span class="electrasim-feature-sub">Simulator tiga dimensi untuk tiap jalur spesialisasi: motor induksi, menara transmisi, lintasan matahari PLTS, EV charging, elektroliser hidrogen, BESS, konveyor PLC, dan lainnya. Putar 360°, ubah parameter, lihat real-time. Dilengkapi AI Tutor. Dibangun dengan Three.js &amp; Babylon.js.</span>
           <span class="electrasim-feature-cta">Buka ElectraSim 3D →</span>
         </span>
       </a>
       <div class="lab-groups" id="simulator-grid"></div>
-      <div class="lab-launch-hint">Pilih satu jalur untuk melihat daftar lab-nya, lalu klik lab untuk masuk — geser parameter &amp; lihat visualisasi real-time.</div>
+      <div class="lab-launch-hint">Pilih satu jalur untuk melihat daftar lab-nya, lalu klik lab untuk masuk — rangkai sendiri, periksa rangkaianmu, dan jalankan simulasinya. Tiap lab punya panduan langkah + AI Tutor yang bisa ditanya kapan saja.</div>
     </div>
   </section>
 
@@ -3832,22 +3833,24 @@ function _trackArtURI(id){
 // seluruh kartu jalur memakai aset yang sudah disiapkan. Nama file mengandung
 // spasi → encodeURI agar URL valid.
 const _TRACK_ART_FILES = {
-  S1:  'ICON HOME/1. instalsi bangunan.png',
-  S2:  'ICON HOME/2 industri dan manufaktur.png',
-  S3:  'ICON HOME/3 distribution engineer.png',
-  S4:  'ICON HOME/4 transmission engineer.png',
-  S5:  'ICON HOME/5 energy analyst.png',
-  S6:  'ICON HOME/6 energy auditor.png',
-  S7:  'ICON HOME/7 renewable engineer.png',
-  S8:  'ICON HOME/8 safety engineer.png',
-  S9:  'ICON HOME/9 sales.png',
-  S10: 'ICON HOME/10 solar engineer.png',
-  S11: 'ICON HOME/11 carbon auditor.png',
-  S12: 'ICON HOME/12 ev engineer.png',
-  S13: 'ICON HOME/13 waste to energy.png',
-  S14: 'ICON HOME/14 HYDROGEN ENGINEER.png',
-  S15: 'ICON HOME/15 BESS ENGINEER.png',
-  S16: 'ICON HOME/16 kontrol engineer.png'
+  // Versi WebP terkompresi (≈50–90 KB/file, dari PNG asli ±2 MB di "ICON HOME/")
+  // — mengurangi total unduhan gambar jalur dari ±33 MB menjadi ±1 MB (anti lag).
+  S1:  'track-art/s1.webp',
+  S2:  'track-art/s2.webp',
+  S3:  'track-art/s3.webp',
+  S4:  'track-art/s4.webp',
+  S5:  'track-art/s5.webp',
+  S6:  'track-art/s6.webp',
+  S7:  'track-art/s7.webp',
+  S8:  'track-art/s8.webp',
+  S9:  'track-art/s9.webp',
+  S10: 'track-art/s10.webp',
+  S11: 'track-art/s11.webp',
+  S12: 'track-art/s12.webp',
+  S13: 'track-art/s13.webp',
+  S14: 'track-art/s14.webp',
+  S15: 'track-art/s15.webp',
+  S16: 'track-art/s16.webp'
 };
 Object.keys(_TRACK_ART_FILES).forEach(id => {
   const uri = encodeURI(_TRACK_ART_FILES[id]);
@@ -4342,22 +4345,22 @@ const SIM_ICONS = {
 // Urutan, label, & warna grup spesialisasi (16 jalur karir = 16 lab; + grup Dasar/Tools bonus)
 const _U = (id) => 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=600&q=70';
 const SIM_GROUPS = [
-  { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'MEP gedung: pencahayaan, drop tegangan, konduit, panel 3φ & pembumian.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)', photo: _U('1621905251918-48416bd8575a') },
-  { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Motor, VFD, KHA kabel, harmonik & pompa.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
-  { key: 'S3', num: '03', label: 'Distribusi', desc: 'Trafo, feeder 20kV, proteksi, kapasitor & restorasi SCADA.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
-  { key: 'S4', num: '04', label: 'Transmisi', desc: 'Sag, isolasi, arester petir, korona EHV & aliran daya.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
-  { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Forecasting, regresi, deteksi anomali & PLTS.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
-  { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Payback, PF, chiller HVAC, retrofit LED & M&V.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
-  { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'PLTS, BESS, genset, turbin angin & PLTA.', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
-  { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Arc flash, pembumian, hubung singkat, LOTO & step-touch.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
-  { key: 'S9',  num: '09', label: 'Sales & Technical Marketing', desc: 'TCO, margin tender & ROI pelanggan.', grad: 'linear-gradient(135deg,#b8732e,#8a4f1c)', photo: _trackArtURI('S9') },
-  { key: 'S10', num: '10', label: 'PV & Solar Engineer', desc: 'String sizing, rasio inverter & yield PLTS.', grad: 'linear-gradient(135deg,#f0a93a,#c97e1a)', photo: _trackArtURI('S10') },
-  { key: 'S11', num: '11', label: 'Sustainability & Carbon', desc: 'Jejak karbon, RE100 & carbon credit.', grad: 'linear-gradient(135deg,#2e9e6b,#19794d)', photo: _trackArtURI('S11') },
-  { key: 'S12', num: '12', label: 'EV & EV Charging', desc: 'Sizing charger, waktu isi & manajemen beban.', grad: 'linear-gradient(135deg,#3a86c8,#22618f)', photo: _trackArtURI('S12') },
-  { key: 'S13', num: '13', label: 'Waste to Energy', desc: 'Nilai kalor sampah, daya & biogas.', grad: 'linear-gradient(135deg,#7a8a3a,#566020)', photo: _trackArtURI('S13') },
-  { key: 'S14', num: '14', label: 'Hydrogen Energy', desc: 'Elektroliser, produksi H₂ & fuel cell.', grad: 'linear-gradient(135deg,#3aa0c8,#226f8f)', photo: _trackArtURI('S14') },
-  { key: 'S15', num: '15', label: 'Baterai & BESS', desc: 'C-rate, peak shaving & degradasi baterai.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _trackArtURI('S15') },
-  { key: 'S16', num: '16', label: 'Kontrol & Otomasi', desc: 'Tuning PID, scaling sensor & scan PLC.', grad: 'linear-gradient(135deg,#6a6f7e,#3a3f4e)', photo: _trackArtURI('S16') },
+  { key: 'S1', num: '01', label: 'Instalasi Bangunan', desc: 'Wiring instalasi rumah 1φ, konduit, panel 3φ, ATS & capacitor bank.', grad: 'linear-gradient(135deg,#d4af6a,#9a7f4f)', photo: _U('1621905251918-48416bd8575a') },
+  { key: 'S2', num: '02', label: 'Industri & Manufaktur', desc: 'Starter motor (DOL, star-delta, fwd-rev), VFD, harmonik & capacitor bank.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _U('1565608087341-404b25492fee') },
+  { key: 'S3', num: '03', label: 'Distribusi', desc: 'Gardu 20kV, proteksi OCR/GFR, isolasi gangguan & restorasi SCADA.', grad: 'linear-gradient(135deg,#e0863a,#b5611f)', photo: _U('1473341304170-971dccb5ac1e') },
+  { key: 'S4', num: '04', label: 'Transmisi', desc: 'Gardu induk 150/20kV & proteksi diferensial trafo 87T.', grad: 'linear-gradient(135deg,#7c6cf0,#4636b8)', photo: _U('1509391366360-2e959784a276') },
+  { key: 'S5', num: '05', label: 'Energy Analyst & Data Science', desc: 'Smart metering, regresi & deteksi anomali beban.', grad: 'linear-gradient(135deg,#16a085,#0e6e5a)', photo: _U('1551288049-bebda4e38f71') },
+  { key: 'S6', num: '06', label: 'Energy Auditor', desc: 'Power monitoring, audit energi & retrofit LED.', grad: 'linear-gradient(135deg,#27ae60,#1d8b4d)', photo: _U('1581092160562-40aa08e78837') },
+  { key: 'S7', num: '07', label: 'Pembangkitan & Renewable', desc: 'Sinkronisasi generator ke grid & wiring pembangkit.', grad: 'linear-gradient(135deg,#f39c12,#d97e0a)', photo: _U('1509391366360-2e959784a276') },
+  { key: 'S8', num: '08', label: 'K3 Listrik', desc: 'Drill LOTO, pembumian TN-S, RCD & keselamatan kerja listrik.', grad: 'linear-gradient(135deg,#e74c3c,#b3291b)', photo: _U('1581092918056-0c4c3acd3789') },
+  { key: 'S9',  num: '09', label: 'Sales & Technical Marketing', desc: 'Panel MDP/SDP, distribusi bertingkat & spesifikasi komponen.', grad: 'linear-gradient(135deg,#b8732e,#8a4f1c)', photo: _trackArtURI('S9') },
+  { key: 'S10', num: '10', label: 'PV & Solar Engineer', desc: 'Wiring PLTS on-grid: panel → inverter → meter ekspor-impor.', grad: 'linear-gradient(135deg,#f0a93a,#c97e1a)', photo: _trackArtURI('S10') },
+  { key: 'S11', num: '11', label: 'Sustainability & Carbon', desc: 'Sistem hybrid PLTS + grid & bauran energi hijau.', grad: 'linear-gradient(135deg,#2e9e6b,#19794d)', photo: _trackArtURI('S11') },
+  { key: 'S12', num: '12', label: 'EV & EV Charging', desc: 'Wiring SPKLU DC fast charging: RCBO, charger & control pilot.', grad: 'linear-gradient(135deg,#3a86c8,#22618f)', photo: _trackArtURI('S12') },
+  { key: 'S13', num: '13', label: 'Waste to Energy', desc: 'Evakuasi daya genset biogas ke grid 20kV.', grad: 'linear-gradient(135deg,#7a8a3a,#566020)', photo: _trackArtURI('S13') },
+  { key: 'S14', num: '14', label: 'Hydrogen Energy', desc: 'Catu daya elektroliser hidrogen: rectifier & keselamatan H₂.', grad: 'linear-gradient(135deg,#3aa0c8,#226f8f)', photo: _trackArtURI('S14') },
+  { key: 'S15', num: '15', label: 'Baterai & BESS', desc: 'Wiring BESS: pack → BMS → PCS → grid, AC & DC-coupled.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _trackArtURI('S15') },
+  { key: 'S16', num: '16', label: 'Kontrol & Otomasi', desc: 'PLC I/O & ladder, MCC PLC→motor & tuning PID.', grad: 'linear-gradient(135deg,#6a6f7e,#3a3f4e)', photo: _trackArtURI('S16') },
   { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
 ];
 // Simulator Room: pakai ilustrasi resmi ICON HOME untuk kartu jalur S1–S16
@@ -4673,6 +4676,28 @@ SIMULATORS.push({
   desc: 'Latihan merangkai distribusi berjenjang: incoming → MCCB utama → busbar MDP → feeder → busbar SDP → MCB grup → beban. Periksa, lalu energize. Lengkap panduan langkah & tutorial hirarki MDP/SDP, selektivitas (diskriminasi) proteksi bertingkat, koordinasi rating breaker, & penyusunan BoQ panel untuk technical sales.',
   level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.mcb, working: true, embed: 'wlab.html?lab=mdp-sdp'
 });
+
+// ── Kurasi Simulator Lab: HANYA lab hands-on ─────────────────────────
+// Yang ditampilkan: semua lab wiring (Wiring Trainer, Wiring Lab engine,
+// Capacitor Bank — punya `embed`) + lab interaktif berbasis aksi (klik,
+// susun, urutkan, picu gangguan). Lab "geser slider lihat angka" dihapus
+// dari katalog karena tidak melatih skill — kalkulator semacam itu tetap
+// tersedia di tab Design Calculators.
+const ESA_HANDSON_LABS = new Set([
+  'conduit-fill',      // susun kabel ke konduit (klik +/-)
+  'panel-schedule',    // susun beban panel & seimbangkan fasa R-S-T
+  'harmonics-thd',     // aktif/nonaktifkan orde harmonik, baca dampaknya
+  'feeder-restore',    // game SCADA: isolasi gangguan & restorasi feeder
+  'regression-trend',  // klik kanvas menaruh titik data, baca regresi
+  'anomaly-zscore',    // deteksi anomali profil beban
+  'lighting-retrofit', // klik ganti lampu lama → LED, hitung ROI
+  'loto-sequence',     // drill urutan LOTO — salah urutan = reset
+  'pid-tuning'         // tuning Kp/Ki/Kd dengan respon sistem real-time
+]);
+for (let i = SIMULATORS.length - 1; i >= 0; i--) {
+  const s = SIMULATORS[i];
+  if (!s.embed && !ESA_HANDSON_LABS.has(s.id)) SIMULATORS.splice(i, 1);
+}
 
 // ================================================
 // ELECTRICAL DESIGN CALCULATORS
@@ -5258,15 +5283,8 @@ const SIM_INFO = {
   'encoder-motion': { w: 'Menghitung resolusi encoder dan gerak (PPR, count, jarak/derajat per pulsa).', g: 'Memahami umpan balik posisi dan kecepatan.', r: 'Desain servo dan sistem motion control.' },
 };
 
-let _labLaunchSet = 'spec';
 let _labOpenJalur = null; // null = hub 16 jalur (1 layar); 'S1'.. = drill-down lab di jalur itu
 function _simGroup(s) { return SIM_GROUPS.find(g => g.key === (s.jalur || 'Fondasi')) || SIM_GROUPS[0]; }
-function labShowSet(which) {
-  _labLaunchSet = which;
-  _labOpenJalur = null; // ganti set → kembali ke hub
-  document.querySelectorAll('.lab-chip').forEach(c => c.classList.toggle('active', c.dataset.set === which));
-  renderSimulators();
-}
 function openLabJalur(key) {
   _labOpenJalur = key;
   renderSimulators();
@@ -5280,6 +5298,14 @@ function backToJalurs() {
   if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 const _LAB_ARROW = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// Tipe latihan tiap lab — ditampilkan di kartu agar jelas skill apa yang dilatih.
+function _labKind(s) {
+  if (s.embed) {
+    if (s.embed.indexOf('capbank') === 0) return '🔧 Desain & Wiring';
+    return '🔌 Rangkai Wiring';
+  }
+  return '🖱️ Latihan Interaktif';
+}
 function _labTile(s, g) {
   const _locked = !esaIsFreeLab(s) && !esaContentUnlocked();
   return `
@@ -5292,6 +5318,7 @@ function _labTile(s, g) {
       <span class="lab-tile-content">
         <span class="lab-tile-cat">${s.category || g.label}</span>
         <span class="lab-tile-title">${s.name}${_locked ? ' <span class="module-lock-icon">🔒</span>' : ''}</span>
+        <span class="lab-tile-meta">${_labKind(s)} · ${s.level || ''} · ${s.duration || ''}</span>
         <span class="lab-tile-open">${_locked ? 'Buka Lab — perlu akses' : 'Buka Lab'} ${_LAB_ARROW}</span>
       </span>
     </button>`;
@@ -5300,13 +5327,9 @@ function renderSimulators() {
   const grid = document.getElementById('simulator-grid');
   if (!grid) return;
 
-  // Set "Dasar & Tools": langsung tampilkan lab (kelompok tunggal Fondasi).
-  if (_labLaunchSet === 'bonus') {
-    const g = SIM_GROUPS.find(x => x.key === 'Fondasi');
-    const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === 'Fondasi');
-    grid.innerHTML = `<div class="lab-launch-grid">${sims.map(s => _labTile(s, g)).join('')}</div>`;
-    return;
-  }
+  // Chip jumlah lab — dihitung dari katalog terkurasi (hands-on saja).
+  const chip = document.getElementById('lab-count-chip');
+  if (chip) chip.textContent = SIMULATORS.length + ' Lab Hands-on';
 
   // Drill-down: satu jalur dibuka → tampilkan lab-lab di dalamnya + tombol kembali.
   if (_labOpenJalur) {
@@ -5336,12 +5359,13 @@ function renderSimulators() {
     return `
     <button type="button" class="lab-jalur-card" style="--g-grad:${g.grad}" onclick="openLabJalur('${g.key}')" aria-label="Buka jalur ${g.label}">
       <span class="lab-jalur-thumb">
-        <img src="${g.photo}" alt="" loading="lazy" onerror="this.style.display='none'">
+        <img src="${g.photo}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
         <span class="lab-jalur-num">${g.num}</span>
       </span>
       <span class="lab-jalur-body">
         <span class="lab-jalur-label">${g.label}</span>
-        <span class="lab-jalur-count">${sims.length} lab ${_LAB_ARROW}</span>
+        <span class="lab-jalur-desc">${g.desc}</span>
+        <span class="lab-jalur-count">${sims.length} lab hands-on ${_LAB_ARROW}</span>
       </span>
     </button>`;
   }).join('') + `</div>`;
@@ -5489,6 +5513,85 @@ window.esaLoadBooks = esaLoadBooks;
 // ================================================
 // SIMULATOR MODAL — dynamic content per simulator
 // ================================================
+// ── AI Tutor di dalam modal lab ──────────────────────────────────
+// Chat ke Edge Function sim-assistant (DeepSeek) — sama dengan widget
+// "Tanya AI" di ElectraSim/ElectraSim 3D — dengan konteks lab yang dibuka.
+const _TUTOR_ENDPOINT = 'https://osjdzroehpquegtvktvt.supabase.co/functions/v1/sim-assistant';
+let _tutorCtx = null, _tutorHistory = [];
+function _tutorEsc(s) { return String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function _labTutorHTML(sim) {
+  return `
+  <div class="sim-tutor">
+    <div class="sim-tutor-head">
+      <b>🤖 AI Tutor</b>
+      <span>Tanya apa saja soal lab <strong>${_tutorEsc(sim.name)}</strong> — konsep, cara pakai, sampai aplikasinya di lapangan.</span>
+    </div>
+    <div class="sim-tutor-body" id="sim-tutor-body"></div>
+    <div class="sim-tutor-chips" id="sim-tutor-chips"></div>
+    <div class="sim-tutor-foot">
+      <textarea id="sim-tutor-in" rows="1" placeholder="Ketik pertanyaan untuk AI Tutor…"></textarea>
+      <button type="button" id="sim-tutor-send" onclick="_tutorSend()">➤</button>
+    </div>
+  </div>`;
+}
+function _tutorAddMsg(text, who) {
+  const body = document.getElementById('sim-tutor-body');
+  if (!body) return null;
+  const d = document.createElement('div');
+  d.className = 'sim-tutor-msg sim-tutor-' + who;
+  d.textContent = text;
+  body.appendChild(d);
+  body.scrollTop = body.scrollHeight;
+  return d;
+}
+function _labTutorInit(sim, g) {
+  const info = SIM_INFO[sim.id];
+  _tutorCtx = {
+    sim: sim.name,
+    context: (g ? g.label + ' — ' : '') + sim.name + '. ' + (sim.desc || '') +
+      (info ? ' Fungsi: ' + info.w + ' Tujuan belajar: ' + info.g + ' Kegunaan dunia nyata: ' + info.r : '')
+  };
+  _tutorHistory = [];
+  _tutorAddMsg('Halo! 👋 Aku AI Tutor untuk lab "' + sim.name + '". Mau kujelaskan cara pakainya, atau ada konsep yang ingin ditanyakan?', 'bot');
+  const chips = document.getElementById('sim-tutor-chips');
+  if (chips) {
+    ['Bagaimana cara memakai lab ini?', 'Jelaskan konsep dasarnya', 'Apa kegunaannya di pekerjaan nyata?'].forEach(q => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'sim-tutor-chip'; b.textContent = q;
+      b.addEventListener('click', () => { const i = document.getElementById('sim-tutor-in'); if (i) i.value = q; _tutorSend(); });
+      chips.appendChild(b);
+    });
+  }
+  const input = document.getElementById('sim-tutor-in');
+  if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); _tutorSend(); } });
+}
+function _tutorSend() {
+  const input = document.getElementById('sim-tutor-in');
+  const btn = document.getElementById('sim-tutor-send');
+  if (!input || !_tutorCtx) return;
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  _tutorAddMsg(q, 'user');
+  _tutorHistory.push({ role: 'user', content: q });
+  if (btn) btn.disabled = true;
+  const typing = _tutorAddMsg('mengetik…', 'bot');
+  if (typing) typing.classList.add('sim-tutor-typing');
+  fetch(_TUTOR_ENDPOINT, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ sim: _tutorCtx.sim, context: _tutorCtx.context, question: q, history: _tutorHistory.slice(0, -1) })
+  }).then(r => r.json()).then(d => {
+    if (typing) typing.remove();
+    const a = (d && d.answer) || 'Maaf, aku belum bisa menjawab itu.';
+    _tutorAddMsg(a, 'bot');
+    _tutorHistory.push({ role: 'assistant', content: a });
+    if (_tutorHistory.length > 12) _tutorHistory = _tutorHistory.slice(-12);
+  }).catch(() => {
+    if (typing) typing.remove();
+    _tutorAddMsg('Maaf, koneksi gagal. Coba lagi ya 🙏', 'bot');
+  }).finally(() => { if (btn) btn.disabled = false; });
+}
+
 function openSimulator(simId) {
   const content = document.getElementById('sim-modal-content');
   const modal = document.getElementById('sim-modal');
@@ -5517,7 +5620,7 @@ function openSimulator(simId) {
   const g = _simGroup(sim);
   const banner = `
     <div class="sim-banner">
-      <img src="${g.photo}" alt="" onerror="this.style.display='none'">
+      <img src="${g.photo}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
       <span class="sim-banner-grad" style="background:${g.grad}"></span>
       <span class="sim-banner-shade"></span>
       <span class="sim-banner-txt">
@@ -5540,7 +5643,10 @@ function openSimulator(simId) {
       </div>`
     : `<div class="sim-about"><div class="sim-about-h">ℹ️ Tentang lab ini</div><div class="sim-about-item"><p>${sim.desc || ''}</p></div></div>`;
 
-  content.innerHTML = banner + about + body;
+  // AI Tutor hanya untuk lab non-iframe; lab wiring (iframe) sudah punya
+  // widget "Tanya AI" sendiri (sim-assistant.js) di dalam halamannya.
+  const tutor = sim.embed ? '' : _labTutorHTML(sim);
+  content.innerHTML = banner + about + body + tutor;
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -5555,6 +5661,7 @@ function openSimulator(simId) {
     else if (simId === 'inst-vdrop') initVoltageDrop();
     else if (simId === 'inst-mcb') initMCBCoord();
     else if (SIM_BUILDERS[simId]) SIM_BUILDERS[simId].init();
+    if (!sim.embed) _labTutorInit(sim, g);
   }, 50);
 }
 
