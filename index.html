@@ -3904,17 +3904,20 @@ function renderPractices() {
   // banner section below, so it's excluded from the regular 12-track grid.
   grid.innerHTML = PRACTICE_CARDS.filter(p => !p.isFastTrack).map(p => `
     <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}" onclick="openJalur('${p.id}')">
-      <div class="practice-card-photo" style="background-image: url('${p.photo}')"></div>
-      ${p.comingSoon ? '<div class="practice-card-soon-badge">Coming Soon</div>' : ''}
-      <div class="practice-arrow">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+      <div class="practice-card-photo">
+        <div class="practice-card-photo-img" style="background-image: url('${p.photo}')"></div>
+        <span class="practice-card-badge">Jalur <strong>${p.num}</strong></span>
       </div>
+      ${p.comingSoon ? '<div class="practice-card-soon-badge">Coming Soon</div>' : ''}
       <div class="practice-card-inner">
-        <div class="practice-num">${p.id} · JALUR ${p.num}</div>
         <h3 class="practice-name">${p.name}</h3>
         <p class="practice-desc">${p.desc}</p>
+        <span class="practice-cta">
+          Lihat Jalur
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
       </div>
     </button>
   `).join('');
