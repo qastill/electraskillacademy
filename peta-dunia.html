@@ -110,6 +110,13 @@
   <label class="row"><input type="checkbox" id="ebt-only"> 🌱 Hanya EBT (terbarukan)</label>
   <div class="legend" id="legend"></div>
 
+  <h4>Jaringan interkoneksi</h4>
+  <label class="row"><input type="checkbox" id="grid"> ⚡ Tampilkan interkoneksi grid</label>
+  <label class="row"><input type="checkbox" id="grid-planned"> ➕ Termasuk rencana (planned)</label>
+  <div class="legend" style="margin-top:4px;">
+    <span><i style="background:#d4af6a"></i>Existing</span><span><i style="background:#5a8cd0"></i>Rencana</span>
+  </div>
+
   <h4>Tampilan</h4>
   <label class="row"><input type="checkbox" id="mode3d"> ⛰️ Mode 3D (kolom kapasitas)</label>
 
@@ -132,6 +139,7 @@
 <div id="errbox"></div>
 
 <script src="peta-dunia/world-plants.js"></script>
+<script src="peta-dunia/world-grid.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin=""></script>
 <script src="https://unpkg.com/deck.gl@9.0.36/dist.min.js" crossorigin=""></script>
 
@@ -151,6 +159,15 @@
 const WP=window.WORLD_PLANTS, FUELS=WP.fuels, COUNTRIES=WP.countries;
 // [name, iso3, mw, lat, lon, fuelIdx]  → objek ringan
 const PLANTS=WP.plants.map(p=>({name:p[0],iso:p[1],mw:p[2],lat:p[3],lon:p[4],fuel:FUELS[p[5]]}));
+
+// Jaringan interkoneksi antar-negara/region (The Global Transmission Database, MIT)
+// nodes: { "IDN-XX":[lat,lon,countryName] }  edges: [fromId,toId,existMW,planMW]
+const GRID = window.WORLD_GRID || {nodes:{},edges:[]};
+const ARCS = GRID.edges.map(e=>{
+  const a=GRID.nodes[e[0]], b=GRID.nodes[e[1]]; if(!a||!b) return null;
+  return { s:[a[1],a[0]], t:[b[1],b[0]], fromIso:e[0].slice(0,3), toIso:e[1].slice(0,3),
+           fromC:a[2], toC:b[2], ex:e[2], pl:e[3] };
+}).filter(Boolean);
 
 const FUEL_COLOR={
   'Coal':'#4a4a55','Gas':'#e08a3c','Oil':'#8c6a4a','Petcoke':'#6b5a4a','Cogeneration':'#7a6a55',
@@ -189,13 +206,18 @@ const map=new maplibregl.Map({ container:'map', style:'https://tiles.openfreemap
   center:[20,25], zoom:1.4, pitch:0, maxPitch:75, attributionControl:{compact:true} });
 map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'bottom-right');
 
-const state={ country:'', ebtOnly:false, mode3d:false };
+const state={ country:'', ebtOnly:false, mode3d:false, grid:false, gridPlanned:false };
 let overlay=null, _loaded=false;
 
 map.on('load',()=>{
   _loaded=true;
   overlay=new deck.MapboxOverlay({ interleaved:true, layers:[],
-    getTooltip:({object})=> object? {html:`<b>${object.name}</b><br>${object.fuel} · ${object.mw.toLocaleString('id-ID')} MW<br><span style="opacity:.7">${COUNTRIES[object.iso]||object.iso}</span>`} : null });
+    getTooltip:({object})=>{
+      if(!object) return null;
+      if(object.fuel) return {html:`<b>${object.name}</b><br>${object.fuel} · ${object.mw.toLocaleString('id-ID')} MW<br><span style="opacity:.7">${COUNTRIES[object.iso]||object.iso}</span>`};
+      if(object.ex!==undefined) return {html:`<b>Interkoneksi</b><br>${object.fromC} ↔ ${object.toC}<br>Existing ${object.ex.toLocaleString('id-ID')} MW${object.pl?` · Rencana +${object.pl.toLocaleString('id-ID')} MW`:''}`};
+      return null;
+    } });
   map.addControl(overlay);
   refresh(false);
   document.getElementById('loading').style.display='none';
@@ -209,6 +231,14 @@ setTimeout(()=>{ if(_loaded)return; document.getElementById('loading').style.dis
 document.getElementById('ebt-only').addEventListener('change',e=>{ state.ebtOnly=e.target.checked; refresh(false); });
 document.getElementById('mode3d').addEventListener('change',e=>{ state.mode3d=e.target.checked;
   map.easeTo({pitch: state.mode3d?55:0, duration:600}); refresh(false); });
+document.getElementById('grid').addEventListener('change',e=>{ state.grid=e.target.checked; refresh(false); });
+document.getElementById('grid-planned').addEventListener('change',e=>{ state.gridPlanned=e.target.checked; refresh(false); });
+
+function currentArcs(){
+  let a=ARCS.filter(x=>x.ex>0);
+  if(state.country) a=a.filter(x=>x.fromIso===state.country||x.toIso===state.country);
+  return a;
+}
 
 function currentData(){
   let d=PLANTS;
@@ -234,9 +264,25 @@ function refresh(fly){
       getFillColor:d=>{ const c=hexRgb(FUEL_COLOR[d.fuel]||'#888'); return [c[0],c[1],c[2],210]; },
       onClick:info=>info.object&&showDetail(info.object) }));
   }
+  // Jaringan interkoneksi (arc) — di atas titik pembangkit
+  if(state.grid){
+    const arcs=currentArcs();
+    if(state.gridPlanned){
+      const planned=(state.country? ARCS.filter(x=>x.pl>0 && (x.fromIso===state.country||x.toIso===state.country)) : ARCS.filter(x=>x.pl>0));
+      layers.push(new deck.ArcLayer({ id:'grid-planned', data:planned, pickable:true,
+        getSourcePosition:d=>d.s, getTargetPosition:d=>d.t,
+        getSourceColor:[90,140,208,150], getTargetColor:[90,140,208,150],
+        getWidth:d=>Math.max(1,Math.sqrt(d.pl)/22), widthMinPixels:0.8, widthMaxPixels:6, getHeight:0.25 }));
+    }
+    layers.push(new deck.ArcLayer({ id:'grid-existing', data:arcs, pickable:true,
+      getSourcePosition:d=>d.s, getTargetPosition:d=>d.t,
+      getSourceColor:[212,175,106,210], getTargetColor:[212,175,106,150],
+      getWidth:d=>Math.max(1,Math.sqrt(d.ex)/20), widthMinPixels:1, widthMaxPixels:8, getHeight:0.3 }));
+  }
   overlay.setProps({layers});
   document.getElementById('readout').textContent =
     `${data.length.toLocaleString('id-ID')} pembangkit · ${Math.round(data.reduce((a,p)=>a+p.mw,0)/1000).toLocaleString('id-ID')} GW`
+    + (state.grid? ' · '+currentArcs().length+' interkoneksi':'')
     + (state.country? ' · '+(COUNTRIES[state.country]||state.country):' · global');
 
   if(fly && data.length){
@@ -274,6 +320,20 @@ function mixOf(list){
   for(const p of list){ byFuel[p.fuel]=(byFuel[p.fuel]||0)+p.mw; byBucket[bucket(p.fuel)]+=p.mw; total+=p.mw; }
   return {byFuel,byBucket,total,count:list.length};
 }
+function gridInsightHTML(scope){
+  if(!ARCS.length) return '';
+  let list=ARCS;
+  if(scope) list=ARCS.filter(x=>x.fromIso===scope||x.toIso===scope);
+  if(!list.length) return '';
+  const ex=list.reduce((a,x)=>a+x.ex,0), pl=list.reduce((a,x)=>a+x.pl,0);
+  const fmt=n=>Math.round(n).toLocaleString('id-ID');
+  const top=list.filter(x=>x.ex>0).sort((a,b)=>b.ex-a.ex).slice(0,5)
+    .map(x=>`<tr><td>${x.fromC} ↔ ${x.toC}</td><td class="n">${fmt(x.ex/1000)} GW</td></tr>`).join('');
+  return `<h3>Jaringan Interkoneksi ${scope?'· '+(COUNTRIES[scope]||scope):''}</h3>
+    <p>${list.length} koneksi · kapasitas existing <strong>${fmt(ex/1000)} GW</strong>${pl?` · rencana +${fmt(pl/1000)} GW`:''}.</p>
+    ${top?`<table class="ctable"><tr><th>Koneksi</th><th class="n">Existing</th></tr>${top}</table>`:''}`;
+}
+
 function showMix(){
   const scope=state.country, list=currentData();
   const m=mixOf(state.ebtOnly? PLANTS.filter(p=>!scope||p.iso===scope):list); // pakai data penuh negara utk insight
@@ -322,9 +382,10 @@ function showMix(){
       <span><span class="mdot" style="background:#b06ad0"></span>Nuklir ${nu.toFixed(1)}%</span></div>
     <h3>Per bahan bakar</h3>${fuelRows}
     ${extra}
+    ${gridInsightHTML(scope)}
     <a class="jlink" href="index.html?jalur=S7" style="margin-top:16px;">🎓 Pelajari Jalur Pembangkitan &amp; Renewable <span class="arr">→</span></a>
     <button class="closeb" onclick="document.getElementById('mix-modal').classList.remove('show')">Tutup</button>
-    <p style="margin-top:14px;font-size:11px;color:#6b7184">Sumber: WRI Global Power Plant Database (≈34.900 pembangkit, rilis 2021). Untuk edukasi &amp; eksplorasi.</p>`;
+    <p style="margin-top:14px;font-size:11px;color:#6b7184">Sumber: pembangkit — <strong>WRI Global Power Plant Database</strong> (≈34.900 pembangkit, 2021); interkoneksi — <strong>The Global Transmission Database</strong> (MIT). Untuk edukasi &amp; eksplorasi.</p>`;
   document.getElementById('mix-modal').classList.add('show');
 }
 
