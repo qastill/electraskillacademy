@@ -472,33 +472,39 @@ if ('serviceWorker' in navigator) {
         <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
         <a class="nav-right" href="peta-dunia.html" style="cursor:pointer;color:#d4af6a;" title="World Electricity Maps — peta pembangkit listrik dunia">🌐 World Electricity Maps</a>
-      <button class="nav-daftar-btn" onclick="esaShowAuthModal()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:8px;padding:9px 22px;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Daftar</button>
+      <button class="nav-daftar-btn" onclick="esaShowAuthModal()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:10px 24px;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Daftar</button>
       </div>
       <button class="nav-burger" id="navBurger" type="button" aria-label="Buka menu" aria-expanded="false" onclick="esaToggleNav()"><span></span><span></span><span></span></button>
     </nav>
 
     <div class="hero-content">
       <div class="hero-inner">
+        <div class="hero-eyebrow">Akademi Kelistrikan Indonesia</div>
         <h1 class="hero-headline">
-          Siap Memulai Karir<br>
-          Sebagai<br>
-          <strong style="font-weight: 900; -webkit-text-stroke: 1.5px #c9a84c; color: #f0d080; display: inline-block;">Profesional Electrician</strong>
+          Siap Memulai Karir sebagai<br>
+          <em>Profesional Electrician &amp; Energy Expert</em>
         </h1>
-        <a href="#practices" class="hero-cta">Start Journey</a>
-        <button class="hero-daftar-btn" onclick="esaShowAuthModal()" style="display:inline-flex;align-items:center;justify-content:center;padding:22px 44px;background:transparent;color:#c9a96e;border:2px solid rgba(201,169,110,0.6);font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;margin-left:16px;border-radius:0;" onmouseover="this.style.background='rgba(201,169,110,0.12)';this.style.borderColor='#c9a96e'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(201,169,110,0.6)'">Daftar / Masuk</button>
-        <div class="hero-peta-wrap">
-          <a href="peta-dunia.html" class="hero-peta-btn">
-            <span class="hero-peta-globe" aria-hidden="true">🌐</span>
-            World Electricity Maps
+        <div class="hero-cta-row">
+          <a href="#practices" class="hero-cta">Mulai Belajar
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
+          <button class="hero-cta--ghost hero-daftar-btn" onclick="esaShowAuthModal()">Daftar / Masuk</button>
+          <a href="peta-dunia.html" class="hero-cta--ghost" title="World Electricity Maps — peta pembangkit listrik dunia">
+            <span style="margin-right:9px;" aria-hidden="true">🌐</span>World Electricity Maps
+          </a>
+        </div>
+        <div class="hero-stats" aria-label="Electra Skill Academy dalam angka">
+          <div class="hero-stat"><div class="hero-stat-num">16</div><div class="hero-stat-label">Jalur Karir</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">600+</div><div class="hero-stat-label">Modul &amp; Video</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">SKKNI</div><div class="hero-stat-label">Selaras Standar</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">24/7</div><div class="hero-stat-label">AI Tutor</div></div>
         </div>
       </div>
     </div>
   </section>
 
-<!-- USER PROGRESS PANEL (shown when profile exists) -->
-<div id="esa-home-progress-panel" class="esa-home-progress" style="display:none;"></div>
+<!-- USER PROGRESS PANEL — dihapus dari home (bar gelap di bawah hero membingungkan);
+     updateHomeProgress() aman karena sudah guard if(!panel) return. -->
 
 <!-- REFERRAL DASHBOARD WIDGET — dihilangkan dari main page -->
 
@@ -606,8 +612,8 @@ if ('serviceWorker' in navigator) {
         </h2>
         <p style="color:rgba(245,240,230,0.7);font-family:var(--sans);font-size:0.92rem;line-height:1.6;margin:0 0 20px;max-width:560px;">Investasi sekali — akses seumur hidup ke seluruh ekosistem akademi: 600+ modul, AI Tutor, sertifikat, talent pool ke 100+ perusahaan partner, plus event eksklusif.</p>
 
-        <div style="display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg, #ef4444, #dc2626); color:#fff; padding:9px 18px; border-radius:100px; font-size:0.78rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:24px; box-shadow:0 6px 18px rgba(220,38,38,0.4); animation:esa-pulse-glow 2.5s ease-in-out infinite;">
-          <span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:#fff;border-radius:50%;color:#dc2626;font-size:0.7rem;font-weight:900;">!</span>
+        <div class="esa-promo-chip">
+          <span aria-hidden="true" class="chip-ic">⚡</span>
           <span>Promo Spesial · Berlaku sampai 31 Juli 2026</span>
         </div>
 
@@ -620,13 +626,13 @@ if ('serviceWorker' in navigator) {
               <span class="academy-pricing-price">Rp 299.000</span>
               <span class="academy-pricing-period">/ Lifetime · Sekali Bayar</span>
             </div>
-            <span style="font-family:var(--sans);font-size:0.78rem;color:#86efac;font-weight:600;letter-spacing:0.04em;">💰 Hemat Rp 701.000 — diskon 70% selama promo</span>
+            <span class="esa-save-note">✦ Hemat Rp 701.000 — diskon 70% selama promo</span>
           </div>
         </div>
 
         <div class="academy-pricing-section-title">Yang Kamu Dapatkan</div>
 
-        <ul class="academy-pricing-list esa-pricing-grid">
+        <ul class="academy-pricing-list esa-pricing-grid esa-benefits-collapsed" id="esaBenefitsGrid">
           <li class="esa-benefit-card">
             <div class="esa-benefit-photo" data-fallback-icon="📚"><img loading="lazy" alt="Modul kelistrikan" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
             <div class="esa-benefit-body">
@@ -763,6 +769,11 @@ if ('serviceWorker' in navigator) {
             </div>
           </li>
         </ul>
+        <button type="button" class="esa-benefits-toggle" id="esaBenefitsToggle"
+          onclick="(function(b){var g=document.getElementById('esaBenefitsGrid');var c=g.classList.toggle('esa-benefits-collapsed');b.querySelector('.tg-text').textContent=c?'Lihat 11 Benefit Lainnya':'Tampilkan Ringkas';if(!c)return;g.scrollIntoView({behavior:'smooth',block:'start'});})(this)">
+          <span class="tg-text">Lihat 11 Benefit Lainnya</span>
+          <svg class="tg-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
 
         <!-- E-book Bonus Poster -->
         <div class="esa-ebook-bonus" style="margin-top:40px;padding:32px;background:linear-gradient(135deg,rgba(212,175,106,0.1),rgba(160,120,64,0.04));border:1px solid rgba(212,175,106,0.32);border-radius:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:32px;align-items:center;">
@@ -810,31 +821,11 @@ if ('serviceWorker' in navigator) {
     </div>
   </section>
 
-  <section class="testimonial">
-    <div class="testimonial-inner">
-      <div class="testimonial-content reveal">
-        <h2 class="testimonial-title">Siswa kami</h2>
-        <p class="testimonial-text" id="testimonial-text">
-          Dari nol sampai akhirnya keterima jadi teknisi distribusi PLN Haleyora Power, semuanya berawal dari Electra Skill Academy. Materi K3, PUIL, dan praktikum wiring di sini sangat sesuai dengan dunia kerja nyata. Sertifikasi dari ESA langsung dilirik recruiter — saya gak nyangka prosesnya secepat ini.
-        </p>
-        <a href="#" class="testimonial-name-btn" id="testimonial-name">Rizky Saputra</a>
-        <div class="testimonial-role" id="testimonial-role" style="margin-top:8px;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-dark);font-weight:600;">Teknisi Distribusi · PT Haleyora Power (PLN Group)</div>
-        <div class="testimonial-nav">
-          <button class="testimonial-dot active" data-index="0" aria-label="Testimonial 1"></button>
-          <button class="testimonial-dot" data-index="1" aria-label="Testimonial 2"></button>
-        </div>
-      </div>
-      <div class="testimonial-photo reveal">
-        <img src="https://lh3.googleusercontent.com/d/1EI8kJwdIJ6TDDkwCPpzbgI2o_qXEaLjA=w800-h1000" alt="Alumni ESA" id="testimonial-img" loading="lazy" decoding="async">
-      </div>
-    </div>
-  </section>
-
   <!-- ===== FAQ HOME SECTION ===== -->
   <section class="home-faq">
     <div class="home-faq-inner">
       <div class="home-faq-header reveal">
-        <div class="section-eyebrow">— Pertanyaan Umum —</div>
+        <div class="section-eyebrow">Pertanyaan Umum</div>
         <h2 class="home-faq-title">Yang Sering <span class="home-faq-accent">Ditanyakan</span></h2>
         <p class="home-faq-subtitle">Jawaban cepat untuk pertanyaan paling umum tentang program Electra Skill Academy. Tidak ketemu? <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20program%20Electra%20Academy" target="_blank" rel="noopener" class="home-faq-wa">Chat Admin via WA</a>.</p>
       </div>
@@ -1035,7 +1026,8 @@ if ('serviceWorker' in navigator) {
 
   <section class="partners">
     <div class="partners-inner">
-      <h2 class="partners-title reveal">Partner Industri Kami</h2>
+      <div class="section-eyebrow reveal">Kolaborasi Industri</div>
+      <h2 class="partners-title reveal">Partner <span class="italic">Industri</span> Kami</h2>
       <p class="partners-subtitle reveal">Bersama perusahaan terbaik di sektor energi & industri Indonesia.</p>
       <div class="partners-grid reveal">
         <!-- PT PLN (Persero) -->
@@ -1817,9 +1809,9 @@ if ('serviceWorker' in navigator) {
           <h2 class="lab-launch-title">ElectraSim 3D — <span class="italic">simulator interaktif</span></h2>
         </div>
       </div>
-      <a class="electrasim-feature" href="#" onclick="event.preventDefault();openExternalSim();return false;" style="background:linear-gradient(135deg,#0f1a2e,#1d2b3a 55%,#3a4a2a)">
-        <span class="electrasim-feature-ic" style="background:linear-gradient(135deg,#5b8cff,#3a4a2a)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#0a1228" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></svg>
+      <a class="electrasim-feature" href="#" onclick="event.preventDefault();openExternalSim();return false;">
+        <span class="electrasim-feature-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></svg>
         </span>
         <span class="electrasim-feature-body">
           <span class="electrasim-feature-eyebrow">Lab Unggulan · Khusus Member</span>
@@ -1828,13 +1820,13 @@ if ('serviceWorker' in navigator) {
           <span class="electrasim-feature-cta">Buka Simulator →</span>
         </span>
       </a>
-      <a class="electrasim-feature" href="https://electrakids.vercel.app/" target="_blank" rel="noopener" title="Kelas listrik seru untuk anak SD" style="background:linear-gradient(135deg,#ff6b9d 0%,#ffa53e 50%,#5bc8ff 100%);margin-top:16px;">
-        <span class="electrasim-feature-ic" style="background:rgba(255,255,255,0.92);box-shadow:0 6px 20px rgba(255,107,157,0.4);font-size:30px;line-height:1;">🧒</span>
+      <a class="electrasim-feature electrasim-feature--kids" href="https://electrakids.vercel.app/" target="_blank" rel="noopener" title="Kelas listrik seru untuk anak SD">
+        <span class="electrasim-feature-ic">🧒</span>
         <span class="electrasim-feature-body">
-          <span class="electrasim-feature-eyebrow" style="color:#fff;">ElectraKids · Untuk Anak SD</span>
+          <span class="electrasim-feature-eyebrow">ElectraKids · Untuk Anak SD</span>
           <span class="electrasim-feature-title">Electra For Kids — Simulator Anak</span>
           <span class="electrasim-feature-sub">Kelas listrik seru &amp; aman untuk anak SD: eksperimen interaktif, animasi, dan permainan untuk mengenal dunia kelistrikan sejak dini. Dibuka di tab baru.</span>
-          <span class="electrasim-feature-cta" style="color:#fff;">Buka ElectraKids →</span>
+          <span class="electrasim-feature-cta">Buka ElectraKids →</span>
         </span>
       </a>
       <div class="lab-launch-hint">Simulator dibuka di dalam halaman ini (tidak pindah situs). Tutup dengan tombol × di pojok untuk kembali ke Labs.</div>
@@ -2495,6 +2487,28 @@ if ('serviceWorker' in navigator) {
       <div class="jobs-hero-eyebrow">Lowongan Mitra Industri</div>
       <h1>Karir nyata bareng <span class="italic">partner</span> ESA</h1>
       <p class="jobs-hero-desc">Lowongan langsung dari mitra industri Electra Skill Academy. Lamar posisi yang cocok dengan jalur karirmu dan terhubung dengan perusahaan terbaik di sektor energi dan manufaktur.</p>
+    </div>
+  </section>
+
+  <!-- ===== CERITA ALUMNI (dipindah dari home) ===== -->
+  <section class="testimonial">
+    <div class="testimonial-inner">
+      <div class="testimonial-content reveal">
+        <div class="section-eyebrow">Cerita Alumni</div>
+        <h2 class="testimonial-title">Dari Belajar ke <span class="italic">Bekerja</span></h2>
+        <p class="testimonial-text" id="testimonial-text">
+          Dari nol sampai akhirnya keterima jadi teknisi distribusi PLN Haleyora Power, semuanya berawal dari Electra Skill Academy. Materi K3, PUIL, dan praktikum wiring di sini sangat sesuai dengan dunia kerja nyata. Sertifikasi dari ESA langsung dilirik recruiter — saya gak nyangka prosesnya secepat ini.
+        </p>
+        <a href="#" class="testimonial-name-btn" id="testimonial-name">Rizky Saputra</a>
+        <div class="testimonial-role" id="testimonial-role" style="margin-top:8px;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-dark);font-weight:600;">Teknisi Distribusi · PT Haleyora Power (PLN Group)</div>
+        <div class="testimonial-nav">
+          <button class="testimonial-dot active" data-index="0" aria-label="Testimonial 1"></button>
+          <button class="testimonial-dot" data-index="1" aria-label="Testimonial 2"></button>
+        </div>
+      </div>
+      <div class="testimonial-photo reveal">
+        <img src="https://lh3.googleusercontent.com/d/1EI8kJwdIJ6TDDkwCPpzbgI2o_qXEaLjA=w800-h1000" alt="Alumni ESA" id="testimonial-img" loading="lazy" decoding="async">
+      </div>
     </div>
   </section>
 
