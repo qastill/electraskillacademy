@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>World Electricity Maps — Electra Skill Academy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Peta pembangkit listrik dunia — 34.900+ pembangkit di 167 negara, dengan kapasitas, bahan bakar, dan bauran energi (EBT/fosil/nuklir). Bisa difilter per negara, termasuk Indonesia.">
+<meta name="author" content="Electra Skill Academy">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="">
+<style>
+  :root{ --navy:#0d0f1c; --navy2:#13172a; --gold:#d4af6a; --gold-dark:#a07840; --ink:#e9eaf2; --mute:#9aa0b4; --line:rgba(255,255,255,0.09); }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif; color:var(--ink); overflow:hidden; background:#080a12; }
+
+  .nav{ position:fixed; top:0; left:0; right:0; height:48px; background:var(--navy); display:flex; align-items:center;
+    padding:0 16px; gap:10px; z-index:2000; }
+  .nav a{ display:flex; align-items:center; gap:6px; color:rgba(255,255,255,0.82); text-decoration:none; font-size:13px; padding:6px 11px; border-radius:6px; }
+  .nav a:hover{ background:rgba(255,255,255,0.09); color:#fff; }
+  .nav .brand{ font-weight:700; color:var(--gold); font-size:13px; letter-spacing:.03em; margin-right:auto; }
+  .nav .brand b{ color:#fff; font-weight:400; }
+  .nav .badge{ background:rgba(212,175,106,0.16); color:var(--gold); font-size:11px; font-weight:700; padding:4px 10px; border-radius:100px; border:1px solid rgba(212,175,106,.3); text-decoration:none; }
+
+  #map{ position:fixed; top:48px; left:0; right:0; bottom:0; }
+
+  .panel{ position:fixed; top:62px; left:14px; z-index:1500; width:296px; max-width:calc(100vw - 28px);
+    background:rgba(16,19,34,0.93); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    border:1px solid var(--line); border-radius:14px; padding:16px; box-shadow:0 12px 32px rgba(0,0,0,0.45);
+    max-height:calc(100vh - 80px); overflow-y:auto; }
+  .panel h1{ font-size:16px; color:#fff; } .panel h1 b{ color:var(--gold); }
+  .panel .sub{ font-size:11.5px; color:var(--mute); margin:3px 0 12px; line-height:1.45; }
+  .panel h4{ font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin:14px 0 8px;
+    border-top:1px solid var(--line); padding-top:12px; }
+  .quick{ display:flex; gap:8px; margin-bottom:8px; }
+  .quick button{ flex:1; padding:8px; border-radius:8px; border:1px solid var(--line); background:#191d33; color:var(--ink); cursor:pointer; font-size:12.5px; font-weight:600; }
+  .quick button:hover{ border-color:var(--gold); }
+  select, input[type=search]{ width:100%; padding:8px 10px; border-radius:8px; background:#0e1120; color:var(--ink);
+    border:1px solid var(--line); font-size:13px; }
+  .row{ display:flex; align-items:center; gap:8px; padding:4px 0; font-size:13px; cursor:pointer; }
+  .row input{ accent-color:var(--gold); width:15px; height:15px; }
+  .legend{ display:flex; flex-wrap:wrap; gap:5px 10px; font-size:11px; color:#bcc; }
+  .legend span{ display:inline-flex; align-items:center; gap:5px; } .legend i{ width:10px; height:10px; border-radius:2px; }
+  .readout{ font-size:11px; color:var(--mute); margin-top:10px; }
+  .btn-mix{ width:100%; margin-top:12px; padding:9px; border:none; border-radius:9px; cursor:pointer;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#1a1d2e; font-weight:700; font-size:12.5px; }
+
+  #detail{ position:fixed; right:14px; top:62px; z-index:1500; width:300px; max-width:calc(100vw - 28px);
+    background:rgba(16,19,34,0.96); border:1px solid var(--line); border-radius:14px; padding:16px; display:none;
+    box-shadow:0 12px 32px rgba(0,0,0,0.5); }
+  #detail.show{ display:block; }
+  #detail .kind{ font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); }
+  #detail .title{ font-size:16px; color:#fff; font-weight:700; margin:2px 0 10px; line-height:1.2; }
+  #detail table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  #detail td{ padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.06); color:#cdd; }
+  #detail td:first-child{ color:#899; width:42%; }
+  #detail .close{ position:absolute; top:10px; right:12px; cursor:pointer; color:#899; font-size:20px; background:none; border:none; }
+  .jlink{ display:flex; align-items:center; gap:8px; margin-top:14px; background:linear-gradient(135deg,#c9a96e,#a07840);
+    color:#1a1d2e; text-decoration:none; padding:10px 13px; border-radius:9px; font-size:13px; font-weight:700; }
+  .jlink .arr{ margin-left:auto; }
+
+  .modal-bd{ position:fixed; inset:0; background:rgba(8,10,18,0.82); z-index:3000; display:none; align-items:center;
+    justify-content:center; padding:20px; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
+  .modal-bd.show{ display:flex; }
+  .modal{ background:#11142a; border:1px solid var(--line); border-radius:14px; padding:26px; max-width:580px; width:100%;
+    max-height:86vh; overflow-y:auto; }
+  .modal h2{ color:#fff; font-size:21px; margin-bottom:4px; } .modal h2 b{ color:var(--gold); }
+  .modal h3{ color:var(--gold); font-size:12px; text-transform:uppercase; letter-spacing:.08em; margin:18px 0 10px; }
+  .modal p{ font-size:13px; color:var(--mute); line-height:1.55; }
+  .sbar{ display:flex; height:20px; border-radius:6px; overflow:hidden; background:#222; margin:6px 0; }
+  .mrow{ margin-bottom:10px; } .mrh{ display:flex; align-items:center; gap:7px; font-size:12.5px; }
+  .mdot{ width:11px; height:11px; border-radius:50%; display:inline-block; } .mname{ flex:1; }
+  .mtrack{ height:8px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden; margin:5px 0 4px; }
+  .mbar{ height:100%; border-radius:4px; } .mmeta{ font-size:11px; color:#899; }
+  .ctable{ width:100%; border-collapse:collapse; font-size:12.5px; margin-top:4px; }
+  .ctable td,.ctable th{ padding:5px 6px; border-bottom:1px solid var(--line); text-align:left; }
+  .ctable th{ color:var(--mute); font-weight:600; font-size:11px; text-transform:uppercase; }
+  .ctable td.n{ text-align:right; font-variant-numeric:tabular-nums; }
+  .modal .closeb{ margin-top:18px; padding:9px 18px; background:var(--gold); color:#1a1d2e; border:none; border-radius:8px; cursor:pointer; font-weight:700; }
+
+  #loading{ position:fixed; inset:48px 0 0 0; z-index:1800; display:flex; align-items:center; justify-content:center;
+    background:#080a12; color:var(--mute); flex-direction:column; gap:14px; font-size:14px; }
+  .spin{ width:34px; height:34px; border:3px solid rgba(212,175,106,0.25); border-top-color:var(--gold); border-radius:50%; animation:sp .9s linear infinite; }
+  @keyframes sp{ to{ transform:rotate(360deg); } }
+  #errbox{ position:fixed; inset:48px 0 0 0; z-index:1900; display:none; align-items:center; justify-content:center; background:#080a12; color:#cdd; padding:30px; text-align:center; }
+  @media(max-width:560px){ .panel{ width:calc(100vw - 28px); max-height:44vh; } #detail{ width:calc(100vw - 28px); top:auto; bottom:14px; } }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="index.html"><span style="font-size:16px;">‹</span> Kembali</a>
+  <div class="brand">Electra Skill Academy <b>· World Electricity Maps</b></div>
+  <a href="peta-kelistrikan.html" class="badge" title="Detail jaringan Indonesia (transmisi & gardu)">🇮🇩 Detail Indonesia</a>
+  <a href="simulasi-energi.html" class="badge">🌱 Simulasi</a>
+</div>
+
+<div id="map"></div>
+
+<div class="panel">
+  <h1>World <b>Electricity</b> Maps</h1>
+  <div class="sub">34.900+ pembangkit listrik di 167 negara. Warna = bahan bakar, ukuran = kapasitas. Klik titik untuk detail, atau filter per negara.</div>
+
+  <h4>Wilayah</h4>
+  <div class="quick">
+    <button onclick="selectCountry('')">🌍 Dunia</button>
+    <button onclick="selectCountry('IDN')">🇮🇩 Indonesia</button>
+  </div>
+  <select id="country"></select>
+
+  <h4>Bahan bakar</h4>
+  <label class="row"><input type="checkbox" id="ebt-only"> 🌱 Hanya EBT (terbarukan)</label>
+  <div class="legend" id="legend"></div>
+
+  <h4>Tampilan</h4>
+  <label class="row"><input type="checkbox" id="mode3d"> ⛰️ Mode 3D (kolom kapasitas)</label>
+
+  <button class="btn-mix" onclick="showMix()">📊 Bauran Energi (insight)</button>
+  <div class="readout" id="readout">memuat data…</div>
+</div>
+
+<div id="detail">
+  <button class="close" onclick="document.getElementById('detail').classList.remove('show')">×</button>
+  <div class="kind" id="d-kind"></div>
+  <div class="title" id="d-title"></div>
+  <div id="d-body"></div>
+</div>
+
+<div class="modal-bd" id="mix-modal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal" id="mix-content"></div>
+</div>
+
+<div id="loading"><div class="spin"></div><div>Memuat peta dunia &amp; 34.900+ pembangkit…</div></div>
+<div id="errbox"></div>
+
+<script src="peta-dunia/world-plants.js"></script>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin=""></script>
+<script src="https://unpkg.com/deck.gl@9.0.36/dist.min.js" crossorigin=""></script>
+
+<script>
+(function(){
+  if(!window.maplibregl || !window.deck || !window.WORLD_PLANTS){
+    document.getElementById('loading').style.display='none';
+    const e=document.getElementById('errbox'); e.style.display='flex';
+    e.innerHTML='Gagal memuat peta/dataset dunia. Periksa koneksi lalu muat ulang.<br><br><a href="peta-kelistrikan.html" style="color:#d4af6a;">↩ Peta Indonesia</a>';
+    throw new Error('deps missing');
+  }
+})();
+
+// ============================================================
+// DATA
+// ============================================================
+const WP=window.WORLD_PLANTS, FUELS=WP.fuels, COUNTRIES=WP.countries;
+// [name, iso3, mw, lat, lon, fuelIdx]  → objek ringan
+const PLANTS=WP.plants.map(p=>({name:p[0],iso:p[1],mw:p[2],lat:p[3],lon:p[4],fuel:FUELS[p[5]]}));
+
+const FUEL_COLOR={
+  'Coal':'#4a4a55','Gas':'#e08a3c','Oil':'#8c6a4a','Petcoke':'#6b5a4a','Cogeneration':'#7a6a55',
+  'Hydro':'#3a8fd0','Solar':'#f2c200','Wind':'#36c2c9','Geothermal':'#d05a4a',
+  'Nuclear':'#b06ad0','Biomass':'#6fae3a','Waste':'#8b6f3a','Wave and Tidal':'#2a9d8f',
+  'Storage':'#8893a8','Other':'#6c7486',
+};
+const EBT=new Set(['Hydro','Solar','Wind','Geothermal','Biomass','Waste','Wave and Tidal']);
+const FOSSIL=new Set(['Coal','Gas','Oil','Petcoke','Cogeneration']);
+function bucket(f){ return EBT.has(f)?'ebt':(f==='Nuclear'?'nuklir':(FOSSIL.has(f)?'fosil':'lain')); }
+function hexRgb(h){ h=(h||'#888').replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+
+// Pemetaan ke jalur Academy
+const FUEL_JALUR={'Solar':'S10','Coal':'S7','Gas':'S7','Oil':'S7','Hydro':'S7','Geothermal':'S7','Wind':'S7',
+  'Nuclear':'S7','Biomass':'S7','Waste':'S13','Petcoke':'S7','Cogeneration':'S7','Storage':'S15'};
+const JALUR_LABEL={S7:'Pembangkitan & Renewable',S10:'PV & Solar Engineer',S13:'Waste to Energy',S15:'Baterai & BESS'};
+
+// ============================================================
+// LEGEND + COUNTRY SELECT
+// ============================================================
+(function(){
+  const present=[...new Set(PLANTS.map(p=>p.fuel))].sort();
+  document.getElementById('legend').innerHTML=present.map(f=>`<span><i style="background:${FUEL_COLOR[f]||'#888'}"></i>${f}</span>`).join('');
+  const counts={}; PLANTS.forEach(p=>counts[p.iso]=(counts[p.iso]||0)+1);
+  const sel=document.getElementById('country');
+  sel.innerHTML='<option value="">🌍 Semua negara ('+PLANTS.length.toLocaleString('id-ID')+')</option>'
+    + Object.keys(COUNTRIES).sort((a,b)=>COUNTRIES[a].localeCompare(COUNTRIES[b]))
+       .map(c=>`<option value="${c}">${COUNTRIES[c]} (${(counts[c]||0).toLocaleString('id-ID')})</option>`).join('');
+  sel.addEventListener('change',()=>{ state.country=sel.value; refresh(true); });
+})();
+
+// ============================================================
+// MAP
+// ============================================================
+const map=new maplibregl.Map({ container:'map', style:'https://tiles.openfreemap.org/styles/dark',
+  center:[20,25], zoom:1.4, pitch:0, maxPitch:75, attributionControl:{compact:true} });
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'bottom-right');
+
+const state={ country:'', ebtOnly:false, mode3d:false };
+let overlay=null, _loaded=false;
+
+map.on('load',()=>{
+  _loaded=true;
+  overlay=new deck.MapboxOverlay({ interleaved:true, layers:[],
+    getTooltip:({object})=> object? {html:`<b>${object.name}</b><br>${object.fuel} · ${object.mw.toLocaleString('id-ID')} MW<br><span style="opacity:.7">${COUNTRIES[object.iso]||object.iso}</span>`} : null });
+  map.addControl(overlay);
+  refresh(false);
+  document.getElementById('loading').style.display='none';
+});
+map.on('error',e=>console.warn('[world] map error', e&&e.error));
+setTimeout(()=>{ if(_loaded)return; document.getElementById('loading').style.display='none';
+  const e=document.getElementById('errbox'); e.style.display='flex';
+  e.innerHTML='Peta dasar lambat/gagal dimuat.<br><br><a href="#" onclick="location.reload();return false;" style="color:#d4af6a;">⟳ Muat ulang</a> &nbsp; <a href="peta-kelistrikan.html" style="color:#d4af6a;">↩ Peta Indonesia</a>';
+}, 15000);
+
+document.getElementById('ebt-only').addEventListener('change',e=>{ state.ebtOnly=e.target.checked; refresh(false); });
+document.getElementById('mode3d').addEventListener('change',e=>{ state.mode3d=e.target.checked;
+  map.easeTo({pitch: state.mode3d?55:0, duration:600}); refresh(false); });
+
+function currentData(){
+  let d=PLANTS;
+  if(state.country) d=d.filter(p=>p.iso===state.country);
+  if(state.ebtOnly) d=d.filter(p=>EBT.has(p.fuel));
+  return d;
+}
+
+function refresh(fly){
+  if(!overlay) return;
+  const data=currentData();
+  const layers=[];
+  if(state.mode3d){
+    layers.push(new deck.ColumnLayer({ id:'plants', data, pickable:true, diskResolution:10, extruded:true,
+      radius: state.country?2500:9000, getPosition:d=>[d.lon,d.lat],
+      getElevation:d=>d.mw, elevationScale: state.country?40:60,
+      getFillColor:d=>{ const c=hexRgb(FUEL_COLOR[d.fuel]||'#888'); return [c[0],c[1],c[2],230]; },
+      onClick:info=>info.object&&showDetail(info.object) }));
+  } else {
+    layers.push(new deck.ScatterplotLayer({ id:'plants', data, pickable:true,
+      getPosition:d=>[d.lon,d.lat], getRadius:d=>Math.sqrt(Math.max(d.mw,1))*180,
+      radiusUnits:'meters', radiusMinPixels:1.5, radiusMaxPixels:22, opacity:0.82, stroked:false,
+      getFillColor:d=>{ const c=hexRgb(FUEL_COLOR[d.fuel]||'#888'); return [c[0],c[1],c[2],210]; },
+      onClick:info=>info.object&&showDetail(info.object) }));
+  }
+  overlay.setProps({layers});
+  document.getElementById('readout').textContent =
+    `${data.length.toLocaleString('id-ID')} pembangkit · ${Math.round(data.reduce((a,p)=>a+p.mw,0)/1000).toLocaleString('id-ID')} GW`
+    + (state.country? ' · '+(COUNTRIES[state.country]||state.country):' · global');
+
+  if(fly && data.length){
+    let minx=180,miny=90,maxx=-180,maxy=-90;
+    for(const p of data){ if(p.lon<minx)minx=p.lon; if(p.lon>maxx)maxx=p.lon; if(p.lat<miny)miny=p.lat; if(p.lat>maxy)maxy=p.lat; }
+    try{ map.fitBounds([[minx,miny],[maxx,maxy]],{padding:60,maxZoom:7,duration:800}); }catch(e){}
+  } else if(fly && !state.country){
+    map.easeTo({center:[20,25],zoom:1.4,duration:800});
+  }
+}
+function selectCountry(c){ state.country=c; document.getElementById('country').value=c; refresh(true); }
+
+// ============================================================
+// DETAIL
+// ============================================================
+function row(l,v){ return (v||v===0)?`<tr><td>${l}</td><td>${v}</td></tr>`:''; }
+function showDetail(p){
+  document.getElementById('d-kind').textContent='Pembangkit · '+(COUNTRIES[p.iso]||p.iso);
+  document.getElementById('d-title').textContent=p.name;
+  const tag=bucket(p.fuel), tagTxt={ebt:'Terbarukan (EBT)',fosil:'Fosil',nuklir:'Nuklir',lain:'Lainnya'}[tag];
+  let body=`<table>${row('Bahan bakar','<strong>'+p.fuel+'</strong> · '+tagTxt)}
+    ${row('Kapasitas','<strong>'+p.mw.toLocaleString('id-ID')+' MW</strong>')}
+    ${row('Negara',COUNTRIES[p.iso]||p.iso)}${row('Koordinat',p.lat.toFixed(3)+', '+p.lon.toFixed(3))}</table>`;
+  const jid=FUEL_JALUR[p.fuel]||'S7';
+  body+=`<a class="jlink" href="index.html?jalur=${jid}">🎓 Pelajari di Jalur <strong>${JALUR_LABEL[jid]}</strong> <span class="arr">→</span></a>`;
+  document.getElementById('d-body').innerHTML=body;
+  document.getElementById('detail').classList.add('show');
+}
+
+// ============================================================
+// INSIGHT: BAURAN ENERGI
+// ============================================================
+function mixOf(list){
+  const byFuel={}, byBucket={ebt:0,fosil:0,nuklir:0,lain:0}; let total=0;
+  for(const p of list){ byFuel[p.fuel]=(byFuel[p.fuel]||0)+p.mw; byBucket[bucket(p.fuel)]+=p.mw; total+=p.mw; }
+  return {byFuel,byBucket,total,count:list.length};
+}
+function showMix(){
+  const scope=state.country, list=currentData();
+  const m=mixOf(state.ebtOnly? PLANTS.filter(p=>!scope||p.iso===scope):list); // pakai data penuh negara utk insight
+  const data = scope? PLANTS.filter(p=>p.iso===scope) : PLANTS;
+  const M=mixOf(data);
+  const fmt=n=>Math.round(n).toLocaleString('id-ID'); const pct=v=>M.total?v/M.total*100:0;
+  const label= scope? (COUNTRIES[scope]||scope) : 'Dunia';
+  const fuelRows=Object.entries(M.byFuel).sort((a,b)=>b[1]-a[1]).map(([f,v])=>{
+    const col=FUEL_COLOR[f]||'#888', sh=pct(v), bk=bucket(f);
+    return `<div class="mrow"><div class="mrh"><span class="mdot" style="background:${col}"></span>
+      <span class="mname"><strong>${f}</strong></span><span style="font-size:10px;color:#899">${bk.toUpperCase()}</span></div>
+      <div class="mtrack"><div class="mbar" style="width:${sh.toFixed(1)}%;background:${col}"></div></div>
+      <div class="mmeta">${fmt(v/1000)} GW · ${sh.toFixed(1)}%</div></div>`;
+  }).join('');
+
+  // ranking negara (hanya saat scope dunia, atau utk menempatkan negara terpilih)
+  let extra='';
+  const countryTotals={}; PLANTS.forEach(p=>countryTotals[p.iso]=(countryTotals[p.iso]||0)+p.mw);
+  const ranked=Object.entries(countryTotals).sort((a,b)=>b[1]-a[1]);
+  if(!scope){
+    const top=ranked.slice(0,8).map(([c,v],i)=>`<tr><td>${i+1}. ${COUNTRIES[c]||c}</td><td class="n">${fmt(v/1000)} GW</td></tr>`).join('');
+    extra=`<h3>Negara dengan kapasitas terbesar</h3><table class="ctable"><tr><th>Negara</th><th class="n">Kapasitas</th></tr>${top}</table>`;
+  } else {
+    const rank=ranked.findIndex(([c])=>c===scope)+1;
+    const eb=pct(M.byBucket.ebt);
+    extra=`<h3>Posisi ${label}</h3><table class="ctable">
+      <tr><td>Peringkat kapasitas dunia</td><td class="n">#${rank} dari ${ranked.length}</td></tr>
+      <tr><td>Porsi EBT</td><td class="n">${eb.toFixed(1)}%</td></tr>
+      <tr><td>Porsi Fosil</td><td class="n">${pct(M.byBucket.fosil).toFixed(1)}%</td></tr>
+      <tr><td>Total pembangkit</td><td class="n">${M.count.toLocaleString('id-ID')}</td></tr></table>`;
+  }
+
+  const eb=pct(M.byBucket.ebt), fo=pct(M.byBucket.fosil), nu=pct(M.byBucket.nuklir), la=pct(M.byBucket.lain);
+  document.getElementById('mix-content').innerHTML=`
+    <h2>Bauran Energi · <b>${label}</b></h2>
+    <p>${M.count.toLocaleString('id-ID')} pembangkit · total <strong>${fmt(M.total/1000)} GW</strong>.</p>
+    <h3>EBT · Fosil · Nuklir</h3>
+    <div class="sbar">
+      <div style="width:${eb}%;background:#2ca02c" title="EBT"></div>
+      <div style="width:${fo}%;background:#5a5a5a" title="Fosil"></div>
+      <div style="width:${nu}%;background:#b06ad0" title="Nuklir"></div>
+      <div style="width:${la}%;background:#3a3f52" title="Lain"></div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;margin-top:8px">
+      <span><span class="mdot" style="background:#2ca02c"></span>EBT ${eb.toFixed(1)}%</span>
+      <span><span class="mdot" style="background:#5a5a5a"></span>Fosil ${fo.toFixed(1)}%</span>
+      <span><span class="mdot" style="background:#b06ad0"></span>Nuklir ${nu.toFixed(1)}%</span></div>
+    <h3>Per bahan bakar</h3>${fuelRows}
+    ${extra}
+    <a class="jlink" href="index.html?jalur=S7" style="margin-top:16px;">🎓 Pelajari Jalur Pembangkitan &amp; Renewable <span class="arr">→</span></a>
+    <button class="closeb" onclick="document.getElementById('mix-modal').classList.remove('show')">Tutup</button>
+    <p style="margin-top:14px;font-size:11px;color:#6b7184">Sumber: WRI Global Power Plant Database (≈34.900 pembangkit, rilis 2021). Untuk edukasi &amp; eksplorasi.</p>`;
+  document.getElementById('mix-modal').classList.add('show');
+}
+
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){
+  document.getElementById('mix-modal').classList.remove('show');
+  document.getElementById('detail').classList.remove('show'); } });
+</script>
+</body>
+</html>
