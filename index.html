@@ -472,7 +472,6 @@ if ('serviceWorker' in navigator) {
         <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
         <a class="nav-right" href="peta-kelistrikan.html" style="cursor:pointer;color:#d4af6a;" title="Peta interaktif sistem kelistrikan Indonesia">🗺 Peta Kelistrikan</a>
-      <a class="nav-forkids-btn" href="https://electrakids.vercel.app/" target="_blank" rel="noopener" title="Kelas listrik seru untuk anak SD" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#ff6b9d 0%,#ffa53e 50%,#5bc8ff 100%);color:#fff;text-decoration:none;border-radius:999px;padding:8px 18px;font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;box-shadow:0 4px 14px rgba(255,107,157,0.4);transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 22px rgba(255,107,157,0.55)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(255,107,157,0.4)'">🧒 For Kids</a>
       <button class="nav-daftar-btn" onclick="esaShowAuthModal()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:8px;padding:9px 22px;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Daftar</button>
       </div>
       <button class="nav-burger" id="navBurger" type="button" aria-label="Buka menu" aria-expanded="false" onclick="esaToggleNav()"><span></span><span></span><span></span></button>
@@ -1820,6 +1819,15 @@ if ('serviceWorker' in navigator) {
           <span class="electrasim-feature-title">ElectraSim 3D — Simulator Lab</span>
           <span class="electrasim-feature-sub">Simulator kelistrikan interaktif untuk tiap jalur spesialisasi: wiring, motor, distribusi, PLTS, BESS, EV, hidrogen, PLC, dan lainnya. Berjalan langsung di dalam Electra Academy — daftar/masuk sebagai member untuk membuka.</span>
           <span class="electrasim-feature-cta">Buka Simulator →</span>
+        </span>
+      </a>
+      <a class="electrasim-feature" href="https://electrakids.vercel.app/" target="_blank" rel="noopener" title="Kelas listrik seru untuk anak SD" style="background:linear-gradient(135deg,#ff6b9d 0%,#ffa53e 50%,#5bc8ff 100%);margin-top:16px;">
+        <span class="electrasim-feature-ic" style="background:rgba(255,255,255,0.92);box-shadow:0 6px 20px rgba(255,107,157,0.4);font-size:30px;line-height:1;">🧒</span>
+        <span class="electrasim-feature-body">
+          <span class="electrasim-feature-eyebrow" style="color:#fff;">ElectraKids · Untuk Anak SD</span>
+          <span class="electrasim-feature-title">Electra For Kids — Simulator Anak</span>
+          <span class="electrasim-feature-sub">Kelas listrik seru &amp; aman untuk anak SD: eksperimen interaktif, animasi, dan permainan untuk mengenal dunia kelistrikan sejak dini. Dibuka di tab baru.</span>
+          <span class="electrasim-feature-cta" style="color:#fff;">Buka ElectraKids →</span>
         </span>
       </a>
       <div class="lab-launch-hint">Simulator dibuka di dalam halaman ini (tidak pindah situs). Tutup dengan tombol × di pojok untuk kembali ke Labs.</div>
@@ -16595,7 +16603,6 @@ else{setTimeout(init,200);}
     var talentPool=links.find(function(a){return a.textContent.trim()==='Talent Pool';});
     var sert=links.find(function(a){return a.textContent.trim()==='Ambil Sertifikasi';});
     var daftar=navGroup.querySelector('button.nav-daftar-btn');
-    var forKids=navGroup.querySelector('a.nav-forkids-btn');
     if(!talentPool)return;
     if(labs)labs.textContent='Labs';
     if(labs)labs.onclick=function(e){e.preventDefault();showView('labs');};
@@ -16661,7 +16668,6 @@ else{setTimeout(init,200);}
     navGroup.appendChild(libraryLink);
     navGroup.appendChild(galleryLink);
     navGroup.appendChild(workshopLink);
-    if(forKids)navGroup.appendChild(forKids);
     if(daftar)navGroup.appendChild(daftar);
   }
   
