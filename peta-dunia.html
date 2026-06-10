@@ -40,8 +40,19 @@
   .seg{ display:flex; gap:6px; background:#0c0f1d; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:9px; }
   .seg-btn{ flex:1; padding:8px; border-radius:7px; border:none; background:transparent; color:var(--mute); cursor:pointer; font-size:12.5px; font-weight:600; transition:.2s; }
   .seg-btn:hover{ color:var(--ink); } .seg-btn.active{ background:rgba(212,175,106,0.16); color:var(--gold); }
-  select{ width:100%; padding:9px 11px; border-radius:10px; background:#0c0f1d; color:var(--ink);
-    border:1px solid var(--line); font-size:13px; cursor:pointer; } select:hover{ border-color:rgba(212,175,106,.4); }
+  select,#country-search{ width:100%; padding:9px 11px; border-radius:10px; background:#0c0f1d; color:var(--ink);
+    border:1px solid var(--line); font-size:13px; cursor:pointer; }
+  select:hover,#country-search:focus{ border-color:rgba(212,175,106,.4); outline:none; }
+  #country-search{ margin-bottom:8px; cursor:text; }
+  #country-search::placeholder{ color:#6b7184; }
+
+  .mini{ margin-top:12px; background:#0c0f1d; border:1px solid var(--line); border-radius:11px; padding:11px 12px; }
+  .mini-top{ display:flex; justify-content:space-between; align-items:baseline; font-size:12.5px; margin-bottom:7px; }
+  .mini-top b{ color:#fff; font-weight:700; } .mini-top .gw{ color:var(--gold); font-weight:700; font-variant-numeric:tabular-nums; }
+  .mini-bar{ display:flex; height:9px; border-radius:5px; overflow:hidden; background:#222838; }
+  .mini-bar i{ height:100%; transition:width .4s ease; }
+  .mini-leg{ display:flex; flex-wrap:wrap; gap:4px 12px; font-size:10.5px; color:var(--mute); margin-top:7px; }
+  .mini-leg b{ font-variant-numeric:tabular-nums; }
 
   .toggles{ margin:14px 0 4px; border-top:1px solid var(--line); padding-top:6px; }
   .tg{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; font-size:13px; cursor:pointer; }
@@ -69,6 +80,11 @@
   .btn-mix:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(212,175,106,.3); }
   .btn-src{ width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; cursor:pointer;
     background:transparent; color:var(--ink); font-weight:600; font-size:12.5px; transition:.2s; } .btn-src:hover{ border-color:var(--gold); color:#fff; }
+  .actions-row{ display:flex; gap:8px; } .actions-row .btn-src{ flex:1; padding:10px 8px; }
+  .toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); z-index:4000;
+    background:var(--gold); color:#1a1d2e; font-size:13px; font-weight:700; padding:11px 20px; border-radius:100px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4); opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
   .srcgrid{ display:grid; gap:10px; }
   .srccard{ display:flex; gap:12px; align-items:flex-start; background:#0e1120; border:1px solid var(--line);
     border-radius:11px; padding:13px 14px; text-decoration:none; transition:border-color .2s,transform .2s; }
@@ -141,7 +157,11 @@
     <button class="seg-btn active" data-region="" onclick="selectCountry('')">🌍 Dunia</button>
     <button class="seg-btn" data-region="IDN" onclick="selectCountry('IDN')">🇮🇩 Indonesia</button>
   </div>
+  <input id="country-search" list="country-dl" placeholder="🔍 Cari negara…" autocomplete="off" spellcheck="false">
+  <datalist id="country-dl"></datalist>
   <select id="country" aria-label="Pilih negara"></select>
+
+  <div class="mini" id="mini"></div>
 
   <div class="toggles">
     <label class="tg"><span class="tg-lab">🌱 Hanya EBT (terbarukan)</span><input type="checkbox" id="ebt-only"><span class="sw"></span></label>
@@ -160,11 +180,15 @@
 
   <div class="actions">
     <button class="btn-mix" onclick="showMix()">📊 Insight bauran energi</button>
-    <button class="btn-src" onclick="showSources()">🔗 Sumber &amp; layer</button>
+    <div class="actions-row">
+      <button class="btn-src" onclick="showSources()">🔗 Sumber &amp; layer</button>
+      <button class="btn-src btn-share" onclick="shareView()" title="Salin tautan tampilan saat ini">📤 Bagikan</button>
+    </div>
   </div>
   <div class="readout" id="readout">memuat data…</div>
 </div>
 <button class="panel-show" id="panelShow" title="Tampilkan kontrol" aria-label="Tampilkan kontrol">☰</button>
+<div class="toast" id="toast"></div>
 
 <div id="detail">
   <button class="close" onclick="document.getElementById('detail').classList.remove('show')">×</button>
@@ -234,25 +258,44 @@ const JALUR_LABEL={S7:'Pembangkitan & Renewable',S10:'PV & Solar Engineer',S13:'
 // ============================================================
 // LEGEND + COUNTRY SELECT
 // ============================================================
+// Restore state dari URL hash (permalink)
+function parseHash(){
+  const p=new URLSearchParams(location.hash.slice(1));
+  const num=v=>{ const n=parseFloat(v); return isFinite(n)?n:undefined; };
+  return { c:p.get('c')||'', f:p.get('f')==='1', g:p.get('g')==='1', pl:p.get('p')==='1', d:p.get('d')==='1',
+           z:num(p.get('z')), y:num(p.get('y')), x:num(p.get('x')) };
+}
+const INIT=parseHash();
+const NAME2ISO={}; Object.keys(COUNTRIES).forEach(c=>NAME2ISO[COUNTRIES[c].toLowerCase()]=c);
+
 (function(){
   const present=[...new Set(PLANTS.map(p=>p.fuel))].sort();
   document.getElementById('legend').innerHTML=present.map(f=>`<span><i style="background:${FUEL_COLOR[f]||'#888'}"></i>${f}</span>`).join('');
   const counts={}; PLANTS.forEach(p=>counts[p.iso]=(counts[p.iso]||0)+1);
   const sel=document.getElementById('country');
+  const sorted=Object.keys(COUNTRIES).sort((a,b)=>COUNTRIES[a].localeCompare(COUNTRIES[b]));
   sel.innerHTML='<option value="">🌍 Semua negara ('+PLANTS.length.toLocaleString('id-ID')+')</option>'
-    + Object.keys(COUNTRIES).sort((a,b)=>COUNTRIES[a].localeCompare(COUNTRIES[b]))
-       .map(c=>`<option value="${c}">${COUNTRIES[c]} (${(counts[c]||0).toLocaleString('id-ID')})</option>`).join('');
-  sel.addEventListener('change',()=>{ state.country=sel.value; syncSeg(); refresh(true); });
+    + sorted.map(c=>`<option value="${c}">${COUNTRIES[c]} (${(counts[c]||0).toLocaleString('id-ID')})</option>`).join('');
+  sel.addEventListener('change',()=>{ state.country=sel.value; syncSearch(); syncSeg(); refresh(true); });
+  // kotak cari (datalist)
+  document.getElementById('country-dl').innerHTML=sorted.map(c=>`<option value="${COUNTRIES[c]}">`).join('');
+  const search=document.getElementById('country-search');
+  search.addEventListener('change',()=>{
+    const iso=NAME2ISO[search.value.trim().toLowerCase()];
+    if(iso){ selectCountry(iso); } else if(search.value.trim()===''){ selectCountry(''); }
+  });
+  if(INIT.c){ sel.value=INIT.c; }
 })();
 
 // ============================================================
 // MAP
 // ============================================================
 const map=new maplibregl.Map({ container:'map', style:'https://tiles.openfreemap.org/styles/dark',
-  center:[20,25], zoom:1.4, pitch:0, maxPitch:75, attributionControl:{compact:true} });
+  center:(INIT.x!==undefined&&INIT.y!==undefined)?[INIT.x,INIT.y]:[20,25],
+  zoom:INIT.z!==undefined?INIT.z:1.4, pitch:INIT.d?55:0, maxPitch:75, attributionControl:{compact:true} });
 map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'bottom-right');
 
-const state={ country:'', ebtOnly:false, mode3d:false, grid:false, gridPlanned:false };
+const state={ country:INIT.c||'', ebtOnly:!!INIT.f, mode3d:!!INIT.d, grid:!!INIT.g, gridPlanned:!!INIT.pl };
 let overlay=null, _loaded=false;
 
 map.on('load',()=>{
@@ -265,6 +308,14 @@ map.on('load',()=>{
       return null;
     } });
   map.addControl(overlay);
+  // Terapkan state awal (dari hash) ke kontrol UI
+  document.getElementById('ebt-only').checked=state.ebtOnly;
+  document.getElementById('grid').checked=state.grid;
+  document.getElementById('grid-planned').checked=state.gridPlanned;
+  document.getElementById('mode3d').checked=state.mode3d;
+  document.getElementById('planned-row').classList.toggle('on', state.grid);
+  syncSeg(); syncSearch();
+  map.on('moveend',writeHash);
   refresh(false);
   document.getElementById('loading').style.display='none';
 });
@@ -341,6 +392,7 @@ function refresh(fly){
     `${data.length.toLocaleString('id-ID')} pembangkit · ${Math.round(data.reduce((a,p)=>a+p.mw,0)/1000).toLocaleString('id-ID')} GW`
     + (state.grid? ' · '+currentArcs().length+' interkoneksi':'')
     + (state.country? ' · '+(COUNTRIES[state.country]||state.country):' · global');
+  renderMini(); writeHash();
 
   if(fly && data.length){
     let minx=180,miny=90,maxx=-180,maxy=-90;
@@ -350,7 +402,39 @@ function refresh(fly){
     map.easeTo({center:[20,25],zoom:1.4,duration:800});
   }
 }
-function selectCountry(c){ state.country=c; document.getElementById('country').value=c; syncSeg(); refresh(true); }
+function selectCountry(c){ state.country=c; document.getElementById('country').value=c; syncSearch(); syncSeg(); refresh(true); }
+function syncSearch(){ const s=document.getElementById('country-search'); if(s) s.value = state.country?(COUNTRIES[state.country]||''):''; }
+
+// Mini-insight nempel (tanpa modal)
+function renderMini(){
+  const scope=state.country;
+  const data=scope?PLANTS.filter(p=>p.iso===scope):PLANTS;
+  const m=mixOf(data), t=m.total||1;
+  const eb=m.byBucket.ebt/t*100, fo=m.byBucket.fosil/t*100, nu=m.byBucket.nuklir/t*100, la=m.byBucket.lain/t*100;
+  document.getElementById('mini').innerHTML=
+    `<div class="mini-top"><b>${scope?(COUNTRIES[scope]||scope):'🌍 Dunia'}</b><span class="gw">${Math.round(m.total/1000).toLocaleString('id-ID')} GW</span></div>
+     <div class="mini-bar"><i style="width:${eb}%;background:#2ca02c"></i><i style="width:${fo}%;background:#5a5a5a"></i><i style="width:${nu}%;background:#b06ad0"></i><i style="width:${la}%;background:#3a3f52"></i></div>
+     <div class="mini-leg"><span><b style="color:#4cc94c">${eb.toFixed(0)}%</b> EBT</span><span><b style="color:#bcc">${fo.toFixed(0)}%</b> Fosil</span>${nu>0.4?`<span><b style="color:#c79ad9">${nu.toFixed(0)}%</b> Nuklir</span>`:''} · ${m.count.toLocaleString('id-ID')} unit</div>`;
+}
+
+// Permalink / share state
+function buildHash(){
+  const p=new URLSearchParams(), c=map.getCenter();
+  if(state.country)p.set('c',state.country);
+  if(state.ebtOnly)p.set('f','1'); if(state.grid)p.set('g','1'); if(state.gridPlanned)p.set('p','1'); if(state.mode3d)p.set('d','1');
+  p.set('z',map.getZoom().toFixed(2)); p.set('y',c.lat.toFixed(3)); p.set('x',c.lng.toFixed(3));
+  return p.toString();
+}
+let _hashT; function writeHash(){ clearTimeout(_hashT); _hashT=setTimeout(()=>{
+  try{ history.replaceState(null,'','#'+buildHash()); }catch(e){} }, 400); }
+function shareView(){
+  const url=location.origin+location.pathname+'#'+buildHash();
+  const done=()=>toast('🔗 Tautan tampilan disalin!');
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done,()=>prompt('Salin tautan:',url)); }
+  else prompt('Salin tautan:',url);
+}
+let _toastT; function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(_toastT); _toastT=setTimeout(()=>t.classList.remove('show'),2200); }
 
 // ============================================================
 // DETAIL
