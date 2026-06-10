@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Peta Ketenagalistrikan 3D — Electra Skill Academy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Peta 3D interaktif sistem tenaga listrik Indonesia — pembangkit sebagai kolom 3D (tinggi = kapasitas), gardu induk, dan jaringan transmisi di atas medan 3D.">
+<meta name="author" content="Electra Skill Academy">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="">
+<style>
+  :root { --nav-bg:#0d0f1c; --gold:#d4af6a; --gold-dark:#a07840; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#eaeaf0; overflow:hidden; background:#0b0d18; }
+
+  .electra-nav {
+    position:fixed; top:0; left:0; right:0; height:48px; background:var(--nav-bg);
+    display:flex; align-items:center; padding:0 16px; z-index:2000; gap:10px;
+  }
+  .electra-nav a { display:flex; align-items:center; gap:8px; color:rgba(255,255,255,0.8);
+    text-decoration:none; font-size:13px; padding:6px 12px; border-radius:6px; transition:background .15s,color .15s; }
+  .electra-nav a:hover { background:rgba(255,255,255,0.1); color:#fff; }
+  .electra-nav .brand { font-weight:700; color:var(--gold); font-size:13px; letter-spacing:.04em; margin-right:auto; }
+  .electra-nav .badge { background:rgba(212,175,106,0.18); color:var(--gold); font-size:11px; font-weight:700;
+    padding:3px 9px; border-radius:100px; border:1px solid rgba(212,175,106,.35); }
+  .electra-nav .b2d { background:rgba(255,255,255,0.08); }
+
+  #map { position:fixed; top:48px; left:0; right:0; bottom:0; }
+
+  /* Panel kontrol */
+  .panel {
+    position:fixed; top:62px; left:14px; z-index:1500; width:280px; max-width:calc(100vw - 28px);
+    background:rgba(15,18,32,0.92); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4); max-height:calc(100vh - 80px); overflow-y:auto;
+  }
+  .panel h1 { font-size:15px; color:#fff; margin-bottom:2px; }
+  .panel .sub { font-size:11px; color:#9aa; margin-bottom:12px; line-height:1.4; }
+  .panel h4 { font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--gold);
+    margin:14px 0 8px; border-top:1px solid rgba(255,255,255,0.07); padding-top:12px; }
+  .panel h4:first-of-type { border-top:none; padding-top:0; }
+  .row { display:flex; align-items:center; gap:9px; padding:5px 0; font-size:13px; cursor:pointer; }
+  .row input { accent-color:var(--gold); width:15px; height:15px; cursor:pointer; }
+  .row .sw { width:14px; height:14px; border-radius:3px; flex-shrink:0; }
+  .legend { display:flex; flex-wrap:wrap; gap:5px 12px; font-size:11px; color:#bcc; margin-top:4px; }
+  .legend span { display:inline-flex; align-items:center; gap:5px; }
+  .legend i { width:10px; height:10px; border-radius:2px; display:inline-block; }
+  .readout { font-size:11px; color:#9aa; margin-top:10px; }
+  .hint { font-size:10.5px; color:#788; margin-top:6px; line-height:1.45; }
+  .btn-energy { width:100%; margin-top:12px; padding:9px; border:none; border-radius:8px; cursor:pointer;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#1a1d2e; font-weight:700; font-size:12.5px; }
+  .btn-energy:hover { filter:brightness(1.06); }
+
+  /* Detail panel */
+  #detail { position:fixed; right:14px; top:62px; z-index:1500; width:300px; max-width:calc(100vw - 28px);
+    background:rgba(15,18,32,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:12px;
+    padding:16px; box-shadow:0 10px 30px rgba(0,0,0,0.5); display:none; }
+  #detail.show { display:block; }
+  #detail .kind { font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); }
+  #detail .title { font-size:16px; color:#fff; font-weight:700; margin:2px 0 10px; line-height:1.2; }
+  #detail table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  #detail td { padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.06); color:#cdd; vertical-align:top; }
+  #detail td:first-child { color:#899; width:42%; }
+  #detail .close { position:absolute; top:10px; right:12px; cursor:pointer; color:#899; font-size:20px; line-height:1; background:none; border:none; }
+  .dp-jalur-link { display:flex; align-items:center; gap:8px; margin-top:14px;
+    background:linear-gradient(135deg,#c9a96e,#a07840); color:#1a1d2e; text-decoration:none;
+    padding:10px 13px; border-radius:9px; font-size:13px; font-weight:700; transition:transform .18s; }
+  .dp-jalur-link:hover { transform:translateY(-1px); }
+  .dp-jalur-link .arr { margin-left:auto; }
+
+  /* Modal bauran energi */
+  .modal-bd { position:fixed; inset:0; background:rgba(8,10,20,0.8); z-index:3000; display:none;
+    align-items:center; justify-content:center; padding:20px; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
+  .modal-bd.show { display:flex; }
+  .modal { background:#121426; border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:26px;
+    max-width:560px; width:100%; max-height:86vh; overflow-y:auto; color:#dde; }
+  .modal h2 { color:#fff; font-size:20px; margin-bottom:6px; }
+  .modal h3 { color:var(--gold); font-size:13px; text-transform:uppercase; letter-spacing:.08em; margin:18px 0 10px; }
+  .modal p { font-size:13px; line-height:1.55; color:#bcc; }
+  .mix-split-bar { display:flex; height:22px; border-radius:6px; overflow:hidden; background:#222; }
+  .mix-split-bar .ebt { background:#2ca02c; } .mix-split-bar .fosil { background:#5a5a5a; }
+  .mix-leg { display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:10px; font-size:12.5px; }
+  .mix-dot { width:11px; height:11px; border-radius:50%; display:inline-block; margin-right:5px; vertical-align:middle; }
+  .mix-row { margin-bottom:11px; } .mix-row-head { display:flex; align-items:center; gap:7px; font-size:12.5px; }
+  .mix-name { flex:1; } .mix-tag { font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:100px; text-transform:uppercase; }
+  .mix-tag.ebt { background:rgba(44,160,44,.2); color:#7ddc7d; } .mix-tag.fosil { background:rgba(160,160,160,.2); color:#bbb; }
+  .mix-track { height:8px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden; margin:5px 0 4px; }
+  .mix-bar { height:100%; border-radius:4px; } .mix-meta { font-size:11px; color:#899; }
+  .modal .close-btn { margin-top:18px; padding:9px 18px; background:var(--gold); color:#1a1d2e; border:none;
+    border-radius:8px; cursor:pointer; font-weight:700; }
+
+  #loading { position:fixed; inset:48px 0 0 0; z-index:1800; display:flex; align-items:center; justify-content:center;
+    background:#0b0d18; color:#9aa; font-size:14px; flex-direction:column; gap:14px; }
+  .spin { width:34px; height:34px; border:3px solid rgba(212,175,106,0.25); border-top-color:var(--gold);
+    border-radius:50%; animation:sp 0.9s linear infinite; }
+  @keyframes sp { to { transform:rotate(360deg); } }
+  #errbox { position:fixed; inset:48px 0 0 0; z-index:1900; display:none; align-items:center; justify-content:center;
+    background:#0b0d18; color:#cdd; font-size:14px; padding:30px; text-align:center; }
+
+  @media (max-width:560px) {
+    .panel { width:calc(100vw - 28px); max-height:42vh; }
+    #detail { width:calc(100vw - 28px); top:auto; bottom:14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="electra-nav">
+  <a href="index.html" title="Kembali ke Electra Skill Academy"><span style="font-size:16px;">‹</span> Kembali</a>
+  <div class="brand">Electra Skill Academy <span style="font-weight:400;color:#fff;">· Peta 3D</span></div>
+  <a href="peta-kelistrikan.html" class="badge b2d" title="Versi peta 2D">🗺 Mode 2D</a>
+  <span class="badge">BETA</span>
+</div>
+
+<div id="map"></div>
+
+<div class="panel" id="panel">
+  <h1>Peta Ketenagalistrikan 3D</h1>
+  <div class="sub">Pembangkit sebagai <strong>kolom 3D</strong> (tinggi ∝ kapasitas MW), gardu induk &amp; transmisi di atas medan 3D. Klik objek untuk detail. Seret + <em>Ctrl/kanan</em> untuk memiringkan &amp; memutar.</div>
+
+  <h4>Layer</h4>
+  <label class="row"><input type="checkbox" id="t-gen" checked> 🏭 Pembangkit (kolom)</label>
+  <label class="row"><input type="checkbox" id="t-sub" checked> 🔌 Gardu Induk</label>
+  <label class="row"><input type="checkbox" id="t-trm" checked> ⚡ Transmisi</label>
+  <label class="row"><input type="checkbox" id="t-ebt"> 🌱 Hanya EBT (pembangkit)</label>
+
+  <h4>Jenis pembangkit</h4>
+  <div class="legend" id="legend-gen"></div>
+
+  <h4>Tegangan (GI &amp; transmisi)</h4>
+  <div class="legend">
+    <span><i style="background:#d62728"></i>500 kV</span>
+    <span><i style="background:#9467bd"></i>275 kV</span>
+    <span><i style="background:#1f77b4"></i>150 kV</span>
+    <span><i style="background:#2ca02c"></i>70 kV</span>
+  </div>
+
+  <button class="btn-energy" onclick="showEnergyMix()">⚡ Bauran Energi Nasional</button>
+  <div class="readout" id="readout">memuat data…</div>
+  <div class="hint">Tinggi kolom relatif terhadap kapasitas (skala dilebih-lebihkan agar terlihat). Prototipe — data eksisting, perlu verifikasi.</div>
+</div>
+
+<div id="detail">
+  <button class="close" onclick="document.getElementById('detail').classList.remove('show')">×</button>
+  <div class="kind" id="d-kind"></div>
+  <div class="title" id="d-title"></div>
+  <div id="d-body"></div>
+</div>
+
+<div class="modal-bd" id="energy-modal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal" id="energy-content"></div>
+</div>
+
+<div id="loading"><div class="spin"></div><div>Memuat peta 3D &amp; data…</div></div>
+<div id="errbox"></div>
+
+<!-- Data 8 region (sama dengan peta 2D) -->
+<script src="peta-kelistrikan/data_jamali.js"></script>
+<script src="peta-kelistrikan/data_sumatra.js"></script>
+<script src="peta-kelistrikan/data_kalimantan.js"></script>
+<script src="peta-kelistrikan/data_sulawesi.js"></script>
+<script src="peta-kelistrikan/data_maluku.js"></script>
+<script src="peta-kelistrikan/data_papua.js"></script>
+<script src="peta-kelistrikan/data_ntb.js"></script>
+<script src="peta-kelistrikan/data_ntt.js"></script>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin=""></script>
+<script src="https://unpkg.com/deck.gl@9.0.36/dist.min.js" crossorigin=""></script>
+
+<script>
+// ============================================================
+// GUARD: pastikan library termuat
+// ============================================================
+(function(){
+  if (!window.maplibregl || !window.deck) {
+    document.getElementById('loading').style.display = 'none';
+    const e = document.getElementById('errbox');
+    e.style.display = 'flex';
+    e.innerHTML = 'Gagal memuat pustaka peta 3D (MapLibre / deck.gl). Periksa koneksi, lalu muat ulang. '
+      + '<br><br><a href="peta-kelistrikan.html" style="color:#d4af6a;">↩ Buka peta 2D</a>';
+    throw new Error('libs missing');
+  }
+})();
+
+// ============================================================
+// KLASIFIKASI & WARNA (selaras dengan peta 2D)
+// ============================================================
+const PLANT_COLORS = {
+  'PLTU':'#3a3a3a','PLTGU':'#ff7f0e','PLTG':'#ffbb78','PLTA':'#1f77b4',
+  'PLTM':'#76b7e1','PLTMH':'#76b7e1','PLTP':'#d62728','PLTS':'#f7d100',
+  'PLTB':'#17becf','PLTD':'#8c564b','PLTMG':'#c49c94','PLTSa':'#8b4513',
+  'PLT Biomas':'#6b8e23','PLT Biomass':'#6b8e23','PLTBg':'#9acd32','Unknown':'#999',
+};
+const PLANT_DESC = {
+  'PLTU':'Batubara (uap)','PLTGU':'Gas (combined cycle)','PLTG':'Gas (open cycle)',
+  'PLTMG':'Mesin gas','PLTA':'Tenaga air','PLTM':'Minihidro','PLTMH':'Mikrohidro',
+  'PLTP':'Panas bumi','PLTS':'Surya','PLTB':'Angin (bayu)','PLTD':'Diesel',
+  'PLTSa':'Sampah','PLT Biomas':'Biomassa','PLT Biomass':'Biomassa','PLTBg':'Biogas','Unknown':'Tidak diketahui',
+};
+const EBT_TYPES = new Set(['PLTA','PLTM','PLTMH','PLTP','PLTS','PLTB','PLTSa','PLT Biomas','PLT Biomass','PLTBg','PLTAL','PLTGL','PLTBm']);
+const isEBT = t => EBT_TYPES.has(t);
+
+function hexToRgb(h){ h=(h||'#999').replace('#',''); if(h.length===3)h=h.split('').map(c=>c+c).join('');
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+function voltMaxFromStr(v){ const parts=(v||'').split('/').map(x=>parseInt(x)).filter(x=>!isNaN(x)); return parts.length?Math.max(...parts):0; }
+function voltColorRgb(maxV){
+  if(maxV>=500)return[214,39,40]; if(maxV>=275)return[148,103,189];
+  if(maxV>=150)return[31,119,180]; if(maxV>=70)return[44,160,44]; return[150,150,150];
+}
+
+// "Pelajari di Jalur terkait"
+const JALUR_LABEL={S3:'Distribusi',S4:'Transmisi',S7:'Pembangkitan & Renewable',S10:'PV & Solar Engineer',S13:'Waste to Energy'};
+const PLANT_JALUR={'PLTS':'S10','PLTSa':'S13','PLTU':'S7','PLTGU':'S7','PLTG':'S7','PLTMG':'S7','PLTD':'S7',
+  'PLTA':'S7','PLTM':'S7','PLTMH':'S7','PLTP':'S7','PLTB':'S7','PLT Biomas':'S7','PLT Biomass':'S7','PLTBg':'S7'};
+function relatedJalur(kind,p){
+  if(kind==='trm')return'S4';
+  if(kind==='sub')return voltMaxFromStr(p.voltage)>=275?'S4':'S3';
+  return PLANT_JALUR[p.type]||'S7';
+}
+
+// ============================================================
+// MUAT DATA → array deck.gl
+// ============================================================
+const REGION_KEYS=['jamali','sumatra','kalimantan','sulawesi','maluku','papua','ntb','ntt'];
+const REGIONS={}; REGION_KEYS.forEach(k=>{REGIONS[k]=window[k.toUpperCase()+'_DATA']||null;});
+
+const plants=[], subs=[], lines=[];
+(function buildData(){
+  for(const k of REGION_KEYS){
+    const d=REGIONS[k]; if(!d)continue;
+    (d.generators&&d.generators.features||[]).forEach(f=>{
+      const p=f.properties, c=f.geometry.coordinates;
+      plants.push({position:[c[0],c[1]], mw:parseFloat(p.capacity_mw)||0, props:p, type:p.type||'Unknown', ebt:isEBT(p.type)});
+    });
+    (d.substations&&d.substations.features||[]).forEach(f=>{
+      const p=f.properties, c=f.geometry.coordinates;
+      subs.push({position:[c[0],c[1]], maxV:voltMaxFromStr(p.voltage), mva:parseFloat(p.capacity_mva)||0, props:p});
+    });
+    (d.transmission&&d.transmission.features||[]).forEach(f=>{
+      const p=f.properties, path=f.geometry.coordinates;
+      lines.push({path, maxV:parseFloat(p.voltage_kv_max)||0, props:p});
+    });
+  }
+})();
+
+// Legenda jenis pembangkit (hanya yg ada datanya)
+(function legendGen(){
+  const present=new Set(plants.map(p=>p.type));
+  const box=document.getElementById('legend-gen');
+  [...present].sort().forEach(t=>{
+    const s=document.createElement('span');
+    s.innerHTML=`<i style="background:${PLANT_COLORS[t]||'#999'}"></i>${t}`;
+    s.title=PLANT_DESC[t]||''; box.appendChild(s);
+  });
+})();
+
+// ============================================================
+// MAP (MapLibre) + TERRAIN
+// ============================================================
+const map = new maplibregl.Map({
+  container:'map',
+  style:'https://tiles.openfreemap.org/styles/dark',
+  center:[110.0,-7.2], zoom:6.0, pitch:58, bearing:-12, maxPitch:80, antialias:true,
+  attributionControl:{compact:true},
+});
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}), 'bottom-right');
+
+let overlay=null;
+map.on('load', ()=>{
+  // Medan 3D (DEM gratis Terrarium/AWS) — fail-soft bila sumber tidak tersedia.
+  try {
+    map.addSource('dem',{type:'raster-dem',
+      tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+      encoding:'terrarium', tileSize:256, maxzoom:13, attribution:'Terrain: Mapzen/AWS'});
+    map.setTerrain({source:'dem', exaggeration:1.4});
+  } catch(e){ console.warn('[3D] terrain off:', e); }
+
+  overlay = new deck.MapboxOverlay({
+    interleaved:true,
+    layers:[],
+    getTooltip: ({object,layer}) => {
+      if(!object) return null;
+      if(layer && layer.id==='plants')
+        return {html:`<b>${object.props.name||'(pembangkit)'}</b><br>${object.type} · ${object.mw?object.mw.toLocaleString('id-ID')+' MW':'—'}`};
+      if(layer && layer.id==='subs')
+        return {html:`<b>${object.props.name||'(gardu induk)'}</b><br>${object.props.voltage||''} kV`};
+      if(layer && layer.id==='lines')
+        return {html:`Transmisi ${object.props.voltage_class||''}`};
+      return null;
+    },
+  });
+  map.addControl(overlay);
+  rebuildLayers();
+  document.getElementById('loading').style.display='none';
+  document.getElementById('readout').textContent =
+    `${plants.length.toLocaleString('id-ID')} pembangkit · ${subs.length.toLocaleString('id-ID')} GI · ${lines.length.toLocaleString('id-ID')} segmen transmisi`;
+});
+map.on('error', e => console.warn('[3D] map error', e && e.error));
+
+// Watchdog: bila basemap gagal termuat dalam 14 dtk, beri jalan keluar (bukan spinner abadi).
+let _loaded=false; map.on('load',()=>{_loaded=true;});
+setTimeout(()=>{
+  if(_loaded) return;
+  document.getElementById('loading').style.display='none';
+  const e=document.getElementById('errbox'); e.style.display='flex';
+  e.innerHTML='Peta dasar 3D lambat/gagal dimuat (mungkin jaringan atau penyedia tiles). '
+    +'<br><br><a href="peta-kelistrikan.html" style="color:#d4af6a;">↩ Buka peta 2D</a> &nbsp; '
+    +'<a href="#" onclick="location.reload();return false;" style="color:#d4af6a;">⟳ Muat ulang</a>';
+}, 14000);
+
+// ============================================================
+// LAYERS deck.gl
+// ============================================================
+const ELEV_SCALE = 28;     // tinggi kolom = mw * skala (meter)
+const COL_RADIUS = 5500;   // radius kolom (meter)
+
+function rebuildLayers(){
+  if(!overlay) return;
+  const showGen=document.getElementById('t-gen').checked;
+  const showSub=document.getElementById('t-sub').checked;
+  const showTrm=document.getElementById('t-trm').checked;
+  const ebtOnly=document.getElementById('t-ebt').checked;
+  const genData = ebtOnly ? plants.filter(p=>p.ebt) : plants;
+
+  const layers=[];
+  if(showTrm) layers.push(new deck.PathLayer({
+    id:'lines', data:lines, pickable:true,
+    getPath:d=>d.path, getColor:d=>voltColorRgb(d.maxV),
+    getWidth:d=> d.maxV>=275?3:(d.maxV>=150?2:1.2),
+    widthUnits:'pixels', widthMinPixels:1, opacity:0.8, jointRounded:true, capRounded:true,
+    onClick:info=>info.object&&showDetail('trm',info.object.props),
+  }));
+  if(showSub) layers.push(new deck.ScatterplotLayer({
+    id:'subs', data:subs, pickable:true,
+    getPosition:d=>d.position, getFillColor:d=>voltColorRgb(d.maxV),
+    getRadius:d=> Math.max(2200, Math.sqrt(d.mva||1)*450),
+    radiusUnits:'meters', radiusMinPixels:2.5, radiusMaxPixels:9,
+    stroked:true, getLineColor:[255,255,255,140], lineWidthMinPixels:0.5, opacity:0.9,
+    onClick:info=>info.object&&showDetail('sub',info.object.props),
+  }));
+  if(showGen) layers.push(new deck.ColumnLayer({
+    id:'plants', data:genData, pickable:true, diskResolution:14, extruded:true,
+    radius:COL_RADIUS, getPosition:d=>d.position,
+    getElevation:d=>d.mw, elevationScale:ELEV_SCALE,
+    getFillColor:d=>{ const c=hexToRgb(PLANT_COLORS[d.type]||'#999'); return [c[0],c[1],c[2],235]; },
+    material:{ambient:0.55,diffuse:0.6,shininess:32,specularColor:[255,255,255]},
+    onClick:info=>info.object&&showDetail('gen',info.object.props),
+  }));
+  overlay.setProps({layers});
+
+  let shown=(showTrm?lines.length:0)+(showSub?subs.length:0)+(showGen?genData.length:0);
+  document.getElementById('readout').textContent = `${shown.toLocaleString('id-ID')} objek tampil`;
+}
+['t-gen','t-sub','t-trm','t-ebt'].forEach(id=>document.getElementById(id).addEventListener('change',rebuildLayers));
+
+// ============================================================
+// DETAIL PANEL
+// ============================================================
+function row(l,v){ return (v||v===0)?`<tr><td>${l}</td><td>${v}</td></tr>`:''; }
+function showDetail(kind,p){
+  const kindLabel = kind==='gen'?'Pembangkit':(kind==='sub'?'Gardu Induk':'Saluran Transmisi');
+  document.getElementById('d-kind').textContent=kindLabel;
+  let title='', body='';
+  if(kind==='gen'){
+    title=p.name||'(tanpa nama)';
+    const mw=p.capacity_mw?parseFloat(p.capacity_mw).toLocaleString('id-ID')+' MW':'<i>tidak tercatat</i>';
+    body=`<table>${row('Jenis','<strong>'+(p.type||'-')+'</strong>'+(PLANT_DESC[p.type]?' — '+PLANT_DESC[p.type]:''))}
+      ${row('Kapasitas',mw)}${row('Provinsi',p.province)}${row('Sistem',p.system)}
+      ${row('Status',p.status)}${row('Operator',p.operator)}</table>`;
+  } else if(kind==='sub'){
+    title=p.name||'(tanpa nama)';
+    body=`<table>${row('Provinsi',p.province)}${row('Sistem',p.system)}
+      ${row('Tegangan','<strong>'+(p.voltage||'-')+' kV</strong>')}
+      ${row('Jumlah trafo',p.trafo_count?p.trafo_count+' unit':'')}
+      ${row('Kapasitas',p.capacity_mva?p.capacity_mva+' MVA':'')}</table>`;
+  } else {
+    title='Transmisi '+(p.voltage_class||'');
+    body=`<table>${row('Sistem',p.system)}${row('Kelas tegangan','<strong>'+(p.voltage_class||'-')+'</strong>')}
+      ${row('Tegangan',(p.voltage_kv_all||p.voltage_kv_max||'-')+' kV')}
+      ${row('Panjang',p.length_km?parseFloat(p.length_km).toFixed(1)+' km':'')}</table>`;
+  }
+  const jid=relatedJalur(kind,p), jlabel=JALUR_LABEL[jid]||'Karir Kelistrikan';
+  body+=`<a class="dp-jalur-link" href="index.html?jalur=${jid}">🎓 Pelajari di Jalur <strong>${jlabel}</strong> <span class="arr">→</span></a>`;
+  document.getElementById('d-title').textContent=title;
+  document.getElementById('d-body').innerHTML=body;
+  document.getElementById('detail').classList.add('show');
+}
+
+// ============================================================
+// BAURAN ENERGI NASIONAL
+// ============================================================
+function showEnergyMix(){
+  const byType={}; let total=0,units=0,ebt=0,fosil=0;
+  for(const p of plants){ const t=p.type; byType[t]=byType[t]||{c:0,mw:0}; byType[t].c++; byType[t].mw+=p.mw;
+    total+=p.mw; units++; if(p.ebt)ebt+=p.mw; else if(t!=='Unknown')fosil+=p.mw; }
+  const fmt=n=>Math.round(n).toLocaleString('id-ID'); const pct=v=>total?v/total*100:0;
+  const rows=Object.entries(byType).sort((a,b)=>b[1].mw-a[1].mw).map(([t,v])=>{
+    const color=PLANT_COLORS[t]||'#999', share=pct(v.mw), tag=isEBT(t)?'ebt':(t==='Unknown'?'':'fosil');
+    return `<div class="mix-row"><div class="mix-row-head"><span class="mix-dot" style="background:${color}"></span>
+      <span class="mix-name"><strong>${t}</strong>${PLANT_DESC[t]?' · '+PLANT_DESC[t]:''}</span>
+      ${tag?`<span class="mix-tag ${tag}">${tag==='ebt'?'EBT':'Fosil'}</span>`:''}</div>
+      <div class="mix-track"><div class="mix-bar" style="width:${share.toFixed(1)}%;background:${color}"></div></div>
+      <div class="mix-meta">${fmt(v.mw)} MW · ${v.c} unit · ${share.toFixed(1)}%</div></div>`;
+  }).join('');
+  document.getElementById('energy-content').innerHTML=`
+    <h2>Bauran Energi Nasional</h2>
+    <p>Komposisi kapasitas terpasang (ter-parse) dari <strong>${units.toLocaleString('id-ID')}</strong> pembangkit di 8 region. Total: <strong>${fmt(total)} MW</strong>.</p>
+    <h3>EBT vs Fosil</h3>
+    <div class="mix-split-bar"><div class="ebt" style="width:${pct(ebt).toFixed(1)}%"></div><div class="fosil" style="width:${pct(fosil).toFixed(1)}%"></div></div>
+    <div class="mix-leg"><span><span class="mix-dot" style="background:#2ca02c"></span>EBT — <strong>${fmt(ebt)} MW</strong> (${pct(ebt).toFixed(1)}%)</span>
+      <span><span class="mix-dot" style="background:#5a5a5a"></span>Fosil — <strong>${fmt(fosil)} MW</strong> (${pct(fosil).toFixed(1)}%)</span></div>
+    <h3>Per jenis pembangkit</h3>${rows}
+    <a class="dp-jalur-link" href="index.html?jalur=S7">🎓 Pelajari Jalur <strong>Pembangkitan &amp; Renewable</strong> <span class="arr">→</span></a>
+    <button class="close-btn" onclick="document.getElementById('energy-modal').classList.remove('show')">Tutup</button>`;
+  document.getElementById('energy-modal').classList.add('show');
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.getElementById('energy-modal').classList.remove('show');
+    document.getElementById('detail').classList.remove('show');
+  }
+});
+</script>
+</body>
+</html>
