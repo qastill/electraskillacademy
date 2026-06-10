@@ -16,7 +16,8 @@
     padding:0 16px; gap:10px; z-index:2000; }
   .nav a{ display:flex; align-items:center; gap:6px; color:rgba(255,255,255,0.82); text-decoration:none; font-size:13px; padding:6px 11px; border-radius:6px; }
   .nav a:hover{ background:rgba(255,255,255,0.09); color:#fff; }
-  .nav .brand{ font-weight:700; color:var(--gold); font-size:13px; letter-spacing:.03em; margin-right:auto; }
+  .nav .brand{ font-weight:700; color:var(--gold); font-size:13px; letter-spacing:.03em; margin-left:auto; }
+  @media(max-width:680px){ .nav .brand{ display:none; } }
   .nav .brand b{ color:#fff; font-weight:400; }
   .nav .badge{ background:rgba(212,175,106,0.16); color:var(--gold); font-size:11px; font-weight:700; padding:4px 10px; border-radius:100px; border:1px solid rgba(212,175,106,.3); text-decoration:none; }
 
@@ -37,9 +38,14 @@
     color:var(--gold); font-size:18px; display:none; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(0,0,0,0.4); }
   .panel-show.show{ display:flex; } .panel-show:hover{ border-color:var(--gold); }
 
-  .seg{ display:flex; gap:6px; background:#0c0f1d; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:9px; }
-  .seg-btn{ flex:1; padding:8px; border-radius:7px; border:none; background:transparent; color:var(--mute); cursor:pointer; font-size:12.5px; font-weight:600; transition:.2s; }
-  .seg-btn:hover{ color:var(--ink); } .seg-btn.active{ background:rgba(212,175,106,0.16); color:var(--gold); }
+  /* (segmented Dunia/Indonesia dihapus — tombol "Detail Indonesia" di nav yang dipakai) */
+  .story{ margin-top:10px; padding:13px 15px; background:linear-gradient(135deg,rgba(212,175,106,0.1),rgba(212,175,106,0.03));
+    border:1px solid rgba(212,175,106,0.3); border-radius:11px; }
+  .story-h{ font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:7px; }
+  .story ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .story li{ font-size:12.5px; line-height:1.55; color:#cfd4e4; padding-left:18px; position:relative; }
+  .story li::before{ content:'◆'; position:absolute; left:0; top:1px; color:var(--gold); font-size:9px; }
+  .story li b{ color:#fff; } .story li .g{ color:#7ddc8a; } .story li .f{ color:#d9a06a; }
   select,#country-search{ width:100%; padding:9px 11px; border-radius:10px; background:#0c0f1d; color:var(--ink);
     border:1px solid var(--line); font-size:13px; cursor:pointer; }
   select:hover,#country-search:focus{ border-color:rgba(212,175,106,.4); outline:none; }
@@ -141,9 +147,9 @@
 
 <div class="nav">
   <a href="index.html"><span style="font-size:16px;">‹</span> Kembali</a>
-  <div class="brand">Electra Skill Academy <b>· World Electricity Maps</b></div>
   <a href="peta-kelistrikan.html" class="badge" title="Detail jaringan Indonesia (transmisi & gardu)">🇮🇩 Detail Indonesia</a>
   <a href="simulasi-energi.html" class="badge">🌱 Simulasi</a>
+  <div class="brand">Electra Skill Academy <b>· World Electricity Maps</b></div>
 </div>
 
 <div id="map"></div>
@@ -153,10 +159,6 @@
   <h1>World <b>Electricity</b> Maps</h1>
   <div class="sub">34.900+ pembangkit di 167 negara. <b>Warna</b> = bahan bakar, <b>ukuran</b> = kapasitas.</div>
 
-  <div class="seg">
-    <button class="seg-btn active" data-region="" onclick="selectCountry('')">🌍 Dunia</button>
-    <button class="seg-btn" data-region="IDN" onclick="selectCountry('IDN')">🇮🇩 Indonesia</button>
-  </div>
   <input id="country-search" list="country-dl" placeholder="🔍 Cari negara…" autocomplete="off" spellcheck="false">
   <datalist id="country-dl"></datalist>
   <select id="country" aria-label="Pilih negara"></select>
@@ -475,6 +477,64 @@ function gridInsightHTML(scope){
     ${top?`<table class="ctable"><tr><th>Koneksi</th><th class="n">Existing</th></tr>${top}</table>`:''}`;
 }
 
+// ---- Benua: pemetaan & insight naratif ----
+const CONTINENT_OF={};
+'AFG ARE ARM AZE BGD BHR BRN BTN CHN CYP GEO IDN IND IRN IRQ ISR JOR JPN KAZ KGZ KHM KOR KWT LAO LBN LKA MMR MNG MYS NPL OMN PAK PHL PRK PSE QAT SAU SGP SYR THA TJK TKM TUR TWN UZB VNM YEM'.split(' ').forEach(c=>CONTINENT_OF[c]='Asia');
+'ALB AUT BEL BGR BIH BLR CHE CZE DEU DNK ESP EST FIN FRA GBR GRC HRV HUN IRL ISL ITA KOS LTU LUX LVA MDA MKD MNE NLD NOR POL PRT ROU RUS SRB SVK SVN SWE UKR'.split(' ').forEach(c=>CONTINENT_OF[c]='Eropa');
+'ARG BLZ BOL BRA CAN CHL COL CRI CUB DOM ECU GTM GUF GUY HND HTI JAM MEX NIC PAN PER PRI PRY SLV SUR TTO URY USA VEN'.split(' ').forEach(c=>CONTINENT_OF[c]='Amerika');
+'AGO BDI BEN BFA BWA CAF CIV CMR COD COG CPV DJI DZA EGY ERI ETH GAB GHA GIN GMB GNQ KEN LBR LBY LSO MAR MDG MLI MOZ MRT MUS MWI NAM NER NGA RWA SDN SEN SLE SOM SSD SWZ SYC TCD TGO TUN TZA UGA ZAF ZMB ZWE'.split(' ').forEach(c=>CONTINENT_OF[c]='Afrika');
+'AUS FJI NCL NZL PNG SLB VUT WSM'.split(' ').forEach(c=>CONTINENT_OF[c]='Oseania');
+
+function continentAgg(){
+  const agg={};
+  for(const p of PLANTS){
+    const ct=CONTINENT_OF[p.iso]; if(!ct) continue;
+    const a=agg[ct]=agg[ct]||{gw:0,ebt:0,nuc:0,byC:{}};
+    a.gw+=p.mw; if(EBT.has(p.fuel))a.ebt+=p.mw; if(p.fuel==='Nuclear')a.nuc+=p.mw;
+    a.byC[p.iso]=(a.byC[p.iso]||0)+p.mw;
+  }
+  return agg;
+}
+function continentInsightHTML(scope){
+  const fmt=n=>Math.round(n).toLocaleString('id-ID');
+  const agg=continentAgg(); const tot=Object.values(agg).reduce((s,a)=>s+a.gw,0)||1;
+  const rows=Object.entries(agg).sort((a,b)=>b[1].gw-a[1].gw);
+  if(scope){
+    // Konteks benua untuk negara terpilih
+    const ct=CONTINENT_OF[scope]; if(!ct||!agg[ct]) return '';
+    const a=agg[ct];
+    const rankInCt=Object.entries(a.byC).sort((x,y)=>y[1]-x[1]).findIndex(([c])=>c===scope)+1;
+    const myGw=a.byC[scope]||0;
+    const myEbt=(()=>{let e=0,t=0;for(const p of PLANTS){if(p.iso!==scope)continue;t+=p.mw;if(EBT.has(p.fuel))e+=p.mw;}return t?e/t*100:0;})();
+    const ctEbt=a.ebt/a.gw*100;
+    return `<div class="story"><div class="story-h">🧭 Konteks Benua · ${ct}</div><ul>
+      <li><b>#${rankInCt}</b> kapasitas terbesar di ${ct} (${fmt(myGw/1000)} dari ${fmt(a.gw/1000)} GW benua).</li>
+      <li>Bauran EBT <b>${myEbt.toFixed(0)}%</b> — ${myEbt>=ctEbt?'<span class="g">di atas</span>':'<span class="f">di bawah</span>'} rata-rata ${ct} (${ctEbt.toFixed(0)}%).</li>
+    </ul></div>`;
+  }
+  // Tabel + narasi dunia
+  const table=rows.map(([ct,a])=>{
+    const top=Object.entries(a.byC).sort((x,y)=>y[1]-x[1])[0];
+    return `<tr><td><b>${ct}</b></td><td class="n">${fmt(a.gw/1000)} GW</td><td class="n">${(a.gw/tot*100).toFixed(0)}%</td>
+      <td class="n">${(a.ebt/a.gw*100).toFixed(0)}%</td><td>${(COUNTRIES[top[0]]||top[0]).replace(' of America','')}</td></tr>`;
+  }).join('');
+  const big=rows[0];
+  const greenest=rows.filter(([,a])=>a.gw>50e3).sort((a,b)=>(b[1].ebt/b[1].gw)-(a[1].ebt/a[1].gw))[0];
+  const fossil=rows.filter(([,a])=>a.gw>50e3).sort((a,b)=>(a[1].ebt/a[1].gw)-(b[1].ebt/b[1].gw))[0];
+  const nuke=rows.slice().sort((a,b)=>(b[1].nuc/b[1].gw)-(a[1].nuc/a[1].gw))[0];
+  const small=rows[rows.length-1], afr=agg['Afrika'];
+  const topC=Object.entries(big[1].byC).sort((x,y)=>y[1]-x[1]).slice(0,2).map(([c])=>(COUNTRIES[c]||c).replace(' of America',''));
+  return `<h3>Per Benua</h3>
+    <table class="ctable"><tr><th>Benua</th><th class="n">Kapasitas</th><th class="n">% Dunia</th><th class="n">EBT</th><th>Terbesar</th></tr>${table}</table>
+    <div class="story"><div class="story-h">📌 Apa yang bisa disimpulkan</div><ul>
+      <li><b>${big[0]}</b> adalah pusat gravitasi listrik dunia — <b>${(big[1].gw/tot*100).toFixed(0)}%</b> kapasitas global (${fmt(big[1].gw/1000)} GW), dipimpin ${topC.join(' & ')}. Namun bauran EBT-nya baru <span class="f">${(big[1].ebt/big[1].gw*100).toFixed(0)}%</span> — medan utama transisi energi global.</li>
+      <li><b>${greenest[0]}</b> benua besar terhijau: <span class="g">${(greenest[1].ebt/greenest[1].gw*100).toFixed(0)}% EBT</span>, ditopang hidro &amp; angin — bukti dekarbonisasi skala benua itu mungkin.</li>
+      <li><b>${nuke[0]}</b> paling mengandalkan <b>nuklir</b> (${(nuke[1].nuc/nuke[1].gw*100).toFixed(0)}% kapasitasnya) sebagai energi rendah karbon.</li>
+      <li><b>${afr?'Afrika':small[0]}</b> baru ${afr?(afr.gw/tot*100).toFixed(0):(small[1].gw/tot*100).toFixed(0)}% kapasitas dunia padahal ±18% populasi — ketimpangan akses listrik sekaligus pasar pertumbuhan terbesar dekade ini.</li>
+      <li>Pola peta: titik menumpuk di pesisir &amp; lembah sungai (pendingin, hidro, beban kota); <b>Indonesia</b> tampak didominasi batu bara di Jawa — konteks penting target EBT 23%.</li>
+    </ul></div>`;
+}
+
 function showMix(){
   const scope=state.country, list=currentData();
   const m=mixOf(state.ebtOnly? PLANTS.filter(p=>!scope||p.iso===scope):list); // pakai data penuh negara utk insight
@@ -523,6 +583,7 @@ function showMix(){
       <span><span class="mdot" style="background:#b06ad0"></span>Nuklir ${nu.toFixed(1)}%</span></div>
     <h3>Per bahan bakar</h3>${fuelRows}
     ${extra}
+    ${continentInsightHTML(scope)}
     ${gridInsightHTML(scope)}
     <a class="jlink" href="index.html?jalur=S7" style="margin-top:16px;">🎓 Pelajari Jalur Pembangkitan &amp; Renewable <span class="arr">→</span></a>
     <button class="closeb" onclick="document.getElementById('mix-modal').classList.remove('show')">Tutup</button>
