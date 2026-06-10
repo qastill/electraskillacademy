@@ -42,6 +42,18 @@
   .readout{ font-size:11px; color:var(--mute); margin-top:10px; }
   .btn-mix{ width:100%; margin-top:12px; padding:9px; border:none; border-radius:9px; cursor:pointer;
     background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#1a1d2e; font-weight:700; font-size:12.5px; }
+  .btn-src{ width:100%; margin-top:8px; padding:9px; border:1px solid var(--line); border-radius:9px; cursor:pointer;
+    background:#191d33; color:var(--ink); font-weight:600; font-size:12.5px; } .btn-src:hover{ border-color:var(--gold); }
+  .srcgrid{ display:grid; gap:10px; }
+  .srccard{ display:flex; gap:12px; align-items:flex-start; background:#0e1120; border:1px solid var(--line);
+    border-radius:11px; padding:13px 14px; text-decoration:none; transition:border-color .2s,transform .2s; }
+  .srccard:hover{ border-color:var(--gold); transform:translateY(-1px); }
+  .srccard .si{ font-size:22px; line-height:1; } .srccard .st{ flex:1; }
+  .srccard .stt{ color:#fff; font-weight:700; font-size:13.5px; } .srccard .stt .ext{ color:var(--gold); font-size:11px; font-weight:600; }
+  .srccard .sd{ color:var(--mute); font-size:12px; margin-top:2px; line-height:1.4; }
+  .badge-lic{ display:inline-block; margin-top:5px; font-size:10px; color:#8a93a8; background:rgba(255,255,255,0.05);
+    border:1px solid var(--line); border-radius:5px; padding:1px 6px; }
+  .srcused{ border-color:rgba(44,160,44,0.45); } .srcused .stt::after{ content:' ✓ dipakai'; color:#4cc94c; font-size:10px; font-weight:700; }
 
   #detail{ position:fixed; right:14px; top:62px; z-index:1500; width:300px; max-width:calc(100vw - 28px);
     background:rgba(16,19,34,0.96); border:1px solid var(--line); border-radius:14px; padding:16px; display:none;
@@ -121,6 +133,7 @@
   <label class="row"><input type="checkbox" id="mode3d"> ⛰️ Mode 3D (kolom kapasitas)</label>
 
   <button class="btn-mix" onclick="showMix()">📊 Bauran Energi (insight)</button>
+  <button class="btn-src" onclick="showSources()">🔗 Sumber &amp; layer eksternal</button>
   <div class="readout" id="readout">memuat data…</div>
 </div>
 
@@ -133,6 +146,10 @@
 
 <div class="modal-bd" id="mix-modal" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="modal" id="mix-content"></div>
+</div>
+
+<div class="modal-bd" id="src-modal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal" id="src-content"></div>
 </div>
 
 <div id="loading"><div class="spin"></div><div>Memuat peta dunia &amp; 34.900+ pembangkit…</div></div>
@@ -389,8 +406,44 @@ function showMix(){
   document.getElementById('mix-modal').classList.add('show');
 }
 
+// ============================================================
+// SUMBER & LAYER EKSTERNAL (deep-link kontekstual ke 4 sumber)
+// ============================================================
+const ISO3_2={"AFG":"AF","ALB":"AL","DZA":"DZ","AGO":"AO","ARG":"AR","ARM":"AM","AUS":"AU","AUT":"AT","AZE":"AZ","BHS":"BS","BHR":"BH","BGD":"BD","BLR":"BY","BEL":"BE","BLZ":"BZ","BEN":"BJ","BTN":"BT","BOL":"BO","BIH":"BA","BWA":"BW","BRA":"BR","BRN":"BN","BGR":"BG","BFA":"BF","BDI":"BI","CPV":"CV","KHM":"KH","CMR":"CM","CAN":"CA","CAF":"CF","TCD":"TD","CHL":"CL","CHN":"CN","COL":"CO","COM":"KM","COG":"CG","COD":"CD","CRI":"CR","CIV":"CI","HRV":"HR","CUB":"CU","CYP":"CY","CZE":"CZ","DNK":"DK","DJI":"DJ","DOM":"DO","ECU":"EC","EGY":"EG","SLV":"SV","GNQ":"GQ","ERI":"ER","EST":"EE","SWZ":"SZ","ETH":"ET","FJI":"FJ","FIN":"FI","FRA":"FR","GAB":"GA","GMB":"GM","GEO":"GE","DEU":"DE","GHA":"GH","GRC":"GR","GTM":"GT","GIN":"GN","GNB":"GW","GUY":"GY","HTI":"HT","HND":"HN","HKG":"HK","HUN":"HU","ISL":"IS","IND":"IN","IDN":"ID","IRN":"IR","IRQ":"IQ","IRL":"IE","ISR":"IL","ITA":"IT","JAM":"JM","JPN":"JP","JOR":"JO","KAZ":"KZ","KEN":"KE","PRK":"KP","KOR":"KR","KWT":"KW","KGZ":"KG","LAO":"LA","LVA":"LV","LBN":"LB","LSO":"LS","LBR":"LR","LBY":"LY","LTU":"LT","LUX":"LU","MDG":"MG","MWI":"MW","MYS":"MY","MLI":"ML","MLT":"MT","MRT":"MR","MUS":"MU","MEX":"MX","MDA":"MD","MNG":"MN","MNE":"ME","MAR":"MA","MOZ":"MZ","MMR":"MM","NAM":"NA","NPL":"NP","NLD":"NL","NCL":"NC","NZL":"NZ","NIC":"NI","NER":"NE","NGA":"NG","MKD":"MK","NOR":"NO","OMN":"OM","PAK":"PK","PAN":"PA","PNG":"PG","PRY":"PY","PER":"PE","PHL":"PH","POL":"PL","PRT":"PT","PRI":"PR","QAT":"QA","ROU":"RO","RUS":"RU","RWA":"RW","SAU":"SA","SEN":"SN","SRB":"RS","SLE":"SL","SGP":"SG","SVK":"SK","SVN":"SI","SLB":"SB","SOM":"SO","ZAF":"ZA","SSD":"SS","ESP":"ES","LKA":"LK","SDN":"SD","SUR":"SR","SWE":"SE","CHE":"CH","SYR":"SY","TWN":"TW","TJK":"TJ","TZA":"TZ","THA":"TH","TGO":"TG","TTO":"TT","TUN":"TN","TUR":"TR","TKM":"TM","UGA":"UG","UKR":"UA","ARE":"AE","GBR":"GB","USA":"US","URY":"UY","UZB":"UZ","VEN":"VE","VNM":"VN","YEM":"YE","ZMB":"ZM","ZWE":"ZW"};
+
+function showSources(){
+  const c=map.getCenter(), z=Math.max(2,Math.round(map.getZoom()));
+  const lat=c.lat.toFixed(3), lon=c.lng.toFixed(3);
+  const iso=state.country, iso2=iso?ISO3_2[iso]:null, cname=iso?(COUNTRIES[iso]||iso):'dunia';
+  const oim=`https://openinframap.org/#${z}/${lat}/${lon}`;
+  const em = iso2?`https://app.electricitymaps.com/zone/${iso2}`:`https://app.electricitymaps.com/map`;
+  const card=(used,icon,title,desc,href,lic)=>`<a class="srccard ${used?'srcused':''}" href="${href}" target="_blank" rel="noopener">
+    <span class="si">${icon}</span><span class="st"><span class="stt">${title} <span class="ext">↗</span></span>
+    <span class="sd">${desc}</span><span class="badge-lic">${lic}</span></span></a>`;
+  const emDesc='Intensitas karbon &amp; bauran listrik real-time per zona'+(iso2?` — langsung ke zona ${cname}`:'')+'.';
+  document.getElementById('src-content').innerHTML=`
+    <h2>Sumber &amp; <b>Layer Eksternal</b></h2>
+    <p>Peta ini menggabungkan beberapa sumber terbuka tanpa duplikasi. Tautan di bawah membuka view saat ini${iso?` (fokus <strong>${cname}</strong>)`:''} di layanan aslinya.</p>
+    <h3>Layer aktif di peta ini</h3>
+    <div class="srcgrid">
+      ${card(true,'🏭','WRI Global Power Plant Database','Pembangkit dunia (kapasitas, bahan bakar, koordinat) — basis lapisan pembangkit.','https://github.com/wri/global-power-plant-database','CC-BY 4.0 · dataset')}
+      ${card(true,'⚡','The Global Transmission Database','Interkoneksi antar-negara/region (existing + planned) — basis lapisan grid. Diindeks oleh Awesome-Electrical-Grid-Mapping.','https://github.com/Electricity-Transmission-Database/electricity-transmission-database','MIT · dataset')}
+    </div>
+    <h3>Layer eksternal (buka di sumbernya)</h3>
+    <div class="srcgrid">
+      ${card(false,'🌐','Open Infrastructure Map','Transmisi &amp; gardu detail dari OpenStreetMap. Tile diproteksi hotlink, jadi dibuka langsung pada view peta saat ini.',oim,'OSM ODbL · peta live')}
+      ${card(false,'💨','Electricity Maps',emDesc,em,'API/peta real-time')}
+      ${card(false,'🛰️','Gridfinder','Prediksi jaringan listrik MV/LV global (nighttime lights + OSM) — berguna untuk wilayah berdata minim.','https://gridfinder.org/','MIT · model prediksi')}
+      ${card(false,'🤝','MapYourGrid','Inisiatif memperluas cakupan grid transmisi dunia di OpenStreetMap (≈70%→98%). Pelajari &amp; berkontribusi.','https://www.mapyourgrid.org/','inisiatif terbuka')}
+    </div>
+    <button class="closeb" onclick="document.getElementById('src-modal').classList.remove('show')">Tutup</button>
+    <p style="margin-top:14px;font-size:11px;color:#6b7184">Kurasi sumber: <a href="https://github.com/open-energy-transition/Awesome-Electrical-Grid-Mapping" target="_blank" rel="noopener" style="color:#9aa0b4;">Awesome-Electrical-Grid-Mapping</a>. Hak cipta &amp; lisensi tetap pada pemilik masing-masing data.</p>`;
+  document.getElementById('src-modal').classList.add('show');
+}
+
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){
   document.getElementById('mix-modal').classList.remove('show');
+  document.getElementById('src-modal').classList.remove('show');
   document.getElementById('detail').classList.remove('show'); } });
 </script>
 </body>
