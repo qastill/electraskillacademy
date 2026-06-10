@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <title>Peta Ketenagalistrikan Indonesia — Electra Skill Academy</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Peta interaktif sistem tenaga listrik Indonesia — pembangkit, gardu induk, transmisi. Data RUPTL PLN 2025–2034 & OpenStreetMap. 8 region nasional.">
-<meta name="author" content="Electra Skill Academy · Sandro Agassi Sitompul, Ph.D.">
+<meta name="description" content="Peta interaktif sistem tenaga listrik Indonesia — pembangkit, gardu induk, transmisi. 8 region nasional.">
+<meta name="author" content="Electra Skill Academy">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <style>
   /* ===== ELECTRA NAV BAR ===== */
   :root {
@@ -306,7 +307,6 @@
   <div class="brand">
     Electra Skill Academy <span>· Peta Ketenagalistrikan</span>
   </div>
-  <a href="https://github.com/sandro71626/indonesia-power-map" target="_blank" rel="noopener" class="badge">Open Source</a>
 </div>
 
 <div class="header">
@@ -322,10 +322,10 @@
   <div class="section">
     <h5>Peta dasar</h5>
     <select id="basemap-select">
-      <option value="positron" selected>Carto Positron</option>
-      <option value="positron_nolabels">Positron (tanpa label)</option>
-      <option value="voyager">Carto Voyager</option>
-      <option value="dark">Carto Dark Matter</option>
+      <option value="positron" selected>Terang</option>
+      <option value="positron_nolabels">Terang (tanpa label)</option>
+      <option value="voyager">Standar</option>
+      <option value="dark">Gelap</option>
     </select>
   </div>
 
@@ -437,12 +437,11 @@
 <button class="legend-chip" id="legend-chip" title="Buka legenda" aria-label="Buka legenda">📖 Legenda</button>
 
 <div class="footer">
-  Sumber: <a href="https://github.com/sandro71626/indonesia-power-map" target="_blank" rel="noopener">Indonesia Power Map</a> · RUPTL PLN 2025–2034 · OpenStreetMap (© OSM contributors) · CARTO basemap.
-  <a onclick="document.getElementById('about-modal').classList.add('show')">Detail sumber &amp; disclaimer</a>
+  Peta interaktif sistem ketenagalistrikan Indonesia untuk edukasi &amp; eksplorasi publik.
+  <a onclick="document.getElementById('about-modal').classList.add('show')">Tentang &amp; disclaimer</a>
   <div class="attribution">
-    Disusun oleh <strong>Sandro Agassi Sitompul, Ph.D.</strong>
-    <em>Inisiatif teknis independen untuk membantu pemahaman publik terhadap sistem ketenagalistrikan Indonesia.</em>
-    &middot; Terintegrasi dengan <strong>Electra Skill Academy</strong>
+    <strong>Electra Skill Academy</strong>
+    <em>Membantu pemahaman publik terhadap sistem ketenagalistrikan Indonesia.</em>
   </div>
 </div>
 
@@ -474,11 +473,11 @@
       <li>Peta ini <strong>bukan</strong> alat operasi sistem tenaga, <strong>bukan</strong>
           dashboard dispatch realtime, dan <strong>tidak</strong> merepresentasikan
           informasi rahasia maupun data internal institusi mana pun.</li>
-      <li>Koordinat berasal dari OpenStreetMap sehingga <strong>perlu verifikasi
+      <li>Koordinat bersifat indikatif sehingga <strong>perlu verifikasi
           independen</strong> sebelum dipakai untuk keputusan operasional, teknis,
           atau hukum.</li>
-      <li>Data kapasitas dan daftar gardu induk diambil dari RUPTL PLN 2025–2034
-          yang bersifat publik.</li>
+      <li>Data kapasitas dan daftar gardu induk merujuk pada dokumen perencanaan
+          ketenagalistrikan nasional yang bersifat publik.</li>
     </ul>
 
     <h3>Data</h3>
@@ -488,24 +487,10 @@
       <li><strong>4.053 segmen transmisi</strong> — ~20.000 km, tegangan 70–500 kV</li>
     </ul>
 
-    <h3>Sumber data</h3>
-    <ul>
-      <li><strong>RUPTL PLN 2025–2034</strong> (Keputusan Menteri ESDM 188.K/TL.03/MEM.L/2025)</li>
-      <li><strong>OpenStreetMap</strong> (© OSM contributors, ODbL)</li>
-      <li><strong>Statistik PLN 2024 &amp; 2025</strong>, <strong>Handbook of Energy &amp; Economic Statistics of Indonesia 2024 (ESDM)</strong></li>
-      <li><strong>Carto Basemaps</strong> (© CARTO)</li>
-    </ul>
-
-    <h3>Lisensi</h3>
-    <p>Kode: Apache License 2.0. Data &amp; dokumen: CC-BY-SA 4.0. Data turunan OSM: ODbL.</p>
-
-    <h3>Author</h3>
-    <p>Dikembangkan oleh <strong>Sandro Agassi Sitompul, Ph.D.</strong> sebagai inisiatif teknis independen. Terintegrasi dengan <strong>Electra Skill Academy</strong> untuk kebutuhan edukasi dan eksplorasi publik.</p>
-
-    <ul>
-      <li>GitHub: <a href="https://github.com/sandro71626/indonesia-power-map" target="_blank" rel="noopener">github.com/sandro71626/indonesia-power-map</a></li>
-      <li>Email: <a href="mailto:contact@indonesiapowermap.com">contact@indonesiapowermap.com</a></li>
-    </ul>
+    <h3>Tentang penyelenggara</h3>
+    <p>Peta ini disusun dan dikelola oleh <strong>Electra Skill Academy</strong>
+    untuk kebutuhan edukasi dan eksplorasi publik. Visualisasi merujuk pada dokumen
+    perencanaan ketenagalistrikan nasional yang bersifat publik serta peta dasar terbuka.</p>
 
     <div class="version-info">
       Versi <span>v1.0.0-beta</span> · Pembaruan terakhir <span>30 Mei 2026</span>
@@ -664,8 +649,6 @@ function subDetailHTML(p) {
     ${dpRow('Tegangan', '<strong>' + p.voltage + ' kV</strong>')}
     ${dpRow('Jumlah trafo', p.trafo_count ? p.trafo_count + ' unit' : '')}
     ${dpRow('Kapasitas', p.capacity_mva ? p.capacity_mva + ' MVA' : '')}
-    ${dpRow('Sumber', p.source_id + (p.source_table ? ' (' + p.source_table + ')' : ''))}
-    ${dpRow('Koordinat', p.match_source)}
   </table>
   `;
 }
@@ -683,7 +666,6 @@ function genDetailHTML(p) {
     ${dpRow('Status', p.status)}
     ${dpRow('Operator', p.operator)}
     ${dpRow('Metode', p.method)}
-    ${dpRow('Sumber', p.source_id)}
   </table>
   `;
 }
@@ -694,8 +676,6 @@ function trmDetailHTML(p) {
     ${dpRow('Kelas tegangan', '<strong>' + p.voltage_class + '</strong>')}
     ${dpRow('Tegangan', p.voltage_kv_all + ' kV')}
     ${dpRow('Panjang', parseFloat(p.length_km).toFixed(1) + ' km')}
-    ${dpRow('OSM ID', p.osm_id)}
-    ${dpRow('Sumber', p.source_id)}
   </table>`;
 }
 

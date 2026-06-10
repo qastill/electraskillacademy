@@ -368,113 +368,128 @@ body {
 .practices-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
+  gap: 24px;
 }
 
+/* ── Elegant LMS course card ───────────────────────────── */
 .practice-card {
-  background: var(--tan);
+  background: #ffffff;
   padding: 0;
-  min-height: 420px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
   text-decoration: none;
   color: var(--navy-deep);
-  border: none;
+  border: 1px solid var(--line);
+  border-radius: 16px;
   text-align: left;
   font-family: inherit;
+  box-shadow: 0 1px 3px rgba(26, 29, 46, 0.05);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
 }
 
-.practice-card-soon { opacity: 0.78; }
+.practice-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 44px rgba(26, 29, 46, 0.16);
+  border-color: var(--line-gold);
+}
+
+.practice-card-soon { opacity: 0.82; }
 .practice-card-soon:hover { opacity: 1; }
-.practice-card-soon .practice-card-photo { filter: grayscale(35%); }
-.practice-card-soon:hover .practice-card-photo { filter: grayscale(0); }
+.practice-card-soon .practice-card-photo-img { filter: grayscale(45%); }
+.practice-card-soon:hover .practice-card-photo-img { filter: grayscale(0); }
 .practice-card-soon-badge {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 14px;
+  right: 14px;
   z-index: 5;
   background: linear-gradient(135deg, #c9a96e, #a07840);
   color: #1a1d2e;
   font-family: var(--sans);
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   padding: 6px 12px;
   border-radius: 100px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
-.practice-card:nth-child(odd) { background: var(--tan); }
-.practice-card:nth-child(even) { background: var(--tan-light); }
-
+/* Photo: full-bleed top, gentle zoom on hover */
 .practice-card-photo {
   width: 100%;
-  height: 180px;
+  height: 188px;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--navy-deep);
+}
+
+.practice-card-photo-img {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
-  background-color: var(--navy-deep);
-  position: relative;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.4s ease;
+}
+
+.practice-card:hover .practice-card-photo-img {
+  transform: scale(1.06);
 }
 
 .practice-card-photo::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(26, 29, 46, 0.15) 0%, rgba(217, 197, 160, 0.5) 100%);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(180deg, rgba(26, 29, 46, 0) 45%, rgba(26, 29, 46, 0.55) 100%);
+  z-index: 1;
 }
 
-.practice-card:hover .practice-card-photo {
-  height: 200px;
+/* "Jalur 01" pill overlaid on photo */
+.practice-card-badge {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(26, 29, 46, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(245, 240, 230, 0.2);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 100px;
 }
-
-.practice-card:hover .practice-card-photo::after {
-  background: linear-gradient(180deg, rgba(26, 29, 46, 0.35) 0%, rgba(26, 29, 46, 0.85) 100%);
-}
+.practice-card-badge strong { color: var(--gold); font-weight: 800; }
 
 .practice-card-inner {
-  padding: 26px 30px 32px;
+  padding: 22px 24px 24px;
   flex: 1;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
-.practice-card:hover {
-  background: var(--navy-deep);
-  color: var(--cream);
-  transform: translateY(-4px);
-}
-
-.practice-card:hover .practice-name,
-.practice-card:hover .practice-desc { color: var(--cream); }
-.practice-card:hover .practice-num { color: var(--gold); }
-
-.practice-num {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  color: var(--ink-mute);
-  margin-bottom: 16px;
-  transition: color 0.3s;
-}
-
 .practice-name {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: 23px;
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: 0.01em;
+  line-height: 1.14;
+  letter-spacing: 0.005em;
   color: var(--navy-deep);
   text-transform: uppercase;
-  margin-bottom: 20px;
+  margin: 0 0 10px;
   transition: color 0.3s;
 }
 
@@ -482,36 +497,60 @@ body {
   font-family: var(--sans);
   font-size: 13px;
   line-height: 1.6;
-  color: var(--ink-dim);
+  color: var(--ink-mute);
   font-weight: 400;
-  flex: 1;
+  margin: 0 0 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer CTA — replaces floating arrow for a cleaner LMS feel */
+.practice-cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
   transition: color 0.3s;
 }
-
-.practice-arrow {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(26, 29, 46, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--navy-deep);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  opacity: 1;
-  z-index: 3;
+.practice-cta svg {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.practice-card:hover .practice-cta { color: var(--navy-deep); }
+.practice-card:hover .practice-cta svg { transform: translateX(5px); }
 
-.practice-card:hover .practice-arrow {
-  background: var(--gold);
-  color: var(--navy-deep);
-  border-color: var(--gold);
-  transform: rotate(-45deg);
+/* ================================================
+   PETA KELISTRIKAN · FEATURE BANNER
+================================================ */
+.petakel-banner {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+.petakel-banner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 64px rgba(13, 15, 28, 0.4) !important;
+}
+.petakel-banner:hover .petakel-cta {
+  gap: 16px !important;
+  box-shadow: 0 8px 22px rgba(201, 169, 110, 0.45);
+}
+@media (max-width: 1024px) {
+  .petakel-section { padding-left: 40px !important; padding-right: 40px !important; }
+}
+@media (max-width: 768px) {
+  .petakel-section { padding: 48px 20px !important; }
+  .petakel-inner { padding: 32px 26px !important; gap: 24px !important; }
+  .petakel-art { order: -1; flex-basis: auto !important; }
+  .petakel-art div { font-size: 84px !important; }
 }
 
 /* ================================================
