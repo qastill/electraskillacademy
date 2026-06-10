@@ -15,26 +15,9 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  <url>
-    <loc>https://electraacademy.com/electrasim.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://electraacademy.com/electrasim3d.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://electraacademy.com/capbank.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://electraacademy.com/wlab.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+  <!-- Halaman simulator (electrasim, electrasim3d, capbank, wlab) DIHAPUS
+       SEMENTARA dari sitemap — bagian simulator dilepas dari situs sambil
+       menunggu alamat web simulator eksternal. -->
   <!-- Hash-routed views — Google sebenarnya tidak crawl hash, tapi
        kita inisiasi awareness dgn sitemap. Untuk SEO real, perlu
        migrate ke per-jalur HTML page (Next.js / static pre-render). -->

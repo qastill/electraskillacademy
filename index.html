@@ -946,7 +946,7 @@ if ('serviceWorker' in navigator) {
           <div class="home-faq-answer">
             <p><strong>Lab &amp; Simulator Room</strong> adalah ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta:</p>
             <ul>
-              <li><strong>Simulator Lab per spesialisasi (5 lab di Instalasi)</strong> — tiap jalur karir punya lab spesifik (Lighting/Voltage Drop/MCB untuk Instalasi, Motor Starting & VFD untuk Industri, Trafo & Feeder 20 kV untuk Distribusi, Sag & BIL untuk Transmisi, Load Forecasting & NTL untuk Data Science, Audit & PF untuk Auditor, PV & BESS untuk Renewable, Arc Flash & Pembumian untuk K3). Buka di menu <em>Labs</em>, gratis untuk member.</li>
+              <li><strong>Simulator Lab per spesialisasi</strong> — tiap jalur karir punya lab spesifik (wiring instalasi, motor &amp; starter, distribusi 20 kV, PLTS, BESS, K3, dan lainnya). <em>Sementara dinonaktifkan untuk pemeliharaan — segera tersedia kembali di alamat web khusus.</em></li>
               <li><strong>9 Design Calculator</strong> — cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling tension, protection coordination.</li>
               <li><strong>Physical Lab Room</strong> — undangan prioritas ke partner training facility ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.</li>
             </ul>
@@ -1754,58 +1754,23 @@ if ('serviceWorker' in navigator) {
     <div class="labs-hero-inner">
       <div class="labs-hero-eyebrow">Digital Lab &amp; Praktikum</div>
       <h1>Belajar teori, latih <span class="italic">tangannya</span></h1>
-      <p class="labs-hero-desc">Jangan cuma hafal rumus. Coba langsung di simulator interaktif, atau ikut kelas praktikum hands-on di fasilitas partner ESA seluruh Indonesia.</p>
+      <p class="labs-hero-desc">Jangan cuma hafal rumus. Pakai kalkulator desain kelistrikan standar internasional, atau ikut kelas praktikum hands-on di fasilitas partner ESA seluruh Indonesia.</p>
       <div class="labs-hero-tabs">
-        <button class="labs-tab-btn active" data-panel="simulator" onclick="labsShowSection('simulator')">Digital Simulator Lab</button>
-        <button class="labs-tab-btn" data-panel="design-calc" onclick="labsShowSection('design-calc')">Design Calculators</button>
+        <button class="labs-tab-btn active" data-panel="design-calc" onclick="labsShowSection('design-calc')">Design Calculators</button>
         <button class="labs-tab-btn" data-panel="praktikum" onclick="labsShowSection('praktikum')">Kelas Praktikum</button>
       </div>
     </div>
   </section>
 
-  <!-- Simulator Section -->
-  <section class="simulator-section lab-launch labs-panel show" id="lab-simulator">
-    <div class="lab-launch-inner">
-      <div class="lab-launch-head">
-        <div>
-          <div class="lab-section-eyebrow">Digital Simulator Lab</div>
-          <h2 class="lab-launch-title">16 Jalur Spesialisasi — <span class="italic">100% hands-on</span></h2>
-          <p style="margin:10px 0 0;max-width:620px;font-size:0.93rem;line-height:1.65;color:var(--ink-soft,#5a5d6e);">Semua lab di sini melatih tangan, bukan sekadar slide: merangkai wiring instalasi &amp; panel, mengisolasi gangguan jaringan, menyusun beban 3 fasa, drill prosedur LOTO. Tiap lab dilengkapi teori singkat, panduan langkah, validasi otomatis, dan <strong>AI Tutor</strong> yang siap ditanya.</p>
-        </div>
-        <div class="lab-chips">
-          <span class="lab-chip active" id="lab-count-chip">Lab Hands-on</span>
-          <span class="lab-chip" style="cursor:default;">⚡ 100% Interaktif</span>
-        </div>
-      </div>
-      <a class="electrasim-feature" href="electrasim.html" target="_blank" rel="noopener" onclick="if(!window.esaRequireAccess()){event.preventDefault();return false;}">
-        <span class="electrasim-feature-ic">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        </span>
-        <span class="electrasim-feature-body">
-          <span class="electrasim-feature-eyebrow">Baru · Lab Unggulan</span>
-          <span class="electrasim-feature-title">ElectraSim — 16 Simulator Spesialisasi</span>
-          <span class="electrasim-feature-sub">Wiring trainer interaktif (1φ · 3φ · instalasi rumah) plus 15 simulator per jalur karier: motor &amp; starter, fault isolation, proteksi relai, dispatch, PV, BESS, EV, hidrogen, LOTO, PLC ladder, dan lainnya. Dilengkapi AI Tutor — tanya apa saja sambil praktik.</span>
-          <span class="electrasim-feature-cta">Buka ElectraSim →</span>
-        </span>
-      </a>
-      <a class="electrasim-feature" href="electrasim3d.html" target="_blank" rel="noopener" onclick="if(!window.esaRequireAccess()){event.preventDefault();return false;}" style="margin-top:12px;background:linear-gradient(135deg,#0f1a2e,#1d2b3a 55%,#3a4a2a)">
-        <span class="electrasim-feature-ic" style="background:linear-gradient(135deg,#5b8cff,#3a4a2a)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#0a1228" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></svg>
-        </span>
-        <span class="electrasim-feature-body">
-          <span class="electrasim-feature-eyebrow">Baru · Lab 3D / 360°</span>
-          <span class="electrasim-feature-title">ElectraSim 3D — 16 Simulator 360°</span>
-          <span class="electrasim-feature-sub">Simulator tiga dimensi untuk tiap jalur spesialisasi: motor induksi, menara transmisi, lintasan matahari PLTS, EV charging, elektroliser hidrogen, BESS, konveyor PLC, dan lainnya. Putar 360°, ubah parameter, lihat real-time. Dilengkapi AI Tutor. Dibangun dengan Three.js &amp; Babylon.js.</span>
-          <span class="electrasim-feature-cta">Buka ElectraSim 3D →</span>
-        </span>
-      </a>
-      <div class="lab-groups" id="simulator-grid"></div>
-      <div class="lab-launch-hint">Pilih satu jalur untuk melihat daftar lab-nya, lalu klik lab untuk masuk — rangkai sendiri, periksa rangkaianmu, dan jalankan simulasinya. Tiap lab punya panduan langkah + AI Tutor yang bisa ditanya kapan saja.</div>
-    </div>
-  </section>
+  <!-- Simulator Section: DIHAPUS SEMENTARA (crash di perangkat tertentu).
+       Seluruh markup Digital Simulator Lab (ElectraSim, ElectraSim 3D, grid
+       54 lab) dilepas dari UI per permintaan owner — nanti diganti tautan ke
+       alamat web simulator eksternal. Kode JS katalog & halaman standalone
+       (electrasim.html, electrasim3d.html, wiring.html, wlab.html,
+       capbank.html) masih ada di repo, tinggal dipasang lagi bila perlu. -->
 
   <!-- Electrical Design Calculators Section -->
-  <section class="calc-section labs-panel" id="lab-design-calc">
+  <section class="calc-section labs-panel show" id="lab-design-calc">
     <div class="lab-section-inner">
       <div class="lab-section-header">
         <div class="lab-section-eyebrow">Electrical Design Calculators</div>
@@ -3896,12 +3861,13 @@ function showView(view) {
     target.classList.add('active');
     currentView = view;
     window.scrollTo({ top: 0, behavior: 'instant' });
-    // Labs: selalu mulai dari panel pertama (Simulator) tiap kali dibuka.
+    // Labs: selalu mulai dari panel pertama (Design Calculators) tiap kali
+    // dibuka. (Panel Simulator dihapus sementara — lihat komentar di markup.)
     if (view === 'labs') {
       document.querySelectorAll('.labs-tab-btn').forEach(t =>
-        t.classList.toggle('active', t.getAttribute('data-panel') === 'simulator'));
+        t.classList.toggle('active', t.getAttribute('data-panel') === 'design-calc'));
       document.querySelectorAll('.labs-panel').forEach(p =>
-        p.classList.toggle('show', p.id === 'lab-simulator'));
+        p.classList.toggle('show', p.id === 'lab-design-calc'));
     }
   }
 }
