@@ -482,7 +482,7 @@ if ('serviceWorker' in navigator) {
         <div class="hero-eyebrow">Akademi Kelistrikan Indonesia</div>
         <h1 class="hero-headline">
           Siap Memulai Karir sebagai<br>
-          <em>Profesional Electrician</em>
+          <em>Profesional Electrician &amp; Energy Expert</em>
         </h1>
         <div class="hero-cta-row">
           <a href="#practices" class="hero-cta">Mulai Belajar
@@ -503,8 +503,8 @@ if ('serviceWorker' in navigator) {
     </div>
   </section>
 
-<!-- USER PROGRESS PANEL (shown when profile exists) -->
-<div id="esa-home-progress-panel" class="esa-home-progress" style="display:none;"></div>
+<!-- USER PROGRESS PANEL — dihapus dari home (bar gelap di bawah hero membingungkan);
+     updateHomeProgress() aman karena sudah guard if(!panel) return. -->
 
 <!-- REFERRAL DASHBOARD WIDGET — dihilangkan dari main page -->
 
