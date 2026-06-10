@@ -3889,8 +3889,12 @@ const _TRACK_ART_FILES = {
   S15: 'track-art/s15.webp',
   S16: 'track-art/s16.webp'
 };
+// Cache-bust: foto jalur dipakai nama file sama (track-art/sN.webp) tapi isinya
+// sudah diganti. vercel.json meng-cache gambar 7 hari, jadi browser lama masih
+// pakai foto lama. Query ?v= memaksa fetch ulang versi terbaru.
+const _TRACK_ART_VER = '3';
 Object.keys(_TRACK_ART_FILES).forEach(id => {
-  const uri = encodeURI(_TRACK_ART_FILES[id]);
+  const uri = encodeURI(_TRACK_ART_FILES[id]) + '?v=' + _TRACK_ART_VER;
   const card = PRACTICE_CARDS.find(c => c.id === id); if (card) card.photo = uri;
   if (TRACKS_META[id]) TRACKS_META[id].photo = uri;
 });
@@ -4406,7 +4410,7 @@ const SIM_GROUPS = [
 // Simulator Room: pakai ilustrasi resmi ICON HOME untuk kartu jalur S1–S16
 // (selaras dengan grid home). Grup bonus "Fondasi" tetap pakai foto Unsplash.
 SIM_GROUPS.forEach(g => {
-  if (_TRACK_ART_FILES[g.key]) g.photo = encodeURI(_TRACK_ART_FILES[g.key]);
+  if (_TRACK_ART_FILES[g.key]) g.photo = encodeURI(_TRACK_ART_FILES[g.key]) + '?v=' + _TRACK_ART_VER;
 });
 
 const SIMULATORS = [
