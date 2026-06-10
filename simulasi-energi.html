@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Simulasi Transisi Energi Indonesia — Electra Skill Academy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Simulator transisi energi & gamifikasi menuju green energy — ubah bauran energi Indonesia, kejar target EBT, tekan emisi CO2. Berbasis data kelistrikan nyata 8 region.">
+<meta name="author" content="Electra Skill Academy">
+<style>
+  :root{ --navy:#0d0f1c; --navy2:#161a2e; --gold:#d4af6a; --gold-dark:#a07840;
+    --green:#2ca02c; --green2:#4cc94c; --coal:#5a5a5a; --ink:#e9eaf2; --mute:#9aa0b4; --line:rgba(255,255,255,0.09); }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif; background:#0a0c16; color:var(--ink); line-height:1.5; }
+  a{ color:var(--gold); }
+
+  .nav{ position:sticky; top:0; height:48px; background:var(--navy); display:flex; align-items:center;
+    padding:0 16px; gap:10px; z-index:50; border-bottom:1px solid var(--line); }
+  .nav a{ display:flex; align-items:center; gap:6px; color:rgba(255,255,255,0.82); text-decoration:none;
+    font-size:13px; padding:6px 11px; border-radius:6px; }
+  .nav a:hover{ background:rgba(255,255,255,0.08); color:#fff; }
+  .nav .brand{ font-weight:700; color:var(--gold); font-size:13px; letter-spacing:.04em; margin-right:auto; }
+  .nav .brand b{ color:#fff; font-weight:400; }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:34px 20px 80px; }
+  .hero{ text-align:center; margin-bottom:34px; }
+  .hero .eyebrow{ color:var(--green2); font-size:12px; font-weight:800; letter-spacing:.22em; text-transform:uppercase; }
+  .hero h1{ font-size:clamp(28px,5vw,46px); margin:10px 0 12px; line-height:1.08;
+    background:linear-gradient(120deg,#fff,#cfe9cf 60%,#9ad29a); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p{ color:var(--mute); max-width:640px; margin:0 auto; font-size:15px; }
+
+  h2.sec{ font-size:13px; text-transform:uppercase; letter-spacing:.16em; color:var(--gold);
+    margin:38px 0 16px; display:flex; align-items:center; gap:10px; }
+  h2.sec::after{ content:''; flex:1; height:1px; background:var(--line); }
+
+  /* Insight cards */
+  .cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+  .card{ background:linear-gradient(160deg,var(--navy2),#10132340); border:1px solid var(--line);
+    border-radius:14px; padding:18px; }
+  .card .k{ font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--mute); }
+  .card .v{ font-size:30px; font-weight:800; margin:6px 0 2px; }
+  .card .v small{ font-size:14px; font-weight:600; color:var(--mute); }
+  .card .d{ font-size:12.5px; color:var(--mute); }
+  .card.green{ border-color:rgba(44,160,44,0.4); } .card.green .v{ color:var(--green2); }
+  .card.coal .v{ color:#c98; } .card.co2 .v{ color:#e88; }
+  .splitbar{ display:flex; height:14px; border-radius:7px; overflow:hidden; margin:8px 0 4px; background:#222; }
+  .splitbar .ebt{ background:var(--green); } .splitbar .fos{ background:var(--coal); }
+
+  /* Simulator */
+  .sim{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:18px; }
+  @media(max-width:780px){ .sim{ grid-template-columns:1fr; } }
+  .panel{ background:var(--navy2); border:1px solid var(--line); border-radius:16px; padding:20px; }
+  .panel h3{ font-size:15px; margin-bottom:4px; } .panel .note{ font-size:12px; color:var(--mute); margin-bottom:14px; }
+  .ctrl{ margin:16px 0; }
+  .ctrl .top{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; margin-bottom:6px; }
+  .ctrl .top .lab{ display:flex; align-items:center; gap:7px; font-weight:600; }
+  .ctrl .top .dot{ width:11px; height:11px; border-radius:50%; }
+  .ctrl .top .val{ font-variant-numeric:tabular-nums; color:var(--gold); font-weight:700; }
+  input[type=range]{ width:100%; accent-color:var(--green); cursor:pointer; }
+  input[type=range].coal{ accent-color:#c98a4a; }
+  .reset{ margin-top:6px; background:none; border:1px solid var(--line); color:var(--mute); padding:7px 14px;
+    border-radius:8px; cursor:pointer; font-size:12px; } .reset:hover{ color:#fff; border-color:var(--gold); }
+
+  /* Result */
+  .result .big{ text-align:center; padding:8px 0 14px; }
+  .result .big .lbl{ font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--mute); }
+  .result .big .pct{ font-size:54px; font-weight:800; color:var(--green2); line-height:1; margin:4px 0; }
+  .result .big .sub{ font-size:12.5px; color:var(--mute); }
+  .progress{ margin:14px 0; }
+  .progress .pl{ display:flex; justify-content:space-between; font-size:12px; color:var(--mute); margin-bottom:5px; }
+  .track{ height:12px; background:rgba(255,255,255,0.08); border-radius:7px; overflow:hidden; position:relative; }
+  .fill{ height:100%; border-radius:7px; transition:width .35s ease; background:linear-gradient(90deg,var(--green),var(--green2)); }
+  .tgt{ position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--gold); }
+  .tgt b{ position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--gold); white-space:nowrap; }
+  .stat2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+  .stat2 .s{ background:#10132360; border:1px solid var(--line); border-radius:10px; padding:11px; text-align:center; }
+  .stat2 .s .n{ font-size:20px; font-weight:800; } .stat2 .s .t{ font-size:11px; color:var(--mute); }
+
+  /* Missions / gamification */
+  .missions{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; }
+  .mission{ background:var(--navy2); border:1px solid var(--line); border-radius:14px; padding:16px; position:relative; transition:border-color .25s,transform .25s; }
+  .mission.done{ border-color:rgba(44,160,44,0.6); box-shadow:0 0 0 1px rgba(44,160,44,0.3) inset; }
+  .mission .ic{ font-size:24px; } .mission .mt{ font-weight:700; margin:6px 0 3px; font-size:14px; }
+  .mission .md{ font-size:12px; color:var(--mute); } .mission .badge{ position:absolute; top:14px; right:14px; font-size:18px; opacity:.25; }
+  .mission.done .badge{ opacity:1; }
+  .scorebar{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; background:linear-gradient(120deg,#11331d,#0d0f1c);
+    border:1px solid rgba(44,160,44,0.35); border-radius:14px; padding:16px 20px; margin-bottom:16px; }
+  .scorebar .score{ font-size:34px; font-weight:800; color:var(--green2); } .scorebar .score small{ font-size:14px; color:var(--mute); }
+  .scorebar .stars{ font-size:22px; letter-spacing:3px; } .scorebar .rank{ margin-left:auto; text-align:right; }
+  .scorebar .rank .r{ font-size:16px; font-weight:800; color:var(--gold); } .scorebar .rank .rl{ font-size:11px; color:var(--mute); text-transform:uppercase; letter-spacing:.1em; }
+
+  .cta{ display:flex; gap:10px; flex-wrap:wrap; margin-top:26px; }
+  .cta a{ text-decoration:none; padding:12px 20px; border-radius:10px; font-weight:700; font-size:13px; }
+  .cta .p{ background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#1a1d2e; }
+  .cta .s{ background:transparent; border:1px solid var(--line); color:var(--ink); }
+  .foot{ margin-top:40px; font-size:11.5px; color:#6b7184; line-height:1.6; border-top:1px solid var(--line); padding-top:16px; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="index.html"><span style="font-size:16px;">‹</span> Kembali</a>
+  <div class="brand">Electra Skill Academy <b>· Simulasi Energi</b></div>
+  <a href="peta-kelistrikan.html">🗺 Peta 2D</a>
+  <a href="peta-3d.html">🌐 Peta 3D</a>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">🌱 Menuju Green Energy</div>
+    <h1>Simulasi Transisi Energi Indonesia</h1>
+    <p>Lihat kondisi nyata kelistrikan Indonesia, lalu jadi "perencana energi": tambah pembangkit terbarukan,
+       pensiunkan batubara, dan kejar target EBT &amp; Net Zero. Semua dihitung dari data ±528 pembangkit di 8 region.</p>
+  </div>
+
+  <h2 class="sec">📊 Insight Kondisi Kelistrikan Indonesia</h2>
+  <div class="cards" id="insights"><!-- diisi JS --></div>
+
+  <h2 class="sec">🎛️ Simulator Transisi Energi</h2>
+  <div class="sim">
+    <div class="panel">
+      <h3>Atur skenario</h3>
+      <div class="note">Geser untuk menambah kapasitas terbarukan &amp; memensiunkan PLTU batubara.</div>
+      <div id="controls"></div>
+      <button class="reset" onclick="resetSim()">↺ Reset skenario</button>
+    </div>
+    <div class="panel result">
+      <div class="big">
+        <div class="lbl">Bauran EBT (skenario)</div>
+        <div class="pct" id="r-ebt">–</div>
+        <div class="sub" id="r-ebt-sub"></div>
+      </div>
+      <div class="progress">
+        <div class="pl"><span>Progres ke target</span><span id="r-target-lbl"></span></div>
+        <div class="track"><div class="fill" id="r-fill" style="width:0%"></div>
+          <div class="tgt" id="tgt-23"><b>23% (2025)</b></div>
+          <div class="tgt" id="tgt-40"><b>40%</b></div></div>
+      </div>
+      <div class="stat2">
+        <div class="s"><div class="n" id="r-co2">–</div><div class="t">Emisi CO₂/thn (juta ton)</div></div>
+        <div class="s"><div class="n" id="r-co2red" style="color:var(--green2)">–</div><div class="t">CO₂ dihindari</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec">🏆 Tantangan Green Energy</h2>
+  <div class="scorebar">
+    <div><div class="score" id="g-score">0<small> poin</small></div><div class="stars" id="g-stars">☆☆☆☆</div></div>
+    <div class="rank"><div class="r" id="g-rank">Pemula</div><div class="rl">Peringkat Perencana</div></div>
+  </div>
+  <div class="missions" id="missions"></div>
+
+  <div class="cta">
+    <a class="p" href="index.html?jalur=S7">🎓 Pelajari Jalur Pembangkitan &amp; Renewable →</a>
+    <a class="s" href="index.html?jalur=S10">PV &amp; Solar (S10)</a>
+    <a class="s" href="index.html?jalur=S15">Baterai &amp; BESS (S15)</a>
+  </div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<!-- Data 8 region (sama dengan peta) -->
+<script src="peta-kelistrikan/data_jamali.js"></script>
+<script src="peta-kelistrikan/data_sumatra.js"></script>
+<script src="peta-kelistrikan/data_kalimantan.js"></script>
+<script src="peta-kelistrikan/data_sulawesi.js"></script>
+<script src="peta-kelistrikan/data_maluku.js"></script>
+<script src="peta-kelistrikan/data_papua.js"></script>
+<script src="peta-kelistrikan/data_ntb.js"></script>
+<script src="peta-kelistrikan/data_ntt.js"></script>
+
+<script>
+// ============================================================
+// MUAT & AGREGASI DATA NYATA
+// ============================================================
+const REGION_KEYS=['jamali','sumatra','kalimantan','sulawesi','maluku','papua','ntb','ntt'];
+const REGION_LABEL={jamali:'JAMALI',sumatra:'Sumatra',kalimantan:'Kalimantan',sulawesi:'Sulawesi',maluku:'Maluku',papua:'Papua',ntb:'NTB',ntt:'NTT'};
+const EBT_TYPES=new Set(['PLTA','PLTM','PLTMH','PLTP','PLTS','PLTB','PLTSa','PLT Biomas','PLT Biomass','PLTBg']);
+// Asumsi estimasi faktor kapasitas (CF) & emisi (EF, tCO2/MWh) untuk fosil
+const CF={PLTU:0.65,PLTGU:0.55,PLTG:0.30,PLTMG:0.40,PLTD:0.25};
+const EF={PLTU:1.0,PLTGU:0.40,PLTG:0.55,PLTMG:0.55,PLTD:0.75};
+const HOURS=8760, GRID_EF=0.75, TARGET_EBT=0.23;
+
+const base = (function(){
+  let total=0, ebt=0, fosil=0, coal=0, units=0, co2=0;
+  const byType={}, perRegion={};
+  for(const k of REGION_KEYS){
+    const d=window[k.toUpperCase()+'_DATA']; if(!d||!d.generators)continue;
+    perRegion[k]={total:0,ebt:0};
+    for(const f of d.generators.features){
+      const t=f.properties.type||'Unknown'; const mw=parseFloat(f.properties.capacity_mw)||0;
+      total+=mw; units++; perRegion[k].total+=mw; byType[t]=(byType[t]||0)+mw;
+      if(EBT_TYPES.has(t)){ ebt+=mw; perRegion[k].ebt+=mw; }
+      else if(t!=='Unknown'){ fosil+=mw; if(t==='PLTU')coal+=mw; }
+      if(CF[t]) co2 += mw*CF[t]*HOURS*EF[t];
+    }
+  }
+  const regRank=Object.entries(perRegion).filter(([,v])=>v.total>200)
+    .map(([k,v])=>({k,pct:v.total?v.ebt/v.total*100:0})).sort((a,b)=>b.pct-a.pct);
+  return { total, ebt, fosil, coal, units, co2, byType, perRegion, regRank };
+})();
+
+const fmt=n=>Math.round(n).toLocaleString('id-ID');
+const fmt1=n=>n.toLocaleString('id-ID',{maximumFractionDigits:1});
+
+// ============================================================
+// INSIGHT CARDS
+// ============================================================
+(function renderInsights(){
+  const b=base; const ebtPct=b.ebt/b.total*100, fosPct=b.fosil/b.total*100, coalPct=b.coal/b.total*100;
+  const gap=Math.max(0, b.total*TARGET_EBT - b.ebt);
+  const greenest=b.regRank[0];
+  const cards=[
+    `<div class="card"><div class="k">Total Kapasitas Terpasang</div>
+      <div class="v">${fmt(b.total)} <small>MW</small></div>
+      <div class="d">${b.units.toLocaleString('id-ID')} pembangkit di 8 region</div></div>`,
+    `<div class="card green"><div class="k">Porsi EBT Saat Ini</div>
+      <div class="v">${fmt1(ebtPct)}<small>%</small></div>
+      <div class="splitbar"><div class="ebt" style="width:${ebtPct}%"></div><div class="fos" style="width:${fosPct}%"></div></div>
+      <div class="d">EBT ${fmt(b.ebt)} MW · Fosil ${fmt(b.fosil)} MW</div></div>`,
+    `<div class="card coal"><div class="k">Dominasi Batubara (PLTU)</div>
+      <div class="v">${fmt1(coalPct)}<small>%</small></div>
+      <div class="d">${fmt(b.coal)} MW — tantangan utama dekarbonisasi</div></div>`,
+    `<div class="card co2"><div class="k">Estimasi Emisi CO₂ / tahun</div>
+      <div class="v">${fmt1(b.co2/1e6)} <small>juta ton</small></div>
+      <div class="d">Dari pembangkit fosil (estimasi kasar)</div></div>`,
+    `<div class="card"><div class="k">Gap ke Target EBT 23% (2025)</div>
+      <div class="v">${fmt(gap)} <small>MW</small></div>
+      <div class="d">Tambahan EBT yang dibutuhkan</div></div>`,
+    `<div class="card green"><div class="k">Region Terhijau</div>
+      <div class="v" style="font-size:24px;">${REGION_LABEL[greenest.k]}</div>
+      <div class="d">${fmt1(greenest.pct)}% kapasitasnya EBT</div></div>`,
+  ];
+  document.getElementById('insights').innerHTML=cards.join('');
+})();
+
+// ============================================================
+// SIMULATOR
+// ============================================================
+const ADD_TYPES=[
+  {key:'PLTS', label:'Surya (PLTS)',     color:'#f7d100', cf:0.18, max:30000, step:500},
+  {key:'PLTB', label:'Angin (PLTB)',     color:'#17becf', cf:0.30, max:15000, step:250},
+  {key:'PLTA', label:'Air (PLTA)',       color:'#1f77b4', cf:0.45, max:20000, step:250},
+  {key:'PLTP', label:'Panas Bumi (PLTP)',color:'#d62728', cf:0.85, max:15000, step:250},
+];
+const state={ add:{PLTS:0,PLTB:0,PLTA:0,PLTP:0}, retireCoal:0 };
+
+(function buildControls(){
+  const box=document.getElementById('controls'); let html='';
+  for(const a of ADD_TYPES){
+    html+=`<div class="ctrl">
+      <div class="top"><span class="lab"><span class="dot" style="background:${a.color}"></span>+ ${a.label}</span>
+        <span class="val" id="v-${a.key}">0 MW</span></div>
+      <input type="range" min="0" max="${a.max}" step="${a.step}" value="0" data-add="${a.key}"></div>`;
+  }
+  html+=`<div class="ctrl">
+    <div class="top"><span class="lab"><span class="dot" style="background:#c98a4a"></span>⛏️ Pensiunkan PLTU (batubara)</span>
+      <span class="val" id="v-coal">0 MW</span></div>
+    <input type="range" class="coal" min="0" max="${Math.round(base.coal)}" step="250" value="0" data-coal="1"></div>`;
+  box.innerHTML=html;
+  box.querySelectorAll('input[type=range]').forEach(inp=>inp.addEventListener('input',()=>{
+    if(inp.dataset.add) state.add[inp.dataset.add]=+inp.value;
+    if(inp.dataset.coal) state.retireCoal=+inp.value;
+    recompute();
+  }));
+})();
+
+function resetSim(){
+  state.add={PLTS:0,PLTB:0,PLTA:0,PLTP:0}; state.retireCoal=0;
+  document.querySelectorAll('#controls input[type=range]').forEach(i=>i.value=0);
+  recompute();
+}
+
+function scenario(){
+  let addMW=0, addMWh=0;
+  for(const a of ADD_TYPES){ const mw=state.add[a.key]||0; addMW+=mw; addMWh+=mw*a.cf*HOURS; }
+  const retire=Math.min(state.retireCoal, base.coal);
+  const newTotal=base.total + addMW - retire;
+  const newEbt=base.ebt + addMW;
+  const ebtPct=newTotal>0 ? newEbt/newTotal*100 : 0;
+  const retiredEmis=retire*CF.PLTU*HOURS*EF.PLTU;
+  const displaced=addMWh*GRID_EF;
+  const newCo2=Math.max(0, base.co2 - retiredEmis - displaced);
+  const co2Red=base.co2 - newCo2;
+  return { addMW, retire, newTotal, ebtPct, newCo2, co2Red, co2RedPct: base.co2? co2Red/base.co2*100:0 };
+}
+
+// ============================================================
+// GAMIFIKASI
+// ============================================================
+const MISSIONS=[
+  {id:'ebt23', ic:'🎯', t:'Target Nasional 23%', d:'Capai bauran EBT 23% (sasaran RUEN 2025).',
+   test:s=>s.ebtPct>=23, pts:25},
+  {id:'coal50', ic:'⛏️', t:'Pangkas Batubara', d:'Pensiunkan ≥50% kapasitas PLTU batubara.',
+   test:s=>s.retire>=base.coal*0.5, pts:25},
+  {id:'co230', ic:'💨', t:'Tekan Emisi 30%', d:'Turunkan emisi CO₂ tahunan minimal 30%.',
+   test:s=>s.co2RedPct>=30, pts:25},
+  {id:'nze', ic:'🌍', t:'Jalur Net Zero', d:'Dorong bauran EBT hingga ≥40%.',
+   test:s=>s.ebtPct>=40, pts:25},
+];
+const RANKS=[[0,'Pemula'],[25,'Perencana Junior'],[50,'Perencana Energi'],[75,'Ahli Transisi'],[100,'Arsitek Net Zero']];
+
+function renderMissions(s){
+  let done=0;
+  document.getElementById('missions').innerHTML=MISSIONS.map(m=>{
+    const ok=m.test(s); if(ok)done++;
+    return `<div class="mission ${ok?'done':''}"><div class="badge">${ok?'✅':'⬜'}</div>
+      <div class="ic">${m.ic}</div><div class="mt">${m.t}</div><div class="md">${m.d}</div></div>`;
+  }).join('');
+  const score=MISSIONS.reduce((a,m)=>a+(m.test(s)?m.pts:0),0);
+  document.getElementById('g-score').innerHTML=`${score}<small> poin</small>`;
+  document.getElementById('g-stars').textContent='★'.repeat(done)+'☆'.repeat(MISSIONS.length-done);
+  let rank=RANKS[0][1]; for(const [p,r] of RANKS){ if(score>=p)rank=r; }
+  document.getElementById('g-rank').textContent=rank;
+}
+
+// ============================================================
+// RECOMPUTE / RENDER
+// ============================================================
+function recompute(){
+  const s=scenario();
+  for(const a of ADD_TYPES) document.getElementById('v-'+a.key).textContent='+'+fmt(state.add[a.key])+' MW';
+  document.getElementById('v-coal').textContent='−'+fmt(state.retire)+' MW';
+  document.getElementById('r-ebt').textContent=fmt1(s.ebtPct)+'%';
+  const base0=base.ebt/base.total*100;
+  const delta=s.ebtPct-base0;
+  document.getElementById('r-ebt-sub').innerHTML=`dari ${fmt1(base0)}% awal · <span style="color:${delta>=0?'var(--green2)':'#e88'}">${delta>=0?'+':''}${fmt1(delta)} poin</span>`;
+  // progress bar ke 40% (skala visual), penanda 23% & 40%
+  const SCALE=40;
+  document.getElementById('r-fill').style.width=Math.min(100, s.ebtPct/SCALE*100)+'%';
+  document.getElementById('tgt-23').style.left=(23/SCALE*100)+'%';
+  document.getElementById('tgt-40').style.left='100%';
+  document.getElementById('r-target-lbl').textContent=`${fmt1(s.ebtPct)}% / 23%`;
+  document.getElementById('r-co2').textContent=fmt1(s.newCo2/1e6);
+  document.getElementById('r-co2red').textContent='−'+fmt1(s.co2Red/1e6)+' Mt ('+fmt1(s.co2RedPct)+'%)';
+  renderMissions(s);
+}
+
+// Footer metodologi
+document.getElementById('foot').innerHTML=
+  'Sumber: data eksisting pembangkit 8 region (sama dengan Peta Kelistrikan). '
+  +'Emisi &amp; energi adalah <strong>estimasi kasar</strong> berbasis asumsi faktor kapasitas (PLTU 0,65; PLTGU 0,55; PLTG/D 0,3) '
+  +'dan faktor emisi (PLTU 1,0; gas 0,4–0,55; diesel 0,75 tCO₂/MWh); penambahan EBT diasumsikan menggantikan energi fosil pada '
+  +(GRID_EF)+' tCO₂/MWh. Angka untuk edukasi &amp; eksplorasi, bukan untuk keputusan operasional/kebijakan.';
+
+recompute();
+</script>
+</body>
+</html>
