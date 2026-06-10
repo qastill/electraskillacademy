@@ -946,7 +946,7 @@ if ('serviceWorker' in navigator) {
           <div class="home-faq-answer">
             <p><strong>Lab &amp; Simulator Room</strong> adalah ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta:</p>
             <ul>
-              <li><strong>Simulator Lab per spesialisasi</strong> — tiap jalur karir punya lab spesifik (wiring instalasi, motor &amp; starter, distribusi 20 kV, PLTS, BESS, K3, dan lainnya). <em>Sementara dinonaktifkan untuk pemeliharaan — segera tersedia kembali di alamat web khusus.</em></li>
+              <li><strong>Simulator Lab (ElectraSim 3D)</strong> — simulator kelistrikan interaktif per jalur karir (wiring instalasi, motor &amp; starter, distribusi 20 kV, PLTS, BESS, K3, dan lainnya). Buka di menu <em>Labs</em>, khusus member.</li>
               <li><strong>9 Design Calculator</strong> — cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling tension, protection coordination.</li>
               <li><strong>Physical Lab Room</strong> — undangan prioritas ke partner training facility ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.</li>
             </ul>
@@ -1754,23 +1754,45 @@ if ('serviceWorker' in navigator) {
     <div class="labs-hero-inner">
       <div class="labs-hero-eyebrow">Digital Lab &amp; Praktikum</div>
       <h1>Belajar teori, latih <span class="italic">tangannya</span></h1>
-      <p class="labs-hero-desc">Jangan cuma hafal rumus. Pakai kalkulator desain kelistrikan standar internasional, atau ikut kelas praktikum hands-on di fasilitas partner ESA seluruh Indonesia.</p>
+      <p class="labs-hero-desc">Jangan cuma hafal rumus. Coba langsung di simulator interaktif, pakai kalkulator desain kelistrikan standar internasional, atau ikut kelas praktikum hands-on di fasilitas partner ESA seluruh Indonesia.</p>
       <div class="labs-hero-tabs">
-        <button class="labs-tab-btn active" data-panel="design-calc" onclick="labsShowSection('design-calc')">Design Calculators</button>
+        <button class="labs-tab-btn active" data-panel="simulator" onclick="labsShowSection('simulator')">Digital Simulator Lab</button>
+        <button class="labs-tab-btn" data-panel="design-calc" onclick="labsShowSection('design-calc')">Design Calculators</button>
         <button class="labs-tab-btn" data-panel="praktikum" onclick="labsShowSection('praktikum')">Kelas Praktikum</button>
       </div>
     </div>
   </section>
 
-  <!-- Simulator Section: DIHAPUS SEMENTARA (crash di perangkat tertentu).
-       Seluruh markup Digital Simulator Lab (ElectraSim, ElectraSim 3D, grid
-       54 lab) dilepas dari UI per permintaan owner — nanti diganti tautan ke
-       alamat web simulator eksternal. Kode JS katalog & halaman standalone
-       (electrasim.html, electrasim3d.html, wiring.html, wlab.html,
-       capbank.html) masih ada di repo, tinggal dipasang lagi bila perlu. -->
+  <!-- Simulator Section: kini terhubung ke app eksternal electrasim3d.vercel.app.
+       Simulator dibuka DI DALAM electraacademy.com (iframe modal, gerbang
+       member) — bukan tab/jendela baru — sesuai kebijakan "hanya via
+       electraacademy.com". Grid lab lama (54 lab in-app) tetap dilepas;
+       kode katalog & halaman standalone masih ada di repo bila diperlukan. -->
+  <section class="simulator-section lab-launch labs-panel show" id="lab-simulator">
+    <div class="lab-launch-inner">
+      <div class="lab-launch-head">
+        <div>
+          <div class="lab-section-eyebrow">Digital Simulator Lab</div>
+          <h2 class="lab-launch-title">ElectraSim 3D — <span class="italic">simulator interaktif</span></h2>
+        </div>
+      </div>
+      <a class="electrasim-feature" href="#" onclick="event.preventDefault();openExternalSim();return false;" style="background:linear-gradient(135deg,#0f1a2e,#1d2b3a 55%,#3a4a2a)">
+        <span class="electrasim-feature-ic" style="background:linear-gradient(135deg,#5b8cff,#3a4a2a)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0a1228" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></svg>
+        </span>
+        <span class="electrasim-feature-body">
+          <span class="electrasim-feature-eyebrow">Lab Unggulan · Khusus Member</span>
+          <span class="electrasim-feature-title">ElectraSim 3D — Simulator Lab</span>
+          <span class="electrasim-feature-sub">Simulator kelistrikan interaktif untuk tiap jalur spesialisasi: wiring, motor, distribusi, PLTS, BESS, EV, hidrogen, PLC, dan lainnya. Berjalan langsung di dalam Electra Academy — daftar/masuk sebagai member untuk membuka.</span>
+          <span class="electrasim-feature-cta">Buka Simulator →</span>
+        </span>
+      </a>
+      <div class="lab-launch-hint">Simulator dibuka di dalam halaman ini (tidak pindah situs). Tutup dengan tombol × di pojok untuk kembali ke Labs.</div>
+    </div>
+  </section>
 
   <!-- Electrical Design Calculators Section -->
-  <section class="calc-section labs-panel show" id="lab-design-calc">
+  <section class="calc-section labs-panel" id="lab-design-calc">
     <div class="lab-section-inner">
       <div class="lab-section-header">
         <div class="lab-section-eyebrow">Electrical Design Calculators</div>
@@ -3861,13 +3883,12 @@ function showView(view) {
     target.classList.add('active');
     currentView = view;
     window.scrollTo({ top: 0, behavior: 'instant' });
-    // Labs: selalu mulai dari panel pertama (Design Calculators) tiap kali
-    // dibuka. (Panel Simulator dihapus sementara — lihat komentar di markup.)
+    // Labs: selalu mulai dari panel pertama (Simulator) tiap kali dibuka.
     if (view === 'labs') {
       document.querySelectorAll('.labs-tab-btn').forEach(t =>
-        t.classList.toggle('active', t.getAttribute('data-panel') === 'design-calc'));
+        t.classList.toggle('active', t.getAttribute('data-panel') === 'simulator'));
       document.querySelectorAll('.labs-panel').forEach(p =>
-        p.classList.toggle('show', p.id === 'lab-design-calc'));
+        p.classList.toggle('show', p.id === 'lab-simulator'));
     }
   }
 }
@@ -5556,6 +5577,22 @@ function _tutorSend() {
     if (typing) typing.remove();
     _tutorAddMsg('Maaf, koneksi gagal. Coba lagi ya 🙏', 'bot');
   }).finally(() => { if (btn) btn.disabled = false; });
+}
+
+// ── ElectraSim 3D eksternal (electrasim3d.vercel.app) ────────────────
+// Dibuka DI DALAM electraacademy.com lewat iframe modal — gerbang member
+// via esaRequireAccess(). Param via=electraacademy dipakai guard di sisi
+// app simulator untuk menolak akses langsung. closeSimulator() yang sudah
+// ada mengosongkan modal sehingga iframe (WebGL) benar-benar dibongkar.
+const ESA_SIM3D_URL = 'https://electrasim3d.vercel.app/?via=electraacademy';
+function openExternalSim() {
+  if (!window.esaRequireAccess || !esaRequireAccess()) return;
+  const content = document.getElementById('sim-modal-content');
+  const modal = document.getElementById('sim-modal');
+  if (!content || !modal) return;
+  content.innerHTML = `<iframe src="${ESA_SIM3D_URL}" title="ElectraSim 3D" loading="lazy" allow="fullscreen" allowfullscreen style="width:100%;height:86vh;min-height:560px;border:0;border-radius:12px;background:#0b0f17;display:block"></iframe>`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function openSimulator(simId) {
