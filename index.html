@@ -1814,9 +1814,9 @@ if ('serviceWorker' in navigator) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></svg>
         </span>
         <span class="electrasim-feature-body">
-          <span class="electrasim-feature-eyebrow">Lab Unggulan · Khusus Member</span>
+          <span class="electrasim-feature-eyebrow">Lab Unggulan · Katalog Gratis Dijelajahi</span>
           <span class="electrasim-feature-title">ElectraSim 3D — Simulator Lab</span>
-          <span class="electrasim-feature-sub">Simulator kelistrikan interaktif untuk tiap jalur spesialisasi: wiring, motor, distribusi, PLTS, BESS, EV, hidrogen, PLC, dan lainnya. Berjalan langsung di dalam Electra Academy — daftar/masuk sebagai member untuk membuka.</span>
+          <span class="electrasim-feature-sub">Simulator kelistrikan interaktif untuk tiap jalur spesialisasi: wiring, motor, distribusi, PLTS, BESS, EV, hidrogen, PLC, dan lainnya. Telusuri katalog &amp; lihat semua lab gratis — menjalankan misi premium untuk member aktif.</span>
           <span class="electrasim-feature-cta">Buka Simulator →</span>
         </span>
       </a>
@@ -5655,21 +5655,11 @@ function _tutorSend() {
 // via esaRequireAccess(). Param via=electraacademy dipakai guard di sisi
 // app simulator untuk menolak akses langsung. closeSimulator() yang sudah
 // ada mengosongkan modal sehingga iframe (WebGL) benar-benar dibongkar.
-const ESA_SIM3D_URL = 'https://electrasim3d.vercel.app/?via=electraacademy';
+const ESA_SIM3D_URL = '/electrasim3d.html?via=electraacademy';
 function openExternalSim() {
-  // Katalog simulator boleh ditelusuri member terdaftar (cukup login, tanpa bayar):
-  // mereka bisa lihat semua jalur & misi yang tersedia. Misi tetap TERKUNCI di dalam
-  // app simulator dan baru minta langganan saat hendak dijalankan.
-  if (!esaContentUnlocked()) {
-    if (!esaIsLoggedIn()) {
-      if (typeof window.esaShowAuthModal === 'function') {
-        window._esaAuthNote = 'Masuk / daftar dulu (gratis) untuk menelusuri katalog simulator. Untuk menjalankan misi, aktifkan akses penuh.';
-        window.esaShowAuthModal();
-      }
-      return;
-    }
-    // sudah login tapi belum bayar → tetap boleh masuk untuk lihat-lihat katalog.
-  }
+  // Katalog simulator TERBUKA untuk semua pengunjung (tanpa login / tanpa bayar):
+  // siapa pun bisa melihat semua jalur & misi yang tersedia. Lock baru muncul di
+  // dalam simulator saat hendak MENJALANKAN misi premium (paywall untuk non-member).
   const content = document.getElementById('sim-modal-content');
   const modal = document.getElementById('sim-modal');
   if (!content || !modal) return;
@@ -17608,5 +17598,6 @@ else{setTimeout(init,200);}
 })();
 </script>
 
+<script src="/ask-ai.js" defer></script>
 </body>
 </html>
