@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>atlite studio — weather to energy, the easy way · Electra Skill Academy</title>
+<meta name="description" content="atlite studio — front-end no-code untuk PyPSA/atlite. Pilih wilayah, set periode & parameter, lalu dapatkan kode Python siap jalan untuk konversi cuaca → energi terbarukan." />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+  :root{
+    --ink:#0B1722;
+    --ink-soft:#1B2A3A;
+    --surface:#EEF1F5;
+    --card:#FFFFFF;
+    --line:#D7DEE7;
+    --line-strong:#BAC4D0;
+    --accent:#0FA3B1;        /* default = wind */
+    --solar:#F2A40C;
+    --wind:#0FA3B1;
+    --csp:#D8731A;
+    --hydro:#3B82C4;
+    --heat:#C2492E;
+    --temp:#6B7280;
+    --ok:#1F9D6B;
+    --warn:#C9821A;
+    --danger:#C2492E;
+    --code-bg:#0B1722;
+    --code-line:#16273A;
+    --muted:#5B6876;
+    --muted-2:#8593A2;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--surface);
+    color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted-2);
+  }
+  .mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;}
+
+  /* ===== ELECTRA SKILL ACADEMY NAV BAR ===== */
+  .electra-nav {
+    position: sticky; top: 0; left: 0; right: 0;
+    height: 48px;
+    background: #0d0f1c;
+    display: flex; align-items: center;
+    padding: 0 16px;
+    z-index: 4000;
+    gap: 10px;
+  }
+  .electra-nav a {
+    display: flex; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .electra-nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .electra-nav .back-btn { font-size: 16px; margin-right: 4px; }
+  .electra-nav .brand {
+    font-weight: 700; color: #d4af6a; font-size: 13px;
+    letter-spacing: 0.04em; margin-right: auto;
+  }
+  .electra-nav .brand span { color: rgba(255,255,255,0.6); font-weight: 400; }
+  .electra-nav .badge {
+    background: #d4af6a; color: #0d0f1c; border-radius: 999px;
+    padding: 2px 10px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+  }
+  @media (max-width: 520px){ .electra-nav .brand span { display:none; } }
+
+  /* ---------- header ---------- */
+  .topbar{
+    background:var(--ink);
+    color:#E8EDF3;
+    padding:22px clamp(16px,4vw,52px) 26px;
+    background-image:
+      linear-gradient(transparent 0 calc(100% - 1px), rgba(255,255,255,.05) calc(100% - 1px)),
+      linear-gradient(90deg, transparent 0 calc(100% - 1px), rgba(255,255,255,.05) calc(100% - 1px));
+    background-size:34px 34px;
+    border-bottom:1px solid #00121f;
+  }
+  .topbar-inner{max-width:1280px;margin:0 auto;}
+  .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .logo{
+    font-family:"Archivo",sans-serif;font-weight:800;
+    font-size:clamp(30px,5vw,46px);letter-spacing:-.02em;line-height:1;
+    color:#fff;
+  }
+  .logo .dot{color:var(--wind);}
+  .logo .lite{color:var(--solar);}
+  .brand-tag{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:#8FA3B6;
+    letter-spacing:.04em;
+  }
+  .lede{
+    margin:14px 0 0;max-width:760px;color:#B8C6D4;font-size:15px;
+  }
+  .lede strong{color:#E8EDF3;font-weight:600;}
+  .honest{
+    margin-top:16px;display:flex;gap:10px;align-items:flex-start;
+    background:rgba(15,163,177,.08);
+    border:1px solid rgba(15,163,177,.32);
+    border-left:3px solid var(--wind);
+    padding:11px 14px;border-radius:7px;max-width:760px;
+  }
+  .honest svg{flex:0 0 auto;margin-top:2px;}
+  .honest p{margin:0;font-size:13px;color:#C7D5E1;}
+  .honest b{color:#fff;font-weight:600;}
+
+  /* ---------- pipeline ---------- */
+  .pipeline{
+    max-width:1280px;margin:0 auto;padding:18px clamp(16px,4vw,52px) 0;
+    display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;
+  }
+  .pstep{
+    flex:1 1 180px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:13px 15px;position:relative;min-width:160px;
+  }
+  .pstep .pnum{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--accent);font-weight:600;}
+  .pstep h4{margin:3px 0 2px;font-family:"Archivo",sans-serif;font-size:15px;font-weight:700;letter-spacing:-.01em;}
+  .pstep p{margin:0;font-size:12.5px;color:var(--muted);}
+  .parrow{display:flex;align-items:center;color:var(--line-strong);}
+  @media(max-width:720px){.parrow{display:none;}}
+
+  /* ---------- workspace ---------- */
+  .wrap{max-width:1280px;margin:0 auto;padding:22px clamp(16px,4vw,52px) 60px;}
+  .workspace{
+    display:grid;grid-template-columns:minmax(0,1fr) 452px;gap:22px;align-items:start;
+  }
+  @media(max-width:1040px){.workspace{grid-template-columns:1fr;}}
+
+  .col-controls{display:flex;flex-direction:column;gap:18px;min-width:0;}
+
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  }
+  .panel-head{
+    display:flex;align-items:center;gap:11px;padding:14px 18px;border-bottom:1px solid var(--line);
+  }
+  .step-chip{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+    width:26px;height:26px;border-radius:7px;display:grid;place-items:center;
+    background:var(--ink);color:#fff;flex:0 0 auto;
+  }
+  .panel-head h3{margin:0;font-family:"Archivo",sans-serif;font-size:16px;font-weight:700;letter-spacing:-.01em;}
+  .panel-head .sub{margin-left:auto;font-size:12px;color:var(--muted-2);}
+  .panel-body{padding:18px;}
+
+  /* ---------- map ---------- */
+  .mapwrap{position:relative;background:#0B1722;border-radius:9px;overflow:hidden;border:1px solid #04101b;}
+  svg.map{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair;}
+  .grat{stroke:rgba(120,150,175,.20);stroke-width:.6;}
+  .grat-major{stroke:rgba(120,150,175,.34);stroke-width:.8;}
+  .glabel{fill:#6E8398;font-family:"IBM Plex Mono",monospace;font-size:8px;}
+  .land{fill:#152838;stroke:#23415a;stroke-width:.6;}
+  .cell{fill:none;stroke:rgba(15,163,177,.42);stroke-width:.4;}
+  .bbox{fill:rgba(15,163,177,.14);stroke:var(--accent);stroke-width:1.4;}
+  .handle{fill:#fff;stroke:var(--accent);stroke-width:1.4;cursor:grab;}
+  .maphint{
+    position:absolute;left:10px;bottom:9px;font-family:"IBM Plex Mono",monospace;
+    font-size:10.5px;color:#7B8EA0;background:rgba(11,23,34,.7);padding:3px 7px;border-radius:5px;
+    pointer-events:none;
+  }
+
+  /* readout */
+  .readout{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-top:16px;}
+  .ro{background:var(--card);padding:11px 13px;}
+  .ro .k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);}
+  .ro .v{font-family:"Archivo",sans-serif;font-weight:700;font-size:19px;margin-top:2px;letter-spacing:-.01em;}
+  .ro .v small{font-weight:500;font-size:12px;color:var(--muted);}
+  .ro.full{grid-column:1/-1;}
+  .sizebar{height:5px;border-radius:3px;background:var(--line);margin-top:8px;overflow:hidden;}
+  .sizebar i{display:block;height:100%;background:var(--ok);border-radius:3px;transition:width .25s,background .25s;}
+  .flag{margin-top:12px;display:none;gap:9px;align-items:flex-start;font-size:12.5px;
+    padding:9px 12px;border-radius:8px;border:1px solid;}
+  .flag.show{display:flex;}
+  .flag.warn{background:#FBF3E4;border-color:#EBD4A6;color:#7A5A12;}
+  .flag.danger{background:#FBEAE5;border-color:#E7C2B6;color:#8A3320;}
+  .flag svg{flex:0 0 auto;margin-top:1px;}
+
+  /* ---------- form fields ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  @media(max-width:520px){.grid4{grid-template-columns:1fr 1fr;}}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field label{font-size:12px;font-weight:500;color:var(--ink-soft);}
+  .field .hint{font-size:11px;color:var(--muted-2);}
+  input[type=text],input[type=number],input[type=date],select{
+    font-family:"IBM Plex Sans",sans-serif;font-size:13.5px;color:var(--ink);
+    background:#FBFCFD;border:1px solid var(--line-strong);border-radius:8px;
+    padding:9px 11px;width:100%;transition:border-color .15s,box-shadow .15s;
+  }
+  input:focus,select:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);}
+  .mono-in input{font-family:"IBM Plex Mono",monospace;letter-spacing:.01em;}
+
+  .chiprow{display:flex;gap:8px;flex-wrap:wrap;}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);cursor:pointer;
+    padding:8px 11px;border:1px solid var(--line-strong);border-radius:8px;background:#FBFCFD;user-select:none;}
+  .chk input{accent-color:var(--accent);width:15px;height:15px;}
+
+  /* conversion tabs */
+  .convtabs{display:flex;gap:7px;flex-wrap:wrap;padding:14px 18px 0;}
+  .convtab{
+    font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:500;
+    border:1px solid var(--line-strong);background:#FBFCFD;color:var(--muted);
+    padding:8px 13px;border-radius:8px 8px 0 0;cursor:pointer;display:flex;align-items:center;gap:7px;
+    border-bottom:none;position:relative;top:1px;transition:all .15s;
+  }
+  .convtab .swatch{width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.6;}
+  .convtab[aria-selected=true]{
+    color:var(--ink);background:var(--card);border-color:var(--line);font-weight:600;
+    box-shadow:0 -2px 0 var(--accent) inset;
+  }
+  .convtab[aria-selected=true] .swatch{opacity:1;color:var(--accent);}
+  .convbody{padding:18px;border-top:1px solid var(--line);}
+  .conv-desc{font-size:13px;color:var(--muted);margin:0 0 16px;}
+  .conv-desc b{color:var(--ink-soft);font-weight:600;}
+  .conv-pane{display:none;}
+  .conv-pane.active{display:block;}
+
+  /* ---------- code rail ---------- */
+  .rail{position:sticky;top:66px;display:flex;flex-direction:column;gap:0;
+    border-radius:12px;overflow:hidden;border:1px solid #04101b;}
+  @media(max-width:1040px){.rail{position:static;}}
+  .rail-tabs{display:flex;background:var(--ink-soft);border-bottom:1px solid var(--code-line);}
+  .rtab{flex:1;font-family:"IBM Plex Mono",monospace;font-size:12px;color:#7E93A6;
+    background:transparent;border:none;padding:12px 8px;cursor:pointer;letter-spacing:.02em;
+    border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+  .rtab[aria-selected=true]{color:#fff;border-bottom-color:var(--accent);}
+  .codehead{display:flex;align-items:center;gap:10px;background:var(--code-bg);
+    padding:11px 14px;border-bottom:1px solid var(--code-line);}
+  .codehead .fname{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#9DB0C2;}
+  .copybtn{margin-left:auto;font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:500;
+    color:var(--ink);background:var(--accent);border:none;border-radius:7px;padding:7px 13px;cursor:pointer;
+    display:flex;align-items:center;gap:6px;transition:transform .1s,filter .15s;}
+  .copybtn:hover{filter:brightness(1.06);}
+  .copybtn:active{transform:scale(.96);}
+  .copybtn.done{background:var(--ok);color:#fff;}
+  pre.code{margin:0;background:var(--code-bg);color:#D6E2EE;
+    font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.7;
+    padding:16px 16px 20px;overflow-x:auto;max-height:62vh;tab-size:4;}
+  @media(max-width:1040px){pre.code{max-height:none;}}
+  pre.code .cm{color:#5E768C;}      /* comment */
+  pre.code .kw{color:#7FD1DE;}      /* keyword/module */
+  pre.code .st{color:#E2B270;}      /* string */
+  pre.code .nm{color:#A9C7E0;}      /* number */
+  pre.code .fn{color:#9FE0B0;}      /* function */
+  pre.code .ac{color:var(--accent);font-weight:600;}
+
+  .railnote{background:var(--code-bg);padding:12px 16px 16px;border-top:1px solid var(--code-line);}
+  .railnote p{margin:0;font-size:12px;color:#8EA1B4;line-height:1.55;}
+  .railnote a{color:var(--accent);text-decoration:none;}
+  .railnote a:hover{text-decoration:underline;}
+
+  /* generic text-tab body for install/cds */
+  .textpane{display:none;}
+  .textpane.active{display:block;}
+
+  footer{max-width:1280px;margin:0 auto;padding:8px clamp(16px,4vw,52px) 46px;
+    color:var(--muted);font-size:12.5px;}
+  footer a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line-strong);}
+  footer a:hover{color:var(--accent);border-color:var(--accent);}
+  .disclaim{margin-top:8px;font-size:11.5px;color:var(--muted-2);}
+
+  .secthead{font-family:"Archivo",sans-serif;font-weight:700;font-size:13px;
+    letter-spacing:-.005em;margin:0 0 11px;color:var(--ink);display:flex;align-items:center;gap:8px;}
+  .secthead::before{content:"";width:14px;height:2px;background:var(--accent);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- ===== ELECTRA SKILL ACADEMY NAV BAR ===== -->
+<div class="electra-nav">
+  <a href="peta-kelistrikan.html" title="Kembali ke Peta Ketenagalistrikan">
+    <span class="back-btn">‹</span> Kembali
+  </a>
+  <div class="brand">
+    Electra Skill Academy <span>· Atlite Studio</span>
+  </div>
+  <a href="peta-kelistrikan.html" class="badge" title="Peta Ketenagalistrikan Indonesia" style="text-decoration:none;">🗺️ Peta Listrik</a>
+  <a href="simulasi-energi.html" class="badge" title="Simulasi transisi energi & gamifikasi" style="text-decoration:none;">🌱 Simulasi</a>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="logo">at<span class="dot">l</span><span class="lite">ite</span> studio</span>
+      <span class="brand-tag">weather → energy · no-code front-end for PyPSA/atlite</span>
+    </div>
+    <p class="lede"><strong>atlite</strong> mengubah data cuaca (kecepatan angin, radiasi matahari dari ERA5) menjadi potensi & time series energi terbarukan — PLTB, PLTS, CSP, hydro, kebutuhan panas. Studio ini bikin langkah tersulitnya jadi mudah: <strong>pilih wilayah, set periode & parameter, lalu dapatkan kode Python yang tinggal dijalankan.</strong></p>
+    <div class="honest">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0FA3B1" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <p><b>Cara kerjanya:</b> komputasi berat atlite (download ERA5 berukuran GB + pemrosesan numerik) berjalan di mesin kamu — memang begitu desainnya. Studio ini menyusun konfigurasi & meng-generate kodenya, bukan menjalankan simulasinya di browser.</p>
+    </div>
+  </div>
+</header>
+
+<section class="pipeline" id="pipeline">
+  <div class="pstep"><div class="pnum">01</div><h4>Cutout</h4><p>Iris satu kotak wilayah + periode dari basis data cuaca global.</p></div>
+  <div class="parrow"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 7h18M14 2l6 5-6 5"/></svg></div>
+  <div class="pstep"><div class="pnum">02</div><h4>Convert</h4><p>Terapkan model turbin/panel untuk hitung daya per grid cell.</p></div>
+  <div class="parrow"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 7h18M14 2l6 5-6 5"/></svg></div>
+  <div class="pstep"><div class="pnum">03</div><h4>Output</h4><p>Capacity factor, time series, CSV, dan peta siap dipakai di model energi.</p></div>
+</section>
+
+<div class="wrap">
+<div class="workspace">
+
+  <!-- LEFT: controls -->
+  <div class="col-controls">
+
+    <!-- Panel 1: Cutout -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="step-chip">1</span>
+        <h3>Cutout — wilayah & waktu</h3>
+        <span class="sub">geser kotak di peta</span>
+      </div>
+      <div class="panel-body">
+        <div class="mapwrap">
+          <svg class="map" id="map" viewBox="0 0 960 400" preserveAspectRatio="xMidYMid meet" aria-label="Peta pemilih wilayah">
+            <g id="graticule"></g>
+            <g id="landlayer"></g>
+            <g id="celllayer"></g>
+            <g id="bboxlayer"></g>
+          </svg>
+          <div class="maphint">grid snap 0.25° · drag isi kotak untuk geser, sudut untuk ubah ukuran</div>
+        </div>
+
+        <div class="grid4" style="margin-top:16px;">
+          <div class="field mono-in"><label>Lon min (x₁)</label><input type="number" id="x1" step="0.25" value="105.5"></div>
+          <div class="field mono-in"><label>Lon max (x₂)</label><input type="number" id="x2" step="0.25" value="109"></div>
+          <div class="field mono-in"><label>Lat min (y₁)</label><input type="number" id="y1" step="0.25" value="-8"></div>
+          <div class="field mono-in"><label>Lat max (y₂)</label><input type="number" id="y2" step="0.25" value="-5"></div>
+        </div>
+
+        <div class="grid2" style="margin-top:16px;">
+          <div class="field"><label>Periode mulai</label><input type="date" id="t1" value="2023-01-01"></div>
+          <div class="field"><label>Periode selesai</label><input type="date" id="t2" value="2023-12-31"></div>
+        </div>
+
+        <div class="grid2" style="margin-top:16px;">
+          <div class="field">
+            <label>Sumber data (module)</label>
+            <select id="module">
+              <option value="era5" selected>ERA5 — reanalysis global (default, lengkap)</option>
+              <option value="sarah">SARAH-3 — radiasi surya resolusi tinggi (Eropa/Afrika)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Resolusi grid (dx = dy)</label>
+            <select id="res">
+              <option value="0.25" selected>0.25° — native ERA5 (~28 km)</option>
+              <option value="0.5">0.5° — lebih ringan</option>
+              <option value="1">1.0° — sangat ringan / kasar</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- live readout -->
+        <div class="readout">
+          <div class="ro"><div class="k">Grid cells</div><div class="v" id="ro-cells">—</div></div>
+          <div class="ro"><div class="k">Time steps</div><div class="v" id="ro-steps">—</div></div>
+          <div class="ro"><div class="k">Est. cutout</div><div class="v" id="ro-size">—</div></div>
+          <div class="ro full"><div class="k">Estimasi beban download (kasar)</div>
+            <div class="sizebar"><i id="sizebar" style="width:10%"></i></div>
+          </div>
+        </div>
+        <div class="flag warn" id="flag-warn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          <span id="flag-warn-txt"></span>
+        </div>
+        <div class="flag danger" id="flag-danger">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
+          <span id="flag-danger-txt"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 2: Conversion -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="step-chip">2</span>
+        <h3>Conversion — apa yang dihitung</h3>
+      </div>
+      <div class="convtabs" id="convtabs" role="tablist">
+        <button class="convtab" role="tab" data-conv="wind" aria-selected="true"><span class="swatch"></span>Angin (PLTB)</button>
+        <button class="convtab" role="tab" data-conv="pv" aria-selected="false"><span class="swatch"></span>Surya PV</button>
+        <button class="convtab" role="tab" data-conv="csp" aria-selected="false"><span class="swatch"></span>CSP</button>
+        <button class="convtab" role="tab" data-conv="runoff" aria-selected="false"><span class="swatch"></span>Hydro</button>
+        <button class="convtab" role="tab" data-conv="heat" aria-selected="false"><span class="swatch"></span>Heat demand</button>
+      </div>
+      <div class="convbody">
+
+        <!-- WIND -->
+        <div class="conv-pane active" data-pane="wind">
+          <p class="conv-desc"><b>cutout.wind()</b> — ubah kecepatan angin jadi daya per-unit memakai kurva daya turbin.</p>
+          <div class="grid2">
+            <div class="field">
+              <label>Model turbin</label>
+              <select id="w-turbine">
+                <option>Vestas_V112_3MW</option>
+                <option>Vestas_V90_3MW</option>
+                <option>Vestas_V164_7MW_offshore</option>
+                <option>Enercon_E101_3000kW</option>
+                <option>Enercon_E126_7500kW</option>
+                <option>Siemens_SWT_2300kW</option>
+                <option>NREL_ReferenceTurbine_2020ATB_5.5MW</option>
+                <option>NREL_ReferenceTurbine_2020ATB_15MW_offshore</option>
+                <option>Bonus_B1000_1000kW</option>
+              </select>
+              <span class="hint">Nama dari pustaka turbin OEDB bawaan atlite.</span>
+            </div>
+            <div class="field">
+              <label>Bentuk hasil</label>
+              <select id="w-output" class="out-select">
+                <option value="series">Time series per grid cell</option>
+                <option value="cf">Peta capacity factor rata-rata</option>
+              </select>
+              <span class="hint">CF = energi aktual ÷ energi maksimum teoretis.</span>
+            </div>
+          </div>
+          <div class="chiprow" style="margin-top:14px;">
+            <label class="chk"><input type="checkbox" id="w-smooth" checked> Smooth power curve (anjuran wilayah luas)</label>
+          </div>
+        </div>
+
+        <!-- PV -->
+        <div class="conv-pane" data-pane="pv">
+          <p class="conv-desc"><b>cutout.pv()</b> — radiasi surya → daya panel PV pada orientasi/tracking tertentu.</p>
+          <div class="grid2">
+            <div class="field">
+              <label>Jenis panel</label>
+              <select id="p-panel">
+                <option value="CSi">CSi — silikon kristalin (umum)</option>
+                <option value="CdTe">CdTe — thin-film</option>
+                <option value="KANENA">KANENA</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Orientasi</label>
+              <select id="p-orient" class="out-select">
+                <option value="manual">Manual (atur slope & azimuth)</option>
+                <option value="latitude_optimal">latitude_optimal (otomatis)</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid2" id="p-manual-fields" style="margin-top:14px;">
+            <div class="field mono-in"><label>Slope / kemiringan (°)</label><input type="number" id="p-slope" value="15" min="0" max="90" step="1">
+              <span class="hint">Dekat ekuator umumnya rendah (≈ lintang).</span></div>
+            <div class="field mono-in"><label>Azimuth (°)</label><input type="number" id="p-azimuth" value="0" min="0" max="360" step="1">
+              <span class="hint">0° = menghadap khatulistiwa; 180° konvensi utara.</span></div>
+          </div>
+          <div class="field" style="margin-top:14px;">
+            <label>Tracking</label>
+            <select id="p-tracking">
+              <option value="">Tetap (tanpa tracking)</option>
+              <option value="horizontal">Horizontal single-axis</option>
+              <option value="tilted_horizontal">Tilted single-axis</option>
+              <option value="vertical">Vertical single-axis</option>
+            </select>
+          </div>
+          <div class="chiprow" style="margin-top:14px;">
+            <label class="chk"><input type="checkbox" id="p-output-cf"> Keluarkan sebagai peta CF rata-rata</label>
+          </div>
+        </div>
+
+        <!-- CSP -->
+        <div class="conv-pane" data-pane="csp">
+          <p class="conv-desc"><b>cutout.csp()</b> — radiasi langsung (DNI) → keluaran termal kolektor surya terkonsentrasi.</p>
+          <div class="grid2">
+            <div class="field">
+              <label>Instalasi</label>
+              <select id="c-install">
+                <option value="SAM_solar_tower">SAM_solar_tower — menara surya</option>
+                <option value="SAM_parabolic_trough">SAM_parabolic_trough — palung parabolik</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Bentuk hasil</label>
+              <select id="c-output" class="out-select">
+                <option value="series">Time series per grid cell</option>
+                <option value="cf">Peta CF rata-rata</option>
+              </select>
+            </div>
+          </div>
+          <p class="conv-desc" style="margin:14px 0 0;">Catatan: CSP butuh DNI tinggi & langit cerah; cocok dicek dulu apakah wilayahmu layak.</p>
+        </div>
+
+        <!-- RUNOFF -->
+        <div class="conv-pane" data-pane="runoff">
+          <p class="conv-desc"><b>cutout.runoff()</b> — limpasan permukaan, basis inflow PLTA. Biasanya dipadukan dengan poligon DAS.</p>
+          <div class="chiprow">
+            <label class="chk"><input type="checkbox" id="r-smooth" checked> Smooth (haluskan deret limpasan)</label>
+            <label class="chk"><input type="checkbox" id="r-norm"> Normalisasi terhadap rerata</label>
+          </div>
+          <p class="conv-desc" style="margin:14px 0 0;">Untuk inflow waduk yang realistis, atlite menggabungkan runoff dengan shapefile DAS — lihat dokumentasi hydro.</p>
+        </div>
+
+        <!-- HEAT -->
+        <div class="conv-pane" data-pane="heat">
+          <p class="conv-desc"><b>cutout.heat_demand()</b> — suhu udara → kebutuhan pemanas (heating degree). Untuk iklim tropis biasanya bernilai kecil.</p>
+          <div class="grid2">
+            <div class="field mono-in"><label>Ambang suhu (°C)</label><input type="number" id="h-threshold" value="15" step="0.5">
+              <span class="hint">Pemanasan dihitung di bawah ambang ini.</span></div>
+            <div class="field">
+              <label>Bentuk hasil</label>
+              <select id="h-output" class="out-select">
+                <option value="series">Time series per grid cell</option>
+                <option value="cf">Peta rata-rata</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- RIGHT: code rail -->
+  <aside class="rail">
+    <div class="rail-tabs" id="railtabs" role="tablist">
+      <button class="rtab" role="tab" data-rtab="py" aria-selected="true">run.py</button>
+      <button class="rtab" role="tab" data-rtab="install" aria-selected="false">install</button>
+      <button class="rtab" role="tab" data-rtab="cds" aria-selected="false">CDS setup</button>
+    </div>
+
+    <!-- PY pane -->
+    <div class="textpane active" data-rtabpane="py">
+      <div class="codehead">
+        <span class="fname" id="py-fname">atlite_run.py</span>
+        <button class="copybtn" id="copy-py">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code" id="code-py"></pre>
+      <div class="railnote">
+        <p>Hasil <span class="mono">cutout.*</span> adalah xarray DataArray. Sebelum <span class="mono">prepare()</span> jalan, set dulu CDS API (tab di atas). <a href="https://atlite.readthedocs.io/en/latest/" target="_blank" rel="noopener">Dokumentasi atlite ↗</a></p>
+      </div>
+    </div>
+
+    <!-- INSTALL pane -->
+    <div class="textpane" data-rtabpane="install">
+      <div class="codehead">
+        <span class="fname">terminal</span>
+        <button class="copybtn" id="copy-install">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code" id="code-install"></pre>
+      <div class="railnote">
+        <p>conda dari conda-forge paling mulus karena membawa dependensi geospasial & numerik. Butuh Python 3.9+.</p>
+      </div>
+    </div>
+
+    <!-- CDS pane -->
+    <div class="textpane" data-rtabpane="cds">
+      <div class="codehead">
+        <span class="fname">~/.cdsapirc</span>
+        <button class="copybtn" id="copy-cds">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code" id="code-cds"></pre>
+      <div class="railnote">
+        <p>1) Daftar di Copernicus CDS &amp; setujui lisensi ERA5. 2) Salin <i>Personal Access Token</i> dari halaman profil. 3) Tempel ke <span class="mono">~/.cdsapirc</span> seperti di atas. Cek format terbaru di <a href="https://atlite.readthedocs.io/en/latest/introduction.html" target="_blank" rel="noopener">panduan atlite ↗</a> bila CDS berubah.</p>
+      </div>
+    </div>
+  </aside>
+
+</div>
+</div>
+
+<footer>
+  Dibuat untuk mempermudah <a href="https://github.com/PyPSA/atlite" target="_blank" rel="noopener">PyPSA/atlite</a> — pustaka open-source (MIT) dari komunitas PyPSA. Studio ini hanya penyusun konfigurasi & generator kode (front-end tidak resmi).
+  <div class="disclaim">Estimasi grid cell, time step, dan ukuran download adalah perhitungan kasar untuk merencanakan request — angka final ditentukan oleh atlite & variabel yang diunduh. Selalu rujuk dokumentasi resmi untuk parameter & nama turbin/panel terbaru.</div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------------- projection ---------------- */
+const LON0=94, LON1=142, LAT0=-12, LAT1=8;
+const VW=960, VH=400;
+const sx = VW/(LON1-LON0);   // px per deg lon
+const sy = VH/(LAT1-LAT0);   // px per deg lat
+const lon2x = lon => (lon-LON0)*sx;
+const lat2y = lat => (LAT1-lat)*sy;
+const x2lon = x => LON0 + x/sx;
+const y2lat = y => LAT1 - y/sy;
+
+/* ---------------- state ---------------- */
+const S = {
+  x1:105.5, x2:109, y1:-8, y2:-5,
+  t1:"2023-01-01", t2:"2023-12-31",
+  module:"era5", res:0.25,
+  conv:"wind"
+};
+const ACCENT = {wind:"#0FA3B1", pv:"#F2A40C", csp:"#D8731A", runoff:"#3B82C4", heat:"#C2492E"};
+
+/* ---------------- simplified land ---------------- */
+const LAND = [
+  /* Sumatra */ [[95.3,5.6],[98,4],[100,1.2],[102,-1],[104,-3],[105.9,-5.6],[105.2,-5.9],[103,-4.2],[101,-1.6],[99,1],[96.6,4.2],[95.3,5.6]],
+  /* Java */    [[105.2,-6.0],[106.8,-6.1],[110,-6.4],[112.6,-6.9],[114.4,-8.4],[112.8,-8.3],[110,-7.7],[108,-7.7],[106,-7.1],[105.2,-6.0]],
+  /* Kalimantan */ [[109,1.6],[111,1.9],[114,1.4],[117.6,0.2],[117.4,-3.5],[116,-4.1],[114,-3.8],[110.6,-3.0],[109.2,-1.0],[108.9,0.9],[109,1.6]],
+  /* Sulawesi */ [[119.8,1.3],[121,0.5],[120.5,-0.5],[121.5,-1.9],[123,-2.6],[122.3,-3.9],[120.9,-5.6],[120.1,-5.5],[120.3,-3.5],[119.3,-2.5],[119.6,-1.0],[119.0,0.3],[119.8,1.3]],
+  /* Papua W */ [[131,-0.8],[134,-1.2],[137,-2.3],[139,-3.7],[141,-6.0],[141,-9.0],[138,-8.2],[135,-6.6],[132.5,-4.1],[131,-2.5],[131,-0.8]],
+  /* Halmahera */ [[127.4,1.5],[128.4,0.9],[128.2,-0.3],[127.6,0.4],[127.4,1.5]]
+];
+const ISLES = [ /* small ellipses: [lon,lat,rlon,rlat] */
+  [115.1,-8.4,.55,.28],[116.4,-8.6,.7,.3],[117.8,-8.7,.95,.32],
+  [121,-8.7,1.0,.32],[124.4,-9.3,.95,.34],[129.7,-3.1,1.1,.4]
+];
+
+/* ---------------- draw map ---------------- */
+const $ = id => document.getElementById(id);
+function buildGraticule(){
+  const g = $("graticule"); let s="";
+  for(let lon=Math.ceil(LON0); lon<=LON1; lon++){
+    const major = lon%5===0;
+    s+=`<line class="${major?'grat-major':'grat'}" x1="${lon2x(lon).toFixed(1)}" y1="0" x2="${lon2x(lon).toFixed(1)}" y2="${VH}"/>`;
+    if(major) s+=`<text class="glabel" x="${(lon2x(lon)+2).toFixed(1)}" y="${VH-4}">${lon}°E</text>`;
+  }
+  for(let lat=Math.ceil(LAT0); lat<=LAT1; lat++){
+    const major = lat%4===0;
+    s+=`<line class="${major?'grat-major':'grat'}" x1="0" y1="${lat2y(lat).toFixed(1)}" x2="${VW}" y2="${lat2y(lat).toFixed(1)}"/>`;
+    if(major) s+=`<text class="glabel" x="3" y="${(lat2y(lat)-3).toFixed(1)}">${lat}°</text>`;
+  }
+  g.innerHTML=s;
+}
+function buildLand(){
+  let s="";
+  LAND.forEach(poly=>{
+    const pts = poly.map(p=>`${lon2x(p[0]).toFixed(1)},${lat2y(p[1]).toFixed(1)}`).join(" ");
+    s+=`<polygon class="land" points="${pts}"/>`;
+  });
+  ISLES.forEach(e=>{
+    s+=`<ellipse class="land" cx="${lon2x(e[0]).toFixed(1)}" cy="${lat2y(e[1]).toFixed(1)}" rx="${(e[2]*sx).toFixed(1)}" ry="${(e[3]*sy).toFixed(1)}"/>`;
+  });
+  $("landlayer").innerHTML=s;
+}
+
+function drawBox(){
+  const bx = $("bboxlayer"), cl=$("celllayer");
+  const X1=lon2x(S.x1), X2=lon2x(S.x2), Y1=lat2y(S.y2), Y2=lat2y(S.y1); // note lat inverted
+  const w=X2-X1, h=Y2-Y1;
+  // cells
+  const nx=Math.max(1,Math.round((S.x2-S.x1)/S.res));
+  const ny=Math.max(1,Math.round((S.y2-S.y1)/S.res));
+  let cs="";
+  if(nx*ny<=900){
+    for(let i=0;i<=nx;i++){const xx=X1+(w*i/nx);cs+=`<line class="cell" x1="${xx.toFixed(1)}" y1="${Y1.toFixed(1)}" x2="${xx.toFixed(1)}" y2="${Y2.toFixed(1)}"/>`;}
+    for(let j=0;j<=ny;j++){const yy=Y1+(h*j/ny);cs+=`<line class="cell" x1="${X1.toFixed(1)}" y1="${yy.toFixed(1)}" x2="${X2.toFixed(1)}" y2="${yy.toFixed(1)}"/>`;}
+  }
+  cl.innerHTML=cs;
+  const hs=6;
+  bx.innerHTML=
+    `<rect class="bbox" x="${X1.toFixed(1)}" y="${Y1.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"/>`+
+    `<rect class="handle" data-h="nw" x="${(X1-hs).toFixed(1)}" y="${(Y1-hs).toFixed(1)}" width="${hs*2}" height="${hs*2}"/>`+
+    `<rect class="handle" data-h="ne" x="${(X2-hs).toFixed(1)}" y="${(Y1-hs).toFixed(1)}" width="${hs*2}" height="${hs*2}"/>`+
+    `<rect class="handle" data-h="sw" x="${(X1-hs).toFixed(1)}" y="${(Y2-hs).toFixed(1)}" width="${hs*2}" height="${hs*2}"/>`+
+    `<rect class="handle" data-h="se" x="${(X2-hs).toFixed(1)}" y="${(Y2-hs).toFixed(1)}" width="${hs*2}" height="${hs*2}"/>`;
+}
+
+/* ---------------- pointer drag ---------------- */
+const map=$("map");
+let drag=null;
+function svgPt(ev){
+  const r=map.getBoundingClientRect();
+  const cx=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left;
+  const cy=(ev.touches?ev.touches[0].clientY:ev.clientY)-r.top;
+  return {x:cx/r.width*VW, y:cy/r.height*VH};
+}
+const snap=v=>Math.round(v/S.res)*S.res;
+const clampLon=v=>Math.min(LON1,Math.max(LON0,v));
+const clampLat=v=>Math.min(LAT1,Math.max(LAT0,v));
+
+map.addEventListener("pointerdown",ev=>{
+  const t=ev.target;
+  const pt=svgPt(ev);
+  if(t.classList.contains("handle")){
+    drag={mode:"resize",h:t.dataset.h};
+  }else{
+    // inside box? -> move ; else start new box
+    const inX = S.x1<=x2lon(pt.x) && x2lon(pt.x)<=S.x2;
+    const inY = S.y1<=y2lat(pt.y) && y2lat(pt.y)<=S.y2;
+    if(inX&&inY){
+      drag={mode:"move", ox:x2lon(pt.x)-S.x1, oy:y2lat(pt.y)-S.y1, w:S.x2-S.x1, h:S.y2-S.y1};
+    }else{
+      drag={mode:"new", ax:snap(clampLon(x2lon(pt.x))), ay:snap(clampLat(y2lat(pt.y)))};
+    }
+  }
+  map.setPointerCapture(ev.pointerId);
+  ev.preventDefault();
+},{passive:false});
+
+map.addEventListener("pointermove",ev=>{
+  if(!drag) return;
+  const pt=svgPt(ev);
+  let lon=clampLon(x2lon(pt.x)), lat=clampLat(y2lat(pt.y));
+  if(drag.mode==="resize"){
+    if(drag.h.includes("w")) S.x1=snap(lon); else S.x2=snap(lon);
+    if(drag.h.includes("n")) S.y2=snap(lat); else S.y1=snap(lat);
+  }else if(drag.mode==="move"){
+    let nx1=snap(lon-drag.ox), ny1=snap(lat-drag.oy);
+    nx1=Math.min(LON1-drag.w,Math.max(LON0,nx1));
+    ny1=Math.min(LAT1-drag.h,Math.max(LAT0,ny1));
+    S.x1=nx1; S.x2=nx1+drag.w; S.y1=ny1; S.y2=ny1+drag.h;
+  }else if(drag.mode==="new"){
+    S.x1=Math.min(drag.ax,snap(lon)); S.x2=Math.max(drag.ax,snap(lon));
+    S.y1=Math.min(drag.ay,snap(lat)); S.y2=Math.max(drag.ay,snap(lat));
+  }
+  normalizeBox(); syncInputs(); drawBox(); updateAll();
+  ev.preventDefault();
+},{passive:false});
+
+map.addEventListener("pointerup",()=>{drag=null;});
+map.addEventListener("pointercancel",()=>{drag=null;});
+
+function normalizeBox(){
+  if(S.x2<S.x1+S.res) S.x2=S.x1+S.res;
+  if(S.y2<S.y1+S.res) S.y2=S.y1+S.res;
+  S.x1=+S.x1.toFixed(2);S.x2=+S.x2.toFixed(2);S.y1=+S.y1.toFixed(2);S.y2=+S.y2.toFixed(2);
+}
+
+/* ---------------- inputs sync ---------------- */
+function syncInputs(){
+  $("x1").value=S.x1; $("x2").value=S.x2; $("y1").value=S.y1; $("y2").value=S.y2;
+}
+["x1","x2","y1","y2"].forEach(id=>{
+  $(id).addEventListener("input",()=>{
+    const v=parseFloat($(id).value); if(!isNaN(v)) S[id]=v;
+    normalizeBox(); drawBox(); updateAll();
+  });
+});
+["t1","t2","module"].forEach(id=>$(id).addEventListener("input",()=>{S[id]=$(id).value;updateAll();}));
+$("res").addEventListener("input",()=>{S.res=parseFloat($("res").value);normalizeBox();syncInputs();drawBox();updateAll();});
+
+/* ---------------- readout ---------------- */
+function daysBetween(a,b){
+  const d1=new Date(a), d2=new Date(b);
+  if(isNaN(d1)||isNaN(d2)||d2<d1) return 0;
+  return Math.round((d2-d1)/86400000)+1;
+}
+function fmt(n){
+  if(n>=1e9) return (n/1e9).toFixed(1)+"B";
+  if(n>=1e6) return (n/1e6).toFixed(1)+"M";
+  if(n>=1e3) return (n/1e3).toFixed(1)+"k";
+  return ""+n;
+}
+function updateReadout(){
+  const nx=Math.max(1,Math.round((S.x2-S.x1)/S.res));
+  const ny=Math.max(1,Math.round((S.y2-S.y1)/S.res));
+  const cells=nx*ny;
+  const days=daysBetween(S.t1,S.t2);
+  const steps=days*24; // ERA5 hourly
+  // size est: cells * steps * ~10 vars * 4 bytes
+  const bytes=cells*steps*10*4;
+  $("ro-cells").innerHTML=`${fmt(cells)} <small>(${nx}×${ny})</small>`;
+  $("ro-steps").innerHTML=`${fmt(steps)} <small>jam</small>`;
+  let sizeTxt, gb=bytes/1073741824;
+  if(gb>=1) sizeTxt=`${gb.toFixed(1)} <small>GB</small>`;
+  else sizeTxt=`${(bytes/1048576).toFixed(0)} <small>MB</small>`;
+  $("ro-size").innerHTML=sizeTxt;
+  // bar + flags (log-ish scale, ~5GB = full)
+  const pct=Math.min(100,Math.max(6,(gb/5)*100));
+  const bar=$("sizebar"); bar.style.width=pct+"%";
+  const w=$("flag-warn"), d=$("flag-danger");
+  w.classList.remove("show"); d.classList.remove("show");
+  if(gb>=8){
+    bar.style.background="var(--danger)";
+    d.classList.add("show");
+    $("flag-danger-txt").textContent=`Request sangat besar (~${gb.toFixed(0)} GB). Persempit area atau perpendek periode — download bisa berjam-jam & boros disk.`;
+  }else if(gb>=2){
+    bar.style.background="var(--warn)";
+    w.classList.add("show");
+    $("flag-warn-txt").textContent=`Cukup besar (~${gb.toFixed(1)} GB). Pastikan koneksi & ruang disk memadai; download pertama bisa lama.`;
+  }else{
+    bar.style.background="var(--ok)";
+  }
+}
+
+/* ---------------- code generation ---------------- */
+function esc(s){return s;}
+function dt(s){return s;}
+function pyCutout(){
+  const path=`cutout_${Math.abs(Math.round(S.x1))}E_${Math.abs(Math.round(S.y1))}S.nc`;
+  return [
+`<span class="kw">import</span> atlite`,
+`<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt`,
+``,
+`<span class="cm"># 1) Definisikan cutout: satu kotak wilayah + periode dari data cuaca</span>`,
+`cutout = atlite.<span class="fn">Cutout</span>(`,
+`    path=<span class="st">"${path}"</span>,`,
+`    module=<span class="st">"${S.module}"</span>,`,
+`    x=<span class="fn">slice</span>(<span class="nm">${S.x1}</span>, <span class="nm">${S.x2}</span>),   <span class="cm"># bujur (lon)</span>`,
+`    y=<span class="fn">slice</span>(<span class="nm">${S.y1}</span>, <span class="nm">${S.y2}</span>),   <span class="cm"># lintang (lat)</span>`,
+`    time=<span class="fn">slice</span>(<span class="st">"${S.t1}"</span>, <span class="st">"${S.t2}"</span>),`,
+`    dx=<span class="nm">${S.res}</span>, dy=<span class="nm">${S.res}</span>,`,
+`)`,
+``,
+`<span class="cm"># 2) Unduh & bangun (butuh CDS API aktif — lihat tab "CDS setup")</span>`,
+`cutout.<span class="fn">prepare</span>()`,
+``
+  ];
+}
+
+function pyConvert(){
+  const c=S.conv;
+  let lines=[], varname="result", isCF=false;
+  if(c==="wind"){
+    const turb=$("w-turbine").value;
+    const smooth=$("w-smooth").checked;
+    isCF=$("w-output").value==="cf";
+    varname="wind";
+    lines=[
+      `<span class="cm"># 3) Konversi: angin -> daya turbin (per-unit, per grid cell)</span>`,
+      `wind = cutout.<span class="ac fn">wind</span>(`,
+      `    turbine=<span class="st">"${turb}"</span>,`,
+      `    smooth=<span class="nm">${smooth?'True':'False'}</span>,`+(isCF?`\n    capacity_factor=<span class="nm">True</span>,`:``),
+      `)`
+    ];
+  }else if(c==="pv"){
+    const panel=$("p-panel").value;
+    const orient=$("p-orient").value;
+    const track=$("p-tracking").value;
+    isCF=$("p-output-cf").checked;
+    varname="pv";
+    let oLine = orient==="latitude_optimal"
+      ? `    orientation=<span class="st">"latitude_optimal"</span>,`
+      : `    orientation={<span class="st">"slope"</span>: <span class="nm">${(+$("p-slope").value).toFixed(1)}</span>, <span class="st">"azimuth"</span>: <span class="nm">${(+$("p-azimuth").value).toFixed(1)}</span>},`;
+    lines=[
+      `<span class="cm"># 3) Konversi: radiasi surya -> daya panel PV</span>`,
+      `pv = cutout.<span class="ac fn">pv</span>(`,
+      `    panel=<span class="st">"${panel}"</span>,`,
+      oLine,
+      (track?`    tracking=<span class="st">"${track}"</span>,`:`    tracking=<span class="nm">None</span>,`),
+      (isCF?`    capacity_factor=<span class="nm">True</span>,`:null),
+      `)`
+    ].filter(Boolean);
+  }else if(c==="csp"){
+    const inst=$("c-install").value;
+    isCF=$("c-output").value==="cf";
+    varname="csp";
+    lines=[
+      `<span class="cm"># 3) Konversi: DNI -> keluaran termal CSP</span>`,
+      `csp = cutout.<span class="ac fn">csp</span>(`,
+      `    installation=<span class="st">"${inst}"</span>,`+(isCF?`\n    capacity_factor=<span class="nm">True</span>,`:``),
+      `)`
+    ];
+  }else if(c==="runoff"){
+    const sm=$("r-smooth").checked, nm=$("r-norm").checked;
+    varname="runoff";
+    lines=[
+      `<span class="cm"># 3) Konversi: limpasan permukaan (basis inflow PLTA)</span>`,
+      `runoff = cutout.<span class="ac fn">runoff</span>(`,
+      `    smooth=<span class="nm">${sm?'True':'False'}</span>,`+(nm?`\n    normalize_using_yearly=<span class="nm">True</span>,`:``),
+      `)`,
+      ``,
+      `<span class="cm"># Tip: untuk inflow waduk, gabungkan runoff dengan poligon DAS</span>`,
+      `<span class="cm"># lewat shapes=... (lihat dokumentasi hydro atlite).</span>`
+    ];
+  }else if(c==="heat"){
+    const th=(+$("h-threshold").value).toFixed(1);
+    isCF=$("h-output").value==="cf";
+    varname="heat";
+    lines=[
+      `<span class="cm"># 3) Konversi: suhu -> kebutuhan panas (heating)</span>`,
+      `heat = cutout.<span class="ac fn">heat_demand</span>(`,
+      `    threshold=<span class="nm">${th}</span>,`,
+      `)`
+    ];
+  }
+  return {lines, varname, isCF};
+}
+
+function pyOutput(varname, isCF){
+  if(isCF){
+    return [
+      ``,
+      `<span class="cm"># 4) Gunakan hasil — peta capacity factor rata-rata</span>`,
+      `${varname}.<span class="fn">plot</span>(cmap=<span class="st">"viridis"</span>)`,
+      `plt.<span class="fn">title</span>(<span class="st">"Mean capacity factor"</span>)`,
+      `plt.<span class="fn">show</span>()`,
+      ``,
+      `${varname}.<span class="fn">to_dataframe</span>(name=<span class="st">"cf"</span>).<span class="fn">to_csv</span>(<span class="st">"${varname}_cf_map.csv"</span>)`
+    ];
+  }
+  return [
+    ``,
+    `<span class="cm"># 4) Gunakan hasil — peta rata-rata + time series rata-rata wilayah</span>`,
+    `mean_map = ${varname}.<span class="fn">mean</span>(<span class="st">"time"</span>)        <span class="cm"># nilai rata-rata per cell</span>`,
+    `series  = ${varname}.<span class="fn">mean</span>([<span class="st">"x"</span>, <span class="st">"y"</span>]).<span class="fn">to_pandas</span>()  <span class="cm"># rerata spasial sederhana</span>`,
+    ``,
+    `series.<span class="fn">to_csv</span>(<span class="st">"${varname}_timeseries.csv"</span>)`,
+    `mean_map.<span class="fn">plot</span>(cmap=<span class="st">"viridis"</span>); plt.<span class="fn">show</span>()`,
+    ``,
+    `<span class="cm"># Catatan: rerata spasial = bobot seragam. Untuk agregasi ke region</span>`,
+    `<span class="cm"># tertimbang kapasitas, pakai layout/shapes (lihat dokumentasi).</span>`
+  ];
+}
+
+function generatePy(){
+  const {lines, varname, isCF}=pyConvert();
+  const all=[...pyCutout(), ...lines, ...pyOutput(varname,isCF)];
+  $("code-py").innerHTML=all.join("\n");
+  // filename + accent class
+  const path=`atlite_${S.conv}_run.py`;
+  $("py-fname").textContent=path;
+}
+
+const INSTALL=
+`<span class="cm"># Anjuran: conda (membawa dependensi geospasial & numerik)</span>
+conda install -c conda-forge atlite
+
+<span class="cm"># Alternatif via pip</span>
+pip install atlite
+
+<span class="cm"># Versi terbaru langsung dari GitHub</span>
+pip install git+https://github.com/PyPSA/atlite.git
+
+<span class="cm"># Tambahan berguna</span>
+pip install matplotlib cdsapi`;
+
+const CDS=
+`<span class="cm"># File: ~/.cdsapirc  (Linux/macOS) atau %USERPROFILE%\\.cdsapirc (Windows)</span>
+url: <span class="st">https://cds.climate.copernicus.eu/api</span>
+key: <span class="st">&lt;TEMPEL-PERSONAL-ACCESS-TOKEN-MU&gt;</span>
+
+<span class="cm"># Langkah:</span>
+<span class="cm"># 1. Daftar akun di Copernicus Climate Data Store</span>
+<span class="cm"># 2. Buka halaman dataset ERA5 -> setujui Terms of use / licence</span>
+<span class="cm"># 3. Salin token dari halaman profil -> tempel di key di atas</span>
+<span class="cm"># 4. pip install "cdsapi&gt;=0.7"</span>
+<span class="cm"># Selesai. Pertama kali prepare() akan mengantre & mengunduh.</span>`;
+
+/* ---------------- tabs ---------------- */
+function setAccent(){
+  document.documentElement.style.setProperty("--accent", ACCENT[S.conv]);
+}
+document.querySelectorAll(".convtab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".convtab").forEach(t=>t.setAttribute("aria-selected","false"));
+    tab.setAttribute("aria-selected","true");
+    S.conv=tab.dataset.conv;
+    document.querySelectorAll(".conv-pane").forEach(p=>p.classList.toggle("active",p.dataset.pane===S.conv));
+    setAccent(); drawBox(); generatePy();
+  });
+});
+document.querySelectorAll(".rtab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".rtab").forEach(t=>t.setAttribute("aria-selected","false"));
+    tab.setAttribute("aria-selected","true");
+    document.querySelectorAll(".textpane").forEach(p=>p.classList.toggle("active",p.dataset.rtabpane===tab.dataset.rtab));
+  });
+});
+
+/* PV orientation manual toggle */
+$("p-orient").addEventListener("change",()=>{
+  $("p-manual-fields").style.display = $("p-orient").value==="manual" ? "grid":"none";
+  generatePy();
+});
+/* every conversion control re-generates */
+document.querySelectorAll("#convtabs ~ .convbody input, #convtabs ~ .convbody select")
+  .forEach(el=>el.addEventListener("input",generatePy));
+
+/* ---------------- copy ---------------- */
+function plain(html){
+  return html.replace(/<[^>]+>/g,"").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
+}
+function wireCopy(btnId, getter){
+  $(btnId).addEventListener("click",async()=>{
+    try{
+      await navigator.clipboard.writeText(plain(getter()));
+    }catch(e){
+      const ta=document.createElement("textarea");ta.value=plain(getter());
+      document.body.appendChild(ta);ta.select();
+      try{document.execCommand("copy");}catch(_){}
+      document.body.removeChild(ta);
+    }
+    const b=$(btnId);b.classList.add("done");const t=b.querySelector("svg").outerHTML;
+    b.innerHTML=t+" Tersalin";
+    setTimeout(()=>{b.classList.remove("done");b.innerHTML=t+" Copy";},1400);
+  });
+}
+
+/* ---------------- update ---------------- */
+function updateAll(){ updateReadout(); generatePy(); }
+
+/* ---------------- init ---------------- */
+buildGraticule(); buildLand(); setAccent(); drawBox();
+$("code-install").innerHTML=INSTALL;
+$("code-cds").innerHTML=CDS;
+wireCopy("copy-py",()=>$("code-py").innerHTML);
+wireCopy("copy-install",()=>$("code-install").innerHTML);
+wireCopy("copy-cds",()=>$("code-cds").innerHTML);
+$("p-manual-fields").style.display="grid";
+updateAll();
+</script>
+</body>
+</html>
