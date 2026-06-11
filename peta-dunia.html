@@ -250,7 +250,7 @@
   </div>
   <div class="pot-embed-frame">
     <iframe id="pot-embed-iframe" title="Peta potensi energi terbarukan" allow="fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    <div class="pot-embed-note" id="pot-embed-note">Memuat peta potensi… Jika tampilan tidak muncul, situs sumber memblokir embed — klik <b>Buka penuh ↗</b>.</div>
+    <div class="pot-embed-note" id="pot-embed-note">Memuat peta… untuk data potensi jangka panjang yang resmi, klik <b>Buka Atlas ↗</b>.</div>
   </div>
 </div>
 
@@ -680,46 +680,67 @@ function showSources(){
 // Atlas surya/angin ditampilkan EMBED di dalam halaman (iframe) untuk view
 // saat ini, dengan tombol "Buka penuh" sebagai cadangan bila sumber memblokir.
 // ============================================================
-function _potUrl(kind){
-  const c=map.getCenter(), z=Math.min(11,Math.max(2,Math.round(map.getZoom())));
-  const lat=c.lat.toFixed(3), lon=c.lng.toFixed(3);
-  const iso=state.country, cname=iso?(COUNTRIES[iso]||iso):'';
-  if(kind==='solar') return `https://globalsolaratlas.info/map?c=${lat},${lon},${z}`;
-  return iso?`https://globalwindatlas.info/en/area/${encodeURIComponent(cname)}`:'https://globalwindatlas.info/en/';
+function _potCoords(){
+  const c=map.getCenter(), z=Math.min(11,Math.max(3,Math.round(map.getZoom())));
+  const iso=state.country;
+  return { lat:c.lat.toFixed(3), lon:c.lng.toFixed(3), z, iso, cname: iso?(COUNTRIES[iso]||iso):'' };
+}
+// Windy.com mengizinkan embed iframe (Global Solar/Wind Atlas memblokirnya via
+// X-Frame-Options), jadi tampilan in-page memakai Windy: overlay angin & solar
+// power, live, terpusat ke koordinat peta saat ini.
+function _windyUrl(overlay,p){
+  return 'https://embed.windy.com/embed2.html?'+[
+    'lat='+p.lat,'lon='+p.lon,'detailLat='+p.lat,'detailLon='+p.lon,
+    'zoom='+p.z,'level=surface','overlay='+overlay,'product=ecmwf',
+    'menu=','message=','marker=true','calendar=now','pressure=','type=map',
+    'location=coordinates','detail=','metricWind=km%2Fh','metricTemp=%C2%B0C','radarRange=-1'
+  ].join('&');
+}
+// Atlas potensi resmi (jangka panjang) — dibuka di tab baru via "Buka Atlas".
+function _atlasUrl(kind,p){
+  if(kind==='solar') return 'https://globalsolaratlas.info/map?c='+p.lat+','+p.lon+','+p.z;
+  return p.iso?'https://globalwindatlas.info/en/area/'+encodeURIComponent(p.cname):'https://globalwindatlas.info/en/';
 }
 function showPotensi(){
   const iso=state.country, cname=iso?(COUNTRIES[iso]||iso):'dunia';
-  const tile=(kind,icon,title,desc)=>`<button class="pot-tile" onclick="openPotEmbed('${kind}')">
+  const tile=(onclick,icon,title,desc,go)=>`<button class="pot-tile" onclick="${onclick}">
       <span class="pt-ic">${icon}</span>
       <span class="pt-tx"><span class="pt-tt">${title}</span><span class="pt-sd">${desc}</span></span>
-      <span class="pt-go">Lihat →</span></button>`;
+      <span class="pt-go">${go}</span></button>`;
   document.getElementById('pot-content').innerHTML=`
     <h2>Potensi <b>Energi Terbarukan</b></h2>
-    <p>Seberapa besar listrik yang bisa dihasilkan <strong>matahari</strong>, <strong>angin</strong>, &amp; <strong>air</strong> di tiap lokasi. Pilih jenis di bawah — peta potensi tampil langsung di sini untuk wilayah peta saat ini${iso?` (fokus <strong>${cname}</strong>)`:''}.</p>
+    <p>Seberapa besar listrik yang bisa dihasilkan <strong>matahari</strong> &amp; <strong>angin</strong> di tiap lokasi, terpusat ke wilayah peta saat ini${iso?` (fokus <strong>${cname}</strong>)`:''}.</p>
     <div class="pot-tiles">
-      ${tile('solar','☀️','Potensi Surya','Iradiasi &amp; potensi panel surya (PV). Sumber: Global Solar Atlas (ESMAP/World Bank).')}
-      ${tile('wind','💨','Potensi Angin','Kecepatan &amp; kelas angin per ketinggian. Sumber: Global Wind Atlas (DTU).')}
+      ${tile("openPotAtlas('solar')",'☀️','Potensi Surya','Buka <strong>Global Solar Atlas</strong> (data iradiasi &amp; potensi PV resmi, ESMAP/World Bank) di tab baru.','Buka ↗')}
+      ${tile("openPotEmbed('wind')",'💨','Potensi Angin','Peta kecepatan angin <strong>live</strong> tampil di sini + tombol ke Global Wind Atlas (DTU).','Lihat →')}
     </div>
     <div class="pot-note">
       <span class="pt-ic" style="font-size:18px">🛰️</span>
-      <span>Angka potensi ini dihitung dari data cuaca <strong>ERA5</strong> memakai <a href="https://github.com/PyPSA/atlite" target="_blank" rel="noopener">atlite (PyPSA)</a> — library Python terbuka (mesin di balik pemodelan sistem energi). <a href="https://atlite.readthedocs.io/" target="_blank" rel="noopener">Dokumentasi ↗</a></span>
+      <span>Potensi jangka panjang dihitung dari data cuaca <strong>ERA5</strong> memakai <a href="https://github.com/PyPSA/atlite" target="_blank" rel="noopener">atlite (PyPSA)</a> — library Python terbuka (mesin pemodelan sistem energi). <a href="https://atlite.readthedocs.io/" target="_blank" rel="noopener">Dokumentasi ↗</a></span>
     </div>
     <button class="closeb" onclick="document.getElementById('pot-modal').classList.remove('show')">Tutup</button>`;
   document.getElementById('pot-modal').classList.add('show');
 }
-function openPotEmbed(kind){
-  const url=_potUrl(kind);
-  const title=(kind==='solar'?'☀️ Potensi Surya':'💨 Potensi Angin');
+// Surya: atlas resmi memblokir iframe, jadi dibuka di tab baru (deep-link ke view).
+function openPotAtlas(kind){
+  const url=_atlasUrl(kind,_potCoords());
+  window.open(url,'_blank','noopener');
   document.getElementById('pot-modal').classList.remove('show');
-  document.getElementById('pot-embed-title').textContent=title;
-  const open=document.getElementById('pot-embed-open'); open.href=url;
+}
+// Angin: Windy mengizinkan embed → tampil live di dalam halaman.
+function openPotEmbed(kind){
+  const p=_potCoords();
+  const embed=_windyUrl('wind', p);
+  const atlas=_atlasUrl('wind',p);
+  document.getElementById('pot-modal').classList.remove('show');
+  document.getElementById('pot-embed-title').textContent='💨 Potensi Angin — kecepatan angin (live)';
+  const open=document.getElementById('pot-embed-open'); open.href=atlas;
+  open.textContent='Buka Global Wind Atlas ↗';
   const note=document.getElementById('pot-embed-note'); note.classList.remove('hide');
   const f=document.getElementById('pot-embed-iframe');
   f.onload=()=>{ note.classList.add('hide'); };
-  f.src=url;
-  // Cadangan: bila sumber memblokir embed (onload tak menandakan sukses), tetap
-  // tampilkan petunjuk "Buka penuh" beberapa detik lalu.
-  clearTimeout(window._potT); window._potT=setTimeout(()=>note.classList.remove('hide'),4500);
+  f.src=embed;
+  clearTimeout(window._potT); window._potT=setTimeout(()=>note.classList.add('hide'),4000);
   document.getElementById('pot-embed').classList.add('show');
   document.body.style.overflow='hidden';
 }
