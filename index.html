@@ -5657,7 +5657,19 @@ function _tutorSend() {
 // ada mengosongkan modal sehingga iframe (WebGL) benar-benar dibongkar.
 const ESA_SIM3D_URL = 'https://electrasim3d.vercel.app/?via=electraacademy';
 function openExternalSim() {
-  if (!window.esaRequireAccess || !esaRequireAccess()) return;
+  // Katalog simulator boleh ditelusuri member terdaftar (cukup login, tanpa bayar):
+  // mereka bisa lihat semua jalur & misi yang tersedia. Misi tetap TERKUNCI di dalam
+  // app simulator dan baru minta langganan saat hendak dijalankan.
+  if (!esaContentUnlocked()) {
+    if (!esaIsLoggedIn()) {
+      if (typeof window.esaShowAuthModal === 'function') {
+        window._esaAuthNote = 'Masuk / daftar dulu (gratis) untuk menelusuri katalog simulator. Untuk menjalankan misi, aktifkan akses penuh.';
+        window.esaShowAuthModal();
+      }
+      return;
+    }
+    // sudah login tapi belum bayar → tetap boleh masuk untuk lihat-lihat katalog.
+  }
   const content = document.getElementById('sim-modal-content');
   const modal = document.getElementById('sim-modal');
   if (!content || !modal) return;
