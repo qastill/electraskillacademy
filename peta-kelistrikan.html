@@ -493,6 +493,12 @@
   </div>
 
   <div class="section">
+    <button class="action" onclick="showPotensi()">
+      🌤️ Potensi energi terbarukan
+    </button>
+  </div>
+
+  <div class="section">
     <button class="action" onclick="document.getElementById('about-modal').classList.add('show')">
       ℹ Tentang peta &amp; sumber data
     </button>
@@ -571,6 +577,12 @@
 <div class="modal-backdrop" id="stats-modal"
      onclick="if(event.target===this)this.classList.remove('show')">
   <div class="modal" id="stats-content"></div>
+</div>
+
+<!-- ===== POTENSI EBT MODAL (content injected on 🌤️ click) ===== -->
+<div class="modal-backdrop" id="potensi-modal"
+     onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal" id="potensi-content"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1371,6 +1383,49 @@ function showEnergyMix() {
   document.getElementById('stats-modal').classList.add('show');
 }
 
+// ===== POTENSI ENERGI TERBARUKAN (EBT) =====
+// atlite (PyPSA) adalah library Python terbuka yang mengubah data cuaca/iklim
+// (reanalysis ERA5) menjadi potensi energi terbarukan — angin (PLTB), surya (PLTS),
+// dan hidro (PLTA) — sebagai capacity factor per lokasi & waktu. Karena perhitungan
+// itu berjalan di Python (server), peta ini menautkan ke atlite sebagai mesin model,
+// plus atlas potensi yang bisa langsung DILIHAT untuk wilayah peta saat ini.
+function showPotensi() {
+  const c = map.getCenter();
+  const lat = c.lat.toFixed(3), lng = c.lng.toFixed(3);
+  const z = Math.min(11, Math.max(5, Math.round(map.getZoom())));
+  const gsa = `https://globalsolaratlas.info/map?c=${lat},${lng},${z}`;
+  const gwa = `https://globalwindatlas.info/en/area/Indonesia`;
+  const card = (icon, title, desc, href, badge) => `
+    <a href="${href}" target="_blank" rel="noopener" style="display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:inherit;border:1px solid rgba(0,0,0,0.1);border-radius:12px;padding:13px 15px;margin-bottom:10px;background:rgba(0,0,0,0.02);">
+      <span style="font-size:22px;line-height:1;">${icon}</span>
+      <span style="display:block;">
+        <span style="display:block;font-weight:700;">${title} <span style="opacity:.6;">↗</span></span>
+        <span style="display:block;font-size:12.5px;color:#5a6172;line-height:1.5;margin-top:3px;">${desc}</span>
+        <span style="display:inline-block;margin-top:6px;font-size:10.5px;font-weight:700;letter-spacing:.3px;color:#3a7d44;background:rgba(58,125,68,.12);padding:2px 8px;border-radius:20px;">${badge}</span>
+      </span></a>`;
+  document.getElementById('potensi-content').innerHTML = `
+    <h2>Potensi Energi Terbarukan</h2>
+    <p><strong>Potensi EBT</strong> = seberapa besar listrik yang bisa dihasilkan
+    sumber terbarukan (matahari, angin, air) di suatu lokasi — biasanya dinyatakan
+    sebagai <em>capacity factor</em> atau iradiasi/kecepatan angin. Indonesia kuat di
+    <strong>surya (PLTS)</strong>, dengan kantong potensi <strong>angin (PLTB)</strong>
+    di NTT, Sulsel &amp; pesisir tertentu, serta <strong>hidro (PLTA)</strong> &amp;
+    <strong>panas bumi (PLTP)</strong>.</p>
+
+    <h3>Lihat potensi pada wilayah peta saat ini</h3>
+    ${card('☀️','Global Solar Atlas','Peta iradiasi &amp; potensi PV (PLTS) — terbuka langsung pada koordinat tengah peta saat ini. Sumber: ESMAP / World Bank.',gsa,'Surya · peta live')}
+    ${card('💨','Global Wind Atlas','Peta kecepatan &amp; potensi angin (PLTB) untuk Indonesia — kelas angin per ketinggian. Sumber: DTU Wind Energy.',gwa,'Angin · peta live')}
+
+    <h3>Model &amp; sumber terbuka</h3>
+    ${card('🛰️','atlite (PyPSA)','Library Python terbuka yang mengubah data cuaca <strong>ERA5</strong> menjadi potensi angin, surya &amp; hidro (capacity factor per lokasi/waktu) — mesin di balik pemodelan sistem energi PyPSA. Jalankan untuk menghitung potensi Indonesia secara kustom.','https://github.com/PyPSA/atlite','Library · MIT/GPL')}
+    ${card('📘','Dokumentasi atlite','Panduan pemakaian atlite: cutout ERA5, konversi PV/wind/hydro, & contoh notebook.','https://atlite.readthedocs.io/','Docs')}
+
+    <p style="margin-top:6px;font-size:11px;color:#6b7184;">Catatan: atlite adalah <em>library</em> (dijalankan di Python), bukan peta web — jadi untuk melihat potensi secara visual gunakan tautan atlas di atas. Hak cipta &amp; lisensi pada pemilik masing-masing.</p>
+
+    <button class="close" onclick="document.getElementById('potensi-modal').classList.remove('show')">Tutup</button>`;
+  document.getElementById('potensi-modal').classList.add('show');
+}
+
 document.querySelectorAll('.sidebar .section.collapsible h4').forEach(h =>
   h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed')));
 
@@ -1379,7 +1434,9 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     const aboutM = document.getElementById('about-modal');
     const statsM = document.getElementById('stats-modal');
-    if (statsM.classList.contains('show')) statsM.classList.remove('show');
+    const potM = document.getElementById('potensi-modal');
+    if (potM.classList.contains('show')) potM.classList.remove('show');
+    else if (statsM.classList.contains('show')) statsM.classList.remove('show');
     else if (aboutM.classList.contains('show')) aboutM.classList.remove('show');
     else closeDetail();
   }
