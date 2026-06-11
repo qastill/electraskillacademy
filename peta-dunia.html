@@ -186,6 +186,7 @@
       <button class="btn-src" onclick="showSources()">🔗 Sumber &amp; layer</button>
       <button class="btn-src btn-share" onclick="shareView()" title="Salin tautan tampilan saat ini">📤 Bagikan</button>
     </div>
+    <button class="btn-src" style="margin-top:8px" onclick="showPotensi()">🌤️ Potensi energi terbarukan</button>
   </div>
   <div class="readout" id="readout">memuat data…</div>
 </div>
@@ -205,6 +206,9 @@
 
 <div class="modal-bd" id="src-modal" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="modal" id="src-content"></div>
+</div>
+<div class="modal-bd" id="pot-modal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal" id="pot-content"></div>
 </div>
 
 <div id="loading"><div class="spin"></div><div>Memuat peta dunia &amp; 34.900+ pembangkit…</div></div>
@@ -626,9 +630,45 @@ function showSources(){
   document.getElementById('src-modal').classList.add('show');
 }
 
+// ============================================================
+// POTENSI ENERGI TERBARUKAN (global)
+// atlite (PyPSA) = library Python yang mengubah data cuaca ERA5 jadi potensi
+// angin/surya/hidro (capacity factor). Bukan peta web, jadi ditautkan sebagai
+// mesin model + atlas potensi yang bisa langsung dilihat untuk view saat ini.
+// ============================================================
+function showPotensi(){
+  const c=map.getCenter(), z=Math.min(11,Math.max(2,Math.round(map.getZoom())));
+  const lat=c.lat.toFixed(3), lon=c.lng.toFixed(3);
+  const iso=state.country, cname=iso?(COUNTRIES[iso]||iso):'dunia';
+  const gsa=`https://globalsolaratlas.info/map?c=${lat},${lon},${z}`;
+  const gwa=iso?`https://globalwindatlas.info/en/area/${encodeURIComponent(cname)}`:'https://globalwindatlas.info/en/';
+  const card=(icon,title,desc,href,lic)=>`<a class="srccard" href="${href}" target="_blank" rel="noopener">
+    <span class="si">${icon}</span><span class="st"><span class="stt">${title} <span class="ext">↗</span></span>
+    <span class="sd">${desc}</span><span class="badge-lic">${lic}</span></span></a>`;
+  const gsaDesc='Iradiasi &amp; potensi PV (surya) global'+(iso?` — fokus <strong>${cname}</strong>`:'')+'. Buka di koordinat tengah peta saat ini. Sumber: ESMAP / World Bank.';
+  const gwaDesc=iso?`Kecepatan &amp; kelas angin untuk <strong>${cname}</strong> (jika tersedia). Sumber: DTU Wind Energy.`:'Kecepatan &amp; kelas angin dunia per ketinggian — pilih negara/area di situs. Sumber: DTU Wind Energy.';
+  document.getElementById('pot-content').innerHTML=`
+    <h2>Potensi <b>Energi Terbarukan</b></h2>
+    <p><strong>Potensi EBT</strong> = seberapa besar listrik yang bisa dihasilkan matahari, angin, &amp; air di suatu lokasi (capacity factor / iradiasi / kecepatan angin). Tautan di bawah membuka atlas potensi pada view saat ini${iso?` (fokus <strong>${cname}</strong>)`:''}.</p>
+    <h3>Lihat potensi (atlas live)</h3>
+    <div class="srcgrid">
+      ${card('☀️','Global Solar Atlas',gsaDesc,gsa,'Surya · peta live')}
+      ${card('💨','Global Wind Atlas',gwaDesc,gwa,'Angin · peta live')}
+    </div>
+    <h3>Model &amp; sumber terbuka</h3>
+    <div class="srcgrid">
+      ${card('🛰️','atlite (PyPSA)','Library Python terbuka: ubah data cuaca <strong>ERA5</strong> jadi potensi angin, surya &amp; hidro (capacity factor per lokasi/waktu) — mesin di balik pemodelan sistem energi PyPSA.','https://github.com/PyPSA/atlite','Python · MIT/GPL')}
+      ${card('📘','Dokumentasi atlite','Panduan cutout ERA5, konversi PV/wind/hydro, &amp; contoh notebook untuk menghitung potensi kustom.','https://atlite.readthedocs.io/','Docs')}
+    </div>
+    <button class="closeb" onclick="document.getElementById('pot-modal').classList.remove('show')">Tutup</button>
+    <p style="margin-top:14px;font-size:11px;color:#6b7184">Catatan: atlite adalah <em>library</em> (dijalankan di Python), bukan peta web — untuk melihat potensi secara visual gunakan tautan atlas di atas. Hak cipta &amp; lisensi pada pemilik masing-masing.</p>`;
+  document.getElementById('pot-modal').classList.add('show');
+}
+
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){
   document.getElementById('mix-modal').classList.remove('show');
   document.getElementById('src-modal').classList.remove('show');
+  document.getElementById('pot-modal').classList.remove('show');
   document.getElementById('detail').classList.remove('show'); } });
 </script>
 </body>
