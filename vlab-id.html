@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Labs Ketenagalistrikan — Electra Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0f17;--bg2:#10151f;--panel:#141b27;--panel2:#1a2433;--line:#26344a;--line2:#33445f;
+    --gold:#e8b339;--gold-d:#b8860b;--gold-soft:#f3d27a;--copper:#c9763b;--txt:#e7edf6;--txt-d:#8ea0b8;--txt-dd:#5b6b82;
+    --ok:#3ddc84;--err:#ff5d5d;--live:#ffd34d;--r:14px}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
+    background-image:radial-gradient(1200px 600px at 80% -10%,rgba(232,179,57,.06),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(201,118,59,.05),transparent 60%);}
+  .wrap{max-width:1220px;margin:0 auto;padding:18px 14px 60px}
+  header{display:flex;align-items:center;gap:13px;margin-bottom:14px;flex-wrap:wrap}
+  .bolt{width:42px;height:42px;border-radius:11px;background:linear-gradient(145deg,var(--gold),var(--gold-d));display:grid;place-items:center;box-shadow:0 6px 22px rgba(232,179,57,.35)}
+  .bolt svg{width:22px;height:22px}
+  .brand h1{font-family:'Chakra Petch',sans-serif;font-size:19px;letter-spacing:.5px}
+  .brand h1 span{color:var(--gold)}
+  .brand p{font-size:11.5px;color:var(--txt-d);margin-top:2px}
+  .lvl{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold-soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 13px}
+  .picker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .pick{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--txt-d);padding:9px 13px;border-radius:9px;cursor:pointer;transition:.15s}
+  .pick:hover{border-color:var(--gold-d);color:var(--txt)}
+  .pick.on{background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;border-color:var(--gold)}
+  .layout{display:grid;grid-template-columns:1fr 330px;gap:15px;align-items:start}
+  @media(max-width:920px){.layout{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:16px}
+  .card h3{font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .exp-title{font-family:'Chakra Petch',sans-serif;font-size:18px;margin-bottom:3px}
+  .exp-sub{font-size:12.5px;color:var(--txt-d);margin-bottom:14px}
+  canvas.plot{width:100%;height:auto;display:block;background:#0a0e16;border:1px solid var(--line2);border-radius:10px}
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:11px 16px;margin:14px 0 2px}
+  @media(max-width:520px){.controls{grid-template-columns:1fr}}
+  .ctrl{display:flex;flex-direction:column;gap:5px}
+  .ctrl-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--txt-d)}
+  .ctrl-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold-soft)}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:99px;background:var(--line2);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--gold);border:2px solid #1a1206;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+  input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--gold);border:2px solid #1a1206;cursor:pointer}
+  select,.seg{font-family:'Plus Jakarta Sans',sans-serif;background:var(--panel2);color:var(--txt);border:1px solid var(--line2);border-radius:8px;padding:8px 10px;font-size:13px;width:100%}
+  .seg-wrap{display:flex;gap:6px;flex-wrap:wrap}
+  .segbtn{flex:1;min-width:64px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:600;border:1px solid var(--line2);background:var(--panel2);color:var(--txt-d);padding:8px 6px;border-radius:8px;cursor:pointer;transition:.12s}
+  .segbtn.on{background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;border-color:var(--gold)}
+  .readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
+  .ro{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .ro .k{font-size:10.5px;color:var(--txt-dd);text-transform:uppercase;letter-spacing:.06em}
+  .ro .v{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--gold-soft);margin-top:3px}
+  .ro .v small{font-size:11px;color:var(--txt-d)}
+  .note{margin-top:13px;font-size:12px;color:var(--txt-d);line-height:1.55;background:rgba(232,179,57,.06);border:1px solid rgba(232,179,57,.18);border-radius:9px;padding:11px 13px}
+  .info h4{font-family:'Chakra Petch',sans-serif;font-size:12.5px;color:var(--gold-soft);margin:14px 0 5px}
+  .info h4:first-child{margin-top:0}
+  .info p,.info li{font-size:12.5px;color:var(--txt-d);line-height:1.6}
+  .info ul{padding-left:17px;margin:3px 0}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gold-soft);background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:2px 7px;margin:2px 3px 2px 0}
+  .led{width:54px;height:54px;border-radius:50%;background:#1a2433;border:3px solid var(--line2);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:20px;color:var(--txt-dd);transition:.15s}
+  .led.on{background:radial-gradient(circle at 40% 35%,#7dffb0,#1f9e5a);border-color:#3ddc84;color:#06140d;box-shadow:0 0 22px rgba(61,220,132,.6)}
+  table.tt{border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12.5px;margin-top:6px}
+  table.tt th,table.tt td{border:1px solid var(--line2);padding:5px 12px;text-align:center;color:var(--txt-d)}
+  table.tt th{color:var(--gold-soft);background:var(--panel2)}
+  table.tt tr.cur td{background:rgba(232,179,57,.16);color:var(--txt)}
+  .bits{display:flex;gap:5px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace}
+  .bit{width:26px;height:30px;display:grid;place-items:center;border:1px solid var(--line2);border-radius:6px;font-size:14px;font-weight:700;background:var(--bg)}
+  .bit.one{background:linear-gradient(145deg,var(--gold),var(--gold-d));color:#1a1206;border-color:var(--gold)}
+  .flags{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .flag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt-dd);border:1px solid var(--line2);border-radius:6px;padding:4px 9px}
+  .flag.on{color:#06140d;background:var(--ok);border-color:var(--ok)}
+  .foot{text-align:center;color:var(--txt-dd);font-size:11.5px;margin-top:24px;line-height:1.6}
+  .foot a{color:var(--gold-soft)}
+  .toggle{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--txt-d)}
+  .sw{width:40px;height:22px;border-radius:99px;background:var(--line2);position:relative;cursor:pointer;transition:.2s;flex-shrink:0}
+  .sw::after{content:"";position:absolute;top:2.5px;left:2.5px;width:17px;height:17px;border-radius:50%;background:#0a0e16;transition:.2s}
+  .sw.on{background:var(--gold)}.sw.on::after{left:20px;background:#1a1206}
+  svg.diagram{width:100%;height:auto;display:block;background:#0a0e16;border:1px solid var(--line2);border-radius:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="bolt"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="#1a1206" stroke="#1a1206" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+    <div class="brand"><h1>Virtual <span>Labs</span> Ketenagalistrikan</h1><p>Laboratorium virtual interaktif · Electra Skill Academy</p></div>
+    <div class="lvl" id="labLvl">—</div>
+  </header>
+
+  <div class="picker" id="picker"></div>
+
+  <div class="layout">
+    <div class="card">
+      <div class="exp-title" id="expTitle">—</div>
+      <div class="exp-sub" id="expSub"></div>
+      <div id="stage"></div>
+    </div>
+    <div class="card info" id="info"></div>
+  </div>
+
+  <div class="foot">
+    Versi Bahasa Indonesia yang dibangun & di-embed oleh <b style="color:var(--gold-soft)">Electra Skill Academy</b>.
+    Terinspirasi struktur <a href="https://www.vlab.co.in/broad-area-electrical-engineering" target="_blank" rel="noopener">Virtual Labs — Electrical Engineering</a>
+    (Kementerian Pendidikan Pemerintah India). Seluruh simulasi di halaman ini berjalan lokal di dalam Electra Academy.
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ════════════════════════════════════════════════════════════════
+   Virtual Labs Ketenagalistrikan — simulasi interaktif buatan ESA.
+   Setiap lab = { name, sub, level, info(html), build(stage) }.
+   Semua perhitungan & gambar berjalan di sisi klien (vanilla JS).
+   ════════════════════════════════════════════════════════════════ */
+
+// ── Helper UI ────────────────────────────────────────────────────
+function elFrom(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; }
+function slider(o){ // {label,min,max,step,value,fmt,on}
+  const wrap=elFrom(`<label class="ctrl"><div class="ctrl-head"><span>${o.label}</span><span class="ctrl-val"></span></div><input type="range"></label>`);
+  const inp=wrap.querySelector('input'), val=wrap.querySelector('.ctrl-val');
+  inp.min=o.min; inp.max=o.max; inp.step=o.step; inp.value=o.value;
+  const fmt=o.fmt||(v=>v);
+  function refresh(){ val.textContent=fmt(parseFloat(inp.value)); }
+  inp.addEventListener('input',()=>{refresh(); o.on(parseFloat(inp.value));});
+  refresh();
+  return {wrap,input:inp,refresh,get v(){return parseFloat(inp.value);}};
+}
+function seg(o){ // {label,options:[{v,t}],value,on}
+  const wrap=elFrom(`<div class="ctrl"><div class="ctrl-head"><span>${o.label}</span></div><div class="seg-wrap"></div></div>`);
+  const box=wrap.querySelector('.seg-wrap'); let cur=o.value;
+  o.options.forEach(op=>{
+    const b=elFrom(`<button class="segbtn">${op.t}</button>`);
+    if(op.v===cur) b.classList.add('on');
+    b.addEventListener('click',()=>{ cur=op.v; box.querySelectorAll('.segbtn').forEach(x=>x.classList.remove('on')); b.classList.add('on'); o.on(cur); });
+    box.appendChild(b);
+  });
+  return {wrap,get v(){return cur;}};
+}
+function readout(items){ // [{k,v}]
+  const box=elFrom(`<div class="readout"></div>`);
+  items.forEach(it=> box.appendChild(elFrom(`<div class="ro"><div class="k">${it.k}</div><div class="v" data-k="${it.id}">${it.v||''}</div></div>`)));
+  return box;
+}
+function setRO(box,id,html){ const e=box.querySelector(`[data-k="${id}"]`); if(e) e.innerHTML=html; }
+
+// ── Plot (canvas garis, opsi sumbu-x logaritmik) ─────────────────
+function makeCanvas(w,h){ const c=document.createElement('canvas'); c.className='plot'; c.width=w; c.height=h; return c; }
+function drawPlot(canvas,cfg){
+  const ctx=canvas.getContext('2d'), W=canvas.width, H=canvas.height;
+  const pad={l:56,r:14,t:14,b:40};
+  const x0=pad.l,y0=H-pad.b,x1=W-pad.r,y1=pad.t;
+  let {xmin,xmax,ymin,ymax,logx,xlabel,ylabel,series=[],markers=[]}=cfg;
+  if(ymin===ymax){ymax=ymin+1;}
+  const lg=v=>Math.log10(v);
+  const sx=v=> logx ? x0+(lg(v)-lg(xmin))/(lg(xmax)-lg(xmin))*(x1-x0) : x0+(v-xmin)/(xmax-xmin)*(x1-x0);
+  const sy=v=> y0-(v-ymin)/(ymax-ymin)*(y0-y1);
+  ctx.fillStyle='#0a0e16'; ctx.fillRect(0,0,W,H);
+  ctx.font='12px JetBrains Mono, monospace'; ctx.textBaseline='middle';
+  // grid + ticks
+  ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.fillStyle='#5b6b82';
+  function niceTicks(a,b,n){ const span=b-a, step0=span/n, mag=Math.pow(10,Math.floor(Math.log10(step0))), r=step0/mag; let s=mag*(r>=5?5:r>=2?2:1); const out=[]; for(let t=Math.ceil(a/s)*s; t<=b+1e-9; t+=s) out.push(+t.toFixed(6)); return out; }
+  // X ticks
+  ctx.textAlign='center';
+  if(logx){
+    for(let d=Math.ceil(lg(xmin)); d<=Math.floor(lg(xmax)); d++){ const xv=Math.pow(10,d), px=sx(xv);
+      ctx.beginPath(); ctx.moveTo(px,y0); ctx.lineTo(px,y1); ctx.stroke();
+      ctx.fillText(xv>=1?xv.toString():xv.toString(), px, y0+16); }
+  } else {
+    niceTicks(xmin,xmax,6).forEach(xv=>{ const px=sx(xv); ctx.beginPath(); ctx.moveTo(px,y0); ctx.lineTo(px,y1); ctx.stroke();
+      ctx.fillText(_fmtNum(xv), px, y0+16); });
+  }
+  // Y ticks
+  ctx.textAlign='right';
+  niceTicks(ymin,ymax,5).forEach(yv=>{ const py=sy(yv); ctx.strokeStyle=(Math.abs(yv)<1e-9)?'rgba(255,255,255,.18)':'rgba(255,255,255,.06)';
+    ctx.beginPath(); ctx.moveTo(x0,py); ctx.lineTo(x1,py); ctx.stroke(); ctx.fillStyle='#5b6b82'; ctx.fillText(_fmtNum(yv), x0-8, py); });
+  // axis labels
+  ctx.fillStyle='#8ea0b8'; ctx.textAlign='center';
+  if(xlabel) ctx.fillText(xlabel,(x0+x1)/2,H-8);
+  if(ylabel){ ctx.save(); ctx.translate(14,(y0+y1)/2); ctx.rotate(-Math.PI/2); ctx.fillText(ylabel,0,0); ctx.restore(); }
+  // series
+  series.forEach(s=>{
+    ctx.strokeStyle=s.color||'#e8b339'; ctx.lineWidth=s.width||2.2; ctx.beginPath(); let started=false;
+    if(s.dash) ctx.setLineDash(s.dash); else ctx.setLineDash([]);
+    s.pts.forEach(p=>{ if(p[1]==null||isNaN(p[1])){started=false;return;} const px=sx(p[0]),py=Math.max(y1,Math.min(y0,sy(p[1]))); if(!started){ctx.moveTo(px,py);started=true;} else ctx.lineTo(px,py); });
+    ctx.stroke(); ctx.setLineDash([]);
+  });
+  // markers
+  markers.forEach(m=>{ const px=sx(m.x),py=sy(m.y); ctx.fillStyle=m.color||'#3ddc84'; ctx.beginPath(); ctx.arc(px,py,4.5,0,7); ctx.fill();
+    if(m.label){ ctx.fillStyle=m.color||'#3ddc84'; ctx.textAlign='left'; ctx.fillText(m.label,px+8,py-2);} });
+}
+function _fmtNum(v){ if(v===0) return '0'; const a=Math.abs(v); if(a>=1000||a<0.01) return v.toExponential(0); if(Number.isInteger(v)) return v.toString(); return (+v.toFixed(2)).toString(); }
+function num(v,d=2){ return (Math.round(v*Math.pow(10,d))/Math.pow(10,d)).toLocaleString('id-ID'); }
+
+/* ════════════════════════════════════════════════════════════════
+   DAFTAR LAB
+   ════════════════════════════════════════════════════════════════ */
+const LABS = {};
+
+// 1) MESIN LISTRIK — Transformator ────────────────────────────────
+LABS.machines = {
+  name:'Mesin Listrik', sub:'Transformator: rasio belitan, tegangan & arus',
+  level:'Eksperimen · Transformator 1 fasa',
+  info:`<h4>Tujuan</h4><p>Memahami hubungan rasio belitan dengan tegangan & arus pada transformator ideal.</p>
+    <h4>Teori</h4><p>Vp/Vs = Np/Ns dan (transformator ideal, daya kekal) Vp·Ip = Vs·Is, sehingga Is/Ip = Np/Ns.</p>
+    <h4>Dunia nyata</h4><p>Dasar gardu distribusi (20 kV→400 V), adaptor, dan catu daya.</p>
+    <span class="badge">step-up</span><span class="badge">step-down</span><span class="badge">Vp·Ip≈Vs·Is</span>`,
+  build(stage){
+    const svg=elFrom(`<svg class="diagram" viewBox="0 0 560 220"></svg>`);
+    const out=readout([{k:'Tegangan sekunder Vs',id:'vs'},{k:'Arus primer Ip',id:'ip'},{k:'Arus sekunder Is',id:'is'},{k:'Jenis',id:'type'}]);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    let Np=400,Ns=200,Vp=220,RL=20;
+    function draw(){
+      const Vs=Vp*Ns/Np, Is=Vs/RL, Ip=Vs*Is/Vp; const type=Ns>Np?'Step-up':(Ns<Np?'Step-down':'Isolasi 1:1');
+      setRO(out,'vs',`${num(Vs,1)} <small>V</small>`); setRO(out,'ip',`${num(Ip,2)} <small>A</small>`);
+      setRO(out,'is',`${num(Is,2)} <small>A</small>`); setRO(out,'type',`<span style="font-size:14px">${type}</span>`);
+      // gambar inti + lilitan
+      const coils=(x,n,col)=>{ let p=''; const turns=Math.max(3,Math.round(n/60)); for(let i=0;i<turns;i++){ const y=60+i*(100/turns); p+=`<circle cx="${x}" cy="${y+ (100/turns)/2}" r="${(100/turns)/2.1}" fill="none" stroke="${col}" stroke-width="3"/>`;} return p; };
+      svg.innerHTML=`
+        <rect x="250" y="40" width="60" height="140" rx="6" fill="none" stroke="#33445f" stroke-width="10"/>
+        ${coils(250,Np,'#c9763b')}${coils(310,Ns,'#e8b339')}
+        <text x="200" y="32" fill="#8ea0b8" font-size="12" text-anchor="middle">Primer</text>
+        <text x="360" y="32" fill="#8ea0b8" font-size="12" text-anchor="middle">Sekunder</text>
+        <text x="200" y="200" fill="#c9763b" font-size="13" text-anchor="middle" font-family="monospace">Np=${Np} · ${Vp}V</text>
+        <text x="360" y="200" fill="#e8b339" font-size="13" text-anchor="middle" font-family="monospace">Ns=${Ns} · ${num(Vs,0)}V</text>
+        <line x1="60" y1="80" x2="240" y2="80" stroke="#c9763b" stroke-width="2"/><line x1="60" y1="160" x2="240" y2="160" stroke="#c9763b" stroke-width="2"/>
+        <line x1="320" y1="80" x2="500" y2="80" stroke="#e8b339" stroke-width="2"/><line x1="320" y1="160" x2="500" y2="160" stroke="#e8b339" stroke-width="2"/>
+        <rect x="475" y="100" width="34" height="40" fill="none" stroke="#e8b339" stroke-width="2"/><text x="492" y="124" fill="#e8b339" font-size="11" text-anchor="middle" font-family="monospace">RL</text>`;
+    }
+    [ slider({label:'Belitan primer Np',min:50,max:1000,step:10,value:Np,fmt:v=>v+' lilit',on:v=>{Np=v;draw();}}),
+      slider({label:'Belitan sekunder Ns',min:50,max:1000,step:10,value:Ns,fmt:v=>v+' lilit',on:v=>{Ns=v;draw();}}),
+      slider({label:'Tegangan primer Vp',min:100,max:400,step:5,value:Vp,fmt:v=>v+' V',on:v=>{Vp=v;draw();}}),
+      slider({label:'Beban RL',min:5,max:200,step:1,value:RL,fmt:v=>v+' Ω',on:v=>{RL=v;draw();}}) ].forEach(c=>ctrls.appendChild(c.wrap));
+    stage.appendChild(svg); stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">Geser belitan: saat <b>Ns&gt;Np</b> tegangan naik (step-up) tetapi arus turun — daya (V×I) tetap kekal pada transformator ideal.</div>`));
+    draw();
+  }
+};
+
+// 2) RANGKAIAN DASAR — Respon transien RC/RL/RLC ──────────────────
+LABS.circuits = {
+  name:'Rangkaian Listrik Dasar', sub:'Respon transien RC · RL · RLC seri (input step)',
+  level:'Eksperimen · Rangkaian orde-1 & 2',
+  info:`<h4>Tujuan</h4><p>Mengamati cara kapasitor/induktor mengisi & sistem RLC berosilasi terhadap waktu.</p>
+    <h4>Teori</h4><p>RC: Vc=V(1−e<sup>−t/RC</sup>). RLC seri: ω₀=1/√(LC), ζ=(R/2)√(C/L). ζ&lt;1 teredam-kurang (berosilasi), ζ=1 kritis, ζ&gt;1 teredam-lebih.</p>
+    <h4>Dunia nyata</h4><p>Filter, snubber, timing, dan respon transien sistem daya.</p>
+    <span class="badge">ζ</span><span class="badge">ω₀</span><span class="badge">τ=RC</span>`,
+  build(stage){
+    const cv=makeCanvas(820,360); const out=readout([{k:'Tipe rangkaian',id:'t'},{k:'τ atau ω₀',id:'w'},{k:'Damping ζ',id:'z'},{k:'Nilai akhir',id:'f'}]);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    let mode='rlc',R=40,L=0.5,C=200,V=10;
+    function sim(){
+      const Cf=C*1e-6, Tmax = mode==='rc'? 5*R*Cf : mode==='rl'? 5*L/R : 12*Math.sqrt(L*Cf);
+      const N=600, dt=Tmax/N, pts=[]; let vc=0,iL=0;
+      for(let k=0;k<=N;k++){ const t=k*dt; let y;
+        if(mode==='rc'){ y=V*(1-Math.exp(-t/(R*Cf))); }
+        else if(mode==='rl'){ y=(V/R)*(1-Math.exp(-t*R/L)); } // arus
+        else { // RLC seri: state vc,iL ; L diL/dt = V - R iL - vc ; C dvc/dt = iL
+          const diL=(V-R*iL-vc)/L, dvc=iL/Cf; iL+=diL*dt; vc+=dvc*dt; y=vc; }
+        pts.push([t*1000,y]); }
+      const ys=pts.map(p=>p[1]); let ymax=Math.max(...ys,V*1.05),ymin=Math.min(...ys,0);
+      if(mode==='rl'){ymax=Math.max(...ys)*1.1;ymin=0;}
+      drawPlot(cv,{xmin:0,xmax:Tmax*1000,ymin:ymin,ymax:ymax,xlabel:'waktu (ms)',ylabel:mode==='rl'?'arus iL (A)':'Vc (V)',series:[{pts,color:'#e8b339'},{pts:[[0,V],[Tmax*1000,V]],color:'#3a4b66',dash:[6,5]}]});
+      const w0=1/Math.sqrt(L*Cf), z=(R/2)*Math.sqrt(Cf/L);
+      setRO(out,'t', mode==='rc'?'Seri RC':mode==='rl'?'Seri RL':'Seri RLC');
+      setRO(out,'w', mode==='rlc'?`${num(w0,0)} <small>rad/s</small>`:`${num((mode==='rc'?R*Cf:L/R)*1000,2)} <small>ms</small>`);
+      setRO(out,'z', mode==='rlc'?`${num(z,3)} <small>(${z<1?'kurang':z>1?'lebih':'kritis'})</small>`:'—');
+      setRO(out,'f', mode==='rl'?`${num(V/R,2)} <small>A</small>`:`${num(V,1)} <small>V</small>`);
+    }
+    const sLwrap=slider({label:'Induktansi L',min:0.05,max:2,step:0.05,value:L,fmt:v=>v+' H',on:v=>{L=v;sim();}});
+    const sCwrap=slider({label:'Kapasitansi C',min:10,max:1000,step:10,value:C,fmt:v=>v+' µF',on:v=>{C=v;sim();}});
+    function refreshDisable(){ sLwrap.input.disabled=(mode==='rc'); sCwrap.input.disabled=(mode==='rl'); sLwrap.wrap.style.opacity=mode==='rc'?.4:1; sCwrap.wrap.style.opacity=mode==='rl'?.4:1; }
+    const segc=seg({label:'Rangkaian',value:mode,options:[{v:'rc',t:'RC'},{v:'rl',t:'RL'},{v:'rlc',t:'RLC'}],on:v=>{mode=v;refreshDisable();sim();}});
+    ctrls.appendChild(segc.wrap);
+    ctrls.appendChild(slider({label:'Resistansi R',min:1,max:200,step:1,value:R,fmt:v=>v+' Ω',on:v=>{R=v;sim();}}).wrap);
+    ctrls.appendChild(sLwrap.wrap); ctrls.appendChild(sCwrap.wrap);
+    ctrls.appendChild(slider({label:'Tegangan step V',min:1,max:24,step:1,value:V,fmt:v=>v+' V',on:v=>{V=v;sim();}}).wrap);
+    stage.appendChild(cv); stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">Pada RLC, perkecil R hingga ζ&lt;1 untuk melihat tegangan kapasitor <b>melonjak melewati nilai akhir lalu berosilasi</b> (teredam-kurang).</div>`));
+    refreshDisable(); sim();
+  }
+};
+
+// 3) ELEKTRONIKA DAYA — Penyearah ─────────────────────────────────
+LABS['power-elec'] = {
+  name:'Elektronika Daya', sub:'Penyearah terkendali setengah & gelombang penuh',
+  level:'Eksperimen · Rectifier (beban R)',
+  info:`<h4>Tujuan</h4><p>Memahami bentuk gelombang keluaran penyearah & pengaruh sudut picu α (thyristor).</p>
+    <h4>Teori</h4><p>Tak terkendali — setengah: Vdc=Vm/π; gelombang penuh: Vdc=2Vm/π. Terkendali (R, gelombang penuh): Vdc=(2Vm/π)·(1+cosα)/2.</p>
+    <h4>Dunia nyata</h4><p>Charger, drive DC, dan catu daya industri.</p>
+    <span class="badge">SCR</span><span class="badge">sudut picu α</span><span class="badge">Vdc</span>`,
+  build(stage){
+    const cv=makeCanvas(820,330); const out=readout([{k:'Tegangan DC rata-rata',id:'vdc'},{k:'Vm puncak',id:'vm'},{k:'Sudut picu α',id:'a'},{k:'Mode',id:'m'}]);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    let type='full',controlled=true,Vm=311,alpha=30;
+    function sim(){
+      const N=720, pts=[],inp=[]; const aRad=alpha*Math.PI/180;
+      for(let i=0;i<=N;i++){ const th=i/N*4*Math.PI; const s=Vm*Math.sin(th); inp.push([th,s]);
+        const ph=((th%(2*Math.PI))+2*Math.PI)%(2*Math.PI); let y=0;
+        const fire = !controlled || (ph>=aRad);
+        if(type==='half'){ y=(ph<Math.PI && fire)?s:0; }
+        else { // full
+          const sp=Math.abs(s); const conduct = !controlled || (ph%Math.PI)>=aRad; y=conduct?sp:0; }
+        pts.push([th,y]); }
+      let Vdc;
+      if(type==='half') Vdc=controlled? (Vm/(2*Math.PI))*(1+Math.cos(aRad)) : Vm/Math.PI;
+      else Vdc=controlled? (Vm/Math.PI)*(1+Math.cos(aRad)) : 2*Vm/Math.PI;
+      drawPlot(cv,{xmin:0,xmax:4*Math.PI,ymin:-Vm*1.05,ymax:Vm*1.05,xlabel:'ωt (rad)',ylabel:'tegangan (V)',
+        series:[{pts:inp,color:'#3a4b66',width:1.4,dash:[5,4]},{pts,color:'#e8b339',width:2.4},{pts:[[0,Vdc],[4*Math.PI,Vdc]],color:'#3ddc84',dash:[7,5]}]});
+      setRO(out,'vdc',`${num(Vdc,1)} <small>V</small>`); setRO(out,'vm',`${num(Vm,0)} <small>V</small>`);
+      setRO(out,'a',controlled?`${alpha}°`:'—'); setRO(out,'m',`${type==='half'?'½-gelombang':'Gel. penuh'}${controlled?' · terkendali':''}`);
+    }
+    ctrls.appendChild(seg({label:'Jenis penyearah',value:type,options:[{v:'half',t:'Setengah'},{v:'full',t:'Gel. penuh'}],on:v=>{type=v;sim();}}).wrap);
+    const aSl=slider({label:'Sudut picu α',min:0,max:180,step:1,value:alpha,fmt:v=>v+'°',on:v=>{alpha=v;sim();}});
+    const tg=elFrom(`<div class="ctrl"><div class="ctrl-head"><span>Terkendali (SCR)</span></div><div class="toggle"><div class="sw on" id="swc"></div><span>aktif</span></div></div>`);
+    tg.querySelector('#swc').addEventListener('click',function(){ controlled=!controlled; this.classList.toggle('on',controlled); aSl.input.disabled=!controlled; aSl.wrap.style.opacity=controlled?1:.4; sim(); });
+    ctrls.appendChild(tg);
+    ctrls.appendChild(slider({label:'Tegangan puncak Vm',min:100,max:400,step:5,value:Vm,fmt:v=>v+' V',on:v=>{Vm=v;sim();}}).wrap);
+    ctrls.appendChild(aSl.wrap);
+    stage.appendChild(cv); stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">Garis hijau = tegangan DC rata-rata. Naikkan <b>α</b>: bagian gelombang yang lewat makin sedikit → Vdc turun (kontrol fasa).</div>`));
+    sim();
+  }
+};
+
+// 4) SISTEM TENAGA — Kurva relai arus lebih (OCR) ─────────────────
+LABS['power-sys'] = {
+  name:'Sistem Tenaga Listrik', sub:'Karakteristik waktu-terbalik relai arus lebih (IEC 60255)',
+  level:'Eksperimen · Relai OCR 51',
+  info:`<h4>Tujuan</h4><p>Memahami karakteristik waktu-terbalik relai proteksi: makin besar arus, makin cepat trip.</p>
+    <h4>Teori</h4><p>t = TMS · k / ((I/Is)<sup>α</sup> − 1). Standard Inverse (k=0,14; α=0,02), Very Inverse (13,5; 1), Extremely Inverse (80; 2).</p>
+    <h4>Dunia nyata</h4><p>Setting relai di kubikel 20 kV & koordinasi proteksi gardu PLN.</p>
+    <span class="badge">TMS</span><span class="badge">pickup Is</span><span class="badge">IEC 60255</span>`,
+  build(stage){
+    const cv=makeCanvas(820,360); const out=readout([{k:'Kurva',id:'c'},{k:'Arus gangguan',id:'if'},{k:'Kelipatan I/Is',id:'m'},{k:'Waktu trip',id:'t'}]);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    const K={si:[0.14,0.02],vi:[13.5,1],ei:[80,2]}; const NM={si:'Standard Inverse',vi:'Very Inverse',ei:'Extremely Inverse'};
+    let curve='si',TMS=0.5,Is=100,Ifault=500;
+    function tof(I){ const [k,a]=K[curve]; const m=I/Is; if(m<=1) return null; return TMS*k/(Math.pow(m,a)-1); }
+    function sim(){
+      const pts=[]; for(let m=1.05;m<=20;m*=1.03){ const I=m*Is; let t=tof(I); if(t>200)t=null; pts.push([m,t]); }
+      const tF=tof(Ifault); const mF=Ifault/Is;
+      drawPlot(cv,{xmin:1,xmax:20,ymin:0.02,ymax:Math.min(20,Math.max(2,(tof(1.1*Is)||10))),logx:true,xlabel:'kelipatan arus (I/Is)',ylabel:'waktu trip (s)',
+        series:[{pts,color:'#e8b339'}], markers: tF!=null?[{x:mF,y:tF,color:'#3ddc84',label:`${num(tF,2)}s`}]:[]});
+      setRO(out,'c',`<span style="font-size:13px">${NM[curve]}</span>`); setRO(out,'if',`${Ifault} <small>A</small>`);
+      setRO(out,'m',`${num(mF,2)}×`); setRO(out,'t', tF!=null?`${num(tF,2)} <small>s</small>`:'<small>tak trip (I≤Is)</small>');
+    }
+    ctrls.appendChild(seg({label:'Karakteristik kurva',value:curve,options:[{v:'si',t:'SI'},{v:'vi',t:'VI'},{v:'ei',t:'EI'}],on:v=>{curve=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Time Multiplier (TMS)',min:0.05,max:1.5,step:0.05,value:TMS,fmt:v=>v.toFixed(2),on:v=>{TMS=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Arus pickup Is',min:50,max:400,step:10,value:Is,fmt:v=>v+' A',on:v=>{Is=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Arus gangguan',min:60,max:4000,step:20,value:Ifault,fmt:v=>v+' A',on:v=>{Ifault=v;sim();}}).wrap);
+    stage.appendChild(cv); stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">Titik hijau = waktu trip untuk arus gangguan saat ini. <b>Extremely Inverse</b> jauh lebih cepat saat arus besar — cocok untuk koordinasi dengan sekring.</div>`));
+    sim();
+  }
+};
+
+// 5) SISTEM KENDALI — Respon step orde-2 ──────────────────────────
+LABS.control = {
+  name:'Sistem Kendali', sub:'Respon tangga (step) sistem orde-2',
+  level:'Eksperimen · ζ & ωn',
+  info:`<h4>Tujuan</h4><p>Melihat pengaruh rasio redaman ζ dan frekuensi alami ωn terhadap overshoot & waktu tunak.</p>
+    <h4>Teori</h4><p>G(s)=ωn²/(s²+2ζωn s+ωn²). Overshoot %MP=e<sup>−ζπ/√(1−ζ²)</sup>. ts≈4/(ζωn).</p>
+    <h4>Dunia nyata</h4><p>Tuning kontrol kecepatan motor, governor, & sistem servo.</p>
+    <span class="badge">ζ</span><span class="badge">ωn</span><span class="badge">%overshoot</span>`,
+  build(stage){
+    const cv=makeCanvas(820,360); const out=readout([{k:'Overshoot %MP',id:'os'},{k:'Waktu puncak tp',id:'tp'},{k:'Waktu tunak ts',id:'ts'},{k:'Sifat',id:'k'}]);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    let z=0.4,wn=4;
+    function sim(){
+      const Tmax=12/Math.max(0.2,z*wn>0?z*wn:wn)*1; const T=Math.min(20,Math.max(3,Tmax)); const N=600,dt=T/N; let x=0,v=0; const pts=[];
+      for(let k=0;k<=N;k++){ const t=k*dt; pts.push([t,x]); const a=wn*wn*(1-x)-2*z*wn*v; v+=a*dt; x+=v*dt; }
+      const ys=pts.map(p=>p[1]); const ymax=Math.max(1.05,...ys)*1.05;
+      drawPlot(cv,{xmin:0,xmax:T,ymin:0,ymax:ymax,xlabel:'waktu (s)',ylabel:'keluaran c(t)',series:[{pts,color:'#e8b339'},{pts:[[0,1],[T,1]],color:'#3a4b66',dash:[6,5]}]});
+      let os = z<1? Math.exp(-z*Math.PI/Math.sqrt(1-z*z))*100 : 0;
+      const tp = z<1? Math.PI/(wn*Math.sqrt(1-z*z)) : null;
+      const ts = 4/(z*wn);
+      setRO(out,'os',`${num(os,1)} <small>%</small>`); setRO(out,'tp', tp!=null?`${num(tp,2)} <small>s</small>`:'—');
+      setRO(out,'ts',`${num(ts,2)} <small>s</small>`); setRO(out,'k', z<1?'Teredam-kurang':z===1?'Kritis':'Teredam-lebih');
+    }
+    ctrls.appendChild(slider({label:'Rasio redaman ζ',min:0.05,max:2,step:0.05,value:z,fmt:v=>v.toFixed(2),on:v=>{z=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Frekuensi alami ωn',min:1,max:12,step:0.5,value:wn,fmt:v=>v+' rad/s',on:v=>{wn=v;sim();}}).wrap);
+    stage.appendChild(cv); stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">ζ kecil → respon cepat tapi <b>overshoot besar & berosilasi</b>; ζ≈0,7 biasanya kompromi terbaik (overshoot ~5%, cepat tunak).</div>`));
+    sim();
+  }
+};
+
+// 6) PENGUKURAN — Jembatan Wheatstone ─────────────────────────────
+LABS.measure = {
+  name:'Pengukuran Besaran Listrik', sub:'Jembatan Wheatstone — menyetel hingga seimbang',
+  level:'Eksperimen · Ukur resistansi',
+  info:`<h4>Tujuan</h4><p>Mengukur resistansi tak diketahui dengan menyeimbangkan jembatan (galvanometer = 0).</p>
+    <h4>Teori</h4><p>Saat seimbang: R1/R2 = R3/Rx → Rx = R3·R2/R1. Galvanometer menunjuk nol saat seimbang.</p>
+    <h4>Dunia nyata</h4><p>Kalibrasi sensor, strain gauge, & pengukuran presisi.</p>
+    <span class="badge">setimbang</span><span class="badge">galvo nol</span>`,
+  build(stage){
+    const svg=elFrom(`<svg class="diagram" viewBox="0 0 560 300"></svg>`);
+    const out=readout([{k:'Arus galvanometer',id:'g'},{k:'Status',id:'s'},{k:'R3 (variabel)',id:'r3'},{k:'Rx terbaca',id:'rx'}]);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    const R1=100,R2=200; const Rx=337; let R3=150,Vs=5;
+    function draw(){
+      // Vg = Vs*( R2/(R1+R2) - Rx/(R3+Rx) )  (jembatan)
+      const Vg = Vs*( R2/(R1+R2) - Rx/(R3+Rx) );
+      const Ig = Vg/ (50) * 1000; // µA via galvo 50Ω (pendekatan)
+      const bal = Math.abs(Vg)<0.01;
+      const rxRead = R3*R2/R1;
+      const defl = Math.max(-1,Math.min(1, Vg/ (Vs*0.25))); // -1..1
+      const ang = defl*50; // derajat jarum
+      setRO(out,'g',`${num(Ig,1)} <small>µA</small>`);
+      setRO(out,'s', bal?'<span style="color:#3ddc84">SEIMBANG ✓</span>':(Vg>0?'jarum ke kanan →':'← jarum ke kiri'));
+      setRO(out,'r3',`${R3} <small>Ω</small>`); setRO(out,'rx', bal?`<span style="color:#3ddc84">${num(rxRead,0)} Ω</span>`:'<small>setimbangkan dulu</small>');
+      const cx=480,cy=70,r=42; const a=(ang-90)*Math.PI/180;
+      svg.innerHTML=`
+        <polygon points="200,40 330,150 200,260 70,150" fill="none" stroke="#33445f" stroke-width="2"/>
+        <text x="120" y="85" fill="#c9763b" font-size="12" font-family="monospace">R1=${R1}</text>
+        <text x="265" y="85" fill="#c9763b" font-size="12" font-family="monospace">R2=${R2}</text>
+        <text x="110" y="225" fill="#e8b339" font-size="12" font-family="monospace">R3=${R3}</text>
+        <text x="262" y="225" fill="#e8b339" font-size="12" font-family="monospace">Rx=?</text>
+        <circle cx="200" cy="40" r="5" fill="#e8b339"/><text x="200" y="28" fill="#8ea0b8" font-size="11" text-anchor="middle">+${Vs}V</text>
+        <circle cx="200" cy="260" r="5" fill="#8ea0b8"/><text x="200" y="282" fill="#8ea0b8" font-size="11" text-anchor="middle">0V</text>
+        <line x1="70" y1="150" x2="330" y2="150" stroke="${bal?'#3ddc84':'#c9763b'}" stroke-width="2" stroke-dasharray="${bal?'0':'5 4'}"/>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#0a0e16" stroke="${bal?'#3ddc84':'#33445f'}" stroke-width="2"/>
+        <line x1="${cx}" y1="${cy}" x2="${cx+r*0.8*Math.cos(a)}" y2="${cy+r*0.8*Math.sin(a)}" stroke="${bal?'#3ddc84':'#e8b339'}" stroke-width="2.5"/>
+        <text x="${cx}" y="${cy+r+16}" fill="#8ea0b8" font-size="11" text-anchor="middle">Galvanometer</text>
+        <line x1="330" y1="150" x2="${cx-r}" y2="${cy}" stroke="#33445f" stroke-width="1.5"/>`;
+    }
+    ctrls.appendChild(slider({label:'R3 (resistor variabel)',min:50,max:800,step:1,value:R3,fmt:v=>v+' Ω',on:v=>{R3=v;draw();}}).wrap);
+    ctrls.appendChild(slider({label:'Tegangan sumber Vs',min:1,max:12,step:1,value:Vs,fmt:v=>v+' V',on:v=>{Vs=v;draw();}}).wrap);
+    stage.appendChild(svg); stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">Putar <b>R3</b> hingga galvanometer menunjuk nol (jarum tegak, hijau). Saat itu Rx = R3·R2/R1 terbaca. Coba temukan nilai Rx tersembunyi!</div>`));
+    draw();
+  }
+};
+
+// 7) ELEKTRONIKA ANALOG — Penguat op-amp ──────────────────────────
+LABS.analog = {
+  name:'Elektronika Analog', sub:'Penguat op-amp: inverting & non-inverting (dengan saturasi)',
+  level:'Eksperimen · Op-amp',
+  info:`<h4>Tujuan</h4><p>Memahami penguatan op-amp dan kliping saat keluaran melewati tegangan suplai.</p>
+    <h4>Teori</h4><p>Inverting: Av=−Rf/Rin. Non-inverting: Av=1+Rf/Rin. Keluaran terpotong pada ±Vsat.</p>
+    <h4>Dunia nyata</h4><p>Pengondisi sinyal sensor, filter aktif, & instrumentasi.</p>
+    <span class="badge">Av=−Rf/Rin</span><span class="badge">±Vsat</span>`,
+  build(stage){
+    const cv=makeCanvas(820,330); const out=readout([{k:'Penguatan Av',id:'av'},{k:'Amplitudo keluar',id:'vo'},{k:'Status',id:'s'},{k:'Konfigurasi',id:'c'}]);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    let conf='inv',Rin=10,Rf=47,Vin=0.2,Vsat=12,freq=2;
+    function sim(){
+      const Av = conf==='inv'? -(Rf/Rin) : (1+Rf/Rin);
+      const N=720,inp=[],o=[]; let clipped=false;
+      for(let i=0;i<=N;i++){ const th=i/N*4*Math.PI; const vi=Vin*Math.sin(th); inp.push([th,vi]); let vo=Av*vi; if(vo>Vsat){vo=Vsat;clipped=true;} if(vo<-Vsat){vo=-Vsat;clipped=true;} o.push([th,vo]); }
+      const amp=Math.min(Math.abs(Av*Vin),Vsat);
+      drawPlot(cv,{xmin:0,xmax:4*Math.PI,ymin:-Vsat*1.1,ymax:Vsat*1.1,xlabel:'ωt (rad)',ylabel:'tegangan (V)',
+        series:[{pts:inp,color:'#3a4b66',width:1.6},{pts:o,color:'#e8b339',width:2.4},{pts:[[0,Vsat],[4*Math.PI,Vsat]],color:'#ff5d5d',dash:[5,5],width:1},{pts:[[0,-Vsat],[4*Math.PI,-Vsat]],color:'#ff5d5d',dash:[5,5],width:1}]});
+      setRO(out,'av',`${num(Av,1)} <small>×</small>`); setRO(out,'vo',`${num(amp,2)} <small>V</small>`);
+      setRO(out,'s', clipped?'<span style="color:#ff5d5d">TERPOTONG (clipping)</span>':'<span style="color:#3ddc84">linear ✓</span>');
+      setRO(out,'c', conf==='inv'?'Inverting':'Non-inverting');
+    }
+    ctrls.appendChild(seg({label:'Konfigurasi',value:conf,options:[{v:'inv',t:'Inverting'},{v:'noninv',t:'Non-inv'}],on:v=>{conf=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Rin',min:1,max:100,step:1,value:Rin,fmt:v=>v+' kΩ',on:v=>{Rin=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Rf (umpan balik)',min:1,max:200,step:1,value:Rf,fmt:v=>v+' kΩ',on:v=>{Rf=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Amplitudo masuk Vin',min:0.05,max:3,step:0.05,value:Vin,fmt:v=>v+' V',on:v=>{Vin=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Tegangan suplai ±Vsat',min:3,max:18,step:1,value:Vsat,fmt:v=>'±'+v+' V',on:v=>{Vsat=v;sim();}}).wrap);
+    stage.appendChild(cv); stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">Garis abu = sinyal masuk, garis emas = keluaran. Perbesar Rf atau Vin hingga keluaran <b>menabrak ±Vsat</b> dan ratanya terpotong (clipping).</div>`));
+    sim();
+  }
+};
+
+// 8) ELEKTRONIKA DIGITAL — Gerbang logika ─────────────────────────
+LABS.digital = {
+  name:'Elektronika Digital', sub:'Gerbang logika & tabel kebenaran interaktif',
+  level:'Eksperimen · Logic gates',
+  info:`<h4>Tujuan</h4><p>Memahami keluaran gerbang logika dasar dan membaca tabel kebenaran.</p>
+    <h4>Teori</h4><p>AND=A·B, OR=A+B, XOR=A⊕B, NAND/NOR/XNOR = inversinya, NOT=Ā.</p>
+    <h4>Dunia nyata</h4><p>Blok pembangun semua rangkaian digital: prosesor, memori, kendali.</p>
+    <span class="badge">AND</span><span class="badge">OR</span><span class="badge">XOR</span><span class="badge">NAND</span>`,
+  build(stage){
+    const out=elFrom(`<div></div>`);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    const GATES={AND:(a,b)=>a&b,OR:(a,b)=>a|b,NAND:(a,b)=>1-(a&b),NOR:(a,b)=>1-(a|b),XOR:(a,b)=>a^b,XNOR:(a,b)=>1-(a^b),NOT:(a,b)=>1-a};
+    let gate='AND',A=0,B=0;
+    const panel=elFrom(`<div style="display:flex;gap:26px;align-items:center;flex-wrap:wrap;justify-content:center;padding:14px;background:#0a0e16;border:1px solid #33445f;border-radius:10px"></div>`);
+    function render(){
+      const isNot=gate==='NOT'; const Y=GATES[gate](A,B);
+      const inToggle=(label,val,cb)=>{ const d=elFrom(`<div style="text-align:center"><div class="led ${val?'on':''}" style="cursor:pointer;width:44px;height:44px;font-size:17px">${val}</div><div style="font-size:11px;color:#8ea0b8;margin-top:5px">${label}</div></div>`); d.querySelector('.led').addEventListener('click',cb); return d; };
+      panel.innerHTML='';
+      const left=elFrom(`<div style="display:flex;flex-direction:column;gap:14px"></div>`);
+      left.appendChild(inToggle('A',A,()=>{A=1-A;render();}));
+      if(!isNot) left.appendChild(inToggle('B',B,()=>{B=1-B;render();}));
+      panel.appendChild(left);
+      panel.appendChild(elFrom(`<div style="font-family:'Chakra Petch';font-weight:700;font-size:22px;color:#e8b339;border:2px solid #e8b339;border-radius:12px;padding:18px 22px">${gate}</div>`));
+      panel.appendChild(elFrom(`<div style="text-align:center"><div class="led ${Y?'on':''}">${Y}</div><div style="font-size:11px;color:#8ea0b8;margin-top:5px">Y</div></div>`));
+      // tabel kebenaran
+      let rows='';
+      const combos = isNot?[[0],[1]]:[[0,0],[0,1],[1,0],[1,1]];
+      combos.forEach(c=>{ const y=GATES[gate](c[0],c[1]||0); const cur=(c[0]===A && (isNot|| c[1]===B)); rows+=`<tr class="${cur?'cur':''}"><td>${c[0]}</td>${isNot?'':`<td>${c[1]}</td>`}<td>${y}</td></tr>`; });
+      out.innerHTML='';
+      const tbl=elFrom(`<div style="margin-top:16px;display:flex;justify-content:center"><table class="tt"><thead><tr><th>A</th>${isNot?'':'<th>B</th>'}<th>Y</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+      out.appendChild(tbl);
+    }
+    ctrls.appendChild(seg({label:'Gerbang',value:gate,options:Object.keys(GATES).map(g=>({v:g,t:g})),on:v=>{gate=v;render();}}).wrap);
+    stage.appendChild(panel); stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">Klik lingkaran <b>A</b>/<b>B</b> untuk membalik input (0↔1). Baris tabel kebenaran yang sedang aktif tersorot kuning.</div>`));
+    render();
+  }
+};
+
+// 9) MIKROPROSESOR — ALU 8-bit ────────────────────────────────────
+LABS.micro = {
+  name:'Mikroprosesor & Sistem Tertanam', sub:'ALU 8-bit: operasi aritmetika & logika + flag',
+  level:'Eksperimen · Unit Aritmetika-Logika',
+  info:`<h4>Tujuan</h4><p>Memahami operasi ALU pada level bit beserta flag status (Zero, Carry, Sign).</p>
+    <h4>Teori</h4><p>ALU mengolah dua operand 8-bit (0–255). Flag: Z=hasil 0, C=carry/borrow keluar bit-8, S=bit-7 (MSB) hasil.</p>
+    <h4>Dunia nyata</h4><p>Inti setiap CPU/mikrokontroler (8085, 8086, AVR, ARM).</p>
+    <span class="badge">ADD</span><span class="badge">SUB</span><span class="badge">AND</span><span class="badge">SHL</span>`,
+  build(stage){
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    const view=elFrom(`<div style="background:#0a0e16;border:1px solid #33445f;border-radius:10px;padding:16px"></div>`);
+    let A=90,B=45,op='ADD';
+    const bitsRow=(label,val)=>{ let b=''; for(let i=7;i>=0;i--){ const on=(val>>i)&1; b+=`<div class="bit ${on?'one':''}">${on}</div>`; } return `<div style="margin-bottom:12px"><div style="font-size:11px;color:#8ea0b8;margin-bottom:5px">${label} = <span style="color:#f3d27a;font-family:monospace">${val} (0x${(val&0xFF).toString(16).toUpperCase().padStart(2,'0')})</span></div><div class="bits">${b}</div></div>`; };
+    function compute(){ let R=0,C=0; switch(op){
+      case 'ADD': R=A+B; C=R>255?1:0; break;
+      case 'SUB': R=A-B; C=R<0?1:0; break;
+      case 'AND': R=A&B; break; case 'OR': R=A|B; break; case 'XOR': R=A^B; break;
+      case 'NOT': R=(~A)&0xFF; break; case 'SHL': R=A<<1; C=(A>>7)&1; break; case 'SHR': R=A>>1; C=A&1; break;
+    } const Rb=R&0xFF; return {R:Rb,C,Z:Rb===0?1:0,S:(Rb>>7)&1}; }
+    function render(){
+      const r=compute(); const isUn=(op==='NOT'||op==='SHL'||op==='SHR');
+      view.innerHTML = bitsRow('A',A) + (isUn?'':bitsRow('B',B)) +
+        `<div style="text-align:center;color:#e8b339;font-family:'Chakra Petch';font-weight:700;font-size:15px;margin:4px 0 12px">▼ ${op} ▼</div>` +
+        bitsRow('Hasil R', r.R) +
+        `<div class="flags"><div class="flag ${r.Z?'on':''}">Z (zero)</div><div class="flag ${r.C?'on':''}">C (carry)</div><div class="flag ${r.S?'on':''}">S (sign)</div></div>`;
+    }
+    ctrls.appendChild(seg({label:'Operasi',value:op,options:['ADD','SUB','AND','OR','XOR','NOT','SHL','SHR'].map(o=>({v:o,t:o})),on:v=>{op=v;render();}}).wrap);
+    ctrls.appendChild(slider({label:'Operand A',min:0,max:255,step:1,value:A,fmt:v=>v+'',on:v=>{A=v;render();}}).wrap);
+    ctrls.appendChild(slider({label:'Operand B',min:0,max:255,step:1,value:B,fmt:v=>v+'',on:v=>{B=v;render();}}).wrap);
+    stage.appendChild(view); stage.appendChild(ctrls);
+    stage.appendChild(elFrom(`<div class="note">Atur A & B lalu pilih operasi — lihat hasilnya per-bit (biner), heksadesimal, dan flag. Coba ADD hingga &gt;255 untuk memunculkan <b>carry</b>.</div>`));
+    render();
+  }
+};
+
+// 10) DSP — Spektrum DFT ──────────────────────────────────────────
+LABS.dsp = {
+  name:'Pengolahan Sinyal Digital', sub:'Sinyal gabungan sinus & spektrum DFT',
+  level:'Eksperimen · DFT / analisis frekuensi',
+  info:`<h4>Tujuan</h4><p>Memahami bahwa sinyal waktu adalah jumlah sinus, dan DFT mengungkap komponen frekuensinya.</p>
+    <h4>Teori</h4><p>X[k]=Σ x[n]·e<sup>−j2πkn/N</sup>. Magnitudo |X[k]| menunjukkan kekuatan tiap frekuensi.</p>
+    <h4>Dunia nyata</h4><p>Analisis getaran, audio, kualitas daya (THD), & komunikasi.</p>
+    <span class="badge">DFT</span><span class="badge">spektrum</span><span class="badge">N=128</span>`,
+  build(stage){
+    const cvT=makeCanvas(820,200); const cvF=makeCanvas(820,200);
+    const out=readout([{k:'Komponen',id:'c'},{k:'Frekuensi dominan',id:'d'}]);
+    const ctrls=elFrom(`<div class="controls"></div>`);
+    let f1=4,a1=1,f2=10,a2=0.6,f3=0,a3=0,noise=false;
+    function sim(){
+      const N=128, x=[]; for(let n=0;n<N;n++){ let s=a1*Math.sin(2*Math.PI*f1*n/N)+a2*Math.sin(2*Math.PI*f2*n/N)+a3*Math.sin(2*Math.PI*f3*n/N); if(noise) s+=(Math.random()-0.5)*0.6; x.push(s); }
+      const tpts=x.map((v,n)=>[n,v]);
+      const amp=Math.max(1,a1+a2+a3+ (noise?0.6:0));
+      drawPlot(cvT,{xmin:0,xmax:N-1,ymin:-amp*1.1,ymax:amp*1.1,xlabel:'n (sampel)',ylabel:'x[n]',series:[{pts:tpts,color:'#c9763b',width:1.8}]});
+      // DFT magnitude
+      const half=N/2, mag=[]; let dom=0,domV=0;
+      for(let k=0;k<half;k++){ let re=0,im=0; for(let n=0;n<N;n++){ const ph=2*Math.PI*k*n/N; re+=x[n]*Math.cos(ph); im-=x[n]*Math.sin(ph);} const m=2*Math.sqrt(re*re+im*im)/N; mag.push([k,m]); if(m>domV){domV=m;dom=k;} }
+      drawPlot(cvF,{xmin:0,xmax:half,ymin:0,ymax:Math.max(0.3,domV*1.15),xlabel:'frekuensi (bin k)',ylabel:'|X[k]|',series:[{pts:mag,color:'#e8b339',width:2}],markers:[{x:dom,y:domV,color:'#3ddc84',label:'k='+dom}]});
+      let comps=[`${f1}(${a1})`]; if(a2>0)comps.push(`${f2}(${a2})`); if(a3>0)comps.push(`${f3}(${a3})`);
+      setRO(out,'c', comps.join(' + ')); setRO(out,'d',`k = ${dom}`);
+    }
+    const lblT=elFrom(`<div style="font-size:11px;color:#8ea0b8;margin:2px 0 6px">Domain waktu</div>`);
+    const lblF=elFrom(`<div style="font-size:11px;color:#8ea0b8;margin:14px 0 6px">Spektrum (domain frekuensi)</div>`);
+    ctrls.appendChild(slider({label:'Frekuensi 1 (bin)',min:1,max:40,step:1,value:f1,fmt:v=>'k='+v,on:v=>{f1=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Amplitudo 1',min:0,max:1.5,step:0.1,value:a1,fmt:v=>v.toFixed(1),on:v=>{a1=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Frekuensi 2 (bin)',min:1,max:40,step:1,value:f2,fmt:v=>'k='+v,on:v=>{f2=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Amplitudo 2',min:0,max:1.5,step:0.1,value:a2,fmt:v=>v.toFixed(1),on:v=>{a2=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Frekuensi 3 (bin)',min:1,max:40,step:1,value:f3,fmt:v=>'k='+v,on:v=>{f3=v;sim();}}).wrap);
+    ctrls.appendChild(slider({label:'Amplitudo 3',min:0,max:1.5,step:0.1,value:a3,fmt:v=>v.toFixed(1),on:v=>{a3=v;sim();}}).wrap);
+    const tg=elFrom(`<div class="ctrl"><div class="ctrl-head"><span>Tambah derau (noise)</span></div><div class="toggle"><div class="sw" id="swn"></div><span>acak</span></div></div>`);
+    tg.querySelector('#swn').addEventListener('click',function(){ noise=!noise; this.classList.toggle('on',noise); sim(); });
+    ctrls.appendChild(tg);
+    stage.appendChild(lblT); stage.appendChild(cvT); stage.appendChild(lblF); stage.appendChild(cvF);
+    stage.appendChild(ctrls); stage.appendChild(out);
+    stage.appendChild(elFrom(`<div class="note">Setel amplitudo komponen ke-2/3 dan lihat <b>puncak baru muncul di spektrum</b> tepat di bin frekuensinya. Aktifkan derau untuk melihat lantai noise.</div>`));
+    sim();
+  }
+};
+
+/* ════════════════════════════════════════════════════════════════
+   ROUTER + PICKER
+   ════════════════════════════════════════════════════════════════ */
+const ORDER=['machines','circuits','power-elec','power-sys','control','measure','analog','digital','micro','dsp'];
+const stage=document.getElementById('stage'), info=document.getElementById('info'),
+      picker=document.getElementById('picker'), expTitle=document.getElementById('expTitle'),
+      expSub=document.getElementById('expSub'), labLvl=document.getElementById('labLvl');
+let active=null;
+function show(id){
+  if(!LABS[id]) id='machines'; active=id; const L=LABS[id];
+  picker.querySelectorAll('.pick').forEach(p=>p.classList.toggle('on',p.dataset.id===id));
+  expTitle.textContent=L.name; expSub.textContent=L.sub; labLvl.textContent=L.level;
+  stage.innerHTML=''; info.innerHTML=`<h3>Tentang Eksperimen</h3>`+L.info;
+  L.build(stage);
+  try{ history.replaceState(null,'', location.pathname+'?lab='+id); }catch(e){}
+}
+ORDER.forEach(id=>{ const b=elFrom(`<button class="pick" data-id="${id}">${LABS[id].name}</button>`); b.addEventListener('click',()=>show(id)); picker.appendChild(b); });
+const q=new URLSearchParams(location.search).get('lab');
+show(q && LABS[q] ? q : 'machines');
+</script>
+</body>
+</html>
