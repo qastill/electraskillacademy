@@ -3067,6 +3067,146 @@ body {
   box-shadow: 0 6px 14px rgba(67, 97, 238, 0.35);
 }
 
+/* ── Virtual Labs (versi Indonesia) ───────────────────────────── */
+.vlab-section {
+  padding: 100px 80px;
+  background: var(--cream);
+}
+.vlab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+.vlab-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vlab-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(26, 29, 46, 0.08);
+}
+.vlab-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.vlab-card-icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: linear-gradient(135deg, #1a1d2e 0%, #2d3148 100%);
+  border-radius: 10px;
+}
+.vlab-card-badge {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  background: rgba(212, 175, 106, 0.12);
+  border: 1px solid var(--line-gold);
+  padding: 5px 11px;
+  border-radius: 100px;
+}
+.vlab-card h4 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--navy-deep);
+  line-height: 1.3;
+  margin: 0 0 8px;
+}
+.vlab-card-desc {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  margin: 0 0 16px;
+}
+.vlab-exp-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-gold);
+}
+.vlab-exp-list {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  flex: 1;
+}
+.vlab-exp-list li {
+  position: relative;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  padding: 5px 0 5px 20px;
+}
+.vlab-exp-list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 11px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.vlab-open-btn {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--navy-deep);
+  border: none;
+  padding: 11px 18px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.vlab-open-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(201, 169, 110, 0.4);
+}
+.vlab-credit {
+  margin-top: 40px;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+  text-align: center;
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.vlab-credit a { color: var(--gold-dark); text-decoration: underline; }
+@media (max-width: 768px) {
+  .vlab-section { padding: 70px 24px; }
+  .vlab-grid { grid-template-columns: 1fr; }
+}
+
 /* Calculator modal form */
 .calc-form {
   display: grid;
