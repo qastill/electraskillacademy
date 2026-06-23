@@ -75,6 +75,18 @@
   .sw::after{content:"";position:absolute;top:2.5px;left:2.5px;width:17px;height:17px;border-radius:50%;background:#0a0e16;transition:.2s}
   .sw.on{background:var(--gold)}.sw.on::after{left:20px;background:#1a1206}
   svg.diagram{width:100%;height:auto;display:block;background:#0a0e16;border:1px solid var(--line2);border-radius:10px}
+  .goal-banner{display:flex;gap:11px;align-items:flex-start;background:linear-gradient(135deg,rgba(232,179,57,.14),rgba(201,118,59,.05));border:1px solid rgba(232,179,57,.3);border-radius:11px;padding:12px 14px;margin-bottom:15px}
+  .goal-banner .gi{font-size:19px;line-height:1.2;flex-shrink:0}
+  .goal-banner b{color:var(--gold-soft);font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.7px;text-transform:uppercase}
+  .goal-banner p{font-size:13px;color:var(--txt);margin-top:3px;line-height:1.5}
+  .insight{margin-top:14px;background:#0a0e16;border:1px solid var(--line2);border-left:3px solid var(--gold);border-radius:9px;padding:12px 14px;font-size:13px;line-height:1.6;color:var(--txt)}
+  .insight b{color:var(--gold-soft)}
+  .insight .tag{font-family:'Chakra Petch',sans-serif;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:6px;margin-bottom:5px}
+  .steps{counter-reset:s;padding:0;margin:4px 0 2px;list-style:none}
+  .steps li{position:relative;padding:5px 0 5px 27px;font-size:12.5px;color:var(--txt-d);line-height:1.5}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;background:var(--panel2);border:1px solid var(--gold-d);color:var(--gold-soft);font-size:11px;font-family:'JetBrains Mono',monospace;display:grid;place-items:center}
+  .challenge{margin-top:8px;background:rgba(61,220,132,.07);border:1px solid rgba(61,220,132,.25);border-radius:9px;padding:10px 12px;font-size:12.5px;color:var(--txt-d);line-height:1.55}
+  .challenge b{color:#7dffb0;font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:3px}
 </style>
 </head>
 <body>
@@ -91,7 +103,9 @@
     <div class="card">
       <div class="exp-title" id="expTitle">—</div>
       <div class="exp-sub" id="expSub"></div>
+      <div id="goalBanner"></div>
       <div id="stage"></div>
+      <div id="insightBox"></div>
     </div>
     <div class="card info" id="info"></div>
   </div>
@@ -198,6 +212,9 @@ const LABS = {};
 LABS.machines = {
   name:'Mesin Listrik', sub:'Transformator: rasio belitan, tegangan & arus',
   level:'Eksperimen · Transformator 1 fasa',
+  goal:'Membuktikan Vp/Vs = Np/Ns, dan bahwa daya kekal — menaikkan tegangan otomatis menurunkan arus.',
+  steps:['Atur belitan Np & Ns, perhatikan Vs mengikuti rasio.','Buat Ns&gt;Np (step-up), lalu Ns&lt;Np (step-down).','Ubah beban RL dan amati arus Is &amp; Ip ikut berubah.'],
+  challenge:'Buat transformator yang menurunkan 220 V menjadi 55 V. Berapa rasio Np : Ns yang dibutuhkan?',
   info:`<h4>Tujuan</h4><p>Memahami hubungan rasio belitan dengan tegangan & arus pada transformator ideal.</p>
     <h4>Teori</h4><p>Vp/Vs = Np/Ns dan (transformator ideal, daya kekal) Vp·Ip = Vs·Is, sehingga Is/Ip = Np/Ns.</p>
     <h4>Dunia nyata</h4><p>Dasar gardu distribusi (20 kV→400 V), adaptor, dan catu daya.</p>
@@ -211,6 +228,8 @@ LABS.machines = {
       const Vs=Vp*Ns/Np, Is=Vs/RL, Ip=Vs*Is/Vp; const type=Ns>Np?'Step-up':(Ns<Np?'Step-down':'Isolasi 1:1');
       setRO(out,'vs',`${num(Vs,1)} <small>V</small>`); setRO(out,'ip',`${num(Ip,2)} <small>A</small>`);
       setRO(out,'is',`${num(Is,2)} <small>A</small>`); setRO(out,'type',`<span style="font-size:14px">${type}</span>`);
+      const Pp=Vp*Ip;
+      setInsight(`Rasio belitan Np:Ns = <b>${num(Np/Ns,2)} : 1</b> membuat ${Vp} V menjadi <b>${num(Vs,0)} V</b> (${type.toLowerCase()}). Daya di kedua sisi sama (~<b>${num(Pp,0)} W</b>), sehingga karena tegangan ${Ns>Np?'naik':'turun'}, arus justru ${Ns>Np?'turun':'naik'} (Is=${num(Is,2)} A vs Ip=${num(Ip,2)} A). Itulah sebabnya saluran transmisi bertegangan tinggi: arus kecil → rugi I²R kecil.`);
       // gambar inti + lilitan
       const coils=(x,n,col)=>{ let p=''; const turns=Math.max(3,Math.round(n/60)); for(let i=0;i<turns;i++){ const y=60+i*(100/turns); p+=`<circle cx="${x}" cy="${y+ (100/turns)/2}" r="${(100/turns)/2.1}" fill="none" stroke="${col}" stroke-width="3"/>`;} return p; };
       svg.innerHTML=`
@@ -238,6 +257,9 @@ LABS.machines = {
 LABS.circuits = {
   name:'Rangkaian Listrik Dasar', sub:'Respon transien RC · RL · RLC seri (input step)',
   level:'Eksperimen · Rangkaian orde-1 & 2',
+  goal:'Memahami konstanta waktu (RC/RL) dan redaman (RLC): kapan rangkaian naik mulus vs berosilasi.',
+  steps:['Pilih RC — amati kurva pengisian eksponensial.','Pindah ke RLC, lalu kecilkan R hingga muncul osilasi.','Perhatikan ζ: &lt;1 berosilasi, =1 kritis, &gt;1 lambat.'],
+  challenge:'Pada mode RLC, cari nilai R yang membuat ζ ≈ 1 (teredam kritis) untuk L & C saat ini.',
   info:`<h4>Tujuan</h4><p>Mengamati cara kapasitor/induktor mengisi & sistem RLC berosilasi terhadap waktu.</p>
     <h4>Teori</h4><p>RC: Vc=V(1−e<sup>−t/RC</sup>). RLC seri: ω₀=1/√(LC), ζ=(R/2)√(C/L). ζ&lt;1 teredam-kurang (berosilasi), ζ=1 kritis, ζ&gt;1 teredam-lebih.</p>
     <h4>Dunia nyata</h4><p>Filter, snubber, timing, dan respon transien sistem daya.</p>
@@ -263,6 +285,9 @@ LABS.circuits = {
       setRO(out,'w', mode==='rlc'?`${num(w0,0)} <small>rad/s</small>`:`${num((mode==='rc'?R*Cf:L/R)*1000,2)} <small>ms</small>`);
       setRO(out,'z', mode==='rlc'?`${num(z,3)} <small>(${z<1?'kurang':z>1?'lebih':'kritis'})</small>`:'—');
       setRO(out,'f', mode==='rl'?`${num(V/R,2)} <small>A</small>`:`${num(V,1)} <small>V</small>`);
+      if(mode==='rc') setInsight(`Konstanta waktu τ = R·C = <b>${num(R*Cf*1000,2)} ms</b>. Kapasitor terisi ~63% dalam 1τ dan dianggap penuh (${V} V) setelah ~5τ (≈${num(5*R*Cf*1000,0)} ms). Perbesar R atau C → pengisian makin lambat.`);
+      else if(mode==='rl') setInsight(`Konstanta waktu τ = L/R = <b>${num(L/R*1000,2)} ms</b>. Arus induktor naik menuju nilai akhir I = V/R = <b>${num(V/R,2)} A</b>. Induktor melawan perubahan arus, jadi arus naik bertahap, bukan seketika.`);
+      else setInsight(`ζ = <b>${num(z,2)}</b> → ${z<1?`<b>teredam-kurang</b>: tegangan kapasitor melonjak melewati ${V} V lalu berosilasi sebelum diam`:z>1?'<b>teredam-lebih</b>: naik mulus tanpa osilasi tapi lambat':'<b>teredam kritis</b>: naik tercepat tanpa overshoot'}. Frekuensi alami ω₀ = <b>${num(w0,0)} rad/s</b>. Kecilkan R untuk memperjelas osilasi.`);
     }
     const sLwrap=slider({label:'Induktansi L',min:0.05,max:2,step:0.05,value:L,fmt:v=>v+' H',on:v=>{L=v;sim();}});
     const sCwrap=slider({label:'Kapasitansi C',min:10,max:1000,step:10,value:C,fmt:v=>v+' µF',on:v=>{C=v;sim();}});
@@ -282,6 +307,9 @@ LABS.circuits = {
 LABS['power-elec'] = {
   name:'Elektronika Daya', sub:'Penyearah terkendali setengah & gelombang penuh',
   level:'Eksperimen · Rectifier (beban R)',
+  goal:'Melihat bagaimana sudut picu α thyristor mengatur besarnya tegangan DC keluaran penyearah.',
+  steps:['Bandingkan penyearah setengah vs gelombang penuh.','Aktifkan mode terkendali (SCR), lalu naikkan α dari 0° ke 90°.','Amati garis hijau (Vdc rata-rata) ikut turun.'],
+  challenge:'Pada gelombang penuh terkendali, pada sudut α berapa Vdc turun menjadi sekitar separuh nilai maksimumnya?',
   info:`<h4>Tujuan</h4><p>Memahami bentuk gelombang keluaran penyearah & pengaruh sudut picu α (thyristor).</p>
     <h4>Teori</h4><p>Tak terkendali — setengah: Vdc=Vm/π; gelombang penuh: Vdc=2Vm/π. Terkendali (R, gelombang penuh): Vdc=(2Vm/π)·(1+cosα)/2.</p>
     <h4>Dunia nyata</h4><p>Charger, drive DC, dan catu daya industri.</p>
@@ -306,6 +334,8 @@ LABS['power-elec'] = {
         series:[{pts:inp,color:'#3a4b66',width:1.4,dash:[5,4]},{pts,color:'#e8b339',width:2.4},{pts:[[0,Vdc],[4*Math.PI,Vdc]],color:'#3ddc84',dash:[7,5]}]});
       setRO(out,'vdc',`${num(Vdc,1)} <small>V</small>`); setRO(out,'vm',`${num(Vm,0)} <small>V</small>`);
       setRO(out,'a',controlled?`${alpha}°`:'—'); setRO(out,'m',`${type==='half'?'½-gelombang':'Gel. penuh'}${controlled?' · terkendali':''}`);
+      const Vmax = type==='half'? Vm/Math.PI : 2*Vm/Math.PI;
+      setInsight(`Garis emas = tegangan yang lolos ke beban, garis hijau = rata-ratanya (<b>Vdc = ${num(Vdc,0)} V</b>). ${controlled?`Dengan α = <b>${alpha}°</b>, thyristor baru menyala setelah ${alpha}° tiap siklus, memangkas gelombang → Vdc ${num(100*Vdc/Vmax,0)}% dari maksimum (${num(Vmax,0)} V).`:'Mode tak terkendali (dioda): seluruh bagian gelombang lewat.'} ${type==='full'?'Gelombang penuh memanfaatkan kedua paruh siklus → Vdc dua kali lipat versi setengah.':'Penyearah setengah membuang paruh negatif → Vdc lebih kecil & banyak riak.'}`);
     }
     ctrls.appendChild(seg({label:'Jenis penyearah',value:type,options:[{v:'half',t:'Setengah'},{v:'full',t:'Gel. penuh'}],on:v=>{type=v;sim();}}).wrap);
     const aSl=slider({label:'Sudut picu α',min:0,max:180,step:1,value:alpha,fmt:v=>v+'°',on:v=>{alpha=v;sim();}});
@@ -324,6 +354,9 @@ LABS['power-elec'] = {
 LABS['power-sys'] = {
   name:'Sistem Tenaga Listrik', sub:'Karakteristik waktu-terbalik relai arus lebih (IEC 60255)',
   level:'Eksperimen · Relai OCR 51',
+  goal:'Memahami prinsip proteksi: makin besar arus gangguan, makin cepat relai memerintahkan pemutus untuk trip.',
+  steps:['Pilih karakteristik kurva (SI / VI / EI).','Geser arus gangguan, amati titik hijau & waktu trip.','Ubah TMS untuk menggeser seluruh kurva naik/turun.'],
+  challenge:'Dengan kurva Extremely Inverse, berapa kira-kira waktu trip saat arus gangguan = 10× arus pickup?',
   info:`<h4>Tujuan</h4><p>Memahami karakteristik waktu-terbalik relai proteksi: makin besar arus, makin cepat trip.</p>
     <h4>Teori</h4><p>t = TMS · k / ((I/Is)<sup>α</sup> − 1). Standard Inverse (k=0,14; α=0,02), Very Inverse (13,5; 1), Extremely Inverse (80; 2).</p>
     <h4>Dunia nyata</h4><p>Setting relai di kubikel 20 kV & koordinasi proteksi gardu PLN.</p>
@@ -341,6 +374,8 @@ LABS['power-sys'] = {
         series:[{pts,color:'#e8b339'}], markers: tF!=null?[{x:mF,y:tF,color:'#3ddc84',label:`${num(tF,2)}s`}]:[]});
       setRO(out,'c',`<span style="font-size:13px">${NM[curve]}</span>`); setRO(out,'if',`${Ifault} <small>A</small>`);
       setRO(out,'m',`${num(mF,2)}×`); setRO(out,'t', tF!=null?`${num(tF,2)} <small>s</small>`:'<small>tak trip (I≤Is)</small>');
+      if(tF==null) setInsight(`Arus gangguan (${Ifault} A) <b>masih di bawah/sama dengan pickup ${Is} A</b>, jadi relai menganggapnya beban normal dan <b>tidak trip</b>. Relai hanya bekerja jika arus melebihi setelan pickup.`);
+      else setInsight(`Arus gangguan ${Ifault} A = <b>${num(mF,1)}×</b> pickup → relai trip dalam <b>${num(tF,2)} detik</b> (${NM[curve]}). Karena karakteristiknya "waktu-terbalik", gangguan besar dekat sumber diputus cepat, sedangkan gangguan kecil diberi jeda agar tidak salah-trip. Naikkan TMS untuk memperlambat seluruh kurva (koordinasi dengan relai hilir).`);
     }
     ctrls.appendChild(seg({label:'Karakteristik kurva',value:curve,options:[{v:'si',t:'SI'},{v:'vi',t:'VI'},{v:'ei',t:'EI'}],on:v=>{curve=v;sim();}}).wrap);
     ctrls.appendChild(slider({label:'Time Multiplier (TMS)',min:0.05,max:1.5,step:0.05,value:TMS,fmt:v=>v.toFixed(2),on:v=>{TMS=v;sim();}}).wrap);
@@ -356,6 +391,9 @@ LABS['power-sys'] = {
 LABS.control = {
   name:'Sistem Kendali', sub:'Respon tangga (step) sistem orde-2',
   level:'Eksperimen · ζ & ωn',
+  goal:'Memahami trade-off kecepatan vs overshoot lewat rasio redaman ζ pada respon sistem.',
+  steps:['Mulai dengan ζ kecil (0,2) — overshoot besar & berosilasi.','Naikkan ζ ke 1 — overshoot hilang, respon mulus.','Bandingkan waktu tunak ts pada tiap ζ.'],
+  challenge:'Temukan nilai ζ yang menghasilkan overshoot sekitar 5% — acuan desain kontrol yang umum dipakai.',
   info:`<h4>Tujuan</h4><p>Melihat pengaruh rasio redaman ζ dan frekuensi alami ωn terhadap overshoot & waktu tunak.</p>
     <h4>Teori</h4><p>G(s)=ωn²/(s²+2ζωn s+ωn²). Overshoot %MP=e<sup>−ζπ/√(1−ζ²)</sup>. ts≈4/(ζωn).</p>
     <h4>Dunia nyata</h4><p>Tuning kontrol kecepatan motor, governor, & sistem servo.</p>
@@ -374,6 +412,7 @@ LABS.control = {
       const ts = 4/(z*wn);
       setRO(out,'os',`${num(os,1)} <small>%</small>`); setRO(out,'tp', tp!=null?`${num(tp,2)} <small>s</small>`:'—');
       setRO(out,'ts',`${num(ts,2)} <small>s</small>`); setRO(out,'k', z<1?'Teredam-kurang':z===1?'Kritis':'Teredam-lebih');
+      setInsight(`Dengan ζ = <b>${num(z,2)}</b>: ${z<1?`sistem <b>melampaui target ${num(os,0)}%</b> (overshoot) lalu berosilasi sebelum tenang`:z>=1?'sistem naik <b>mulus tanpa overshoot</b> tapi lebih lambat':''}. Waktu tunak ts ≈ <b>${num(ts,2)} s</b>. ζ kecil = cepat tapi "menyentak"; ζ besar = halus tapi lambat. <b>ζ ≈ 0,7</b> biasanya kompromi terbaik (overshoot ~5%, cukup cepat).`);
     }
     ctrls.appendChild(slider({label:'Rasio redaman ζ',min:0.05,max:2,step:0.05,value:z,fmt:v=>v.toFixed(2),on:v=>{z=v;sim();}}).wrap);
     ctrls.appendChild(slider({label:'Frekuensi alami ωn',min:1,max:12,step:0.5,value:wn,fmt:v=>v+' rad/s',on:v=>{wn=v;sim();}}).wrap);
@@ -387,6 +426,9 @@ LABS.control = {
 LABS.measure = {
   name:'Pengukuran Besaran Listrik', sub:'Jembatan Wheatstone — menyetel hingga seimbang',
   level:'Eksperimen · Ukur resistansi',
+  goal:'Mengukur resistansi yang tak diketahui dengan menyeimbangkan jembatan hingga galvanometer menunjuk nol.',
+  steps:['Putar R3 perlahan ke kiri/kanan.','Amati jarum galvanometer mendekati tengah (nol).','Saat seimbang (hijau), baca Rx = R3·R2/R1.'],
+  challenge:'Temukan nilai Rx yang tersembunyi (petunjuk: nilainya berada di antara 300–350 Ω).',
   info:`<h4>Tujuan</h4><p>Mengukur resistansi tak diketahui dengan menyeimbangkan jembatan (galvanometer = 0).</p>
     <h4>Teori</h4><p>Saat seimbang: R1/R2 = R3/Rx → Rx = R3·R2/R1. Galvanometer menunjuk nol saat seimbang.</p>
     <h4>Dunia nyata</h4><p>Kalibrasi sensor, strain gauge, & pengukuran presisi.</p>
@@ -407,6 +449,8 @@ LABS.measure = {
       setRO(out,'g',`${num(Ig,1)} <small>µA</small>`);
       setRO(out,'s', bal?'<span style="color:#3ddc84">SEIMBANG ✓</span>':(Vg>0?'jarum ke kanan →':'← jarum ke kiri'));
       setRO(out,'r3',`${R3} <small>Ω</small>`); setRO(out,'rx', bal?`<span style="color:#3ddc84">${num(rxRead,0)} Ω</span>`:'<small>setimbangkan dulu</small>');
+      if(bal) setInsight(`<b>Seimbang!</b> Galvanometer = 0 berarti tidak ada arus melintas — kedua cabang punya pembagi tegangan yang sama. Maka Rx = R3·R2/R1 = ${R3}·${R2}/${R1} = <b>${num(rxRead,0)} Ω</b>. Hebatnya, hasil ini <b>tidak bergantung pada tegangan sumber</b> — itu sebabnya jembatan sangat presisi.`);
+      else setInsight(`Jarum ${Vg>0?'menyimpang ke kanan →':'← menyimpang ke kiri'} karena jembatan belum seimbang (ada beda potensial ${num(Math.abs(Vg)*1000,0)} mV di galvanometer). ${Vg>0?'Turunkan':'Naikkan'} R3 untuk mendekati nol.`);
       const cx=480,cy=70,r=42; const a=(ang-90)*Math.PI/180;
       svg.innerHTML=`
         <polygon points="200,40 330,150 200,260 70,150" fill="none" stroke="#33445f" stroke-width="2"/>
@@ -434,6 +478,9 @@ LABS.measure = {
 LABS.analog = {
   name:'Elektronika Analog', sub:'Penguat op-amp: inverting & non-inverting (dengan saturasi)',
   level:'Eksperimen · Op-amp',
+  goal:'Memahami penguatan op-amp dan batas saturasi (clipping) ketika keluaran melebihi tegangan suplai.',
+  steps:['Pilih konfigurasi inverting atau non-inverting.','Atur Rf/Rin untuk mengubah penguatan.','Perbesar Vin atau Rf hingga keluaran terpotong di ±Vsat.'],
+  challenge:'Buat penguatan tepat 10× memakai konfigurasi non-inverting (ingat: Av = 1 + Rf/Rin).',
   info:`<h4>Tujuan</h4><p>Memahami penguatan op-amp dan kliping saat keluaran melewati tegangan suplai.</p>
     <h4>Teori</h4><p>Inverting: Av=−Rf/Rin. Non-inverting: Av=1+Rf/Rin. Keluaran terpotong pada ±Vsat.</p>
     <h4>Dunia nyata</h4><p>Pengondisi sinyal sensor, filter aktif, & instrumentasi.</p>
@@ -452,6 +499,7 @@ LABS.analog = {
       setRO(out,'av',`${num(Av,1)} <small>×</small>`); setRO(out,'vo',`${num(amp,2)} <small>V</small>`);
       setRO(out,'s', clipped?'<span style="color:#ff5d5d">TERPOTONG (clipping)</span>':'<span style="color:#3ddc84">linear ✓</span>');
       setRO(out,'c', conf==='inv'?'Inverting':'Non-inverting');
+      setInsight(`Penguatan Av = ${conf==='inv'?`−Rf/Rin = −${Rf}/${Rin}`:`1 + Rf/Rin = 1 + ${Rf}/${Rin}`} = <b>${num(Av,1)}×</b>. ${conf==='inv'?'Tanda minus = keluaran terbalik fasa 180° dari masukan.':'Keluaran sefasa dengan masukan.'} ${clipped?`⚠️ Keluaran ideal (${num(Av*Vin,1)} V) <b>melebihi ±${Vsat} V</b>, jadi puncaknya terpotong rata (clipping) — sinyal cacat. Kurangi Vin atau Rf.`:`Sinyal masih <b>linear</b> (puncak ${num(Math.abs(Av*Vin),1)} V &lt; ${Vsat} V suplai).`}`);
     }
     ctrls.appendChild(seg({label:'Konfigurasi',value:conf,options:[{v:'inv',t:'Inverting'},{v:'noninv',t:'Non-inv'}],on:v=>{conf=v;sim();}}).wrap);
     ctrls.appendChild(slider({label:'Rin',min:1,max:100,step:1,value:Rin,fmt:v=>v+' kΩ',on:v=>{Rin=v;sim();}}).wrap);
@@ -468,6 +516,9 @@ LABS.analog = {
 LABS.digital = {
   name:'Elektronika Digital', sub:'Gerbang logika & tabel kebenaran interaktif',
   level:'Eksperimen · Logic gates',
+  goal:'Menguasai keluaran gerbang logika dasar dan cara membaca tabel kebenaran.',
+  steps:['Pilih gerbang (AND, OR, XOR, …).','Klik lingkaran A/B untuk membalik input 0↔1.','Cocokkan keluaran Y dengan baris tabel yang tersorot.'],
+  challenge:'Gerbang mana yang keluarannya bernilai 1 HANYA jika kedua inputnya berbeda?',
   info:`<h4>Tujuan</h4><p>Memahami keluaran gerbang logika dasar dan membaca tabel kebenaran.</p>
     <h4>Teori</h4><p>AND=A·B, OR=A+B, XOR=A⊕B, NAND/NOR/XNOR = inversinya, NOT=Ā.</p>
     <h4>Dunia nyata</h4><p>Blok pembangun semua rangkaian digital: prosesor, memori, kendali.</p>
@@ -495,6 +546,8 @@ LABS.digital = {
       out.innerHTML='';
       const tbl=elFrom(`<div style="margin-top:16px;display:flex;justify-content:center"><table class="tt"><thead><tr><th>A</th>${isNot?'':'<th>B</th>'}<th>Y</th></tr></thead><tbody>${rows}</tbody></table></div>`);
       out.appendChild(tbl);
+      const DESC={AND:'bernilai 1 hanya jika A DAN B keduanya 1',OR:'bernilai 1 jika A ATAU B (salah satu) 1',NAND:'kebalikan AND — 0 hanya jika keduanya 1',NOR:'kebalikan OR — 1 hanya jika keduanya 0',XOR:'bernilai 1 jika A dan B BERBEDA',XNOR:'bernilai 1 jika A dan B SAMA',NOT:'membalik input (0→1, 1→0)'};
+      setInsight(`${isNot?`NOT ${A}`:`${A} ${gate} ${B}`} = <b>${Y}</b>. Gerbang <b>${gate}</b> ${DESC[gate]}. Baris tabel kebenaran yang sesuai input saat ini disorot kuning.`);
     }
     ctrls.appendChild(seg({label:'Gerbang',value:gate,options:Object.keys(GATES).map(g=>({v:g,t:g})),on:v=>{gate=v;render();}}).wrap);
     stage.appendChild(panel); stage.appendChild(ctrls); stage.appendChild(out);
@@ -507,6 +560,9 @@ LABS.digital = {
 LABS.micro = {
   name:'Mikroprosesor & Sistem Tertanam', sub:'ALU 8-bit: operasi aritmetika & logika + flag',
   level:'Eksperimen · Unit Aritmetika-Logika',
+  goal:'Memahami cara ALU mengolah data di level bit, beserta arti flag status Zero, Carry, dan Sign.',
+  steps:['Atur nilai operand A dan B.','Pilih operasi (ADD, SUB, AND, …).','Amati hasil dalam biner/heksadesimal serta flag yang menyala.'],
+  challenge:'Lakukan ADD yang membuat flag Carry menyala (hasil penjumlahan melebihi 255 — batas 8-bit).',
   info:`<h4>Tujuan</h4><p>Memahami operasi ALU pada level bit beserta flag status (Zero, Carry, Sign).</p>
     <h4>Teori</h4><p>ALU mengolah dua operand 8-bit (0–255). Flag: Z=hasil 0, C=carry/borrow keluar bit-8, S=bit-7 (MSB) hasil.</p>
     <h4>Dunia nyata</h4><p>Inti setiap CPU/mikrokontroler (8085, 8086, AVR, ARM).</p>
@@ -528,6 +584,8 @@ LABS.micro = {
         `<div style="text-align:center;color:#e8b339;font-family:'Chakra Petch';font-weight:700;font-size:15px;margin:4px 0 12px">▼ ${op} ▼</div>` +
         bitsRow('Hasil R', r.R) +
         `<div class="flags"><div class="flag ${r.Z?'on':''}">Z (zero)</div><div class="flag ${r.C?'on':''}">C (carry)</div><div class="flag ${r.S?'on':''}">S (sign)</div></div>`;
+      const opTxt = op==='NOT'?`NOT ${A}`:op==='SHL'?`${A} digeser kiri`:op==='SHR'?`${A} digeser kanan`:`${A} ${op} ${B}`;
+      setInsight(`${opTxt} = <b>${r.R}</b> (0x${r.R.toString(16).toUpperCase().padStart(2,'0')}). Flag: ${r.Z?'<b>Z menyala</b> (hasil nol)':'Z mati'}, ${r.C?'<b>C menyala</b> — '+(op==='ADD'?'penjumlahan melebihi 255, ada limpahan (carry)':op==='SUB'?'pengurangan menghasilkan minus (borrow)':'bit terdorong keluar')+'':'C mati'}, ${r.S?'<b>S menyala</b> (bit-7=1, ditafsirkan negatif pada bilangan bertanda)':'S mati'}. ALU hanya menyimpan 8 bit — itu sebabnya hasil "berputar" saat melebihi 255.`);
     }
     ctrls.appendChild(seg({label:'Operasi',value:op,options:['ADD','SUB','AND','OR','XOR','NOT','SHL','SHR'].map(o=>({v:o,t:o})),on:v=>{op=v;render();}}).wrap);
     ctrls.appendChild(slider({label:'Operand A',min:0,max:255,step:1,value:A,fmt:v=>v+'',on:v=>{A=v;render();}}).wrap);
@@ -542,6 +600,9 @@ LABS.micro = {
 LABS.dsp = {
   name:'Pengolahan Sinyal Digital', sub:'Sinyal gabungan sinus & spektrum DFT',
   level:'Eksperimen · DFT / analisis frekuensi',
+  goal:'Membuktikan bahwa sinyal waktu adalah jumlah beberapa sinus, dan DFT dapat mengungkap tiap frekuensinya.',
+  steps:['Aktifkan 1 sinus — lihat 1 puncak tunggal di spektrum.','Tambahkan komponen ke-2 dan ke-3.','Aktifkan derau dan amati lantai noise muncul.'],
+  challenge:'Susun sinyal yang menghasilkan dua puncak berkekuatan sama tepat di bin k=5 dan k=12.',
   info:`<h4>Tujuan</h4><p>Memahami bahwa sinyal waktu adalah jumlah sinus, dan DFT mengungkap komponen frekuensinya.</p>
     <h4>Teori</h4><p>X[k]=Σ x[n]·e<sup>−j2πkn/N</sup>. Magnitudo |X[k]| menunjukkan kekuatan tiap frekuensi.</p>
     <h4>Dunia nyata</h4><p>Analisis getaran, audio, kualitas daya (THD), & komunikasi.</p>
@@ -562,6 +623,8 @@ LABS.dsp = {
       drawPlot(cvF,{xmin:0,xmax:half,ymin:0,ymax:Math.max(0.3,domV*1.15),xlabel:'frekuensi (bin k)',ylabel:'|X[k]|',series:[{pts:mag,color:'#e8b339',width:2}],markers:[{x:dom,y:domV,color:'#3ddc84',label:'k='+dom}]});
       let comps=[`${f1}(${a1})`]; if(a2>0)comps.push(`${f2}(${a2})`); if(a3>0)comps.push(`${f3}(${a3})`);
       setRO(out,'c', comps.join(' + ')); setRO(out,'d',`k = ${dom}`);
+      const nComp=[a1,a2,a3].filter(a=>a>0).length;
+      setInsight(`Sinyal di atas (domain waktu) yang terlihat rumit sebenarnya hanya gabungan <b>${nComp} gelombang sinus</b>. DFT memecahnya: tiap sinus muncul sebagai <b>satu garis tegak</b> di spektrum, tepat pada bin frekuensinya — puncak tertinggi kini di <b>k=${dom}</b>. ${noise?'Derau acak menyebar ke semua bin → muncul "lantai noise" rendah di bawah puncak.':'Tanpa derau, di luar puncak spektrum bernilai nol.'} Inilah dasar analisis getaran, audio, dan THD daya.`);
     }
     const lblT=elFrom(`<div style="font-size:11px;color:#8ea0b8;margin:2px 0 6px">Domain waktu</div>`);
     const lblF=elFrom(`<div style="font-size:11px;color:#8ea0b8;margin:14px 0 6px">Spektrum (domain frekuensi)</div>`);
@@ -587,13 +650,22 @@ LABS.dsp = {
 const ORDER=['machines','circuits','power-elec','power-sys','control','measure','analog','digital','micro','dsp'];
 const stage=document.getElementById('stage'), info=document.getElementById('info'),
       picker=document.getElementById('picker'), expTitle=document.getElementById('expTitle'),
-      expSub=document.getElementById('expSub'), labLvl=document.getElementById('labLvl');
+      expSub=document.getElementById('expSub'), labLvl=document.getElementById('labLvl'),
+      goalBanner=document.getElementById('goalBanner'), insightBox=document.getElementById('insightBox');
+// Panel "Apa yang terjadi?" — penjelasan langsung yang diperbarui tiap kali
+// parameter digeser, supaya pengguna paham makna angka yang berubah.
+function setInsight(html){ insightBox.innerHTML=`<div class="insight"><span class="tag">💡 Apa yang terjadi?</span>${html}</div>`; }
 let active=null;
 function show(id){
   if(!LABS[id]) id='machines'; active=id; const L=LABS[id];
   picker.querySelectorAll('.pick').forEach(p=>p.classList.toggle('on',p.dataset.id===id));
   expTitle.textContent=L.name; expSub.textContent=L.sub; labLvl.textContent=L.level;
-  stage.innerHTML=''; info.innerHTML=`<h3>Tentang Eksperimen</h3>`+L.info;
+  goalBanner.innerHTML = L.goal ? `<div class="goal-banner"><span class="gi">🎯</span><div><b>Tujuan eksperimen</b><p>${L.goal}</p></div></div>` : '';
+  insightBox.innerHTML='';
+  const stepsHTML = L.steps ? `<h4>Cara mencoba</h4><ol class="steps">${L.steps.map(s=>`<li>${s}</li>`).join('')}</ol>` : '';
+  const chHTML = L.challenge ? `<div class="challenge"><b>🧪 Tantangan</b>${L.challenge}</div>` : '';
+  info.innerHTML=`<h3>Tentang Eksperimen</h3>`+L.info+stepsHTML+chHTML;
+  stage.innerHTML='';
   L.build(stage);
   try{ history.replaceState(null,'', location.pathname+'?lab='+id); }catch(e){}
 }
