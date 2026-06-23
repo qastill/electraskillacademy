@@ -1791,6 +1791,7 @@ if ('serviceWorker' in navigator) {
       <div class="labs-hero-tabs">
         <button class="labs-tab-btn active" data-panel="simulator" onclick="labsShowSection('simulator')">Digital Simulator Lab</button>
         <button class="labs-tab-btn" data-panel="design-calc" onclick="labsShowSection('design-calc')">Design Calculators</button>
+        <button class="labs-tab-btn" data-panel="vlab" onclick="labsShowSection('vlab')">Virtual Labs</button>
         <button class="labs-tab-btn" data-panel="praktikum" onclick="labsShowSection('praktikum')">Kelas Praktikum</button>
       </div>
     </div>
@@ -1853,6 +1854,23 @@ if ('serviceWorker' in navigator) {
 
       <h3 class="calc-subgroup-title">Additional Calculators <span class="calc-count">4 Tools</span></h3>
       <div class="calc-grid" id="calc-grid-additional"></div>
+    </div>
+  </section>
+
+  <!-- Virtual Labs Section — adaptasi Bahasa Indonesia dari Virtual Labs
+       (broad area Electrical Engineering), inisiatif Kementerian Pendidikan
+       Pemerintah India (vlabs.ac.in / vlab.co.in). Katalog lab + eksperimen
+       diterjemahkan & disusun ulang agar terbaca oleh pelajar Indonesia.
+       Tombol "Buka lab interaktif" mengarah ke lab asli (berbahasa Inggris). -->
+  <section class="vlab-section labs-panel" id="lab-vlab">
+    <div class="lab-section-inner">
+      <div class="lab-section-header">
+        <div class="lab-section-eyebrow">Virtual Labs · Versi Indonesia</div>
+        <h2 class="lab-section-title">Laboratorium <span class="italic">virtual</span> ketenagalistrikan</h2>
+        <p class="lab-section-sub">Adaptasi Bahasa Indonesia dari katalog <em>Electrical Engineering</em> Virtual Labs — program laboratorium daring gratis inisiatif Kementerian Pendidikan Pemerintah India. Tiap lab berisi eksperimen interaktif untuk memahami teori kelistrikan secara mandiri, tanpa perlu alat fisik.</p>
+      </div>
+      <div class="vlab-grid" id="vlab-grid"></div>
+      <p class="vlab-credit">Sumber lab interaktif: <a href="https://www.vlab.co.in/broad-area-electrical-engineering" target="_blank" rel="noopener">Virtual Labs — Electrical Engineering</a> (vlabs.ac.in), Kementerian Pendidikan Pemerintah India. Deskripsi & judul eksperimen di atas telah diterjemahkan ke Bahasa Indonesia oleh Electra Skill Academy untuk tujuan edukasi.</p>
     </div>
   </section>
 
@@ -5433,6 +5451,102 @@ function renderSimulators() {
       </span>
     </button>`;
   }).join('') + `</div>`;
+}
+
+// ── VIRTUAL LABS (adaptasi Bahasa Indonesia) ─────────────────────
+// Katalog lab + eksperimen diterjemahkan dari broad area Electrical
+// Engineering Virtual Labs (vlabs.ac.in). `src` mengarah ke katalog lab
+// asli yang interaktif (berbahasa Inggris) — dibuka di tab baru.
+const VLAB_SRC = 'https://www.vlab.co.in/broad-area-electrical-engineering';
+const VIRTUAL_LABS = [
+  { icon: '⚙️', badge: 'Mesin Listrik', name: 'Lab Mesin Listrik', desc: 'Mempelajari transformator serta motor dan generator AC/DC: prinsip kerja, karakteristik, pengasutan, dan pengujian beban.', exp: [
+    'Uji beban-nol & hubung singkat transformator 1 fasa',
+    'Uji polaritas & rasio transformasi',
+    'Karakteristik beban motor induksi 3 fasa',
+    'Pengasutan & pembalikan arah motor induksi',
+    'Karakteristik generator DC shunt',
+    'Uji beban motor DC' ] },
+  { icon: '🔌', badge: 'Rangkaian', name: 'Lab Rangkaian Listrik Dasar', desc: 'Fondasi semua rangkaian: hukum dasar, teorema jaringan, dan respon transien rangkaian RLC.', exp: [
+    'Verifikasi Hukum Ohm',
+    'Hukum Kirchhoff arus (KCL) & tegangan (KVL)',
+    'Teorema Thevenin & Norton',
+    'Teorema superposisi',
+    'Teorema transfer daya maksimum',
+    'Respon transien rangkaian RC, RL, & RLC' ] },
+  { icon: '⚡', badge: 'Elektronika Daya', name: 'Lab Elektronika Daya', desc: 'Konversi daya menggunakan komponen semikonduktor: penyearah terkendali, chopper, dan inverter.', exp: [
+    'Karakteristik V-I Thyristor (SCR)',
+    'Penyearah terkendali setengah & gelombang penuh',
+    'DC chopper (buck & boost)',
+    'Inverter 1 fasa dengan PWM',
+    'Karakteristik MOSFET & IGBT',
+    'Rangkaian pemicu (triggering) gate' ] },
+  { icon: '🗼', badge: 'Sistem Tenaga', name: 'Lab Sistem Tenaga Listrik', desc: 'Analisis jaringan tenaga: parameter saluran, aliran daya, gangguan hubung singkat, dan proteksi.', exp: [
+    'Pengukuran parameter saluran transmisi (R, L, C)',
+    'Studi aliran daya (Gauss-Seidel / Newton-Raphson)',
+    'Analisis hubung singkat simetris',
+    'Komponen simetris & gangguan asimetris',
+    'Karakteristik relai arus lebih (OCR)',
+    'Kestabilan sistem tenaga (kurva ayunan)' ] },
+  { icon: '🎛️', badge: 'Sistem Kendali', name: 'Lab Sistem Kendali', desc: 'Memahami perilaku sistem dinamik dan teknik analisis kestabilan pada domain waktu & frekuensi.', exp: [
+    'Respon transien sistem orde-1 & orde-2',
+    'Diagram Bode & margin kestabilan',
+    'Tempat kedudukan akar (root locus)',
+    'Kriteria kestabilan Routh-Hurwitz',
+    'Perancangan pengendali PID',
+    'Diagram Nyquist' ] },
+  { icon: '📐', badge: 'Pengukuran', name: 'Lab Pengukuran Besaran Listrik', desc: 'Teknik pengukuran presisi resistansi, induktansi, kapasitansi, dan daya menggunakan metode jembatan.', exp: [
+    'Jembatan Wheatstone (ukur resistansi)',
+    'Jembatan Kelvin double (resistansi rendah)',
+    'Jembatan Maxwell (ukur induktansi)',
+    'Jembatan Schering (ukur kapasitansi)',
+    'Pengukuran daya 3 fasa (metode 2 wattmeter)',
+    'Potensiometer DC' ] },
+  { icon: '📈', badge: 'Elektronika Analog', name: 'Lab Elektronika Analog', desc: 'Karakteristik komponen semikonduktor dan rangkaian penguat berbasis transistor & op-amp.', exp: [
+    'Karakteristik dioda & rangkaian penyearah',
+    'Rangkaian clipper & clamper',
+    'Penguat transistor common-emitter (CE)',
+    'Op-amp: penguat inverting & non-inverting',
+    'Rangkaian osilator',
+    'Regulator tegangan' ] },
+  { icon: '🔢', badge: 'Elektronika Digital', name: 'Lab Elektronika Digital', desc: 'Rangkaian logika kombinasional dan sekuensial sebagai dasar sistem digital modern.', exp: [
+    'Verifikasi gerbang logika dasar',
+    'Penyederhanaan fungsi Boolean (Peta Karnaugh)',
+    'Rangkaian penjumlah & pengurang (adder/subtractor)',
+    'Multiplexer & decoder',
+    'Flip-flop (SR, JK, D, T)',
+    'Pencacah (counter) & register geser' ] },
+  { icon: '💻', badge: 'Mikroprosesor', name: 'Lab Mikroprosesor & Sistem Tertanam', desc: 'Pemrograman dan antarmuka mikroprosesor 8085/8086 untuk dasar sistem tertanam (embedded).', exp: [
+    'Pemrograman dasar 8085 / 8086',
+    'Operasi aritmetika & logika',
+    'Pengurutan data (sorting)',
+    'Antarmuka I/O paralel (8255)',
+    'Timer / counter (8253)',
+    'Penanganan interupsi' ] },
+  { icon: '〰️', badge: 'Sinyal & DSP', name: 'Lab Pengolahan Sinyal Digital', desc: 'Analisis sinyal dan sistem diskrit serta perancangan filter digital (DSP).', exp: [
+    'Pembangkitan sinyal waktu-diskrit',
+    'Konvolusi linear & sirkular',
+    'Transformasi Fourier diskrit (DFT) & FFT',
+    'Perancangan filter FIR',
+    'Perancangan filter IIR',
+    'Analisis transformasi-Z' ] }
+];
+
+function renderVirtualLabs() {
+  const grid = document.getElementById('vlab-grid');
+  if (!grid) return;
+  grid.innerHTML = VIRTUAL_LABS.map(l => `
+    <div class="vlab-card">
+      <div class="vlab-card-head">
+        <span class="vlab-card-icon">${l.icon}</span>
+        <span class="vlab-card-badge">${l.badge}</span>
+      </div>
+      <h4>${l.name}</h4>
+      <p class="vlab-card-desc">${l.desc}</p>
+      <div class="vlab-exp-label">${l.exp.length} Eksperimen</div>
+      <ul class="vlab-exp-list">${l.exp.map(e => `<li>${e}</li>`).join('')}</ul>
+      <a class="vlab-open-btn" href="${VLAB_SRC}" target="_blank" rel="noopener">Buka Lab Interaktif →</a>
+    </div>
+  `).join('');
 }
 
 function renderPraktikum() {
@@ -12657,6 +12771,7 @@ renderPractices();
 renderCerts();
 renderSimulators();
 renderCalculators();
+renderVirtualLabs();
 renderPraktikum();
 renderTalents();
 observeReveals();
