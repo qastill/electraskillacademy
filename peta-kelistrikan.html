@@ -397,7 +397,7 @@
 
   <div class="section">
     <h4>Region</h4>
-    <div class="layer-toggle"><input type="checkbox" id="r-jamali" checked>
+    <div class="layer-toggle"><input type="checkbox" id="r-jamali">
       <label for="r-jamali">JAMALI</label>
       <button class="region-zoom" data-region="jamali" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="jamali" aria-label="Statistik Wilayah">📊</button></div>
     <div class="layer-toggle"><input type="checkbox" id="r-sumatra">
@@ -951,47 +951,63 @@ function loadAllRegions() {
   return Promise.all(REGION_KEYS.map(k => loadRegionData(k).catch(e => { console.error(e); return null; })));
 }
 
-function buildFeaturesForRegion(region) {
+// Serahkan main-thread ke browser (paint/input) di antara potongan build.
+const _yieldToBrowser = () => new Promise(res => {
+  (window.requestAnimationFrame || window.setTimeout)(res, 0);
+});
+
+// Bangun layer per wilayah SECARA BERTAHAP (chunked): setiap CHUNK fitur,
+// serahkan main-thread agar peta tetap responsif & tidak freeze saat memuat
+// wilayah padat (mis. JAMALI ~3.030 fitur).
+async function buildFeaturesForRegion(region) {
   if (builtRegions.has(region)) return;
   const data = REGIONS[region];
   if (!data) return;
   builtRegions.add(region);
-  {
-    for (const f of data.transmission.features) {
-      const p = f.properties;
-      const latlngs = f.geometry.coordinates.map(c => [c[1], c[0]]);
-      const layer = L.polyline(latlngs, {
-        renderer: lineRenderer,
-        color: p.color || '#666', weight: p.weight || 1.5, opacity: 0.85,
-      });
-      const rec = { kind:'trm', region, tier:trmTier(p), props:p, layer, visible:false };
-      layer.on('click', () => showDetail(rec));
-      features.push(rec);
-    }
 
-    for (const f of data.substations.features) {
-      const p = f.properties;
-      const [lon, lat] = f.geometry.coordinates;
-      const tier = subTier(p);
-      const m = L.marker([lat, lon], { icon: giIcon(p.voltage, parseFloat(p.capacity_mva)) });
-      const rec = { kind:'sub', region, tier, props:p, layer:m, visible:false };
-      m.on('click', () => showDetail(rec));
-      if (tier === 'backbone' && p.name)
-        m.bindTooltip(p.name, {permanent:true, direction:'top', className:'feat-label', offset:[0,-4]});
-      features.push(rec);
-    }
+  const CHUNK = 400;
+  let n = 0;
 
-    for (const f of data.generators.features) {
-      const p = f.properties;
-      const [lon, lat] = f.geometry.coordinates;
-      const tier = genTier(p);
-      const m = L.marker([lat, lon], { icon: plantIcon(p.type, parseFloat(p.capacity_mw)) });
-      const rec = { kind:'gen', region, tier, props:p, layer:m, visible:false };
-      m.on('click', () => showDetail(rec));
-      if (tier === 'backbone' && p.name && p.name !== '(unnamed)')
-        m.bindTooltip(p.name, {permanent:true, direction:'top', className:'feat-label', offset:[0,-4]});
-      features.push(rec);
-    }
+  const trm = data.transmission.features;
+  for (let i = 0; i < trm.length; i++) {
+    const f = trm[i], p = f.properties;
+    const latlngs = f.geometry.coordinates.map(c => [c[1], c[0]]);
+    const layer = L.polyline(latlngs, {
+      renderer: lineRenderer,
+      color: p.color || '#666', weight: p.weight || 1.5, opacity: 0.85,
+    });
+    const rec = { kind:'trm', region, tier:trmTier(p), props:p, layer, visible:false };
+    layer.on('click', () => showDetail(rec));
+    features.push(rec);
+    if (++n % CHUNK === 0) await _yieldToBrowser();
+  }
+
+  const sub = data.substations.features;
+  for (let i = 0; i < sub.length; i++) {
+    const f = sub[i], p = f.properties;
+    const [lon, lat] = f.geometry.coordinates;
+    const tier = subTier(p);
+    const m = L.marker([lat, lon], { icon: giIcon(p.voltage, parseFloat(p.capacity_mva)) });
+    const rec = { kind:'sub', region, tier, props:p, layer:m, visible:false };
+    m.on('click', () => showDetail(rec));
+    if (tier === 'backbone' && p.name)
+      m.bindTooltip(p.name, {permanent:true, direction:'top', className:'feat-label', offset:[0,-4]});
+    features.push(rec);
+    if (++n % CHUNK === 0) await _yieldToBrowser();
+  }
+
+  const gen = data.generators.features;
+  for (let i = 0; i < gen.length; i++) {
+    const f = gen[i], p = f.properties;
+    const [lon, lat] = f.geometry.coordinates;
+    const tier = genTier(p);
+    const m = L.marker([lat, lon], { icon: plantIcon(p.type, parseFloat(p.capacity_mw)) });
+    const rec = { kind:'gen', region, tier, props:p, layer:m, visible:false };
+    m.on('click', () => showDetail(rec));
+    if (tier === 'backbone' && p.name && p.name !== '(unnamed)')
+      m.bindTooltip(p.name, {permanent:true, direction:'top', className:'feat-label', offset:[0,-4]});
+    features.push(rec);
+    if (++n % CHUNK === 0) await _yieldToBrowser();
   }
 }
 
@@ -1244,11 +1260,25 @@ function setupFilters() {
 // ============================================================
 async function init() {
   setupFilters();
+
+  // Default RINGAN: tak ada wilayah dimuat saat load (0 byte data), peta
+  // langsung tampil. Data baru diambil saat user mencentang wilayah.
+  const enabled = REGION_KEYS.filter(k => {
+    const el = document.getElementById('r-' + k);
+    return el && el.checked && REGION_BOUNDS[k];
+  });
+
   try { await ensureEnabledRegions(); }
   catch (e) { console.error(e); }
 
+  const ro = document.getElementById('readout');
+  if (!enabled.length) {
+    // Tak ada wilayah dipilih → tampilkan seluruh Indonesia + ajakan memilih.
+    if (ro) ro.textContent = '⟵ Pilih wilayah di panel "Region" untuk menampilkan data';
+    updateZoomUI();
+    return;
+  }
   if (!builtRegions.size) {
-    const ro = document.getElementById('readout');
     if (ro) ro.textContent =
       'Data gagal dimuat. Pastikan file data_<region>.js berada di folder yang sama.';
     return;
@@ -1256,15 +1286,9 @@ async function init() {
 
   // Fit ke wilayah aktif memakai bounds STATIS — hindari materialisasi array
   // vertex raksasa (dulu iterasi seluruh fitur 8 region → lonjakan memori).
-  const enabled = REGION_KEYS.filter(k => {
-    const el = document.getElementById('r-' + k);
-    return el && el.checked && REGION_BOUNDS[k];
-  });
-  if (enabled.length) {
-    const b = L.latLngBounds(REGION_BOUNDS[enabled[0]]);
-    enabled.slice(1).forEach(k => b.extend(L.latLngBounds(REGION_BOUNDS[k])));
-    map.fitBounds(b, { padding: [20, 20] });
-  }
+  const b = L.latLngBounds(REGION_BOUNDS[enabled[0]]);
+  enabled.slice(1).forEach(k => b.extend(L.latLngBounds(REGION_BOUNDS[k])));
+  map.fitBounds(b, { padding: [20, 20] });
 
   updateZoomUI();
   applyFilters();
@@ -1276,7 +1300,12 @@ async function init() {
 map.on('zoomend', updateZoomUI);
 
 REGION_KEYS.forEach(k =>
-  document.getElementById('r-' + k).addEventListener('change', applyFilters));
+  document.getElementById('r-' + k).addEventListener('change', function () {
+    // Saat wilayah baru dicentang, arahkan peta ke wilayah itu (default ringan
+    // membuka peta tanpa fokus wilayah tertentu).
+    if (this.checked && REGION_BOUNDS[k]) map.fitBounds(REGION_BOUNDS[k], { padding: [30, 30] });
+    applyFilters();
+  }));
 
 document.querySelectorAll('.region-zoom').forEach(btn => {
   btn.addEventListener('click', e => {
