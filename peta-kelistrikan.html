@@ -972,6 +972,25 @@ function buildFeatures() {
   }
 }
 
+// Setelah buildFeatures(), koordinat setiap fitur sudah disalin ke objek
+// layer Leaflet (yang menyimpan geometrinya sendiri). Salinan koordinat di
+// window.*_DATA tidak pernah dibaca lagi — panel statistik hanya membaca
+// f.properties. Melepas field geometry membuang salinan koordinat kedua
+// (ribuan LineString di data_jamali/sumatra dst.), pemangkas memori
+// tertahan terbesar sekaligus memutus penyimpanan koordinat ganda.
+function freeRawGeometry() {
+  for (const region of REGION_KEYS) {
+    const data = REGIONS[region];
+    if (!data) continue;
+    for (const key of ['transmission', 'substations', 'generators']) {
+      const fc = data[key];
+      if (fc && fc.features) {
+        for (const f of fc.features) f.geometry = null;
+      }
+    }
+  }
+}
+
 // ============================================================
 // FILTER HELPERS
 // ============================================================
@@ -1191,14 +1210,21 @@ function init() {
     return;
   }
   buildFeatures();
+  // Geometri mentah sudah dikonsumsi buildFeatures(); lepas agar bisa di-GC
+  // sebelum kerja berat berikutnya, menekan puncak memori saat halaman dibuka.
+  freeRawGeometry();
   setupFilters();
 
-  const allLatLngs = [];
+  // fitBounds hemat memori: perluas satu objek bounds secara inkremental,
+  // BUKAN menumpuk ratusan ribu titik dari semua garis ke satu array raksasa
+  // lalu membangun L.latLngBounds dari array itu (dulu ini spike OOM di detik
+  // pertama). getBounds()/extend() bekerja transient tanpa menahan array.
+  const bounds = L.latLngBounds([]);
   for (const ft of features) {
-    if (ft.kind === 'trm') ft.layer.getLatLngs().forEach(ll => allLatLngs.push(ll));
-    else allLatLngs.push(ft.layer.getLatLng());
+    if (ft.kind === 'trm') bounds.extend(ft.layer.getBounds());
+    else bounds.extend(ft.layer.getLatLng());
   }
-  if (allLatLngs.length) map.fitBounds(L.latLngBounds(allLatLngs), { padding: [20, 20] });
+  if (bounds.isValid()) map.fitBounds(bounds, { padding: [20, 20] });
 
   updateZoomUI();
   applyFilters();
