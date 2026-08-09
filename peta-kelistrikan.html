@@ -400,27 +400,29 @@
     <div class="layer-toggle"><input type="checkbox" id="r-jamali" checked>
       <label for="r-jamali">JAMALI</label>
       <button class="region-zoom" data-region="jamali" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="jamali" aria-label="Statistik Wilayah">📊</button></div>
-    <div class="layer-toggle"><input type="checkbox" id="r-sumatra" checked>
+    <div class="layer-toggle"><input type="checkbox" id="r-sumatra">
       <label for="r-sumatra">Sumatra</label>
       <button class="region-zoom" data-region="sumatra" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="sumatra" aria-label="Statistik Wilayah">📊</button></div>
-    <div class="layer-toggle"><input type="checkbox" id="r-kalimantan" checked>
+    <div class="layer-toggle"><input type="checkbox" id="r-kalimantan">
       <label for="r-kalimantan">Kalimantan</label>
       <button class="region-zoom" data-region="kalimantan" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="kalimantan" aria-label="Statistik Wilayah">📊</button></div>
-    <div class="layer-toggle"><input type="checkbox" id="r-sulawesi" checked>
+    <div class="layer-toggle"><input type="checkbox" id="r-sulawesi">
       <label for="r-sulawesi">Sulawesi</label>
       <button class="region-zoom" data-region="sulawesi" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="sulawesi" aria-label="Statistik Wilayah">📊</button></div>
-    <div class="layer-toggle"><input type="checkbox" id="r-maluku" checked>
+    <div class="layer-toggle"><input type="checkbox" id="r-maluku">
       <label for="r-maluku">Maluku</label>
       <button class="region-zoom" data-region="maluku" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="maluku" aria-label="Statistik Wilayah">📊</button></div>
-    <div class="layer-toggle"><input type="checkbox" id="r-papua" checked>
+    <div class="layer-toggle"><input type="checkbox" id="r-papua">
       <label for="r-papua">Papua</label>
       <button class="region-zoom" data-region="papua" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="papua" aria-label="Statistik Wilayah">📊</button></div>
-    <div class="layer-toggle"><input type="checkbox" id="r-ntb" checked>
+    <div class="layer-toggle"><input type="checkbox" id="r-ntb">
       <label for="r-ntb">NTB</label>
       <button class="region-zoom" data-region="ntb" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="ntb" aria-label="Statistik Wilayah">📊</button></div>
-    <div class="layer-toggle"><input type="checkbox" id="r-ntt" checked>
+    <div class="layer-toggle"><input type="checkbox" id="r-ntt">
       <label for="r-ntt">NTT</label>
       <button class="region-zoom" data-region="ntt" aria-label="Fokus ke Wilayah">📍</button><button class="region-stats" data-region="ntt" aria-label="Statistik Wilayah">📊</button></div>
+    <div class="note">Hemat memori: hanya <strong>JAMALI</strong> yang dimuat saat awal.
+      Centang wilayah lain untuk memuatnya sesuai kebutuhan.</div>
   </div>
 
   <div class="section">
@@ -594,14 +596,10 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script src="peta-kelistrikan/data_jamali.js"></script>
-<script src="peta-kelistrikan/data_sumatra.js"></script>
-<script src="peta-kelistrikan/data_kalimantan.js"></script>
-<script src="peta-kelistrikan/data_sulawesi.js"></script>
-<script src="peta-kelistrikan/data_maluku.js"></script>
-<script src="peta-kelistrikan/data_papua.js"></script>
-<script src="peta-kelistrikan/data_ntb.js"></script>
-<script src="peta-kelistrikan/data_ntt.js"></script>
+<!-- Data wilayah (~4,5 MB total) TIDAK lagi dimuat sekaligus di sini.
+     Dulu 8 tag skrip data blocking memaksa parse 4,5 MB + build 5.513 layer
+     Leaflet di depan sehingga heap melonjak / OOM. Kini dimuat lazy
+     per-wilayah lewat loadRegionData() saat wilayahnya dibutuhkan. -->
 <script>
 // ============================================================
 // MAP + BASEMAPS
@@ -927,49 +925,83 @@ const REGION_BOUNDS = {
   ntt:        [[-11.00, 119.10], [-7.90, 125.30]],
 };
 const REGIONS = {};
-REGION_KEYS.forEach(k => { REGIONS[k] = window[k.toUpperCase() + '_DATA'] || null; });
 const features = [];
 
-function buildFeatures() {
-  for (const [region, data] of Object.entries(REGIONS)) {
-    if (!data) continue;
+// ============================================================
+// LAZY LOADING DATA + LAYER PER-WILAYAH
+// ------------------------------------------------------------
+// Penyebab OOM lama: 8 file data (~4,5 MB) dimuat sekaligus lalu SEMUA
+// 5.513 feature dibangun jadi layer Leaflet di depan. Kini data mentah
+// dan layernya dibangun hanya saat wilayahnya dibutuhkan.
+// ============================================================
+const _dataPromises = {};        // region -> Promise pemuatan script data
+const builtRegions = new Set();  // region yang layernya sudah dibangun
 
-    for (const f of data.transmission.features) {
-      const p = f.properties;
-      const latlngs = f.geometry.coordinates.map(c => [c[1], c[0]]);
-      const layer = L.polyline(latlngs, {
-        renderer: lineRenderer,
-        color: p.color || '#666', weight: p.weight || 1.5, opacity: 0.85,
-      });
-      const rec = { kind:'trm', region, tier:trmTier(p), props:p, layer, visible:false };
-      layer.on('click', () => showDetail(rec));
-      features.push(rec);
-    }
+function loadRegionData(k) {
+  if (_dataPromises[k]) return _dataPromises[k];
+  _dataPromises[k] = new Promise((resolve, reject) => {
+    const cached = window[k.toUpperCase() + '_DATA'];
+    if (cached) { REGIONS[k] = cached; resolve(cached); return; }
+    const s = document.createElement('script');
+    s.src = 'peta-kelistrikan/data_' + k + '.js';
+    s.async = true;
+    s.onload = () => { REGIONS[k] = window[k.toUpperCase() + '_DATA'] || null; resolve(REGIONS[k]); };
+    s.onerror = () => { delete _dataPromises[k]; reject(new Error('Gagal memuat data ' + k)); };
+    document.head.appendChild(s);
+  });
+  return _dataPromises[k];
+}
 
-    for (const f of data.substations.features) {
-      const p = f.properties;
-      const [lon, lat] = f.geometry.coordinates;
-      const tier = subTier(p);
-      const m = L.marker([lat, lon], { icon: giIcon(p.voltage, parseFloat(p.capacity_mva)) });
-      const rec = { kind:'sub', region, tier, props:p, layer:m, visible:false };
-      m.on('click', () => showDetail(rec));
-      if (tier === 'backbone' && p.name)
-        m.bindTooltip(p.name, {permanent:true, direction:'top', className:'feat-label', offset:[0,-4]});
-      features.push(rec);
-    }
+function buildRegion(region) {
+  if (builtRegions.has(region)) return;
+  const data = REGIONS[region];
+  if (!data) return;
+  builtRegions.add(region);
 
-    for (const f of data.generators.features) {
-      const p = f.properties;
-      const [lon, lat] = f.geometry.coordinates;
-      const tier = genTier(p);
-      const m = L.marker([lat, lon], { icon: plantIcon(p.type, parseFloat(p.capacity_mw)) });
-      const rec = { kind:'gen', region, tier, props:p, layer:m, visible:false };
-      m.on('click', () => showDetail(rec));
-      if (tier === 'backbone' && p.name && p.name !== '(unnamed)')
-        m.bindTooltip(p.name, {permanent:true, direction:'top', className:'feat-label', offset:[0,-4]});
-      features.push(rec);
-    }
+  for (const f of data.transmission.features) {
+    const p = f.properties;
+    const latlngs = f.geometry.coordinates.map(c => [c[1], c[0]]);
+    const layer = L.polyline(latlngs, {
+      renderer: lineRenderer,
+      color: p.color || '#666', weight: p.weight || 1.5, opacity: 0.85,
+    });
+    const rec = { kind:'trm', region, tier:trmTier(p), props:p, layer, visible:false };
+    layer.on('click', () => showDetail(rec));
+    features.push(rec);
   }
+
+  for (const f of data.substations.features) {
+    const p = f.properties;
+    const [lon, lat] = f.geometry.coordinates;
+    const tier = subTier(p);
+    const m = L.marker([lat, lon], { icon: giIcon(p.voltage, parseFloat(p.capacity_mva)) });
+    const rec = { kind:'sub', region, tier, props:p, layer:m, visible:false };
+    m.on('click', () => showDetail(rec));
+    if (tier === 'backbone' && p.name)
+      m.bindTooltip(p.name, {permanent:true, direction:'top', className:'feat-label', offset:[0,-4]});
+    features.push(rec);
+  }
+
+  for (const f of data.generators.features) {
+    const p = f.properties;
+    const [lon, lat] = f.geometry.coordinates;
+    const tier = genTier(p);
+    const m = L.marker([lat, lon], { icon: plantIcon(p.type, parseFloat(p.capacity_mw)) });
+    const rec = { kind:'gen', region, tier, props:p, layer:m, visible:false };
+    m.on('click', () => showDetail(rec));
+    if (tier === 'backbone' && p.name && p.name !== '(unnamed)')
+      m.bindTooltip(p.name, {permanent:true, direction:'top', className:'feat-label', offset:[0,-4]});
+    features.push(rec);
+  }
+}
+
+// Muat data + bangun layer satu wilayah, refresh opsi filter & peta.
+async function ensureRegion(k) {
+  const already = builtRegions.has(k);
+  await loadRegionData(k);
+  buildRegion(k);
+  if (!already) refreshFilterOptions();
+  applyFilters();
 }
 
 // ============================================================
@@ -1111,7 +1143,11 @@ function selectSearchResult(ft) {
 // ============================================================
 // SETUP FILTER UI
 // ============================================================
-function setupFilters() {
+// (Re)bangun opsi provinsi + legend jenis pembangkit dari feature yang SUDAH
+// dimuat. Dipanggil ulang tiap kali wilayah baru di-lazy-load, agar filter tetap
+// mencakup provinsi/tipe wilayah baru (kalau tidak, generator tipe baru akan
+// ikut tersembunyi oleh applyFilters). Idempoten & mempertahankan pilihan aktif.
+function refreshFilterOptions() {
   const provinces = new Set();
   const types = new Set();
   for (const ft of features) {
@@ -1120,21 +1156,27 @@ function setupFilters() {
   }
 
   const provSel = document.getElementById('f-province');
+  const curProv = provSel.value;
+  provSel.innerHTML = '<option value="">Semua provinsi</option>';
   [...provinces].sort().forEach(p => {
     const o = document.createElement('option'); o.value = p; o.textContent = p;
     provSel.appendChild(o);
   });
-  provSel.addEventListener('change', applyFilters);
+  if ([...provSel.options].some(o => o.value === curProv)) provSel.value = curProv;
 
   const ptLegend = document.getElementById('planttype-legend');
+  const prevChecked = {};
+  ptLegend.querySelectorAll('.f-type').forEach(c => { prevChecked[c.value] = c.checked; });
+  ptLegend.innerHTML = '';
   [...types].sort().forEach(t => {
     const color = PLANT_COLORS[t] || '#999';
     const code = PLANT_LABEL[t] || '?';
     const dark = DARK_TEXT.has(t);
+    const checked = prevChecked[t] !== false; // tipe baru default aktif
     const lab = document.createElement('label');
-    lab.className = 'type-toggle';
+    lab.className = 'type-toggle' + (checked ? '' : ' off');
     const desc = PLANT_DESC[t] ? ' — ' + PLANT_DESC[t] : '';
-    lab.innerHTML = `<input type="checkbox" class="f-type" value="${t}" checked>
+    lab.innerHTML = `<input type="checkbox" class="f-type" value="${t}"${checked ? ' checked' : ''}>
       <span class="circle-sym" style="background:${color};${dark ? 'color:#222;' : ''}
         width:15px;height:15px;font-size:8px">${code}</span>
       <span><strong>${t}</strong>${desc}</span>`;
@@ -1144,10 +1186,15 @@ function setupFilters() {
   ptNote.className = 'note';
   ptNote.textContent = 'Klik untuk sembunyikan/tampilkan jenis. Ukuran simbol ∝ kapasitas MW.';
   ptLegend.appendChild(ptNote);
-  document.querySelectorAll('.f-type').forEach(c => c.addEventListener('change', () => {
+  ptLegend.querySelectorAll('.f-type').forEach(c => c.addEventListener('change', () => {
     c.closest('.type-toggle').classList.toggle('off', !c.checked);
     applyFilters();
   }));
+}
+
+function setupFilters() {
+  refreshFilterOptions();
+  document.getElementById('f-province').addEventListener('change', applyFilters);
 
   function wireLayerGroup(masterId, subClass) {
     const master = document.getElementById(masterId);
@@ -1169,7 +1216,7 @@ function setupFilters() {
   wireLayerGroup('m-gen', 'sub-gen');
 
   document.getElementById('f-reset').addEventListener('click', () => {
-    provSel.value = '';
+    document.getElementById('f-province').value = '';
     document.querySelectorAll('.f-type').forEach(c => {
       c.checked = true;
       c.closest('.type-toggle').classList.remove('off');
@@ -1184,23 +1231,27 @@ function setupFilters() {
 // ============================================================
 // INIT
 // ============================================================
-function init() {
-  if (REGION_KEYS.every(k => !REGIONS[k])) {
+const DEFAULT_REGION = 'jamali';
+
+async function init() {
+  setupFilters();
+  updateZoomUI();
+
+  // Hanya wilayah default (JAMALI) yang dimuat di awal — sisanya lazy saat dicentang.
+  document.getElementById('readout').textContent = 'Memuat wilayah JAMALI…';
+  try {
+    await loadRegionData(DEFAULT_REGION);
+  } catch (e) {
     document.getElementById('readout').textContent =
-      'Data gagal dimuat. Pastikan file data_<region>.js berada di folder yang sama.';
+      'Data gagal dimuat. Pastikan file data_' + DEFAULT_REGION + '.js berada di folder yang sama.';
     return;
   }
-  buildFeatures();
-  setupFilters();
+  buildRegion(DEFAULT_REGION);
+  refreshFilterOptions();
 
-  const allLatLngs = [];
-  for (const ft of features) {
-    if (ft.kind === 'trm') ft.layer.getLatLngs().forEach(ll => allLatLngs.push(ll));
-    else allLatLngs.push(ft.layer.getLatLng());
-  }
-  if (allLatLngs.length) map.fitBounds(L.latLngBounds(allLatLngs), { padding: [20, 20] });
+  const bounds = REGION_BOUNDS[DEFAULT_REGION];
+  if (bounds) map.fitBounds(bounds, { padding: [20, 20] });
 
-  updateZoomUI();
   applyFilters();
 }
 
@@ -1210,13 +1261,32 @@ function init() {
 map.on('zoomend', updateZoomUI);
 
 REGION_KEYS.forEach(k =>
-  document.getElementById('r-' + k).addEventListener('change', applyFilters));
+  document.getElementById('r-' + k).addEventListener('change', (e) => {
+    if (e.target.checked && !builtRegions.has(k)) {
+      // Lazy-load wilayah saat pertama dicentang.
+      e.target.disabled = true;
+      ensureRegion(k)
+        .catch(() => { e.target.checked = false; alert('Gagal memuat data wilayah ' + k + '.'); })
+        .finally(() => { e.target.disabled = false; });
+    } else {
+      applyFilters();
+    }
+  }));
 
 document.querySelectorAll('.region-zoom').forEach(btn => {
-  btn.addEventListener('click', e => {
+  btn.addEventListener('click', async e => {
     e.preventDefault();
     e.stopPropagation();
-    const bounds = REGION_BOUNDS[btn.dataset.region];
+    const k = btn.dataset.region;
+    const cb = document.getElementById('r-' + k);
+    const wasChecked = cb ? cb.checked : true;
+    if (cb && !cb.checked) cb.checked = true;
+    if (!builtRegions.has(k)) {
+      try { await ensureRegion(k); } catch (err) { console.error(err); }
+    } else if (!wasChecked) {
+      applyFilters(); // sudah dibangun tapi tadinya tersembunyi → tampilkan lagi
+    }
+    const bounds = REGION_BOUNDS[k];
     if (bounds) map.fitBounds(bounds, { padding: [30, 30] });
   });
 });
@@ -1301,11 +1371,19 @@ function renderStatsHTML(regionKey) {
 }
 
 document.querySelectorAll('.region-stats').forEach(btn => {
-  btn.addEventListener('click', e => {
+  btn.addEventListener('click', async e => {
     e.preventDefault();
     e.stopPropagation();
-    document.getElementById('stats-content').innerHTML = renderStatsHTML(btn.dataset.region);
+    const k = btn.dataset.region;
+    const content = document.getElementById('stats-content');
     document.getElementById('stats-modal').classList.add('show');
+    if (!REGIONS[k]) {
+      content.innerHTML = '<h2>Memuat data…</h2>';
+      try { await loadRegionData(k); } catch (err) {
+        content.innerHTML = '<h2>Data tidak tersedia</h2>'; return;
+      }
+    }
+    content.innerHTML = renderStatsHTML(k);
   });
 });
 
@@ -1385,9 +1463,14 @@ function renderEnergyMixHTML() {
     <button class="close" onclick="document.getElementById('stats-modal').classList.remove('show')">Tutup</button>
   `;
 }
-function showEnergyMix() {
-  document.getElementById('stats-content').innerHTML = renderEnergyMixHTML();
+async function showEnergyMix() {
+  const content = document.getElementById('stats-content');
   document.getElementById('stats-modal').classList.add('show');
+  content.innerHTML = '<h2>Memuat data nasional…</h2>';
+  // Bauran nasional butuh data mentah SEMUA wilayah — muat on-demand (di-cache),
+  // hanya data (bukan layer peta), jadi tetap akurat tanpa membebani load awal.
+  await Promise.all(REGION_KEYS.map(k => loadRegionData(k).catch(() => null)));
+  content.innerHTML = renderEnergyMixHTML();
 }
 
 // ===== POTENSI ENERGI TERBARUKAN (EBT) =====
