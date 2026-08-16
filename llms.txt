@@ -1,9 +1,11 @@
 # Electra Skill Academy
 
 > Platform belajar daring bidang energi dan ketenagalistrikan asal Indonesia.
-> 16 jalur karir, 605+ modul (video + materi PPT + quiz 25 soal),
-> 6 jenjang level (L1 Esensial sampai L6 Consultant), lab simulator,
-> AI Tutor 24/7, dan sertifikat ber-QR yang dapat diverifikasi publik.
+> Memetakan 16 jalur karir, 8 di antaranya sudah berkurikulum lengkap
+> Level 3–6; 8 sisanya berstatus segera hadir.
+> 605+ modul (video + materi PPT + quiz 25 soal), 6 jenjang level
+> (L1 Esensial sampai L6 Consultant), lab simulator, AI Tutor 24/7, dan
+> sertifikat ber-QR yang dapat diverifikasi publik.
 > Akses dibuka lewat satu kali pembayaran Rp 299.000 via QRIS, berlaku seumur hidup.
 
 Situs: https://electraacademy.com/
