@@ -1,0 +1,107 @@
+{
+  "id": "single-line-diagram",
+  "tipe": "kamus",
+  "kataKunciUtama": "single line diagram adalah",
+  "kataKunci": [
+    "single line diagram adalah",
+    "cara membaca sld",
+    "diagram garis tunggal",
+    "beda sld dan wiring diagram"
+  ],
+  "title": "Single Line Diagram Adalah: Cara Membaca SLD Kelistrikan",
+  "h1": "<em>Single Line Diagram</em> (SLD)",
+  "description": "SLD adalah gambar yang menyederhanakan sistem tenaga jadi satu garis. Penjelasan cara membacanya, bedanya dengan wiring diagram, dan urutan menelusurinya.",
+  "eyebrow": "Kamus Kelistrikan · Gambar Teknik",
+  "lede": "SLD adalah dokumen pertama yang dibuka saat menghadapi instalasi yang belum dikenal. Bisa membacanya adalah pembeda antara menebak dan memahami.",
+  "answer": "<p><strong>Single Line Diagram (SLD)</strong> atau diagram garis tunggal adalah gambar yang menyederhanakan sistem tenaga listrik menjadi satu garis, meski kenyataannya terdiri dari beberapa penghantar. Tujuannya menunjukkan <em>alur daya dan urutan proteksi</em> dari sumber sampai beban, bukan cara pengawatan sebenarnya. SLD memakai simbol standar dan menjadi acuan utama saat merencanakan, mengoperasikan, dan menelusuri gangguan.</p>",
+  "stats": [
+    {
+      "n": "1",
+      "label": "Garis Mewakili Semua Fasa"
+    },
+    {
+      "n": "1.21",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "1.20",
+      "label": "Modul Simbol"
+    },
+    {
+      "n": "L1",
+      "label": "Level"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Kenapa disederhanakan jadi satu garis",
+      "html": "<p>Sistem 3 fasa punya beberapa penghantar. Kalau semuanya digambar, satu panel sederhana saja sudah menjadi kusut dan alur dayanya justru hilang di antara garis-garis.</p><p>SLD membuang detail itu dengan sengaja. Satu garis mewakili seluruh fasa, dan yang ditonjolkan adalah pertanyaan yang benar-benar penting saat memahami sistem: <strong>daya masuk dari mana, lewat pengaman apa saja, dan berakhir di beban mana</strong>.</p><p>Karena itu SLD tidak bisa dipakai untuk mengawat panel. Untuk itu ada gambar lain.</p>"
+    },
+    {
+      "type": "table",
+      "h2": "Beda SLD dan diagram pengawatan",
+      "head": [
+        "Aspek",
+        "Single Line Diagram",
+        "Diagram pengawatan"
+      ],
+      "rows": [
+        [
+          "Yang ditunjukkan",
+          "Alur daya dan urutan proteksi",
+          "Sambungan kawat sebenarnya"
+        ],
+        [
+          "Jumlah garis",
+          "Satu garis mewakili semua fasa",
+          "Setiap penghantar digambar"
+        ],
+        [
+          "Dipakai untuk",
+          "Perencanaan, operasi, penelusuran gangguan",
+          "Pemasangan dan pengawatan panel"
+        ],
+        [
+          "Tingkat detail",
+          "Ringkas, gambaran menyeluruh",
+          "Rinci, per terminal"
+        ],
+        [
+          "Modul Electra",
+          "<strong>1.21</strong>",
+          "<strong>1.21</strong>"
+        ]
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Urutan membaca SLD",
+      "sub": "Cara yang dipakai saat menghadapi gambar yang belum pernah dilihat.",
+      "html": "<ol><li><strong>Temukan sumbernya lebih dulu</strong> — biasanya di atas atau kiri gambar. Bisa berupa suplai utama, trafo, atau genset.</li><li><strong>Turuti garis ke bawah.</strong> Setiap simbol yang dilewati adalah komponen yang mengubah atau mengamankan aliran daya.</li><li><strong>Catat setiap pengaman</strong> beserta ratingnya. Urutan pengaman dari hulu ke hilir inilah yang menentukan bagian mana yang padam bila terjadi gangguan.</li><li><strong>Perhatikan titik percabangan.</strong> Di sinilah satu sumber terbagi ke beberapa beban, dan di sinilah selektivitas proteksi diuji.</li><li><strong>Cari sumber cadangan dan interlock.</strong> Genset atau suplai kedua mengubah seluruh cara membaca gambar, dan sering menjadi hal yang terlewat.</li></ol><p>Langkah 5 penting untuk keselamatan: instalasi yang tampak mati dari satu sumber bisa saja masih bertegangan dari sumber lain.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar membaca gambar di Electra",
+      "html": "<p>SLD dibahas di modul <strong>1.21 — Diagram garis tunggal (SLD) dan diagram pengawatan</strong> di Level 1 Esensial, kategori Gambar teknik &amp; regulasi. Simbolnya dipelajari lebih dulu di modul <strong>1.20 — Simbol standar IEC/SNI dan konvensi gambar kelistrikan</strong>, dan penerapannya pada denah bangunan di modul <strong>1.22</strong>.</p><p>Untuk berlatih menelusuri rangkaian secara interaktif, tersedia <a href=\"/electrasim3d.html\">ElectraSim 3D</a> dan <a href=\"/vlab-id.html\">Virtual Labs</a>. Urutan belajarnya ada di <a href=\"/belajar-kelistrikan/\">panduan belajar kelistrikan</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Single line diagram adalah apa?",
+      "a": "Single line diagram atau diagram garis tunggal adalah gambar yang menyederhanakan sistem tenaga listrik menjadi satu garis, meski kenyataannya terdiri dari beberapa penghantar. Yang ditunjukkan adalah alur daya dan urutan proteksi dari sumber sampai beban."
+    },
+    {
+      "q": "Apa beda SLD dan wiring diagram?",
+      "a": "SLD menunjukkan alur daya dan urutan proteksi secara ringkas dengan satu garis mewakili semua fasa, dipakai untuk perencanaan dan penelusuran gangguan. Diagram pengawatan menggambar setiap penghantar dan sambungan sebenarnya, dipakai saat memasang dan mengawat panel."
+    },
+    {
+      "q": "Bagaimana cara mulai membaca SLD yang belum pernah dilihat?",
+      "a": "Temukan sumbernya lebih dulu, biasanya di bagian atas atau kiri gambar, lalu turuti garisnya ke bawah sambil mencatat setiap pengaman dan titik percabangan. Terakhir cari sumber cadangan dan interlock, karena keduanya mengubah cara membaca seluruh gambar."
+    },
+    {
+      "q": "Kenapa SLD tidak bisa dipakai untuk mengawat panel?",
+      "a": "Karena SLD sengaja membuang detail penghantar agar alur dayanya terlihat jelas. Satu garis di SLD bisa mewakili beberapa kawat sekaligus, sehingga tidak memuat informasi terminal yang dibutuhkan saat pengawatan."
+    }
+  ]
+}

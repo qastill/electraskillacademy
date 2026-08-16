@@ -1,0 +1,194 @@
+{
+  "_catatan": "Antrean brief konten. Satu entri = satu halaman. Diedit manusia, dibaca tools/content-agent.mjs. Status: antre → draft → lolos → terbit | ditolak",
+  "_ritme": "Pilot 10 halaman dulu. Jangan menambah brief baru sebelum evaluasi 4 minggu selesai — lihat CONTENT-AGENT-PLAYBOOK.md §3.",
+  "briefs": [
+    {
+      "id": "megger",
+      "tipe": "kamus",
+      "istilah": "Megger (insulation tester)",
+      "kataKunciUtama": "megger adalah",
+      "kataKunciPendukung": [
+        "cara menggunakan megger",
+        "nilai minimum tahanan isolasi",
+        "insulation tester"
+      ],
+      "sumberData": [
+        "modul:1.13",
+        "modul:1.15"
+      ],
+      "jalurTerkait": "S1",
+      "prioritas": 1,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "earth-tester",
+      "tipe": "kamus",
+      "istilah": "Earth tester",
+      "kataKunciUtama": "earth tester adalah",
+      "kataKunciPendukung": [
+        "cara mengukur tahanan pentanahan",
+        "nilai grounding yang baik",
+        "earth resistance tester"
+      ],
+      "sumberData": [
+        "modul:1.14",
+        "modul:2.07"
+      ],
+      "jalurTerkait": "S1",
+      "prioritas": 1,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "kha-kabel",
+      "tipe": "kamus",
+      "istilah": "KHA (Kemampuan Hantar Arus)",
+      "kataKunciUtama": "kha kabel adalah",
+      "kataKunciPendukung": [
+        "tabel kha kabel puil",
+        "cara menghitung kha",
+        "derating kabel"
+      ],
+      "sumberData": [
+        "modul:1.18"
+      ],
+      "jalurTerkait": "S1",
+      "prioritas": 1,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "mcb-mccb",
+      "tipe": "kamus",
+      "istilah": "MCB, MCCB, dan fuse",
+      "kataKunciUtama": "perbedaan mcb dan mccb",
+      "kataKunciPendukung": [
+        "breaking capacity adalah",
+        "rating mcb",
+        "fuse HRC NH"
+      ],
+      "sumberData": [
+        "modul:1.16",
+        "modul:2.09"
+      ],
+      "jalurTerkait": "S1",
+      "prioritas": 1,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "elcb-rccb",
+      "tipe": "kamus",
+      "istilah": "ELCB dan RCCB",
+      "kataKunciUtama": "perbedaan elcb dan rccb",
+      "kataKunciPendukung": [
+        "fungsi rccb",
+        "sensitivitas 30mA",
+        "cara tes tombol test rccb"
+      ],
+      "sumberData": [
+        "modul:1.17"
+      ],
+      "jalurTerkait": "S1",
+      "prioritas": 1,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "loto",
+      "tipe": "kamus",
+      "istilah": "LOTO (Lock Out Tag Out)",
+      "kataKunciUtama": "loto adalah",
+      "kataKunciPendukung": [
+        "prosedur lock out tag out",
+        "permit to work listrik",
+        "isolasi energi"
+      ],
+      "sumberData": [
+        "modul:1.09",
+        "modul:1.11"
+      ],
+      "jalurTerkait": "S8",
+      "prioritas": 1,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "arc-flash",
+      "tipe": "kamus",
+      "istilah": "Arc flash",
+      "kataKunciUtama": "arc flash adalah",
+      "kataKunciPendukung": [
+        "bahaya busur api listrik",
+        "IEEE 1584",
+        "kategori APD arc flash"
+      ],
+      "sumberData": [
+        "modul:1.07",
+        "modul:1.08"
+      ],
+      "jalurTerkait": "S8",
+      "prioritas": 1,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "single-line-diagram",
+      "tipe": "kamus",
+      "istilah": "Single Line Diagram (SLD)",
+      "kataKunciUtama": "single line diagram adalah",
+      "kataKunciPendukung": [
+        "cara membaca sld",
+        "diagram garis tunggal",
+        "beda sld dan wiring diagram"
+      ],
+      "sumberData": [
+        "modul:1.21",
+        "modul:1.20"
+      ],
+      "jalurTerkait": "S1",
+      "prioritas": 2,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "faktor-daya",
+      "tipe": "kamus",
+      "istilah": "Faktor daya (cos φ)",
+      "kataKunciUtama": "faktor daya adalah",
+      "kataKunciPendukung": [
+        "cara memperbaiki faktor daya",
+        "cos phi",
+        "denda kvarh PLN"
+      ],
+      "sumberData": [
+        "modul:2.16",
+        "modul:1.04"
+      ],
+      "jalurTerkait": "S2",
+      "prioritas": 2,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    },
+    {
+      "id": "sistem-grounding",
+      "tipe": "kamus",
+      "istilah": "Sistem grounding TN-S, TN-C-S, TT, IT",
+      "kataKunciUtama": "sistem grounding tn-s tt it",
+      "kataKunciPendukung": [
+        "perbedaan TN dan TT",
+        "sistem pembumian PUIL",
+        "elektroda pentanahan"
+      ],
+      "sumberData": [
+        "modul:2.07",
+        "modul:1.14"
+      ],
+      "jalurTerkait": "S1",
+      "prioritas": 2,
+      "status": "terbit",
+      "terbitPada": "2026-08-16"
+    }
+  ]
+}

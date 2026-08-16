@@ -1,0 +1,96 @@
+{
+  "id": "loto",
+  "tipe": "kamus",
+  "kataKunciUtama": "loto adalah",
+  "kataKunci": [
+    "loto adalah",
+    "lock out tag out",
+    "permit to work",
+    "isolasi energi"
+  ],
+  "title": "LOTO Adalah: Prosedur Lock Out Tag Out Kelistrikan",
+  "h1": "<em>LOTO</em>: Lock Out Tag Out",
+  "description": "LOTO adalah prosedur mengunci dan menandai sumber energi agar tidak dinyalakan saat pekerjaan berlangsung. Penjelasan langkah dan kesalahan umum.",
+  "eyebrow": "Kamus Kelistrikan · Keselamatan",
+  "lede": "Sebagian besar kecelakaan listrik saat pemeliharaan bukan karena orang tidak tahu bahayanya, melainkan karena ada orang lain yang menyalakan kembali sumbernya.",
+  "answer": "<p><strong>LOTO (Lock Out Tag Out)</strong> adalah prosedur mengisolasi sumber energi, menguncinya secara fisik dengan gembok, dan memberi penandaan agar tidak dinyalakan orang lain selama pekerjaan berlangsung. <em>Lock out</em> adalah penguncian fisiknya, <em>tag out</em> adalah label yang menjelaskan siapa yang mengunci dan mengapa. Prosedur ini mencakup verifikasi tegangan nol sebelum pekerjaan dimulai.</p>",
+  "stats": [
+    {
+      "n": "1.09",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "1.11",
+      "label": "Modul HIRARC"
+    },
+    {
+      "n": "T+P",
+      "label": "Teori + Praktik"
+    },
+    {
+      "n": "S8",
+      "label": "Jalur K3"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Masalah yang diselesaikan LOTO",
+      "html": "<p>Mematikan pemutus saja tidak cukup. Selama saklar itu bisa dinaikkan siapa pun, orang yang sedang bekerja di ujung lain instalasi tidak punya perlindungan apa pun.</p><p>Pola kecelakaannya hampir selalu sama: teknisi A mematikan pemutus lalu bekerja di panel. Teknisi B — yang tidak tahu ada orang bekerja — menemukan pemutus dalam posisi mati, mengira ada yang lupa, lalu menaikkannya. LOTO memutus rantai ini dengan membuat penyalaan kembali <strong>tidak mungkin secara fisik</strong>, bukan sekadar tidak dianjurkan.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Urutan langkahnya",
+      "html": "<ol><li><strong>Identifikasi seluruh sumber energi.</strong> Bukan hanya listrik utama: ada suplai cadangan, kapasitor yang menyimpan muatan, dan pada mesin bisa ada energi mekanis, pneumatis, atau hidrolis.</li><li><strong>Beri tahu semua pihak terdampak</strong> sebelum mematikan.</li><li><strong>Matikan dan isolasi</strong> setiap sumber yang teridentifikasi.</li><li><strong>Kunci dengan gembok</strong> milik pekerja itu sendiri. Bila ada beberapa pekerja, setiap orang memasang gemboknya masing-masing pada satu penjepit bersama.</li><li><strong>Pasang label</strong> berisi nama, tanggal, dan alasan penguncian.</li><li><strong>Buang energi tersimpan.</strong> Kapasitor dan kabel panjang menyimpan muatan yang tetap berbahaya setelah sumber diputus.</li><li><strong>Verifikasi tegangan nol</strong> dengan alat ukur, lalu uji alat ukurnya pada sumber yang diketahui bertegangan untuk memastikan alatnya sendiri tidak rusak.</li><li><strong>Pasang pembumian sementara</strong> bila diperlukan.</li></ol><p>Langkah 7 tidak boleh dilewati. Alat ukur yang rusak akan menunjukkan nol pada rangkaian yang sebenarnya masih bertegangan.</p>"
+    },
+    {
+      "type": "cards",
+      "h2": "Kesalahan umum di lapangan",
+      "cards": [
+        {
+          "tag": "Kesalahan 1",
+          "h": "Gembok bersama satu kunci",
+          "p": "Kalau kuncinya bisa dibuka orang lain, penguncian kehilangan maknanya. Setiap pekerja harus memegang kunci gemboknya sendiri."
+        },
+        {
+          "tag": "Kesalahan 2",
+          "h": "Hanya memasang label tanpa gembok",
+          "p": "Label memberi informasi, tetapi tidak menghalangi siapa pun. Tag tanpa lock hanya bekerja kalau semua orang membacanya dan patuh."
+        },
+        {
+          "tag": "Kesalahan 3",
+          "h": "Melewatkan sumber cadangan",
+          "p": "Genset, UPS, dan suplai dari panel lain sering terlewat karena yang diingat hanya sumber utama."
+        },
+        {
+          "tag": "Kesalahan 4",
+          "h": "Tidak menguji alat ukurnya",
+          "p": "Verifikasi tegangan nol dengan alat yang ternyata rusak memberi rasa aman yang keliru. Uji alat pada sumber bertegangan yang diketahui, sebelum dan sesudah verifikasi."
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar LOTO di Electra",
+      "html": "<p>LOTO dibahas di modul <strong>1.09 — Prosedur LOTO (Lock Out Tag Out) dan permit to work</strong> di Level 1 Esensial, berformat teori dan praktik. Penilaian risiko yang mendahuluinya ada di modul <strong>1.11 — HIRARC, JSA dan manajemen risiko K3 kelistrikan</strong>.</p><p>Bagi yang ingin menjadikan keselamatan sebagai profesi, lanjutannya adalah <a href=\"/pelatihan-k3-listrik/\">jalur K3 Listrik</a> sampai tingkat konsultan. Lihat juga <a href=\"/jalur/\">seluruh jalur karir</a> dan <a href=\"/kamus/\">istilah lain di kamus</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "LOTO adalah singkatan dari apa?",
+      "a": "LOTO adalah singkatan dari Lock Out Tag Out. Lock out berarti mengunci sumber energi secara fisik dengan gembok, tag out berarti memasang label yang menjelaskan siapa yang mengunci dan mengapa."
+    },
+    {
+      "q": "Apa beda lock out dan tag out?",
+      "a": "Lock out adalah penguncian fisik yang membuat penyalaan kembali tidak mungkin dilakukan tanpa kunci. Tag out adalah label informasi. Label saja tidak menghalangi siapa pun, sehingga tag tanpa lock hanya bekerja kalau semua orang membacanya dan patuh."
+    },
+    {
+      "q": "Kenapa perlu verifikasi tegangan nol padahal sudah dikunci?",
+      "a": "Karena penguncian memastikan tidak ada yang menyalakan, tetapi tidak membuktikan rangkaian benar-benar tidak bertegangan. Bisa ada suplai dari sumber lain atau energi tersimpan di kapasitor. Verifikasi dengan alat ukur adalah pembuktiannya."
+    },
+    {
+      "q": "Bagaimana kalau beberapa orang bekerja bersamaan?",
+      "a": "Setiap pekerja memasang gemboknya sendiri pada satu penjepit bersama, dan memegang kuncinya masing-masing. Sumber baru bisa dinyalakan setelah gembok terakhir dilepas, yang berarti semua orang sudah selesai dan aman."
+    }
+  ]
+}

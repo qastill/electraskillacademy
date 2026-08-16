@@ -1,0 +1,140 @@
+{
+  "id": "mcb-mccb",
+  "tipe": "kamus",
+  "kataKunciUtama": "perbedaan mcb dan mccb",
+  "kataKunci": [
+    "perbedaan mcb dan mccb",
+    "breaking capacity adalah",
+    "fuse HRC NH",
+    "pengaman instalasi"
+  ],
+  "title": "Perbedaan MCB dan MCCB: Fungsi, Rating, dan Cara Memilih",
+  "h1": "Perbedaan <em>MCB, MCCB, dan Fuse</em>",
+  "description": "MCB, MCCB, dan fuse sama-sama pengaman arus lebih tetapi berbeda kapasitas dan penyetelan. Penjelasan breaking capacity dan cara memilih yang tepat.",
+  "eyebrow": "Kamus Kelistrikan · Proteksi",
+  "lede": "Ketiganya memutus arus berlebih, tetapi salah memilih di antara ketiganya adalah salah satu penyebab tersering panel gagal saat justru paling dibutuhkan.",
+  "answer": "<p><strong>MCB, MCCB, dan fuse</strong> sama-sama pengaman arus lebih, bedanya pada kapasitas dan kemampuan setel. <strong>MCB</strong> dipakai untuk arus kecil pada instalasi rumah dan cabang, ratingnya tetap. <strong>MCCB</strong> menangani arus jauh lebih besar dan banyak tipenya bisa disetel, sehingga lazim di panel utama dan industri. <strong>Fuse</strong> memutus dengan melebur, sekali pakai, tetapi punya kemampuan pemutusan sangat tinggi.</p>",
+  "stats": [
+    {
+      "n": "3",
+      "label": "Jenis Pengaman"
+    },
+    {
+      "n": "1.16",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "2.09",
+      "label": "Modul Koordinasi"
+    },
+    {
+      "n": "kA",
+      "label": "Satuan Breaking"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "table",
+      "h2": "Perbandingan ketiganya",
+      "sub": "Perbedaan yang benar-benar menentukan pilihan di lapangan.",
+      "head": [
+        "Aspek",
+        "MCB",
+        "MCCB",
+        "Fuse (HRC/NH)"
+      ],
+      "rows": [
+        [
+          "Rentang arus",
+          "Kecil, untuk cabang",
+          "Menengah sampai besar",
+          "Kecil sampai sangat besar"
+        ],
+        [
+          "Dapat disetel",
+          "Tidak, rating tetap",
+          "Banyak tipe bisa disetel",
+          "Tidak"
+        ],
+        [
+          "Setelah memutus",
+          "Dapat di-reset",
+          "Dapat di-reset",
+          "<strong>Harus diganti</strong>"
+        ],
+        [
+          "Kemampuan pemutusan",
+          "Terbatas",
+          "Tinggi",
+          "<strong>Sangat tinggi</strong>"
+        ],
+        [
+          "Kecepatan pada gangguan besar",
+          "Cepat",
+          "Cepat",
+          "<strong>Paling cepat</strong>"
+        ],
+        [
+          "Tempat lazim",
+          "Panel cabang, rumah",
+          "Panel utama, industri",
+          "Sisi masuk, proteksi motor"
+        ]
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Breaking capacity: angka yang paling sering diabaikan",
+      "html": "<p><strong>Breaking capacity</strong> (kemampuan pemutusan, satuan kA) adalah arus gangguan terbesar yang masih sanggup diputus oleh pengaman dengan selamat. Ini <em>berbeda</em> dari rating arus.</p><p>Salah paham yang berbahaya: mengira pengaman dengan rating arus tepat berarti sudah aman. Kalau arus hubung singkat di titik itu melampaui breaking capacity-nya, pengaman bisa <strong>gagal memutus dan justru meledak</strong> — kontaknya melekat, busur api tidak padam, dan gangguan berlanjut.</p><p>Titik yang dekat dengan trafo punya arus hubung singkat jauh lebih besar daripada titik di ujung instalasi. Karena itu breaking capacity harus dipilih berdasarkan perhitungan arus gangguan di titik pemasangan, bukan disamaratakan untuk seluruh panel.</p>"
+    },
+    {
+      "type": "cards",
+      "h2": "Kesalahan umum di lapangan",
+      "cards": [
+        {
+          "tag": "Kesalahan 1",
+          "h": "Menaikkan rating karena sering trip",
+          "p": "Trip berulang adalah gejala, bukan penyakit. Menaikkan rating tanpa memeriksa penyebabnya membuat kabel kehilangan proteksi, karena pengaman kini membolehkan arus di atas KHA kabelnya."
+        },
+        {
+          "tag": "Kesalahan 2",
+          "h": "Mengabaikan breaking capacity",
+          "p": "Rating arus benar tetapi kemampuan pemutusan kurang. Pengaman tampak normal bertahun-tahun, lalu gagal justru pada saat gangguan besar yang seharusnya ia tangani."
+        },
+        {
+          "tag": "Kesalahan 3",
+          "h": "Tidak mengoordinasikan bertingkat",
+          "p": "Tanpa selektivitas, gangguan di satu cabang kecil memadamkan seluruh panel. Ini dibahas di modul koordinasi proteksi."
+        },
+        {
+          "tag": "Kesalahan 4",
+          "h": "Mengganti fuse dengan yang seadanya",
+          "p": "Fuse pengganti yang berbeda karakteristik atau kelas mengubah perilaku proteksi seluruh rangkaian, meski nilai amperenya sama."
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar proteksi di Electra",
+      "html": "<p>Ketiganya dibahas di modul <strong>1.16 — Pengaman: MCB, MCCB, fuse (HRC/NH), rating dan breaking capacity</strong> di Level 1 Esensial. Koordinasi bertingkat dan selektivitasnya dibahas di modul <strong>2.09 — Koordinasi proteksi MCB-MCCB-fuse dan selektivitas</strong> di Level 2 Fundamental.</p><p>Untuk pendalaman, lihat <a href=\"/jalur/\">jalur karir yang tersedia</a>, mulai dari <a href=\"/belajar-kelistrikan/\">panduan belajar kelistrikan</a>, atau telusuri <a href=\"/kamus/\">istilah lain di kamus</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Apa perbedaan utama MCB dan MCCB?",
+      "a": "MCB dipakai untuk arus kecil pada instalasi rumah dan cabang dengan rating tetap, sedangkan MCCB menangani arus jauh lebih besar dan banyak tipenya dapat disetel. MCCB juga umumnya punya kemampuan pemutusan lebih tinggi, sehingga lazim dipasang di panel utama dan industri."
+    },
+    {
+      "q": "Apa itu breaking capacity?",
+      "a": "Breaking capacity adalah arus gangguan terbesar yang masih sanggup diputus pengaman dengan selamat, satuannya kA. Ini berbeda dari rating arus. Kalau arus hubung singkat melampaui breaking capacity, pengaman dapat gagal memutus dan rusak parah."
+    },
+    {
+      "q": "Kenapa MCB saya sering trip, apakah perlu diganti yang lebih besar?",
+      "a": "Tidak. Trip berulang adalah gejala dari beban berlebih, hubung singkat, atau arus bocor yang perlu dicari penyebabnya. Menaikkan rating membuat kabel kehilangan proteksi karena pengaman kini membolehkan arus di atas kemampuan hantar arus kabelnya."
+    },
+    {
+      "q": "Kapan sebaiknya memakai fuse dibanding MCB?",
+      "a": "Fuse dipilih ketika dibutuhkan kemampuan pemutusan sangat tinggi dan pemutusan yang sangat cepat pada gangguan besar, misalnya di sisi masuk atau proteksi motor. Kelemahannya sekali pakai dan harus diganti setelah memutus."
+    }
+  ]
+}

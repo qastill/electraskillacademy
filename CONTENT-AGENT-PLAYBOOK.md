@@ -1,7 +1,44 @@
 # Playbook AI Content Agent — Electra Skill Academy
 
-Rencana membangun agen AI yang memproduksi konten dari aset data situs ini
-secara otomatis, beserta cara mengelolanya supaya tidak jadi bumerang.
+Cara kerja agen AI yang memproduksi konten dari aset data situs ini secara
+otomatis, beserta cara mengelolanya supaya tidak jadi bumerang.
+
+> **Status: kerangka sudah dibangun, pilot sudah berjalan.**
+>
+> | Komponen | Berkas | Status |
+> |---|---|---|
+> | Lapis fakta | `tools/extract-facts.mjs` → `content/facts.json` | ✅ jalan |
+> | Antrean brief | `content/queue.json` | ✅ 10 brief |
+> | Agen penulis | `tools/content-agent.mjs` | ✅ siap, butuh API key |
+> | Validator 7 gerbang | `tools/validate-draft.mjs` | ✅ jalan |
+> | Render halaman | `tools/build-seo-pages.mjs` | ✅ `/kamus/` + 10 istilah |
+>
+> Pilot pertama: **10 istilah kamus kelistrikan**, semuanya lolos validator.
+>
+> **Catatan penting soal pilot:** kesepuluh draft ditulis oleh Claude di dalam
+> sesi pengembangan, bukan oleh `content-agent.mjs` yang memanggil API —
+> lingkungan pengembangan tidak punya API key dan aksesnya diblokir. Draft itu
+> berfungsi sebagai **keluaran rujukan**: bentuk dan mutu yang harus dicapai
+> agen saat dijalankan sungguhan. Jalankan agen dengan API key untuk brief
+> berikutnya, lalu bandingkan hasilnya dengan sepuluh draft ini.
+
+## Alur kerja sehari-hari
+
+```bash
+# 1. Segarkan fakta (setiap kali kurikulum atau data berubah)
+node tools/extract-facts.mjs
+
+# 2. Tambahkan brief baru ke content/queue.json, lalu jalankan agen
+node tools/content-agent.mjs --batch 5
+
+# 3. Saring
+node tools/validate-draft.mjs        # exit 1 kalau ada yang gagal
+
+# 4. Render dan tinjau
+node tools/build-seo-pages.mjs
+```
+
+Agen tidak pernah menulis ke `main`. Hasilnya selalu lewat PR + review manusia.
 
 ---
 

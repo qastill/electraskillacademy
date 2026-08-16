@@ -16,7 +16,7 @@
  * berkas hasil generate secara langsung — perubahan akan tertimpa.
  */
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, FACTS, NAV, PAGES, STATIC_URLS } from './seo-pages.data.mjs';
@@ -109,6 +109,7 @@ const footer = () => `
       <div>
         <h4>Informasi</h4>
         <ul>
+          <li><a href="/kamus/">Kamus Kelistrikan</a></li>
           <li><a href="/faq/">Tanya Jawab</a></li>
           <li><a href="/bandingkan/">Perbandingan</a></li>
           <li><a href="/panduan.html">Panduan Pendaftar</a></li>
@@ -858,6 +859,261 @@ function renderTrackHub() {
   });
 }
 
+/* ============================================================
+   KAMUS ISTILAH — /kamus/ dan /kamus/<slug>/
+   ============================================================
+   Sumbernya content/drafts/*.json, hasil tools/content-agent.mjs
+   yang sudah lolos tools/validate-draft.mjs. Generator ini TIDAK
+   memvalidasi ulang isi — jalankan validator lebih dulu.
+   ============================================================ */
+
+const DRAFT_DIR = join(ROOT, 'content/drafts');
+
+const KAMUS = existsSync(DRAFT_DIR)
+  ? readdirSync(DRAFT_DIR)
+      .filter((f) => f.endsWith('.json'))
+      .map((f) => JSON.parse(readFileSync(join(DRAFT_DIR, f), 'utf8')))
+      .filter((d) => d.tipe === 'kamus')
+      .sort((a, b) => a.id.localeCompare(b.id))
+  : [];
+
+const kamusUrl = (id) => url(`/kamus/${id}/`);
+
+function renderKamusPage(d) {
+  const u = kamusUrl(d.id);
+
+  const stats = d.stats?.length
+    ? `<div class="stats">${d.stats
+        .map((s) => `<div class="stat"><b>${esc(s.n)}</b><span>${esc(s.label)}</span></div>`)
+        .join('')}</div>`
+    : '';
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${u}#webpage`,
+        url: u,
+        name: d.title,
+        description: d.description,
+        inLanguage: 'id-ID',
+        isPartOf: { '@id': `${SITE.origin}/#website` },
+        about: { '@id': `${SITE.origin}/#organization` },
+        publisher: { '@id': `${SITE.origin}/#organization` },
+        abstract: strip(d.answer),
+        keywords: (d.kataKunci || [d.kataKunciUtama]).join(', '),
+        dateModified: TODAY,
+        breadcrumb: { '@id': `${u}#breadcrumb` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${u}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Beranda', item: url('/') },
+          { '@type': 'ListItem', position: 2, name: 'Kamus Kelistrikan', item: url('/kamus/') },
+          { '@type': 'ListItem', position: 3, name: strip(d.h1), item: u },
+        ],
+      },
+      // DefinedTerm memberi tahu mesin bahwa halaman ini mendefinisikan
+      // satu istilah — format yang paling sering dikutip asisten AI.
+      {
+        '@type': 'DefinedTerm',
+        '@id': `${u}#term`,
+        name: strip(d.h1),
+        description: strip(d.answer),
+        inDefinedTermSet: { '@id': `${url('/kamus/')}#termset` },
+        url: u,
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${u}#faq`,
+        inLanguage: 'id-ID',
+        isPartOf: { '@id': `${u}#webpage` },
+        mainEntity: (d.faq || []).map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+    ],
+  };
+
+  const lain = KAMUS.filter((x) => x.id !== d.id)
+    .slice(0, 6)
+    .map((x) => `<a href="/kamus/${x.id}/">${esc(strip(x.h1))}</a>`)
+    .join('\n    ');
+
+  return htmlDocument({
+    canonical: u,
+    title: d.title,
+    description: d.description,
+    keywords: d.kataKunci || [d.kataKunciUtama],
+    schema,
+    body: `
+<main id="main">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Remah roti">
+      <a href="/">Beranda</a> <span aria-hidden="true">›</span>
+      <a href="/kamus/">Kamus Kelistrikan</a> <span aria-hidden="true">›</span> ${esc(strip(d.h1))}
+    </nav>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">${esc(d.eyebrow || 'Kamus Kelistrikan')}</span>
+      <h1>${d.h1}</h1>
+      <p class="lede">${esc(d.lede)}</p>
+      <div class="answer-box">${d.answer}</div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Mulai Belajar di Electra</a>
+        <a class="btn btn-ghost" href="#faq">Baca Tanya Jawab</a>
+      </div>
+      ${stats}
+    </div>
+  </section>
+
+${(d.blocks || []).map(renderBlock).join('\n')}
+
+  <section class="block" id="faq"><div class="wrap">
+    <h2>Pertanyaan yang sering diajukan</h2>
+    <div class="faq">
+    ${(d.faq || [])
+      .map(
+        (f) => `<details>
+      <summary>${esc(f.q)}</summary>
+      <div class="faq-a"><p>${esc(f.a)}</p></div>
+    </details>`
+      )
+      .join('\n    ')}
+    </div>
+  </div></section>
+
+  <div class="wrap">
+    <div class="final-cta">
+      <h2>Pelajari lebih dalam</h2>
+      <p>Satu kali bayar ${esc(SITE.priceDisplay)} membuka seluruh ${FACTS.jalurSiap} jalur karir yang kurikulumnya sudah lengkap, semua level L1–L6, dan seluruh ${FACTS.modul} modul — selamanya.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Daftar di Electra Skill Academy</a>
+        <a class="btn btn-ghost" href="https://wa.me/${SITE.wa}" rel="nofollow noopener">Tanya Admin via WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="block"><div class="wrap">
+    <h2>Istilah lainnya</h2>
+    <div class="related">
+    ${lain}
+    <a href="/kamus/">Lihat seluruh kamus</a>
+    </div>
+  </div></section>
+</main>
+`,
+  });
+}
+
+function renderKamusHub() {
+  const u = url('/kamus/');
+  const title = 'Kamus Istilah Kelistrikan Indonesia';
+  const description = `Penjelasan istilah kelistrikan yang paling sering ditanyakan teknisi Indonesia — ${KAMUS.length} istilah, ditulis mengacu kurikulum Electra Skill Academy.`;
+
+  const answer = `<p><strong>Kamus istilah kelistrikan Electra</strong> menjelaskan istilah teknis yang paling sering ditanyakan teknisi dan pembelajar di Indonesia, dari alat ukur seperti megger dan earth tester, komponen proteksi seperti MCB dan RCCB, sampai konsep keselamatan seperti LOTO dan arc flash. Setiap entri memuat definisi ringkas, cara pakai di lapangan, kesalahan yang paling sering terjadi, serta modul Electra yang membahasnya lebih dalam.</p>`;
+
+  const cards = KAMUS.map(
+    (d) => `
+      <article class="card">
+        <span class="tag">${esc(d.eyebrow || 'Kamus')}</span>
+        <h3><a href="/kamus/${d.id}/">${esc(strip(d.h1))}</a></h3>
+        <p>${esc(strip(d.answer).slice(0, 180))}…</p>
+      </article>`
+  ).join('');
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${u}#webpage`,
+        url: u,
+        name: title,
+        description,
+        inLanguage: 'id-ID',
+        isPartOf: { '@id': `${SITE.origin}/#website` },
+        about: { '@id': `${SITE.origin}/#organization` },
+        publisher: { '@id': `${SITE.origin}/#organization` },
+        abstract: strip(answer),
+        dateModified: TODAY,
+        breadcrumb: { '@id': `${u}#breadcrumb` },
+        mainEntity: { '@id': `${u}#termset` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${u}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Beranda', item: url('/') },
+          { '@type': 'ListItem', position: 2, name: 'Kamus Kelistrikan', item: u },
+        ],
+      },
+      {
+        '@type': 'DefinedTermSet',
+        '@id': `${u}#termset`,
+        name: title,
+        description,
+        inLanguage: 'id-ID',
+        publisher: { '@id': `${SITE.origin}/#organization` },
+        hasDefinedTerm: KAMUS.map((d) => ({
+          '@type': 'DefinedTerm',
+          name: strip(d.h1),
+          description: strip(d.answer).slice(0, 300),
+          url: kamusUrl(d.id),
+        })),
+      },
+    ],
+  };
+
+  return htmlDocument({
+    canonical: u,
+    title,
+    description,
+    keywords: ['kamus kelistrikan', 'istilah listrik', 'glosarium kelistrikan', 'arti istilah teknik listrik'],
+    schema,
+    body: `
+<main id="main">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Remah roti">
+      <a href="/">Beranda</a> <span aria-hidden="true">›</span> Kamus Kelistrikan
+    </nav>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Kamus · ${KAMUS.length} Istilah</span>
+      <h1>Kamus Istilah <em>Kelistrikan</em></h1>
+      <p class="lede">Penjelasan singkat yang bisa langsung dipakai di lapangan — bukan definisi kamus yang hanya benar tetapi tidak menolong.</p>
+      <div class="answer-box">${answer}</div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Mulai Belajar di Electra</a>
+        <a class="btn btn-ghost" href="/belajar-kelistrikan/">Panduan Belajar dari Nol</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block"><div class="wrap">
+    <h2>Daftar istilah</h2>
+    <p class="sub">Setiap entri memuat definisi, cara pakai, kesalahan umum di lapangan, dan modul Electra yang membahasnya.</p>
+    <div class="cards">${cards}</div>
+  </div></section>
+
+  <section class="block"><div class="wrap">
+    <h2>Cara memakai kamus ini</h2>
+    <p>Kamus ini disusun untuk dua jenis pembaca. Bagi yang <strong>sedang belajar</strong>, tiap entri menunjuk ke modul Electra yang membahasnya lebih dalam beserta urutan prasyaratnya. Bagi yang <strong>sudah bekerja di lapangan</strong>, bagian "kesalahan umum" biasanya yang paling berguna — di situlah letak perbedaan antara memahami definisi dan tidak membuat kekeliruan mahal.</p>
+    <p>Istilah baru ditambahkan mengikuti kurikulum. Urutan belajar lengkapnya ada di <a href="/belajar-kelistrikan/">panduan belajar kelistrikan dari nol</a>, dan pilihan spesialisasinya di <a href="/jalur/">daftar jalur karir</a>.</p>
+  </div></section>
+</main>
+`,
+  });
+}
+
 /* ---------- sitemap ---------- */
 
 function renderSitemap() {
@@ -869,6 +1125,8 @@ function renderSitemap() {
       changefreq: 'weekly',
     })),
     { loc: url('/jalur/'), priority: '0.9', changefreq: 'weekly' },
+    ...(KAMUS.length ? [{ loc: url('/kamus/'), priority: '0.8', changefreq: 'weekly' }] : []),
+    ...KAMUS.map((d) => ({ loc: kamusUrl(d.id), priority: '0.7', changefreq: 'monthly' })),
     // Hanya jalur yang kurikulumnya sudah lengkap yang masuk sitemap.
     // Jalur "segera hadir" tidak diberi halaman sendiri agar tidak
     // menghasilkan halaman tipis yang menjanjikan materi belum ada.
@@ -938,6 +1196,10 @@ ${LIVE_TRACKS.map((t) => `- [${t.name}](${trackUrl(t.slug)}): ${t.tagline}`).joi
 
 Segera hadir (sudah diumumkan, modul masih disiapkan) — ${SOON_TRACKS.length} jalur:
 ${SOON_TRACKS.map((t) => `- ${t.name}: ${t.tagline}`).join('\n')}
+
+## Kamus istilah kelistrikan
+
+${KAMUS.length ? `Direktori: ${url('/kamus/')}\n\n` + KAMUS.map((d) => `- [${strip(d.h1)}](${kamusUrl(d.id)}): ${strip(d.answer).slice(0, 200)}`).join('\n') : '(belum ada entri)'}
 
 ## Standar acuan kurikulum
 
@@ -1097,12 +1359,19 @@ for (const p of PAGES) write(`${p.slug}/index.html`, renderPage(p));
 write('jalur/index.html', renderTrackHub());
 for (const t of LIVE_TRACKS) write(`jalur/${t.slug}/index.html`, renderTrackPage(t));
 
+if (KAMUS.length) {
+  write('kamus/index.html', renderKamusHub());
+  for (const d of KAMUS) write(`kamus/${d.id}/index.html`, renderKamusPage(d));
+}
+
 write('sitemap.xml', renderSitemap());
 write('llms.txt', renderLlmsTxt());
 write('llms-full.txt', renderLlmsFullTxt());
 
 console.log(
-  `\nSelesai — ${PAGES.length} halaman topik + 1 hub jalur + ${LIVE_TRACKS.length} halaman jalur + sitemap + berkas GEO.`
+  `\nSelesai — ${PAGES.length} halaman topik + 1 hub jalur + ${LIVE_TRACKS.length} halaman jalur` +
+    (KAMUS.length ? ` + 1 hub kamus + ${KAMUS.length} istilah` : '') +
+    ` + sitemap + berkas GEO.`
 );
 if (SOON_TRACKS.length) {
   console.log(

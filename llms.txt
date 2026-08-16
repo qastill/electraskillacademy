@@ -61,6 +61,21 @@ Segera hadir (sudah diumumkan, modul masih disiapkan) — 8 jalur:
 - Baterai & BESS: Battery Energy Storage System & manajemen baterai.
 - Kontrol & Otomasi: PLC, SCADA, DCS & otomasi industri.
 
+## Kamus istilah kelistrikan
+
+Direktori: https://electraacademy.com/kamus/
+
+- [Arc Flash: Busur Api Listrik](https://electraacademy.com/kamus/arc-flash/): Arc flash adalah pelepasan energi akibat busur api listrik yang melompat antar penghantar atau ke pembumian. Suhunya sangat tinggi dan berlangsung dalam hitungan milidetik, cukup untuk menimbulkan luk
+- [Earth Tester: Mengukur Tahanan Pentanahan](https://electraacademy.com/kamus/earth-tester/): Earth tester (earth resistance tester) adalah alat ukur tahanan sistem pembumian, yaitu seberapa mudah arus gangguan mengalir dari elektroda pentanahan ke tanah di sekitarnya. Hasilnya dibaca dalam oh
+- [Perbedaan ELCB dan RCCB](https://electraacademy.com/kamus/elcb-rccb/): RCCB (Residual Current Circuit Breaker) memutus rangkaian saat mendeteksi selisih arus antara penghantar yang masuk dan keluar — selisih itu berarti ada arus yang bocor ke tanah, mungkin lewat tubuh m
+- [Faktor Daya (cos φ)](https://electraacademy.com/kamus/faktor-daya/): Faktor daya (cos φ) adalah perbandingan antara daya aktif yang benar-benar menjadi kerja dengan daya semu yang harus disediakan jaringan. Nilainya antara 0 dan 1. Beban induktif seperti motor dan traf
+- [KHA: Kemampuan Hantar Arus Kabel](https://electraacademy.com/kamus/kha-kabel/): KHA (Kemampuan Hantar Arus) adalah arus maksimum yang boleh dialirkan sebuah penghantar secara terus-menerus tanpa membuat suhunya melampaui batas aman isolasinya. Satuannya ampere. Nilai KHA di tabel
+- [LOTO: Lock Out Tag Out](https://electraacademy.com/kamus/loto/): LOTO (Lock Out Tag Out) adalah prosedur mengisolasi sumber energi, menguncinya secara fisik dengan gembok, dan memberi penandaan agar tidak dinyalakan orang lain selama pekerjaan berlangsung. Lock out
+- [Perbedaan MCB, MCCB, dan Fuse](https://electraacademy.com/kamus/mcb-mccb/): MCB, MCCB, dan fuse sama-sama pengaman arus lebih, bedanya pada kapasitas dan kemampuan setel. MCB dipakai untuk arus kecil pada instalasi rumah dan cabang, ratingnya tetap. MCCB menangani arus jauh l
+- [Megger: Alat Ukur Tahanan Isolasi](https://electraacademy.com/kamus/megger/): Megger (insulation tester) adalah alat ukur tahanan isolasi. Alat ini menyuntikkan tegangan DC tinggi ke penghantar, lalu mengukur seberapa besar arus yang bocor menembus isolasi. Hasilnya dibaca dala
+- [Single Line Diagram (SLD)](https://electraacademy.com/kamus/single-line-diagram/): Single Line Diagram (SLD) atau diagram garis tunggal adalah gambar yang menyederhanakan sistem tenaga listrik menjadi satu garis, meski kenyataannya terdiri dari beberapa penghantar. Tujuannya menunju
+- [Sistem Grounding TN-S, TN-C-S, TT, IT](https://electraacademy.com/kamus/sistem-grounding/): Sistem grounding menentukan bagaimana sumber dan bodi peralatan dihubungkan ke bumi. Huruf pertama menyatakan pembumian sumber, huruf kedua pembumian bodi peralatan. TN menghubungkan bodi ke titik net
+
 ## Standar acuan kurikulum
 
 PUIL 2011 (SNI 0225) · SKKNI ketenagalistrikan · regulasi ESDM & Kemnaker terkini ·

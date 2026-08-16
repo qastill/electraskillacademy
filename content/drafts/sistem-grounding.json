@@ -1,0 +1,106 @@
+{
+  "id": "sistem-grounding",
+  "tipe": "kamus",
+  "kataKunciUtama": "sistem grounding tn-s tt it",
+  "kataKunci": [
+    "sistem grounding tn-s tt it",
+    "perbedaan TN dan TT",
+    "sistem pembumian",
+    "elektroda pentanahan"
+  ],
+  "title": "Sistem Grounding TN-S, TN-C-S, TT, dan IT: Bedanya Apa?",
+  "h1": "Sistem Grounding <em>TN-S, TN-C-S, TT, IT</em>",
+  "description": "Penjelasan sistem pembumian TN-S, TN-C-S, TT, dan IT: cara membedakannya, konsekuensi proteksinya, dan mengapa pilihan sistem menentukan keselamatan.",
+  "eyebrow": "Kamus Kelistrikan · Grounding",
+  "lede": "Jenis sistem pembumian menentukan apa yang terjadi pada detik pertama saat isolasi gagal — dan siapa yang menanggung akibatnya.",
+  "answer": "<p><strong>Sistem grounding</strong> menentukan bagaimana sumber dan bodi peralatan dihubungkan ke bumi. Huruf pertama menyatakan pembumian sumber, huruf kedua pembumian bodi peralatan. <strong>TN</strong> menghubungkan bodi ke titik netral sumber, <strong>TT</strong> membumikan bodi lewat elektroda sendiri yang terpisah, dan <strong>IT</strong> memakai sumber yang tidak dibumikan langsung. Pilihan ini menentukan besarnya arus gangguan dan perangkat proteksi yang harus dipakai.</p>",
+  "stats": [
+    {
+      "n": "4",
+      "label": "Jenis Sistem"
+    },
+    {
+      "n": "2.07",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "1.14",
+      "label": "Modul Earth Tester"
+    },
+    {
+      "n": "L2",
+      "label": "Level"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Cara membaca kodenya",
+      "html": "<p>Kode dua huruf ini bukan singkatan bahasa Inggris yang perlu dihafal, melainkan penanda posisi:</p><ul><li><strong>Huruf pertama — pembumian sumber.</strong> <code>T</code> berarti titik netral sumber dibumikan langsung. <code>I</code> berarti sumber terisolasi dari bumi, atau dihubungkan lewat impedansi tinggi.</li><li><strong>Huruf kedua — pembumian bodi peralatan.</strong> <code>T</code> berarti bodi dibumikan lewat elektroda sendiri. <code>N</code> berarti bodi dihubungkan ke titik netral sumber.</li></ul><p>Huruf tambahan pada sistem TN menyatakan apakah penghantar netral dan penghantar proteksi dipisah (<code>S</code>), digabung (<code>C</code>), atau digabung di bagian hulu lalu dipisah di hilir (<code>C-S</code>).</p>"
+    },
+    {
+      "type": "table",
+      "h2": "Perbandingan keempatnya",
+      "head": [
+        "Sistem",
+        "Pembumian bodi",
+        "Ciri utama",
+        "Konsekuensi proteksi"
+      ],
+      "rows": [
+        [
+          "<strong>TN-S</strong>",
+          "Ke netral sumber, penghantar proteksi terpisah sepenuhnya",
+          "Netral dan penghantar proteksi tidak pernah digabung",
+          "Arus gangguan besar, pengaman arus lebih dapat memutus cepat"
+        ],
+        [
+          "<strong>TN-C-S</strong>",
+          "Ke netral sumber, digabung di hulu lalu dipisah",
+          "Umum pada sambungan bangunan",
+          "Perlu perhatian pada titik pemisahan; putusnya penghantar gabungan berbahaya"
+        ],
+        [
+          "<strong>TT</strong>",
+          "Elektroda sendiri, terpisah dari sumber",
+          "Bodi dibumikan lokal",
+          "Arus gangguan terbatas tahanan tanah, <strong>perangkat arus sisa menjadi keharusan</strong>"
+        ],
+        [
+          "<strong>IT</strong>",
+          "Elektroda sendiri, sumber tidak dibumikan langsung",
+          "Gangguan pertama tidak memutus suplai",
+          "Perlu pemantau isolasi; dipakai bila kelangsungan suplai kritis"
+        ]
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Kenapa pilihan sistem menentukan keselamatan",
+      "html": "<p>Pada sistem <strong>TN</strong>, gangguan isolasi ke bodi menciptakan jalur berimpedansi rendah kembali ke sumber. Arus gangguannya besar, sehingga pengaman arus lebih biasa dapat mendeteksi dan memutus dengan cepat.</p><p>Pada sistem <strong>TT</strong>, arus gangguan harus melewati tanah, dan tahanan tanah membatasinya. Arusnya bisa terlalu kecil untuk menggerakkan pengaman arus lebih, tetapi <strong>masih cukup besar untuk membunuh orang</strong> yang menyentuh bodi. Inilah alasan sistem TT mensyaratkan perangkat arus sisa seperti <a href=\"/kamus/\">RCCB</a>, bukan sekadar MCB.</p><p>Kekeliruan yang berbahaya adalah memasang instalasi bergaya TT tetapi hanya melengkapinya dengan pengaman arus lebih. Instalasi tampak normal bertahun-tahun, sampai ada gangguan isolasi yang tidak pernah membuat MCB bergerak.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar sistem pembumian di Electra",
+      "html": "<p>Topik ini dibahas di modul <strong>2.07 — Sistem grounding: TN-S, TN-C-S, TT, IT dan elektroda</strong> di Level 2 Fundamental, kategori Grounding &amp; proteksi. Pengukurannya dipelajari lebih dulu di modul <strong>1.14 — Earth tester dan pengukuran tahanan pentanahan</strong>.</p><p>Modul lanjutannya: <strong>2.08</strong> penangkal petir dan SPD, serta <strong>2.09</strong> koordinasi proteksi. Untuk penerapan pada bangunan, lihat <a href=\"/jalur/\">jalur Instalasi Bangunan</a>. Latihan interaktifnya di <a href=\"/vlab-id.html\">Virtual Labs</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Apa arti huruf pada kode TN, TT, dan IT?",
+      "a": "Huruf pertama menyatakan pembumian sumber: T berarti netral sumber dibumikan langsung, I berarti sumber terisolasi atau dihubungkan lewat impedansi tinggi. Huruf kedua menyatakan pembumian bodi peralatan: T berarti lewat elektroda sendiri, N berarti dihubungkan ke titik netral sumber."
+    },
+    {
+      "q": "Apa perbedaan sistem TN dan TT?",
+      "a": "Pada TN, bodi peralatan dihubungkan ke titik netral sumber sehingga arus gangguan besar dan pengaman arus lebih dapat memutus cepat. Pada TT, bodi dibumikan lewat elektroda sendiri sehingga arus gangguan dibatasi tahanan tanah, dan perangkat arus sisa menjadi keharusan."
+    },
+    {
+      "q": "Kenapa sistem TT wajib memakai RCCB?",
+      "a": "Karena arus gangguan pada sistem TT dibatasi tahanan tanah sehingga bisa terlalu kecil untuk menggerakkan MCB, tetapi masih cukup besar untuk membahayakan orang yang menyentuh bodi peralatan. RCCB mendeteksi kebocoran itu berdasarkan selisih arus, bukan besarnya."
+    },
+    {
+      "q": "Apa keunggulan sistem IT?",
+      "a": "Pada sistem IT, gangguan isolasi pertama tidak langsung memutus suplai, sehingga dipakai ketika kelangsungan pasokan sangat kritis. Konsekuensinya sistem ini memerlukan pemantau isolasi agar gangguan pertama tetap terdeteksi dan diperbaiki sebelum gangguan kedua terjadi."
+    }
+  ]
+}

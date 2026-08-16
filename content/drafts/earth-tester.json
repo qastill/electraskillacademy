@@ -1,0 +1,97 @@
+{
+  "id": "earth-tester",
+  "tipe": "kamus",
+  "kataKunciUtama": "earth tester adalah",
+  "kataKunci": [
+    "earth tester adalah",
+    "cara mengukur tahanan pentanahan",
+    "earth resistance tester",
+    "grounding"
+  ],
+  "title": "Earth Tester Adalah: Cara Mengukur Tahanan Pentanahan",
+  "h1": "<em>Earth Tester</em>: Mengukur Tahanan Pentanahan",
+  "description": "Earth tester adalah alat ukur tahanan pentanahan. Penjelasan metode 3 titik, cara pasang pasak bantu, membaca hasil, dan kesalahan umum di lapangan.",
+  "eyebrow": "Kamus Kelistrikan · Alat Ukur",
+  "lede": "Sistem pembumian yang buruk tidak menimbulkan gejala apa pun sampai terjadi gangguan. Earth tester adalah cara mengetahuinya sebelum itu terjadi.",
+  "answer": "<p><strong>Earth tester</strong> (earth resistance tester) adalah alat ukur tahanan sistem pembumian, yaitu seberapa mudah arus gangguan mengalir dari elektroda pentanahan ke tanah di sekitarnya. Hasilnya dibaca dalam ohm. Semakin kecil nilainya, semakin cepat arus gangguan dialirkan dan semakin cepat proteksi bekerja. Pengukuran umumnya memakai metode tiga titik dengan dua pasak bantu.</p>",
+  "stats": [
+    {
+      "n": "3",
+      "label": "Titik Pengukuran"
+    },
+    {
+      "n": "Ω",
+      "label": "Satuan Hasil"
+    },
+    {
+      "n": "1.14",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "2.07",
+      "label": "Modul Grounding"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Apa yang sebenarnya diukur",
+      "html": "<p>Yang diukur bukan kualitas kawat pembumian, melainkan <strong>hubungan antara elektroda dan tanah</strong>. Pasak tembaga yang terpasang sempurna tetap akan memberi hasil buruk kalau tanahnya kering, berpasir, atau berbatu.</p><p>Inilah sebabnya hasil pengukuran bisa berubah menurut musim. Tahanan pentanahan pada musim kemarau lazimnya lebih tinggi daripada musim hujan di titik yang sama persis. Pengukuran yang hanya dilakukan sekali saat musim hujan bisa menyembunyikan masalah.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Metode tiga titik",
+      "sub": "Metode yang paling umum dipakai di lapangan.",
+      "html": "<ol><li><strong>Putus hubungan elektroda dari instalasi.</strong> Kalau masih tersambung, alat akan mengukur seluruh jaringan pembumian, bukan elektroda yang dituju.</li><li><strong>Tancapkan pasak bantu pertama</strong> pada jarak tertentu dari elektroda utama, segaris.</li><li><strong>Tancapkan pasak bantu kedua</strong> lebih jauh lagi pada garis yang sama.</li><li><strong>Sambungkan tiga kabel</strong> alat ke elektroda utama dan kedua pasak bantu sesuai penandaan alat.</li><li><strong>Baca hasilnya</strong>, lalu ulangi dengan menggeser pasak tengah. Bila hasilnya berubah banyak, jarak pasak belum memadai dan pengukuran harus diulang lebih jauh.</li></ol><p>Jarak antar pasak mengikuti panduan alat dan panjang elektroda yang diukur. Prinsipnya: pasak bantu harus cukup jauh agar berada di luar daerah pengaruh elektroda utama.</p>"
+    },
+    {
+      "type": "cards",
+      "h2": "Kesalahan umum di lapangan",
+      "cards": [
+        {
+          "tag": "Kesalahan 1",
+          "h": "Elektroda tidak diputus dari instalasi",
+          "p": "Hasil terbaca sangat rendah dan tampak bagus, padahal yang terukur adalah gabungan seluruh sistem pembumian bangunan, bukan elektroda yang sedang diperiksa."
+        },
+        {
+          "tag": "Kesalahan 2",
+          "h": "Pasak bantu terlalu dekat",
+          "p": "Daerah pengaruh elektroda utama dan pasak bantu saling tumpang tindih, sehingga hasilnya lebih rendah daripada kenyataan."
+        },
+        {
+          "tag": "Kesalahan 3",
+          "h": "Menyiram tanah sebelum mengukur",
+          "p": "Hasilnya membaik sesaat lalu kembali buruk setelah kering. Ini menunda masalah, bukan menyelesaikannya."
+        },
+        {
+          "tag": "Kesalahan 4",
+          "h": "Mengukur sekali seumur hidup",
+          "p": "Tahanan pentanahan berubah menurut musim dan usia elektroda. Tanpa pengukuran berkala, penurunan mutu tidak akan pernah ketahuan."
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar pentanahan di Electra",
+      "html": "<p>Earth tester dibahas di modul <strong>1.14 — Earth tester dan pengukuran tahanan pentanahan</strong> di Level 1 Esensial. Sistem pembumiannya sendiri dibahas lebih dalam di modul <strong>2.07 — Sistem grounding: TN-S, TN-C-S, TT, IT dan elektroda</strong> di Level 2 Fundamental.</p><p>Kedua modul ini termasuk fondasi yang dipakai seluruh jalur, jadi tetap relevan apa pun spesialisasi yang Anda pilih di <a href=\"/jalur/\">daftar jalur karir</a>. Lihat urutan belajarnya di <a href=\"/belajar-kelistrikan/\">panduan belajar kelistrikan</a>, atau <a href=\"/kamus/\">istilah lainnya di kamus</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Earth tester adalah alat untuk mengukur apa?",
+      "a": "Earth tester mengukur tahanan sistem pembumian dalam satuan ohm, yaitu seberapa mudah arus gangguan mengalir dari elektroda pentanahan ke tanah. Nilai yang lebih kecil berarti proteksi bekerja lebih cepat saat terjadi gangguan."
+    },
+    {
+      "q": "Kenapa hasil pengukuran pentanahan berubah-ubah?",
+      "a": "Karena yang diukur adalah hubungan elektroda dengan tanah, dan sifat tanah berubah menurut kelembapan. Hasil pada musim kemarau lazimnya lebih tinggi daripada musim hujan di titik yang sama."
+    },
+    {
+      "q": "Apa beda earth tester dan megger?",
+      "a": "Megger mengukur tahanan isolasi, yaitu kemampuan bahan menahan arus, dan nilainya diharapkan besar. Earth tester mengukur tahanan pentanahan, yaitu kemudahan arus mengalir ke tanah, dan nilainya diharapkan kecil."
+    },
+    {
+      "q": "Apakah elektroda harus dilepas saat diukur?",
+      "a": "Ya, hubungan ke instalasi harus diputus lebih dulu. Kalau tidak, alat akan mengukur gabungan seluruh sistem pembumian bangunan sehingga hasilnya tampak jauh lebih baik daripada kondisi elektroda sebenarnya."
+    }
+  ]
+}
