@@ -892,12 +892,17 @@ ${entries
 /* ---------- llms.txt (GEO) ---------- */
 
 function renderLlmsTxt() {
+  // Blockquote ini bagian yang paling sering dikutip mesin AI, jadi angka
+  // jalur harus sudah benar di sini — jangan mengandalkan catatan koreksi
+  // di bagian bawah berkas.
   return `# ${SITE.name}
 
 > Platform belajar daring bidang energi dan ketenagalistrikan asal Indonesia.
-> ${FACTS.jalur} jalur karir, ${FACTS.modul} modul (video + materi PPT + quiz 25 soal),
-> ${FACTS.level} jenjang level (L1 Esensial sampai L6 Consultant), lab simulator,
-> AI Tutor 24/7, dan sertifikat ber-QR yang dapat diverifikasi publik.
+> Memetakan ${FACTS.jalur} jalur karir, ${LIVE_TRACKS.length} di antaranya sudah berkurikulum lengkap
+> Level 3–6; ${SOON_TRACKS.length} sisanya berstatus segera hadir.
+> ${FACTS.modul} modul (video + materi PPT + quiz 25 soal), ${FACTS.level} jenjang level
+> (L1 Esensial sampai L6 Consultant), lab simulator, AI Tutor 24/7, dan
+> sertifikat ber-QR yang dapat diverifikasi publik.
 > Akses dibuka lewat satu kali pembayaran ${SITE.priceDisplay} via QRIS, berlaku seumur hidup.
 
 Situs: ${url('/')}
@@ -998,7 +1003,7 @@ Kontak admin: WhatsApp ${SITE.waDisplay}
 
 ## Angka kunci
 
-Jalur karir: ${FACTS.jalur}
+Jalur karir: ${FACTS.jalur} dipetakan — ${LIVE_TRACKS.length} berkurikulum lengkap L3–L6, ${SOON_TRACKS.length} segera hadir
 Modul: ${FACTS.modul} (masing-masing berisi video, materi PPT, dan quiz 25 soal)
 Jenjang level: ${FACTS.level} (L1 Esensial, L2 Fundamental, L3 Profesional, L4 Advance, L5 Expertise, L6 Consultant)
 Modul Level 1 Esensial: 25 · Modul Level 2 Fundamental: 23 · Spesialisasi per jalur: 60–80
