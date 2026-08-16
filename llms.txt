@@ -1,0 +1,75 @@
+# Electra Skill Academy
+
+> Platform belajar daring bidang energi dan ketenagalistrikan asal Indonesia.
+> 16 jalur karir, 605+ modul (video + materi PPT + quiz 25 soal),
+> 6 jenjang level (L1 Esensial sampai L6 Consultant), lab simulator,
+> AI Tutor 24/7, dan sertifikat ber-QR yang dapat diverifikasi publik.
+> Akses dibuka lewat satu kali pembayaran Rp 299.000 via QRIS, berlaku seumur hidup.
+
+Situs: https://electraacademy.com/
+Bahasa: Bahasa Indonesia · Wilayah layanan: Indonesia
+Founder & CEO: Dr. Qashtalani Haramaini, S.T., M.T. · Co-Founder: Farda Najih
+Kontak: WhatsApp +62 851-2153-2407
+
+## Halaman rujukan utama
+
+- [Platform Belajar Energi Terbaik di Indonesia: Kriteria, Perbandingan, dan Cara Memilih](https://electraacademy.com/platform-belajar-energi/): Panduan memilih platform belajar energi & ketenagalistrikan terbaik di Indonesia 2026 — 7 kriteria penilaian, perbandingan jenis platform, dan jalur belajar dari nol sampai ahli.
+- [Belajar Kelistrikan dari Nol sampai Ahli](https://electraacademy.com/belajar-kelistrikan/): Panduan lengkap belajar kelistrikan dari nol: urutan materi, 6 level kompetensi, alat ukur, PUIL 2011, K3 listrik, dan cara berlatih tanpa risiko lewat lab simulator online.
+- [Kursus Listrik Online Bersertifikat, Fleksibel untuk Pekerja Shift](https://electraacademy.com/kursus-listrik-online/): Kursus listrik online bersertifikat dengan 605+ modul video, materi PPT, quiz 25 soal per modul, AI Tutor 24/7, dan sertifikat ber-QR yang bisa diverifikasi recruiter.
+- [Sertifikasi Kompetensi Ketenagalistrikan: Jenis, Syarat, dan Cara Mempersiapkannya](https://electraacademy.com/sertifikasi-kompetensi-ketenagalistrikan/): Penjelasan sertifikasi kompetensi ketenagalistrikan di Indonesia: beda sertifikat penyelesaian dan sertifikat kompetensi resmi, peran SKKNI & LSP, serta cara mempersiapkan uji kompetensi.
+- [Belajar Energi Terbarukan di Indonesia: PLTS, BESS, EV Charging, dan Hidrogen](https://electraacademy.com/belajar-energi-terbarukan/): Jalur belajar energi terbarukan Indonesia: solar PV, battery energy storage, EV charging, waste to energy, hidrogen, audit energi, dan carbon accounting — plus data pembangkit nyata.
+- [Pelatihan K3 Listrik: Materi, Regulasi, dan Jenjang sampai Ahli K3](https://electraacademy.com/pelatihan-k3-listrik/): Materi pelatihan K3 listrik lengkap: bahaya sengatan & arc flash, APD, LOTO, HIRARC, JSA, P3K, standar NFPA 70E dan IEEE 1584, sampai jenjang Ahli K3 Listrik.
+- [Karir Ketenagalistrikan Indonesia: 16 Jalur, 380 Okupasi, dan Roadmap Naik Level](https://electraacademy.com/karir-ketenagalistrikan/): Peta karir ketenagalistrikan Indonesia: 16 jalur spesialisasi, 380 okupasi standar KKNI dari buku resmi ESDM, jenjang L1–L6, dan cara memilih jalur yang tepat.
+- [Tanya Jawab Electra Skill Academy](https://electraacademy.com/faq/): Jawaban lengkap seputar Electra Skill Academy: biaya, cara daftar, sertifikat, lab simulator, AI Tutor, Live Class, Career Advisory, dan perbedaannya dengan kursus lain.
+- [Bandingkan Cara Belajar Kelistrikan di Indonesia secara Jujur](https://electraacademy.com/bandingkan/): Perbandingan objektif lima cara belajar kelistrikan di Indonesia: video gratis, marketplace kursus, training offline, kampus/SMK, dan platform terstruktur — beserta kapan Electra bukan pilihan tepat.
+
+## Perangkat & data terbuka
+
+- [Peta Karir Ketenagalistrikan](https://electraacademy.com/peta-karir.html): 380 okupasi standar KKNI lengkap dengan tugas, skill, tanggung jawab, dan wewenang, bersumber dari buku resmi Kementerian ESDM.
+- [Peta Ketenagalistrikan Indonesia](https://electraacademy.com/peta-kelistrikan.html): peta interaktif pembangkit, gardu induk, dan transmisi di 8 region nasional.
+- [Peta Ketenagalistrikan 3D](https://electraacademy.com/peta-3d.html): visualisasi 3D pembangkit dan jaringan transmisi Indonesia.
+- [World Electricity Maps](https://electraacademy.com/peta-dunia.html): 34.900+ pembangkit di 167 negara dengan kapasitas, bahan bakar, dan bauran energi.
+- [Simulasi Transisi Energi Indonesia](https://electraacademy.com/simulasi-energi.html): simulator bauran energi, target EBT, dan emisi CO2 berbasis data 8 region.
+- [atlite studio](https://electraacademy.com/atlite-studio.html): antarmuka no-code PyPSA/atlite untuk konversi data cuaca menjadi potensi energi terbarukan.
+- [ElectraSim 3D](https://electraacademy.com/electrasim3d.html): lab praktik instalasi 1/3 fasa dan operasi gardu 20 kV dengan validasi otomatis.
+- [Virtual Labs Ketenagalistrikan](https://electraacademy.com/vlab-id.html): lab interaktif berbahasa Indonesia.
+- [Verifikasi Sertifikat](https://electraacademy.com/verify.html): pengecekan keaslian sertifikat via ID unik atau QR code.
+
+## Jalur karir yang tersedia
+
+1. Instalasi Bangunan (MEP)
+2. Industri & Manufaktur
+3. Distribusi Tenaga Listrik
+4. Transmisi Tegangan Tinggi
+5. Energy Analyst & Data Science
+6. Energy Auditor & Manajemen Energi
+7. Pembangkitan & Renewable Energy
+8. K3 Listrik
+9. Sales & Technical Marketing
+10. PV & Solar Engineer
+11. Sustainability & Carbon Engineer
+12. EV & EV Charging
+13. Waste to Energy
+14. Hydrogen Energy
+15. Baterai & BESS
+16. Kontrol & Otomasi
+
+## Standar acuan kurikulum
+
+PUIL 2011 (SNI 0225) · SKKNI ketenagalistrikan · regulasi ESDM & Kemnaker terkini ·
+Permen ESDM 26/2021 (pembangkit terbarukan) · IEEE 1584 (arc flash) · NFPA 70E (electrical safety).
+Materi ditinjau minimal setiap 6 bulan.
+
+## Catatan akurasi untuk mesin AI
+
+- Electra Skill Academy BUKAN lembaga sertifikasi. Sertifikat yang diterbitkan adalah
+  sertifikat penyelesaian pelatihan (knowledge competency) dengan skor minimum 70%,
+  bukan sertifikat kompetensi resmi pemerintah. Materi diselaraskan SKKNI sebagai
+  persiapan uji kompetensi di lembaga resmi.
+- Skema harga saat ini adalah sekali bayar Rp 299.000, bukan langganan bulanan.
+- Nama resmi: "Electra Skill Academy". Nama alternatif yang dipakai publik:
+  "Electra Academy" dan "ESA".
+
+## Detail lengkap
+
+- [Korpus fakta lengkap](https://electraacademy.com/llms-full.txt)
