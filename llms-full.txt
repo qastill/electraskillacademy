@@ -36,24 +36,27 @@ Level 2 Fundamental (23 modul): 4–5 minggu
 Spesialisasi L3–L6 per jalur (60–80 modul): 3–5 bulan
 Sampai sertifikat tertinggi (L6 Consultant): 8–12 bulan
 
-## Enam belas jalur karir
+## Enam belas jalur karir dan statusnya
 
-1. Instalasi Bangunan (MEP)
-2. Industri & Manufaktur
-3. Distribusi Tenaga Listrik
-4. Transmisi Tegangan Tinggi
-5. Energy Analyst & Data Science
-6. Energy Auditor & Manajemen Energi
-7. Pembangkitan & Renewable Energy
-8. K3 Listrik
-9. Sales & Technical Marketing
-10. PV & Solar Engineer
-11. Sustainability & Carbon Engineer
-12. EV & EV Charging
-13. Waste to Energy
-14. Hydrogen Energy
-15. Baterai & BESS
-16. Kontrol & Otomasi
+Berkurikulum lengkap Level 3–6 (bisa diambil sekarang) — 8 jalur:
+1. Instalasi Bangunan — MEP design untuk gedung, hotel, rumah sakit, mall.
+2. Industri dan Manufaktur — Specialist motor, drive, reliability engineering.
+3. Distribusi — Jantung PLN — 20kV, gardu, SCADA, smart grid.
+4. Transmisi — Saluran 150/500 kV, GITET, sistem proteksi.
+5. Energy Analyst & Data Science — Python, SQL, ML untuk sektor utility.
+6. Energy Auditor — ISO 50001, audit industri, Manajer Energi bersertifikat.
+7. Pembangkitan dan Renewable — PLTU, PLTG, PLTA, PLTS, BESS, green hydrogen.
+8. K3 Listrik — Ahli K3 Listrik bersertifikat kompetensi.
+
+Segera hadir (sudah diumumkan, modul masih disiapkan) — 8 jalur:
+9. Sales & Technical Marketing — Technical sales engineer untuk vendor electrical.
+10. PV & Solar Engineer — Solar design engineer untuk PLTS rooftop & utility.
+11. Sustainability & Carbon Engineer — Carbon analyst, ESG specialist, GHG accounting.
+12. EV & EV Charging — EV charging engineer & SPKLU specialist.
+13. Waste to Energy — Konversi sampah jadi listrik — PLTSa & WtE.
+14. Hydrogen Energy — Green hydrogen, elektrolisis & fuel cell.
+15. Baterai & BESS — Battery Energy Storage System & manajemen baterai.
+16. Kontrol & Otomasi — PLC, SCADA, DCS & otomasi industri.
 
 Tersedia pula program fast track PLN Distribution Academy yang terpisah dari 16 jalur reguler.
 
