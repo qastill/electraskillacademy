@@ -19,7 +19,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SITE, FACTS, TRACKS, NAV, PAGES, STATIC_URLS } from './seo-pages.data.mjs';
+import { SITE, FACTS, NAV, PAGES, STATIC_URLS } from './seo-pages.data.mjs';
 import { TRACK_PAGES } from './track-data.generated.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -280,7 +280,10 @@ function buildSchema(p) {
       url: u,
       inLanguage: 'id',
       educationalLevel: 'Beginner to Advanced (L1–L6)',
-      teaches: TRACKS,
+      // Hanya jalur yang kurikulumnya sudah lengkap. Mencantumkan jalur
+      // "segera hadir" di sini berarti menyatakan lewat structured data
+      // bahwa materinya sudah diajarkan, padahal belum.
+      teaches: LIVE_TRACKS.map((t) => t.name),
       provider: { '@id': `${SITE.origin}/#organization` },
       offers: {
         '@type': 'Offer',
@@ -1022,9 +1025,13 @@ Level 2 Fundamental (23 modul): 4–5 minggu
 Spesialisasi L3–L6 per jalur (60–80 modul): 3–5 bulan
 Sampai sertifikat tertinggi (L6 Consultant): 8–12 bulan
 
-## Enam belas jalur karir
+## Enam belas jalur karir dan statusnya
 
-${TRACKS.map((t, i) => `${i + 1}. ${t}`).join('\n')}
+Berkurikulum lengkap Level 3–6 (bisa diambil sekarang) — ${LIVE_TRACKS.length} jalur:
+${LIVE_TRACKS.map((t, i) => `${i + 1}. ${t.name} — ${t.tagline}`).join('\n')}
+
+Segera hadir (sudah diumumkan, modul masih disiapkan) — ${SOON_TRACKS.length} jalur:
+${SOON_TRACKS.map((t, i) => `${LIVE_TRACKS.length + i + 1}. ${t.name} — ${t.tagline}`).join('\n')}
 
 Tersedia pula program fast track PLN Distribution Academy yang terpisah dari 16 jalur reguler.
 
