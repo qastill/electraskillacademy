@@ -287,9 +287,16 @@ Diurutkan dari dampak terbesar:
 2. **`sw.js` masih dinonaktifkan** lewat skrip *emergency unregister* di
    `index.html`. Aktifkan kembali setelah stabil agar kunjungan berulang lebih
    cepat (Core Web Vitals ikut membaik).
-3. **Belum ada `lastmod` otomatis per halaman.** Saat ini semua memakai tanggal
+3. **Lima halaman lama punya meta description lebih dari 165 karakter**
+   (`electrasim3d.html` 231, `peta-dunia.html` 180, `atlite-studio.html` 172,
+   `electrasim.html` 171, `simulasi-energi.html` 167). Google memotongnya di
+   sekitar 160 karakter. `patch-seo-heads.mjs` sengaja **tidak** menimpa
+   description yang sudah ditulis pemilik situs — perpendek manual di berkas
+   masing-masing bila mau. `build-seo-pages.mjs` sudah memperingatkan otomatis
+   untuk halaman yang di-generate.
+4. **Belum ada `lastmod` otomatis per halaman.** Saat ini semua memakai tanggal
    build. Bila nanti konten diedit per halaman, simpan tanggal per halaman di
    `seo-pages.data.mjs`.
-4. **Pertimbangkan `trailingSlash: true` di `vercel.json`.** Sengaja belum
+5. **Pertimbangkan `trailingSlash: true` di `vercel.json`.** Sengaja belum
    diaktifkan agar perilaku halaman `.html` yang sudah tayang tidak berubah.
    Saat ini penyatuan URL mengandalkan tag `canonical`, yang sudah cukup.

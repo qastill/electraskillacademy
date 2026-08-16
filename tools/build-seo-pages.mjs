@@ -426,6 +426,19 @@ const SOON_TRACKS = TRACK_PAGES.filter((t) => t.comingSoon || t.levels.length < 
 
 const trackUrl = (slug) => url(`/jalur/${slug}/`);
 
+/**
+ * Potong teks pada batas kata, bukan di tengah kata.
+ * Meta description yang terpotong seperti "…16 jalur kari" tampil apa adanya
+ * di hasil pencarian dan terlihat seperti halaman rusak.
+ */
+function truncate(text, max = 158) {
+  const s = strip(text);
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max);
+  const lastSpace = cut.lastIndexOf(' ');
+  return `${cut.slice(0, lastSpace > 0 ? lastSpace : max).replace(/[.,;:—–-]+$/, '')}…`;
+}
+
 // Penjaga akurasi: teks halaman menyebut angka jalur siap/segera hadir secara
 // literal. Kalau kurikulum di index.html berubah tapi FACTS belum disesuaikan,
 // build dihentikan supaya halaman tidak terlanjur menerbitkan angka yang salah.
@@ -469,7 +482,11 @@ function trackFaq(t) {
 function renderTrackPage(t) {
   const u = trackUrl(t.slug);
   const title = `Jalur Karir ${t.name} — Kurikulum Level 3–6`;
-  const description = `${t.desc} Empat jenjang: ${t.levels.map((l) => l.name).join(', ')}. Bagian dari ${FACTS.jalur} jalur karir Electra Skill Academy.`.slice(0, 300);
+  // Deskripsi jalur di TRACKS_META panjangnya bervariasi, jadi dipotong
+  // pada batas kata agar tidak terlihat rusak di hasil pencarian.
+  const description = truncate(
+    `${t.desc} Jenjang L3–L6: ${t.levels.map((l) => l.name).join(', ')}.`
+  );
   const faq = trackFaq(t);
 
   const answer = `<p><strong>Jalur karir ${t.name}</strong> di Electra Skill Academy adalah jalur spesialisasi Level 3 sampai Level 6. ${t.desc} Empat jenjangnya berurutan: <strong>${t.levels
@@ -659,7 +676,7 @@ function renderTrackPage(t) {
 function renderTrackHub() {
   const u = url('/jalur/');
   const title = `${FACTS.jalur} Jalur Karir Ketenagalistrikan & Energi`;
-  const description = `Daftar lengkap ${FACTS.jalur} jalur karir Electra Skill Academy — dari instalasi bangunan, distribusi, dan transmisi sampai PLTS, BESS, EV charging, dan hidrogen. ${LIVE_TRACKS.length} jalur sudah tersedia penuh.`;
+  const description = `Daftar ${FACTS.jalur} jalur karir ketenagalistrikan & energi Electra Skill Academy, dari instalasi bangunan sampai hidrogen — ${LIVE_TRACKS.length} jalur sudah berkurikulum lengkap.`;
 
   const answer = `<p>Electra Skill Academy membagi bidang ketenagalistrikan dan energi menjadi <strong>${FACTS.jalur} jalur karir</strong>, masing-masing dengan empat jenjang: <strong>Profesional (L3) → Advance (L4) → Expertise (L5) → Consultant (L6)</strong>. Saat ini <strong>${LIVE_TRACKS.length} jalur sudah tersedia penuh</strong> — ${LIVE_TRACKS.map((t) => t.name).join(', ')} — sedangkan ${SOON_TRACKS.length} jalur lainnya berstatus <strong>segera hadir</strong>. Seluruh jalur yang tersedia terbuka lewat satu kali pembayaran ${SITE.priceDisplay}, tanpa biaya tambahan bila Anda berpindah jalur.</p>`;
 
@@ -1042,10 +1059,22 @@ ${sections}
 
 /* ---------- eksekusi ---------- */
 
+// Google memotong meta description di sekitar 160 karakter. Deskripsi yang
+// lebih panjang tampil terpotong di hasil pencarian, dan potongannya sering
+// jatuh di tengah kalimat yang justru paling meyakinkan.
+const DESC_MAX = 165;
+const descWarnings = [];
+
 function write(relPath, content) {
   const full = join(ROOT, relPath);
   mkdirSync(dirname(full), { recursive: true });
   writeFileSync(full, content, 'utf8');
+
+  const m = content.match(/<meta name="description" content="([^"]*)"/);
+  if (m && m[1].length > DESC_MAX) {
+    descWarnings.push(`${relPath} — ${m[1].length} karakter`);
+  }
+
   console.log(`  ✓ ${relPath} (${(Buffer.byteLength(content) / 1024).toFixed(1)} KB)`);
 }
 
@@ -1067,5 +1096,12 @@ if (SOON_TRACKS.length) {
   console.log(
     `Catatan: ${SOON_TRACKS.length} jalur belum dibuatkan halaman sendiri karena berstatus segera hadir ` +
       `(${SOON_TRACKS.map((t) => t.name).join(', ')}). Semuanya tetap dicantumkan di /jalur/.`
+  );
+}
+
+if (descWarnings.length) {
+  console.warn(
+    `\nPeringatan: ${descWarnings.length} meta description melebihi ${DESC_MAX} karakter dan akan ` +
+      `terpotong di hasil pencarian —\n  ${descWarnings.join('\n  ')}`
   );
 }

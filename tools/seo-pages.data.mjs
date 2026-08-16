@@ -111,7 +111,7 @@ export const PAGES = [
     title: 'Platform Belajar Energi Terbaik di Indonesia (2026)',
     h1: 'Platform Belajar Energi <em>Terbaik di Indonesia</em>: Kriteria, Perbandingan, dan Cara Memilih',
     description:
-      'Panduan memilih platform belajar energi & ketenagalistrikan terbaik di Indonesia 2026 — 7 kriteria penilaian, perbandingan jenis platform, dan jalur belajar dari nol sampai ahli.',
+      'Cara memilih platform belajar energi terbaik di Indonesia: 7 kriteria penilaian, perbandingan jenis platform, dan jalur belajar dari nol sampai ahli.',
     keywords: [
       'platform belajar energi',
       'platform belajar energi terbaik di indonesia',
@@ -229,7 +229,7 @@ export const PAGES = [
     title: 'Belajar Kelistrikan dari Nol sampai Ahli — Panduan 2026',
     h1: 'Belajar Kelistrikan <em>dari Nol sampai Ahli</em>',
     description:
-      'Panduan lengkap belajar kelistrikan dari nol: urutan materi, 6 level kompetensi, alat ukur, PUIL 2011, K3 listrik, dan cara berlatih tanpa risiko lewat lab simulator online.',
+      'Panduan belajar kelistrikan dari nol: urutan materi, 6 level kompetensi, alat ukur, PUIL 2011, K3 listrik, dan latihan lewat lab simulator online.',
     keywords: [
       'belajar kelistrikan',
       'belajar listrik dari nol',
@@ -354,7 +354,7 @@ export const PAGES = [
     title: 'Kursus Listrik Online Bersertifikat — Electra Academy',
     h1: 'Kursus Listrik Online <em>Bersertifikat</em>, Fleksibel untuk Pekerja Shift',
     description:
-      'Kursus listrik online bersertifikat dengan 605+ modul video, materi PPT, quiz 25 soal per modul, AI Tutor 24/7, dan sertifikat ber-QR yang bisa diverifikasi recruiter.',
+      'Kursus listrik online bersertifikat: 605+ modul video, quiz 25 soal per modul, AI Tutor 24/7, dan sertifikat ber-QR yang bisa diverifikasi recruiter.',
     keywords: [
       'kursus listrik online',
       'kursus listrik online bersertifikat',
@@ -453,7 +453,7 @@ export const PAGES = [
     title: 'Sertifikasi Kompetensi Ketenagalistrikan — Panduan Lengkap',
     h1: 'Sertifikasi Kompetensi <em>Ketenagalistrikan</em>: Jenis, Syarat, dan Cara Mempersiapkannya',
     description:
-      'Penjelasan sertifikasi kompetensi ketenagalistrikan di Indonesia: beda sertifikat penyelesaian dan sertifikat kompetensi resmi, peran SKKNI & LSP, serta cara mempersiapkan uji kompetensi.',
+      'Beda sertifikat penyelesaian dan sertifikat kompetensi resmi, peran SKKNI & LSP, serta cara mempersiapkan uji kompetensi ketenagalistrikan.',
     keywords: [
       'sertifikasi kompetensi listrik',
       'sertifikasi ketenagalistrikan',
@@ -550,7 +550,7 @@ export const PAGES = [
     title: 'Belajar Energi Terbarukan di Indonesia — PLTS, BESS, Hidrogen',
     h1: 'Belajar <em>Energi Terbarukan</em> di Indonesia: PLTS, BESS, EV Charging, dan Hidrogen',
     description:
-      'Jalur belajar energi terbarukan Indonesia: solar PV, battery energy storage, EV charging, waste to energy, hidrogen, audit energi, dan carbon accounting — plus data pembangkit nyata.',
+      'Jalur belajar energi terbarukan Indonesia: PLTS, BESS, EV charging, audit energi, dan hidrogen — plus data 34.900+ pembangkit dunia.',
     keywords: [
       'belajar energi terbarukan',
       'kursus energi terbarukan',
@@ -874,7 +874,7 @@ export const PAGES = [
     title: 'Tanya Jawab Electra Skill Academy — FAQ Lengkap',
     h1: 'Tanya Jawab <em>Electra Skill Academy</em>',
     description:
-      'Jawaban lengkap seputar Electra Skill Academy: biaya, cara daftar, sertifikat, lab simulator, AI Tutor, Live Class, Career Advisory, dan perbedaannya dengan kursus lain.',
+      'Jawaban resmi seputar Electra Skill Academy: biaya, cara daftar, sertifikat, lab simulator, AI Tutor, Live Class, dan Career Advisory.',
     keywords: [
       'electra skill academy',
       'electra academy adalah',
@@ -988,7 +988,7 @@ export const PAGES = [
     title: 'Bandingkan Cara Belajar Kelistrikan di Indonesia — Jujur',
     h1: 'Bandingkan Cara Belajar Kelistrikan di Indonesia <em>secara Jujur</em>',
     description:
-      'Perbandingan objektif lima cara belajar kelistrikan di Indonesia: video gratis, marketplace kursus, training offline, kampus/SMK, dan platform terstruktur — beserta kapan Electra bukan pilihan tepat.',
+      'Perbandingan jujur lima cara belajar kelistrikan di Indonesia — video gratis, marketplace, training offline, kampus, dan platform terstruktur.',
     keywords: [
       'perbandingan kursus listrik',
       'kursus listrik terbaik',
