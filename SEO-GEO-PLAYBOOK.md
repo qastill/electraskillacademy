@@ -12,31 +12,49 @@ mesin AI** seperti ChatGPT, Claude, Perplexity, Gemini, dan Google AI Overviews
 |---|---|
 | `robots.txt` | Mengizinkan eksplisit 25+ crawler AI (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, OAI-SearchBot, dst.) dan memblokir `/admin*`, `/api/`, `/assets-protected/` |
 | `llms.txt` | Ringkasan terkurasi untuk mesin AI — identitas, angka kunci, daftar halaman rujukan |
-| `llms-full.txt` | Korpus fakta lengkap (±57 KB) berisi seluruh isi halaman landing dalam teks polos |
-| `sitemap.xml` | 26 URL, dengan `lastmod`; URL hash (`/#about`) dihapus karena tidak pernah di-crawl |
+| `llms-full.txt` | Korpus fakta lengkap (±58 KB) berisi seluruh isi halaman landing dalam teks polos |
+| `sitemap.xml` | 35 URL, dengan `lastmod`; URL hash (`/#about`) dihapus karena tidak pernah di-crawl |
 | `seo/landing.css` | Stylesheet ringan khusus halaman landing (tidak memuat `styles.css` 250 KB) |
-| `tools/seo-pages.data.mjs` | **Sumber tunggal isi halaman landing** — edit di sini |
+| `tools/seo-pages.data.mjs` | **Sumber tunggal isi halaman topik** — edit di sini |
+| `tools/extract-track-data.mjs` | Menarik `TRACKS_META` & `LEVEL_OVERRIDES` dari `index.html` → `track-data.generated.mjs` |
 | `tools/build-seo-pages.mjs` | Generator halaman + sitemap + berkas GEO |
 | `tools/patch-seo-heads.mjs` | Penambal `<head>` halaman lama (idempoten) |
-| 9 folder landing | Halaman statis ber-URL bersih, lihat tabel di §2 |
-| `index.html` | Schema diperluas (Organization, Person, WebSite, EducationalOrganization, Course, FAQPage) + blok tautan internal ke 9 halaman landing |
+| `tools/build-og-image.mjs` | Render `og-image.svg` → `og-image.png` 1200×630 lewat Chromium |
+| 9 folder landing topik | Halaman statis ber-URL bersih, lihat tabel di §2 |
+| `/jalur/` + 8 folder jalur | Direktori jalur karir + halaman per jalur yang kurikulumnya lengkap |
+| `og-image.png` | Pratinjau berbagi tautan — WhatsApp/Facebook/LinkedIn tidak merender SVG |
+| `index.html` | Schema diperluas (Organization, Person, WebSite, EducationalOrganization, Course, FAQPage) + blok tautan internal ke halaman landing |
 | `vercel.json` | Header `noindex` untuk admin & API, `Content-Type` untuk `llms.txt`, 8 redirect kata kunci |
 
 ### Cara memperbarui isi
 
 ```bash
-# 1. Edit konten
+# 1. Edit konten halaman topik
 $EDITOR tools/seo-pages.data.mjs
 
-# 2. Regenerate halaman + sitemap + llms.txt
+# 2. Kalau kurikulum di index.html berubah, tarik ulang data jalur dulu
+node tools/extract-track-data.mjs
+
+# 3. Regenerate semua halaman + sitemap + llms.txt
 node tools/build-seo-pages.mjs
 
-# 3. Kalau ada halaman .html baru, tambahkan ke TARGETS lalu:
+# 4. Kalau ada halaman .html baru, tambahkan ke TARGETS lalu:
 node tools/patch-seo-heads.mjs
+
+# 5. Kalau og-image.svg diubah:
+node tools/build-og-image.mjs
 ```
 
-Jangan mengedit `*/index.html`, `sitemap.xml`, `llms.txt`, atau `llms-full.txt`
+Jangan mengedit `*/index.html`, `jalur/**`, `sitemap.xml`, `llms.txt`,
+`llms-full.txt`, `og-image.png`, atau `tools/track-data.generated.mjs`
 secara langsung — semuanya hasil generate dan akan tertimpa.
+
+### Penjaga akurasi otomatis
+
+`build-seo-pages.mjs` **gagal dengan exit code 1** bila `FACTS.jalurSiap` /
+`FACTS.jalurSoon` di `seo-pages.data.mjs` tidak cocok dengan data nyata hasil
+ekstraksi. Ini mencegah halaman menerbitkan jumlah jalur yang salah ketika
+kurikulum berubah tapi teks belum disesuaikan.
 
 ---
 
@@ -53,7 +71,23 @@ secara langsung — semuanya hasil generate dan akan tertimpa.
 | `/karir-ketenagalistrikan/` | karir ketenagalistrikan | okupasi ketenagalistrikan, jenjang karir electrician, prospek kerja teknik listrik |
 | `/faq/` | electra skill academy | electra academy adalah, review electra academy, biaya electra academy |
 | `/bandingkan/` | platform belajar kelistrikan terbaik | perbandingan kursus listrik, alternatif kursus kelistrikan |
+| `/jalur/` | jalur karir ketenagalistrikan | spesialisasi kelistrikan, pilihan karir energi |
+| `/jalur/instalasi-listrik-bangunan/` | instalasi listrik bangunan | kursus MEP, teknisi listrik gedung |
+| `/jalur/kelistrikan-industri/` | kelistrikan industri | maintenance pabrik listrik, reliability engineer |
+| `/jalur/distribusi-tenaga-listrik/` | distribusi tenaga listrik | jaringan 20 kV, gardu distribusi, smart grid |
+| `/jalur/transmisi-tegangan-tinggi/` | transmisi tegangan tinggi | gardu induk 150 kV, GITET, proteksi transmisi |
+| `/jalur/energy-analyst-data-science/` | energy analyst | load forecasting, python untuk utility |
+| `/jalur/energy-auditor/` | energy auditor | audit energi, ISO 50001, manajer energi |
+| `/jalur/pembangkitan-renewable/` | pembangkitan listrik | renewable energy engineer, PLTS skala MW |
+| `/jalur/k3-listrik/` | k3 listrik | ahli k3 listrik, arc flash, Permenaker 12/2015 |
 | `/` (beranda) | electra skill academy | pelatihan kelistrikan indonesia |
+
+Delapan jalur yang berstatus **segera hadir** (S9–S16) sengaja **tidak** dibuatkan
+halaman sendiri. Halaman tipis yang menjanjikan materi belum ada merugikan dua
+kali: peringkatnya buruk dan calon peserta merasa tertipu. Semuanya tetap
+dicantumkan di `/jalur/` beserta statusnya. Begitu kurikulumnya lengkap di
+`index.html`, jalankan `extract-track-data.mjs` + `build-seo-pages.mjs` —
+halamannya terbit otomatis.
 
 **Aturan penting:** satu kata kunci utama = satu URL. Jangan membuat halaman baru
 yang menyasar kata kunci yang sudah dipegang halaman lain — itu *keyword
@@ -78,13 +112,39 @@ di Indonesia"**. Cara yang dipakai di sini:
      bukan pilihan yang tepat".
   3. Klaim superlatif tanpa dasar berpotensi bermasalah dari sisi iklan/konsumen.
 - Sebagai gantinya dipakai **klaim spesifik yang bisa dicek sendiri** oleh
-  pembaca: 16 jalur karir, 605+ modul, lab simulator 3D, 9 kalkulator desain,
-  380 okupasi KKNI, sertifikat ber-QR. Klaim seperti ini jauh lebih kuat untuk
-  peringkat maupun konversi.
+  pembaca: 8 jalur karir berkurikulum lengkap (dari 16 yang dipetakan), 605+ modul,
+  lab simulator 3D, 9 kalkulator desain, 380 okupasi KKNI, sertifikat ber-QR.
+  Klaim seperti ini jauh lebih kuat untuk peringkat maupun konversi.
 
 Kalau nanti ada dasar yang bisa dikutip (jumlah member terverifikasi, penghargaan,
 liputan media, hasil survei independen), tambahkan sebagai **fakta bersumber**
 di `tools/seo-pages.data.mjs`, lalu regenerate.
+
+### Soal "16 jalur karir"
+
+Situs mengumumkan 16 jalur, tetapi di `TRACKS_META` (`index.html`) delapan di
+antaranya — S9 sampai S16 — masih bertanda *"Coming soon."* dan belum punya
+`LEVEL_OVERRIDES` untuk L3–L6. Artinya **hanya 8 jalur yang benar-benar bisa
+diambil hari ini**.
+
+Seluruh halaman SEO karena itu ditulis sebagai "16 jalur **dipetakan**, 8
+**berkurikulum lengkap**", bukan "16 jalur tersedia". Ini bukan sekadar soal
+kehati-hatian:
+
+- Calon peserta yang membayar karena mengira bisa mengambil jalur PV & Solar
+  hari ini akan kecewa — dan keluhan semacam itu jauh lebih mahal daripada
+  tambahan klik.
+- Mesin AI membandingkan klaim halaman dengan isi produk. Ketidakcocokan yang
+  terdeteksi menurunkan kepercayaan terhadap seluruh situs, bukan satu halaman.
+
+`llms.txt` juga memuat peringatan eksplisit agar mesin AI tidak menyatakan
+seluruh 16 jalur bisa diambil sekarang.
+
+**Begitu jalur baru selesai** — yaitu setelah `LEVEL_OVERRIDES` untuk L3–L6
+jalur itu ditambahkan dan penanda "Coming soon." dihapus dari deskripsinya di
+`index.html` — jalankan `extract-track-data.mjs`, sesuaikan `FACTS.jalurSiap`
+dan `FACTS.jalurSoon`, lalu `build-seo-pages.mjs`. Halaman jalurnya terbit
+otomatis dan seluruh kalimat yang menyebut angka ikut menyesuaikan.
 
 ---
 
@@ -96,7 +156,8 @@ naik secepat yang diharapkan.
 ### 4.1 Segera (hari pertama setelah deploy)
 
 - [ ] **Google Search Console** — verifikasi domain, submit `sitemap.xml`,
-      lalu pakai *URL Inspection → Request Indexing* untuk 9 halaman landing.
+      lalu pakai *URL Inspection → Request Indexing* untuk 9 halaman topik,
+      `/jalur/`, dan 8 halaman jalur karir.
 - [ ] **Bing Webmaster Tools** — verifikasi + submit sitemap. Ini penting untuk
       GEO: **ChatGPT Search dan Copilot memakai indeks Bing.**
 - [ ] **Google Business Profile** — daftarkan entitas bisnis (nama, kategori
@@ -215,21 +276,20 @@ faktanya akurat. Jika ada fakta yang salah dikutip, perbaiki/pertegas di
 
 Diurutkan dari dampak terbesar:
 
-1. **Beranda masih SPA 1,4 MB dengan hash routing.** Isi `#jalur`, `#modul`,
-   `#sertifikasi`, dan `#talent` praktis tidak bisa di-crawl. Dampak terbesar
-   berikutnya adalah memberi setiap jalur karir halaman statisnya sendiri
-   (mis. `/jalur/distribusi-listrik/`) — 16 halaman baru yang masing-masing
-   menyasar kata kunci spesialisasi. Generator di `tools/` sudah siap dipakai
-   ulang untuk itu.
-2. **`og-image.svg` berformat SVG.** Facebook, WhatsApp, dan LinkedIn **tidak
-   merender SVG** untuk pratinjau. Ganti ke PNG 1200×630 — ini memengaruhi
-   setiap kali tautan dibagikan.
-3. **`sw.js` masih dinonaktifkan** lewat skrip *emergency unregister* di
+1. **Beranda masih SPA 1,4 MB dengan routing `showView()`.** Isi view `modul`,
+   `sertifikasi`, `talent`, `referensi`, dan `gallery` masih tidak bisa
+   di-crawl. Halaman jalur karir sudah menutup sebagian besar celah ini,
+   tetapi katalog modul dan daftar sertifikasi masih tersembunyi. Langkah
+   berikutnya yang paling berdampak: halaman statis per skema sertifikasi
+   (8 skema, masing-masing punya nama, prasyarat, format uji, dan biaya —
+   semuanya sudah ada di array `CERTIFICATIONS` di `index.html`, jadi bisa
+   diekstrak dengan pola yang sama seperti `extract-track-data.mjs`).
+2. **`sw.js` masih dinonaktifkan** lewat skrip *emergency unregister* di
    `index.html`. Aktifkan kembali setelah stabil agar kunjungan berulang lebih
    cepat (Core Web Vitals ikut membaik).
-4. **Belum ada `lastmod` otomatis per halaman.** Saat ini semua memakai tanggal
+3. **Belum ada `lastmod` otomatis per halaman.** Saat ini semua memakai tanggal
    build. Bila nanti konten diedit per halaman, simpan tanggal per halaman di
    `seo-pages.data.mjs`.
-5. **Pertimbangkan `trailingSlash: true` di `vercel.json`.** Sengaja belum
+4. **Pertimbangkan `trailingSlash: true` di `vercel.json`.** Sengaja belum
    diaktifkan agar perilaku halaman `.html` yang sudah tayang tidak berubah.
    Saat ini penyatuan URL mengandalkan tag `canonical`, yang sudah cukup.

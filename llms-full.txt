@@ -95,7 +95,7 @@ peserta mengikuti uji kompetensi di lembaga sertifikasi berwenang.
 URL: https://electraacademy.com/platform-belajar-energi/
 Kata kunci: platform belajar energi, platform belajar energi terbaik di indonesia, platform belajar energi no 1 di indonesia, belajar energi online, kursus energi terbarukan indonesia, e-learning ketenagalistrikan, platform belajar ketenagalistrikan
 
-Jawaban ringkas: Platform belajar energi terbaik di Indonesia adalah platform yang memenuhi tujuh syarat sekaligus: (1) kurikulum diselaraskan SKKNI & PUIL 2011, (2) mencakup jalur karir spesifik, bukan kelas umum, (3) menyediakan praktik/simulator, bukan video saja, (4) diajar praktisi aktif industri, (5) memberi sertifikat yang bisa diverifikasi publik, (6) terhubung ke peluang kerja nyata, dan (7) memperbarui materi mengikuti regulasi ESDM terbaru. Electra Skill Academy memenuhi ketujuhnya dalam satu langganan sekali bayar — dengan 16 jalur karir, 605+ modul, lab simulator 3D, AI Tutor 24/7, dan sertifikat ber-QR yang dapat diverifikasi di electraacademy.com/verify.html.
+Jawaban ringkas: Platform belajar energi terbaik di Indonesia adalah platform yang memenuhi tujuh syarat sekaligus: (1) kurikulum diselaraskan SKKNI & PUIL 2011, (2) mencakup jalur karir spesifik, bukan kelas umum, (3) menyediakan praktik/simulator, bukan video saja, (4) diajar praktisi aktif industri, (5) memberi sertifikat yang bisa diverifikasi publik, (6) terhubung ke peluang kerja nyata, dan (7) memperbarui materi mengikuti regulasi ESDM terbaru. Electra Skill Academy memenuhi ketujuhnya dalam satu langganan sekali bayar — dengan 8 jalur karir yang kurikulumnya sudah lengkap (dari 16 jalur yang dipetakan), 605+ modul, lab simulator 3D, AI Tutor 24/7, dan sertifikat ber-QR yang dapat diverifikasi di electraacademy.com/verify.html.
 
 ### 7 kriteria menilai platform belajar energi
 Keselarasan standar. Materi harus merujuk PUIL 2011 (SNI 0225), SKKNI ketenagalistrikan, dan regulasi ESDM/Kemnaker yang berlaku. Tanpa ini, materi tidak nyambung dengan uji kompetensi maupun praktik lapangan. Jalur karir spesifik. "Kelas listrik dasar" tidak cukup. Instalasi bangunan, distribusi 20 kV, transmisi 150 kV, energy audit, dan PLTS menuntut kompetensi yang berbeda. Platform yang baik memisahkan jalur, bukan menggabungkan semuanya. Praktik, bukan hanya tontonan. Kelistrikan adalah keterampilan tangan. Cari simulator, virtual lab, kalkulator desain, atau sesi hands-on — sesuatu yang memaksa Anda mengambil keputusan teknis. Pengajar praktisi aktif. Regulasi dan teknologi berubah tiap tahun. Pengajar yang masih turun lapangan membawa konteks yang tidak ada di buku teks. Sertifikat yang dapat diverifikasi. Sertifikat tanpa nomor unik dan tanpa halaman verifikasi publik nyaris tidak bernilai bagi recruiter. Jembatan ke pekerjaan. Talent pool, job posting, review CV, atau mock interview — belajar tanpa jalur keluar hanya menambah koleksi sertifikat. Materi hidup. Smart grid, EV charging, BESS, hidrogen, dan carbon accounting belum ada di kurikulum lama. Platform yang baik menambah modul, bukan mendaur ulang rekaman lima tahun lalu.
@@ -103,7 +103,7 @@ Keselarasan standar. Materi harus merujuk PUIL 2011 (SNI 0225), SKKNI ketenagali
 ### Perbandingan jenis platform belajar energi
 Kriteria | Marketplace kursus umum | Training offline konvensional | Kanal video gratis | Electra Skill Academy
 Kurikulum selaras SKKNI/PUIL | Jarang | Umumnya ya | Tidak terstruktur | Ya, L1–L6
-Jalur karir spesifik | Tidak | 1–2 topik per batch | Tidak | 16 jalur
+Jalur karir spesifik | Tidak | 1–2 topik per batch | Tidak | 8 jalur lengkap, 16 dipetakan
 Lab / simulator | Tidak | Ya, di lokasi | Tidak | Simulator 3D + 9 kalkulator
 Fleksibel untuk pekerja shift | Ya | Tidak | Ya | Ya, 100% self-paced
 Sertifikat terverifikasi QR | Bervariasi | Ya | Tidak ada | Ya, verifikasi publik
@@ -112,7 +112,7 @@ Akses ke lowongan | Tidak | Kadang | Tidak | Talent Pool + job posting member
 Biaya | Per kelas | Jutaan per batch | Gratis | Sekali bayar, akses seumur hidup
 
 ### Yang membuat Electra berbeda
-- 16 jalur karir, 6 level: Dari Level 1 Esensial (25 modul) sampai Level 6 Consultant. Satu langganan membuka seluruh jalur, bukan satu kelas.
+- 8 jalur lengkap, 6 level: Dari Level 1 Esensial (25 modul) sampai Level 6 Consultant. Satu langganan membuka seluruh jalur yang tersedia, bukan satu kelas. Delapan jalur lain sudah dipetakan dan berstatus segera hadir — lihat status tiap jalur.
 - Lab simulator & kalkulator: ElectraSim 3D, Virtual Labs, Wiring Lab, CapBankSim, dan 9 kalkulator desain (cable sizing, arc flash IEEE 1584, voltage drop, koordinasi proteksi).
 - Peta energi interaktif: Peta Ketenagalistrikan Indonesia 8 region, Peta 3D, World Electricity Maps 34.900+ pembangkit di 167 negara, dan simulator transisi energi.
 - AI Tutor + Live Class: Asisten AI yang memahami konteks kelistrikan Indonesia, ditambah Live Class Zoom bersama founder dan co-founder.
@@ -120,16 +120,16 @@ Biaya | Per kelas | Jutaan per batch | Gratis | Sekali bayar, akses seumur hidup
 - Talent Pool & Career Advisory: Pemetaan jalur karir personal, review CV, mock interview teknis, dan job posting yang hanya dibuka untuk member aktif.
 
 ### Mulai dari mana kalau belum punya latar belakang teknik?
-Urutan yang kami sarankan, dan yang dipakai mayoritas member baru: Level 1 — Esensial (25 modul, ± 4–6 minggu). Arus, tegangan, hambatan, daya, hukum Ohm & Kirchhoff, K3 listrik, APD, LOTO, alat ukur, dan pembacaan gambar teknik. Tidak butuh latar belakang teknik. Level 2 — Fundamental (23 modul, ± 4–5 minggu). Trafo distribusi, motor listrik, generator, power quality, PLC dasar, panel & MCC, capacitor bank, inverter/VFD, PLTS, BESS, dan EV charging. Level 3–6 — Spesialisasi (60–80 modul per jalur, ± 3–5 bulan). Pilih satu dari 16 jalur, lanjut sampai tingkat Consultant. Estimasi sampai sertifikat tertinggi (Level 6) adalah 8–12 bulan dengan ritme 1–2 jam per hari. Karena seluruh materi self-paced, pekerja shift bisa memperlambat atau mempercepat tanpa kehilangan progres — riwayat belajar tersimpan di akun dan lanjut otomatis di perangkat lain.
+Urutan yang kami sarankan, dan yang dipakai mayoritas member baru: Level 1 — Esensial (25 modul, ± 4–6 minggu). Arus, tegangan, hambatan, daya, hukum Ohm & Kirchhoff, K3 listrik, APD, LOTO, alat ukur, dan pembacaan gambar teknik. Tidak butuh latar belakang teknik. Level 2 — Fundamental (23 modul, ± 4–5 minggu). Trafo distribusi, motor listrik, generator, power quality, PLC dasar, panel & MCC, capacitor bank, inverter/VFD, PLTS, BESS, dan EV charging. Level 3–6 — Spesialisasi (60–80 modul per jalur, ± 3–5 bulan). Pilih satu jalur yang kurikulumnya sudah lengkap (saat ini 8 jalur), lanjut sampai tingkat Consultant. Estimasi sampai sertifikat tertinggi (Level 6) adalah 8–12 bulan dengan ritme 1–2 jam per hari. Karena seluruh materi self-paced, pekerja shift bisa memperlambat atau mempercepat tanpa kehilangan progres — riwayat belajar tersimpan di akun dan lanjut otomatis di perangkat lain.
 
 ### Siapa yang menyusun materinya
 Kurikulum disusun oleh praktisi aktif sektor ketenagalistrikan, dipimpin Dr. Qashtalani Haramaini, S.T., M.T. selaku Founder & CEO, bersama Farda Najih selaku Co-Founder yang menangani jalur K3, Energy Auditor, dan Renewable. Acuan penyusunan materi: PUIL 2011 (SNI 0225), SKKNI ketenagalistrikan, regulasi ESDM & Kemnaker terkini, Permen ESDM 26/2021 untuk pembangkit terbarukan, IEEE 1584 untuk analisis arc flash, dan NFPA 70E untuk keselamatan kerja kelistrikan. Materi ditinjau minimal setiap 6 bulan mengikuti perubahan regulasi dan teknologi.
 ### Tanya jawab
 Q: Apa platform belajar energi terbaik di Indonesia?
-A: Tidak ada satu jawaban untuk semua orang — yang terbaik adalah platform yang selaras SKKNI/PUIL, punya jalur karir spesifik, menyediakan praktik simulator, diajar praktisi aktif, sertifikatnya bisa diverifikasi, terhubung ke lowongan, dan materinya diperbarui. Electra Skill Academy dirancang untuk memenuhi ketujuh kriteria itu sekaligus dengan 16 jalur karir dan 605+ modul dalam satu langganan sekali bayar.
+A: Tidak ada satu jawaban untuk semua orang — yang terbaik adalah platform yang selaras SKKNI/PUIL, punya jalur karir spesifik, menyediakan praktik simulator, diajar praktisi aktif, sertifikatnya bisa diverifikasi, terhubung ke lowongan, dan materinya diperbarui. Electra Skill Academy dirancang untuk memenuhi ketujuh kriteria itu sekaligus, dengan 8 jalur karir berkurikulum lengkap dari 16 jalur yang dipetakan, dan 605+ modul dalam satu langganan sekali bayar.
 
 Q: Berapa biaya belajar di Electra Skill Academy?
-A: Skema saat ini adalah sekali bayar Rp 299.000 via QRIS untuk akses seluruh 16 jalur karir, semua level L1–L6, dan seluruh 605+ modul. Untuk paket korporat atau promo aktif, hubungi admin via WhatsApp +62 851-2153-2407.
+A: Skema saat ini adalah sekali bayar Rp 299.000 via QRIS untuk akses seluruh jalur karir yang tersedia, semua level L1–L6, dan seluruh 605+ modul. Untuk paket korporat atau promo aktif, hubungi admin via WhatsApp +62 851-2153-2407.
 
 Q: Apakah bisa diikuti tanpa latar belakang teknik listrik?
 A: Bisa. Program dimulai dari Level 1 Esensial yang membahas konsep dasar arus, tegangan, hambatan, dan daya tanpa mensyaratkan latar belakang teknik. Yang dibutuhkan adalah konsistensi mengerjakan modul dan quiz.
@@ -189,13 +189,13 @@ A: Teori, alat ukur, pembacaan gambar, dan pengambilan keputusan teknis bisa dik
 URL: https://electraacademy.com/kursus-listrik-online/
 Kata kunci: kursus listrik online, kursus listrik online bersertifikat, kelas listrik online, pelatihan listrik online indonesia, training kelistrikan online, kursus teknisi listrik, les listrik online
 
-Jawaban ringkas: Kursus listrik online Electra Skill Academy berisi 605+ modul yang masing-masing terdiri dari video, materi presentasi, dan quiz 25 soal dengan nilai kelulusan minimum 70%. Materi mencakup 16 jalur karir dan 6 level (L1 Esensial sampai L6 Consultant), dibuka seluruhnya lewat satu kali pembayaran Rp 299.000 via QRIS untuk akses seumur hidup. Peserta mendapat AI Tutor 24/7, Live Class Zoom, akses lab simulator, e-book "Kang Listrik 5.0", dan sertifikat ber-QR yang dapat diverifikasi publik di electraacademy.com/verify.html.
+Jawaban ringkas: Kursus listrik online Electra Skill Academy berisi 605+ modul yang masing-masing terdiri dari video, materi presentasi, dan quiz 25 soal dengan nilai kelulusan minimum 70%. Materi mencakup 8 jalur karir berkurikulum lengkap (dari 16 jalur yang dipetakan) dan 6 level (L1 Esensial sampai L6 Consultant), dibuka seluruhnya lewat satu kali pembayaran Rp 299.000 via QRIS untuk akses seumur hidup. Peserta mendapat AI Tutor 24/7, Live Class Zoom, akses lab simulator, e-book "Kang Listrik 5.0", dan sertifikat ber-QR yang dapat diverifikasi publik di electraacademy.com/verify.html.
 
 ### Cara belajar per modul
 Tonton video. Penjelasan konsep oleh praktisi, dapat diputar ulang tanpa batas. Pelajari materi (PPT). Ringkasan visual berisi rumus, tabel, dan diagram untuk diulang cepat sebelum quiz. Kerjakan quiz 25 soal. Nilai minimum 70% untuk membuka modul berikutnya. Tanya AI Tutor bila ada yang belum jelas. Asisten modul menjawab pertanyaan teknis kapan pun. Panduan langkah demi langkah tersedia di Manual Book, dan alur pendaftaran di Panduan Pendaftar Baru.
 
 ### Yang termasuk dalam satu langganan
-- 605+ modul, 16 jalur: Seluruh jalur dan seluruh level L1–L6 terbuka. Tidak ada paywall per kelas atau per jalur.
+- 605+ modul, 8 jalur lengkap: Seluruh jalur yang tersedia dan seluruh level L1–L6 terbuka. Tidak ada paywall per kelas atau per jalur. Delapan jalur lain berstatus segera hadir — lihat statusnya.
 - AI Tutor 24/7: Asisten modul berbasis AI yang memahami konteks kelistrikan Indonesia, dengan kuota 50 pertanyaan per akun.
 - Live Class Zoom: Kelas langsung setiap 3 hari bersama Founder dan Co-Founder. Gratis untuk member aktif dan direkam bila berhalangan hadir.
 - Lab & simulator: ElectraSim 3D, Virtual Labs, Wiring Lab, CapBankSim, dan 9 kalkulator desain kelistrikan.
@@ -209,7 +209,7 @@ Setiap sertifikat Electra memiliki ID unik dan QR code. Recruiter cukup memindai
 Lulusan SMK/D3/S1 teknik yang ingin menutup jarak antara materi kampus dan kebutuhan lapangan. Teknisi aktif yang ingin naik level ke engineer, specialist, atau consultant. Pekerja shift yang tidak bisa mengikuti kelas offline berjadwal tetap. Pindah karir dari bidang lain — Level 1 tidak mensyaratkan latar belakang teknik. Perusahaan yang ingin melatih karyawan secara massal; skema korporat tersedia lewat admin.
 ### Tanya jawab
 Q: Berapa biaya kursus listrik online di Electra Skill Academy?
-A: Rp 299.000 sekali bayar via QRIS untuk akses seumur hidup ke seluruh 16 jalur karir, semua level L1–L6, dan seluruh 605+ modul. Harga normal Rp 1.000.000. Untuk paket korporat atau cicilan, hubungi admin via WhatsApp +62 851-2153-2407.
+A: Rp 299.000 sekali bayar via QRIS untuk akses seumur hidup ke seluruh jalur karir yang tersedia, semua level L1–L6, dan seluruh 605+ modul. Harga normal Rp 1.000.000. Untuk paket korporat atau cicilan, hubungi admin via WhatsApp +62 851-2153-2407.
 
 Q: Apakah kursusnya berjadwal atau bisa kapan saja?
 A: Seluruh materi 100% self-paced dan dapat diakses 24/7 dari laptop, tablet, maupun ponsel. Progres tersimpan di akun sehingga login di perangkat lain langsung melanjutkan dari modul terakhir. Live Class berjadwal, tetapi selalu direkam bila Anda berhalangan hadir.
@@ -270,20 +270,22 @@ A: Ada. Simulator ElectraSim 3D melatih instalasi 1 dan 3 fasa serta operasi gar
 URL: https://electraacademy.com/belajar-energi-terbarukan/
 Kata kunci: belajar energi terbarukan, kursus energi terbarukan, pelatihan plts, belajar solar panel indonesia, kursus bess, pelatihan ev charging, energi baru terbarukan indonesia, training renewable energy indonesia
 
-Jawaban ringkas: Belajar energi terbarukan di Indonesia paling efektif dimulai dari fondasi kelistrikan (arus, tegangan, daya, elektronika daya) sebelum masuk teknologi spesifik, karena PLTS, BESS, dan EV charging semuanya bertumpu pada konversi dan kualitas daya. Di Electra Skill Academy tersedia tujuh jalur karir bertema transisi energi: Pembangkitan & Renewable Energy, PV & Solar Engineer, Baterai & BESS, EV & EV Charging, Waste to Energy, Hydrogen Energy, serta Sustainability & Carbon Engineer — dilengkapi Energy Auditor untuk sisi efisiensi. Materi mengacu Permen ESDM 26/2021 dan didukung data pembangkit nyata lewat peta energi interaktif.
+Jawaban ringkas: Belajar energi terbarukan di Indonesia paling efektif dimulai dari fondasi kelistrikan (arus, tegangan, daya, elektronika daya) sebelum masuk teknologi spesifik, karena PLTS, BESS, dan EV charging semuanya bertumpu pada konversi dan kualitas daya. Di Electra Skill Academy, jalur transisi energi yang kurikulumnya sudah lengkap hari ini ada dua: Pembangkitan & Renewable Energy (PLTU, PLTG, PLTA, PLTS, BESS, sampai green hydrogen) dan Energy Auditor (ISO 50001, audit industri & gedung). Pengantar Solar PV, BESS, dan EV Charging juga sudah tersedia di Level 2 Fundamental. Lima jalur bertema energi lainnya — PV & Solar Engineer, Baterai & BESS, EV & EV Charging, Waste to Energy, Hydrogen Energy, dan Sustainability & Carbon Engineer — sudah dipetakan tetapi berstatus segera hadir. Materi mengacu Permen ESDM 26/2021 dan didukung data pembangkit nyata lewat peta energi interaktif.
 
-### Tujuh jalur karir energi terbarukan
-- Pembangkitan & Renewable: Dari Power Plant Operator, Renewable Energy Engineer, Power Generation Specialist, sampai Consultant Renewable & Hydrogen Power.
-- PV & Solar Engineer: Desain sistem solar PV, perhitungan yield, pemilihan inverter, proteksi DC, dan komisioning PLTS atap maupun ground-mounted.
-- Baterai & BESS: Battery energy storage system: kimia sel, BMS, sizing, integrasi ke jaringan, dan peran BESS untuk stabilitas frekuensi.
-- EV & EV Charging: Infrastruktur pengisian kendaraan listrik: AC/DC charging, standar konektor, dampak ke jaringan distribusi, dan manajemen beban.
-- Waste to Energy: Konversi sampah menjadi energi: teknologi termal dan biologis, serta integrasinya ke sistem tenaga.
-- Hydrogen Energy: Elektrolisis, penyimpanan, dan pemanfaatan hidrogen sebagai vektor energi dalam sistem tenaga masa depan.
-- Sustainability & Carbon: Carbon accounting, pelaporan emisi, dan strategi dekarbonisasi untuk industri dan utilitas.
-- Energy Auditor: Audit dan manajemen energi — sisi permintaan yang sering memberi penghematan lebih cepat daripada menambah pembangkit.
+### Jalur energi yang sudah tersedia penuh
+- Pembangkitan & Renewable: Dari Profesional Power Plant Operator, Advance Renewable Energy Engineer, Expertise Power Generation Specialist, sampai Consultant Renewable & Hydrogen Power. Mencakup PLTU, PLTG, PLTA, PLTS skala MW, BESS sizing, PVsyst, HOMER, dan green hydrogen.
+- Energy Auditor: Audit energi industri & gedung, ISO 50001, Energy Management System, ROI analysis, sampai Consultant Energy Audit & Sustainability. Sisi permintaan sering memberi penghematan lebih cepat daripada menambah pembangkit.
+
+### Jalur energi yang segera hadir
+- PV & Solar Engineer: Desain PLTS rooftop sampai utility-scale: site survey, simulasi PVsyst, BoQ, PPA, dan komisioning.
+- Baterai & BESS: Battery energy storage system: teknologi sel, BMS, integrasi grid, peak shaving, dan keselamatan baterai skala utility.
+- EV & EV Charging: Charging station design, BMS, OCPP, integrasi grid, dan regulasi SPKLU Indonesia.
+- Waste to Energy: Insinerator, gasifikasi, biogas landfill, dan PLTSa.
+- Hydrogen Energy: Produksi green hydrogen via elektrolisis, penyimpanan, fuel cell, dan integrasi ke sistem tenaga.
+- Sustainability & Carbon: GHG accounting, ISO 14064, ESG report, carbon trading, dan strategi net zero perusahaan.
 
 ### Urutan belajar yang disarankan
-Fondasi kelistrikan (Level 1–2). Tanpa pemahaman daya aktif/reaktif, faktor daya, dan elektronika daya, materi inverter dan konverter DC-DC akan terasa seperti hafalan. Mulai dari jalur belajar kelistrikan. Modul teknologi inti di Level 2. Solar PV System, BESS & Energy Storage, EV Charging Station, Inverter & VFD, UPS & Power Conditioning, serta Power Quality. Pilih satu jalur spesialisasi (Level 3–6). Perdalam desain, operasi, dan konsultansi pada satu teknologi. Latih dengan data nyata. Gunakan peta dan simulator energi di bawah untuk memahami skala dan kendala sistem tenaga sesungguhnya.
+Fondasi kelistrikan (Level 1–2). Tanpa pemahaman daya aktif/reaktif, faktor daya, dan elektronika daya, materi inverter dan konverter DC-DC akan terasa seperti hafalan. Mulai dari jalur belajar kelistrikan. Modul teknologi inti di Level 2. Solar PV System, BESS & Energy Storage, EV Charging Station, Inverter & VFD, UPS & Power Conditioning, serta Power Quality. Inilah alasan Anda tetap bisa mulai belajar PLTS dan BESS sekarang meski jalur spesialisasinya belum rilis. Ambil jalur Pembangkitan & Renewable atau Energy Auditor (Level 3–6). Dua jalur ini yang kurikulumnya sudah lengkap, dan keduanya mencakup materi PLTS, BESS, serta efisiensi energi sampai tingkat konsultan. Latih dengan data nyata. Gunakan peta dan simulator energi di bawah untuk memahami skala dan kendala sistem tenaga sesungguhnya.
 
 ### Belajar dengan data energi nyata, bukan contoh buatan
 Peta Ketenagalistrikan Indonesia — peta interaktif pembangkit, gardu induk, dan jaringan transmisi di 8 region nasional. Peta Ketenagalistrikan 3D — pembangkit divisualkan sebagai kolom 3D dengan tinggi sesuai kapasitas, di atas medan tiga dimensi. World Electricity Maps — 34.900+ pembangkit di 167 negara lengkap dengan kapasitas, bahan bakar, dan bauran energi (EBT, fosil, nuklir), dapat difilter per negara. Simulasi Transisi Energi Indonesia — ubah bauran energi nasional, kejar target EBT, dan lihat dampaknya terhadap emisi CO₂, berbasis data kelistrikan nyata 8 region. atlite studio — antarmuka no-code untuk PyPSA/atlite: pilih wilayah dan periode, dapatkan kode Python siap jalan untuk konversi data cuaca menjadi potensi energi terbarukan.
@@ -295,7 +297,7 @@ Q: Apa yang harus dipelajari lebih dulu untuk masuk industri energi terbarukan?
 A: Mulai dari fondasi kelistrikan — arus, tegangan, daya aktif dan reaktif, faktor daya, serta elektronika daya — karena PLTS, BESS, dan EV charging semuanya bertumpu pada konversi daya. Setelah itu masuk ke modul teknologi inti (Solar PV, BESS, EV Charging, Inverter/VFD), baru pilih satu jalur spesialisasi.
 
 Q: Apakah ada kursus PLTS atau solar panel di Electra Skill Academy?
-A: Ada. Jalur PV & Solar Engineer membahas desain sistem solar PV, perhitungan yield, pemilihan inverter, proteksi sisi DC, dan komisioning. Modul Solar PV System juga tersedia di Level 2 Fundamental sebagai pengantar.
+A: Ada, tetapi perlu dibedakan. Modul Solar PV System sudah tersedia sekarang di Level 2 Fundamental sebagai pengantar, dan materi PLTS skala MW beserta PVsyst dan HOMER ada di jalur Pembangkitan & Renewable Energy yang kurikulumnya sudah lengkap. Jalur khusus PV & Solar Engineer (site survey, BoQ, PPA, komisioning) masih berstatus segera hadir.
 
 Q: Apakah materi energi terbarukan mengikuti regulasi Indonesia?
 A: Ya. Materi mengacu Permen ESDM 26/2021 untuk pembangkit terbarukan, PUIL 2011 (SNI 0225) untuk instalasi, serta SKKNI ketenagalistrikan. Untuk keselamatan sistem DC tegangan tinggi, materi merujuk NFPA 70E dan IEEE 1584.
@@ -351,29 +353,29 @@ A: NFPA 70E untuk praktik kerja aman dan kategori APD, IEEE 1584 untuk perhitung
 URL: https://electraacademy.com/karir-ketenagalistrikan/
 Kata kunci: karir ketenagalistrikan, karir kelistrikan, peta karir listrik, okupasi ketenagalistrikan, jenjang karir electrician, prospek kerja teknik listrik, kerja di pln, lowongan teknisi listrik
 
-Jawaban ringkas: Karir ketenagalistrikan Indonesia terbagi ke dalam okupasi-okupasi yang distandarkan lewat KKNI dan SKKNI. Electra Skill Academy menyediakan Peta Karir Ketenagalistrikan berisi 380 okupasi standar KKNI lengkap dengan tugas, skill, tanggung jawab, dan wewenang, bersumber dari buku resmi Kementerian ESDM. Okupasi tersebut dikelompokkan ke 16 jalur karir — dari Instalasi Bangunan, Distribusi, dan Transmisi, sampai PV & Solar, BESS, EV Charging, Hidrogen, dan Carbon Engineer. Setiap jalur memiliki empat jenjang: Profesional (L3) → Advance (L4) → Expertise (L5) → Consultant (L6).
+Jawaban ringkas: Karir ketenagalistrikan Indonesia terbagi ke dalam okupasi-okupasi yang distandarkan lewat KKNI dan SKKNI. Electra Skill Academy menyediakan Peta Karir Ketenagalistrikan berisi 380 okupasi standar KKNI lengkap dengan tugas, skill, tanggung jawab, dan wewenang, bersumber dari buku resmi Kementerian ESDM. Okupasi tersebut dikelompokkan ke 16 jalur karir — dari Instalasi Bangunan, Distribusi, dan Transmisi, sampai PV & Solar, BESS, EV Charging, Hidrogen, dan Carbon Engineer — dan 8 di antaranya sudah berkurikulum lengkap hari ini. Setiap jalur memiliki empat jenjang: Profesional (L3) → Advance (L4) → Expertise (L5) → Consultant (L6).
 
 ### Enam belas jalur karir dan muara pekerjaannya
-Jalur | Fokus | Contoh tempat kerja
-Instalasi Bangunan (MEP) | Instalasi listrik gedung komersial & residensial sesuai PUIL | Kontraktor MEP, konsultan bangunan, pengelola gedung
-Industri & Manufaktur | Panel, MCC, motor, keandalan pabrik | Pabrik, vendor otomasi, kontraktor industri
-Distribusi | Jaringan 20 kV, gardu, smart grid | Utilitas, kontraktor distribusi, vendor peralatan
-Transmisi | Sistem tegangan tinggi 150 kV ke atas | Utilitas transmisi, kontraktor gardu induk
-Energy Analyst & Data Science | Analitik data utilitas dan peramalan beban | Utilitas, konsultan energi, perusahaan teknologi energi
-Energy Auditor | Audit & manajemen energi, efisiensi | Konsultan energi, industri, gedung komersial
-Pembangkitan & Renewable | Operasi pembangkit dan energi terbarukan | IPP, pembangkit, EPC energi
-K3 Listrik | Keselamatan kerja kelistrikan sampai Ahli K3 | Semua sektor dengan instalasi listrik
-Sales & Technical Marketing | Penjualan teknis peralatan kelistrikan | Distributor, principal, vendor
-PV & Solar Engineer | Desain & komisioning PLTS | EPC solar, kontraktor PLTS atap
-Sustainability & Carbon | Carbon accounting & dekarbonisasi | Korporasi, konsultan ESG
-EV & EV Charging | Infrastruktur pengisian kendaraan listrik | Operator SPKLU, otomotif, utilitas
-Waste to Energy | Konversi sampah menjadi energi | Pemda, IPP, konsultan lingkungan
-Hydrogen Energy | Elektrolisis, penyimpanan, pemanfaatan hidrogen | Riset, energi, industri proses
-Baterai & BESS | Sistem penyimpanan energi baterai | Utilitas, IPP, integrator sistem
-Kontrol & Otomasi | PLC, SCADA, sistem kendali | Manufaktur, utilitas, integrator otomasi
+Jalur | Fokus | Contoh tempat kerja | Status
+Instalasi Bangunan (MEP) | Instalasi listrik gedung komersial & residensial sesuai PUIL | Kontraktor MEP, konsultan bangunan, pengelola gedung | Tersedia
+Industri & Manufaktur | Panel, MCC, motor, keandalan pabrik | Pabrik, vendor otomasi, kontraktor industri | Tersedia
+Distribusi | Jaringan 20 kV, gardu, smart grid | Utilitas, kontraktor distribusi, vendor peralatan | Tersedia
+Transmisi | Sistem tegangan tinggi 150 kV ke atas | Utilitas transmisi, kontraktor gardu induk | Tersedia
+Energy Analyst & Data Science | Analitik data utilitas dan peramalan beban | Utilitas, konsultan energi, perusahaan teknologi energi | Tersedia
+Energy Auditor | Audit & manajemen energi, efisiensi | Konsultan energi, industri, gedung komersial | Tersedia
+Pembangkitan & Renewable | Operasi pembangkit dan energi terbarukan | IPP, pembangkit, EPC energi | Tersedia
+K3 Listrik | Keselamatan kerja kelistrikan sampai Ahli K3 | Semua sektor dengan instalasi listrik | Tersedia
+Sales & Technical Marketing | Penjualan teknis peralatan kelistrikan | Distributor, principal, vendor | Segera hadir
+PV & Solar Engineer | Desain & komisioning PLTS | EPC solar, kontraktor PLTS atap | Segera hadir
+Sustainability & Carbon | Carbon accounting & dekarbonisasi | Korporasi, konsultan ESG | Segera hadir
+EV & EV Charging | Infrastruktur pengisian kendaraan listrik | Operator SPKLU, otomotif, utilitas | Segera hadir
+Waste to Energy | Konversi sampah menjadi energi | Pemda, IPP, konsultan lingkungan | Segera hadir
+Hydrogen Energy | Elektrolisis, penyimpanan, pemanfaatan hidrogen | Riset, energi, industri proses | Segera hadir
+Baterai & BESS | Sistem penyimpanan energi baterai | Utilitas, IPP, integrator sistem | Segera hadir
+Kontrol & Otomasi | PLC, SCADA, sistem kendali | Manufaktur, utilitas, integrator otomasi | Segera hadir
 
 ### Empat jenjang di setiap jalur
-Struktur jenjang yang sama berlaku di seluruh 16 jalur, sehingga perpindahan antar jalur tidak berarti memulai dari nol: Level 3 — Profesional. Eksekusi pekerjaan teknis di lapangan sesuai prosedur dan standar. Level 4 — Advance. Perancangan, perhitungan, dan pengambilan keputusan teknis. Level 5 — Expertise. Spesialisasi mendalam, penyelesaian masalah kompleks, dan pembinaan tim. Level 6 — Consultant. Strategi, kepatuhan, dan rekomendasi tingkat organisasi. Sebelum masuk Level 3, seluruh peserta melewati Level 1 Esensial (25 modul) dan Level 2 Fundamental (23 modul) sebagai fondasi bersama.
+Struktur jenjang yang sama berlaku di seluruh jalur, sehingga perpindahan antar jalur tidak berarti memulai dari nol: Level 3 — Profesional. Eksekusi pekerjaan teknis di lapangan sesuai prosedur dan standar. Level 4 — Advance. Perancangan, perhitungan, dan pengambilan keputusan teknis. Level 5 — Expertise. Spesialisasi mendalam, penyelesaian masalah kompleks, dan pembinaan tim. Level 6 — Consultant. Strategi, kepatuhan, dan rekomendasi tingkat organisasi. Sebelum masuk Level 3, seluruh peserta melewati Level 1 Esensial (25 modul) dan Level 2 Fundamental (23 modul) sebagai fondasi bersama.
 
 ### Cara memilih jalur yang tepat
 Mulai dari kondisi nyata Anda. Lokasi kerja, pengalaman, dan jenis perusahaan di sekitar Anda lebih menentukan daripada tren global. Jalur distribusi masuk akal bila banyak kontraktor utilitas di kota Anda; jalur MEP masuk akal bila pembangunan gedung sedang aktif. Cek okupasi targetnya. Buka Peta Karir, cari okupasi yang menarik, dan baca tugas serta wewenangnya. Bila deskripsi pekerjaannya tidak menarik, jalurnya juga tidak akan menarik. Gunakan Career Advisory. Member aktif yang telah menyelesaikan Level 2 mendapat pemetaan jalur karir personal, review CV dan portofolio, mock interview teknis (simulasi AI plus satu sesi live bulanan dengan engineer senior), serta mentoring 30 menit per bulan. Bangun portofolio sejak awal. Setiap level memandu penyusunan studi kasus dan dokumen kerja yang bisa langsung dipakai saat interview maupun tender.
@@ -382,7 +384,7 @@ Mulai dari kondisi nyata Anda. Lokasi kerja, pengalaman, dan jenis perusahaan di
 Talent Pool. Lulusan bersertifikat masuk ke basis data talent yang disodorkan ke mitra industri — utilitas, kontraktor, IPP, dan konsultan. Job posting khusus member. Lowongan dari mitra rekrutmen yang tidak dipublikasikan ke umum, hanya dapat diakses member aktif. Sertifikat yang bisa diverifikasi recruiter. QR code pada sertifikat mengarah ke halaman verifikasi yang menampilkan data langsung dari basis data. E-book "Kang Listrik 5.0". Panduan karir karya Founder — mega tren energi global, sektor dan jenjang karir, panduan praktis dari interview sampai negosiasi gaji. Gratis untuk member.
 ### Tanya jawab
 Q: Ada berapa jalur karir di bidang ketenagalistrikan?
-A: Electra Skill Academy mengelompokkan bidang ketenagalistrikan ke dalam 16 jalur karir, mulai dari Instalasi Bangunan, Industri, Distribusi, dan Transmisi, sampai jalur transisi energi seperti PV & Solar, BESS, EV Charging, Hidrogen, dan Carbon Engineer. Peta Karir Electra juga memuat 380 okupasi standar KKNI dari buku resmi Kementerian ESDM.
+A: Electra Skill Academy mengelompokkan bidang ketenagalistrikan ke dalam 16 jalur karir, mulai dari Instalasi Bangunan, Industri, Distribusi, dan Transmisi, sampai jalur transisi energi seperti PV & Solar, BESS, EV Charging, Hidrogen, dan Carbon Engineer. Dari 16 jalur itu, 8 sudah berkurikulum lengkap Level 3–6 dan 8 lainnya berstatus segera hadir. Peta Karir Electra juga memuat 380 okupasi standar KKNI dari buku resmi Kementerian ESDM.
 
 Q: Bagaimana jenjang karir seorang teknisi listrik?
 A: Struktur jenjang di Electra terdiri dari empat tingkat setelah fondasi: Profesional (L3) untuk eksekusi teknis lapangan, Advance (L4) untuk perancangan dan perhitungan, Expertise (L5) untuk spesialisasi dan penyelesaian masalah kompleks, serta Consultant (L6) untuk strategi dan kepatuhan tingkat organisasi.
@@ -394,7 +396,7 @@ Q: Apakah Electra membantu mencarikan pekerjaan?
 A: Electra menyediakan Talent Pool yang disodorkan ke mitra industri, job posting yang hanya dibuka untuk member aktif, serta Career Advisory berupa pemetaan jalur karir personal, review CV, mock interview teknis, dan mentoring bulanan. Layanan Career Advisory aktif setelah member menyelesaikan Level 2 Fundamental.
 
 Q: Bisakah pindah jalur karir di tengah jalan?
-A: Bisa, tanpa biaya tambahan. Satu langganan membuka seluruh 16 jalur, dan karena Level 1 serta Level 2 merupakan fondasi bersama, perpindahan jalur tidak berarti memulai dari nol.
+A: Bisa, tanpa biaya tambahan. Satu langganan membuka seluruh jalur yang tersedia, dan karena Level 1 serta Level 2 merupakan fondasi bersama, perpindahan jalur tidak berarti memulai dari nol.
 
 ---
 
@@ -402,13 +404,13 @@ A: Bisa, tanpa biaya tambahan. Satu langganan membuka seluruh 16 jalur, dan kare
 URL: https://electraacademy.com/faq/
 Kata kunci: electra skill academy, electra academy adalah, review electra academy, biaya electra academy, cara daftar electra academy, faq electra academy
 
-Jawaban ringkas: Electra Skill Academy adalah platform belajar daring bidang energi dan ketenagalistrikan asal Indonesia. Platform ini menyediakan 16 jalur karir, 605+ modul berisi video, materi presentasi, dan quiz, enam jenjang level (L1 Esensial sampai L6 Consultant), lab simulator, AI Tutor 24/7, Live Class, dan sertifikat ber-QR yang dapat diverifikasi publik. Akses dibuka lewat satu kali pembayaran Rp 299.000 via QRIS untuk seumur hidup. Didirikan oleh Dr. Qashtalani Haramaini, S.T., M.T. bersama Co-Founder Farda Najih.
+Jawaban ringkas: Electra Skill Academy adalah platform belajar daring bidang energi dan ketenagalistrikan asal Indonesia. Platform ini memetakan 16 jalur karir — 8 di antaranya sudah berkurikulum lengkap Level 3–6 — dengan 605+ modul berisi video, materi presentasi, dan quiz, enam jenjang level (L1 Esensial sampai L6 Consultant), lab simulator, AI Tutor 24/7, Live Class, dan sertifikat ber-QR yang dapat diverifikasi publik. Akses dibuka lewat satu kali pembayaran Rp 299.000 via QRIS untuk seumur hidup. Didirikan oleh Dr. Qashtalani Haramaini, S.T., M.T. bersama Co-Founder Farda Najih.
 
 ### Ringkasan platform
 Nama: Electra Skill Academy (juga dikenal sebagai Electra Academy / ESA) Situs: electraacademy.com Bidang: Pelatihan daring energi dan ketenagalistrikan Wilayah layanan: Indonesia Bahasa: Bahasa Indonesia Founder & CEO: Dr. Qashtalani Haramaini, S.T., M.T. Co-Founder: Farda Najih (jalur K3, Energy Auditor, Renewable) Skema harga: Sekali bayar Rp 299.000 via QRIS, akses seumur hidup Kontak: WhatsApp +62 851-2153-2407
 ### Tanya jawab
 Q: Apa itu Electra Skill Academy?
-A: Electra Skill Academy adalah platform belajar daring bidang energi dan ketenagalistrikan asal Indonesia. Platform ini menyediakan 16 jalur karir, 605+ modul berisi video, materi presentasi dan quiz, enam jenjang level dari L1 Esensial sampai L6 Consultant, lab simulator, AI Tutor 24/7, Live Class, serta sertifikat ber-QR yang dapat diverifikasi publik.
+A: Electra Skill Academy adalah platform belajar daring bidang energi dan ketenagalistrikan asal Indonesia. Platform ini memetakan 16 jalur karir, 8 di antaranya sudah berkurikulum lengkap Level 3–6, dengan 605+ modul berisi video, materi presentasi dan quiz, enam jenjang level dari L1 Esensial sampai L6 Consultant, lab simulator, AI Tutor 24/7, Live Class, serta sertifikat ber-QR yang dapat diverifikasi publik.
 
 Q: Berapa biaya Electra Skill Academy?
 A: Rp 299.000 sekali bayar via QRIS untuk akses seumur hidup ke seluruh jalur, level, dan modul. Harga normal Rp 1.000.000. Untuk paket korporat atau cicilan, hubungi admin via WhatsApp +62 851-2153-2407.
@@ -461,13 +463,13 @@ A: Lima pembeda utama: pendampingan menyusun portofolio berupa studi kasus dan d
 URL: https://electraacademy.com/bandingkan/
 Kata kunci: perbandingan kursus listrik, kursus listrik terbaik, belajar listrik gratis atau berbayar, alternatif kursus kelistrikan, electra academy vs, platform belajar kelistrikan terbaik
 
-Jawaban ringkas: Ada lima cara belajar kelistrikan di Indonesia, masing-masing dengan kelebihan berbeda. Video gratis terbaik untuk menjajaki minat. Marketplace kursus cocok untuk topik tunggal yang sempit. Training offline tak tergantikan untuk keterampilan tangan dan sertifikasi resmi. SMK/kampus memberi dasar teori dan ijazah formal. Platform terstruktur seperti Electra Skill Academy paling sesuai bila Anda butuh kurikulum berjenjang lintas 16 jalur karir, praktik simulator, dan pendampingan berkelanjutan dengan biaya sekali bayar. Kebanyakan praktisi akhirnya memakai kombinasi — misalnya platform terstruktur untuk teori dan latihan, ditambah training offline untuk uji praktik.
+Jawaban ringkas: Ada lima cara belajar kelistrikan di Indonesia, masing-masing dengan kelebihan berbeda. Video gratis terbaik untuk menjajaki minat. Marketplace kursus cocok untuk topik tunggal yang sempit. Training offline tak tergantikan untuk keterampilan tangan dan sertifikasi resmi. SMK/kampus memberi dasar teori dan ijazah formal. Platform terstruktur seperti Electra Skill Academy paling sesuai bila Anda butuh kurikulum berjenjang lintas banyak jalur karir, praktik simulator, dan pendampingan berkelanjutan dengan biaya sekali bayar. Kebanyakan praktisi akhirnya memakai kombinasi — misalnya platform terstruktur untuk teori dan latihan, ditambah training offline untuk uji praktik.
 
 ### Lima cara belajar, dibandingkan berdampingan
 Kriteria | Video gratis | Marketplace kursus | Training offline | SMK / kampus | Electra Skill Academy
 Biaya | Gratis | Per kelas | Jutaan / batch | Semester | Sekali bayar
 Struktur kurikulum | Acak | Per topik | Terstruktur | Terstruktur | Berjenjang L1–L6
-Cakupan jalur karir | Acak | 1 topik | 1–2 topik | Umum | 16 jalur
+Cakupan jalur karir | Acak | 1 topik | 1–2 topik | Umum | 8 jalur lengkap, 16 dipetakan
 Praktik alat fisik | Tidak | Jarang | Ya | Ya | Lewat Workshop/Bootcamp
 Simulator digital | Tidak | Jarang | Jarang | Terbatas | Ya
 Fleksibel untuk pekerja | Ya | Ya | Tidak | Tidak | Ya
@@ -480,7 +482,7 @@ Akses lowongan | Tidak | Tidak | Kadang | Bursa kerja | Talent Pool + job postin
 Bila Anda hanya butuh satu topik sempit — misalnya sekadar ingin memahami cara memasang satu jenis saklar — video gratis atau satu kelas marketplace lebih hemat. Bila Anda butuh sertifikat kompetensi resmi pemerintah minggu ini. Electra bukan lembaga sertifikasi; kami mempersiapkan, tidak menerbitkan. Daftarkan diri langsung ke lembaga sertifikasi berwenang. Bila kebutuhan utama Anda adalah jam praktik dengan alat fisik. Simulator melatih pengambilan keputusan, bukan keterampilan tangan. Untuk itu ikuti Workshop atau Bootcamp, atau training offline yang menyediakan bengkel. Bila Anda tidak punya waktu belajar rutin. Akses seumur hidup tidak berguna tanpa ritme. Minimal 1 jam per hari selama beberapa minggu adalah asumsi di balik seluruh estimasi durasi kami.
 
 ### Kapan Electra menjadi pilihan paling masuk akal
-Anda belum yakin jalur mana yang cocok. Enam belas jalur terbuka sekaligus, sehingga Anda bisa mencoba beberapa tanpa biaya tambahan sebelum memutuskan. Anda bekerja shift atau jauh dari kota besar. Seluruh materi self-paced dan berjalan di browser, termasuk simulator. Anda butuh kurikulum berjenjang, bukan potongan topik. L1 sampai L6 dengan prasyarat yang jelas mencegah belajar melompat-lompat. Anda menyiapkan uji kompetensi. Materi dipetakan ke SKKNI, PUIL 2011, IEEE 1584, dan NFPA 70E, dan tersedia kalkulator serta simulator untuk melatih sisi perhitungan. Anda ingin sertifikat yang bisa dibuktikan recruiter. Verifikasi QR publik menghilangkan keraguan tanpa perlu menghubungi admin.
+Anda belum yakin jalur mana yang cocok. Delapan jalur berkurikulum lengkap terbuka sekaligus, sehingga Anda bisa mencoba beberapa tanpa biaya tambahan sebelum memutuskan. Anda bekerja shift atau jauh dari kota besar. Seluruh materi self-paced dan berjalan di browser, termasuk simulator. Anda butuh kurikulum berjenjang, bukan potongan topik. L1 sampai L6 dengan prasyarat yang jelas mencegah belajar melompat-lompat. Anda menyiapkan uji kompetensi. Materi dipetakan ke SKKNI, PUIL 2011, IEEE 1584, dan NFPA 70E, dan tersedia kalkulator serta simulator untuk melatih sisi perhitungan. Anda ingin sertifikat yang bisa dibuktikan recruiter. Verifikasi QR publik menghilangkan keraguan tanpa perlu menghubungi admin.
 
 ### Kombinasi yang paling sering dipakai praktisi
 Platform terstruktur untuk teori berjenjang, quiz, simulator, dan pendampingan harian. Workshop atau Bootcamp untuk jam praktik dengan alat nyata. Uji kompetensi di lembaga resmi untuk sertifikat yang diakui sebagai persyaratan tenaga teknik. Urutan ini menghemat biaya karena Anda hanya membayar sesi praktik dan uji kompetensi setelah fondasi pengetahuannya benar-benar siap.
@@ -495,4 +497,4 @@ Q: Kapan sebaiknya saya tidak membeli langganan Electra?
 A: Bila Anda hanya butuh satu topik sempit, bila Anda membutuhkan sertifikat kompetensi resmi pemerintah dalam waktu dekat (Electra bukan lembaga sertifikasi), bila kebutuhan utama Anda adalah jam praktik dengan alat fisik, atau bila Anda belum bisa menyediakan waktu belajar rutin.
 
 Q: Apa keunggulan utama Electra dibanding kursus per kelas?
-A: Satu kali pembayaran membuka seluruh 16 jalur karir dan seluruh level L1–L6, sehingga Anda dapat berpindah jalur tanpa biaya tambahan. Selain itu tersedia simulator, 9 kalkulator desain, AI Tutor 24/7, Live Class, Talent Pool, dan sertifikat ber-QR yang dapat diverifikasi publik.
+A: Satu kali pembayaran membuka seluruh jalur karir yang tersedia dan seluruh level L1–L6, sehingga Anda dapat berpindah jalur tanpa biaya tambahan. Selain itu tersedia simulator, 9 kalkulator desain, AI Tutor 24/7, Live Class, Talent Pool, dan sertifikat ber-QR yang dapat diverifikasi publik.

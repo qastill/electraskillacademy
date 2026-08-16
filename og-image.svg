@@ -30,6 +30,10 @@
   <text x="350" y="372" font-family="'Inter', Arial, sans-serif" font-size="36" font-weight="600" fill="#c9a96e" letter-spacing="14">SKILL ACADEMY</text>
 
   <!-- Tagline -->
-  <text x="110" y="500" font-family="'Inter', Arial, sans-serif" font-size="32" font-weight="400" fill="rgba(245,240,230,0.85)">Akademi Pelatihan Kelistrikan Profesional Indonesia</text>
-  <text x="110" y="552" font-family="'Inter', Arial, sans-serif" font-size="24" font-weight="500" fill="rgba(201,169,110,0.85)">8 Jalur Karir · 600+ Modul · AI Tutor 24/7 · Sertifikasi BNSP</text>
+  <!-- Catatan: JANGAN menulis "Sertifikasi BNSP" di sini. Electra bukan
+       lembaga sertifikasi — sertifikat yang diterbitkan adalah sertifikat
+       penyelesaian pelatihan. Klaim yang tidak akurat di gambar pratinjau
+       ikut tersebar ke setiap tautan yang dibagikan. -->
+  <text x="110" y="500" font-family="'Inter', Arial, sans-serif" font-size="32" font-weight="400" fill="rgba(245,240,230,0.85)">Platform Belajar Energi &amp; Ketenagalistrikan Indonesia</text>
+  <text x="110" y="552" font-family="'Inter', Arial, sans-serif" font-size="24" font-weight="500" fill="rgba(201,169,110,0.85)">8 Jalur Karir Lengkap · 605+ Modul · Lab Simulator · AI Tutor 24/7</text>
 </svg>

@@ -20,6 +20,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, FACTS, TRACKS, NAV, PAGES, STATIC_URLS } from './seo-pages.data.mjs';
+import { TRACK_PAGES } from './track-data.generated.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -88,6 +89,7 @@ const footer = () => `
       <div>
         <h4>Karir &amp; Sertifikasi</h4>
         <ul>
+          <li><a href="/jalur/">Semua Jalur Karir</a></li>
           <li><a href="/karir-ketenagalistrikan/">Karir Ketenagalistrikan</a></li>
           <li><a href="/sertifikasi-kompetensi-ketenagalistrikan/">Sertifikasi Kompetensi</a></li>
           <li><a href="/peta-karir.html">Peta Karir 380 Okupasi</a></li>
@@ -118,12 +120,73 @@ const footer = () => `
     <div class="foot-bottom">
       <p style="margin:0">
         <strong>${esc(SITE.name)}</strong> — platform belajar energi &amp; ketenagalistrikan Indonesia.
-        ${FACTS.jalur} jalur karir · ${FACTS.modul} modul · Level L1–L6 · AI Tutor 24/7.
+        ${FACTS.jalurSiap} jalur karir lengkap (dari ${FACTS.jalur} yang dipetakan) · ${FACTS.modul} modul · Level L1–L6 · AI Tutor 24/7.
         Admin WhatsApp ${esc(SITE.waDisplay)}.
       </p>
     </div>
   </div>
 </footer>`;
+
+/* ---------- kerangka dokumen ---------- */
+
+/**
+ * Satu-satunya tempat <head> halaman landing dirakit. Halaman topik,
+ * hub jalur, dan halaman jalur semuanya lewat sini supaya meta tag
+ * tidak pernah berbeda antar jenis halaman.
+ */
+function htmlDocument({ canonical, title, description, keywords, schema, body, navSlug }) {
+  return `<!DOCTYPE html>
+<html lang="${SITE.lang}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(title)} | ${esc(SITE.name)}</title>
+<meta name="description" content="${esc(description)}">
+<meta name="keywords" content="${esc((keywords || []).join(', '))}">
+<meta name="author" content="${esc(SITE.name)}">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#0d0f1c">
+<link rel="canonical" href="${canonical}">
+<link rel="alternate" hreflang="id" href="${canonical}">
+<link rel="alternate" hreflang="x-default" href="${canonical}">
+<link rel="icon" type="image/svg+xml" href="${FAVICON}">
+<link rel="manifest" href="/manifest.json">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="${esc(SITE.name)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:image" content="${url(SITE.ogImage)}">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Electra Skill Academy — platform belajar energi & ketenagalistrikan Indonesia">
+<meta property="og:locale" content="${SITE.locale}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(description)}">
+<meta name="twitter:image" content="${url(SITE.ogImage)}">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/seo/landing.css">
+
+<script type="application/ld+json">
+${JSON.stringify(schema, null, 2)}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Lompat ke konten utama</a>
+${header(navSlug)}
+${body}
+${footer()}
+</body>
+</html>
+`;
+}
 
 /* ---------- render blok konten ---------- */
 
@@ -299,51 +362,14 @@ function renderPage(p) {
 </div></section>`
     : '';
 
-  return `<!DOCTYPE html>
-<html lang="${SITE.lang}">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(p.title)} | ${esc(SITE.name)}</title>
-<meta name="description" content="${esc(p.description)}">
-<meta name="keywords" content="${esc(p.keywords.join(', '))}">
-<meta name="author" content="${esc(SITE.name)}">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#0d0f1c">
-<link rel="canonical" href="${u}">
-<link rel="alternate" hreflang="id" href="${u}">
-<link rel="alternate" hreflang="x-default" href="${u}">
-<link rel="icon" type="image/svg+xml" href="${FAVICON}">
-<link rel="manifest" href="/manifest.json">
-
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="${esc(SITE.name)}">
-<meta property="og:title" content="${esc(p.title)}">
-<meta property="og:description" content="${esc(p.description)}">
-<meta property="og:url" content="${u}">
-<meta property="og:image" content="${url(SITE.ogImage)}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:locale" content="${SITE.locale}">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(p.title)}">
-<meta name="twitter:description" content="${esc(p.description)}">
-<meta name="twitter:image" content="${url(SITE.ogImage)}">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/seo/landing.css">
-
-<script type="application/ld+json">
-${JSON.stringify(buildSchema(p), null, 2)}
-</script>
-</head>
-<body>
-<a class="skip" href="#main">Lompat ke konten utama</a>
-${header(p.slug)}
-
+  return htmlDocument({
+    canonical: u,
+    title: p.title,
+    description: p.description,
+    keywords: p.keywords,
+    schema: buildSchema(p),
+    navSlug: p.slug,
+    body: `
 <main id="main">
   <div class="wrap">
     <nav class="crumbs" aria-label="Remah roti">
@@ -372,7 +398,7 @@ ${faq}
   <div class="wrap">
     <div class="final-cta">
       <h2>Siap mulai?</h2>
-      <p>Satu kali bayar ${esc(SITE.priceDisplay)} membuka seluruh ${FACTS.jalur} jalur karir, semua level L1–L6, dan seluruh ${FACTS.modul} modul — selamanya.</p>
+      <p>Satu kali bayar ${esc(SITE.priceDisplay)} membuka seluruh ${FACTS.jalurSiap} jalur karir yang kurikulumnya sudah lengkap, semua level L1–L6, dan seluruh ${FACTS.modul} modul — selamanya. <a href="/jalur/">Lihat status tiap jalur</a>.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="/">Daftar di Electra Skill Academy</a>
         <a class="btn btn-ghost" href="https://wa.me/${SITE.wa}" rel="nofollow noopener">Tanya Admin via WhatsApp</a>
@@ -382,11 +408,434 @@ ${faq}
 
 ${related}
 </main>
+`,
+  });
+}
 
-${footer()}
-</body>
-</html>
-`;
+/* ============================================================
+   HALAMAN JALUR KARIR — /jalur/ dan /jalur/<slug>/
+   ============================================================
+   Isinya diambil dari tools/track-data.generated.mjs, yang
+   diekstrak langsung dari TRACKS_META & LEVEL_OVERRIDES di
+   index.html. Jangan menulis ulang nama level di sini — kalau
+   kurikulum berubah, jalankan extract-track-data.mjs.
+   ============================================================ */
+
+const LIVE_TRACKS = TRACK_PAGES.filter((t) => !t.comingSoon && t.levels.length === 4);
+const SOON_TRACKS = TRACK_PAGES.filter((t) => t.comingSoon || t.levels.length < 4);
+
+const trackUrl = (slug) => url(`/jalur/${slug}/`);
+
+// Penjaga akurasi: teks halaman menyebut angka jalur siap/segera hadir secara
+// literal. Kalau kurikulum di index.html berubah tapi FACTS belum disesuaikan,
+// build dihentikan supaya halaman tidak terlanjur menerbitkan angka yang salah.
+if (FACTS.jalurSiap !== LIVE_TRACKS.length || FACTS.jalurSoon !== SOON_TRACKS.length) {
+  console.error(
+    `\nGAGAL: FACTS.jalurSiap/jalurSoon (${FACTS.jalurSiap}/${FACTS.jalurSoon}) tidak cocok ` +
+      `dengan data nyata (${LIVE_TRACKS.length}/${SOON_TRACKS.length}).\n` +
+      `Jalankan "node tools/extract-track-data.mjs", lalu perbarui FACTS di tools/seo-pages.data.mjs ` +
+      `beserta kalimat di halaman yang menyebut angka tersebut.\n`
+  );
+  process.exit(1);
+}
+
+function trackFaq(t) {
+  const l3 = t.levels[0];
+  const l6 = t.levels[3];
+  return [
+    {
+      q: `Apa itu jalur karir ${t.name} di Electra Skill Academy?`,
+      a: `${t.desc} Jalur ini punya empat jenjang: ${t.levels.map((l) => l.name).join(', ')}. Materi jalur ini terbuka setelah peserta menyelesaikan Level 1 Esensial dan Level 2 Fundamental sebagai fondasi bersama.`,
+    },
+    {
+      q: `Apa syarat mengambil jalur ${t.name}?`,
+      a: `Tidak ada syarat latar belakang pendidikan tertentu. Yang dibutuhkan adalah menyelesaikan Level 1 Esensial (25 modul) dan Level 2 Fundamental (23 modul) lebih dulu, karena keduanya menjadi fondasi bersama seluruh jalur. Setelah itu jalur ${t.name} terbuka dari Level 3 sampai Level 6.`,
+    },
+    {
+      q: `Berapa lama menyelesaikan jalur ${t.name}?`,
+      a: `Spesialisasi Level 3 sampai Level 6 pada satu jalur berisi 60–80 modul dan rata-rata selesai dalam 3–5 bulan pada ritme 1–2 jam per hari. Bila dihitung dari nol termasuk Level 1 dan Level 2, estimasinya 8–12 bulan sampai jenjang tertinggi.`,
+    },
+    {
+      q: `Setelah menyelesaikan jalur ${t.name}, saya bisa bekerja sebagai apa?`,
+      a: `Pada jenjang pertama, peran targetnya adalah ${l3.name} — ${l3.subtitle}. Pada jenjang tertinggi, peran targetnya adalah ${l6.name} — ${l6.subtitle}.`,
+    },
+    {
+      q: `Apakah harus membayar terpisah untuk jalur ${t.name}?`,
+      a: `Tidak. Satu kali pembayaran ${SITE.priceDisplay} membuka seluruh ${FACTS.jalurSiap} jalur karir yang kurikulumnya sudah lengkap beserta semua levelnya, sehingga Anda bisa berpindah atau mengambil beberapa jalur tanpa biaya tambahan.`,
+    },
+  ];
+}
+
+function renderTrackPage(t) {
+  const u = trackUrl(t.slug);
+  const title = `Jalur Karir ${t.name} — Kurikulum Level 3–6`;
+  const description = `${t.desc} Empat jenjang: ${t.levels.map((l) => l.name).join(', ')}. Bagian dari ${FACTS.jalur} jalur karir Electra Skill Academy.`.slice(0, 300);
+  const faq = trackFaq(t);
+
+  const answer = `<p><strong>Jalur karir ${t.name}</strong> di Electra Skill Academy adalah jalur spesialisasi Level 3 sampai Level 6. ${t.desc} Empat jenjangnya berurutan: <strong>${t.levels
+    .map((l) => l.name)
+    .join('</strong> → <strong>')}</strong>. Jalur ini terbuka setelah peserta menyelesaikan <strong>Level 1 Esensial</strong> (25 modul) dan <strong>Level 2 Fundamental</strong> (23 modul), dan termasuk dalam satu kali pembayaran ${SITE.priceDisplay} bersama ${FACTS.jalurSiap - 1} jalur lain yang kurikulumnya sudah lengkap.</p>`;
+
+  const levelCards = t.levels
+    .map(
+      (l) => `
+      <article class="card">
+        <span class="tag">${esc(l.tier)}</span>
+        <h3>${esc(l.name)}</h3>
+        <p><strong>${esc(l.subtitle)}</strong></p>
+        <p style="margin-top:8px">${esc(l.desc)}</p>
+      </article>`
+    )
+    .join('');
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${u}#webpage`,
+        url: u,
+        name: title,
+        description,
+        inLanguage: 'id-ID',
+        isPartOf: { '@id': `${SITE.origin}/#website` },
+        about: { '@id': `${SITE.origin}/#organization` },
+        publisher: { '@id': `${SITE.origin}/#organization` },
+        abstract: strip(answer),
+        keywords: t.keywords.join(', '),
+        dateModified: TODAY,
+        breadcrumb: { '@id': `${u}#breadcrumb` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${u}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Beranda', item: url('/') },
+          { '@type': 'ListItem', position: 2, name: 'Jalur Karir', item: url('/jalur/') },
+          { '@type': 'ListItem', position: 3, name: t.name, item: u },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${u}#faq`,
+        inLanguage: 'id-ID',
+        isPartOf: { '@id': `${u}#webpage` },
+        mainEntity: faq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+      {
+        '@type': 'Course',
+        '@id': `${u}#course`,
+        name: `Jalur Karir ${t.name}`,
+        description: t.desc,
+        url: u,
+        inLanguage: 'id',
+        educationalLevel: 'Level 3–6 (Profesional sampai Consultant)',
+        coursePrerequisites: 'Level 1 Esensial dan Level 2 Fundamental',
+        teaches: t.levels.map((l) => l.name),
+        provider: { '@id': `${SITE.origin}/#organization` },
+        offers: {
+          '@type': 'Offer',
+          price: SITE.price,
+          priceCurrency: SITE.currency,
+          category: 'Paid',
+          availability: 'https://schema.org/InStock',
+          url: url('/'),
+        },
+        hasCourseInstance: {
+          '@type': 'CourseInstance',
+          courseMode: 'Online',
+          courseWorkload: 'P4M',
+          inLanguage: 'id',
+          location: { '@type': 'VirtualLocation', url: url('/') },
+        },
+      },
+    ],
+  };
+
+  const siblings = LIVE_TRACKS.filter((x) => x.id !== t.id)
+    .slice(0, 6)
+    .map((x) => `<a href="/jalur/${x.slug}/">${esc(x.name)}</a>`)
+    .join('\n    ');
+
+  return htmlDocument({
+    canonical: u,
+    title,
+    description,
+    keywords: t.keywords,
+    schema,
+    body: `
+<main id="main">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Remah roti">
+      <a href="/">Beranda</a> <span aria-hidden="true">›</span>
+      <a href="/jalur/">Jalur Karir</a> <span aria-hidden="true">›</span> ${esc(t.name)}
+    </nav>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Jalur ${esc(t.id)} · Level 3–6</span>
+      <h1>Jalur Karir <em>${esc(t.name)}</em></h1>
+      <p class="lede">${esc(t.tagline)}</p>
+      <div class="answer-box">${answer}</div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Mulai Jalur Ini</a>
+        <a class="btn btn-ghost" href="#faq">Baca Tanya Jawab</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>4</b><span>Jenjang L3–L6</span></div>
+        <div class="stat"><b>60–80</b><span>Modul Jalur Ini</span></div>
+        <div class="stat"><b>3–5</b><span>Bulan Estimasi</span></div>
+        <div class="stat"><b>L1+L2</b><span>Prasyarat</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block"><div class="wrap">
+    <h2>Empat jenjang jalur ${esc(t.name)}</h2>
+    <p class="sub">Setiap jenjang menambah cakupan tanggung jawab, bukan sekadar menambah materi. Nama jenjang di bawah ini sama persis dengan yang tampil di dalam aplikasi.</p>
+    <div class="cards">${levelCards}</div>
+  </div></section>
+
+  <section class="block"><div class="wrap">
+    <h2>Sebelum masuk jalur ini</h2>
+    <p>Seluruh jalur berbagi fondasi yang sama, sehingga Anda tidak perlu mengulang dasar bila nanti berpindah jalur:</p>
+    <ol>
+      <li><strong>Level 1 — Esensial (25 modul, ± 4–6 minggu).</strong> Arus, tegangan, hambatan, daya, hukum Ohm &amp; Kirchhoff, AC 3 fasa, K3 listrik, APD, LOTO, alat ukur, dan pembacaan gambar teknik.</li>
+      <li><strong>Level 2 — Fundamental (23 modul, ± 4–5 minggu).</strong> Trafo distribusi, motor listrik, generator, power quality, PLC dasar, panel &amp; MCC, capacitor bank, inverter/VFD, PLTS, BESS, dan EV charging.</li>
+      <li><strong>Level 3–6 — jalur ${esc(t.name)}.</strong> Empat jenjang di atas, 60–80 modul.</li>
+    </ol>
+    <p>Rincian urutan belajar ada di <a href="/belajar-kelistrikan/">panduan belajar kelistrikan dari nol</a>.</p>
+  </div></section>
+
+  <section class="block"><div class="wrap">
+    <h2>Cara belajarnya</h2>
+    <p>Pola yang sama berlaku untuk seluruh ${FACTS.modul} modul: tonton video, pelajari materi presentasi, lalu kerjakan quiz 25 soal dengan nilai kelulusan 70%. Bila ada yang belum jelas, AI Tutor tersedia 24/7, dan Live Class via Zoom berlangsung setiap 3 hari untuk member aktif.</p>
+    <p>Untuk melatih sisi praktik, tersedia lab simulator (<a href="/electrasim3d.html">ElectraSim 3D</a>, <a href="/vlab-id.html">Virtual Labs</a>) dan ${FACTS.calculators} kalkulator desain — cable sizing, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling tension, dan koordinasi proteksi.</p>
+    <p>Setelah lulus, sertifikat diterbitkan dengan ID unik dan QR code yang dapat <a href="/verify.html">diverifikasi publik</a>. Perlu dicatat: sertifikat Electra adalah sertifikat penyelesaian pelatihan, bukan sertifikat kompetensi resmi pemerintah — penjelasan lengkapnya ada di <a href="/sertifikasi-kompetensi-ketenagalistrikan/">halaman sertifikasi</a>.</p>
+  </div></section>
+
+  <section class="block" id="faq"><div class="wrap">
+    <h2>Pertanyaan yang sering diajukan</h2>
+    <div class="faq">
+    ${faq
+      .map(
+        (f) => `<details>
+      <summary>${esc(f.q)}</summary>
+      <div class="faq-a"><p>${esc(f.a)}</p></div>
+    </details>`
+      )
+      .join('\n    ')}
+    </div>
+  </div></section>
+
+  <div class="wrap">
+    <div class="final-cta">
+      <h2>Ambil jalur ${esc(t.name)}</h2>
+      <p>Satu kali bayar ${esc(SITE.priceDisplay)} membuka jalur ini beserta ${FACTS.jalurSiap - 1} jalur lain yang sudah lengkap, semua level L1–L6, dan seluruh ${FACTS.modul} modul — selamanya.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Daftar di Electra Skill Academy</a>
+        <a class="btn btn-ghost" href="https://wa.me/${SITE.wa}" rel="nofollow noopener">Tanya Admin via WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="block"><div class="wrap">
+    <h2>Jalur karir lainnya</h2>
+    <div class="related">
+    ${siblings}
+    <a href="/jalur/">Lihat semua ${FACTS.jalur} jalur</a>
+    </div>
+  </div></section>
+</main>
+`,
+  });
+}
+
+function renderTrackHub() {
+  const u = url('/jalur/');
+  const title = `${FACTS.jalur} Jalur Karir Ketenagalistrikan & Energi`;
+  const description = `Daftar lengkap ${FACTS.jalur} jalur karir Electra Skill Academy — dari instalasi bangunan, distribusi, dan transmisi sampai PLTS, BESS, EV charging, dan hidrogen. ${LIVE_TRACKS.length} jalur sudah tersedia penuh.`;
+
+  const answer = `<p>Electra Skill Academy membagi bidang ketenagalistrikan dan energi menjadi <strong>${FACTS.jalur} jalur karir</strong>, masing-masing dengan empat jenjang: <strong>Profesional (L3) → Advance (L4) → Expertise (L5) → Consultant (L6)</strong>. Saat ini <strong>${LIVE_TRACKS.length} jalur sudah tersedia penuh</strong> — ${LIVE_TRACKS.map((t) => t.name).join(', ')} — sedangkan ${SOON_TRACKS.length} jalur lainnya berstatus <strong>segera hadir</strong>. Seluruh jalur yang tersedia terbuka lewat satu kali pembayaran ${SITE.priceDisplay}, tanpa biaya tambahan bila Anda berpindah jalur.</p>`;
+
+  const liveCards = LIVE_TRACKS.map(
+    (t) => `
+      <article class="card">
+        <span class="tag">Jalur ${esc(t.id)} · Tersedia</span>
+        <h3><a href="/jalur/${t.slug}/">${esc(t.name)}</a></h3>
+        <p>${esc(t.tagline)}</p>
+        <p style="margin-top:8px">${esc(t.desc)}</p>
+      </article>`
+  ).join('');
+
+  const soonCards = SOON_TRACKS.map(
+    (t) => `
+      <article class="card">
+        <span class="tag">Jalur ${esc(t.id)} · Segera hadir</span>
+        <h3>${esc(t.name)}</h3>
+        <p>${esc(t.tagline)}</p>
+        <p style="margin-top:8px">${esc(t.desc)}</p>
+      </article>`
+  ).join('');
+
+  const faq = [
+    {
+      q: `Ada berapa jalur karir di Electra Skill Academy?`,
+      a: `Ada ${FACTS.jalur} jalur karir. Saat ini ${LIVE_TRACKS.length} jalur tersedia penuh dengan kurikulum Level 3 sampai Level 6, yaitu ${LIVE_TRACKS.map((t) => t.name).join(', ')}. Sisanya ${SOON_TRACKS.length} jalur berstatus segera hadir.`,
+    },
+    {
+      q: `Apakah harus memilih satu jalur saja?`,
+      a: `Tidak. Satu kali pembayaran ${SITE.priceDisplay} membuka seluruh jalur yang tersedia, sehingga Anda bisa mencoba beberapa jalur sebelum memutuskan spesialisasi, dan berpindah kapan saja tanpa biaya tambahan.`,
+    },
+    {
+      q: `Bagaimana cara memilih jalur yang tepat?`,
+      a: `Mulai dari kondisi nyata Anda — lokasi kerja, pengalaman, dan jenis perusahaan di sekitar Anda lebih menentukan daripada tren global. Lalu buka Peta Karir Ketenagalistrikan untuk membaca tugas dan wewenang okupasi targetnya. Member yang telah menyelesaikan Level 2 juga bisa memakai layanan Career Advisory untuk pemetaan jalur karir personal.`,
+    },
+    {
+      q: `Apa arti jenjang Profesional, Advance, Expertise, dan Consultant?`,
+      a: `Profesional (L3) untuk eksekusi pekerjaan teknis di lapangan sesuai prosedur; Advance (L4) untuk perancangan, perhitungan, dan pengambilan keputusan teknis; Expertise (L5) untuk spesialisasi mendalam, penyelesaian masalah kompleks, dan pembinaan tim; Consultant (L6) untuk strategi, kepatuhan, dan rekomendasi tingkat organisasi.`,
+    },
+  ];
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${u}#webpage`,
+        url: u,
+        name: title,
+        description,
+        inLanguage: 'id-ID',
+        isPartOf: { '@id': `${SITE.origin}/#website` },
+        about: { '@id': `${SITE.origin}/#organization` },
+        publisher: { '@id': `${SITE.origin}/#organization` },
+        abstract: strip(answer),
+        dateModified: TODAY,
+        breadcrumb: { '@id': `${u}#breadcrumb` },
+        mainEntity: { '@id': `${u}#list` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${u}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Beranda', item: url('/') },
+          { '@type': 'ListItem', position: 2, name: 'Jalur Karir', item: u },
+        ],
+      },
+      {
+        '@type': 'ItemList',
+        '@id': `${u}#list`,
+        name: `${FACTS.jalur} jalur karir ketenagalistrikan & energi`,
+        numberOfItems: TRACK_PAGES.length,
+        itemListElement: [
+          ...LIVE_TRACKS.map((t, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: t.name,
+            description: t.desc,
+            url: trackUrl(t.slug),
+          })),
+          ...SOON_TRACKS.map((t, i) => ({
+            '@type': 'ListItem',
+            position: LIVE_TRACKS.length + i + 1,
+            name: t.name,
+            description: `${t.desc} (segera hadir)`,
+          })),
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${u}#faq`,
+        inLanguage: 'id-ID',
+        isPartOf: { '@id': `${u}#webpage` },
+        mainEntity: faq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+    ],
+  };
+
+  return htmlDocument({
+    canonical: u,
+    title,
+    description,
+    keywords: ['jalur karir ketenagalistrikan', 'spesialisasi kelistrikan', 'jurusan teknik listrik', 'pilihan karir energi'],
+    schema,
+    body: `
+<main id="main">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Remah roti">
+      <a href="/">Beranda</a> <span aria-hidden="true">›</span> Jalur Karir
+    </nav>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Direktori Jalur · Level 3–6</span>
+      <h1><em>${FACTS.jalur} Jalur Karir</em> Ketenagalistrikan &amp; Energi</h1>
+      <p class="lede">Satu langganan membuka seluruh jalur yang tersedia. Halaman ini menampilkan status tiap jalur apa adanya — mana yang sudah lengkap, mana yang masih disiapkan.</p>
+      <div class="answer-box">${answer}</div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Mulai Belajar di Electra</a>
+        <a class="btn btn-ghost" href="/karir-ketenagalistrikan/">Panduan Memilih Jalur</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>${FACTS.jalur}</b><span>Total Jalur</span></div>
+        <div class="stat"><b>${LIVE_TRACKS.length}</b><span>Tersedia Penuh</span></div>
+        <div class="stat"><b>${SOON_TRACKS.length}</b><span>Segera Hadir</span></div>
+        <div class="stat"><b>4</b><span>Jenjang / Jalur</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block"><div class="wrap">
+    <h2>Jalur yang sudah tersedia penuh</h2>
+    <p class="sub">Kurikulum Level 3 sampai Level 6 lengkap. Klik untuk melihat rincian tiap jenjang.</p>
+    <div class="cards">${liveCards}</div>
+  </div></section>
+
+  <section class="block"><div class="wrap">
+    <h2>Jalur yang segera hadir</h2>
+    <p class="sub">Jalur berikut sudah diumumkan dan masuk peta kurikulum, tetapi modulnya masih disiapkan. Kami mencantumkannya di sini supaya Anda tidak salah mengira sudah bisa diambil hari ini. Untuk perkiraan waktu rilis, tanyakan ke admin.</p>
+    <div class="cards">${soonCards}</div>
+    <p style="margin-top:20px">Materi pengantar untuk beberapa topik tersebut sudah tersedia lebih dulu di <strong>Level 2 Fundamental</strong> — antara lain Solar PV System, BESS &amp; Energy Storage, EV Charging Station, serta Inverter &amp; VFD. Lihat <a href="/belajar-energi-terbarukan/">jalur belajar energi terbarukan</a> untuk urutannya.</p>
+  </div></section>
+
+  <section class="block" id="faq"><div class="wrap">
+    <h2>Pertanyaan yang sering diajukan</h2>
+    <div class="faq">
+    ${faq
+      .map(
+        (f) => `<details>
+      <summary>${esc(f.q)}</summary>
+      <div class="faq-a"><p>${esc(f.a)}</p></div>
+    </details>`
+      )
+      .join('\n    ')}
+    </div>
+  </div></section>
+
+  <div class="wrap">
+    <div class="final-cta">
+      <h2>Siap mulai?</h2>
+      <p>Satu kali bayar ${esc(SITE.priceDisplay)} membuka seluruh ${FACTS.jalurSiap} jalur yang tersedia, semua level L1–L6, dan seluruh ${FACTS.modul} modul — selamanya.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Daftar di Electra Skill Academy</a>
+        <a class="btn btn-ghost" href="https://wa.me/${SITE.wa}" rel="nofollow noopener">Tanya Admin via WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</main>
+`,
+  });
 }
 
 /* ---------- sitemap ---------- */
@@ -399,6 +848,11 @@ function renderSitemap() {
       priority: p.slug === 'platform-belajar-energi' || p.slug === 'belajar-kelistrikan' ? '0.9' : '0.8',
       changefreq: 'weekly',
     })),
+    { loc: url('/jalur/'), priority: '0.9', changefreq: 'weekly' },
+    // Hanya jalur yang kurikulumnya sudah lengkap yang masuk sitemap.
+    // Jalur "segera hadir" tidak diberi halaman sendiri agar tidak
+    // menghasilkan halaman tipis yang menjanjikan materi belum ada.
+    ...LIVE_TRACKS.map((t) => ({ loc: trackUrl(t.slug), priority: '0.8', changefreq: 'monthly' })),
   ];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -450,9 +904,15 @@ ${PAGES.map((p) => `- [${strip(p.h1)}](${pageUrl(p.slug)}): ${p.description}`).j
 - [Virtual Labs Ketenagalistrikan](${url('/vlab-id.html')}): lab interaktif berbahasa Indonesia.
 - [Verifikasi Sertifikat](${url('/verify.html')}): pengecekan keaslian sertifikat via ID unik atau QR code.
 
-## Jalur karir yang tersedia
+## Jalur karir
 
-${TRACKS.map((t, i) => `${i + 1}. ${t}`).join('\n')}
+Direktori lengkap: ${url('/jalur/')}
+
+Tersedia penuh (kurikulum Level 3–6 lengkap) — ${LIVE_TRACKS.length} jalur:
+${LIVE_TRACKS.map((t) => `- [${t.name}](${trackUrl(t.slug)}): ${t.tagline}`).join('\n')}
+
+Segera hadir (sudah diumumkan, modul masih disiapkan) — ${SOON_TRACKS.length} jalur:
+${SOON_TRACKS.map((t) => `- ${t.name}: ${t.tagline}`).join('\n')}
 
 ## Standar acuan kurikulum
 
@@ -469,6 +929,9 @@ Materi ditinjau minimal setiap 6 bulan.
 - Skema harga saat ini adalah sekali bayar ${SITE.priceDisplay}, bukan langganan bulanan.
 - Nama resmi: "Electra Skill Academy". Nama alternatif yang dipakai publik:
   "Electra Academy" dan "ESA".
+- Dari ${FACTS.jalur} jalur karir yang diumumkan, ${LIVE_TRACKS.length} jalur sudah tersedia
+  penuh dan ${SOON_TRACKS.length} jalur masih berstatus "segera hadir". Jangan menyatakan
+  seluruh ${FACTS.jalur} jalur bisa diambil hari ini. Rincian status per jalur: ${url('/jalur/')}
 
 ## Detail lengkap
 
@@ -590,8 +1053,19 @@ console.log('Membangun halaman SEO/GEO Electra Skill Academy…\n');
 
 for (const p of PAGES) write(`${p.slug}/index.html`, renderPage(p));
 
+write('jalur/index.html', renderTrackHub());
+for (const t of LIVE_TRACKS) write(`jalur/${t.slug}/index.html`, renderTrackPage(t));
+
 write('sitemap.xml', renderSitemap());
 write('llms.txt', renderLlmsTxt());
 write('llms-full.txt', renderLlmsFullTxt());
 
-console.log(`\nSelesai — ${PAGES.length} halaman landing + sitemap + berkas GEO.`);
+console.log(
+  `\nSelesai — ${PAGES.length} halaman topik + 1 hub jalur + ${LIVE_TRACKS.length} halaman jalur + sitemap + berkas GEO.`
+);
+if (SOON_TRACKS.length) {
+  console.log(
+    `Catatan: ${SOON_TRACKS.length} jalur belum dibuatkan halaman sendiri karena berstatus segera hadir ` +
+      `(${SOON_TRACKS.map((t) => t.name).join(', ')}). Semuanya tetap dicantumkan di /jalur/.`
+  );
+}

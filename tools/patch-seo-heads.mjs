@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ORIGIN = 'https://electraacademy.com';
-const OG_IMAGE = `${ORIGIN}/og-image.svg`;
+const OG_IMAGE = `${ORIGIN}/og-image.png`;
 
 const START = '<!-- esa-seo:start -->';
 const END = '<!-- esa-seo:end -->';
