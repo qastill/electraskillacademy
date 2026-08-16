@@ -1,0 +1,96 @@
+{
+  "id": "faktor-daya",
+  "tipe": "kamus",
+  "kataKunciUtama": "faktor daya adalah",
+  "kataKunci": [
+    "faktor daya adalah",
+    "cos phi",
+    "cara memperbaiki faktor daya",
+    "kapasitor bank"
+  ],
+  "title": "Faktor Daya Adalah: Arti Cos φ dan Cara Memperbaikinya",
+  "h1": "<em>Faktor Daya</em> (cos φ)",
+  "description": "Faktor daya adalah perbandingan daya aktif terhadap daya semu. Penjelasan arti cos φ, penyebab rendahnya, dan cara memperbaikinya dengan kapasitor.",
+  "eyebrow": "Kamus Kelistrikan · Tenaga Listrik",
+  "lede": "Faktor daya rendah tidak membuat mesin berhenti bekerja. Ia membuat Anda membayar lebih untuk daya yang tidak pernah menjadi kerja.",
+  "answer": "<p><strong>Faktor daya</strong> (cos φ) adalah perbandingan antara daya aktif yang benar-benar menjadi kerja dengan daya semu yang harus disediakan jaringan. Nilainya antara 0 dan 1. Beban induktif seperti motor dan trafo menarik arus tambahan yang tidak menghasilkan kerja, sehingga menurunkan faktor daya. Akibatnya arus naik, rugi-rugi bertambah, dan pelanggan industri dapat dikenai biaya tambahan.</p>",
+  "stats": [
+    {
+      "n": "1",
+      "label": "Nilai Ideal"
+    },
+    {
+      "n": "2.16",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "2.09",
+      "label": "Modul Kapasitor"
+    },
+    {
+      "n": "L2",
+      "label": "Level"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Tiga jenis daya yang perlu dibedakan",
+      "html": "<ul><li><strong>Daya aktif</strong> — daya yang benar-benar menjadi kerja: memutar poros motor, memanaskan elemen, menyalakan lampu.</li><li><strong>Daya reaktif</strong> — daya yang bolak-balik antara sumber dan beban untuk membentuk medan magnet pada motor dan trafo. Tidak menjadi kerja, tetapi tetap harus dialirkan jaringan.</li><li><strong>Daya semu</strong> — gabungan keduanya. Inilah yang menentukan ukuran kabel, trafo, dan pengaman.</li></ul><p>Faktor daya adalah perbandingan daya aktif terhadap daya semu. Kalau nilainya rendah, artinya sebagian besar kapasitas jaringan Anda dipakai untuk mengalirkan daya yang tidak menghasilkan apa-apa.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Kenapa ini merugikan",
+      "html": "<p><strong>Arus naik untuk daya kerja yang sama.</strong> Motor yang menghasilkan kerja sama besar akan menarik arus lebih besar bila faktor dayanya rendah. Arus lebih besar berarti kabel lebih panas, rugi-rugi bertambah, dan jatuh tegangan memburuk.</p><p><strong>Kapasitas terpakai sia-sia.</strong> Trafo dan kabel dirancang berdasarkan daya semu. Faktor daya rendah membuat sebagian kapasitasnya habis untuk daya reaktif, sehingga pabrik bisa kehabisan kapasitas padahal beban kerjanya belum bertambah.</p><p><strong>Biaya tambahan.</strong> Pelanggan industri dengan faktor daya di bawah ambang tertentu dapat dikenai biaya kelebihan pemakaian daya reaktif. Ini sering menjadi pemicu pertama sebuah pabrik memperhatikan faktor dayanya.</p>"
+    },
+    {
+      "type": "cards",
+      "h2": "Cara memperbaikinya",
+      "cards": [
+        {
+          "tag": "Paling umum",
+          "h": "Kapasitor bank",
+          "p": "Kapasitor menyediakan daya reaktif secara lokal sehingga tidak perlu ditarik dari jaringan. Dipasang terpusat di panel utama, per kelompok beban, atau langsung di terminal motor."
+        },
+        {
+          "tag": "Perlu diatur",
+          "h": "Regulator otomatis",
+          "p": "Beban pabrik berubah sepanjang hari. Kapasitor tetap yang tidak diatur dapat membuat kompensasi berlebih saat beban rendah, yang justru menimbulkan masalah baru."
+        },
+        {
+          "tag": "Sering terlewat",
+          "h": "Memilih motor sesuai beban",
+          "p": "Motor yang jauh lebih besar daripada bebannya bekerja pada faktor daya rendah. Mengganti dengan ukuran yang sesuai memperbaiki faktor daya sekaligus menghemat energi."
+        },
+        {
+          "tag": "Hati-hati",
+          "h": "Perhatikan harmonisa",
+          "p": "Pada instalasi dengan banyak inverter dan penyearah, kapasitor dapat beresonansi dengan harmonisa dan memperburuk keadaan. Perlu ditinjau lebih dulu."
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar faktor daya di Electra",
+      "html": "<p>Topik ini dibahas di modul <strong>2.16 — Faktor daya: konsep, pengukuran dan perbaikan dasar</strong> di Level 2 Fundamental, kategori Tenaga listrik &amp; metering. Dasar dayanya sendiri ada di modul <strong>1.04 — Daya, energi, efisiensi dan satuan SI kelistrikan</strong>.</p><p>Penerapan pada instalasi industri diperdalam di <a href=\"/jalur/\">jalur Industri dan Manufaktur</a>, dan dari sisi penghematan energi di jalur Energy Auditor. Electra juga menyediakan simulator kapasitor bank. Mulai dari <a href=\"/belajar-kelistrikan/\">panduan belajar kelistrikan</a> atau lihat <a href=\"/kamus/\">istilah lain di kamus</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Faktor daya adalah apa?",
+      "a": "Faktor daya atau cos φ adalah perbandingan antara daya aktif yang benar-benar menjadi kerja dengan daya semu yang harus disediakan jaringan. Nilainya antara 0 dan 1, dan semakin mendekati 1 semakin efisien pemakaian kapasitas jaringan."
+    },
+    {
+      "q": "Apa yang menyebabkan faktor daya rendah?",
+      "a": "Penyebab utamanya beban induktif seperti motor dan trafo, yang menarik daya reaktif untuk membentuk medan magnet. Motor yang jauh lebih besar daripada bebannya juga bekerja pada faktor daya rendah."
+    },
+    {
+      "q": "Kenapa faktor daya rendah merugikan padahal mesin tetap jalan?",
+      "a": "Karena arus yang ditarik menjadi lebih besar untuk kerja yang sama. Akibatnya kabel lebih panas, rugi-rugi bertambah, kapasitas trafo terpakai sia-sia, dan pelanggan industri dapat dikenai biaya tambahan atas pemakaian daya reaktif."
+    },
+    {
+      "q": "Apakah memasang kapasitor selalu menyelesaikan masalah?",
+      "a": "Tidak selalu. Kapasitor perlu diatur mengikuti perubahan beban, karena kompensasi berlebih saat beban rendah menimbulkan masalah baru. Pada instalasi dengan banyak inverter, kapasitor juga dapat beresonansi dengan harmonisa sehingga perlu ditinjau lebih dulu."
+    }
+  ]
+}

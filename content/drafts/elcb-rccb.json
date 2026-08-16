@@ -1,0 +1,92 @@
+{
+  "id": "elcb-rccb",
+  "tipe": "kamus",
+  "kataKunciUtama": "perbedaan elcb dan rccb",
+  "kataKunci": [
+    "perbedaan elcb dan rccb",
+    "fungsi rccb",
+    "sensitivitas 30 mA",
+    "cara tes tombol test"
+  ],
+  "title": "Perbedaan ELCB dan RCCB: Fungsi dan Cara Mengujinya",
+  "h1": "Perbedaan <em>ELCB dan RCCB</em>",
+  "description": "ELCB dan RCCB melindungi manusia dari arus bocor, bukan dari beban lebih. Penjelasan cara kerja, sensitivitas 30 mA, dan cara menguji tombol test.",
+  "eyebrow": "Kamus Kelistrikan · Proteksi",
+  "lede": "MCB tidak melindungi Anda dari sengatan listrik. Itu tugas perangkat yang berbeda, dan banyak instalasi lama belum memilikinya.",
+  "answer": "<p><strong>RCCB</strong> (Residual Current Circuit Breaker) memutus rangkaian saat mendeteksi selisih arus antara penghantar yang masuk dan keluar — selisih itu berarti ada arus yang bocor ke tanah, mungkin lewat tubuh manusia. <strong>ELCB</strong> adalah istilah lama untuk perangkat sejenis; sebagian tipe lama bekerja dengan mendeteksi tegangan pada bodi. Untuk proteksi manusia dipakai sensitivitas <strong>30 mA</strong>.</p>",
+  "stats": [
+    {
+      "n": "30 mA",
+      "label": "Proteksi Manusia"
+    },
+    {
+      "n": "300 mA",
+      "label": "Proteksi Kebakaran"
+    },
+    {
+      "n": "1.17",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "L1",
+      "label": "Level"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Kenapa MCB saja tidak cukup",
+      "html": "<p>MCB memutus saat arus melebihi ratingnya. Masalahnya, arus yang cukup untuk membunuh manusia jauh lebih kecil daripada rating MCB mana pun.</p><p>Arus sekitar <strong>30 mA</strong> yang melewati tubuh sudah berada di daerah yang dapat memicu fibrilasi ventrikel. MCB dengan rating puluhan ampere tidak akan bergerak sedikit pun pada arus sekecil itu. Karena itu perlindungan terhadap sengatan memerlukan perangkat yang mengukur hal yang berbeda: bukan besarnya arus, melainkan <em>selisih</em>-nya.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Cara kerjanya",
+      "html": "<p>Dalam keadaan normal, arus yang mengalir masuk lewat fasa harus sama persis dengan yang kembali lewat netral. RCCB terus membandingkan keduanya.</p><p>Kalau ada arus yang keluar dari jalur seharusnya — bocor lewat isolasi rusak, lewat bodi peralatan, atau lewat tubuh orang yang menyentuhnya — maka jumlah yang kembali menjadi lebih kecil. Selisih inilah yang dideteksi. Begitu selisihnya mencapai ambang sensitivitas, RCCB memutus.</p><p>Perhatikan konsekuensinya: RCCB <strong>tidak melindungi</strong> dari sengatan bila seseorang menyentuh fasa dan netral sekaligus, karena dalam kasus itu tidak ada arus yang bocor keluar jalur. Ia melindungi dari kebocoran ke tanah, yang merupakan bentuk sengatan paling umum.</p>"
+    },
+    {
+      "type": "cards",
+      "h2": "Dua tingkat sensitivitas yang lazim",
+      "cards": [
+        {
+          "tag": "30 mA",
+          "h": "Proteksi manusia",
+          "p": "Dipakai untuk rangkaian yang dapat disentuh orang: stop kontak, kamar mandi, dapur, area luar ruang, dan peralatan portabel."
+        },
+        {
+          "tag": "300 mA",
+          "h": "Proteksi kebakaran",
+          "p": "Ambangnya terlalu tinggi untuk melindungi manusia. Dipakai di sisi hulu untuk mencegah kebakaran akibat arus bocor menahun yang memanaskan titik sambungan."
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Tombol test: satu-satunya cara memastikan masih berfungsi",
+      "sub": "Bagian yang paling sering diabaikan pemilik bangunan.",
+      "html": "<p>Setiap RCCB punya tombol bertanda T atau TEST. Tombol itu membuat kebocoran arus buatan di dalam perangkat. Menekannya harus membuat RCCB <strong>langsung memutus</strong>.</p><p>Kalau ditekan dan tidak memutus, RCCB itu <strong>sudah tidak melindungi apa pun</strong> — dan tidak ada gejala lain yang akan memberi tahu Anda. Instalasi tetap menyala normal, lampu tetap hidup, dan penghuni mengira terlindungi padahal tidak.</p><p>Mekanismenya bisa macet karena debu, korosi, atau usia, terutama pada perangkat yang tidak pernah trip bertahun-tahun. Pengujian berkala dengan tombol ini adalah pemeriksaan paling murah dengan dampak keselamatan paling besar di seluruh instalasi.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar proteksi arus bocor di Electra",
+      "html": "<p>Topik ini dibahas di modul <strong>1.17 — ELCB/RCCB: prinsip, sensitivitas dan pengujian trip</strong> di Level 1 Esensial, kategori Komponen instalasi tegangan rendah.</p><p>Kaitannya dengan sistem pembumian dibahas di modul <strong>2.07</strong>, dan sisi keselamatan kerjanya di <a href=\"/pelatihan-k3-listrik/\">jalur K3 Listrik</a>. Mulai dari <a href=\"/belajar-kelistrikan/\">panduan belajar kelistrikan</a>, atau lihat <a href=\"/kamus/\">istilah lain di kamus</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Apa perbedaan ELCB dan RCCB?",
+      "a": "RCCB memutus berdasarkan selisih arus antara penghantar yang masuk dan keluar. ELCB adalah istilah lama untuk perangkat sejenis, dan sebagian tipe lama bekerja dengan mendeteksi tegangan pada bodi peralatan. Perangkat yang dipasang pada instalasi baru umumnya bertipe RCCB."
+    },
+    {
+      "q": "Kenapa sensitivitas RCCB untuk manusia 30 mA?",
+      "a": "Karena arus sekitar 30 mA yang melewati tubuh sudah berada di daerah yang dapat memicu fibrilasi ventrikel. Ambang ini dipilih agar pemutusan terjadi sebelum arus bocor mencapai tingkat yang membahayakan jantung."
+    },
+    {
+      "q": "Apakah MCB bisa melindungi dari sengatan listrik?",
+      "a": "Tidak. MCB memutus saat arus melebihi ratingnya, sedangkan arus yang membahayakan manusia jauh lebih kecil daripada rating MCB mana pun. Perlindungan terhadap sengatan memerlukan perangkat arus sisa seperti RCCB."
+    },
+    {
+      "q": "Seberapa sering tombol test RCCB perlu ditekan?",
+      "a": "Secara berkala, mengikuti anjuran pabrikan perangkat. Kalau ditekan dan RCCB tidak memutus, perangkat itu sudah tidak melindungi apa pun meski instalasi tetap menyala normal, dan harus segera diganti."
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "id": "arc-flash",
+  "tipe": "kamus",
+  "kataKunciUtama": "arc flash adalah",
+  "kataKunci": [
+    "arc flash adalah",
+    "busur api listrik",
+    "IEEE 1584",
+    "kategori APD arc flash"
+  ],
+  "title": "Arc Flash Adalah: Bahaya, Penyebab, dan Cara Melindunginya",
+  "h1": "<em>Arc Flash</em>: Busur Api Listrik",
+  "description": "Arc flash adalah pelepasan energi busur api listrik yang melukai dalam milidetik. Penjelasan penyebab, energi insiden, IEEE 1584, dan APD yang tepat.",
+  "eyebrow": "Kamus Kelistrikan · Keselamatan",
+  "lede": "Sengatan listrik memerlukan sentuhan. Arc flash tidak — ia dapat melukai berat orang yang bahkan tidak menyentuh apa pun.",
+  "answer": "<p><strong>Arc flash</strong> adalah pelepasan energi akibat busur api listrik yang melompat antar penghantar atau ke pembumian. Suhunya sangat tinggi dan berlangsung dalam hitungan milidetik, cukup untuk menimbulkan luka bakar berat, membutakan, dan melontarkan pecahan logam. Besarnya bahaya dinyatakan sebagai <em>energi insiden</em>, yang dihitung mengikuti panduan <strong>IEEE 1584</strong> untuk menentukan batas jarak aman dan kelas APD.</p>",
+  "stats": [
+    {
+      "n": "IEEE 1584",
+      "label": "Panduan Perhitungan"
+    },
+    {
+      "n": "NFPA 70E",
+      "label": "Praktik Kerja Aman"
+    },
+    {
+      "n": "1.07",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "S8",
+      "label": "Jalur K3"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Kenapa arc flash berbeda dari sengatan",
+      "html": "<p>Sengatan listrik terjadi ketika arus mengalir melewati tubuh, dan itu memerlukan kontak. Arc flash bekerja lain: energinya dilepaskan ke udara sebagai panas, cahaya, dan tekanan.</p><p>Artinya, seseorang bisa terluka berat <strong>tanpa menyentuh apa pun</strong> — cukup berada terlalu dekat saat busur terjadi. Panasnya mampu membakar pakaian biasa dan melelehkan bahan sintetis ke kulit, yang justru memperparah luka. Tekanan yang menyertainya, disebut <em>arc blast</em>, dapat melontarkan pekerja dan pecahan logam.</p><p>Karena berlangsung dalam milidetik, tidak ada waktu untuk bereaksi. Perlindungan harus sudah dikenakan <em>sebelum</em> pekerjaan dimulai, bukan diandalkan pada refleks.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Penyebab yang paling sering",
+      "html": "<ul><li><strong>Kesalahan alat kerja.</strong> Obeng atau kunci yang terjatuh menjembatani dua penghantar di dalam panel bertegangan.</li><li><strong>Sambungan longgar.</strong> Titik yang panas menahun akhirnya merusak isolasi di sekitarnya.</li><li><strong>Debu, lembap, dan hewan kecil</strong> yang menciptakan jalur konduktif di dalam panel.</li><li><strong>Kegagalan peralatan</strong> saat pemutus dioperasikan, terutama pada peralatan tua yang jarang dirawat.</li></ul><p>Perhatikan bahwa sebagian besar penyebab di atas <strong>bukan kesalahan mendadak</strong>, melainkan kondisi yang menumpuk. Inilah alasan inspeksi termal dan pengencangan berkala termasuk pengendalian arc flash, bukan sekadar pemeliharaan rutin.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Energi insiden dan pemilihan APD",
+      "html": "<p><strong>Energi insiden</strong> adalah jumlah energi panas yang akan diterima permukaan pada jarak tertentu bila busur terjadi. Nilainya dihitung mengikuti <strong>IEEE 1584</strong>, dengan masukan berupa arus hubung singkat di titik itu, waktu pemutusan proteksi, dan jarak kerja.</p><p>Hasil perhitungan menentukan dua hal: <em>batas arc flash</em> — jarak minimum yang aman tanpa APD khusus — dan <em>kelas APD</em> yang harus dipakai bila pekerjaan dilakukan lebih dekat dari batas itu. Praktik kerjanya mengikuti <strong>NFPA 70E</strong>.</p><p>Konsekuensi yang sering luput: <strong>waktu pemutusan proteksi ikut menentukan bahayanya</strong>. Pengaman yang lambat memutus membuat energi insiden jauh lebih besar meski arus gangguannya sama. Karena itu koordinasi proteksi bukan hanya soal keandalan, tetapi juga soal keselamatan orang.</p>"
+    },
+    {
+      "type": "cards",
+      "h2": "Pengendalian yang benar-benar bekerja",
+      "sub": "Diurutkan dari yang paling efektif.",
+      "cards": [
+        {
+          "tag": "Paling efektif",
+          "h": "Bekerja dalam keadaan mati",
+          "p": "Menghilangkan bahayanya sama sekali. Prosedur LOTO dan verifikasi tegangan nol adalah cara mencapainya."
+        },
+        {
+          "tag": "Efektif",
+          "h": "Mempercepat pemutusan",
+          "p": "Setelan proteksi yang lebih cepat menurunkan energi insiden secara langsung. Sering kali lebih murah daripada mengganti peralatan."
+        },
+        {
+          "tag": "Efektif",
+          "h": "Menambah jarak kerja",
+          "p": "Alat operasi jarak jauh memindahkan pekerja keluar dari batas arc flash tanpa mengubah instalasinya."
+        },
+        {
+          "tag": "Terakhir",
+          "h": "APD arc-rated",
+          "p": "Bukan pencegahan, melainkan pengurangan cedera bila busur tetap terjadi. Kelasnya harus sesuai hasil perhitungan energi insiden, bukan dikira-kira."
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar arc flash di Electra",
+      "html": "<p>Bahayanya dibahas di modul <strong>1.07 — Bahaya listrik: sengatan, arc flash dan efek fisiologis</strong>, dan APD-nya di modul <strong>1.08 — APD ketenagalistrikan: pemilihan, inspeksi dan penggunaan</strong>, keduanya di Level 1 Esensial.</p><p>Perhitungan energi insiden dan penetapan zona kerja dipelajari lebih dalam pada jenjang <strong>Advance K3 Listrik Engineer</strong> di <a href=\"/pelatihan-k3-listrik/\">jalur K3 Listrik</a>. Electra juga menyediakan kalkulator arc flash IEEE 1584. Mulai dari <a href=\"/belajar-kelistrikan/\">panduan belajar kelistrikan</a>, atau lihat <a href=\"/kamus/\">istilah lain di kamus</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Arc flash adalah apa?",
+      "a": "Arc flash adalah pelepasan energi akibat busur api listrik yang melompat antar penghantar atau ke pembumian. Energinya keluar sebagai panas, cahaya, dan tekanan dalam hitungan milidetik, dan dapat menimbulkan luka bakar berat pada orang yang bahkan tidak menyentuh peralatan."
+    },
+    {
+      "q": "Apa beda arc flash dan sengatan listrik?",
+      "a": "Sengatan terjadi ketika arus mengalir melewati tubuh dan memerlukan kontak. Arc flash melepaskan energi ke udara, sehingga dapat melukai dari jarak tertentu tanpa sentuhan sama sekali."
+    },
+    {
+      "q": "Apa itu energi insiden pada arc flash?",
+      "a": "Energi insiden adalah jumlah energi panas yang akan diterima permukaan pada jarak tertentu bila busur terjadi. Nilainya dihitung mengikuti IEEE 1584 berdasarkan arus hubung singkat, waktu pemutusan proteksi, dan jarak kerja, lalu dipakai menentukan batas aman dan kelas APD."
+    },
+    {
+      "q": "Apakah pakaian kerja biasa cukup melindungi dari arc flash?",
+      "a": "Tidak. Pakaian biasa dapat ikut terbakar, dan bahan sintetis dapat meleleh ke kulit sehingga memperparah luka. Yang dibutuhkan adalah pakaian arc-rated dengan kelas sesuai hasil perhitungan energi insiden."
+    },
+    {
+      "q": "Bagaimana cara menurunkan bahaya arc flash?",
+      "a": "Urutan yang paling efektif: bekerja dalam keadaan mati dengan prosedur LOTO, mempercepat waktu pemutusan proteksi, menambah jarak kerja dengan alat operasi jarak jauh, dan terakhir memakai APD arc-rated sebagai pengurang cedera."
+    }
+  ]
+}

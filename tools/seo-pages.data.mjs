@@ -78,6 +78,7 @@ export const TRACKS = [
 export const NAV = [
   { href: '/belajar-kelistrikan/', label: 'Belajar Kelistrikan' },
   { href: '/jalur/', label: 'Jalur Karir' },
+  { href: '/kamus/', label: 'Kamus' },
   { href: '/platform-belajar-energi/', label: 'Belajar Energi' },
   { href: '/sertifikasi-kompetensi-ketenagalistrikan/', label: 'Sertifikasi' },
   { href: '/faq/', label: 'FAQ' },

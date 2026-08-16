@@ -1,0 +1,103 @@
+{
+  "id": "kha-kabel",
+  "tipe": "kamus",
+  "kataKunciUtama": "kha kabel adalah",
+  "kataKunci": [
+    "kha kabel adalah",
+    "kemampuan hantar arus",
+    "derating kabel",
+    "pemilihan penampang kabel"
+  ],
+  "title": "KHA Kabel Adalah: Arti, Faktor Derating, dan Cara Memilih",
+  "h1": "<em>KHA</em>: Kemampuan Hantar Arus Kabel",
+  "description": "KHA adalah arus maksimum yang boleh dialirkan kabel secara terus-menerus. Penjelasan faktor derating, cara memilih penampang, dan kesalahan umum.",
+  "eyebrow": "Kamus Kelistrikan · Komponen Instalasi",
+  "lede": "Memilih kabel bukan sekadar mencocokkan angka di tabel. Kondisi pemasangan bisa memangkas kemampuan kabel jauh di bawah angka nominalnya.",
+  "answer": "<p><strong>KHA (Kemampuan Hantar Arus)</strong> adalah arus maksimum yang boleh dialirkan sebuah penghantar secara terus-menerus tanpa membuat suhunya melampaui batas aman isolasinya. Satuannya ampere. Nilai KHA di tabel adalah nilai <em>acuan</em> pada kondisi tertentu; nilai yang benar-benar berlaku didapat setelah dikalikan faktor derating sesuai kondisi pemasangan nyata.</p>",
+  "stats": [
+    {
+      "n": "A",
+      "label": "Satuan KHA"
+    },
+    {
+      "n": "1.18",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "4",
+      "label": "Jenis Kabel Utama"
+    },
+    {
+      "n": "L1",
+      "label": "Level"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Kenapa KHA menentukan keselamatan",
+      "html": "<p>Arus yang mengalir memanaskan penghantar. Selama panas itu bisa dibuang ke lingkungan, suhu kabel stabil dan isolasinya aman. Begitu arus melewati KHA, panas menumpuk lebih cepat daripada yang bisa dibuang.</p><p>Akibatnya bertahap dan diam-diam: isolasi mengeras, retak, lalu getas. Kabel yang dibebani sedikit di atas KHA tidak langsung terbakar — ia menua jauh lebih cepat, lalu gagal beberapa tahun kemudian di titik yang paling panas. Karena itu kegagalan akibat KHA sering ditemukan jauh dari waktu kesalahan desainnya.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Faktor derating: kenapa angka tabel jarang bisa dipakai langsung",
+      "sub": "Empat kondisi ini menurunkan KHA sebenarnya di bawah angka nominal.",
+      "html": "<ul><li><strong>Suhu keliling.</strong> Tabel disusun pada suhu acuan tertentu. Kabel di ruang panas, dekat mesin, atau di plafon yang tidak berventilasi menghantar lebih sedikit daripada angka tabel.</li><li><strong>Jumlah kabel dalam satu jalur.</strong> Kabel yang berdempetan dalam satu conduit atau tray saling memanaskan. Semakin banyak kabel, semakin besar pemotongannya.</li><li><strong>Cara pemasangan.</strong> Kabel di udara terbuka membuang panas jauh lebih baik daripada kabel dalam pipa tertanam.</li><li><strong>Kondisi tanah</strong> untuk kabel tanam: jenis tanah, kelembapan, dan kedalaman semuanya berpengaruh.</li></ul><p>Mengabaikan derating adalah salah satu penyebab tersering panel yang panas berlebihan padahal perhitungan di atas kertas tampak benar.</p>"
+    },
+    {
+      "type": "cards",
+      "h2": "Jenis kabel yang paling sering ditemui",
+      "sub": "Empat kode ini dibahas di modul 1.18. Setiap jenis punya penggunaan dan batas pemasangannya sendiri.",
+      "cards": [
+        {
+          "tag": "NYA",
+          "h": "Kabel inti tunggal",
+          "p": "Penghantar tunggal dengan satu lapis isolasi. Umumnya dipasang di dalam pipa pelindung, bukan langsung terbuka, karena isolasinya tidak dirancang menahan gangguan mekanis."
+        },
+        {
+          "tag": "NYM",
+          "h": "Kabel berselubung",
+          "p": "Beberapa inti dengan selubung luar. Lazim untuk instalasi bangunan di dalam ruang kering, dipasang di dinding atau plafon."
+        },
+        {
+          "tag": "NYY",
+          "h": "Kabel tanam ringan",
+          "p": "Selubung lebih tebal, tahan kondisi lembap. Dipakai untuk penarikan luar ruang dan tanam, selama tidak menerima tekanan mekanis berat."
+        },
+        {
+          "tag": "NYFGBY",
+          "h": "Kabel tanam berperisai",
+          "p": "Dilengkapi perisai kawat baja untuk menahan tekanan mekanis. Dipakai untuk penanaman langsung di area yang dilewati beban atau kendaraan."
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Urutan memilih penampang kabel yang benar",
+      "html": "<ol><li>Hitung arus beban sebenarnya, bukan menebak dari daya terpasang.</li><li>Tentukan pengaman yang akan dipakai — <a href=\"/kamus/\">MCB atau MCCB</a> — dan pastikan ratingnya di atas arus beban.</li><li>Ambil KHA acuan dari tabel sesuai jenis kabel dan cara pemasangannya.</li><li>Kalikan faktor derating untuk suhu, jumlah kabel seberkas, dan cara pemasangan.</li><li>Pastikan KHA setelah derating masih di atas rating pengaman. Kalau tidak, naikkan penampang — bukan menurunkan pengamannya.</li><li>Periksa juga jatuh tegangan untuk penarikan panjang. Kabel bisa lolos syarat KHA tetapi tetap gagal syarat jatuh tegangan.</li></ol><p>Langkah 6 inilah yang paling sering terlewat pada instalasi bangunan panjang. Electra menyediakan kalkulator cable sizing dan voltage drop untuk keduanya.</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar KHA di Electra",
+      "html": "<p>KHA dibahas di modul <strong>1.18 — Kabel: NYA, NYM, NYY, NYFGBY, KHA (PUIL) dan derating</strong> di Level 1 Esensial, kategori Komponen instalasi tegangan rendah.</p><p>Modul pendampingnya: <strong>1.16</strong> pengaman MCB, MCCB, dan fuse, serta <strong>2.05</strong> cable management. Untuk penerapannya pada instalasi nyata, lihat <a href=\"/jalur/\">jalur Instalasi Bangunan</a> atau mulai dari <a href=\"/belajar-kelistrikan/\">panduan belajar kelistrikan</a>. Praktiknya bisa dicoba di <a href=\"/electrasim3d.html\">ElectraSim 3D</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "KHA kabel adalah apa?",
+      "a": "KHA atau Kemampuan Hantar Arus adalah arus maksimum yang boleh dialirkan sebuah penghantar secara terus-menerus tanpa membuat suhunya melampaui batas aman isolasinya. Satuannya ampere."
+    },
+    {
+      "q": "Kenapa KHA kabel harus di-derating?",
+      "a": "Karena nilai di tabel berlaku pada kondisi acuan tertentu. Suhu keliling yang lebih tinggi, banyaknya kabel dalam satu jalur, dan cara pemasangan yang menghambat pembuangan panas semuanya menurunkan kemampuan sebenarnya di bawah angka tabel."
+    },
+    {
+      "q": "Apa yang terjadi kalau kabel dibebani melebihi KHA?",
+      "a": "Isolasi menua jauh lebih cepat karena panas menumpuk. Kabel biasanya tidak langsung terbakar, tetapi mengeras dan getas lalu gagal beberapa tahun kemudian di titik terpanas. Karena itu penyebabnya sering tidak dikaitkan dengan kesalahan desain awal."
+    },
+    {
+      "q": "Mana yang dipilih lebih dulu, kabel atau MCB?",
+      "a": "Arus beban dihitung lebih dulu, lalu pengaman ditentukan, baru kabel dipilih agar KHA setelah derating tetap di atas rating pengaman. Kalau kabel tidak memenuhi, penampangnya yang dinaikkan, bukan pengamannya yang diturunkan."
+    }
+  ]
+}

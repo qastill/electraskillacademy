@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perbedaan ELCB dan RCCB: Fungsi dan Cara Mengujinya | Electra Skill Academy</title>
+<meta name="description" content="ELCB dan RCCB melindungi manusia dari arus bocor, bukan dari beban lebih. Penjelasan cara kerja, sensitivitas 30 mA, dan cara menguji tombol test.">
+<meta name="keywords" content="perbedaan elcb dan rccb, fungsi rccb, sensitivitas 30 mA, cara tes tombol test">
+<meta name="author" content="Electra Skill Academy">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#0d0f1c">
+<link rel="canonical" href="https://electraacademy.com/kamus/elcb-rccb/">
+<link rel="alternate" hreflang="id" href="https://electraacademy.com/kamus/elcb-rccb/">
+<link rel="alternate" hreflang="x-default" href="https://electraacademy.com/kamus/elcb-rccb/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='8' fill='%231a1d2e'/%3E%3Ccircle cx='22' cy='22' r='16' fill='none' stroke='%23c9a96e' stroke-width='1.5'/%3E%3Cpath d='M22 8L29 22L22 36L15 22Z' fill='none' stroke='%23c9a96e' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M8 22h28M22 8v28' stroke='%23c9a96e' stroke-width='1.5'/%3E%3Ccircle cx='22' cy='22' r='3' fill='%23c9a96e'/%3E%3C/svg%3E">
+<link rel="manifest" href="/manifest.json">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Electra Skill Academy">
+<meta property="og:title" content="Perbedaan ELCB dan RCCB: Fungsi dan Cara Mengujinya">
+<meta property="og:description" content="ELCB dan RCCB melindungi manusia dari arus bocor, bukan dari beban lebih. Penjelasan cara kerja, sensitivitas 30 mA, dan cara menguji tombol test.">
+<meta property="og:url" content="https://electraacademy.com/kamus/elcb-rccb/">
+<meta property="og:image" content="https://electraacademy.com/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Electra Skill Academy — platform belajar energi & ketenagalistrikan Indonesia">
+<meta property="og:locale" content="id_ID">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Perbedaan ELCB dan RCCB: Fungsi dan Cara Mengujinya">
+<meta name="twitter:description" content="ELCB dan RCCB melindungi manusia dari arus bocor, bukan dari beban lebih. Penjelasan cara kerja, sensitivitas 30 mA, dan cara menguji tombol test.">
+<meta name="twitter:image" content="https://electraacademy.com/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/seo/landing.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://electraacademy.com/kamus/elcb-rccb/#webpage",
+      "url": "https://electraacademy.com/kamus/elcb-rccb/",
+      "name": "Perbedaan ELCB dan RCCB: Fungsi dan Cara Mengujinya",
+      "description": "ELCB dan RCCB melindungi manusia dari arus bocor, bukan dari beban lebih. Penjelasan cara kerja, sensitivitas 30 mA, dan cara menguji tombol test.",
+      "inLanguage": "id-ID",
+      "isPartOf": {
+        "@id": "https://electraacademy.com/#website"
+      },
+      "about": {
+        "@id": "https://electraacademy.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://electraacademy.com/#organization"
+      },
+      "abstract": "RCCB (Residual Current Circuit Breaker) memutus rangkaian saat mendeteksi selisih arus antara penghantar yang masuk dan keluar — selisih itu berarti ada arus yang bocor ke tanah, mungkin lewat tubuh manusia. ELCB adalah istilah lama untuk perangkat sejenis; sebagian tipe lama bekerja dengan mendeteksi tegangan pada bodi. Untuk proteksi manusia dipakai sensitivitas 30 mA.",
+      "keywords": "perbedaan elcb dan rccb, fungsi rccb, sensitivitas 30 mA, cara tes tombol test",
+      "dateModified": "2026-08-16",
+      "breadcrumb": {
+        "@id": "https://electraacademy.com/kamus/elcb-rccb/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://electraacademy.com/kamus/elcb-rccb/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://electraacademy.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Kamus Kelistrikan",
+          "item": "https://electraacademy.com/kamus/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Perbedaan ELCB dan RCCB",
+          "item": "https://electraacademy.com/kamus/elcb-rccb/"
+        }
+      ]
+    },
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://electraacademy.com/kamus/elcb-rccb/#term",
+      "name": "Perbedaan ELCB dan RCCB",
+      "description": "RCCB (Residual Current Circuit Breaker) memutus rangkaian saat mendeteksi selisih arus antara penghantar yang masuk dan keluar — selisih itu berarti ada arus yang bocor ke tanah, mungkin lewat tubuh manusia. ELCB adalah istilah lama untuk perangkat sejenis; sebagian tipe lama bekerja dengan mendeteksi tegangan pada bodi. Untuk proteksi manusia dipakai sensitivitas 30 mA.",
+      "inDefinedTermSet": {
+        "@id": "https://electraacademy.com/kamus/#termset"
+      },
+      "url": "https://electraacademy.com/kamus/elcb-rccb/"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://electraacademy.com/kamus/elcb-rccb/#faq",
+      "inLanguage": "id-ID",
+      "isPartOf": {
+        "@id": "https://electraacademy.com/kamus/elcb-rccb/#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Apa perbedaan ELCB dan RCCB?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "RCCB memutus berdasarkan selisih arus antara penghantar yang masuk dan keluar. ELCB adalah istilah lama untuk perangkat sejenis, dan sebagian tipe lama bekerja dengan mendeteksi tegangan pada bodi peralatan. Perangkat yang dipasang pada instalasi baru umumnya bertipe RCCB."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kenapa sensitivitas RCCB untuk manusia 30 mA?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Karena arus sekitar 30 mA yang melewati tubuh sudah berada di daerah yang dapat memicu fibrilasi ventrikel. Ambang ini dipilih agar pemutusan terjadi sebelum arus bocor mencapai tingkat yang membahayakan jantung."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Apakah MCB bisa melindungi dari sengatan listrik?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tidak. MCB memutus saat arus melebihi ratingnya, sedangkan arus yang membahayakan manusia jauh lebih kecil daripada rating MCB mana pun. Perlindungan terhadap sengatan memerlukan perangkat arus sisa seperti RCCB."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Seberapa sering tombol test RCCB perlu ditekan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Secara berkala, mengikuti anjuran pabrikan perangkat. Kalau ditekan dan RCCB tidak memutus, perangkat itu sudah tidak melindungi apa pun meski instalasi tetap menyala normal, dan harus segera diganti."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Lompat ke konten utama</a>
+
+<header class="site-head">
+  <div class="wrap site-head-inner">
+    <a class="brand" href="/">
+      <svg width="30" height="30" viewBox="0 0 44 44" aria-hidden="true"><rect width="44" height="44" rx="8" fill="#1a1d2e"/><circle cx="22" cy="22" r="16" fill="none" stroke="#c9a96e" stroke-width="1.5"/><path d="M22 8L29 22L22 36L15 22Z" fill="none" stroke="#c9a96e" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 22h28M22 8v28" stroke="#c9a96e" stroke-width="1.5"/><circle cx="22" cy="22" r="3" fill="#c9a96e"/></svg>
+      <span>Electra<small>Skill Academy</small></span>
+    </a>
+    <nav class="nav" aria-label="Navigasi utama">
+      <a href="/belajar-kelistrikan/">Belajar Kelistrikan</a>
+      <a href="/jalur/">Jalur Karir</a>
+      <a href="/kamus/">Kamus</a>
+      <a href="/platform-belajar-energi/">Belajar Energi</a>
+      <a href="/sertifikasi-kompetensi-ketenagalistrikan/">Sertifikasi</a>
+      <a href="/faq/">FAQ</a>
+      <a class="btn-sm" href="/">Daftar Sekarang</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Remah roti">
+      <a href="/">Beranda</a> <span aria-hidden="true">›</span>
+      <a href="/kamus/">Kamus Kelistrikan</a> <span aria-hidden="true">›</span> Perbedaan ELCB dan RCCB
+    </nav>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Kamus Kelistrikan · Proteksi</span>
+      <h1>Perbedaan <em>ELCB dan RCCB</em></h1>
+      <p class="lede">MCB tidak melindungi Anda dari sengatan listrik. Itu tugas perangkat yang berbeda, dan banyak instalasi lama belum memilikinya.</p>
+      <div class="answer-box"><p><strong>RCCB</strong> (Residual Current Circuit Breaker) memutus rangkaian saat mendeteksi selisih arus antara penghantar yang masuk dan keluar — selisih itu berarti ada arus yang bocor ke tanah, mungkin lewat tubuh manusia. <strong>ELCB</strong> adalah istilah lama untuk perangkat sejenis; sebagian tipe lama bekerja dengan mendeteksi tegangan pada bodi. Untuk proteksi manusia dipakai sensitivitas <strong>30 mA</strong>.</p></div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Mulai Belajar di Electra</a>
+        <a class="btn btn-ghost" href="#faq">Baca Tanya Jawab</a>
+      </div>
+      <div class="stats"><div class="stat"><b>30 mA</b><span>Proteksi Manusia</span></div><div class="stat"><b>300 mA</b><span>Proteksi Kebakaran</span></div><div class="stat"><b>1.17</b><span>Modul Electra</span></div><div class="stat"><b>L1</b><span>Level</span></div></div>
+    </div>
+  </section>
+
+<section class="block"><div class="wrap"><h2>Kenapa MCB saja tidak cukup</h2><p>MCB memutus saat arus melebihi ratingnya. Masalahnya, arus yang cukup untuk membunuh manusia jauh lebih kecil daripada rating MCB mana pun.</p><p>Arus sekitar <strong>30 mA</strong> yang melewati tubuh sudah berada di daerah yang dapat memicu fibrilasi ventrikel. MCB dengan rating puluhan ampere tidak akan bergerak sedikit pun pada arus sekecil itu. Karena itu perlindungan terhadap sengatan memerlukan perangkat yang mengukur hal yang berbeda: bukan besarnya arus, melainkan <em>selisih</em>-nya.</p></div></section>
+<section class="block"><div class="wrap"><h2>Cara kerjanya</h2><p>Dalam keadaan normal, arus yang mengalir masuk lewat fasa harus sama persis dengan yang kembali lewat netral. RCCB terus membandingkan keduanya.</p><p>Kalau ada arus yang keluar dari jalur seharusnya — bocor lewat isolasi rusak, lewat bodi peralatan, atau lewat tubuh orang yang menyentuhnya — maka jumlah yang kembali menjadi lebih kecil. Selisih inilah yang dideteksi. Begitu selisihnya mencapai ambang sensitivitas, RCCB memutus.</p><p>Perhatikan konsekuensinya: RCCB <strong>tidak melindungi</strong> dari sengatan bila seseorang menyentuh fasa dan netral sekaligus, karena dalam kasus itu tidak ada arus yang bocor keluar jalur. Ia melindungi dari kebocoran ke tanah, yang merupakan bentuk sengatan paling umum.</p></div></section>
+<section class="block"><div class="wrap"><h2>Dua tingkat sensitivitas yang lazim</h2><div class="cards">
+      <article class="card">
+        <span class="tag">30 mA</span>
+        <h3>Proteksi manusia</h3>
+        <p>Dipakai untuk rangkaian yang dapat disentuh orang: stop kontak, kamar mandi, dapur, area luar ruang, dan peralatan portabel.</p>
+      </article>
+      <article class="card">
+        <span class="tag">300 mA</span>
+        <h3>Proteksi kebakaran</h3>
+        <p>Ambangnya terlalu tinggi untuk melindungi manusia. Dipakai di sisi hulu untuk mencegah kebakaran akibat arus bocor menahun yang memanaskan titik sambungan.</p>
+      </article></div></div></section>
+<section class="block"><div class="wrap"><h2>Tombol test: satu-satunya cara memastikan masih berfungsi</h2><p class="sub">Bagian yang paling sering diabaikan pemilik bangunan.</p><p>Setiap RCCB punya tombol bertanda T atau TEST. Tombol itu membuat kebocoran arus buatan di dalam perangkat. Menekannya harus membuat RCCB <strong>langsung memutus</strong>.</p><p>Kalau ditekan dan tidak memutus, RCCB itu <strong>sudah tidak melindungi apa pun</strong> — dan tidak ada gejala lain yang akan memberi tahu Anda. Instalasi tetap menyala normal, lampu tetap hidup, dan penghuni mengira terlindungi padahal tidak.</p><p>Mekanismenya bisa macet karena debu, korosi, atau usia, terutama pada perangkat yang tidak pernah trip bertahun-tahun. Pengujian berkala dengan tombol ini adalah pemeriksaan paling murah dengan dampak keselamatan paling besar di seluruh instalasi.</p></div></section>
+<section class="block"><div class="wrap"><h2>Belajar proteksi arus bocor di Electra</h2><p>Topik ini dibahas di modul <strong>1.17 — ELCB/RCCB: prinsip, sensitivitas dan pengujian trip</strong> di Level 1 Esensial, kategori Komponen instalasi tegangan rendah.</p><p>Kaitannya dengan sistem pembumian dibahas di modul <strong>2.07</strong>, dan sisi keselamatan kerjanya di <a href="/pelatihan-k3-listrik/">jalur K3 Listrik</a>. Mulai dari <a href="/belajar-kelistrikan/">panduan belajar kelistrikan</a>, atau lihat <a href="/kamus/">istilah lain di kamus</a>.</p></div></section>
+
+  <section class="block" id="faq"><div class="wrap">
+    <h2>Pertanyaan yang sering diajukan</h2>
+    <div class="faq">
+    <details>
+      <summary>Apa perbedaan ELCB dan RCCB?</summary>
+      <div class="faq-a"><p>RCCB memutus berdasarkan selisih arus antara penghantar yang masuk dan keluar. ELCB adalah istilah lama untuk perangkat sejenis, dan sebagian tipe lama bekerja dengan mendeteksi tegangan pada bodi peralatan. Perangkat yang dipasang pada instalasi baru umumnya bertipe RCCB.</p></div>
+    </details>
+    <details>
+      <summary>Kenapa sensitivitas RCCB untuk manusia 30 mA?</summary>
+      <div class="faq-a"><p>Karena arus sekitar 30 mA yang melewati tubuh sudah berada di daerah yang dapat memicu fibrilasi ventrikel. Ambang ini dipilih agar pemutusan terjadi sebelum arus bocor mencapai tingkat yang membahayakan jantung.</p></div>
+    </details>
+    <details>
+      <summary>Apakah MCB bisa melindungi dari sengatan listrik?</summary>
+      <div class="faq-a"><p>Tidak. MCB memutus saat arus melebihi ratingnya, sedangkan arus yang membahayakan manusia jauh lebih kecil daripada rating MCB mana pun. Perlindungan terhadap sengatan memerlukan perangkat arus sisa seperti RCCB.</p></div>
+    </details>
+    <details>
+      <summary>Seberapa sering tombol test RCCB perlu ditekan?</summary>
+      <div class="faq-a"><p>Secara berkala, mengikuti anjuran pabrikan perangkat. Kalau ditekan dan RCCB tidak memutus, perangkat itu sudah tidak melindungi apa pun meski instalasi tetap menyala normal, dan harus segera diganti.</p></div>
+    </details>
+    </div>
+  </div></section>
+
+  <div class="wrap">
+    <div class="final-cta">
+      <h2>Pelajari lebih dalam</h2>
+      <p>Satu kali bayar Rp 299.000 membuka seluruh 8 jalur karir yang kurikulumnya sudah lengkap, semua level L1–L6, dan seluruh 605+ modul — selamanya.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/">Daftar di Electra Skill Academy</a>
+        <a class="btn btn-ghost" href="https://wa.me/6285121532407" rel="nofollow noopener">Tanya Admin via WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="block"><div class="wrap">
+    <h2>Istilah lainnya</h2>
+    <div class="related">
+    <a href="/kamus/arc-flash/">Arc Flash: Busur Api Listrik</a>
+    <a href="/kamus/earth-tester/">Earth Tester: Mengukur Tahanan Pentanahan</a>
+    <a href="/kamus/faktor-daya/">Faktor Daya (cos φ)</a>
+    <a href="/kamus/kha-kabel/">KHA: Kemampuan Hantar Arus Kabel</a>
+    <a href="/kamus/loto/">LOTO: Lock Out Tag Out</a>
+    <a href="/kamus/mcb-mccb/">Perbedaan MCB, MCCB, dan Fuse</a>
+    <a href="/kamus/">Lihat seluruh kamus</a>
+    </div>
+  </div></section>
+</main>
+
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>Belajar</h4>
+        <ul>
+          <li><a href="/belajar-kelistrikan/">Belajar Kelistrikan</a></li>
+          <li><a href="/kursus-listrik-online/">Kursus Listrik Online</a></li>
+          <li><a href="/belajar-energi-terbarukan/">Energi Terbarukan</a></li>
+          <li><a href="/pelatihan-k3-listrik/">Pelatihan K3 Listrik</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Karir &amp; Sertifikasi</h4>
+        <ul>
+          <li><a href="/jalur/">Semua Jalur Karir</a></li>
+          <li><a href="/karir-ketenagalistrikan/">Karir Ketenagalistrikan</a></li>
+          <li><a href="/sertifikasi-kompetensi-ketenagalistrikan/">Sertifikasi Kompetensi</a></li>
+          <li><a href="/peta-karir.html">Peta Karir 380 Okupasi</a></li>
+          <li><a href="/verify.html">Verifikasi Sertifikat</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Lab &amp; Data</h4>
+        <ul>
+          <li><a href="/electrasim3d.html">ElectraSim 3D</a></li>
+          <li><a href="/vlab-id.html">Virtual Labs</a></li>
+          <li><a href="/peta-kelistrikan.html">Peta Ketenagalistrikan</a></li>
+          <li><a href="/peta-dunia.html">World Electricity Maps</a></li>
+          <li><a href="/simulasi-energi.html">Simulasi Transisi Energi</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Informasi</h4>
+        <ul>
+          <li><a href="/kamus/">Kamus Kelistrikan</a></li>
+          <li><a href="/faq/">Tanya Jawab</a></li>
+          <li><a href="/bandingkan/">Perbandingan</a></li>
+          <li><a href="/panduan.html">Panduan Pendaftar</a></li>
+          <li><a href="/manual-book.html">Manual Book</a></li>
+          <li><a href="https://wa.me/6285121532407" rel="nofollow noopener">WhatsApp Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p style="margin:0">
+        <strong>Electra Skill Academy</strong> — platform belajar energi &amp; ketenagalistrikan Indonesia.
+        8 jalur karir lengkap (dari 16 yang dipetakan) · 605+ modul · Level L1–L6 · AI Tutor 24/7.
+        Admin WhatsApp +62 851-2153-2407.
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

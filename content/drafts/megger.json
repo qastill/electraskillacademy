@@ -1,0 +1,107 @@
+{
+  "id": "megger",
+  "tipe": "kamus",
+  "kataKunciUtama": "megger adalah",
+  "kataKunci": [
+    "megger adalah",
+    "cara menggunakan megger",
+    "insulation tester",
+    "tahanan isolasi"
+  ],
+  "title": "Megger Adalah: Fungsi, Cara Pakai, dan Cara Baca Hasilnya",
+  "h1": "<em>Megger</em>: Alat Ukur Tahanan Isolasi",
+  "description": "Megger adalah alat ukur tahanan isolasi. Penjelasan fungsi, tegangan uji, cara pakai yang benar, cara membaca hasil, dan kesalahan umum di lapangan.",
+  "eyebrow": "Kamus Kelistrikan · Alat Ukur",
+  "lede": "Megger dipakai untuk menjawab satu pertanyaan: apakah isolasi kabel atau belitan motor masih layak, atau sudah bocor dan berbahaya.",
+  "answer": "<p><strong>Megger</strong> (insulation tester) adalah alat ukur tahanan isolasi. Alat ini menyuntikkan tegangan DC tinggi ke penghantar, lalu mengukur seberapa besar arus yang bocor menembus isolasi. Hasilnya dibaca dalam megaohm (MΩ). Semakin besar nilainya, semakin baik isolasinya. Megger dipakai sebelum instalasi dienergikan dan saat pemeliharaan rutin motor, kabel, dan panel.</p>",
+  "stats": [
+    {
+      "n": "500 V",
+      "label": "Tegangan Uji Umum"
+    },
+    {
+      "n": "MΩ",
+      "label": "Satuan Hasil"
+    },
+    {
+      "n": "1.13",
+      "label": "Modul Electra"
+    },
+    {
+      "n": "T+P",
+      "label": "Teori + Praktik"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "prose",
+      "h2": "Kenapa isolasi perlu diukur",
+      "html": "<p>Isolasi kabel dan belitan motor menua. Panas, getaran, lembap, dan minyak perlahan menurunkan kemampuannya menahan arus. Kerusakan ini <strong>tidak terlihat dari luar</strong> — kabel bisa tampak mulus tetapi isolasinya sudah bocor.</p><p>Kalau isolasi yang sudah lemah tetap dienergikan, akibatnya berurutan: arus bocor ke bodi, ELCB sering trip tanpa sebab jelas, lalu hubung singkat atau sengatan pada orang yang menyentuh peralatan. Megger memindahkan kerusakan itu dari \"ketahuan setelah celaka\" menjadi \"ketahuan saat pemeriksaan\".</p>"
+    },
+    {
+      "type": "prose",
+      "h2": "Cara menggunakan megger",
+      "sub": "Urutan ini berlaku untuk instalasi tegangan rendah maupun belitan motor.",
+      "html": "<ol><li><strong>Matikan dan isolasi sumber.</strong> Megger menyuntikkan tegangan tinggi. Mengukur pada rangkaian bertegangan akan merusak alat dan membahayakan Anda. Terapkan prosedur <a href=\"/pelatihan-k3-listrik/\">LOTO</a> lebih dulu.</li><li><strong>Buang muatan sisa.</strong> Kabel panjang dan belitan motor menyimpan muatan kapasitif. Hubungkan singkat ke pembumian sebelum diukur.</li><li><strong>Lepas beban dan peralatan elektronik.</strong> Ballast, SPD, dan perangkat elektronik bisa rusak oleh tegangan uji, sekaligus membuat hasil terbaca rendah palsu.</li><li><strong>Pilih tegangan uji.</strong> Umumnya <strong>500 V DC</strong> untuk instalasi tegangan rendah. Untuk sistem sampai 1 kV dipakai <strong>1000 V DC</strong>.</li><li><strong>Ukur setiap pasangan.</strong> Fasa–netral, fasa–pembumian, netral–pembumian. Untuk motor 3 fasa: tiap belitan ke bodi, dan antar belitan.</li><li><strong>Tahan sampai pembacaan stabil</strong>, biasanya sekitar satu menit. Angka yang naik perlahan lalu diam adalah pembacaan sebenarnya.</li><li><strong>Buang muatan lagi</strong> setelah selesai. Megger meninggalkan muatan pada objek yang diukur.</li></ol>"
+    },
+    {
+      "type": "prose",
+      "h2": "Cara membaca hasilnya",
+      "html": "<p>Yang lebih berguna daripada satu angka tunggal adalah <strong>tren</strong>. Motor yang tahanan isolasinya turun separuh dalam enam bulan lebih mengkhawatirkan daripada motor tua yang nilainya stabil rendah tetapi tidak berubah selama bertahun-tahun.</p><p>Karena itu catat hasil tiap pengukuran beserta tanggal dan suhunya. Tahanan isolasi <strong>turun saat suhu naik</strong>, jadi membandingkan hasil pagi hari dengan hasil setelah motor beroperasi penuh akan menyesatkan.</p><p>Nilai ambang minimum yang berlaku mengikuti standar instalasi yang dipakai proyek Anda. Pastikan Anda memakai edisi standar yang benar sebelum menyatakan lulus atau tidak.</p>"
+    },
+    {
+      "type": "cards",
+      "h2": "Kesalahan umum di lapangan",
+      "sub": "Empat hal ini yang paling sering membuat hasil megger salah dibaca.",
+      "cards": [
+        {
+          "tag": "Kesalahan 1",
+          "h": "Mengukur tanpa melepas beban",
+          "p": "Lampu LED, ballast, dan perangkat elektronik yang masih terpasang membuat pembacaan rendah palsu. Teknisi lalu menyimpulkan kabel rusak, padahal kabelnya sehat."
+        },
+        {
+          "tag": "Kesalahan 2",
+          "h": "Membaca terlalu cepat",
+          "p": "Angka detik pertama masih dipengaruhi arus pengisian kapasitif. Pembacaan yang sah diambil setelah jarum atau angka berhenti naik."
+        },
+        {
+          "tag": "Kesalahan 3",
+          "h": "Mengabaikan suhu dan kelembapan",
+          "p": "Hasil pagi hari yang lembap bisa jauh berbeda dari siang hari kering pada kabel yang sama. Tanpa mencatat kondisinya, perbandingan antar waktu tidak berarti."
+        },
+        {
+          "tag": "Kesalahan 4",
+          "h": "Lupa membuang muatan",
+          "p": "Objek yang baru di-megger menyimpan muatan berbahaya. Ini penyebab sengatan yang mengejutkan justru setelah pekerjaan dianggap selesai."
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "h2": "Belajar megger di Electra",
+      "html": "<p>Megger dibahas di modul <strong>1.13 — Megger (insulation tester) dan standar nilai minimum</strong>, bagian dari kategori Alat ukur &amp; pengukuran di Level 1 Esensial. Modul ini berformat teori dan praktik.</p><p>Modul pendampingnya: <strong>1.12</strong> multimeter dan tang ampere, <strong>1.14</strong> earth tester, dan <strong>1.15</strong> teknik pengukuran serta CAT rating safety. Urutan lengkapnya ada di <a href=\"/belajar-kelistrikan/\">panduan belajar kelistrikan dari nol</a>.</p><p>Untuk berlatih tanpa alat, tersedia <a href=\"/vlab-id.html\">Virtual Labs</a> dan <a href=\"/electrasim3d.html\">ElectraSim 3D</a>. Lihat juga <a href=\"/kamus/\">istilah kelistrikan lainnya</a>.</p>"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Megger adalah alat untuk mengukur apa?",
+      "a": "Megger mengukur tahanan isolasi, yaitu seberapa baik isolasi kabel atau belitan motor menahan kebocoran arus. Hasilnya dibaca dalam megaohm. Megger berbeda dari multimeter, yang mengukur tegangan, arus, dan tahanan pada level rendah."
+    },
+    {
+      "q": "Berapa tegangan uji megger yang dipakai?",
+      "a": "Untuk instalasi tegangan rendah umumnya dipakai 500 V DC. Untuk sistem sampai 1 kV dipakai 1000 V DC. Memakai tegangan uji yang lebih tinggi daripada rating peralatan justru dapat merusak isolasi yang sedang diperiksa."
+    },
+    {
+      "q": "Apa beda megger dan multimeter?",
+      "a": "Multimeter mengukur tahanan dengan tegangan sangat rendah, sehingga tidak mampu menemukan kebocoran isolasi yang baru muncul pada tegangan kerja. Megger menyuntikkan tegangan DC tinggi untuk menguji isolasi dalam kondisi mendekati tekanan sebenarnya."
+    },
+    {
+      "q": "Kenapa hasil megger saya rendah padahal kabel baru?",
+      "a": "Penyebab paling sering adalah beban atau perangkat elektronik yang belum dilepas, kelembapan pada terminal, atau pembacaan yang diambil terlalu cepat sebelum stabil. Periksa ketiganya sebelum menyimpulkan kabelnya rusak."
+    },
+    {
+      "q": "Apakah megger bisa dipakai pada rangkaian yang menyala?",
+      "a": "Tidak boleh. Rangkaian harus dimatikan, diisolasi, dan dibuang muatannya lebih dulu. Mengukur pada rangkaian bertegangan merusak alat dan membahayakan penggunanya."
+    }
+  ]
+}
