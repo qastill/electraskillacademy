@@ -1,7 +1,163 @@
+# ============================================================
+# Electra Skill Academy — https://electraacademy.com
+# Platform belajar energi & ketenagalistrikan Indonesia
+# ============================================================
+
+# ---------- Default: semua crawler ----------
 User-agent: *
 Allow: /
-Allow: /verify.html
+Disallow: /admin.html
+Disallow: /admin-sunarto.html
+Disallow: /api/
+Disallow: /assets-protected/
+Disallow: /quiz-input/
+Disallow: /supabase/
+Disallow: /*.sql$
+
+# ---------- Search engine utama ----------
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-sunarto.html
+Disallow: /api/
+Disallow: /assets-protected/
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-sunarto.html
+Disallow: /api/
+Disallow: /assets-protected/
+
+# ============================================================
+# GEO — Generative Engine Optimization
+# Crawler AI di bawah ini DIIZINKAN penuh supaya konten Electra
+# Skill Academy dapat dikutip di ChatGPT, Claude, Perplexity,
+# Gemini, Google AI Overviews, Copilot, dan asisten AI lainnya.
+# Referensi ringkas untuk mesin: /llms.txt dan /llms-full.txt
+# ============================================================
+
+# --- OpenAI (ChatGPT / SearchGPT) ---
+User-agent: GPTBot
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-sunarto.html
+Disallow: /api/
+Disallow: /assets-protected/
+
+User-agent: OAI-SearchBot
+Allow: /
 Disallow: /admin.html
 Disallow: /api/
 
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+# --- Anthropic (Claude) ---
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+# --- Perplexity ---
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+# --- Google Gemini / AI Overviews ---
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: GoogleOther
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+# --- Microsoft Copilot ---
+User-agent: Bingbot-Extended
+Allow: /
+
+# --- Apple Intelligence ---
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# --- Meta AI ---
+User-agent: meta-externalagent
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: FacebookBot
+Allow: /
+
+# --- Lain-lain (dataset & asisten AI) ---
+User-agent: Amazonbot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: cohere-training-data-crawler
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: Timpibot
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+User-agent: AI2Bot
+Allow: /
+
+# ---------- Sitemap ----------
 Sitemap: https://electraacademy.com/sitemap.xml

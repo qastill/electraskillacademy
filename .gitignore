@@ -5,3 +5,11 @@
 node_modules
 *.log
 .DS_Store
+
+# playwright-core hanya dipakai lokal oleh tools/build-og-image.mjs.
+# package.json sengaja TIDAK di-commit: repo ini dideploy Vercel sebagai
+# situs statis tanpa build step, dan menambahkan package.json akan mengubah
+# cara Vercel mendeteksi proyek (memicu npm install setiap deploy).
+# Untuk regenerate og-image.png: npm i -D playwright-core && node tools/build-og-image.mjs
+package.json
+package-lock.json

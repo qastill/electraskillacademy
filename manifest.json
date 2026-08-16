@@ -1,7 +1,7 @@
 {
   "name": "Electra Skill Academy",
   "short_name": "ESA",
-  "description": "Akademi pelatihan kelistrikan profesional Indonesia — 16 jalur karir, ratusan modul video, lab simulator, AI Tutor, dan persiapan uji kompetensi.",
+  "description": "Platform belajar energi & ketenagalistrikan Indonesia — 16 jalur karir dipetakan (8 sudah lengkap), 605+ modul, lab simulator, AI Tutor 24/7, dan sertifikat terverifikasi.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -9,7 +9,10 @@
   "theme_color": "#c9a96e",
   "scope": "/",
   "lang": "id",
-  "categories": ["education", "productivity"],
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/logo.svg",
@@ -18,9 +21,9 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/og-image.svg",
+      "src": "/og-image.png",
       "sizes": "1200x630",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     }
   ],
