@@ -10751,12 +10751,9 @@ window.esaModuleLocked = esaModuleLocked;
 // Panel terkunci: thumbnail tetap terlihat, isinya yang ditahan.
 function esaLockedPanel(opts) {
   opts = opts || {};
-  var bg = opts.thumb
-    ? '<img class="lockp-img" src="' + opts.thumb.src + '"' +
-      (opts.thumb.fallback ? ' data-fb="' + opts.thumb.fallback + '"' : '') +
-      ' alt="" loading="lazy" onerror="esaCrsThumbErr(this)">'
-    : '';
-  return '<div class="lockp' + (opts.tall ? ' lockp-tall' : '') + '">' + bg +
+  var bg = opts.thumb ? esaThumbImg(opts.thumb, 'lockp-img') : '';
+  var cover = opts.cover ? ' style="background:' + opts.cover + '"' : '';
+  return '<div class="lockp' + (opts.tall ? ' lockp-tall' : '') + '"' + cover + '>' + bg +
     '<div class="lockp-veil"></div>' +
     '<div class="lockp-body">' +
       '<div class="lockp-badge">🔒 ' + (opts.badge || 'Terkunci') + '</div>' +
@@ -10768,29 +10765,126 @@ function esaLockedPanel(opts) {
 }
 window.esaLockedPanel = esaLockedPanel;
 
-// Thumbnail dari URL video. YouTube → gambar asli channel; Drive → preview Drive.
+// Thumbnail dari URL video, beserta rantai cadangannya.
+//   YouTube → maxresdefault tidak selalu ada, turun ke hq lalu mq.
+//   Drive    → lh3.googleusercontent.com lebih tahan hotlink daripada
+//              drive.google.com/thumbnail, jadi dicoba lebih dulu.
 function esaMediaThumb(media) {
   if (!media) return null;
   if (media.youtubeId) {
+    var v = media.youtubeId;
     return {
-      src: 'https://i.ytimg.com/vi/' + media.youtubeId + '/maxresdefault.jpg',
-      fallback: 'https://i.ytimg.com/vi/' + media.youtubeId + '/hqdefault.jpg'
+      src: 'https://i.ytimg.com/vi/' + v + '/maxresdefault.jpg',
+      alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg',
+            'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg']
     };
   }
   if (media.videoUrl) {
     var gd = media.videoUrl.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
-    if (gd) return { src: 'https://drive.google.com/thumbnail?id=' + gd[1] + '&sz=w640', fallback: null };
+    if (gd) return {
+      src: 'https://lh3.googleusercontent.com/d/' + gd[1] + '=w640',
+      alt: ['https://drive.google.com/thumbnail?id=' + gd[1] + '&sz=w640']
+    };
   }
   return null;
 }
 window.esaMediaThumb = esaMediaThumb;
 
-// Kalau thumbnail gagal dimuat: coba cadangan, lalu tampilkan kartu fallback.
+// Satu <img> dengan seluruh rantai cadangannya.
+function esaThumbImg(thumb, extraClass) {
+  if (!thumb) return '';
+  return '<img' + (extraClass ? ' class="' + extraClass + '"' : '') +
+    ' src="' + thumb.src + '"' +
+    ' data-fb="' + (thumb.alt || []).join('|') + '"' +
+    ' alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"' +
+    ' onerror="esaCrsThumbErr(this)">';
+}
+window.esaThumbImg = esaThumbImg;
+
+// Gagal muat → coba cadangan berikutnya; habis semua → buang <img> supaya
+// sampul cadangan di belakangnya yang tampil.
 window.esaCrsThumbErr = function (img) {
-  var fb = img.getAttribute('data-fb');
-  if (fb) { img.removeAttribute('data-fb'); img.src = fb; return; }
-  img.style.display = 'none';
+  var list = (img.getAttribute('data-fb') || '').split('|').filter(Boolean);
+  if (list.length) {
+    img.setAttribute('data-fb', list.slice(1).join('|'));
+    img.src = list[0];
+    return;
+  }
+  img.remove();
 };
+
+// --- Lazy-loader judul thumbnail (/data/module-hooks.js) ---
+function esaLoadModuleHooks(cb) {
+  if (typeof window.MODULE_HOOKS !== 'undefined') { if (cb) cb(); return; }
+  window.__esaHKcbs = window.__esaHKcbs || [];
+  if (cb) window.__esaHKcbs.push(cb);
+  if (window.__esaHKloading) return;
+  window.__esaHKloading = true;
+  var s = document.createElement('script');
+  s.src = '/data/module-hooks.js';
+  s.onload = s.onerror = function () {
+    if (typeof window.MODULE_HOOKS === 'undefined') window.MODULE_HOOKS = {}; // fail-soft
+    window.__esaHKloading = false;
+    var cbs = window.__esaHKcbs || []; window.__esaHKcbs = [];
+    cbs.forEach(function (f) { try { f(); } catch (e) {} });
+  };
+  document.head.appendChild(s);
+}
+window.esaLoadModuleHooks = esaLoadModuleHooks;
+
+// Hook otomatis: kalimat "kenapa harus nonton" yang diturunkan dari kategori
+// dan judul modul. Sengaja dijaga tetap jujur pada isi materinya — memancing
+// rasa penasaran boleh, menjanjikan yang tidak ada di videonya tidak.
+// Modul penting sebaiknya ditulis tangan di /data/module-hooks.js.
+var ESA_HOOK_RULES = [
+  // Dicocokkan dari atas ke bawah — yang lebih spesifik harus lebih dulu.
+  { re: /daya, energi|satuan si|efisiensi dan satuan/i,      h: 'Satuan yang sering tertukar di lapangan' },
+  { re: /loto|lock out|permit to work/i,                     h: 'Prosedur yang menyelamatkan nyawa' },
+  { re: /arc flash|sengatan|bahaya listrik|fisiologis/i,      h: 'Kesalahan kecil, akibat permanen' },
+  { re: /p3k|cpr|aed|tanggap darurat|pertolongan/i,           h: 'Tiga menit pertama menentukan' },
+  { re: /k3|keselamatan|apd|hirarc|jsa|risiko|smk3/i,         h: 'Yang sering dilanggar di lapangan' },
+  { re: /alat ukur|pengukuran|megger|multimeter|tang ampere|earth tester/i, h: 'Angka benar, cara baca salah' },
+  { re: /grounding|pentanahan|proteksi|relay|mcb|mccb|elcb|rccb|fuse/i,     h: 'Kenapa proteksi gagal saat dibutuhkan' },
+  { re: /trafo|transformator/i,                               h: 'Salah sizing, rugi bertahun-tahun' },
+  { re: /motor|vfd|drive|penggerak/i,                         h: 'Motor panas sebelum waktunya' },
+  { re: /kabel|penghantar|kha|derating/i,                     h: 'Kabel benar di atas kertas, panas di lapangan' },
+  { re: /gardu|sutm|sktm|distribusi|20 ?kv/i,                 h: 'Jantung jaringan 20 kV' },
+  { re: /transmisi|gitet|150|500 ?kv|sutet/i,                 h: 'Tegangan tinggi, toleransi nol' },
+  { re: /scada|smart grid|otomasi|plc|dcs|hmi/i,              h: 'Dari ruang kontrol, bukan tiang' },
+  { re: /plts|surya|pv|solar|panel/i,                         h: 'Yang tidak ditulis brosur PLTS' },
+  { re: /baterai|bess|storage|penyimpanan/i,                  h: 'Simpan energinya, bukan cuma bikin' },
+  { re: /audit energi|energy audit|iso 50001|konservasi energi|manajemen energi/i, h: 'Tagihan turun tanpa ganti alat' },
+  { re: /python|sql|data|machine learning|forecast|analitik/i, h: 'Data yang dipakai mengambil keputusan' },
+  { re: /puil|sni|skkni|regulasi|standar|permenaker/i,        h: 'Aturan yang bikin pekerjaan ditolak' },
+  { re: /biaya|tarif|rab|boq|tender|proyek|kontrak/i,         h: 'Salah hitung, proyek merugi' },
+  { re: /instalasi|wiring|panel|saklar|stop kontak/i,         h: 'Rapi di gambar, kacau saat dipasang' },
+  { re: /pembangkit|pltu|pltg|plta|generator|turbin/i,        h: 'Dari bahan bakar jadi listrik' },
+  { re: /rangkaian|hukum ohm|kirchhoff|fasor|ac|dc|daya|energi/i, h: 'Rumus yang dipakai seumur karir' }
+];
+
+function esaModuleHook(it) {
+  if (!it) return '';
+  var manual = (typeof window.MODULE_HOOKS !== 'undefined') ? window.MODULE_HOOKS[it.code] : null;
+  if (manual) return manual;
+  var hay = (it.title || '') + ' ' + (it.category || '');
+  for (var i = 0; i < ESA_HOOK_RULES.length; i++) {
+    if (ESA_HOOK_RULES[i].re.test(hay)) return ESA_HOOK_RULES[i].h;
+  }
+  return (it.levelId === 'L1' || it.levelId === 'L2')
+    ? 'Fondasi sebelum pegang yang nyata'
+    : 'Skill yang dicari di lapangan';
+}
+window.esaModuleHook = esaModuleHook;
+
+// Warna sampul cadangan diturunkan dari nama kategori: modul sejenis jadi
+// sewarna, jadi grid punya ritme dan tidak terlihat seperti deretan kotak
+// kosong yang sama semua.
+function esaCrsCover(key) {
+  var h = 0, t = String(key || 'ESA');
+  for (var i = 0; i < t.length; i++) h = (h * 33 + t.charCodeAt(i)) % 360;
+  return 'linear-gradient(140deg, hsl(' + h + ',30%,15%) 0%, hsl(' + ((h + 38) % 360) + ',34%,27%) 100%)';
+}
+window.esaCrsCover = esaCrsCover;
 
 // ---------------- State katalog ----------------
 var _crsState = {
@@ -11010,17 +11104,22 @@ function esaCrsSidebar() {
 
 function esaCrsCard(d) {
   var it = d.item;
-  var thumbInner;
-  if (d.thumb) {
-    thumbInner =
-      '<div class="crs-thumb-fallback"><span class="c">' + esaCrsEsc(it.code) + '</span></div>' +
-      '<img src="' + d.thumb.src + '"' + (d.thumb.fallback ? ' data-fb="' + d.thumb.fallback + '"' : '') +
-      ' alt="" loading="lazy" decoding="async" onerror="esaCrsThumbErr(this)">';
-  } else {
-    thumbInner =
-      '<div class="crs-thumb-fallback"><span class="c">' + esaCrsEsc(it.code) + '</span>' +
-      '<span class="t">Video segera hadir</span></div>';
-  }
+
+  // Sampul cadangan selalu dirender di belakang <img>. Kalau gambarnya berhasil
+  // dimuat ia tertutup; kalau gagal, yang tersisa tetap sampul yang dirancang.
+  // Sampul sengaja dibiarkan polos: kode sudah ada di badge, kategori sudah ada
+  // di bawah thumbnail. Yang dicetak di sini hanya hook — plus penanda kalau
+  // videonya memang belum ada.
+  var cover = '<div class="crs-thumb-fallback">' +
+    (d.thumb ? '' : '<span class="t">Video segera hadir</span>') +
+  '</div>';
+
+  // Judul hook dicetak di atas thumbnail, seperti teks besar di thumbnail
+  // YouTube — supaya alasan menonton terbaca sebelum judul modulnya.
+  // Video yang sudah punya thumbnail YouTube dilewati: pemiliknya sudah
+  // merancang gambarnya sendiri, menimpanya justru merusak.
+  var hookEl = d.source === 'youtube' ? ''
+    : '<div class="crs-hook"><span>' + esaCrsEsc(esaModuleHook(it)) + '</span></div>';
 
   var srcBadge = d.source === 'youtube'
     ? '<span class="crs-badge crs-badge-src yt">▶ YouTube</span>'
@@ -11034,24 +11133,47 @@ function esaCrsCard(d) {
 
   var statusTxt = d.status === 'lulus' ? '<i style="color:var(--emerald);font-weight:700;">✓ Lulus</i>'
     : (d.status === 'progres' ? '<i style="color:#d4823a;font-weight:700;">◐ Lanjutkan</i>'
-      : '<i>📝 Quiz 25 soal</i>');
+      : '<i>25 soal quiz</i>');
 
   return '<button type="button" class="crs-card" onclick="esaCrsOpen(\'' + it.code + '\',\'' + it.trackId + '\',\'' + it.levelId + '\')">' +
-    '<div class="crs-thumb">' + thumbInner +
-      '<div class="crs-play"><i><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></i></div>' +
+    '<div class="crs-thumb" style="background:' + esaCrsCover(it.category) + '">' +
+      cover + esaThumbImg(d.thumb) + hookEl +
+      '<div class="crs-play"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></i></div>' +
       '<span class="crs-badge crs-badge-level">' + esaCrsEsc(it.code) + '</span>' +
       srcBadge + durBadge + passBadge + progBar +
     '</div>' +
     '<div class="crs-card-body">' +
-      '<div class="crs-card-cat">' + esaCrsEsc(it.category) + '</div>' +
       '<div class="crs-card-title">' + esaCrsEsc(it.title) + '</div>' +
-      '<div class="crs-card-track">' + esaCrsEsc(it.trackName) + ' · ' + esaCrsEsc(it.levelName) + '</div>' +
+      '<div class="crs-card-cat">' + esaCrsEsc(it.category) + '</div>' +
+      '<div class="crs-card-track">' +
+        '<span>' + esaCrsEsc(it.trackName) + '</span><span class="dot">·</span>' +
+        '<span>' + esaCrsEsc(it.levelName) + '</span>' +
+      '</div>' +
       '<div class="crs-card-meta">' +
-        '<i>⏱ ' + (it.jp || '—') + ' JP</i>' + statusTxt +
+        '<i>' + (it.jp || '—') + ' JP</i><span class="dot">·</span>' + statusTxt +
       '</div>' +
     '</div>' +
   '</button>';
 }
+
+// Bangun kartu dari objek modul mentah (dipakai grid di halaman jalur), supaya
+// katalog dan halaman jalur memakai kartu yang sama persis.
+function esaModuleCardHtml(m, trackId, levelId) {
+  var lvl = (typeof LEVELS !== 'undefined') ? LEVELS.find(function (l) { return l.id === levelId; }) : null;
+  var ovr = (typeof LEVEL_OVERRIDES !== 'undefined') ? LEVEL_OVERRIDES[trackId + '_' + levelId] : null;
+  var meta = (typeof TRACKS_META !== 'undefined') ? TRACKS_META[trackId] : null;
+  return esaCrsCard(esaCrsDecorate({
+    code: m.code,
+    title: m.title || '',
+    category: m.category || 'Umum',
+    jp: m.jp || 0,
+    trackId: trackId,
+    trackName: (levelId === 'L1' || levelId === 'L2' || !meta) ? 'Fondasi · Semua Jalur' : meta.name,
+    levelId: levelId,
+    levelName: (ovr && ovr.name) || (lvl && lvl.name) || levelId
+  }));
+}
+window.esaModuleCardHtml = esaModuleCardHtml;
 
 // Kartu "lanjutkan belajar": modul pertama yang belum lulus pada urutan kurikulum.
 function esaCrsResume() {
@@ -11072,9 +11194,9 @@ function esaCrsResume() {
     return;
   }
   var d = esaCrsDecorate(next);
-  var thumbStyle = d.thumb ? ' style="background-image:url(\'' + d.thumb.src + '\')"' : '';
   el.innerHTML = '<div class="crs-resume">' +
-    '<div class="crs-resume-thumb"' + thumbStyle + '></div>' +
+    '<div class="crs-resume-thumb" style="background:' + esaCrsCover(next.category) + '">' +
+      esaThumbImg(d.thumb) + '</div>' +
     '<div class="crs-resume-txt">' +
       '<b>Lanjutkan belajar</b>' +
       '<h4>' + esaCrsEsc(next.title) + '</h4>' +
@@ -11184,8 +11306,10 @@ function openCourses() {
   showView('courses');
   esaLoadModuleMedia(function () {
     esaLoadYoutubeMap(function () {
-      _crsIndex = null;   // segarkan kalau kurikulum berubah
-      esaCrsRender();
+      esaLoadModuleHooks(function () {
+        _crsIndex = null;   // segarkan kalau kurikulum berubah
+        esaCrsRender();
+      });
     });
   });
 }
@@ -11211,6 +11335,19 @@ function openJalur(trackId) {
     if (typeof window.esaToast === 'function') window.esaToast('Segera Hadir', (meta.name || 'Jalur ini') + ' sedang disiapkan — coming soon!', '🚧');
     return;
   }
+  // Grid modul memakai thumbnail, jadi data media + peta YouTube + judul hook
+  // harus siap sebelum render pertama — kalau tidak, levelnya terlanjur
+  // tergambar sebagai daftar cadangan tanpa gambar.
+  if (typeof MODULE_MEDIA === 'undefined' || typeof window.YOUTUBE_MAP === 'undefined'
+      || typeof window.MODULE_HOOKS === 'undefined') {
+    esaLoadModuleMedia(function () {
+      esaLoadYoutubeMap(function () {
+        esaLoadModuleHooks(function () { openJalur(trackId); });
+      });
+    });
+    return;
+  }
+
   currentTrackId = trackId;
   const trackModules = CURRICULUM[trackId] || [];
   const foundationL1 = CURRICULUM['L1'] || [];
@@ -11448,25 +11585,18 @@ function renderLevels(trackId) {
                 <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <div class="module-list">
+            <div class="crs-grid esa-modgrid">
               ${modules.map(m => {
-                const rec = getModRec(m.code);
-                const moduleDoneBadge = rec && rec.passed
-                  ? `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,0.12);color:#16a34a;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-left:8px;vertical-align:middle;">✓ Done · ${fmtDate(rec.lastDate)} · ${rec.bestScore}%</span>`
-                  : '';
-                return `
-                <button class="module-card" data-module-code="${m.code}" onclick="openModul('${m.code}', '${trackId}', '${lvl.id}')">
-                  <span class="module-code">${m.code}</span>
-                  <div>
-                    <div class="module-title">${m.title}${moduleDoneBadge}</div>
-                    <div class="module-meta">${m.category || 'Umum'}<span class="esa-mod-rating" data-rating-code="${m.code}"></span></div>
-                  </div>
-                  <div class="module-arrow">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                      <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                  </div>
-                </button>`;
+                // Kartu yang sama dengan katalog — thumbnail dulu, judul menyusul.
+                try { return esaModuleCardHtml(m, trackId, lvl.id); }
+                catch (e) {
+                  // Data media belum siap: jangan sampai levelnya kosong.
+                  return `<button class="module-card" data-module-code="${m.code}" onclick="openModul('${m.code}', '${trackId}', '${lvl.id}')">
+                    <span class="module-code">${m.code}</span>
+                    <div><div class="module-title">${m.title}</div>
+                    <div class="module-meta">${m.category || 'Umum'}</div></div>
+                  </button>`;
+                }
               }).join('')}
             </div>
           </div>
