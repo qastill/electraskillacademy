@@ -636,7 +636,7 @@ if ('serviceWorker' in navigator) {
           Pilih <span class="italic">Jalur Karirmu</span>
         </h2>
         <p class="practices-sub reveal">
-          Delapan jalur karir yang dirancang dari pemula sampai ahli. Pilih satu yang paling cocok dengan passion dan tujuan karirmu.
+          Enam belas jalur karir, dirancang dari pemula sampai ahli. Pilih satu yang paling cocok dengan tujuan karirmu &mdash; tiap jalur punya enam tingkat berurutan.
         </p>
       </div>
 
@@ -1213,7 +1213,7 @@ if ('serviceWorker' in navigator) {
           <a href="/bandingkan/" style="color:rgba(201,169,110,0.9);text-decoration:none;">Perbandingan</a>
         </nav>
         <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
-          <a onclick="showView('about')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Tentang Kami</a>
+          <!-- "Tentang Kami" disembunyikan bersama menu About Us; halamannya tetap ada. -->
           <a onclick="showView('career-hub')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Career</a>
           <a onclick="showView('referensi')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Library</a>
           <a onclick="showView('gallery')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Gallery</a>
@@ -1490,19 +1490,15 @@ if ('serviceWorker' in navigator) {
       <div class="crs-eyebrow">Katalog Kursus</div>
       <h1>Semua materi video, <span class="italic">satu halaman</span></h1>
       <p class="crs-hero-sub">
-        Cari berdasarkan topik, kode modul, atau jalur karir. Setiap kartu adalah satu modul lengkap —
-        video, materi PPT, dan quiz 25 soal. Ikuti urutannya dari Esensial ke Consultant, atau langsung
-        lompat ke topik yang kamu butuhkan hari ini.
+        Setiap kartu satu modul lengkap — video, materi PPT, dan quiz 25 soal.
+        Pilih jalur karirmu, atau cari langsung topik yang kamu butuhkan hari ini.
       </p>
 
-      <!-- Alur belajar 5 langkah -->
-      <div class="crs-flow">
-        <div class="crs-flow-step"><b>Langkah 1</b><span>Pilih jalur karir yang kamu tuju</span></div>
-        <div class="crs-flow-step"><b>Langkah 2</b><span>Tonton video modul sampai tuntas</span></div>
-        <div class="crs-flow-step"><b>Langkah 3</b><span>Baca materi PPT untuk pendalaman</span></div>
-        <div class="crs-flow-step"><b>Langkah 4</b><span>Kerjakan quiz, lulus minimal 70%</span></div>
-        <div class="crs-flow-step"><b>Langkah 5</b><span>Naik level &amp; kumpulkan sertifikat</span></div>
-      </div>
+      <!-- Lima langkah "Alur belajar" dulu berdiri di sini dan mendorong daftar
+           modul satu layar penuh ke bawah. Isinya sudah ada di dua tempat lain
+           yang memang untuk itu: tautan "Cara Belajar" di header halaman ini,
+           dan FAQ "Sistem Belajar". Halaman katalog gunanya menemukan modul —
+           jadi pencarian dan daftarnya yang didahulukan. -->
 
       <!-- Search + sort -->
       <div class="crs-searchbar">
@@ -4207,11 +4203,22 @@ function showView(view) {
 // ================================================
 // RENDER PRACTICE GRID (landing)
 // ================================================
+// Jumlah modul khusus satu jalur (tidak termasuk Fondasi L1+L2 yang dipakai
+// bersama semua jalur). Angka yang sama dipakai chip di katalog, jadi kartu
+// beranda dan katalog tidak pernah menyebut dua angka berbeda untuk hal sama.
+function esaTrackModuleCount(trackId) {
+  try { return ((typeof CURRICULUM !== 'undefined' && CURRICULUM[trackId]) || []).length; }
+  catch (e) { return 0; }
+}
+window.esaTrackModuleCount = esaTrackModuleCount;
+
 function renderPractices() {
   const grid = document.getElementById('practicesGrid');
   // S13 (PLN Distribution Academy fast track) is rendered in its own dedicated
   // banner section below, so it's excluded from the regular 12-track grid.
-  grid.innerHTML = PRACTICE_CARDS.filter(p => !p.isFastTrack).map(p => `
+  grid.innerHTML = PRACTICE_CARDS.filter(p => !p.isFastTrack).map(p => {
+    const n = esaTrackModuleCount(p.id);
+    return `
     <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}" onclick="openJalur('${p.id}')">
       <div class="practice-card-photo">
         <img class="practice-card-photo-img" src="${p.photo}" alt="" loading="lazy" decoding="async">
@@ -4221,6 +4228,7 @@ function renderPractices() {
       <div class="practice-card-inner">
         <h3 class="practice-name">${p.name}</h3>
         <p class="practice-desc">${p.desc}</p>
+        ${n ? `<span class="practice-count">${n} modul</span>` : ''}
         <span class="practice-cta">
           Lihat Jalur
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -4228,8 +4236,8 @@ function renderPractices() {
           </svg>
         </span>
       </div>
-    </button>
-  `).join('');
+    </button>`;
+  }).join('');
 }
 
 // ================================================
@@ -7577,18 +7585,28 @@ function esaCrsChips() {
     else counts[it.trackId] = (counts[it.trackId] || 0) + 1;
   });
 
+  // Nomor jalur diambil dari PRACTICE_CARDS — sumber yang sama dengan lencana
+  // "Jalur 01" di kartu beranda. Dulu chip di sini hanya teks tanpa nomor,
+  // jadi daftar jalur yang sama terbaca seperti dua sistem berbeda: kartu
+  // berfoto bernomor di beranda, dan chip polos di katalog. Dengan nomor yang
+  // sama, keduanya jadi satu hal yang dilihat dari dua kerapatan.
+  var nomor = {};
+  try { (PRACTICE_CARDS || []).forEach(function (p) { nomor[p.id] = p.num; }); } catch (e) {}
+
   var chips = [{ id: 'all', label: 'Semua', n: idx.length }];
   chips.push({ id: 'FOUNDATION', label: 'Fondasi', n: foundation });
   Object.keys(TRACKS_META).forEach(function (tid) {
     if (!counts[tid]) return;
-    chips.push({ id: tid, label: TRACKS_META[tid].name, n: counts[tid] });
+    chips.push({ id: tid, label: TRACKS_META[tid].name, n: counts[tid], num: nomor[tid] });
   });
 
   var el = document.getElementById('crs-chips');
   if (!el) return;
   el.innerHTML = chips.map(function (c) {
     return '<button type="button" class="crs-chip' + (_crsState.track === c.id ? ' active' : '') +
-      '" onclick="esaCrsSetTrack(\'' + c.id + '\')">' + esaCrsEsc(c.label) +
+      '" onclick="esaCrsSetTrack(\'' + c.id + '\')">' +
+      (c.num ? '<span class="crs-chip-num">' + esaCrsEsc(c.num) + '</span>' : '') +
+      esaCrsEsc(c.label) +
       ' <span class="crs-chip-n">' + c.n + '</span></button>';
   }).join('');
 }
@@ -14342,7 +14360,9 @@ else{setTimeout(init,200);}
 
     navGroup.innerHTML='';
     navGroup.appendChild(coursesLink);
-    navGroup.appendChild(aboutUs);
+    // "About Us" sengaja TIDAK dipasang di menu. Halamannya tetap ada supaya
+    // tautan lama dan hasil pencarian tidak mati — hanya pintunya yang ditutup,
+    // agar menu berisi hal yang dipakai orang untuk belajar.
     navGroup.appendChild(careerLink);
     if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
