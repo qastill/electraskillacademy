@@ -236,7 +236,9 @@ if ('serviceWorker' in navigator) {
      fungsi runtime, jadi aman dimuat tanpa blokir render awal. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="supabase-config.js" defer></script>
-<script src="/data/quiz-bank.js" defer></script>
+<!-- quiz-bank.js (±1,2 MB) TIDAK dimuat di sini. Isinya hanya dipakai saat
+     seseorang mengerjakan quiz sebuah modul, sementara dulu setiap pengunjung
+     beranda ikut mengunduhnya. Dimuat lewat esaLoadQuizBank() saat dibutuhkan. -->
 
 <!-- Penjaga error global: mencegah satu error tak tertangani (mis. gagal
      jaringan / promise Supabase yang reject) bikin halaman terasa "rusak" atau
@@ -1844,8 +1846,12 @@ if ('serviceWorker' in navigator) {
         </div>
       </div>
 
-      <!-- Asisten Modul Sidebar -->
-      <aside class="ai-tutor-sidebar">
+      <!-- Sidebar: daftar tonton berikutnya + asisten modul -->
+      <aside class="modul-side">
+        <!-- Selanjutnya — pola daftar samping YouTube: thumbnail dulu, judul menyusul -->
+        <div class="upnext" id="upnext"></div>
+
+        <div class="ai-tutor-sidebar">
         <div class="ai-tutor-header">
           <div class="ai-tutor-avatar">⚡</div>
           <div class="ai-tutor-info">
@@ -1870,6 +1876,7 @@ if ('serviceWorker' in navigator) {
           </button>
         </div>
         <div id="ai-quota-hint" style="font-size:0.72rem;color:rgba(245,240,230,0.55);margin-top:8px;text-align:right;letter-spacing:0.04em;">Sisa kuota tanya: 50/50</div>
+        </div>
       </aside>
     </div>
   </section>
@@ -4277,7 +4284,7 @@ function renderPractices() {
   grid.innerHTML = PRACTICE_CARDS.filter(p => !p.isFastTrack).map(p => `
     <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}" onclick="openJalur('${p.id}')">
       <div class="practice-card-photo">
-        <div class="practice-card-photo-img" style="background-image: url('${p.photo}')"></div>
+        <img class="practice-card-photo-img" src="${p.photo}" alt="" loading="lazy" decoding="async">
         <span class="practice-card-badge">Jalur <strong>${p.num}</strong></span>
       </div>
       ${p.comingSoon ? '<div class="practice-card-soon-badge">Coming Soon</div>' : ''}
@@ -5962,6 +5969,46 @@ function esaLoadModuleMedia(cb) {
   document.head.appendChild(s);
 }
 window.esaLoadModuleMedia = esaLoadModuleMedia;
+// Lazy-loader bank soal (/data/quiz-bank.js → window.QUIZ_BANK). Berkasnya
+// ±1,2 MB — seperempat berat halaman — dan hanya terpakai saat quiz dirender.
+function esaLoadQuizBank(cb) {
+  if (typeof window.QUIZ_BANK !== 'undefined') { if (cb) cb(); return; }
+  window.__esaQBcbs = window.__esaQBcbs || [];
+  if (cb) window.__esaQBcbs.push(cb);
+  if (window.__esaQBloading) return;
+  window.__esaQBloading = true;
+  var s = document.createElement('script');
+  s.src = '/data/quiz-bank.js';
+  s.onload = s.onerror = function () {
+    if (typeof window.QUIZ_BANK === 'undefined') window.QUIZ_BANK = {}; // fail-soft
+    window.__esaQBloading = false;
+    var cbs = window.__esaQBcbs || []; window.__esaQBcbs = [];
+    cbs.forEach(function (f) { try { f(); } catch (e) {} });
+  };
+  document.head.appendChild(s);
+}
+window.esaLoadQuizBank = esaLoadQuizBank;
+
+// Lazy-loader data okupasi SKTTK (/peta-karir-okupasi-min.js). Hanya dipakai
+// panel "Mendukung Sertifikasi SKTTK" di halaman modul.
+function esaLoadSkttk(cb) {
+  if (typeof window.__SKTTK_OKUPASI !== 'undefined') { if (cb) cb(); return; }
+  window.__esaSKcbs = window.__esaSKcbs || [];
+  if (cb) window.__esaSKcbs.push(cb);
+  if (window.__esaSKloading) return;
+  window.__esaSKloading = true;
+  var s = document.createElement('script');
+  s.src = '/peta-karir-okupasi-min.js';
+  s.onload = s.onerror = function () {
+    if (typeof window.__SKTTK_OKUPASI === 'undefined') window.__SKTTK_OKUPASI = [];
+    window.__esaSKloading = false;
+    var cbs = window.__esaSKcbs || []; window.__esaSKcbs = [];
+    cbs.forEach(function (f) { try { f(); } catch (e) {} });
+  };
+  document.head.appendChild(s);
+}
+window.esaLoadSkttk = esaLoadSkttk;
+
 // Lazy-loader katalog buku Library (/data/books.js → window.BOOKS).
 function esaLoadBooks(cb) {
   if (typeof BOOKS !== 'undefined') { if (cb) cb(); return; }
@@ -12426,6 +12473,33 @@ window.esaSubmitWorkshopPresenter = esaSubmitWorkshopPresenter;
 
 // =================== FAQ DATA + RENDER ===================
 const FAQ_DATA = [
+  { cat: 'Sistem Belajar', q: 'Sistem belajarnya bagaimana? Jelaskan dari awal sampai dapat sertifikat.',
+    a: 'Alurnya lima langkah, berulang untuk tiap modul:<br><br>' +
+       '<strong>1. Pilih jalur karir.</strong> Ada 16 jalur — Distribusi, Industri, K3 Listrik, dan seterusnya. Semua jalur memakai Level 1 dan 2 yang sama, jadi salah pilih di awal tidak membuang waktu.<br>' +
+       '<strong>2. Tonton video modul.</strong> Satu modul = satu video. Rata-rata 25–40 menit.<br>' +
+       '<strong>3. Baca materi PPT.</strong> Rumus, standar PUIL/SKKNI, dan studi kasus lapangan yang tidak muat di video.<br>' +
+       '<strong>4. Kerjakan quiz.</strong> 25 soal, batas 15 menit, lulus minimal 70% (18 benar). Boleh diulang tanpa batas.<br>' +
+       '<strong>5. Lanjut ke modul berikutnya.</strong> Tombol "Modul Berikutnya" baru terbuka setelah quiz modul ini lulus — supaya tidak ada yang tertinggal.<br><br>' +
+       'Saat semua modul dalam satu tingkat lulus, sertifikat tingkat itu terbit. Naik ke tingkat berikutnya, ulangi sampai Level 6.' },
+  { cat: 'Sistem Belajar', q: 'Apa isi satu modul?',
+    a: 'Empat bagian dalam satu halaman: <strong>Video</strong> pembelajaran, <strong>Materi PPT</strong> untuk pendalaman, <strong>Quiz 25 soal</strong>, dan <strong>Live Class</strong> (jadwal atau rekamannya). Ditambah <strong>asisten modul</strong> yang bisa ditanyai soal materi itu, catatan pribadi, bookmark, dan rating.' },
+  { cat: 'Sistem Belajar', q: 'Apa beda keenam tingkat itu?',
+    a: '<strong>1 Esensial</strong> — mulai dari nol: fisika listrik, K3, alat ukur. 25 modul.<br>' +
+       '<strong>2 Fundamental</strong> — dasar yang kuat: instalasi, proteksi, motor. 23 modul.<br>' +
+       '<strong>3 Profesional</strong> — saatnya praktik, siap kerja entry-level.<br>' +
+       '<strong>4 Advance</strong> — dari praktik ke solusi, level engineer.<br>' +
+       '<strong>5 Expertise</strong> — dari solusi ke dampak nyata, senior specialist.<br>' +
+       '<strong>6 Consultant</strong> — konsultan independen, advisor, atau founder.<br><br>' +
+       'Level 1 dan 2 sama untuk semua jalur. Mulai Level 3 barulah materinya khusus per jalur.' },
+  { cat: 'Sistem Belajar', q: 'Apa yang bisa saya lihat sebelum bayar?',
+    a: 'Cukup banyak. <strong>Gratis:</strong> seluruh katalog 1.117 modul beserta thumbnail videonya, halaman tiap modul, judul, kategori, outcome yang akan dikuasai, dan siapa instrukturnya. Jadi kamu bisa menilai isinya dulu sebelum memutuskan.<br><br>' +
+       '<strong>Perlu akses penuh:</strong> memutar video, membuka materi PPT, mengerjakan quiz, menonton rekaman live class, dan bertanya ke asisten modul.' },
+  { cat: 'Sistem Belajar', q: 'Kenapa tombol "Modul Berikutnya" tidak bisa diklik?',
+    a: 'Karena quiz modul yang sedang dibuka belum lulus. Selesaikan 25 soalnya dengan skor minimal 70%, tombolnya langsung terbuka. Ini disengaja: melompati modul membuat quiz berikutnya terasa mustahil karena dasarnya belum terpasang.<br><br>' +
+       'Kalau memang ingin melompat, buka saja modul tujuan langsung dari katalog atau halaman jalur — yang dikunci hanya tombol urutannya, bukan modulnya.' },
+  { cat: 'Sistem Belajar', q: 'Videonya dari mana? Kenapa sebagian dari YouTube dan sebagian tidak?',
+    a: 'Materi video sedang dipindahkan bertahap ke channel YouTube <strong>@electravaa</strong>. Modul yang sudah pindah diputar langsung dari YouTube beserta thumbnail aslinya; sisanya masih diputar dari Google Drive. Keduanya diputar di dalam halaman modul — kamu tidak perlu berpindah aplikasi.' },
+
   { cat: 'Akun', q: 'Bagaimana cara login? Apa saja pilihannya?',
     a: 'Saat ini ada 4 cara login: <strong>Google</strong>, <strong>LinkedIn</strong>, <strong>GitHub</strong>, atau <strong>Magic Link</strong> (login via email tanpa password). Klik tombol <em>Daftar / Masuk</em> di pojok kanan atas, lalu pilih provider favorit Anda. Data Anda aman — kami pakai Supabase Auth dengan enkripsi.' },
   { cat: 'Akun', q: 'Saya lupa cara akses akun Google/LinkedIn lama, gimana?',
@@ -12449,7 +12523,7 @@ const FAQ_DATA = [
   { cat: 'Modul & Belajar', q: 'Saya boleh skip modul?',
     a: 'Boleh, tapi tidak disarankan. Sistem tidak melarang Anda buka modul L3+ langsung kalau sudah aktivasi penuh, tapi quiz akan terasa sulit kalau dasar belum kuat. Rekomendasi: minimal lulus L1+L2.' },
   { cat: 'Modul & Belajar', q: 'Berapa lama satu modul?',
-    a: 'Rata-rata: <strong>video 25-40 menit</strong> + <strong>materi PPT 10-15 menit</strong> + <strong>quiz 25 soal</strong> (estimasi 20-30 menit). Total ~1-1.5 jam per modul. L1 ada 12 modul → ~15 jam total.' },
+    a: 'Rata-rata: <strong>video 25-40 menit</strong> + <strong>materi PPT 10-15 menit</strong> + <strong>quiz 25 soal</strong> (estimasi 20-30 menit). Total ~1-1.5 jam per modul. Level 1 berisi 25 modul (~30 jam) dan Level 2 berisi 23 modul (~28 jam).' },
   { cat: 'Modul & Belajar', q: 'Quiz harus lulus berapa kali untuk dapat sertifikat?',
     a: 'Minimum skor <strong>70% (18 dari 25 soal)</strong>. Tidak ada batas attempt — Anda bisa coba berkali-kali. Sertifikat level diberikan saat semua modul di level itu lulus 70%+ dengan rata-rata.' },
   { cat: 'Modul & Belajar', q: 'Soal-soal sama setiap kali quiz?',
@@ -12719,7 +12793,9 @@ function openModul(code, trackId, levelId) {
   }
 
   // SKTTK Support — okupasi yang didukung modul ini (peta-karir reverse lookup)
-  try { renderSkttkSection(code, trackId, levelId); } catch(e) { /* fail-soft */ }
+  esaLoadSkttk(function () {
+    try { renderSkttkSection(code, trackId, levelId); } catch (e) { /* fail-soft */ }
+  });
 
   // Instructor — track S6/S7/S8 = Farda Najih (K3 + Pembangkit + Auditor),
   // sisanya = Dr Qashtalani Haramaini.
@@ -12844,6 +12920,9 @@ function openModul(code, trackId, levelId) {
   currentSlide = 1;
   renderSlide(module);
 
+  // Daftar tonton berikutnya di sidebar
+  try { renderUpNext(code, trackId, levelId); } catch (e) { /* fail-soft */ }
+
   // Quiz — soal hanya dirender untuk yang sudah punya akses; kalau terkunci,
   // panelnya diganti kartu ajakan supaya isi soal tidak bocor lewat markup.
   if (moduleLocked) {
@@ -12862,7 +12941,9 @@ function openModul(code, trackId, levelId) {
   } else {
     const quizTimer = document.getElementById('quiz-timer');
     if (quizTimer) quizTimer.style.display = '';
-    renderQuiz(module);
+    // Bank soal dimuat saat dibutuhkan; renderQuiz() sendiri sudah aman kalau
+    // QUIZ_BANK kosong (jatuh ke QUIZ_TEMPLATE), jadi ini tidak menahan render.
+    esaLoadQuizBank(function () { renderQuiz(module); });
   }
 
   // Reset tabs
@@ -13563,6 +13644,55 @@ function generateAIResponse(q) {
   }
   // Fallback
   return `Pertanyaan bagus! Untuk${moduleCtx}, coba buka tab Video untuk penjelasan visual, atau Materi PPT untuk detail text. Kalau masih bingung, boleh tanya lagi dengan lebih spesifik — mau jawaban konsep, rumus, contoh, atau aplikasi lapangan?`;
+}
+
+// ================================================
+// SELANJUTNYA — daftar modul berikutnya di tingkat ini
+// ------------------------------------------------
+// Mengikuti daftar samping halaman tonton YouTube: thumbnail kecil di kiri,
+// judul di kanan, modul yang sedang dibuka ditandai. Tujuannya satu — begitu
+// video habis, langkah berikutnya sudah terlihat tanpa perlu dicari.
+// ================================================
+function renderUpNext(currentCode, trackId, levelId) {
+  const box = document.getElementById('upnext');
+  if (!box) return;
+
+  let list = [];
+  if (levelId === 'L1') list = CURRICULUM['L1'] || [];
+  else if (levelId === 'L2') list = CURRICULUM['L2'] || [];
+  else list = (CURRICULUM[trackId] || []).filter(m => m.level === levelId);
+
+  const i = list.findIndex(m => m.code === currentCode);
+  if (i < 0 || list.length < 2) { box.innerHTML = ''; return; }
+
+  // Modul yang sedang dibuka plus enam sesudahnya.
+  const sekitar = list.slice(i, i + 7);
+  const lvlName = (typeof LEVELS !== 'undefined')
+    ? ((LEVELS.find(l => l.id === levelId) || {}).name || levelId) : levelId;
+
+  const baris = sekitar.map(m => {
+    const aktif = m.code === currentCode;
+    const media = (typeof esaResolveModuleMedia === 'function') ? esaResolveModuleMedia(m.code) : {};
+    const thumb = (typeof esaMediaThumb === 'function') ? esaMediaThumb(media) : null;
+    const lulus = typeof window.esaIsModulePassed === 'function' && window.esaIsModulePassed(m.code);
+    const cover = (typeof esaCrsCover === 'function') ? esaCrsCover(m.category || 'Umum') : '#1a1d2e';
+    const img = (thumb && typeof esaThumbImg === 'function') ? esaThumbImg(thumb) : '';
+    return '<button type="button" class="upnext-row' + (aktif ? ' is-active' : '') + '"' +
+      ' onclick="openModul(\'' + m.code + '\',\'' + trackId + '\',\'' + levelId + '\')">' +
+      '<span class="upnext-thumb" style="background:' + cover + '">' + img +
+        (lulus ? '<span class="upnext-tick">✓</span>' : '') +
+      '</span>' +
+      '<span class="upnext-text">' +
+        '<span class="upnext-title">' + escapeHtml(m.title) + '</span>' +
+        '<span class="upnext-meta">' + escapeHtml(m.code) + ' · ' + (m.jp || '—') + ' JP' +
+          (aktif ? ' · sedang dibuka' : '') + '</span>' +
+      '</span></button>';
+  }).join('');
+
+  box.innerHTML =
+    '<div class="upnext-head"><b>Selanjutnya</b>' +
+    '<span>' + escapeHtml(lvlName) + ' · modul ' + (i + 1) + ' dari ' + list.length + '</span></div>' +
+    baris;
 }
 
 // ================================================
@@ -18626,7 +18756,7 @@ else{setTimeout(init,200);}
 </div>
 
 <!-- SKTTK data: 380 okupasi (38 KB) — di-load async untuk reverse-link modul → SKTTK -->
-<script src="/peta-karir-okupasi-min.js" defer></script>
+<!-- Data okupasi SKTTK dimuat lewat esaLoadSkttk() saat halaman modul dibuka. -->
 
 <!-- ================================================================
      QRIS PAYMENT — bayar via QRIS statis, buka akses instan (trust-based)
