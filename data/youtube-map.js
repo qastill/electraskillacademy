@@ -16,9 +16,17 @@
 //     • Objek                         → { id: 'VLRFXiyvg_U', durasi: '12:40' }
 //       (pakai bentuk objek kalau mau durasi tampil di kartu katalog)
 //
+// MODUL GRATIS (opsional)
+//   Tambahkan `gratis: true` untuk membuka satu modul tanpa bayar:
+//     '1.01': { id: 'VLRFXiyvg_U', gratis: true },
+//   Berguna untuk video yang memang sudah publik di channel — menguncinya di
+//   situs tidak menambah pendapatan, sementara membukanya jadi contoh nyata
+//   sebelum orang memutuskan bayar. Default-nya TERKUNCI, jadi tidak ada modul
+//   yang jadi gratis tanpa ditulis eksplisit di sini.
+//
 // PERILAKU
 //   • Modul yang ADA di sini  → video diambil dari YouTube, thumbnail
-//     asli YouTube dipakai di katalog kursus.
+//     asli YouTube dipakai di katalog kursus dan di halaman modul.
 //   • Modul yang BELUM ada di sini → otomatis tetap memakai videoUrl
 //     Google Drive dari /data/module-media.js. Tidak ada yang rusak.
 //   • Slide/PPT tidak terpengaruh — tetap dari module-media.js.

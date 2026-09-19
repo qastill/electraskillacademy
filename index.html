@@ -10725,6 +10725,49 @@ function esaResolveModuleMedia(code) {
 }
 window.esaResolveModuleMedia = esaResolveModuleMedia;
 
+// Modul yang ditandai gratis di YOUTUBE_MAP ({ id, gratis: true }) boleh
+// ditonton tanpa bayar — untuk video yang memang sudah publik di channel,
+// sehingga menguncinya di sini tidak menambah apa pun.
+function esaIsModuleFree(code) {
+  var e = (typeof window.YOUTUBE_MAP !== 'undefined') ? window.YOUTUBE_MAP[code] : null;
+  return !!(e && typeof e === 'object' && e.gratis);
+}
+window.esaIsModuleFree = esaIsModuleFree;
+
+// true bila ISI modul (video, PPT, quiz) masih terkunci untuk pengunjung ini.
+// Halaman modulnya sendiri selalu terbuka — yang dikunci cuma isinya, supaya
+// katalog & pratinjau tetap bisa dijelajahi seperti Netflix/YouTube.
+function esaModuleLocked(code, levelId) {
+  if (typeof esaContentUnlocked === 'function' && esaContentUnlocked()) return false;
+  if (esaIsModuleFree(code)) return false;
+  try {
+    var lvl = (typeof LEVELS !== 'undefined') ? LEVELS.find(function (l) { return l.id === levelId; }) : null;
+    if (lvl && lvl.isFree) return false;
+  } catch (e) {}
+  return true;
+}
+window.esaModuleLocked = esaModuleLocked;
+
+// Panel terkunci: thumbnail tetap terlihat, isinya yang ditahan.
+function esaLockedPanel(opts) {
+  opts = opts || {};
+  var bg = opts.thumb
+    ? '<img class="lockp-img" src="' + opts.thumb.src + '"' +
+      (opts.thumb.fallback ? ' data-fb="' + opts.thumb.fallback + '"' : '') +
+      ' alt="" loading="lazy" onerror="esaCrsThumbErr(this)">'
+    : '';
+  return '<div class="lockp' + (opts.tall ? ' lockp-tall' : '') + '">' + bg +
+    '<div class="lockp-veil"></div>' +
+    '<div class="lockp-body">' +
+      '<div class="lockp-badge">🔒 ' + (opts.badge || 'Terkunci') + '</div>' +
+      '<h4>' + (opts.title || 'Buka akses penuh untuk melanjutkan') + '</h4>' +
+      '<p>' + (opts.desc || '') + '</p>' +
+      '<button type="button" class="lockp-btn" onclick="esaRequireAccess()">Buka Akses Penuh</button>' +
+    '</div>' +
+  '</div>';
+}
+window.esaLockedPanel = esaLockedPanel;
+
 // Thumbnail dari URL video. YouTube → gambar asli channel; Drive → preview Drive.
 function esaMediaThumb(media) {
   if (!media) return null;
@@ -11386,27 +11429,25 @@ function renderLevels(trackId) {
           <div class="level-body-inner">
             <div class="level-description">${lvl.desc}</div>
             ${isLocked ? `
-              <div class="paid-banner">
+              <div class="paid-banner preview-banner">
                 <div class="paid-banner-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                    <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/>
-                    <path d="M8 11V8a4 4 0 118 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
                   </svg>
                 </div>
                 <div class="paid-banner-text">
-                  <strong>Level ini berbayar</strong>
-                  Selesaikan pembayaran akses penuh untuk membuka semua modul.
+                  <strong>Jelajahi bebas — bayar hanya untuk menonton</strong>
+                  Buka modul mana pun untuk melihat thumbnail, outcome, dan instrukturnya. Video, materi PPT, dan quiz terbuka setelah akses penuh aktif.
                 </div>
-                <button class="paid-banner-btn" onclick="event.stopPropagation(); esaRequireAccess();">Bayar — Buka Akses</button>
+                <button class="paid-banner-btn" onclick="event.stopPropagation(); esaRequireAccess();">Buka Akses Penuh</button>
               </div>
-            ` : `
-              <button class="level-start-btn" onclick="event.stopPropagation(); startLevel('${lvl.id}', '${trackId}')">
-                <span>Mulai ${lvl.name}</span>
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            `}
+            ` : ''}
+            <button class="level-start-btn" onclick="event.stopPropagation(); startLevel('${lvl.id}', '${trackId}')">
+              <span>Mulai ${lvl.name}</span>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
             <div class="module-list">
               ${modules.map(m => {
                 const rec = getModRec(m.code);
@@ -11414,10 +11455,10 @@ function renderLevels(trackId) {
                   ? `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,0.12);color:#16a34a;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-left:8px;vertical-align:middle;">✓ Done · ${fmtDate(rec.lastDate)} · ${rec.bestScore}%</span>`
                   : '';
                 return `
-                <button class="module-card ${isLocked ? 'locked' : ''}" data-module-code="${m.code}" onclick="${isLocked ? 'esaRequireAccess()' : `openModul('${m.code}', '${trackId}', '${lvl.id}')`}">
+                <button class="module-card" data-module-code="${m.code}" onclick="openModul('${m.code}', '${trackId}', '${lvl.id}')">
                   <span class="module-code">${m.code}</span>
                   <div>
-                    <div class="module-title">${m.title}${isLocked ? ' <span class="module-lock-icon">🔒</span>' : ''}${moduleDoneBadge}</div>
+                    <div class="module-title">${m.title}${moduleDoneBadge}</div>
                     <div class="module-meta">${m.category || 'Umum'}<span class="esa-mod-rating" data-rating-code="${m.code}"></span></div>
                   </div>
                   <div class="module-arrow">
@@ -11652,6 +11693,20 @@ function renderLiveClassPanel(module, levelId, trackId, instructor) {
   if (!container) return;
 
   const media = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[module.code]) ? MODULE_MEDIA[module.code] : {};
+
+  // Rekaman live class juga materi berbayar. Pintu halaman modul sekarang
+  // terbuka untuk semua, jadi kuncinya dipasang di sini — kalau tidak,
+  // rekaman ikut terbuka begitu saja.
+  if (media.liveClassUrl && esaModuleLocked(module.code, levelId)) {
+    container.innerHTML = '<div style="padding:24px;background:#fafaf6;border-radius:12px;">' +
+      esaLockedPanel({
+        badge: 'Rekaman terkunci',
+        title: 'Rekaman live class modul ini sudah tersedia',
+        desc: 'Sesi tanya-jawab langsung bersama ' + escapeHtml(instructor.name) +
+              '. Buka akses penuh untuk menonton rekamannya kapan saja.'
+      }) + '</div>';
+    return;
+  }
 
   // Kalau ada rekaman live class, render video player
   if (media.liveClassUrl) {
@@ -12382,14 +12437,10 @@ function openModul(code, trackId, levelId) {
 
   if (!module) return;
 
-  // Paywall: masuk jalur & lihat kurikulum gratis, tetapi membuka detail
-  // modul (video + PPT) memerlukan akses penuh. Level yang ditandai gratis
-  // (isFree) tetap terbuka untuk semua.
-  try {
-    const _lvl = (typeof LEVELS !== 'undefined') ? LEVELS.find(l => l.id === levelId) : null;
-    const _levelIsFree = _lvl ? !!_lvl.isFree : false;
-    if (!_levelIsFree && !esaRequireAccess()) return;
-  } catch (e) { if (!esaRequireAccess()) return; }
+  // Akses: halaman modul TERBUKA untuk semua — judul, outcome, instruktur, dan
+  // thumbnail video bisa dilihat tanpa bayar (pola Netflix/YouTube: katalog
+  // bebas dijelajahi, tombol play yang berbayar). Kuncinya dipasang per panel
+  // di bawah lewat esaModuleLocked().
 
   // Lazy-load data media modul saat pertama kali modul dibuka, lalu ulangi.
   if (typeof MODULE_MEDIA === 'undefined') {
@@ -12491,12 +12542,26 @@ function openModul(code, trackId, levelId) {
   // === Inject VIDEO from MODULE_MEDIA (+ override YouTube dari YOUTUBE_MAP) ===
   const media = esaResolveModuleMedia(code);
   const videoWrap = document.getElementById('video-player-wrap');
+  const moduleLocked = esaModuleLocked(code, levelId);
+  window.currentModuleLocked = moduleLocked;
   if (videoWrap) {
     const parsed = parseVideoEmbed(media.videoUrl);
     // Bersihkan toolbar dari pembukaan modul sebelumnya
     const oldActs = videoWrap.parentElement.querySelector('.embed-actions[data-embed="video"]');
     if (oldActs) oldActs.remove();
-    if (parsed) {
+    if (moduleLocked) {
+      // Terkunci: thumbnail asli tetap tampil, pemutarnya yang ditahan.
+      // Tautan "buka di tab baru" sengaja tidak dirender supaya URL video
+      // tidak bocor lewat markup.
+      videoWrap.innerHTML = esaLockedPanel({
+        thumb: esaMediaThumb(media),
+        badge: 'Video terkunci',
+        title: 'Aktifkan akses penuh untuk menonton',
+        desc: media.videoSource
+          ? 'Videonya sudah siap. Buka akses penuh sekali bayar untuk memutar seluruh video, materi PPT, dan quiz di semua jalur.'
+          : 'Video modul ini sedang disiapkan. Buka akses penuh untuk menonton begitu tayang, plus seluruh materi PPT dan quiz.'
+      });
+    } else if (parsed) {
       if (parsed.type === 'video') {
         videoWrap.innerHTML = `<video src="${parsed.src}" controls controlsList="nodownload" playsinline></video>`;
       } else {
@@ -12530,7 +12595,14 @@ function openModul(code, trackId, levelId) {
   const slidesWrap = document.getElementById('slides-wrap');
   if (slidesWrap) {
     const parsedSlide = parseSlideEmbed(media.slideUrl);
-    if (parsedSlide) {
+    if (moduleLocked) {
+      slidesWrap.innerHTML = esaLockedPanel({
+        tall: true,
+        badge: 'Materi PPT terkunci',
+        title: 'Slide lengkap menunggu di balik akses penuh',
+        desc: 'Materi presentasi modul ini berisi rumus, standar PUIL/SKKNI, dan studi kasus lapangan. Buka akses penuh untuk membaca dan mengunduhnya.'
+      });
+    } else if (parsedSlide) {
       const downloadHref = media.slideUrl;
       slidesWrap.innerHTML = `
         <iframe src="${parsedSlide.src}" allowfullscreen></iframe>
@@ -12577,8 +12649,26 @@ function openModul(code, trackId, levelId) {
   currentSlide = 1;
   renderSlide(module);
 
-  // Quiz
-  renderQuiz(module);
+  // Quiz — soal hanya dirender untuk yang sudah punya akses; kalau terkunci,
+  // panelnya diganti kartu ajakan supaya isi soal tidak bocor lewat markup.
+  if (moduleLocked) {
+    const quizList = document.getElementById('quiz-list');
+    if (quizList) {
+      quizList.innerHTML = esaLockedPanel({
+        badge: 'Quiz terkunci',
+        title: '25 soal untuk menguji pemahamanmu',
+        desc: 'Kerjakan quiz dengan skor minimal 70% untuk menuntaskan modul ini dan naik level. Terbuka setelah akses penuh aktif.'
+      });
+    }
+    const quizAnswered = document.getElementById('quiz-answered');
+    if (quizAnswered) quizAnswered.textContent = '0';
+    const quizTimer = document.getElementById('quiz-timer');
+    if (quizTimer) quizTimer.style.display = 'none';
+  } else {
+    const quizTimer = document.getElementById('quiz-timer');
+    if (quizTimer) quizTimer.style.display = '';
+    renderQuiz(module);
+  }
 
   // Reset tabs
   switchTab('video');
@@ -13166,6 +13256,22 @@ function sendAI() {
   const messages = document.getElementById('ai-messages');
   const q = input.value.trim();
   if (!q) return;
+
+  // Asisten modul memanggil API berbayar per pertanyaan. Dulu terlindung oleh
+  // pintu halaman modul; sekarang pintunya terbuka untuk semua, jadi kuncinya
+  // dipasang di sini — kalau tidak, pengunjung yang belum bayar bisa memakai
+  // kuota token tanpa batas akun.
+  if (window.currentModuleData && esaModuleLocked(window.currentModuleData.code, window.currentModuleData.levelId)) {
+    input.value = '';
+    const lockMsg = document.createElement('div');
+    lockMsg.className = 'ai-msg bot';
+    lockMsg.innerHTML = 'Asisten modul terbuka setelah akses penuh aktif. ' +
+      'Sementara ini kamu tetap bisa melihat outcome, instruktur, dan thumbnail materi modul ini gratis. ' +
+      '<button type="button" onclick="esaRequireAccess()" style="margin-top:10px;display:block;background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:9px 18px;font-size:0.76rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Buka Akses Penuh</button>';
+    messages.appendChild(lockMsg);
+    messages.scrollTop = messages.scrollHeight;
+    return;
+  }
 
   // Add user msg
   const userMsg = document.createElement('div');
@@ -15865,26 +15971,12 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   }
 
   function patchOpenModul() {
-    if (typeof window.openModul !== 'function' || window.__esaOpenModulGated) return;
-    const original = window.openModul;
-    window.openModul = function(code, trackId, levelId) {
-      const active = (typeof window.esaIsMemberActive === 'function') ? window.esaIsMemberActive() : false;
-      if (active) return original.apply(this, arguments);
-      // Belum aktif → blokir akses materi, arahkan ke login / pembayaran.
-      let loggedIn = false;
-      try {
-        loggedIn = !!(JSON.parse(localStorage.getItem('esa_logged_in_user') || 'null')
-          || (JSON.parse(localStorage.getItem('esa_data_v1') || '{}').profile || {}).email);
-      } catch (e) {}
-      if (!loggedIn) {
-        if (typeof window.esaShowAuthModal === 'function') window.esaShowAuthModal();
-      } else {
-        if (typeof window.esaToast === 'function') window.esaToast('Akses Terkunci 🔒', 'Selesaikan pembayaran untuk membuka semua materi.', '🔒');
-        if (typeof window.esaShowActivationModal === 'function') window.esaShowActivationModal();
-      }
-      return;
-    };
-    window.__esaOpenModulGated = true;
+    // NO-OP — halaman modul sekarang terbuka untuk semua, seperti halaman judul
+    // di Netflix/YouTube: siapa pun boleh melihat thumbnail, outcome, dan
+    // instrukturnya. Pembayaran tetap wajib untuk ISInya — video, materi PPT,
+    // dan quiz dikunci per panel oleh esaModuleLocked() di openModul(), yang
+    // juga menahan URL media supaya tidak bocor lewat markup.
+    return;
   }
 
   function patchStartLevel() {
