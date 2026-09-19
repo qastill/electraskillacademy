@@ -24,6 +24,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DEFAULT_CHANNEL = 'UCqirq8_ZUdtboImhGmxFSXw'; // @electravaa
@@ -37,6 +38,17 @@ const args = Object.fromEntries(
 const MIN = parseFloat(args.min || '0.72');     // terima langsung
 const MID = parseFloat(args.mid || '0.5');      // terima kalau unggul jelas
 const MARGIN = parseFloat(args.margin || '0.12'); // jarak minimum ke kandidat kedua
+// Saring teaser/Short. Channel ini punya potongan promo yang judulnya mirip
+// judul modul (mis. "Memahami Earth Tester", 26 detik) — tanpa batas ini
+// potongan itu bisa menggantikan video modul aslinya yang 6 menit.
+const MIN_DURASI = parseInt(args['min-durasi'] || '120', 10); // detik
+
+// ISO-8601 (PT6M5S) → detik. Return 0 bila tidak terbaca.
+function durasiDetik(iso) {
+  const m = String(iso || '').match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+  if (!m) return 0;
+  return (+m[1] || 0) * 86400 + (+m[2] || 0) * 3600 + (+m[3] || 0) * 60 + (+m[4] || 0);
+}
 
 // ---------- kurikulum ----------
 function loadCurriculum() {
@@ -127,24 +139,94 @@ async function fetchFromApi(key, channelId) {
     if (!r.ok) throw new Error(`${p} ${r.status}: ${j?.error?.message || 'gagal'}`);
     return j;
   };
+
+  // Ambil semua halaman playlistItems dari satu playlist.
+  const sweep = async (playlistId, label) => {
+    const out = [];
+    let pageToken;
+    try {
+      do {
+        const page = await api('playlistItems', {
+          part: 'snippet', playlistId, maxResults: '50',
+          ...(pageToken ? { pageToken } : {})
+        });
+        for (const it of page.items || []) {
+          const id = it.snippet?.resourceId?.videoId;
+          if (id) out.push({ id, title: it.snippet.title });
+        }
+        pageToken = page.nextPageToken;
+      } while (pageToken);
+    } catch (e) {
+      console.error(`  ! ${label}: ${e.message}`);
+    }
+    return out;
+  };
+
   const ch = await api('channels', { part: 'contentDetails,snippet', id: channelId });
   if (!ch.items?.length) throw new Error(`Channel ${channelId} tidak ditemukan / tidak publik`);
   const uploads = ch.items[0].contentDetails.relatedPlaylists.uploads;
-  console.error(`Channel: ${ch.items[0].snippet.title} — playlist unggahan ${uploads}`);
+  console.error(`Channel: ${ch.items[0].snippet.title}`);
 
-  const vids = [];
-  let pageToken;
+  const seen = new Map();
+  const add = arr => { for (const v of arr) if (!seen.has(v.id)) seen.set(v.id, v); };
+
+  // 1) Playlist unggahan — HANYA memuat video publik untuk pemegang API key.
+  const dariUploads = await sweep(uploads, `playlist unggahan ${uploads}`);
+  add(dariUploads);
+  console.error(`  playlist unggahan  : ${dariUploads.length} video (publik saja)`);
+
+  // 2) Playlist biasa milik channel. Ini penting: playlist PUBLIK boleh berisi
+  //    video UNLISTED, dan API tetap mengembalikannya. Jadi video yang belum
+  //    dipublikasikan bisa ikut terhubung asal sudah unlisted DAN dimasukkan
+  //    ke salah satu playlist publik. Video "private"/draft tetap tidak muncul
+  //    di mana pun — YouTube tidak mengizinkannya, dan memang tidak boleh
+  //    dipasang karena pengunjung hanya akan melihat "Video unavailable".
+  let ptPl, jumlahPl = 0;
   do {
-    const page = await api('playlistItems', {
-      part: 'snippet', playlistId: uploads, maxResults: '50',
-      ...(pageToken ? { pageToken } : {})
+    const page = await api('playlists', {
+      part: 'snippet,contentDetails', channelId, maxResults: '50',
+      ...(ptPl ? { pageToken: ptPl } : {})
     });
-    for (const it of page.items || []) {
-      vids.push({ id: it.snippet.resourceId?.videoId, title: it.snippet.title });
+    for (const pl of page.items || []) {
+      jumlahPl++;
+      const sebelum = seen.size;
+      add(await sweep(pl.id, `playlist ${pl.id}`));
+      const baru = seen.size - sebelum;
+      console.error(`  ${pl.id} : ${String(pl.contentDetails?.itemCount ?? '?').padStart(3)} item` +
+        (baru ? `, +${baru} baru` : '') + ` — ${pl.snippet?.title || ''}`);
     }
-    pageToken = page.nextPageToken;
-  } while (pageToken);
-  return vids.filter(v => v.id);
+    ptPl = page.nextPageToken;
+  } while (ptPl);
+  console.error(`  total playlist     : ${jumlahPl}`);
+
+  // 3) Saring lewat videos.list: hanya yang benar-benar bisa ditonton pengunjung.
+  const semua = [...seen.values()];
+  const layak = [];
+  const ditolak = [];
+  for (let i = 0; i < semua.length; i += 50) {
+    const batch = semua.slice(i, i + 50);
+    const j = await api('videos', { part: 'status,contentDetails', id: batch.map(v => v.id).join(',') });
+    const st = new Map((j.items || []).map(it => [it.id, it]));
+    for (const v of batch) {
+      const it = st.get(v.id);
+      if (!it) { ditolak.push([v, 'tidak ditemukan']); continue; }
+      const s = it.status || {};
+      if (s.privacyStatus === 'private') { ditolak.push([v, 'private']); continue; }
+      if (s.uploadStatus && s.uploadStatus !== 'processed') { ditolak.push([v, 'uploadStatus=' + s.uploadStatus]); continue; }
+      if (s.embeddable === false) { ditolak.push([v, 'embed dimatikan']); continue; }
+      const detik = durasiDetik(it.contentDetails?.duration);
+      if (detik && detik < MIN_DURASI) { ditolak.push([v, `terlalu pendek (${detik}s) — teaser/Short, bukan modul`]); continue; }
+      layak.push({ ...v, privacy: s.privacyStatus, durasi: detik });
+    }
+  }
+  const unlisted = layak.filter(v => v.privacy === 'unlisted').length;
+  console.error(`Video unik ditemukan : ${semua.length}`);
+  console.error(`  bisa ditonton      : ${layak.length} (publik ${layak.length - unlisted}, unlisted ${unlisted})`);
+  if (ditolak.length) {
+    console.error(`  dilewati           : ${ditolak.length}`);
+    for (const [v, sebab] of ditolak.slice(0, 20)) console.error(`    - ${v.id} (${sebab}) ${v.title}`);
+  }
+  return layak;
 }
 
 function readInput(file) {
@@ -232,10 +314,30 @@ function writeMap(hits, overwrite) {
   const body = src.slice(src.indexOf('window.YOUTUBE_MAP'), src.indexOf('};', src.indexOf('window.YOUTUBE_MAP')));
   for (const m of body.matchAll(/'([^']+)'\s*:\s*(\{[^}]*\}|'[^']*')/g)) existing.set(m[1], m[2]);
 
-  let added = 0, kept = 0;
+  // Satu video hanya boleh jadi milik satu modul. Tanpa ini, video yang sudah
+  // dikurasi manual ke modul A bisa ikut ditempel ke modul B yang judulnya
+  // kebetulan mirip — dua modul lalu memutar video yang sama.
+  const idDipakai = new Map(); // videoId -> kode pemilik
+  const idDari = v => {
+    const m = String(v).match(/([\w-]{11})/);
+    return m ? m[1] : '';
+  };
+  for (const [code, val] of existing) {
+    const id = idDari(val);
+    if (id) idDipakai.set(id, code);
+  }
+
+  let added = 0, kept = 0, bentrok = 0;
   for (const h of hits) {
     if (existing.has(h.code) && !overwrite) { kept++; continue; }
+    const pemilik = idDipakai.get(h.id);
+    if (pemilik && pemilik !== h.code) {
+      console.error(`  ! ${h.code} dilewati: video ${h.id} sudah milik modul ${pemilik}`);
+      bentrok++;
+      continue;
+    }
     existing.set(h.code, `'${h.id}'`);
+    idDipakai.set(h.id, h.code);
     added++;
   }
 
@@ -246,7 +348,7 @@ function writeMap(hits, overwrite) {
   const head = src.slice(0, src.indexOf('window.YOUTUBE_MAP'));
   const tail = src.slice(src.indexOf('};', src.indexOf('window.YOUTUBE_MAP')) + 2);
   fs.writeFileSync(file, `${head}window.YOUTUBE_MAP = {\n${lines}\n};${tail}`);
-  return { added, kept, total: codes.length };
+  return { added, kept, bentrok, total: codes.length };
 }
 
 // ---------- main ----------
@@ -278,9 +380,44 @@ if (misses.length) {
   }
 }
 
+let totalTerpeta;
 if (args['dry-run']) {
   console.log('\n[dry-run] data/youtube-map.js tidak diubah.');
+  totalTerpeta = null;
 } else {
   const r = writeMap(hits, !!args.overwrite);
-  console.log(`\ndata/youtube-map.js: +${r.added} baru, ${r.kept} dipertahankan, ${r.total} total.`);
+  console.log(`\ndata/youtube-map.js: +${r.added} baru, ${r.kept} dipertahankan, ` +
+    `${r.bentrok} ditolak (video sudah milik modul lain), ${r.total} total.`);
+  totalTerpeta = r.total;
+}
+
+// ---------- laporan migrasi Drive → YouTube ----------
+// Tujuan akhir: semua modul diputar dari YouTube, tidak ada lagi Google Drive.
+// Baris ini yang menunjukkan seberapa jauh perjalanannya.
+try {
+  const ctx = { console };
+  ctx.window = ctx;
+  vm.createContext(ctx);
+  vm.runInContext(fs.readFileSync(path.join(ROOT, 'data/module-media.js'), 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync(path.join(ROOT, 'data/youtube-map.js'), 'utf8'), ctx);
+  const MM = ctx.MODULE_MEDIA || {};
+  const YM = ctx.YOUTUBE_MAP || {};
+  const punyaVideo = Object.keys(MM).filter(k => MM[k] && MM[k].videoUrl);
+  const masihDrive = punyaVideo.filter(k => !YM[k] && /drive\.google\.com/.test(MM[k].videoUrl));
+  const persen = punyaVideo.length ? ((punyaVideo.length - masihDrive.length) / punyaVideo.length * 100) : 0;
+  console.log('\n=== MIGRASI DRIVE → YOUTUBE ===');
+  console.log(`Modul bervideo      : ${punyaVideo.length}`);
+  console.log(`Sudah dari YouTube  : ${punyaVideo.length - masihDrive.length} (${persen.toFixed(1)}%)`);
+  console.log(`Masih dari Drive    : ${masihDrive.length}`);
+  if (masihDrive.length) {
+    const perJalur = {};
+    for (const k of masihDrive) {
+      const j = (k.match(/^\d+([A-Z]?)/) || [, ''])[1] || 'Fondasi';
+      perJalur[j] = (perJalur[j] || 0) + 1;
+    }
+    console.log('Sisa per jalur      : ' +
+      Object.entries(perJalur).sort((a, b) => b[1] - a[1]).map(([j, n]) => `${j}=${n}`).join(' '));
+  }
+} catch (e) {
+  console.error('(laporan migrasi dilewati: ' + e.message + ')');
 }

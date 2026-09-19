@@ -2,10 +2,21 @@
 // PRIMARY: DeepSeek (lebih murah, kualitas tinggi)
 // FALLBACK: Groq (otomatis dipakai kalau DeepSeek error/rate-limit)
 //
+// KUOTA (migration-014): batas 50 pertanyaan per akun (per email) ditegakkan
+// di SERVER lewat RPC ai_tutor_consume. Sebelumnya batas ini hanya disimpan di
+// localStorage browser sehingga bisa direset siapa saja — artinya tidak ada
+// batas nyata atas biaya token API. Permintaan tanpa email ditolak 401 dan
+// klien memakai jawaban lokal (gratis, tanpa panggilan berbayar).
+//
 // API key di Vercel Environment Variables:
 //   - DEEPSEEK_API_KEY (wajib untuk primary)
 //   - GROQ_API_KEY (opsional untuk fallback otomatis)
+//   - SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (wajib untuk kuota per akun)
 // Override manual via AI_PROVIDER=deepseek | groq (skip auto-fallback)
+
+const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+const TUTOR_LIMIT = Number(process.env.AI_TUTOR_LIMIT || 50);
 
 const PROVIDERS = {
   deepseek: {
@@ -96,6 +107,25 @@ async function callProvider(providerName, systemPrompt, question) {
 
 import { applyCors, rateLimited } from '../lib/guard.js';
 
+// Panggil RPC Supabase dengan service role. Return { ok, value }.
+async function rpc(fn, args) {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SERVICE_KEY,
+        'Authorization': `Bearer ${SERVICE_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(args)
+    });
+    if (!r.ok) return { ok: false, detail: (await r.text()).slice(0, 200) };
+    return { ok: true, value: Number(await r.json()) };
+  } catch (e) {
+    return { ok: false, detail: String(e).slice(0, 200) };
+  }
+}
+
 export default async function handler(req, res) {
   applyCors(req, res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
@@ -114,22 +144,57 @@ export default async function handler(req, res) {
   if (!question) return res.status(400).json({ error: 'Pertanyaan kosong' });
   if (question.length > 1500) return res.status(400).json({ error: 'Pertanyaan terlalu panjang (max 1500 karakter)' });
 
+  // --- Kuota per akun (server-side) ---------------------------------------
+  // Tanpa email tidak ada yang bisa dihitung, jadi tidak ada panggilan berbayar.
+  const email = String(body.email || '').trim().toLowerCase();
+  if (!email || !email.includes('@')) {
+    return res.status(401).json({
+      error: 'login_required',
+      message: `Masuk dulu untuk memakai Asisten Modul (batas ${TUTOR_LIMIT} pertanyaan / akun).`,
+      limit: TUTOR_LIMIT
+    });
+  }
+  if (!SUPABASE_URL || !SERVICE_KEY) {
+    // Gagal tertutup: tanpa penyimpan kuota tidak ada batas nyata atas biaya API.
+    return res.status(503).json({
+      error: 'server_not_configured',
+      message: 'Butuh SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY untuk batas per-akun.'
+    });
+  }
+  // Cek sisa dulu tanpa konsumsi, supaya error provider tidak memakan kuota.
+  const rem = await rpc('ai_tutor_remaining', { p_email: email, p_limit: TUTOR_LIMIT });
+  if (!rem.ok) return res.status(502).json({ error: 'quota_error', detail: rem.detail });
+  if (rem.value <= 0) {
+    return res.status(429).json({
+      error: 'limit_reached',
+      message: `Kuota ${TUTOR_LIMIT} pertanyaan Asisten Modul untuk akun ini sudah habis.`,
+      remaining: 0,
+      limit: TUTOR_LIMIT
+    });
+  }
+
   const moduleTitle = String(body.moduleTitle || '').slice(0, 200);
   const moduleCode = String(body.moduleCode || '').slice(0, 20);
   const systemPrompt = SYSTEM_PROMPT_TEMPLATE(moduleTitle, moduleCode);
+
+  // Konsumsi 1 kuota hanya setelah jawaban benar-benar didapat.
+  const sudahTerpakai = async () => {
+    const used = await rpc('ai_tutor_consume', { p_email: email, p_limit: TUTOR_LIMIT });
+    return used.ok ? Math.max(used.value, 0) : Math.max(rem.value - 1, 0);
+  };
 
   // Override manual via env var (skip fallback)
   const forced = String(process.env.AI_PROVIDER || '').toLowerCase();
   if (forced && PROVIDERS[forced]) {
     const r = await callProvider(forced, systemPrompt, question);
-    if (r.ok) return res.status(200).json({ answer: r.answer, provider: r.provider });
+    if (r.ok) return res.status(200).json({ answer: r.answer, provider: r.provider, remaining: await sudahTerpakai(), limit: TUTOR_LIMIT });
     return res.status(502).json({ error: r.error, detail: r.detail || '' });
   }
 
   // Default flow: DeepSeek dulu, fallback Groq otomatis
   const primary = await callProvider('deepseek', systemPrompt, question);
   if (primary.ok) {
-    return res.status(200).json({ answer: primary.answer, provider: primary.provider });
+    return res.status(200).json({ answer: primary.answer, provider: primary.provider, remaining: await sudahTerpakai(), limit: TUTOR_LIMIT });
   }
 
   // DeepSeek gagal — coba Groq
@@ -140,16 +205,19 @@ export default async function handler(req, res) {
       answer: fallback.answer,
       provider: fallback.provider,
       fallback_from: 'deepseek',
-      primary_error: primary.error
+      primary_error: primary.error,
+      remaining: await sudahTerpakai(),
+      limit: TUTOR_LIMIT
     });
   }
 
-  // Kedua provider gagal
+  // Kedua provider gagal — kuota TIDAK dipotong.
   return res.status(502).json({
     error: 'Kedua AI provider gagal. Pastikan DEEPSEEK_API_KEY dan GROQ_API_KEY valid di Vercel.',
     deepseek_error: primary.error,
     deepseek_detail: primary.detail || '',
     groq_error: fallback.error,
-    groq_detail: fallback.detail || ''
+    groq_detail: fallback.detail || '',
+    remaining: rem.value
   });
 }

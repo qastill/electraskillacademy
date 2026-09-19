@@ -33,6 +33,35 @@
 //
 // Jadi migrasi bisa bertahap: tambah barisnya begitu satu video naik
 // ke YouTube, tanpa menyentuh file lain.
+//
+// ----------------------------------------------------------------
+// MENGISI OTOMATIS DARI CHANNEL
+//   node tools/match-youtube.mjs --api-key=AIza...            (tulis)
+//   node tools/match-youtube.mjs --api-key=AIza... --dry-run  (lihat dulu)
+//   node tools/verify-youtube.mjs --api-key=AIza...           (cek semua ID
+//         masih ada, publik/unlisted, dan boleh di-embed)
+//
+//   Alat itu menyapu playlist unggahan DAN semua playlist publik channel,
+//   lalu menyaring yang tidak layak. Entri yang sudah ada di file ini tidak
+//   pernah ditimpa (kecuali --overwrite), dan satu video tidak boleh dipakai
+//   dua modul.
+//
+// VIDEO YANG MASIH DRAFT / UNLISTED
+//   • UNLISTED sudah bisa dipakai: penonton mana pun yang punya link bisa
+//     memutarnya dan embed-nya jalan. Supaya alat di atas bisa MENEMUKANNYA,
+//     video unlisted harus dimasukkan ke salah satu playlist publik channel —
+//     API key tidak bisa melihat video unlisted yang tidak ada di playlist.
+//     Alternatifnya, tulis manual barisnya di bawah.
+//   • DRAFT / PRIVATE tidak boleh dipasang. Video private hanya bisa dibuka
+//     pemilik channel; kalau dipetakan, semua pengunjung cuma melihat
+//     "Video unavailable". Ubah dulu ke Unlisted atau Public.
+//   verify-youtube.mjs akan menolak keduanya kalau sampai kesalip masuk.
+//
+// SARINGAN DURASI
+//   Video di bawah 120 detik dianggap teaser/Short dan tidak dipetakan
+//   (channel ini punya potongan promo yang judulnya sama dengan judul modul,
+//   mis. "Memahami Earth Tester" 26 detik vs video modulnya 6 menit).
+//   Ubah dengan --min-durasi=<detik> kalau memang ada modul sependek itu.
 // ================================================================
 
 window.YOUTUBE_MAP = {
