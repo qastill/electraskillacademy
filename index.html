@@ -10728,7 +10728,12 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       if (data.active) {
         // Server says user aktif → populate state lokal
         if (data.promo_code) state.promoCode = data.promo_code;
-        if (!state.profile) state.profile = { name: email, email: email };
+        // Profil yang dibuat di sini WAJIB punya `phone`, kalau tidak
+        // loadData() akan menganggapnya skema lama dan memicu migrasi
+        // berulang-ulang. '-' berarti "belum diisi" — modal lengkapi profil
+        // tetap menanyakannya pada pengguna non-admin.
+        if (!state.profile) state.profile = { name: data.name || email, email: email, phone: '-' };
+        if (!state.profile.phone) state.profile.phone = '-';
         state.profile.activationMethod = data.activation_method || 'server';
         if (data.expires_at) state.profile.subscriptionExpiresAt = data.expires_at;
         if (data.activation_method === 'payment') state.profile.isPaid = true;
@@ -10788,11 +10793,25 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       d.schemaVersion = d.schemaVersion || 1;
       d.promoCode = d.promoCode || null;
 
-      // MIGRATION: profile schema v1 (no phone field) is invalid under v2
-      // → invalidate profile but keep all progress, so user will be re-prompted to login
+      // MIGRASI profil v1 → v2 (v1 belum punya field `phone`).
+      //
+      // Dulu blok ini menyetel d.profile = null. Itu memutus akses secara
+      // permanen: syncMemberStatusFromServer() membuat ulang profil sebagai
+      // { name, email } saja — tanpa `phone` — sehingga loadData() berikutnya
+      // menghapusnya lagi, selamanya. isMemberActive() membaca
+      // state.profile.isPaid, jadi profil yang terus dihapus = terkunci terus,
+      // meski server sudah bilang is_active = true.
+      //
+      // Pengguna biasa masih bisa lolos dengan login ulang (modal "lengkapi
+      // profil" mengisi phone). Admin TIDAK bisa: kedua jalur login melewati
+      // modal itu untuk email admin (`needPhone = !isAdmin && ...`), jadi
+      // phone tidak pernah terisi dan lingkarannya tidak pernah putus.
+      //
+      // Cukup ISI phone yang hilang, jangan hapus profilnya. Tujuan migrasi
+      // (meminta nomor HP) tetap tercapai karena modal lengkapi-profil juga
+      // memicu pada phone === '-'.
       if (d.profile && (!d.profile.phone || d.schemaVersion < SCHEMA_VERSION)) {
-        console.info('[ESA] Old profile schema detected (missing phone). Re-login required.');
-        d.profile = null;
+        d.profile.phone = d.profile.phone || '-';
         d.schemaVersion = SCHEMA_VERSION;
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(e) {}
       }
