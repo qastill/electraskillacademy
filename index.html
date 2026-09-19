@@ -1618,21 +1618,19 @@ if ('serviceWorker' in navigator) {
   </div>
 
   <!-- Levels Accordion (sekarang langsung di bawah detail-nav, hero lama dihilangkan) -->
-  <section class="jalur-levels" style="padding-top: 60px;">
+  <section class="jalur-levels" style="padding-top: 26px;">
     <div class="jalur-levels-inner">
-      <div class="jalur-levels-title">
-        <div class="jalur-breadcrumb" id="jalur-breadcrumb" style="margin-bottom: 18px; font-size: 0.78rem; color: var(--ink-mute); letter-spacing: 0.08em; text-transform: uppercase;">
+      <div class="jalur-levels-title jalur-title-compact">
+        <div class="jalur-breadcrumb" id="jalur-breadcrumb">
           <a onclick="showView('home')" style="cursor:pointer; color: var(--gold-dark); text-decoration: none; font-weight: 600;">Beranda</a>
           <span style="margin: 0 8px; color: rgba(26,29,46,0.3);">›</span>
           <span style="color: var(--ink-dim); font-weight: 500;">Jalur Karir</span>
           <span style="margin: 0 8px; color: rgba(26,29,46,0.3);">›</span>
           <span id="jalur-bc-name" style="color: var(--ink); font-weight: 600;"></span>
         </div>
-        <h2>6 Tingkatan dari <span class="italic">pemula ke ahli</span> — <span id="jalur-track-name" style="color: var(--gold-dark); font-style: italic;"></span></h2>
-        <p>Mulai dari Esensial yang gratis, naik bertahap sampai Consultant level. Setiap tingkat dirancang sistematis. <strong>Total <span id="jalur-total-modules">0</span> modul</strong> untuk jalur ini.</p>
-
-        <!-- Profil progress level user -->
-        <div id="jalur-progress-strip" style="margin-top: 28px;"></div>
+        <h2><span id="jalur-track-name"></span></h2>
+        <p>Enam tingkat berurutan, <strong><span id="jalur-total-modules">0</span> modul</strong> — dari nol sampai konsultan.</p>
+        <!-- Strip progres lama dihapus: peta alur di bawah sudah memuatnya. -->
       </div>
       <div class="level-list" id="level-list">
         <!-- Filled by JS -->
@@ -11379,6 +11377,9 @@ function openJalur(trackId) {
 // RENDER JALUR PROGRESS — profil level yang sudah dituntaskan
 // ================================================
 function renderJalurProgress(trackId) {
+  // Digantikan peta alur di renderLevels() — strip terpisah bikin halaman
+  // panjang tanpa menambah informasi. Dibiarkan sebagai no-op supaya
+  // pemanggil lama tidak melempar.
   const strip = document.getElementById('jalur-progress-strip');
   if (!strip || typeof LEVELS === 'undefined') return;
 
@@ -11483,139 +11484,203 @@ function renderJalurProgress(trackId) {
 }
 
 // ================================================
-// RENDER LEVELS (accordion)
+// RENDER LEVELS — alur belajar + satu tingkat aktif
+// ------------------------------------------------
+// Dulu enam akordeon bertumpuk: untuk sampai ke tingkat berikutnya harus
+// menggulir melewati seluruh modul tingkat sebelumnya. Sekarang alurnya
+// dipasang di atas sebagai peta yang bisa diklik, dan hanya tingkat aktif
+// yang menampilkan modulnya — jadi pindah tingkat cukup sekali klik.
 // ================================================
+
+// Sampul tiap tingkat. Kalau berkasnya belum ada, onerror menjatuhkannya ke
+// foto lama di LEVELS[].photo, lalu ke sampul bergradasi.
+const LEVEL_COVERS = {
+  L1: '/img/level-1-esensial.webp',
+  L2: '/img/level-2-fundamental.webp',
+  L3: '/img/level-3-profesional.webp',
+  L4: '/img/level-4-advance.webp',
+  L5: '/img/level-5-expertise.webp',
+  L6: '/img/level-6-consultant.webp'
+};
+const LEVEL_TAGLINES = {
+  L1: 'Mulai dari nol',
+  L2: 'Bangun dasar yang kuat',
+  L3: 'Saatnya praktik',
+  L4: 'Dari praktik ke solusi',
+  L5: 'Dari solusi ke dampak nyata',
+  L6: 'Mengubah visi jadi dampak'
+};
+
+let _esaActiveLevel = 'L1';
+
+function esaLevelCover(levelId, fallbackPhoto) {
+  const src = LEVEL_COVERS[levelId];
+  const fb = fallbackPhoto ? ` data-fb="${fallbackPhoto}"` : '';
+  return `<img src="${src}"${fb} alt="" loading="lazy" decoding="async" onerror="esaCrsThumbErr(this)">`;
+}
+
+// Latar di balik sampul. Kalau berkas gambarnya belum ada, yang tersisa
+// gradasi khas tingkat itu — terbaca sebagai sengaja, bukan gambar gagal muat.
+function esaLevelCoverBg(levelId) {
+  return (typeof esaCrsCover === 'function')
+    ? esaCrsCover('tingkat-' + levelId)
+    : 'linear-gradient(135deg,#1a1d2e,#2d3148)';
+}
+
+window.esaSetLevel = function (levelId, trackId) {
+  _esaActiveLevel = levelId;
+  renderLevels(trackId || currentTrackId);
+  // Gulir ke awal panel, bukan ke puncak halaman — supaya peta alur tetap terlihat.
+  const el = document.getElementById('esa-level-panel');
+  if (el) {
+    const y = el.getBoundingClientRect().top + window.scrollY - 92;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  }
+};
+
 function renderLevels(trackId) {
   const list = document.getElementById('level-list');
+  if (!list) return;
 
-  // Pull progress helpers (defined inside the addon IIFE)
   const isPassed = (code) => typeof window.esaIsModulePassed === 'function' && window.esaIsModulePassed(code);
   const getModRec = (code) => {
     try { return JSON.parse(localStorage.getItem('esa_data_v1') || '{}').modules?.[code]; } catch { return null; }
   };
   const fmtDate = (iso) => {
     if (!iso) return '';
-    try {
-      const d = new Date(iso);
-      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-    } catch { return ''; }
+    try { return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }); } catch { return ''; }
   };
 
-  const levelsHtml = LEVELS.map((baseLvl, idx) => {
-    // Apply per-track override (jika ada) supaya judul level kontekstual
-    // ke spesialisasi (mis. "Consultant Distribution Power" di S3, dll).
-    const overrideKey = `${trackId}_${baseLvl.id}`;
-    const override = (typeof LEVEL_OVERRIDES !== 'undefined') ? LEVEL_OVERRIDES[overrideKey] : null;
+  const memberActive = typeof window.esaIsMemberActive === 'function' && window.esaIsMemberActive();
+
+  // --- Rangkum tiap tingkat sekali, dipakai peta alur maupun panel ---
+  const data = LEVELS.map((baseLvl, idx) => {
+    const override = (typeof LEVEL_OVERRIDES !== 'undefined')
+      ? LEVEL_OVERRIDES[`${trackId}_${baseLvl.id}`] : null;
     const lvl = override ? { ...baseLvl, ...override } : baseLvl;
 
     let modules = [];
     if (lvl.id === 'L1') modules = CURRICULUM['L1'] || [];
     else if (lvl.id === 'L2') modules = CURRICULUM['L2'] || [];
-    else {
-      const trackMods = CURRICULUM[trackId] || [];
-      modules = trackMods.filter(m => m.level === lvl.id);
-    }
+    else modules = (CURRICULUM[trackId] || []).filter(m => m.level === lvl.id);
 
-    const badgeClass = lvl.isFree ? 'free' : 'paid';
-    const badgeText = lvl.isFree ? 'Gratis' : 'Berbayar';
-    const isPaid = !lvl.isFree;
-    // Level berbayar terkunci untuk member yang belum aktif (belum bayar /
-    // belum punya kode). Member aktif (bayar QRIS / promo / admin) → terbuka.
-    const isLocked = isPaid && !(typeof window.esaIsMemberActive === 'function' && window.esaIsMemberActive());
+    const passed = modules.filter(m => isPassed(m.code)).length;
+    const total = modules.length;
+    const complete = total > 0 && passed === total;
 
-    // Compute module-level + level-level "Done" stats
-    const passedCount = modules.filter(m => isPassed(m.code)).length;
-    const totalCount = modules.length;
-    const levelComplete = totalCount > 0 && passedCount === totalCount;
-    let levelAvgScore = 0;
-    let lastDoneDate = null;
-    if (passedCount > 0) {
+    let avg = 0, lastDate = null;
+    if (passed > 0) {
       let sum = 0;
       modules.forEach(m => {
         const r = getModRec(m.code);
         if (r && r.passed) {
           sum += r.bestScore || 0;
-          if (!lastDoneDate || (r.lastDate && r.lastDate > lastDoneDate)) lastDoneDate = r.lastDate;
+          if (!lastDate || (r.lastDate && r.lastDate > lastDate)) lastDate = r.lastDate;
         }
       });
-      levelAvgScore = Math.round(sum / passedCount);
+      avg = Math.round(sum / passed);
     }
-    const levelDoneBadge = levelComplete
-      ? `<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,0.12);color:#16a34a;padding:3px 9px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-left:8px;">✓ Done · ${fmtDate(lastDoneDate)} · ${levelAvgScore}%</span>`
-      : (passedCount > 0 ? `<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(212,175,106,0.12);color:var(--gold-dark);padding:3px 9px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-left:8px;">${passedCount}/${totalCount} lulus</span>` : '');
 
+    return {
+      lvl, idx, modules, passed, total, complete, avg, lastDate,
+      num: idx + 1,
+      locked: !lvl.isFree && !memberActive,
+      status: complete ? 'done' : (passed > 0 ? 'progress' : 'todo')
+    };
+  });
+
+  if (!data.some(d => d.lvl.id === _esaActiveLevel)) _esaActiveLevel = 'L1';
+  const activeIdx = data.findIndex(d => d.lvl.id === _esaActiveLevel);
+  const active = data[activeIdx];
+  const prev = activeIdx > 0 ? data[activeIdx - 1] : null;
+  const next = activeIdx < data.length - 1 ? data[activeIdx + 1] : null;
+
+  // --- Peta alur: newbie → konsultan, tiap simpul bisa diklik ---
+  const nodes = data.map((d, i) => {
+    const cls = ['lvlflow-node', 'is-' + d.status];
+    if (d.lvl.id === _esaActiveLevel) cls.push('active');
+    const tick = d.status === 'done' ? '✓' : d.num;
     return `
-      <div class="level-card" id="level-${lvl.id}">
-        <button class="level-card-header" onclick="toggleLevel('${lvl.id}')">
-          <div class="level-photo" style="background-image: url('${lvl.photo}')"></div>
-          <div class="level-info">
-            <h3>${lvl.name}${levelDoneBadge}</h3>
-            <div class="subtitle">${lvl.subtitle}${lvl.isCommon ? ' · sama untuk semua jalur' : ''}${levelComplete && (lvl.id === 'L1' || lvl.id === 'L2') ? ' · sudah pernah dikerjakan, tidak perlu diulang' : ''}</div>
-          </div>
-          <div class="level-badge ${badgeClass}">${badgeText}</div>
-          <div style="display:flex;align-items:center;gap:16px;">
-            <div class="level-count"><strong>${modules.length}</strong> modul</div>
-            <div class="level-chevron">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
+      ${i > 0 ? '<li class="lvlflow-arrow" aria-hidden="true">→</li>' : ''}
+      <li class="${cls.join(' ')}">
+        <button type="button" onclick="esaSetLevel('${d.lvl.id}','${trackId}')"
+                aria-current="${d.lvl.id === _esaActiveLevel ? 'step' : 'false'}">
+          <span class="lvlflow-thumb" style="background:${esaLevelCoverBg(d.lvl.id)}">${esaLevelCover(d.lvl.id, d.lvl.photo)}<span class="n">${tick}</span></span>
+          <span class="lvlflow-name">${escapeHtml(LEVELS[i].name)}</span>
+          <span class="lvlflow-tag">${escapeHtml(LEVEL_TAGLINES[d.lvl.id] || d.lvl.subtitle || '')}</span>
+          <span class="lvlflow-meta">${d.total} modul${d.passed ? ` · ${d.passed} lulus` : ''}</span>
         </button>
-        <div class="level-body">
-          <div class="level-body-inner">
-            <div class="level-description">${lvl.desc}</div>
-            ${isLocked ? `
-              <div class="paid-banner preview-banner">
-                <div class="paid-banner-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                </div>
-                <div class="paid-banner-text">
-                  <strong>Jelajahi bebas — bayar hanya untuk menonton</strong>
-                  Buka modul mana pun untuk melihat thumbnail, outcome, dan instrukturnya. Video, materi PPT, dan quiz terbuka setelah akses penuh aktif.
-                </div>
-                <button class="paid-banner-btn" onclick="event.stopPropagation(); esaRequireAccess();">Buka Akses Penuh</button>
-              </div>
-            ` : ''}
-            <button class="level-start-btn" onclick="event.stopPropagation(); startLevel('${lvl.id}', '${trackId}')">
-              <span>Mulai ${lvl.name}</span>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="crs-grid esa-modgrid">
-              ${modules.map(m => {
-                // Kartu yang sama dengan katalog — thumbnail dulu, judul menyusul.
-                try { return esaModuleCardHtml(m, trackId, lvl.id); }
-                catch (e) {
-                  // Data media belum siap: jangan sampai levelnya kosong.
-                  return `<button class="module-card" data-module-code="${m.code}" onclick="openModul('${m.code}', '${trackId}', '${lvl.id}')">
-                    <span class="module-code">${m.code}</span>
-                    <div><div class="module-title">${m.title}</div>
-                    <div class="module-meta">${m.category || 'Umum'}</div></div>
-                  </button>`;
-                }
-              }).join('')}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
+      </li>`;
   }).join('');
 
-  list.innerHTML = levelsHtml;
+  const flow = `
+    <div class="lvlflow">
+      <div class="lvlflow-head">
+        <div class="lvlflow-title">
+          <b>Alur belajar</b>
+          <span>Dari nol sampai konsultan — klik tingkat mana pun untuk langsung lompat</span>
+        </div>
+        <div class="lvlflow-nav">
+          <button type="button" class="lvlflow-btn" ${prev ? `onclick="esaSetLevel('${prev.lvl.id}','${trackId}')"` : 'disabled'}>‹ Sebelumnya</button>
+          <button type="button" class="lvlflow-btn primary" ${next ? `onclick="esaSetLevel('${next.lvl.id}','${trackId}')"` : 'disabled'}>Tingkat berikutnya ›</button>
+        </div>
+      </div>
+      <ol class="lvlflow-track">${nodes}</ol>
+    </div>`;
 
-  // Don't auto-expand any level — let the user open them manually.
-  // Previous behavior auto-opened L1 (Esensial) which felt intrusive,
-  // especially for users who already completed L1+L2 in another jalur.
+  // --- Panel tingkat aktif ---
+  const a = active;
+  const doneBadge = a.complete
+    ? `<span class="lvlpanel-chip done">✓ Tuntas · ${a.avg}% · ${fmtDate(a.lastDate)}</span>`
+    : (a.passed > 0 ? `<span class="lvlpanel-chip prog">${a.passed}/${a.total} modul lulus</span>` : '');
+  const pct = a.total ? Math.round((a.passed / a.total) * 100) : 0;
+
+  const grid = a.total
+    ? `<div class="crs-grid esa-modgrid">${a.modules.map(m => {
+        try { return esaModuleCardHtml(m, trackId, a.lvl.id); }
+        catch (e) {
+          return `<button class="module-card" data-module-code="${m.code}" onclick="openModul('${m.code}','${trackId}','${a.lvl.id}')">
+            <span class="module-code">${m.code}</span>
+            <div><div class="module-title">${escapeHtml(m.title)}</div>
+            <div class="module-meta">${escapeHtml(m.category || 'Umum')}</div></div>
+          </button>`;
+        }
+      }).join('')}</div>`
+    : `<div class="crs-empty"><h4>Modul tingkat ini sedang disiapkan</h4>
+        <p>Kurikulumnya sudah dirancang, videonya menyusul. Sementara itu, tingkat di bawahnya bisa kamu selesaikan dulu.</p></div>`;
+
+  const panel = `
+    <div class="lvlpanel" id="esa-level-panel">
+      <div class="lvlpanel-hero">
+        <div class="lvlpanel-cover" style="background:${esaLevelCoverBg(a.lvl.id)}">${esaLevelCover(a.lvl.id, a.lvl.photo)}</div>
+        <div class="lvlpanel-info">
+          <div class="lvlpanel-eyebrow">Tingkat ${a.num} dari ${data.length} · ${a.total} modul ${doneBadge}</div>
+          <h3>${escapeHtml(a.lvl.name)}</h3>
+          <p>${escapeHtml(a.lvl.desc || '')}</p>
+          <div class="lvlpanel-bar"><i style="width:${pct}%"></i></div>
+          <div class="lvlpanel-actions">
+            ${a.total ? `<button type="button" class="level-start-btn" onclick="startLevel('${a.lvl.id}','${trackId}')">
+              <span>Mulai ${escapeHtml(LEVELS[a.idx].name)}</span>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>` : ''}
+            ${a.locked ? `<button type="button" class="lvlpanel-unlock" onclick="esaRequireAccess()">Buka akses penuh</button>` : ''}
+          </div>
+          ${a.locked ? `<div class="lvlpanel-note">Jelajahi bebas — thumbnail, outcome, dan instruktur terbuka untuk semua. Video, PPT, dan quiz perlu akses penuh.</div>` : ''}
+        </div>
+      </div>
+      ${grid}
+      <div class="lvlpanel-foot">
+        ${prev ? `<button type="button" class="lvlflow-btn" onclick="esaSetLevel('${prev.lvl.id}','${trackId}')">‹ ${escapeHtml(LEVELS[prev.idx].name)}</button>` : '<span></span>'}
+        ${next ? `<button type="button" class="lvlflow-btn primary" onclick="esaSetLevel('${next.lvl.id}','${trackId}')">${escapeHtml(LEVELS[next.idx].name)} ›</button>` : '<span></span>'}
+      </div>
+    </div>`;
+
+  list.innerHTML = flow + panel;
 }
 
 function toggleLevel(levelId) {
-  const card = document.getElementById('level-' + levelId);
-  if (!card) return;
-  card.classList.toggle('open');
+  // Akordeon lama sudah diganti pemilih tingkat; jaga pemanggil lama tetap jalan.
+  esaSetLevel(levelId, currentTrackId);
 }
 
 // ================================================

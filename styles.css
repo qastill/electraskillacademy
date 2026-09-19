@@ -11444,3 +11444,287 @@ button:active:not(:disabled),
   .esa-modgrid { grid-template-columns: 1fr; gap: 26px 0; }
   .crs-hook span { font-size: 0.95rem; }
 }
+
+/* ================================================
+   ALUR BELAJAR + PEMILIH TINGKAT (halaman jalur)
+   Menggantikan enam akordeon bertumpuk: peta alur di
+   atas sekaligus jadi navigasi, satu tingkat aktif di
+   bawahnya. Pindah tingkat tanpa menggulir.
+================================================ */
+.jalur-title-compact { margin-bottom: 22px; }
+.jalur-title-compact .jalur-breadcrumb {
+  margin-bottom: 10px;
+  font-size: 0.74rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.jalur-title-compact h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--gold-dark);
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+.jalur-title-compact p { font-size: 0.92rem; color: var(--ink-mute); }
+
+/* --- Peta alur --- */
+.lvlflow {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 20px 16px;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 16px rgba(26, 29, 46, 0.05);
+}
+.lvlflow-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.lvlflow-title b {
+  display: block;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.lvlflow-title span { font-size: 0.85rem; color: var(--ink-mute); }
+.lvlflow-nav { display: flex; gap: 8px; flex-shrink: 0; }
+.lvlflow-btn {
+  background: #fff;
+  border: 1px solid var(--line-gold);
+  color: var(--gold-dark);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s, color 0.18s, opacity 0.18s;
+}
+.lvlflow-btn:hover:not(:disabled) { background: var(--gold-bg); }
+.lvlflow-btn.primary { background: var(--navy-deep); border-color: var(--navy-deep); color: var(--cream); }
+.lvlflow-btn.primary:hover:not(:disabled) { opacity: 0.86; background: var(--navy-deep); }
+.lvlflow-btn:disabled { opacity: 0.3; cursor: default; }
+
+.lvlflow-track {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 2px 0 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.lvlflow-track::-webkit-scrollbar { height: 5px; }
+.lvlflow-track::-webkit-scrollbar-thumb { background: rgba(201, 169, 110, 0.35); border-radius: 3px; }
+
+.lvlflow-arrow {
+  display: flex;
+  align-items: center;
+  color: rgba(26, 29, 46, 0.22);
+  font-size: 1rem;
+  flex-shrink: 0;
+  padding-bottom: 12px;
+}
+.lvlflow-node { flex: 1 1 0; min-width: 132px; }
+.lvlflow-node > button {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 8px 8px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  font-family: var(--sans);
+  transition: background 0.18s, border-color 0.18s;
+}
+.lvlflow-node > button:hover { background: rgba(201, 169, 110, 0.08); }
+.lvlflow-node.active > button {
+  background: var(--gold-bg);
+  border-color: var(--line-gold);
+}
+
+.lvlflow-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--navy-deep);
+  margin-bottom: 7px;
+}
+.lvlflow-thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+/* Sampul sudah mencetak "LEVEL n" di kiri atas; lencana status ditaruh di
+   sudut berlawanan supaya tidak menimpa tulisannya. */
+.lvlflow-thumb .n {
+  position: absolute;
+  right: 6px; bottom: 6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lvlflow-node.is-done .lvlflow-thumb .n { background: var(--emerald); }
+.lvlflow-node.is-progress .lvlflow-thumb .n { background: #d4823a; }
+.lvlflow-node:not(.active) .lvlflow-thumb img { filter: saturate(0.72) brightness(0.86); }
+
+.lvlflow-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.lvlflow-tag {
+  font-size: 0.76rem;
+  color: var(--ink-mute);
+  line-height: 1.3;
+}
+.lvlflow-meta {
+  font-size: 0.72rem;
+  color: var(--gold-dark);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* --- Panel tingkat aktif --- */
+.lvlpanel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 16px rgba(26, 29, 46, 0.05);
+}
+.lvlpanel-hero {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 22px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+.lvlpanel-cover {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--navy-deep), var(--navy-light));
+}
+.lvlpanel-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.lvlpanel-eyebrow {
+  font-size: 0.76rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lvlpanel-chip {
+  padding: 2px 9px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.lvlpanel-chip.done { background: rgba(34, 197, 94, 0.12); color: #16a34a; }
+.lvlpanel-chip.prog { background: rgba(212, 175, 106, 0.16); color: var(--gold-dark); }
+.lvlpanel-info h3 {
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.lvlpanel-info p {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+.lvlpanel-bar {
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(26, 29, 46, 0.08);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.lvlpanel-bar i { display: block; height: 100%; background: var(--gold); border-radius: 99px; }
+.lvlpanel-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.lvlpanel-unlock {
+  background: linear-gradient(135deg, var(--gold), #a07840);
+  color: var(--navy-deep);
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.lvlpanel-unlock:hover { opacity: 0.88; }
+.lvlpanel-note {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--ink-mute);
+  line-height: 1.5;
+  padding-left: 12px;
+  border-left: 2px solid var(--line-gold);
+}
+.lvlpanel-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .lvlpanel-hero { grid-template-columns: 1fr; gap: 16px; }
+  .lvlpanel-cover { max-width: 320px; }
+  .lvlflow-arrow { display: none; }
+  .lvlflow-node { min-width: 148px; flex: 0 0 148px; }
+}
+@media (max-width: 640px) {
+  .lvlflow { padding: 14px; }
+  .lvlflow-nav { width: 100%; }
+  .lvlflow-nav .lvlflow-btn { flex: 1; }
+  .lvlpanel { padding: 14px; }
+  .lvlpanel-cover { max-width: 100%; }
+  .lvlpanel-foot .lvlflow-btn { flex: 1; }
+}
