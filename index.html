@@ -584,6 +584,7 @@ if ('serviceWorker' in navigator) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           <span>Cari</span>
         </button>
+        <a class="nav-right" onclick="openCourses()" style="cursor:pointer;">Kursus</a>
         <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
         <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
@@ -639,6 +640,17 @@ if ('serviceWorker' in navigator) {
 
       <div class="practices-grid" id="practicesGrid">
         <!-- Filled by JS -->
+      </div>
+
+      <!-- Jalan pintas ke katalog: buat yang sudah tahu topik yang dicari -->
+      <div class="reveal" style="text-align:center;margin-top:52px;padding-top:40px;border-top:1px solid var(--line-gold);">
+        <p style="color:var(--ink-mute);font-size:0.95rem;margin-bottom:18px;">
+          Sudah tahu topik yang kamu cari? Lewati pemilihan jalur —
+          telusuri seluruh materi video langsung dari katalog.
+        </p>
+        <button type="button" onclick="openCourses()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:15px 38px;font-family:var(--sans);font-size:0.82rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          Buka Katalog Kursus →
+        </button>
       </div>
     </div>
   </section>
@@ -1437,6 +1449,146 @@ if ('serviceWorker' in navigator) {
       </div>
     </footer>
   </div>
+
+<!-- ========================================================== -->
+<!-- VIEW: KATALOG KURSUS (grid thumbnail YouTube + filter)      -->
+<!-- ========================================================== -->
+<div class="view" id="view-courses">
+  <!-- Detail nav -->
+  <div class="detail-nav">
+    <a class="detail-nav-logo" onclick="showView('home')">
+      <div class="detail-nav-logo-mark">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+          <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+          <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+        </svg>
+      </div>
+      <div class="detail-nav-logo-text">
+        Electra<br>
+        <span class="line-2">Skill Academy</span>
+      </div>
+    </a>
+    <div class="detail-nav-center">Katalog Kursus</div>
+    <div class="detail-nav-right">
+      <a class="detail-nav-back" href="manual-book.html" target="_blank" rel="noopener" title="Manual Book — cara belajar Video, PPT &amp; Quiz" style="text-decoration:none;">
+        📖 Cara Belajar
+      </a>
+      <button class="detail-nav-back" onclick="showView('home')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kembali
+      </button>
+    </div>
+  </div>
+
+  <!-- Hero: alur belajar + pencarian + chip jalur -->
+  <section class="crs-hero">
+    <div class="crs-hero-inner">
+      <div class="crs-eyebrow">Katalog Kursus</div>
+      <h1>Semua materi video, <span class="italic">satu halaman</span></h1>
+      <p class="crs-hero-sub">
+        Cari berdasarkan topik, kode modul, atau jalur karir. Setiap kartu adalah satu modul lengkap —
+        video, materi PPT, dan quiz 25 soal. Ikuti urutannya dari Esensial ke Consultant, atau langsung
+        lompat ke topik yang kamu butuhkan hari ini.
+      </p>
+
+      <!-- Alur belajar 5 langkah -->
+      <div class="crs-flow">
+        <div class="crs-flow-step"><b>Langkah 1</b><span>Pilih jalur karir yang kamu tuju</span></div>
+        <div class="crs-flow-step"><b>Langkah 2</b><span>Tonton video modul sampai tuntas</span></div>
+        <div class="crs-flow-step"><b>Langkah 3</b><span>Baca materi PPT untuk pendalaman</span></div>
+        <div class="crs-flow-step"><b>Langkah 4</b><span>Kerjakan quiz, lulus minimal 70%</span></div>
+        <div class="crs-flow-step"><b>Langkah 5</b><span>Naik level &amp; kumpulkan sertifikat</span></div>
+      </div>
+
+      <!-- Search + sort -->
+      <div class="crs-searchbar">
+        <div class="crs-search-wrap">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.7"/><path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <input type="search" id="crs-search" placeholder="Cari topik, kode modul, atau kategori…" autocomplete="off" oninput="esaCrsOnSearch(this.value)">
+        </div>
+        <select id="crs-sort" onchange="esaCrsSetSort(this.value)" aria-label="Urutkan kursus">
+          <option value="urutan">Urutan kurikulum</option>
+          <option value="video">Ada video YouTube dulu</option>
+          <option value="durasi-desc">JP terbanyak</option>
+          <option value="durasi-asc">JP tersedikit</option>
+          <option value="judul">Judul A–Z</option>
+        </select>
+      </div>
+
+      <!-- Chip jalur -->
+      <div class="crs-chips" id="crs-chips"></div>
+    </div>
+  </section>
+
+  <!-- Body: sidebar filter + grid kartu -->
+  <section class="crs-body">
+    <div class="crs-body-inner">
+
+      <!-- Sidebar filter -->
+      <aside class="crs-filters" id="crs-filters">
+        <div class="crs-filters-head">
+          <h3>Filter</h3>
+          <button class="crs-reset" type="button" onclick="esaCrsResetFilters()">Reset</button>
+        </div>
+
+        <details class="crs-fgroup" open>
+          <summary>Tingkat</summary>
+          <div class="crs-fopts" id="crs-f-level"></div>
+        </details>
+
+        <details class="crs-fgroup" open>
+          <summary>Sumber video</summary>
+          <div class="crs-fopts" id="crs-f-source"></div>
+        </details>
+
+        <details class="crs-fgroup">
+          <summary>Status belajar</summary>
+          <div class="crs-fopts" id="crs-f-status"></div>
+        </details>
+
+        <details class="crs-fgroup">
+          <summary>Kategori</summary>
+          <div class="crs-fopts" id="crs-f-cat"></div>
+        </details>
+      </aside>
+
+      <!-- Hasil -->
+      <div>
+        <div class="crs-resultbar">
+          <div class="crs-count"><strong id="crs-count">0</strong> <span id="crs-count-label">modul ditemukan</span></div>
+          <button class="crs-filter-toggle" type="button" onclick="esaCrsToggleFilters()">⚙ Filter</button>
+        </div>
+        <div class="crs-activefilters" id="crs-activefilters" style="margin-bottom:18px;"></div>
+
+        <!-- Lanjutkan belajar -->
+        <div id="crs-resume"></div>
+
+        <div class="crs-grid" id="crs-grid"></div>
+        <div class="crs-more" id="crs-more"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-mark">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="20" stroke="#c9a96e" stroke-width="1.2"/>
+            <path d="M22 8L29 22L22 36L15 22L22 8Z" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+            <path d="M8 22L36 22M22 8L22 36" stroke="#c9a96e" stroke-width="1.2"/>
+            <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+          </svg>
+        </div>
+        <div class="footer-brand-text">Electra<br><span class="line-2">Skill Academy</span></div>
+      </div>
+      <div class="footer-copy">© 2026 Electra Skill Academy. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
 
 <div class="view" id="view-jalur">
   <!-- Detail nav -->
@@ -10510,8 +10662,501 @@ function careerOpenModule(trackId, code) {
 // ================================================
 // OPEN JALUR DETAIL
 // ================================================
+// ================================================================
+// KATALOG KURSUS — grid kartu ber-thumbnail + filter + pencarian
+// ----------------------------------------------------------------
+// Sumber video per modul diselesaikan oleh esaResolveModuleMedia():
+// YOUTUBE_MAP (kalau ada) menang atas MODULE_MEDIA (Google Drive),
+// jadi migrasi ke YouTube bisa bertahap tanpa mengubah file lain.
+// ================================================================
+
+// --- Lazy-loader peta YouTube (/data/youtube-map.js) ---
+function esaLoadYoutubeMap(cb) {
+  if (typeof window.YOUTUBE_MAP !== 'undefined') { if (cb) cb(); return; }
+  window.__esaYTcbs = window.__esaYTcbs || [];
+  if (cb) window.__esaYTcbs.push(cb);
+  if (window.__esaYTloading) return;
+  window.__esaYTloading = true;
+  var s = document.createElement('script');
+  s.src = '/data/youtube-map.js';
+  s.onload = s.onerror = function () {
+    if (typeof window.YOUTUBE_MAP === 'undefined') window.YOUTUBE_MAP = {}; // fail-soft
+    window.__esaYTloading = false;
+    var cbs = window.__esaYTcbs || []; window.__esaYTcbs = [];
+    cbs.forEach(function (f) { try { f(); } catch (e) {} });
+  };
+  document.head.appendChild(s);
+}
+window.esaLoadYoutubeMap = esaLoadYoutubeMap;
+
+// Normalisasi nilai YOUTUBE_MAP → ID 11 karakter.
+// Menerima ID mentah, URL watch/youtu.be/embed/shorts (parameter &list=… diabaikan).
+function esaYtId(v) {
+  if (!v) return null;
+  var raw = (typeof v === 'object') ? v.id : v;
+  if (!raw || typeof raw !== 'string') return null;
+  raw = raw.trim();
+  if (/^[\w-]{11}$/.test(raw)) return raw;
+  var m = raw.match(/(?:youtube\.com\/watch\?(?:[^#]*&)?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtube\.com\/live\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+window.esaYtId = esaYtId;
+
+// Media modul final: YouTube menang, sisanya jatuh balik ke Google Drive.
+function esaResolveModuleMedia(code) {
+  var base = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[code]) ? MODULE_MEDIA[code] : {};
+  var out = {};
+  for (var k in base) if (Object.prototype.hasOwnProperty.call(base, k)) out[k] = base[k];
+  var entry = (typeof window.YOUTUBE_MAP !== 'undefined') ? window.YOUTUBE_MAP[code] : null;
+  var id = esaYtId(entry);
+  if (id) {
+    out.videoUrl = 'https://www.youtube.com/watch?v=' + id;
+    out.videoSource = 'youtube';
+    out.youtubeId = id;
+    if (entry && typeof entry === 'object' && entry.durasi) out.duration = entry.durasi;
+  } else if (out.videoUrl) {
+    out.videoSource = /youtu\.?be/.test(out.videoUrl) ? 'youtube'
+      : (/drive\.google\.com/.test(out.videoUrl) ? 'drive' : 'lain');
+    if (out.videoSource === 'youtube') out.youtubeId = esaYtId(out.videoUrl);
+  } else {
+    out.videoSource = null;
+  }
+  return out;
+}
+window.esaResolveModuleMedia = esaResolveModuleMedia;
+
+// Thumbnail dari URL video. YouTube → gambar asli channel; Drive → preview Drive.
+function esaMediaThumb(media) {
+  if (!media) return null;
+  if (media.youtubeId) {
+    return {
+      src: 'https://i.ytimg.com/vi/' + media.youtubeId + '/maxresdefault.jpg',
+      fallback: 'https://i.ytimg.com/vi/' + media.youtubeId + '/hqdefault.jpg'
+    };
+  }
+  if (media.videoUrl) {
+    var gd = media.videoUrl.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
+    if (gd) return { src: 'https://drive.google.com/thumbnail?id=' + gd[1] + '&sz=w640', fallback: null };
+  }
+  return null;
+}
+window.esaMediaThumb = esaMediaThumb;
+
+// Kalau thumbnail gagal dimuat: coba cadangan, lalu tampilkan kartu fallback.
+window.esaCrsThumbErr = function (img) {
+  var fb = img.getAttribute('data-fb');
+  if (fb) { img.removeAttribute('data-fb'); img.src = fb; return; }
+  img.style.display = 'none';
+};
+
+// ---------------- State katalog ----------------
+var _crsState = {
+  q: '', track: 'all', sort: 'urutan',
+  levels: [], sources: [], statuses: [], cats: [],
+  limit: 24
+};
+var _crsIndex = null;
+
+// Bangun indeks datar seluruh modul: fondasi (L1/L2) sekali, lalu per jalur.
+function esaCrsBuildIndex() {
+  if (_crsIndex) return _crsIndex;
+  var out = [], seen = {}, order = 0;
+
+  function push(m, trackId, trackName, levelId) {
+    if (seen[m.code]) return;
+    seen[m.code] = 1;
+    var lvl = (typeof LEVELS !== 'undefined') ? LEVELS.find(function (l) { return l.id === levelId; }) : null;
+    var ovr = (typeof LEVEL_OVERRIDES !== 'undefined') ? LEVEL_OVERRIDES[trackId + '_' + levelId] : null;
+    out.push({
+      code: m.code,
+      title: m.title || '',
+      category: m.category || 'Umum',
+      jp: m.jp || 0,
+      mode: m.mode || '',
+      trackId: trackId,
+      trackName: trackName,
+      levelId: levelId,
+      levelName: (ovr && ovr.name) || (lvl && lvl.name) || levelId,
+      order: order++
+    });
+  }
+
+  ['L1', 'L2'].forEach(function (lv) {
+    (CURRICULUM[lv] || []).forEach(function (m) { push(m, lv, 'Fondasi · Semua Jalur', lv); });
+  });
+  Object.keys(TRACKS_META).forEach(function (tid) {
+    if (TRACKS_META[tid].externalUrl) return;           // jalur fast-track eksternal
+    var meta = TRACKS_META[tid];
+    (CURRICULUM[tid] || []).forEach(function (m) { push(m, tid, meta.name, m.level || 'L3'); });
+  });
+
+  _crsIndex = out;
+  return out;
+}
+
+// Status belajar per modul dari localStorage.
+function esaCrsStatus(code) {
+  var st = {};
+  try { st = (JSON.parse(localStorage.getItem('esa_data_v1') || '{}').modules) || {}; } catch (e) {}
+  var r = st[code];
+  if (r && r.passed) return 'lulus';
+  if (r && (r.attempts || r.bestScore)) return 'progres';
+  return 'belum';
+}
+
+// Satu item + media-nya (dipakai saat render kartu).
+function esaCrsDecorate(it) {
+  var media = esaResolveModuleMedia(it.code);
+  return {
+    item: it,
+    media: media,
+    source: media.videoSource,          // 'youtube' | 'drive' | 'lain' | null
+    thumb: esaMediaThumb(media),
+    status: esaCrsStatus(it.code)
+  };
+}
+
+// ---------------- Filter + urut ----------------
+function esaCrsFiltered() {
+  var s = _crsState;
+  var q = s.q.trim().toLowerCase();
+  var rows = esaCrsBuildIndex().map(esaCrsDecorate);
+
+  var out = rows.filter(function (d) {
+    var it = d.item;
+    if (s.track !== 'all') {
+      if (s.track === 'FOUNDATION') { if (it.trackId !== 'L1' && it.trackId !== 'L2') return false; }
+      else if (it.trackId !== s.track) return false;
+    }
+    if (s.levels.length && s.levels.indexOf(it.levelId) === -1) return false;
+    if (s.cats.length && s.cats.indexOf(it.category) === -1) return false;
+    if (s.statuses.length && s.statuses.indexOf(d.status) === -1) return false;
+    if (s.sources.length) {
+      var src = d.source === 'youtube' ? 'youtube' : (d.source === 'drive' ? 'drive' : 'kosong');
+      if (s.sources.indexOf(src) === -1) return false;
+    }
+    if (q) {
+      var hay = (it.code + ' ' + it.title + ' ' + it.category + ' ' + it.trackName + ' ' + it.levelName).toLowerCase();
+      if (hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+
+  if (s.sort === 'judul') out.sort(function (a, b) { return a.item.title.localeCompare(b.item.title, 'id'); });
+  else if (s.sort === 'durasi-desc') out.sort(function (a, b) { return (b.item.jp - a.item.jp) || (a.item.order - b.item.order); });
+  else if (s.sort === 'durasi-asc') out.sort(function (a, b) { return (a.item.jp - b.item.jp) || (a.item.order - b.item.order); });
+  else if (s.sort === 'video') out.sort(function (a, b) {
+    var av = a.source === 'youtube' ? 0 : 1, bv = b.source === 'youtube' ? 0 : 1;
+    return (av - bv) || (a.item.order - b.item.order);
+  });
+  else out.sort(function (a, b) { return a.item.order - b.item.order; });
+
+  return out;
+}
+
+// ---------------- Render ----------------
+function esaCrsEsc(str) {
+  return String(str == null ? '' : str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function esaCrsChips() {
+  var idx = esaCrsBuildIndex();
+  var counts = {}, foundation = 0;
+  idx.forEach(function (it) {
+    if (it.trackId === 'L1' || it.trackId === 'L2') foundation++;
+    else counts[it.trackId] = (counts[it.trackId] || 0) + 1;
+  });
+
+  var chips = [{ id: 'all', label: 'Semua', n: idx.length }];
+  chips.push({ id: 'FOUNDATION', label: 'Fondasi', n: foundation });
+  Object.keys(TRACKS_META).forEach(function (tid) {
+    if (!counts[tid]) return;
+    chips.push({ id: tid, label: TRACKS_META[tid].name, n: counts[tid] });
+  });
+
+  var el = document.getElementById('crs-chips');
+  if (!el) return;
+  el.innerHTML = chips.map(function (c) {
+    return '<button type="button" class="crs-chip' + (_crsState.track === c.id ? ' active' : '') +
+      '" onclick="esaCrsSetTrack(\'' + c.id + '\')">' + esaCrsEsc(c.label) +
+      ' <span class="crs-chip-n">' + c.n + '</span></button>';
+  }).join('');
+}
+
+function esaCrsSidebar() {
+  var idx = esaCrsBuildIndex();
+
+  // --- Tingkat ---
+  var lvCount = {};
+  idx.forEach(function (it) { lvCount[it.levelId] = (lvCount[it.levelId] || 0) + 1; });
+  var lvEl = document.getElementById('crs-f-level');
+  if (lvEl) {
+    lvEl.innerHTML = (typeof LEVELS !== 'undefined' ? LEVELS : []).filter(function (l) { return lvCount[l.id]; })
+      .map(function (l) {
+        return '<label class="crs-fopt"><input type="checkbox" value="' + l.id + '"' +
+          (_crsState.levels.indexOf(l.id) > -1 ? ' checked' : '') +
+          ' onchange="esaCrsToggleMulti(\'levels\', this.value, this.checked)">' +
+          '<span>' + esaCrsEsc(l.name) + '</span><span class="n">' + lvCount[l.id] + '</span></label>';
+      }).join('');
+  }
+
+  // --- Sumber video ---
+  var srcCount = { youtube: 0, drive: 0, kosong: 0 };
+  idx.forEach(function (it) {
+    var m = esaResolveModuleMedia(it.code);
+    if (m.videoSource === 'youtube') srcCount.youtube++;
+    else if (m.videoSource === 'drive') srcCount.drive++;
+    else srcCount.kosong++;
+  });
+  var srcEl = document.getElementById('crs-f-source');
+  if (srcEl) {
+    var srcDefs = [
+      { id: 'youtube', label: '▶ YouTube' },
+      { id: 'drive', label: 'Google Drive' },
+      { id: 'kosong', label: 'Belum ada video' }
+    ];
+    srcEl.innerHTML = srcDefs.map(function (d) {
+      return '<label class="crs-fopt"><input type="checkbox" value="' + d.id + '"' +
+        (_crsState.sources.indexOf(d.id) > -1 ? ' checked' : '') +
+        ' onchange="esaCrsToggleMulti(\'sources\', this.value, this.checked)">' +
+        '<span>' + esaCrsEsc(d.label) + '</span><span class="n">' + srcCount[d.id] + '</span></label>';
+    }).join('');
+  }
+
+  // --- Status belajar ---
+  var stCount = { belum: 0, progres: 0, lulus: 0 };
+  idx.forEach(function (it) { stCount[esaCrsStatus(it.code)]++; });
+  var stEl = document.getElementById('crs-f-status');
+  if (stEl) {
+    var stDefs = [
+      { id: 'lulus', label: '✓ Sudah lulus' },
+      { id: 'progres', label: '◐ Sedang dikerjakan' },
+      { id: 'belum', label: '○ Belum dimulai' }
+    ];
+    stEl.innerHTML = stDefs.map(function (d) {
+      return '<label class="crs-fopt"><input type="checkbox" value="' + d.id + '"' +
+        (_crsState.statuses.indexOf(d.id) > -1 ? ' checked' : '') +
+        ' onchange="esaCrsToggleMulti(\'statuses\', this.value, this.checked)">' +
+        '<span>' + esaCrsEsc(d.label) + '</span><span class="n">' + stCount[d.id] + '</span></label>';
+    }).join('');
+  }
+
+  // --- Kategori (dibatasi ke jalur yang sedang dipilih supaya tidak 400 baris) ---
+  var scope = idx.filter(function (it) {
+    if (_crsState.track === 'all') return true;
+    if (_crsState.track === 'FOUNDATION') return it.trackId === 'L1' || it.trackId === 'L2';
+    return it.trackId === _crsState.track;
+  });
+  var catCount = {};
+  scope.forEach(function (it) { catCount[it.category] = (catCount[it.category] || 0) + 1; });
+  var cats = Object.keys(catCount).sort(function (a, b) { return catCount[b] - catCount[a] || a.localeCompare(b, 'id'); });
+  if (_crsState.track === 'all') cats = cats.slice(0, 40);
+  var catEl = document.getElementById('crs-f-cat');
+  if (catEl) {
+    catEl.innerHTML = cats.map(function (c) {
+      return '<label class="crs-fopt"><input type="checkbox" value="' + esaCrsEsc(c) + '"' +
+        (_crsState.cats.indexOf(c) > -1 ? ' checked' : '') +
+        ' onchange="esaCrsToggleMulti(\'cats\', this.value, this.checked)">' +
+        '<span>' + esaCrsEsc(c) + '</span><span class="n">' + catCount[c] + '</span></label>';
+    }).join('') + (_crsState.track === 'all' && Object.keys(catCount).length > 40
+      ? '<div style="padding:10px 0 2px;font-size:0.76rem;color:var(--ink-mute);">Pilih satu jalur di atas untuk melihat seluruh kategorinya.</div>' : '');
+  }
+}
+
+function esaCrsCard(d) {
+  var it = d.item;
+  var thumbInner;
+  if (d.thumb) {
+    thumbInner =
+      '<div class="crs-thumb-fallback"><span class="c">' + esaCrsEsc(it.code) + '</span></div>' +
+      '<img src="' + d.thumb.src + '"' + (d.thumb.fallback ? ' data-fb="' + d.thumb.fallback + '"' : '') +
+      ' alt="" loading="lazy" decoding="async" onerror="esaCrsThumbErr(this)">';
+  } else {
+    thumbInner =
+      '<div class="crs-thumb-fallback"><span class="c">' + esaCrsEsc(it.code) + '</span>' +
+      '<span class="t">Video segera hadir</span></div>';
+  }
+
+  var srcBadge = d.source === 'youtube'
+    ? '<span class="crs-badge crs-badge-src yt">▶ YouTube</span>'
+    : (d.source === 'drive' ? '<span class="crs-badge crs-badge-src gd">Drive</span>' : '');
+
+  var durBadge = d.media.duration
+    ? '<span class="crs-badge crs-badge-dur">' + esaCrsEsc(d.media.duration) + '</span>' : '';
+
+  var passBadge = d.status === 'lulus' ? '<span class="crs-badge crs-badge-pass">✓ Lulus</span>' : '';
+  var progBar = d.status === 'progres' ? '<div class="crs-progress"><i style="width:50%"></i></div>' : '';
+
+  var statusTxt = d.status === 'lulus' ? '<i style="color:var(--emerald);font-weight:700;">✓ Lulus</i>'
+    : (d.status === 'progres' ? '<i style="color:#d4823a;font-weight:700;">◐ Lanjutkan</i>'
+      : '<i>📝 Quiz 25 soal</i>');
+
+  return '<button type="button" class="crs-card" onclick="esaCrsOpen(\'' + it.code + '\',\'' + it.trackId + '\',\'' + it.levelId + '\')">' +
+    '<div class="crs-thumb">' + thumbInner +
+      '<div class="crs-play"><i><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></i></div>' +
+      '<span class="crs-badge crs-badge-level">' + esaCrsEsc(it.code) + '</span>' +
+      srcBadge + durBadge + passBadge + progBar +
+    '</div>' +
+    '<div class="crs-card-body">' +
+      '<div class="crs-card-cat">' + esaCrsEsc(it.category) + '</div>' +
+      '<div class="crs-card-title">' + esaCrsEsc(it.title) + '</div>' +
+      '<div class="crs-card-track">' + esaCrsEsc(it.trackName) + ' · ' + esaCrsEsc(it.levelName) + '</div>' +
+      '<div class="crs-card-meta">' +
+        '<i>⏱ ' + (it.jp || '—') + ' JP</i>' + statusTxt +
+      '</div>' +
+    '</div>' +
+  '</button>';
+}
+
+// Kartu "lanjutkan belajar": modul pertama yang belum lulus pada urutan kurikulum.
+function esaCrsResume() {
+  var el = document.getElementById('crs-resume');
+  if (!el) return;
+  var idx = esaCrsBuildIndex();
+  var passedAny = idx.some(function (it) { return esaCrsStatus(it.code) === 'lulus'; });
+  if (!passedAny) { el.innerHTML = ''; return; }
+
+  var next = null;
+  for (var i = 0; i < idx.length; i++) {
+    if (esaCrsStatus(idx[i].code) !== 'lulus') { next = idx[i]; break; }
+  }
+  if (!next) {
+    el.innerHTML = '<div class="crs-resume"><div class="crs-resume-txt">' +
+      '<b>Selesai</b><h4>Semua modul sudah kamu lulusi 🎉</h4>' +
+      '<p>Lanjut ke Live Class atau ambil sertifikat di halaman profil.</p></div></div>';
+    return;
+  }
+  var d = esaCrsDecorate(next);
+  var thumbStyle = d.thumb ? ' style="background-image:url(\'' + d.thumb.src + '\')"' : '';
+  el.innerHTML = '<div class="crs-resume">' +
+    '<div class="crs-resume-thumb"' + thumbStyle + '></div>' +
+    '<div class="crs-resume-txt">' +
+      '<b>Lanjutkan belajar</b>' +
+      '<h4>' + esaCrsEsc(next.title) + '</h4>' +
+      '<p>' + esaCrsEsc(next.code) + ' · ' + esaCrsEsc(next.trackName) + ' · ' + esaCrsEsc(next.levelName) + '</p>' +
+    '</div>' +
+    '<button type="button" class="crs-resume-btn" onclick="esaCrsOpen(\'' + next.code + '\',\'' + next.trackId + '\',\'' + next.levelId + '\')">Lanjutkan →</button>' +
+  '</div>';
+}
+
+function esaCrsActiveTags() {
+  var el = document.getElementById('crs-activefilters');
+  if (!el) return;
+  var tags = [];
+  if (_crsState.q) tags.push({ label: '"' + _crsState.q + '"', act: 'esaCrsClearSearch()' });
+  if (_crsState.track !== 'all') {
+    var name = _crsState.track === 'FOUNDATION' ? 'Fondasi' : ((TRACKS_META[_crsState.track] || {}).name || _crsState.track);
+    tags.push({ label: name, act: 'esaCrsSetTrack(\'all\')' });
+  }
+  ['levels', 'sources', 'statuses', 'cats'].forEach(function (key) {
+    _crsState[key].forEach(function (v) {
+      tags.push({ label: v, act: 'esaCrsToggleMulti(\'' + key + '\',\'' + String(v).replace(/'/g, "\\'") + '\',false)' });
+    });
+  });
+  el.innerHTML = tags.map(function (t) {
+    return '<button type="button" class="crs-tag" onclick="' + t.act + '">' + esaCrsEsc(t.label) + '</button>';
+  }).join('');
+}
+
+function esaCrsRender() {
+  esaCrsChips();
+  esaCrsSidebar();
+  esaCrsActiveTags();
+  esaCrsResume();
+
+  var rows = esaCrsFiltered();
+  var countEl = document.getElementById('crs-count');
+  if (countEl) countEl.textContent = rows.length.toLocaleString('id-ID');
+
+  var grid = document.getElementById('crs-grid');
+  var more = document.getElementById('crs-more');
+  if (!grid) return;
+
+  if (!rows.length) {
+    grid.innerHTML = '<div class="crs-empty"><h4>Tidak ada modul yang cocok</h4>' +
+      '<p>Coba kata kunci lain, atau <button type="button" class="crs-reset" onclick="esaCrsResetFilters()">reset semua filter</button>.</p></div>';
+    if (more) more.innerHTML = '';
+    return;
+  }
+
+  var shown = rows.slice(0, _crsState.limit);
+  grid.innerHTML = shown.map(esaCrsCard).join('');
+  if (more) {
+    more.innerHTML = rows.length > shown.length
+      ? '<button type="button" class="crs-more-btn" onclick="esaCrsMore()">Muat ' +
+        Math.min(24, rows.length - shown.length) + ' modul lagi (' + shown.length + '/' + rows.length + ')</button>'
+      : '<div style="color:var(--ink-mute);font-size:0.84rem;">Semua ' + rows.length + ' modul sudah tampil.</div>';
+  }
+}
+
+// ---------------- Aksi ----------------
+window.esaCrsSetTrack = function (id) {
+  _crsState.track = id;
+  _crsState.cats = [];          // kategori terikat ke jalur, reset saat pindah jalur
+  _crsState.limit = 24;
+  esaCrsRender();
+};
+window.esaCrsSetSort = function (v) { _crsState.sort = v; _crsState.limit = 24; esaCrsRender(); };
+window.esaCrsToggleMulti = function (key, val, on) {
+  var arr = _crsState[key];
+  var i = arr.indexOf(val);
+  if (on && i === -1) arr.push(val);
+  if (!on && i > -1) arr.splice(i, 1);
+  _crsState.limit = 24;
+  esaCrsRender();
+};
+window.esaCrsResetFilters = function () {
+  _crsState.q = ''; _crsState.track = 'all'; _crsState.sort = 'urutan';
+  _crsState.levels = []; _crsState.sources = []; _crsState.statuses = []; _crsState.cats = [];
+  _crsState.limit = 24;
+  var si = document.getElementById('crs-search'); if (si) si.value = '';
+  var so = document.getElementById('crs-sort'); if (so) so.value = 'urutan';
+  esaCrsRender();
+};
+window.esaCrsClearSearch = function () {
+  _crsState.q = '';
+  var si = document.getElementById('crs-search'); if (si) si.value = '';
+  esaCrsRender();
+};
+var _crsSearchTimer = null;
+window.esaCrsOnSearch = function (v) {
+  clearTimeout(_crsSearchTimer);
+  _crsSearchTimer = setTimeout(function () {
+    _crsState.q = v || ''; _crsState.limit = 24; esaCrsRender();
+  }, 180);
+};
+window.esaCrsMore = function () { _crsState.limit += 24; esaCrsRender(); };
+window.esaCrsToggleFilters = function () {
+  var el = document.getElementById('crs-filters');
+  if (el) el.classList.toggle('show');
+};
+window.esaCrsOpen = function (code, trackId, levelId) {
+  openModul(code, trackId, levelId);
+};
+
+// Entry point — dipanggil dari nav / tombol beranda.
+function openCourses() {
+  showView('courses');
+  esaLoadModuleMedia(function () {
+    esaLoadYoutubeMap(function () {
+      _crsIndex = null;   // segarkan kalau kurikulum berubah
+      esaCrsRender();
+    });
+  });
+}
+window.openCourses = openCourses;
+
 function openJalur(trackId) {
   const meta = TRACKS_META[trackId];
+  // Modul fondasi (L1/L2) dipakai bersama semua jalur, jadi tidak punya entri
+  // TRACKS_META. Alihkan ke katalog yang difilter Fondasi supaya tidak error.
+  if (!meta) {
+    if (typeof openCourses === 'function') { openCourses(); esaCrsSetTrack('FOUNDATION'); }
+    else showView('home');
+    return;
+  }
   // Special-case fast-track tracks (e.g. S13 PLN Distribution Academy):
   // they aren't backed by internal curriculum — redirect to partner site.
   if (meta && meta.externalUrl) {
@@ -11751,6 +12396,12 @@ function openModul(code, trackId, levelId) {
     esaLoadModuleMedia(function () { openModul(code, trackId, levelId); });
     return;
   }
+  // Peta YouTube per modul — menimpa videoUrl Drive kalau modulnya sudah naik
+  // ke channel. Dimuat sekali, lalu render ulang.
+  if (typeof window.YOUTUBE_MAP === 'undefined') {
+    esaLoadYoutubeMap(function () { openModul(code, trackId, levelId); });
+    return;
+  }
 
   // Expose modul aktif ke global supaya bookmark/notes/rating bisa akses
   window.currentModuleData = {
@@ -11794,8 +12445,14 @@ function openModul(code, trackId, levelId) {
     <div class="modul-meta-item">🎓 <strong>${levelName}</strong></div>
   `;
 
-  // Back button
-  document.getElementById('modul-back-btn').onclick = () => openJalur(trackId);
+  // Back button — modul fondasi tidak punya halaman jalur sendiri, kembalikan
+  // ke katalog; modul jalur kembali ke akordeon level jalurnya.
+  const _backBtn = document.getElementById('modul-back-btn');
+  if (_backBtn) {
+    const _isFoundation = !TRACKS_META[trackId];
+    _backBtn.lastChild.textContent = _isFoundation ? ' Kembali ke Katalog' : ' Kembali ke Jalur';
+    _backBtn.onclick = () => openJalur(trackId);
+  }
 
   // Video info — title + description + outcomes + instructor (per-track)
   document.getElementById('video-info-title').textContent = module.title;
@@ -11831,8 +12488,8 @@ function openModul(code, trackId, levelId) {
   // Live Class panel — render rekaman kalau ada, atau jadwal upcoming
   renderLiveClassPanel(module, levelId, trackId, instructor);
 
-  // === Inject VIDEO from MODULE_MEDIA ===
-  const media = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[code]) ? MODULE_MEDIA[code] : {};
+  // === Inject VIDEO from MODULE_MEDIA (+ override YouTube dari YOUTUBE_MAP) ===
+  const media = esaResolveModuleMedia(code);
   const videoWrap = document.getElementById('video-player-wrap');
   if (videoWrap) {
     const parsed = parseVideoEmbed(media.videoUrl);
@@ -11853,7 +12510,7 @@ function openModul(code, trackId, levelId) {
         <span>Video · ${(module && module.title) ? module.title : 'Modul'}</span>
         <span style="display:inline-flex;gap:8px;flex-wrap:wrap;">
           <button type="button" class="embed-btn" onclick="esaFullscreenEmbed(this)" title="Layar penuh">⛶ Layar Penuh</button>
-          <a class="embed-btn" href="${media.videoUrl}" target="_blank" rel="noopener">Buka di Tab Baru ↗</a>
+          <a class="embed-btn" href="${media.videoUrl}" target="_blank" rel="noopener">${media.videoSource === 'youtube' ? 'Tonton di YouTube ↗' : 'Buka di Tab Baru ↗'}</a>
         </span>`;
       videoWrap.parentElement.insertBefore(acts, videoWrap.nextSibling);
     } else {
@@ -11862,7 +12519,7 @@ function openModul(code, trackId, levelId) {
           <div class="video-play-btn" style="position:relative;z-index:2;width:88px;height:88px;border-radius:50%;background:rgba(245,240,230,0.15);backdrop-filter:blur(8px);border:1px solid rgba(201,169,110,0.4);color:var(--gold);display:flex;align-items:center;justify-content:center;">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           </div>
-          <div class="video-placeholder-text">Video belum di-upload · Tambah di MODULE_MEDIA['${code}']</div>
+          <div class="video-placeholder-text">Video belum di-upload · Tambah YOUTUBE_MAP['${code}'] di /data/youtube-map.js, atau videoUrl di MODULE_MEDIA['${code}']</div>
           <div class="video-duration" style="position:absolute;bottom:20px;right:20px;padding:6px 14px;background:rgba(26,29,46,0.85);color:var(--cream);font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0.1em;">—:—</div>
         </div>
       `;
@@ -16578,7 +17235,7 @@ function hookSV(){
     // bayar. Lock-nya ADA di level KONTEN — saat membuka modul / menjalankan
     // simulator / klik buku — lewat esaRequireAccess(), BUKAN di pintu menu.
     var PUBLIC_VIEWS={home:1,about:1,'liveclass-schedule':1,faq:1,'expert-workshop':1,
-      jalur:1,labs:1,referensi:1};
+      jalur:1,labs:1,referensi:1,courses:1};
     // MEMBER-ONLY views (login + active member; non-member → activation prompt)
     var MEMBER_VIEWS={talent:1,jobs:1,sertifikasi:1,certification:1};
     window.showView=function(v){
@@ -16924,6 +17581,14 @@ else{setTimeout(init,200);}
     if(sert)sert.textContent='Certification';
     if(sert)sert.onclick=function(e){e.preventDefault();showView('sertifikasi');};
 
+    // Kursus — katalog seluruh modul video, public access.
+    var coursesLink=document.createElement('a');
+    coursesLink.className='nav-right';
+    coursesLink.href='#';
+    coursesLink.textContent='Kursus';
+    coursesLink.style.cursor='pointer';
+    coursesLink.onclick=function(e){e.preventDefault(); if(typeof window.openCourses==='function') window.openCourses(); else publicShow('courses');};
+
     // About Us link — public, bypass auth gate
     var aboutUs=document.createElement('a');
     aboutUs.className='nav-right';aboutUs.href='#';aboutUs.textContent='About Us';
@@ -16976,6 +17641,7 @@ else{setTimeout(init,200);}
     workshopLink.onclick=function(e){e.preventDefault(); publicShow('expert-workshop'); if(typeof window.renderExpertWorkshop==='function') window.renderExpertWorkshop();};
 
     navGroup.innerHTML='';
+    navGroup.appendChild(coursesLink);
     navGroup.appendChild(aboutUs);
     navGroup.appendChild(careerLink);
     if(simLabs)navGroup.appendChild(simLabs);
