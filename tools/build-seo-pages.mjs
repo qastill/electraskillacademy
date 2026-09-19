@@ -82,6 +82,7 @@ const footer = () => `
         <ul>
           <li><a href="/belajar-kelistrikan/">Belajar Kelistrikan</a></li>
           <li><a href="/kursus-listrik-online/">Kursus Listrik Online</a></li>
+          <li><a href="/video/">Video Pembelajaran</a></li>
           <li><a href="/belajar-energi-terbarukan/">Energi Terbarukan</a></li>
           <li><a href="/pelatihan-k3-listrik/">Pelatihan K3 Listrik</a></li>
         </ul>
@@ -184,6 +185,7 @@ ${JSON.stringify(schema, null, 2)}
 ${header(navSlug)}
 ${body}
 ${footer()}
+<script defer src="/esa-insight.js"></script>
 </body>
 </html>
 `;
