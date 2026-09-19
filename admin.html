@@ -73,6 +73,20 @@
   td .pill.fail { background: rgba(239,107,107,0.15); color: #ef9090; }
   td .pill.warn { background: rgba(212,175,106,0.15); color: #d4af6a; }
   .empty { padding: 40px 20px; text-align: center; color: rgba(245,240,230,0.45); font-size: 0.88rem; }
+
+  /* ===== Grafik trafik (tab Pengunjung) ===== */
+  /* Satu deret, satu warna — tidak perlu legenda, judul kartu yang menamainya. */
+  .tchart { display: flex; align-items: flex-end; gap: 2px; height: 170px; padding: 20px 18px 10px; }
+  .tchart .bar { flex: 1; min-width: 3px; background: #d4af6a; border-radius: 4px 4px 0 0; opacity: 0.82; transition: opacity 0.15s; cursor: default; }
+  .tchart .bar:hover { opacity: 1; }
+  .tchart .bar.zero { background: rgba(245,240,230,0.1); border-radius: 2px 2px 0 0; }
+  .tchart-x { display: flex; justify-content: space-between; padding: 0 18px 16px; font-size: 0.72rem; color: rgba(245,240,230,0.45); }
+  .tchart-tip { position: fixed; z-index: 60; pointer-events: none; background: rgba(13,15,28,0.96); border: 1px solid rgba(212,175,106,0.4); border-radius: 8px; padding: 8px 12px; font-size: 0.78rem; line-height: 1.5; white-space: nowrap; opacity: 0; transition: opacity 0.12s; box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
+  .tbar-track { height: 6px; min-width: 56px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+  .tbar-fill { height: 100%; background: #d4af6a; border-radius: 3px; }
+  .card-head { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 700; color: #d4af6a; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.78rem; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+  .card-head .note { font-weight: 500; letter-spacing: 0; text-transform: none; color: rgba(245,240,230,0.45); font-size: 0.74rem; }
+  .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
 </style>
 <!-- esa-seo:start -->
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -131,6 +145,7 @@
       <button class="tab-btn active" data-tab="participants">Pendaftar</button>
       <button class="tab-btn" data-tab="payments">Pembayaran</button>
       <button class="tab-btn" data-tab="analytics">Analytics</button>
+      <button class="tab-btn" data-tab="traffic">Pengunjung</button>
       <button class="tab-btn" data-tab="progress">Progress Modul</button>
       <button class="tab-btn" data-tab="exams">Hasil Ujian</button>
       <button class="tab-btn" data-tab="certs">Sertifikat</button>
@@ -139,6 +154,7 @@
     </div>
 
     <div class="tab-panel" id="panel-analytics"><div class="empty">Memuat...</div></div>
+    <div class="tab-panel" id="panel-traffic"><div class="empty">Memuat...</div></div>
     <div class="tab-panel active" id="panel-participants"><div class="empty">Memuat...</div></div>
     <div class="tab-panel" id="panel-progress"><div class="empty">Memuat...</div></div>
     <div class="tab-panel" id="panel-exams"><div class="empty">Memuat...</div></div>
@@ -302,6 +318,7 @@
       participants: window.esaLoadTabParticipants,
       payments: window.esaLoadTabPayments,
       analytics: window.esaLoadTabAnalytics,
+      traffic: window.esaLoadTabTraffic,
       progress: window.esaLoadTabProgress,
       exams: window.esaLoadTabExams,
       certs: window.esaLoadTabCerts,
@@ -931,6 +948,202 @@
       panel.innerHTML = memberHTML + funnelHTML + difficultHTML + topHTML;
     } catch (e) {
       panel.innerHTML = emptyMsg('Gagal load analytics: ' + e.message + '. Pastikan migration-002, 003, 004 sudah di-run.');
+    }
+  };
+
+  // ===== Tab: PENGUNJUNG (analitik trafik) =====
+  // Sumber data: view v_traffic_* dari migration-014, diisi oleh /api/visit.
+  // Semua agregasi dilakukan di database — dashboard tidak pernah menarik
+  // baris page_views mentah (bisa ratusan ribu).
+  window.esaLoadTabTraffic = async function () {
+    const sb = window.__esaAdminSb;
+    const panel = document.getElementById('panel-traffic');
+    panel.innerHTML = '<div class="empty">Memuat data pengunjung...</div>';
+
+    const [sum, daily, pages, sources, devices, countries] = await Promise.all([
+      sb.from('v_traffic_summary').select('*').single(),
+      sb.from('v_traffic_daily').select('*'),
+      sb.from('v_traffic_pages').select('*').limit(25),
+      sb.from('v_traffic_sources').select('*').limit(15),
+      sb.from('v_traffic_devices').select('*'),
+      sb.from('v_traffic_countries').select('*').limit(10)
+    ]);
+
+    // Tabel/view belum ada → beri instruksi, bukan pesan error mentah.
+    const firstErr = [sum, daily, pages, sources, devices, countries].map(r => r.error).find(Boolean);
+    if (firstErr) {
+      const missing = /relation|does not exist|schema cache|42P01|PGRST205/i.test(
+        (firstErr.message || '') + (firstErr.code || '')
+      );
+      panel.innerHTML = missing
+        ? '<div class="empty" style="line-height:1.7;">Tabel analitik pengunjung belum dibuat.<br><br>' +
+          'Buka <strong>Supabase → SQL Editor → New query</strong>, tempel seluruh isi ' +
+          '<code style="color:#d4af6a;">migration-014-page-views.sql</code>, lalu klik Run.<br>' +
+          'Setelah itu muat ulang halaman ini.</div>'
+        : emptyMsg('Gagal load data pengunjung: ' + (firstErr.message || 'tidak diketahui'));
+      return;
+    }
+
+    const S = sum.data || {};
+    const num = (n) => (n == null ? '–' : Number(n).toLocaleString('id-ID'));
+
+    const statsHTML =
+      '<div class="stats-grid" style="margin-bottom:24px;">' +
+      '<div class="stat-card"><div class="lbl">Kunjungan Hari Ini</div><div class="val">' + num(S.views_today) + '</div>' +
+        '<div class="sub">' + num(S.visitors_today) + ' pengunjung unik</div></div>' +
+      '<div class="stat-card"><div class="lbl">Kunjungan 7 Hari</div><div class="val">' + num(S.views_7d) + '</div>' +
+        '<div class="sub">' + num(S.visitors_7d) + ' pengunjung unik</div></div>' +
+      '<div class="stat-card"><div class="lbl">Kunjungan 30 Hari</div><div class="val">' + num(S.views_30d) + '</div>' +
+        '<div class="sub">' + num(S.visitors_30d) + ' pengunjung unik</div></div>' +
+      '<div class="stat-card"><div class="lbl">Sesi 30 Hari</div><div class="val">' + num(S.sessions_30d) + '</div>' +
+        '<div class="sub">' + (S.sessions_30d ? (S.views_30d / S.sessions_30d).toFixed(1) : '–') + ' halaman per sesi</div></div>' +
+      '</div>';
+
+    // --- Grafik batang harian ---
+    // Hari tanpa kunjungan diisi nol supaya sumbu waktunya tidak bolong;
+    // deret tunggal, satu warna, jadi tidak perlu legenda.
+    const byDay = Object.fromEntries((daily.data || []).map(r => [r.day, r]));
+    const days = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      const row = byDay[key];
+      days.push({
+        key: key,
+        label: d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }),
+        views: row ? row.views : 0,
+        visitors: row ? row.visitors : 0
+      });
+    }
+    const maxViews = Math.max(1, ...days.map(d => d.views));
+    const totalViews = days.reduce((a, d) => a + d.views, 0);
+
+    const chartHTML =
+      '<div class="table-wrap" style="margin-bottom:24px;">' +
+      '<div class="card-head"><span>Kunjungan Harian · 30 Hari Terakhir</span>' +
+        '<span class="note">puncak ' + num(maxViews) + ' / hari</span></div>' +
+      '<div class="tchart" id="tchart">' +
+      days.map(d =>
+        '<div class="bar' + (d.views ? '' : ' zero') + '"' +
+        ' style="height:' + (d.views ? Math.max(3, Math.round((d.views / maxViews) * 100)) : 2) + '%"' +
+        ' data-tip="' + esc(d.label) + ' · ' + num(d.views) + ' kunjungan · ' + num(d.visitors) + ' pengunjung"></div>'
+      ).join('') +
+      '</div>' +
+      '<div class="tchart-x"><span>' + esc(days[0].label) + '</span>' +
+        '<span>' + num(totalViews) + ' kunjungan dalam 30 hari</span>' +
+        '<span>' + esc(days[days.length - 1].label) + '</span></div>' +
+      '</div>';
+
+    // --- Tabel: halaman, sumber, perangkat, negara ---
+    // Batang di dalam sel memberi perbandingan besaran tanpa grafik terpisah.
+    const magnitude = (v, max) =>
+      '<div class="tbar-track"><div class="tbar-fill" style="width:' +
+      (max ? Math.max(2, Math.round((v / max) * 100)) : 0) + '%"></div></div>';
+
+    const pageRows = pages.data || [];
+    const maxPage = Math.max(1, ...pageRows.map(r => r.views));
+    const pagesHTML = pageRows.length
+      ? '<div class="table-wrap" style="margin-bottom:24px;">' +
+        '<div class="card-head"><span>Halaman Terpopuler · 30 Hari</span>' +
+          '<span class="note">"masuk" = halaman pertama yang dibuka pengunjung</span></div>' +
+        '<table><thead><tr><th>Halaman</th><th>Kunjungan</th><th>Pengunjung</th><th>Masuk</th><th style="width:22%"></th></tr></thead><tbody>' +
+        pageRows.map(r =>
+          '<tr><td class="mono"><a href="' + esc(r.path) + '" target="_blank" rel="noopener">' + esc(r.path) + '</a>' +
+          (r.title ? '<div style="font-size:0.74rem;color:rgba(245,240,230,0.45);margin-top:2px;">' + esc(String(r.title).slice(0, 70)) + '</div>' : '') +
+          '</td><td><strong>' + num(r.views) + '</strong></td><td>' + num(r.visitors) + '</td>' +
+          '<td>' + num(r.entries) + '</td><td>' + magnitude(r.views, maxPage) + '</td></tr>'
+        ).join('') + '</tbody></table></div>'
+      : '';
+
+    const srcRows = sources.data || [];
+    const maxSrc = Math.max(1, ...srcRows.map(r => r.views));
+    const sourcesHTML = srcRows.length
+      ? '<div class="table-wrap" style="margin-bottom:24px;">' +
+        '<div class="card-head"><span>Sumber Trafik · 30 Hari</span>' +
+          '<span class="note">utm_source diutamakan, lalu situs perujuk</span></div>' +
+        '<table><thead><tr><th>Sumber</th><th>Campaign</th><th>Kunjungan</th><th>Pengunjung</th><th style="width:22%"></th></tr></thead><tbody>' +
+        srcRows.map(r =>
+          '<tr><td>' + esc(r.source) + '</td><td class="mono">' + esc(r.campaign || '–') + '</td>' +
+          '<td><strong>' + num(r.views) + '</strong></td><td>' + num(r.visitors) + '</td>' +
+          '<td>' + magnitude(r.views, maxSrc) + '</td></tr>'
+        ).join('') + '</tbody></table></div>'
+      : '';
+
+    const smallTable = (title, rows, labelKey, labelFn) => {
+      if (!rows || !rows.length) return '';
+      const max = Math.max(1, ...rows.map(r => r.views));
+      return '<div class="table-wrap"><div class="card-head"><span>' + title + '</span></div>' +
+        '<table><thead><tr><th>' + (labelKey === 'device' ? 'Perangkat' : 'Negara') +
+        '</th><th>Kunjungan</th><th style="width:34%"></th></tr></thead><tbody>' +
+        rows.map(r => '<tr><td>' + esc(labelFn ? labelFn(r[labelKey]) : r[labelKey]) + '</td>' +
+          '<td><strong>' + num(r.views) + '</strong></td><td>' + magnitude(r.views, max) + '</td></tr>').join('') +
+        '</tbody></table></div>';
+    };
+
+    const deviceLabel = (d) => ({ mobile: 'Ponsel', tablet: 'Tablet', desktop: 'Desktop' }[d] || d);
+    const breakdownHTML = '<div class="two-col">' +
+      smallTable('Perangkat · 30 Hari', devices.data, 'device', deviceLabel) +
+      smallTable('Negara · 30 Hari', countries.data, 'country') +
+      '</div>';
+
+    const exportBtn = (rows, name, label) =>
+      rows && rows.length
+        ? '<button onclick="esaExportCSV(' + JSON.stringify(rows).replace(/"/g, '&quot;') + ',\'' + name + '\')" ' +
+          'style="padding:6px 12px;background:transparent;color:#d4af6a;border:1px solid #d4af6a;border-radius:6px;font-size:0.8rem;cursor:pointer;">' +
+          label + '</button>'
+        : '';
+
+    const toolbar = '<div class="toolbar" style="justify-content:flex-end;">' +
+      exportBtn(days, 'trafik-harian.csv', 'Export Harian') +
+      exportBtn(pageRows, 'trafik-halaman.csv', 'Export Halaman') +
+      exportBtn(srcRows, 'trafik-sumber.csv', 'Export Sumber') +
+      '</div>';
+
+    panel.innerHTML = statsHTML + chartHTML + toolbar + pagesHTML + sourcesHTML + breakdownHTML +
+      (totalViews === 0 ? '<div class="empty" id="tr-diag" style="line-height:1.7;margin-top:12px;">Memeriksa pencatat kunjungan...</div>' : '');
+
+    // Nol kunjungan bisa berarti dua hal yang sangat berbeda: situs memang
+    // sepi, atau endpoint pencatatnya belum dikonfigurasi. Tanyakan ke
+    // /api/visit supaya tidak menebak.
+    if (totalViews === 0) {
+      const diag = document.getElementById('tr-diag');
+      try {
+        const h = await (await fetch('/api/visit', { headers: { accept: 'application/json' } })).json();
+        diag.innerHTML = h.configured
+          ? 'Pencatat kunjungan <strong style="color:#86efac;">aktif</strong>, tapi belum ada kunjungan tercatat. ' +
+            'Data mulai masuk begitu ada orang membuka situs.'
+          : 'Pencatat kunjungan <strong style="color:#ef9090;">belum aktif</strong>: environment variable ' +
+            '<code style="color:#d4af6a;">' + esc(h.needs || 'SUPABASE_SERVICE_ROLE_KEY') + '</code> belum diset di Vercel.<br>' +
+            'Vercel → Project → Settings → Environment Variables, lalu redeploy.';
+      } catch (e) {
+        diag.textContent = 'Belum ada kunjungan tercatat, dan status pencatat tidak bisa dicek (' + e.message + ').';
+      }
+    }
+
+    // Tooltip grafik — mengikuti kursor, satu elemen dipakai ulang.
+    const chart = document.getElementById('tchart');
+    if (chart) {
+      let tip = document.getElementById('tchart-tip');
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.id = 'tchart-tip';
+        tip.className = 'tchart-tip';
+        document.body.appendChild(tip);
+      }
+      chart.addEventListener('mousemove', function (e) {
+        const bar = e.target.closest('.bar');
+        if (!bar) { tip.style.opacity = '0'; return; }
+        tip.textContent = bar.dataset.tip || '';
+        tip.style.opacity = '1';
+        // Ukur setelah teks masuk, supaya tooltip di batang paling kanan
+        // tidak terpotong tepi layar.
+        const w = tip.offsetWidth;
+        tip.style.left = Math.max(8, Math.min(e.clientX + 14, window.innerWidth - w - 12)) + 'px';
+        tip.style.top = (e.clientY - 44) + 'px';
+      });
+      chart.addEventListener('mouseleave', function () { tip.style.opacity = '0'; });
     }
   };
 

@@ -729,5 +729,6 @@ ORDER.forEach(id=>{ const b=elFrom(`<button class="pick" data-id="${id}">${LABS[
 const q=new URLSearchParams(location.search).get('lab');
 show(q && LABS[q] ? q : 'machines');
 </script>
+<script defer src="/esa-insight.js"></script>
 </body>
 </html>

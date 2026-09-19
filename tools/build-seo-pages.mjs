@@ -185,6 +185,7 @@ ${JSON.stringify(schema, null, 2)}
 ${header(navSlug)}
 ${body}
 ${footer()}
+<script defer src="/esa-insight.js"></script>
 </body>
 </html>
 `;
