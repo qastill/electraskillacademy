@@ -12047,3 +12047,63 @@ button:active:not(:disabled),
   /* padding .lockp-body (22/26) ditumpuk di atas padding .lockp — rapatkan */
   .video-player-wrap > .lockp .lockp-body { padding: 6px 4px 2px; }
 }
+
+/* ================================================================
+   SATU SISTEM UNTUK DAFTAR JALUR KARIR
+   ----------------------------------------------------------------
+   Enam belas jalur karir yang sama muncul di dua tempat: kartu berfoto
+   di beranda ("Pilih Jalur Karirmu") dan chip di katalog kursus. Dulu
+   keduanya tidak berbagi apa pun secara visual — kartu bernomor "Jalur 01"
+   dengan foto, chip hanya teks polos — sehingga terbaca sebagai dua daftar
+   yang kebetulan mirip. Sekarang keduanya memakai nomor jalur yang sama
+   dan angka modul yang sama, jadi satu hal yang dilihat dari dua kerapatan:
+   beranda untuk memilih, katalog untuk menyaring.
+================================================================ */
+
+/* Angka modul di kartu beranda — angka yang persis sama dengan chip katalog,
+   diambil dari CURRICULUM lewat esaTrackModuleCount(). */
+.practice-count {
+  display: inline-block;
+  margin: 0 0 14px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  opacity: 0.85;
+}
+
+/* Nomor jalur di chip katalog — mencerminkan lencana "Jalur 01" di kartu. */
+.crs-chip-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  margin-right: 8px;
+  padding: 0 4px;
+  border-radius: 5px;
+  background: rgba(201, 169, 110, 0.18);
+  color: var(--gold);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+.crs-chip.active .crs-chip-num {
+  background: rgba(26, 29, 46, 0.16);
+  color: rgba(26, 29, 46, 0.75);
+}
+
+/* Blok chip jadi lebih tenang: tanpa lima kotak "Langkah" di atasnya, deretan
+   ini sekarang hal pertama setelah pencarian, jadi tidak perlu berteriak. */
+.crs-chips { gap: 8px; }
+.crs-chip { padding: 8px 14px; font-size: 0.83rem; }
+
+@media (max-width: 640px) {
+  .crs-chip { padding: 7px 11px; font-size: 0.78rem; }
+  .crs-chip-num { min-width: 17px; height: 17px; margin-right: 6px; font-size: 0.64rem; }
+  .practice-count { font-size: 10px; margin-bottom: 10px; }
+}
