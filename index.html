@@ -5710,6 +5710,7 @@ function openSimulator(simId) {
     content.innerHTML = '<div style="padding:64px 24px;text-align:center;color:rgba(245,240,230,0.6);font-size:14px;letter-spacing:0.04em">Menyiapkan lab…</div>';
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('esa-modal-open');
     esaLoadSimBuilders(function () { openSimulator(simId); });
     return;
   }
@@ -5760,6 +5761,7 @@ function openSimulator(simId) {
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
+  document.body.classList.add('esa-modal-open'); // sembunyikan tombol melayang & bilah CTA
 
   // Initialize simulator after DOM insertion
   setTimeout(() => {
@@ -5779,6 +5781,7 @@ function closeSimulator() {
   const modal = document.getElementById('sim-modal');
   if (modal) modal.classList.remove('active');
   document.body.style.overflow = '';
+  document.body.classList.remove('esa-modal-open');
   // PENTING: kosongkan isi modal agar iframe simulator 3D (WebGL) benar-benar
   // dibongkar. Tanpa ini, iframe tetap hidup di DOM & loop render WebGL terus
   // jalan di latar (PowerSaveBlocker aktif, memori GPU tertahan) → Chrome crash.
@@ -11227,6 +11230,8 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     } catch (e) {}
     // Akun berganti → sisa kuota AI dari akun sebelumnya tidak berlaku lagi.
     try { _aiRemainingServer = null; if (typeof updateAIQuotaHint === 'function') updateAIQuotaHint(); } catch (e) {}
+    // Bilah CTA "Daftar Gratis" hanya untuk tamu — begitu masuk, turunkan.
+    try { if (typeof window.esaUpdateStickyMobileCTA === 'function') window.esaUpdateStickyMobileCTA(); } catch (e) {}
     if (typeof window.esaUpdateNavUser === 'function') {
       try { window.esaUpdateNavUser(); } catch (e) {}
     }
@@ -12879,7 +12884,11 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         return u && u.email;
       } catch(e) { return false; }
     })();
-    cta.style.display = (isMobile && !loggedIn) ? 'block' : 'none';
+    const tampil = isMobile && !loggedIn;
+    cta.style.display = tampil ? 'block' : 'none';
+    // Tombol melayang (WA, AI) menaikkan diri di atas bilah ini hanya saat
+    // bilahnya benar-benar tampil — lihat aturan body.esa-cta-on di CSS.
+    document.body.classList.toggle('esa-cta-on', tampil);
   }
   window.esaUpdateStickyMobileCTA = esaUpdateStickyMobileCTA;
 
@@ -13253,6 +13262,7 @@ function buildModal(){
   if(document.getElementById("esa-auth-modal"))return;
   var overlay=document.createElement("div");
   overlay.id="esa-auth-modal";
+  document.body.classList.add('esa-modal-open'); // sembunyikan tombol melayang & bilah CTA di HP
   overlay.style.position="fixed";overlay.style.inset="0";overlay.style.zIndex="99999";
   overlay.style.background="rgba(10,12,24,0.92)";overlay.style.display="flex";
   overlay.style.alignItems="center";overlay.style.justifyContent="center";
@@ -13478,6 +13488,7 @@ function triggerSupabaseOAuth(provider, label, evt){
 function closeModal(){
   var m=document.getElementById("esa-auth-modal");
   if(m){m.style.opacity="0";m.style.transition="opacity 0.2s";setTimeout(function(){if(m.parentNode)m.remove();},200);}
+  document.body.classList.remove('esa-modal-open');
 }
 
 function handleCred(resp){
