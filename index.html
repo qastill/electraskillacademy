@@ -10779,9 +10779,10 @@ function esaIsModuleFree(code) {
 }
 window.esaIsModuleFree = esaIsModuleFree;
 
-// true bila ISI modul (video, PPT, quiz) masih terkunci untuk pengunjung ini.
-// Halaman modulnya sendiri selalu terbuka — yang dikunci cuma isinya, supaya
-// katalog & pratinjau tetap bisa dijelajahi seperti Netflix/YouTube.
+// true bila VIDEO modul ini masih terkunci untuk pengunjung yang sedang membuka.
+// HANYA video yang dikunci: materi PPT, quiz 25 soal, rekaman live class, dan
+// asisten modul terbuka untuk semua. Seluruh situs bisa dijelajahi keluar-masuk
+// tanpa hambatan; satu-satunya yang menuntut bayar adalah menekan tombol play.
 function esaModuleLocked(code, levelId) {
   if (typeof esaContentUnlocked === 'function' && esaContentUnlocked()) return false;
   if (esaIsModuleFree(code)) return false;
@@ -10814,22 +10815,34 @@ window.esaLockedPanel = esaLockedPanel;
 //   YouTube → maxresdefault tidak selalu ada, turun ke hq lalu mq.
 //   Drive    → lh3.googleusercontent.com lebih tahan hotlink daripada
 //              drive.google.com/thumbnail, jadi dicoba lebih dulu.
-function esaMediaThumb(media) {
+//
+// UKURAN PENTING. Browser menyimpan bitmap yang sudah di-dekode, bukan berkas
+// terkompresnya: satu gambar 1280x720 memakan ~3,7 MB memori apa pun ukuran
+// berkasnya. Katalog bisa menampung ratusan kartu sekaligus, jadi memakai
+// maxresdefault di sana pernah menembus 2 GB dan membuat tab Chrome mati.
+// Kartu kecil (±300 px) cukup dilayani mqdefault 320x180 — ~0,23 MB, enam
+// belas kali lebih ringan. Ukuran besar hanya untuk pemutar/sampul panel.
+function esaMediaThumb(media, ukuran) {
   if (!media) return null;
+  var besar = ukuran === 'besar';
   if (media.youtubeId) {
     var v = media.youtubeId;
-    return {
-      src: 'https://i.ytimg.com/vi/' + v + '/maxresdefault.jpg',
-      alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg',
-            'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg']
-    };
+    return besar
+      ? { src: 'https://i.ytimg.com/vi/' + v + '/maxresdefault.jpg',
+          alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg',
+                'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg'] }
+      : { src: 'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg',
+          alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg'] };
   }
   if (media.videoUrl) {
     var gd = media.videoUrl.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
-    if (gd) return {
-      src: 'https://lh3.googleusercontent.com/d/' + gd[1] + '=w640',
-      alt: ['https://drive.google.com/thumbnail?id=' + gd[1] + '&sz=w640']
-    };
+    if (gd) {
+      var w = besar ? 'w640' : 'w320';
+      return {
+        src: 'https://lh3.googleusercontent.com/d/' + gd[1] + '=' + w,
+        alt: ['https://drive.google.com/thumbnail?id=' + gd[1] + '&sz=' + w]
+      };
+    }
   }
   return null;
 }
@@ -11291,13 +11304,28 @@ function esaCrsRender() {
     return;
   }
 
-  var shown = rows.slice(0, _crsState.limit);
+  // Batas aman jumlah kartu di DOM sekaligus. Tanpa ini, menekan "muat lagi"
+  // berulang kali bisa menaruh 1.117 kartu (±28.000 simpul) dalam satu halaman
+  // dan membuat tab kehabisan memori. Filter di kiri jauh lebih cepat daripada
+  // menggulir ribuan kartu, jadi di batas ini pengunjung diarahkan ke sana.
+  var BATAS_KARTU = 360;
+  var shown = rows.slice(0, Math.min(_crsState.limit, BATAS_KARTU));
   grid.innerHTML = shown.map(esaCrsCard).join('');
   if (more) {
-    more.innerHTML = rows.length > shown.length
-      ? '<button type="button" class="crs-more-btn" onclick="esaCrsMore()">Muat ' +
-        Math.min(24, rows.length - shown.length) + ' modul lagi (' + shown.length + '/' + rows.length + ')</button>'
-      : '<div style="color:var(--ink-mute);font-size:0.84rem;">Semua ' + rows.length + ' modul sudah tampil.</div>';
+    if (rows.length <= shown.length) {
+      more.innerHTML = '<div style="color:var(--ink-mute);font-size:0.84rem;">Semua ' + rows.length + ' modul sudah tampil.</div>';
+    } else if (shown.length >= BATAS_KARTU) {
+      more.innerHTML =
+        '<div style="color:var(--ink-mute);font-size:0.86rem;line-height:1.6;max-width:520px;margin:0 auto;">' +
+        'Menampilkan ' + shown.length + ' dari ' + rows.length.toLocaleString('id-ID') + ' modul. ' +
+        'Sisanya tidak dimuat sekaligus supaya halaman tetap ringan — ' +
+        'pakai pencarian atau filter di kiri untuk mempersempit.' +
+        '</div>';
+    } else {
+      more.innerHTML = '<button type="button" class="crs-more-btn" onclick="esaCrsMore()">Muat ' +
+        Math.min(24, Math.min(rows.length, BATAS_KARTU) - shown.length) + ' modul lagi (' +
+        shown.length + '/' + rows.length + ')</button>';
+    }
   }
 }
 
@@ -11712,7 +11740,7 @@ function renderLevels(trackId) {
             </button>` : ''}
             ${a.locked ? `<button type="button" class="lvlpanel-unlock" onclick="esaRequireAccess()">Buka akses penuh</button>` : ''}
           </div>
-          ${a.locked ? `<div class="lvlpanel-note">Jelajahi bebas — thumbnail, outcome, dan instruktur terbuka untuk semua. Video, PPT, dan quiz perlu akses penuh.</div>` : ''}
+          ${a.locked ? `<div class="lvlpanel-note">Materi PPT, quiz 25 soal, dan asisten modul terbuka untuk semua. Hanya pemutaran video yang memerlukan akses penuh.</div>` : ''}
         </div>
       </div>
       ${grid}
@@ -11935,20 +11963,6 @@ function renderLiveClassPanel(module, levelId, trackId, instructor) {
   if (!container) return;
 
   const media = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[module.code]) ? MODULE_MEDIA[module.code] : {};
-
-  // Rekaman live class juga materi berbayar. Pintu halaman modul sekarang
-  // terbuka untuk semua, jadi kuncinya dipasang di sini — kalau tidak,
-  // rekaman ikut terbuka begitu saja.
-  if (media.liveClassUrl && esaModuleLocked(module.code, levelId)) {
-    container.innerHTML = '<div style="padding:24px;background:#fafaf6;border-radius:12px;">' +
-      esaLockedPanel({
-        badge: 'Rekaman terkunci',
-        title: 'Rekaman live class modul ini sudah tersedia',
-        desc: 'Sesi tanya-jawab langsung bersama ' + escapeHtml(instructor.name) +
-              '. Buka akses penuh untuk menonton rekamannya kapan saja.'
-      }) + '</div>';
-    return;
-  }
 
   // Kalau ada rekaman live class, render video player
   if (media.liveClassUrl) {
@@ -12825,12 +12839,12 @@ function openModul(code, trackId, levelId) {
       // Tautan "buka di tab baru" sengaja tidak dirender supaya URL video
       // tidak bocor lewat markup.
       videoWrap.innerHTML = esaLockedPanel({
-        thumb: esaMediaThumb(media),
+        thumb: esaMediaThumb(media, 'besar'),
         badge: 'Video terkunci',
         title: 'Aktifkan akses penuh untuk menonton',
         desc: media.videoSource
-          ? 'Videonya sudah siap. Buka akses penuh sekali bayar untuk memutar seluruh video, materi PPT, dan quiz di semua jalur.'
-          : 'Video modul ini sedang disiapkan. Buka akses penuh untuk menonton begitu tayang, plus seluruh materi PPT dan quiz.'
+          ? 'Materi PPT dan quiz modul ini bisa kamu buka sekarang juga — yang perlu akses penuh hanya memutar videonya. Sekali bayar, berlaku untuk seluruh jalur.'
+          : 'Video modul ini sedang disiapkan. Sementara itu materi PPT dan quiz-nya sudah bisa kamu kerjakan.'
       });
     } else if (parsed) {
       if (parsed.type === 'video') {
@@ -12866,14 +12880,7 @@ function openModul(code, trackId, levelId) {
   const slidesWrap = document.getElementById('slides-wrap');
   if (slidesWrap) {
     const parsedSlide = parseSlideEmbed(media.slideUrl);
-    if (moduleLocked) {
-      slidesWrap.innerHTML = esaLockedPanel({
-        tall: true,
-        badge: 'Materi PPT terkunci',
-        title: 'Slide lengkap menunggu di balik akses penuh',
-        desc: 'Materi presentasi modul ini berisi rumus, standar PUIL/SKKNI, dan studi kasus lapangan. Buka akses penuh untuk membaca dan mengunduhnya.'
-      });
-    } else if (parsedSlide) {
+    if (parsedSlide) {
       const downloadHref = media.slideUrl;
       slidesWrap.innerHTML = `
         <iframe src="${parsedSlide.src}" allowfullscreen></iframe>
@@ -12923,28 +12930,9 @@ function openModul(code, trackId, levelId) {
   // Daftar tonton berikutnya di sidebar
   try { renderUpNext(code, trackId, levelId); } catch (e) { /* fail-soft */ }
 
-  // Quiz — soal hanya dirender untuk yang sudah punya akses; kalau terkunci,
-  // panelnya diganti kartu ajakan supaya isi soal tidak bocor lewat markup.
-  if (moduleLocked) {
-    const quizList = document.getElementById('quiz-list');
-    if (quizList) {
-      quizList.innerHTML = esaLockedPanel({
-        badge: 'Quiz terkunci',
-        title: '25 soal untuk menguji pemahamanmu',
-        desc: 'Kerjakan quiz dengan skor minimal 70% untuk menuntaskan modul ini dan naik level. Terbuka setelah akses penuh aktif.'
-      });
-    }
-    const quizAnswered = document.getElementById('quiz-answered');
-    if (quizAnswered) quizAnswered.textContent = '0';
-    const quizTimer = document.getElementById('quiz-timer');
-    if (quizTimer) quizTimer.style.display = 'none';
-  } else {
-    const quizTimer = document.getElementById('quiz-timer');
-    if (quizTimer) quizTimer.style.display = '';
-    // Bank soal dimuat saat dibutuhkan; renderQuiz() sendiri sudah aman kalau
-    // QUIZ_BANK kosong (jatuh ke QUIZ_TEMPLATE), jadi ini tidak menahan render.
-    esaLoadQuizBank(function () { renderQuiz(module); });
-  }
+  // Quiz terbuka untuk semua. Bank soal dimuat saat dibutuhkan; renderQuiz()
+  // sendiri sudah aman kalau QUIZ_BANK kosong (jatuh ke QUIZ_TEMPLATE).
+  esaLoadQuizBank(function () { renderQuiz(module); });
 
   // Reset tabs
   switchTab('video');
@@ -13532,22 +13520,6 @@ function sendAI() {
   const messages = document.getElementById('ai-messages');
   const q = input.value.trim();
   if (!q) return;
-
-  // Asisten modul memanggil API berbayar per pertanyaan. Dulu terlindung oleh
-  // pintu halaman modul; sekarang pintunya terbuka untuk semua, jadi kuncinya
-  // dipasang di sini — kalau tidak, pengunjung yang belum bayar bisa memakai
-  // kuota token tanpa batas akun.
-  if (window.currentModuleData && esaModuleLocked(window.currentModuleData.code, window.currentModuleData.levelId)) {
-    input.value = '';
-    const lockMsg = document.createElement('div');
-    lockMsg.className = 'ai-msg bot';
-    lockMsg.innerHTML = 'Asisten modul terbuka setelah akses penuh aktif. ' +
-      'Sementara ini kamu tetap bisa melihat outcome, instruktur, dan thumbnail materi modul ini gratis. ' +
-      '<button type="button" onclick="esaRequireAccess()" style="margin-top:10px;display:block;background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:9px 18px;font-size:0.76rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Buka Akses Penuh</button>';
-    messages.appendChild(lockMsg);
-    messages.scrollTop = messages.scrollHeight;
-    return;
-  }
 
   // Add user msg
   const userMsg = document.createElement('div');
@@ -14656,6 +14628,57 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
       '<p><strong>Cookies/localStorage.</strong> Kami pakai localStorage untuk menyimpan: profil, progres modul, sertifikat, kuota AI. Tidak dipakai untuk tracking lintas-situs.</p>'+
       '<p style="font-size:0.78rem;color:rgba(245,240,230,0.55);margin-top:18px;">Sesuai UU PDP No. 27/2022. Update terakhir: '+new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+'.</p>'
     );
+  };
+
+  // Magic-link dari MODAL LOGIN. Memakai field email milik modal login sendiri
+  // (esa-login-email), bukan field biodata — keduanya bisa terbuka bergantian.
+  window.esaLoginWithEmail = async function () {
+    const inp = document.getElementById('esa-login-email');
+    const msg = document.getElementById('esa-login-email-msg');
+    const btn = document.getElementById('esa-login-email-btn');
+    if (!inp || !msg || !btn) return;
+    const email = inp.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.textContent = '✗ Masukkan alamat email yang valid.';
+      msg.style.color = '#ef9090';
+      inp.focus();
+      return;
+    }
+    if (!window.__esaSb) {
+      msg.textContent = '✗ Koneksi ke server belum siap. Muat ulang halaman lalu coba lagi.';
+      msg.style.color = '#ef9090';
+      return;
+    }
+    const labelAsli = btn.innerHTML;
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    btn.textContent = 'Mengirim…';
+    msg.textContent = '';
+    try {
+      // shouldCreateUser true: pendaftar lama yang belum pernah OAuth tetap
+      // bisa masuk, dan pendatang baru langsung punya akun.
+      const r = await window.__esaSb.auth.signInWithOtp({
+        email: email,
+        options: {
+          emailRedirectTo: window.location.origin + window.location.pathname,
+          shouldCreateUser: true
+        }
+      });
+      if (r.error) throw r.error;
+      msg.innerHTML = '✓ Link masuk dikirim ke <strong>' + email + '</strong>. Buka email itu lalu klik linknya — kamu langsung masuk tanpa password.';
+      msg.style.color = '#86efac';
+      inp.style.display = 'none';
+      btn.style.display = 'none';
+      if (typeof window.esaLogEvent === 'function') {
+        window.esaLogEvent('login_success', { email: email, provider: 'magic_link', metadata: { stage: 'requested', from: 'login_modal' } });
+      }
+    } catch (e) {
+      msg.textContent = '✗ Gagal mengirim: ' + (e.message || 'kesalahan tidak diketahui');
+      msg.style.color = '#ef9090';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.innerHTML = labelAsli;
+    }
   };
 
   // Magic-link login via Supabase Auth OTP — alternatif kalau user tidak
@@ -17042,7 +17065,7 @@ function buildModal(){
   h2.style.fontWeight="700";h2.style.margin="0 0 6px";
 
   var p1=document.createElement("p");
-  p1.innerHTML='<strong style="color:#c9a96e;">Sudah punya akun?</strong> Klik tombol login di bawah.<br><strong style="color:#c9a96e;">Belum punya akun?</strong> Klik <em>Daftar Manual</em> untuk isi biodata dulu.';
+  p1.innerHTML='<strong style="color:#c9a96e;">Sudah punya akun?</strong> Masuk lewat Google/LinkedIn/GitHub, atau kirim link masuk ke email yang kamu pakai saat daftar.<br><strong style="color:#c9a96e;">Belum punya akun?</strong> Klik <em>Daftar Baru</em> untuk isi biodata dulu.';
   p1.style.color="#9ca3af";p1.style.fontSize="13px";p1.style.margin="0 0 22px";p1.style.lineHeight="1.7";
 
   // Catatan kontekstual "khusus member" — muncul saat modal dipicu dari konten
@@ -17093,6 +17116,34 @@ function buildModal(){
     },180);
   };
 
+  // ---- Masuk dengan Email (magic link) ----
+  // Wajib ada di sini: pendaftar lewat "Daftar Baru — Isi Biodata" tidak punya
+  // akun OAuth, jadi tanpa opsi ini mereka terkunci di luar akunnya sendiri.
+  var mlDivider=document.createElement("div");
+  mlDivider.style.cssText="display:flex;align-items:center;gap:10px;color:#6b7280;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 12px;";
+  mlDivider.innerHTML='<span style="flex:1;height:1px;background:rgba(255,255,255,0.08);"></span><span>atau pakai email</span><span style="flex:1;height:1px;background:rgba(255,255,255,0.08);"></span>';
+
+  var mlInput=document.createElement("input");
+  mlInput.type="email";mlInput.id="esa-login-email";
+  mlInput.placeholder="email yang kamu pakai saat daftar";
+  mlInput.autocomplete="email";
+  mlInput.style.cssText="width:100%;padding:12px 14px;border-radius:8px;border:1px solid rgba(201,169,110,0.3);background:rgba(255,255,255,0.05);color:#f5f0e6;font-size:13px;font-family:Inter,sans-serif;outline:none;margin-bottom:8px;box-sizing:border-box;";
+  mlInput.onfocus=function(){mlInput.style.borderColor="#c9a96e";};
+  mlInput.onblur=function(){mlInput.style.borderColor="rgba(201,169,110,0.3)";};
+  mlInput.onkeypress=function(e){if(e.key==="Enter")window.esaLoginWithEmail();};
+
+  var mlBtn=document.createElement("button");
+  mlBtn.id="esa-login-email-btn";
+  mlBtn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" style="margin-right:9px" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Kirim Link Masuk ke Email';
+  mlBtn.style.cssText="width:100%;padding:12px 16px;border-radius:8px;border:1px solid rgba(201,169,110,0.45);background:transparent;color:#c9a96e;font-size:13px;font-weight:600;font-family:Inter,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;";
+  mlBtn.onmouseover=function(){mlBtn.style.background="rgba(201,169,110,0.1)";};
+  mlBtn.onmouseout=function(){mlBtn.style.background="transparent";};
+  mlBtn.onclick=function(){window.esaLoginWithEmail();};
+
+  var mlMsg=document.createElement("div");
+  mlMsg.id="esa-login-email-msg";
+  mlMsg.style.cssText="font-size:11.5px;text-align:center;margin-top:9px;min-height:1em;line-height:1.5;";
+
   var p2=document.createElement("p");
   p2.textContent="Dengan mendaftar, Anda menyetujui syarat & ketentuan Electra Skill Academy";
   p2.style.color="#6b7280";p2.style.fontSize="11px";p2.style.margin="16px 0 0";
@@ -17104,6 +17155,10 @@ function buildModal(){
   box.appendChild(linkedinBtn);
   box.appendChild(githubBtn);
   box.appendChild(gsiDiv);
+  box.appendChild(mlDivider);
+  box.appendChild(mlInput);
+  box.appendChild(mlBtn);
+  box.appendChild(mlMsg);
   box.appendChild(divider);
   box.appendChild(emailBtn);
   box.appendChild(p2);
