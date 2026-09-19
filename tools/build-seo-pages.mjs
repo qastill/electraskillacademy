@@ -456,6 +456,32 @@ if (FACTS.jalurSiap !== LIVE_TRACKS.length || FACTS.jalurSoon !== SOON_TRACKS.le
   process.exit(1);
 }
 
+// Penjaga yang sama untuk JUMLAH MODUL. Penjaga jalur di atas ada sejak awal,
+// tapi FACTS.modul tidak diperiksa siapa pun — akibatnya "605+" tercetak di 30
+// halaman lama setelah kurikulum tumbuh ke 1.117 modul. Halaman SEO hidup dari
+// angka yang bisa dipercaya: kalau Google dan LLM mengutip angka basi, yang
+// rusak bukan hanya peringkat tapi juga kredibilitas.
+{
+  // Dihitung langsung dari CURRICULUM — sumber yang sama dengan yang dipakai
+  // situs, bukan dari ringkasan yang bisa ikut basi.
+  let nyata = 0;
+  try {
+    const vm = await import('node:vm');
+    const ctx = { console }; ctx.window = ctx; vm.createContext(ctx);
+    vm.runInContext(readFileSync(join(ROOT, 'data/app-data.js'), 'utf8'), ctx);
+    nyata = Object.values(ctx.CURRICULUM || {}).reduce((n, a) => n + a.length, 0);
+  } catch (e) { /* data tidak terbaca — penjaga dilewati, bukan menghentikan build */ }
+  const tertulis = parseInt(String(FACTS.modul).replace(/[^\d]/g, ''), 10);
+  // Toleransi 2% supaya pembulatan gaya "1.100+" tetap boleh dipakai.
+  if (nyata && tertulis && Math.abs(nyata - tertulis) / nyata > 0.02) {
+    console.error(
+      `\nGAGAL: FACTS.modul ("${FACTS.modul}") menyimpang >2% dari jumlah modul nyata (${nyata}).\n` +
+        `Jalankan "node tools/extract-track-data.mjs", lalu perbarui FACTS.modul di tools/seo-pages.data.mjs.\n`
+    );
+    process.exit(1);
+  }
+}
+
 function trackFaq(t) {
   const l3 = t.levels[0];
   const l6 = t.levels[3];

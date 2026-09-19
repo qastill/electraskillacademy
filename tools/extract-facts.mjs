@@ -35,13 +35,18 @@ const require = createRequire(import.meta.url);
 
 /* ---------- util: ambil literal objek dari index.html ---------- */
 
-const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+// Lihat catatan sama di extract-track-data.mjs: literal data sekarang ada di
+// data/app-data.js, jadi kedua berkas dibaca dan disambung.
+const bacaOpsional = (rel) => {
+  try { return readFileSync(join(ROOT, rel), 'utf8'); } catch (e) { return ''; }
+};
+const html = [bacaOpsional('data/app-data.js'), bacaOpsional('index.html')].join('\n');
 
 /** Ambil `const <nama> = {…}` / `[…]` dengan menghitung kurung. */
 function literalFromHtml(name) {
-  const marker = `const ${name} = `;
-  const start = html.indexOf(marker);
-  if (start === -1) throw new Error(`${name} tidak ditemukan di index.html`);
+  let start = html.indexOf(`window.${name} = `);
+  if (start === -1) start = html.indexOf(`const ${name} = `);
+  if (start === -1) throw new Error(`${name} tidak ditemukan di data/app-data.js maupun index.html`);
 
   const openIdx = html.slice(start).search(/[[{]/) + start;
   const openCh = html[openIdx];

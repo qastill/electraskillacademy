@@ -23,13 +23,25 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const src = readFileSync(join(ROOT, 'index.html'), 'utf8');
+
+// Data aplikasi (TRACKS_META, LEVEL_OVERRIDES, CURRICULUM, …) pindah dari
+// index.html ke data/app-data.js. Dua-duanya dibaca dan disambung supaya alat
+// ini tetap jalan di mana pun literalnya berada sekarang atau nanti — pindah
+// berkas tidak boleh diam-diam mematikan generator halaman SEO.
+const bacaOpsional = (rel) => {
+  try { return readFileSync(join(ROOT, rel), 'utf8'); } catch (e) { return ''; }
+};
+const src = [
+  bacaOpsional('data/app-data.js'),
+  bacaOpsional('index.html'),
+].join('\n');
 
 /** Ambil literal objek JS setelah `const <nama> = ` dengan menghitung kurung kurawal. */
 function extractObjectLiteral(name) {
-  const marker = `const ${name} = `;
-  const start = src.indexOf(marker);
-  if (start === -1) throw new Error(`${name} tidak ditemukan di index.html`);
+  // app-data.js memakai `window.X = `, index.html dulu memakai `const X = `.
+  let start = src.indexOf(`window.${name} = `);
+  if (start === -1) start = src.indexOf(`const ${name} = `);
+  if (start === -1) throw new Error(`${name} tidak ditemukan di data/app-data.js maupun index.html`);
 
   let i = src.indexOf('{', start);
   const open = i;

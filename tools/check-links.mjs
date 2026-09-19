@@ -11,9 +11,22 @@ import fs from 'fs';
 import path from 'path';
 
 const root = path.resolve(process.cwd());
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 
-const re = /(videoUrl|slideUrl|driveUrl)\s*:\s*'([^']+)'/g;
+// videoUrl/slideUrl/driveUrl tinggal di data/module-media.js, bukan lagi di
+// index.html. Alat ini dulu hanya membaca index.html, jadi diam-diam berhenti
+// menemukan apa pun dan menulis laporan kosong — gagal yang tidak berbunyi.
+// Semua berkas yang mungkin memuatnya dibaca dan disambung.
+const bacaOpsional = (rel) => {
+  try { return fs.readFileSync(path.join(root, rel), 'utf8'); } catch (e) { return ''; }
+};
+const html = [
+  bacaOpsional('data/module-media.js'),
+  bacaOpsional('data/app-data.js'),
+  bacaOpsional('data/books.js'),
+  bacaOpsional('index.html'),
+].join('\n');
+
+const re = /(videoUrl|slideUrl|driveUrl)\s*:\s*['"]([^'"]+)['"]/g;
 const items = [];
 let m;
 while ((m = re.exec(html)) !== null) {

@@ -112,7 +112,7 @@ di Indonesia"**. Cara yang dipakai di sini:
      bukan pilihan yang tepat".
   3. Klaim superlatif tanpa dasar berpotensi bermasalah dari sisi iklan/konsumen.
 - Sebagai gantinya dipakai **klaim spesifik yang bisa dicek sendiri** oleh
-  pembaca: 8 jalur karir berkurikulum lengkap (dari 16 yang dipetakan), 605+ modul,
+  pembaca: 8 jalur karir berkurikulum lengkap (dari 16 yang dipetakan), 1.117 modul,
   lab simulator 3D, 9 kalkulator desain, 380 okupasi KKNI, sertifikat ber-QR.
   Klaim seperti ini jauh lebih kuat untuk peringkat maupun konversi.
 
@@ -226,7 +226,7 @@ ranking di Google. Empat hal yang diterapkan di seluruh halaman landing:
    dan paragraf yang sama disalin ke properti `abstract` di JSON-LD.
 
 2. **Angka spesifik, bukan sifat.**
-   "605+ modul" dikutip; "banyak modul" tidak. "Nilai lulus 70%" dikutip;
+   "1.117 modul" dikutip; "banyak modul" tidak. "Nilai lulus 70%" dikutip;
    "standar tinggi" tidak. Setiap klaim di halaman dibuat berbentuk angka atau
    nama standar (PUIL 2011, IEEE 1584, NFPA 70E).
 

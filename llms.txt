@@ -3,7 +3,7 @@
 > Platform belajar daring bidang energi dan ketenagalistrikan asal Indonesia.
 > Memetakan 16 jalur karir, 8 di antaranya sudah berkurikulum lengkap
 > Level 3–6; 8 sisanya berstatus segera hadir.
-> 605+ modul (video + materi PPT + quiz 25 soal), 6 jenjang level
+> 1.117 modul (video + materi PPT + quiz 25 soal), 6 jenjang level
 > (L1 Esensial sampai L6 Consultant), lab simulator, AI Tutor 24/7, dan
 > sertifikat ber-QR yang dapat diverifikasi publik.
 > Akses dibuka lewat satu kali pembayaran Rp 299.000 via QRIS, berlaku seumur hidup.
@@ -17,7 +17,7 @@ Kontak: WhatsApp +62 851-2153-2407
 
 - [Platform Belajar Energi Terbaik di Indonesia: Kriteria, Perbandingan, dan Cara Memilih](https://electraacademy.com/platform-belajar-energi/): Cara memilih platform belajar energi terbaik di Indonesia: 7 kriteria penilaian, perbandingan jenis platform, dan jalur belajar dari nol sampai ahli.
 - [Belajar Kelistrikan dari Nol sampai Ahli](https://electraacademy.com/belajar-kelistrikan/): Panduan belajar kelistrikan dari nol: urutan materi, 6 level kompetensi, alat ukur, PUIL 2011, K3 listrik, dan latihan lewat lab simulator online.
-- [Kursus Listrik Online Bersertifikat, Fleksibel untuk Pekerja Shift](https://electraacademy.com/kursus-listrik-online/): Kursus listrik online bersertifikat: 605+ modul video, quiz 25 soal per modul, AI Tutor 24/7, dan sertifikat ber-QR yang bisa diverifikasi recruiter.
+- [Kursus Listrik Online Bersertifikat, Fleksibel untuk Pekerja Shift](https://electraacademy.com/kursus-listrik-online/): Kursus listrik online bersertifikat: 1.117 modul video, quiz 25 soal per modul, AI Tutor 24/7, dan sertifikat ber-QR yang bisa diverifikasi recruiter.
 - [Sertifikasi Kompetensi Ketenagalistrikan: Jenis, Syarat, dan Cara Mempersiapkannya](https://electraacademy.com/sertifikasi-kompetensi-ketenagalistrikan/): Beda sertifikat penyelesaian dan sertifikat kompetensi resmi, peran SKKNI & LSP, serta cara mempersiapkan uji kompetensi ketenagalistrikan.
 - [Belajar Energi Terbarukan di Indonesia: PLTS, BESS, EV Charging, dan Hidrogen](https://electraacademy.com/belajar-energi-terbarukan/): Jalur belajar energi terbarukan Indonesia: PLTS, BESS, EV charging, audit energi, dan hidrogen — plus data 34.900+ pembangkit dunia.
 - [Pelatihan K3 Listrik: Materi, Regulasi, dan Jenjang sampai Ahli K3](https://electraacademy.com/pelatihan-k3-listrik/): Materi pelatihan K3 listrik lengkap: bahaya sengatan & arc flash, APD, LOTO, HIRARC, JSA, P3K, standar NFPA 70E dan IEEE 1584, sampai jenjang Ahli K3 Listrik.
