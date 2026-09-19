@@ -8098,10 +8098,25 @@ const LEVEL_TAGLINES = {
 
 let _esaActiveLevel = 'L1';
 
-function esaLevelCover(levelId, fallbackPhoto) {
+// Versi sampul tingkat. Dinaikkan kalau berkas gambarnya diganti, supaya
+// browser yang masih memegang versi lama — atau 404 lama — mengambil ulang.
+//
+// Ini bukan kehati-hatian teoretis: LEVEL_COVERS menunjuk ke
+// /img/level-5-expertise.webp dan /img/level-6-consultant.webp sejak #225,
+// tapi kedua berkasnya baru ada di #228. Selama rentang itu keduanya 404 dan
+// pengunjung melihat foto stok yang sama sekali tidak nyambung.
+const LEVEL_COVER_VER = '2';
+
+function esaLevelCover(levelId) {
   const src = LEVEL_COVERS[levelId];
-  const fb = fallbackPhoto ? ` data-fb="${fallbackPhoto}"` : '';
-  return `<img src="${src}"${fb} alt="" loading="lazy" decoding="async" onerror="esaCrsThumbErr(this)">`;
+  if (!src) return '';
+  // SENGAJA tanpa data-fb. Dulu sampul yang gagal dimuat diganti foto stok
+  // Unsplash — hasilnya wajah acak yang tidak ada hubungannya dengan tingkat
+  // itu, dan mustahil dikenali sebagai error karena terlihat seperti desain
+  // yang disengaja. Lebih baik jatuh ke gradasi khas tingkatnya (sudah ada di
+  // belakang lewat esaLevelCoverBg): terbaca sebagai pilihan desain, dan kalau
+  // gambarnya memang hilang, hilangnya terlihat.
+  return `<img src="${src}?v=${LEVEL_COVER_VER}" alt="" loading="lazy" decoding="async" onerror="esaCrsThumbErr(this)">`;
 }
 
 // Latar di balik sampul. Kalau berkas gambarnya belum ada, yang tersisa
@@ -8190,7 +8205,7 @@ function renderLevels(trackId) {
       <li class="${cls.join(' ')}">
         <button type="button" onclick="esaSetLevel('${d.lvl.id}','${trackId}')"
                 aria-current="${d.lvl.id === _esaActiveLevel ? 'step' : 'false'}">
-          <span class="lvlflow-thumb" style="background:${esaLevelCoverBg(d.lvl.id)}">${esaLevelCover(d.lvl.id, d.lvl.photo)}<span class="n">${tick}</span></span>
+          <span class="lvlflow-thumb" style="background:${esaLevelCoverBg(d.lvl.id)}">${esaLevelCover(d.lvl.id)}<span class="n">${tick}</span></span>
           <span class="lvlflow-name">${escapeHtml(LEVELS[i].name)}</span>
           <span class="lvlflow-tag">${escapeHtml(LEVEL_TAGLINES[d.lvl.id] || d.lvl.subtitle || '')}</span>
           <span class="lvlflow-meta">${d.total} modul${d.passed ? ` · ${d.passed} lulus` : ''}</span>
@@ -8237,7 +8252,7 @@ function renderLevels(trackId) {
   const panel = `
     <div class="lvlpanel" id="esa-level-panel">
       <div class="lvlpanel-hero">
-        <div class="lvlpanel-cover" style="background:${esaLevelCoverBg(a.lvl.id)}">${esaLevelCover(a.lvl.id, a.lvl.photo)}</div>
+        <div class="lvlpanel-cover" style="background:${esaLevelCoverBg(a.lvl.id)}">${esaLevelCover(a.lvl.id)}</div>
         <div class="lvlpanel-info">
           <div class="lvlpanel-eyebrow">Tingkat ${a.num} dari ${data.length} · ${a.total} modul ${doneBadge}</div>
           <h3>${escapeHtml(a.lvl.name)}</h3>
