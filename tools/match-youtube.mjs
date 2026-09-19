@@ -34,7 +34,9 @@ const args = Object.fromEntries(
     return m ? [m[1], m[2] === undefined ? true : m[2]] : [a, true];
   })
 );
-const MIN = parseFloat(args.min || '0.72');
+const MIN = parseFloat(args.min || '0.72');     // terima langsung
+const MID = parseFloat(args.mid || '0.5');      // terima kalau unggul jelas
+const MARGIN = parseFloat(args.margin || '0.12'); // jarak minimum ke kandidat kedua
 
 // ---------- kurikulum ----------
 function loadCurriculum() {
@@ -61,16 +63,51 @@ const norm = s => String(s || '')
   .replace(/[^a-z0-9]+/g, ' ')
   .trim();
 
-const STOP = new Set(['dan', 'di', 'ke', 'untuk', 'yang', 'pada', 'dengan', 'dari', 'atau', 'the', 'of', 'a']);
+// Kata yang tidak membedakan apa pun. Selain kata sambung, judul di channel
+// banyak memakai pembungkus hook ("Memahami X: Bagaimana cara ...?") yang kalau
+// ikut dihitung justru mengencerkan kata kunci yang sesungguhnya.
+const STOP = new Set([
+  'dan', 'di', 'ke', 'untuk', 'yang', 'pada', 'dengan', 'dari', 'atau', 'the', 'of', 'a',
+  'memahami', 'mengenal', 'pengenalan', 'bagaimana', 'apa', 'apakah', 'mengapa', 'kenapa',
+  'mana', 'harus', 'ini', 'itu', 'bisa', 'cara', 'kerja', 'benar', 'tepat', 'bedanya',
+  'beda', 'arti', 'saja', 'juga', 'agar', 'supaya', 'lengkap', 'dasar', 'praktik', 'vs'
+]);
 const tokens = s => norm(s).split(' ').filter(t => t && t.length > 1 && !STOP.has(t));
 
-// Dice coefficient atas himpunan token — toleran terhadap urutan dan imbuhan.
+// Bobot per kata (IDF). Tanpa ini, kata yang muncul di ratusan judul modul —
+// "listrik", "kelistrikan", "sistem", "analisis" — ikut menentukan sama kuatnya
+// dengan kata penentu seperti "apd", "elcb", "megger". Akibatnya nyata:
+// "Memahami APD Kelistrikan" sempat tertarik ke modul daya & energi hanya
+// karena sama-sama memuat "kelistrikan". Kata langka harus lebih berat.
+let _idf = null;
+function buildIdf(modules) {
+  const df = new Map();
+  for (const m of modules) {
+    for (const t of new Set(tokens(m.title))) df.set(t, (df.get(t) || 0) + 1);
+  }
+  const N = modules.length;
+  _idf = { df, N };
+}
+function w(t) {
+  if (!_idf) return 1;
+  return Math.log(_idf.N / (1 + (_idf.df.get(t) || 0))) + 1;
+}
+const wsum = set => [...set].reduce((s, t) => s + w(t), 0);
+
+// Dua ukuran berbobot, diambil yang terbesar:
+//  • Dice — simetris, bagus saat kedua judul sepanjang itu.
+//  • Containment — irisan / sisi terkecil. Ini yang menyelamatkan judul hook:
+//    "Memahami Earth Tester" punya sedikit kata dan semuanya ada di judul
+//    modulnya; Dice menghukumnya hanya karena judul modul lebih panjang.
 function similarity(a, b) {
   const A = new Set(tokens(a)), B = new Set(tokens(b));
   if (!A.size || !B.size) return 0;
   let inter = 0;
-  for (const t of A) if (B.has(t)) inter++;
-  return (2 * inter) / (A.size + B.size);
+  for (const t of A) if (B.has(t)) inter += w(t);
+  const wa = wsum(A), wb = wsum(B);
+  const dice = (2 * inter) / (wa + wb);
+  const contain = inter / Math.min(wa, wb);
+  return Math.max(dice, contain);
 }
 
 // "6H 14", "6H-14", "6H.14", "3C 1" → "6H.14" / "3C.01"
@@ -153,13 +190,25 @@ function match(videos, modules) {
     }
 
     if (!mod) {
-      let best = null, bestS = 0;
+      let best = null, bestS = 0, secondS = 0;
       for (const m of modules) {
         const s = similarity(v.title, m.title);
-        if (s > bestS) { bestS = s; best = m; }
+        if (s > bestS) { secondS = bestS; bestS = s; best = m; }
+        else if (s > secondS) { secondS = s; }
       }
-      if (best && bestS >= MIN) { mod = best; how = 'mirip'; score = bestS; }
-      else { misses.push({ ...v, terdekat: best?.code, terdekatJudul: best?.title, skor: +bestS.toFixed(2) }); continue; }
+      const margin = bestS - secondS;
+      // Diterima kalau kemiripannya tinggi, ATAU cukup tinggi sekaligus
+      // unggul jelas dari kandidat kedua. Skor bagus yang menang tipis
+      // justru tanda judulnya ambigu — itu diserahkan ke manusia.
+      const yakin = bestS >= MIN || (bestS >= MID && margin >= MARGIN);
+      if (best && yakin) { mod = best; how = 'mirip'; score = bestS; }
+      else {
+        misses.push({
+          ...v, terdekat: best?.code, terdekatJudul: best?.title,
+          skor: +bestS.toFixed(2), selisih: +margin.toFixed(2)
+        });
+        continue;
+      }
     }
 
     // Satu modul hanya boleh dipegang satu video — yang skornya lebih tinggi menang.
@@ -212,6 +261,7 @@ if (args['api-key']) {
   process.exit(2);
 }
 
+buildIdf(modules);
 console.error(`\n${videos.length} video · ${modules.length} modul kurikulum\n`);
 const { hits, misses } = match(videos, modules);
 
@@ -224,7 +274,7 @@ if (misses.length) {
   for (const m of misses) {
     console.log(`${m.id}  ${m.title || '(tanpa judul)'}`);
     if (m.alasan) console.log(`         ${m.alasan}`);
-    else if (m.terdekat) console.log(`         terdekat: ${m.terdekat} (${m.skor}) ${m.terdekatJudul}`);
+    else if (m.terdekat) console.log(`         terdekat: ${m.terdekat} (skor ${m.skor}, selisih ${m.selisih}) ${m.terdekatJudul}`);
   }
 }
 
