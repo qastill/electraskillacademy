@@ -11871,3 +11871,179 @@ button:active:not(:disabled),
   .modul-side { position: static; max-height: none; }
   .upnext { max-height: none; }
 }
+
+/* ================================================================
+   MOBILE PORTRAIT — audit terukur di 390×844 dan 360×800
+   ----------------------------------------------------------------
+   Tiap aturan di bawah lahir dari satu temuan nyata, bukan tebakan.
+   Nomor merujuk ke temuan audit; komentar menjelaskan gejalanya.
+================================================================ */
+
+/* [1] HALAMAN MODUL — video tidak terlihat sama sekali di HP.
+   Blok inline #view-modul .modul-main-inner memaksa
+   grid-template-columns: 1fr 340px !important tanpa media query.
+   Di lebar 390px kolom 340px menghabiskan ruang, kolom utama (video,
+   tab, materi) menyusut ke lebar 0. Aturan ini memakai spesifisitas
+   lebih tinggi (1 id + 2 kelas) supaya menang atas blok inline itu. */
+@media (max-width: 900px) {
+  #view-modul .modul-main .modul-main-inner {
+    grid-template-columns: 1fr !important;
+    padding: 12px 12px 28px !important;
+    gap: 16px !important;
+  }
+  #view-modul .modul-main { padding-left: 0 !important; padding-right: 0 !important; }
+  .modul-side { position: static; max-height: none; }
+  /* Deretan tab (Video · Materi · Quiz · …) dikunci nowrap + overflow
+     hidden, jadi tab di ujung kanan terpotong tanpa cara mencapainya.
+     Biarkan digeser jari; sembunyikan scrollbar-nya. */
+  #view-modul .modul-tabs {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #view-modul .modul-tabs::-webkit-scrollbar { display: none; }
+}
+
+@media (max-width: 640px) {
+  /* [2] HEADER HALAMAN DETAIL — "KEMBALI KE KATALOG" pecah jadi tiga
+     baris, logo jadi tiga baris. Huruf kapital berjarak lebar (0.18–0.28em)
+     tidak muat di 390px. Rapatkan, larang pecah baris, sembunyikan judul
+     tengah dan tautan "Cara belajar" (keduanya ada di menu). */
+  .detail-nav { padding: 10px 14px; gap: 10px; }
+  .detail-nav-logo { gap: 8px; }
+  .detail-nav-logo-mark { width: 28px; height: 28px; flex-shrink: 0; }
+  .detail-nav-logo-text { font-size: 10px; letter-spacing: 0.12em; white-space: nowrap; }
+  .detail-nav-logo-text .line-2 { letter-spacing: 0.14em; }
+  .detail-nav-center { display: none; }
+  .detail-nav-right { gap: 10px; flex-shrink: 0; }
+  /* Kedua tautan kanan memakai kelas yang sama: <a> "Cara Belajar" dan
+     <button> "Kembali …". Berdampingan mereka 147 + 194 px, sedangkan ruang
+     tersisa 225 px. Tautan "Cara Belajar" disembunyikan di HP (isinya tetap
+     terjangkau dari menu dan FAQ "Sistem Belajar"); tombol Kembali dirapatkan
+     supaya "KEMBALI KE KATALOG" muat satu baris. */
+  a.detail-nav-back { display: none; }
+  button.detail-nav-back { font-size: 10px; letter-spacing: 0.04em; white-space: nowrap; gap: 5px; }
+  .detail-nav-ai { display: none; }
+
+  /* Navigasi bawah modul (Sebelumnya / Berikutnya): dua tombol 205 + 198 px
+     di kotak 366 px. Tumpuk vertikal, lebar penuh. */
+  .modul-footer-nav { flex-wrap: wrap; gap: 10px; padding: 14px; }
+  .modul-footer-nav-btn { flex: 1 1 100%; justify-content: center; }
+
+  /* [3] PETA ALUR — hanya 1,8 dari 6 tingkat yang terlihat; sisanya di
+     balik tepi kanan tanpa petunjuk bisa digeser. Tujuan peta ini justru
+     memperlihatkan seluruh jalan dari pemula ke konsultan: jadikan grid
+     3×2 supaya keenamnya terlihat sekaligus tanpa geser. */
+  .lvlflow-track {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    overflow: visible;
+    padding: 0;
+  }
+  .lvlflow-arrow { display: none; }
+  .lvlflow-node { min-width: 0; flex: none; }
+  .lvlflow-node > button { padding: 6px; }
+  .lvlflow-thumb { aspect-ratio: 16 / 11; border-radius: 8px; }
+  .lvlflow-name { font-size: 12px; }
+  .lvlflow-sub, .lvlflow-count { font-size: 10.5px; }
+
+  /* [4] BERANDA 19 LAYAR — bagian #practices sendiri 8,3 layar karena
+     16 kartu jalur ditumpuk satu per baris pada ukuran penuh. Dua kolom
+     dengan foto lebih pendek dan deskripsi dua baris memangkasnya ~60%
+     tanpa menghilangkan satu jalur pun. */
+  .practices-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
+  .practice-card-photo { height: 108px; }
+  .practice-card-inner { padding: 12px; }
+  .practice-name { font-size: 14px; line-height: 1.3; }
+  .practice-desc {
+    font-size: 12px;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .practice-cta { font-size: 11px; }
+
+  /* [5] TIGA ELEMEN MELAYANG BERTUMPUK DI BAWAH — tombol AI (z-index
+     2147483000, ditanam ask-ai.js saat runtime) menindih bilah CTA dan
+     ikut tampil di atas modal login/lab. Turunkan z-index-nya ke bawah
+     modal, dorong kedua tombol ke atas bilah CTA hanya saat bilah itu
+     tampil (kelas body.esa-cta-on dari esaUpdateStickyMobileCTA), dan
+     sembunyikan semuanya saat ada modal terbuka (body.esa-modal-open). */
+  html body .eai-fab {
+    left: 12px !important;
+    bottom: 12px !important;
+    z-index: 9987 !important;
+    padding: 11px !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3) !important;
+  }
+  .esa-fab-wa { right: 12px !important; bottom: 12px !important; }
+  body.esa-cta-on .esa-fab-wa { bottom: 82px !important; }
+  html body.esa-cta-on .eai-fab { bottom: 82px !important; }
+  body.esa-modal-open #esa-sticky-mobile-cta,
+  body.esa-modal-open .esa-fab-wa,
+  html body.esa-modal-open .eai-fab { display: none !important; }
+
+  /* [6] MODAL LAB — padding 48/56px menyisakan ~258px untuk simulator,
+     dan kontrol terbawah tertutup bilah CTA. Rapatkan padding, beri ruang
+     bawah, dan pastikan SVG lab menyusut ke lebar layar. */
+  .sim-modal { padding: 10px 6px; }
+  .sim-modal-inner { padding: 18px 12px 48px; }
+  #sim-modal-content svg { max-width: 100%; height: auto; }
+  .sim-modal-close { top: 10px; right: 10px; }
+
+  /* [7] TEKS DI BAWAH 12PX — meta modul di daftar "Selanjutnya" 0.74rem
+     (11,8px) sulit dibaca di HP. */
+  .upnext-meta { font-size: 0.8rem; }
+  .lvlflow-title span { font-size: 0.8rem; }
+}
+
+/* Body tidak boleh menggeser horizontal apa pun penyebabnya — tetap
+   dipertahankan, tapi aturan [1]–[6] memperbaiki sumbernya, bukan
+   sekadar menyembunyikan. */
+
+/* [8] MODAL LAB DI HP — simulator baru muncul ~1,7 layar ke bawah, di bawah
+   kotak "Tentang lab ini" + judul + deskripsi. Orang membuka lab untuk
+   memakainya; penjelasan menyusul. Urutan dibalik murni lewat CSS (order),
+   tanpa menyentuh JS pembangun lab. Urutan DOM asli: spanduk, tentang,
+   badan lab, tutor. */
+@media (max-width: 640px) {
+  #sim-modal-content { display: flex; flex-direction: column; }
+  #sim-modal-content > .sim-banner { order: 0; }
+  #sim-modal-content > .sim-about { order: 5; margin-top: 18px; }
+}
+
+/* [9] STATISTIK HERO DI HP — empat angka dibungkus flex-wrap jadi 2+2,
+   tapi pembatas kanan tiap item ikut terbawa sehingga baris atas berakhir
+   dengan garis pemisah yang menggantung ke kolom kosong. Jadikan grid dua
+   kolom dan beri pembatas hanya pada kolom kiri. */
+@media (max-width: 640px) {
+  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 0; }
+  .hero-stat { padding: 4px 16px 4px 0; margin-right: 0; border-right: none; }
+  .hero-stat:nth-child(odd) { border-right: 1px solid rgba(245, 240, 230, 0.14); }
+  .hero-stat:nth-child(even) { padding-left: 16px; }
+}
+
+/* [10] PANEL KUNCI VIDEO DI HP — .video-player-wrap dikunci rasio 16:9 dan
+   overflow hidden (benar untuk iframe). Tapi saat videonya terkunci, panel
+   kunci (lencana + judul + penjelasan + tombol) butuh ~330px sementara
+   kotaknya hanya 205px: judul terdorong 31px ke atas dan terpotong. Di HP,
+   biarkan kotak tumbuh mengikuti isinya; min-height 56.25vw menjaga rasio
+   16:9 persis saat isinya iframe biasa. Teks panel ikut dirapatkan supaya
+   tetap dekat rasio aslinya. */
+@media (max-width: 640px) {
+  /* Hanya saat isinya panel kunci. Saat isinya iframe, rasio 16:9 dasar
+     tetap berlaku — iframe memakai height:100% yang butuh tinggi induk
+     yang pasti; min-height saja membuatnya jatuh ke 150px bawaan. */
+  .video-player-wrap:has(> .lockp) { aspect-ratio: auto; min-height: 56.25vw; }
+  .video-player-wrap > .lockp { position: relative; aspect-ratio: auto; height: auto; min-height: 56.25vw; padding: 18px 16px 16px; }
+  .lockp h4 { font-size: 17px; line-height: 1.25; margin: 6px 0 8px; }
+  .lockp p { font-size: 13px; line-height: 1.45; }
+  .lockp .lockp-badge { font-size: 10px; }
+}
+@media (max-width: 640px) {
+  /* padding .lockp-body (22/26) ditumpuk di atas padding .lockp — rapatkan */
+  .video-player-wrap > .lockp .lockp-body { padding: 6px 4px 2px; }
+}
