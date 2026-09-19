@@ -82,6 +82,7 @@ export const NAV = [
   { href: '/platform-belajar-energi/', label: 'Belajar Energi' },
   { href: '/sertifikasi-kompetensi-ketenagalistrikan/', label: 'Sertifikasi' },
   { href: '/faq/', label: 'FAQ' },
+  { href: '/video/', label: 'Video' },
 ];
 
 /* ============================================================
@@ -1089,6 +1090,7 @@ export const PAGES = [
 /** Halaman non-generated yang tetap perlu masuk sitemap. */
 export const STATIC_URLS = [
   { loc: '/', priority: '1.0', changefreq: 'weekly' },
+  { loc: '/video/', priority: '0.7', changefreq: 'weekly' },
   { loc: '/verify.html', priority: '0.7', changefreq: 'monthly' },
   { loc: '/manual-book.html', priority: '0.6', changefreq: 'monthly' },
   { loc: '/panduan.html', priority: '0.6', changefreq: 'monthly' },
