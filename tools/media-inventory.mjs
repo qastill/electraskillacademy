@@ -1,5 +1,5 @@
-// Pembaca inventaris media modul — dipakai bersama oleh
-// tools/report-media-sources.mjs dan tools/match-youtube-modules.mjs.
+// Pembaca inventaris media modul — dipakai tools/report-media-sources.mjs,
+// dan tersedia untuk alat lain yang perlu membaca ketiga sumber yang sama.
 //
 // Tiga sumber kebenaran yang dibaca:
 //   1. data/app-data.js              → CURRICULUM: daftar modul + judulnya
