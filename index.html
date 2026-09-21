@@ -540,7 +540,7 @@ if ('serviceWorker' in navigator) {
 #view-modul .ai-tutor-messages::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
 
 </style>
-<link rel="stylesheet" href="/academy-lobby.css?v=1">
+<link rel="stylesheet" href="/academy-lobby.css?v=2">
 </head>
 <body>
 
@@ -598,32 +598,19 @@ if ('serviceWorker' in navigator) {
     </nav>
 
     <div class="academy-lobby">
-      <div class="lobby-intro"><span class="lobby-eyebrow">YOUR NEXT CHAPTER STARTS HERE</span>
-        <h1>Pilih jalanmu.<br><em>Bangun masa depan energi.</em></h1>
-        <p>Satu karakter. Banyak kemungkinan. Temukan Academy-mu dan mulai perjalanan dari rasa ingin tahu menjadi keahlian.</p>
-      </div>
-      <div class="lobby-layout">
-        <section class="character-stage" aria-label="Pilih karakter perjalanan">
-          <img id="lobby-character" src="img/level-1-esensial.webp" alt="Karakter Explorer" fetchpriority="high">
-          <div class="stage-top"><span>01 / KARAKTER</span><span class="stage-dot">PERSONALIZE YOUR JOURNEY</span></div>
-          <div class="character-caption"><span id="character-role">THE EXPLORER</span><h2 id="character-title">Berani mulai.</h2><p id="character-description">Setiap ahli pernah menjadi pemula.</p>
-            <div class="character-options" role="group" aria-label="Karakter pilihan">
-              <button type="button" data-character="0" aria-pressed="true">Explorer</button>
-              <button type="button" data-character="1" aria-pressed="false">Builder</button>
-              <button type="button" data-character="2" aria-pressed="false">Visionary</button>
-            </div><small>Karakter visual — bebas pilih, semua materi tetap bisa dijelajahi.</small>
-          </div>
-        </section>
-        <section class="academy-selector" aria-labelledby="academy-choice-heading">
-          <div class="selector-heading"><span class="lobby-eyebrow">02 / DESTINASI</span><span>16 ACADEMIES</span></div>
-          <h2 id="academy-choice-heading">Kamu mau ke bidang apa?</h2>
-          <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih Academy"></div>
-          <div class="academy-preview" aria-live="polite"><span id="academy-status"></span><h3 id="academy-selected-name"></h3><p id="academy-selected-description"></p></div>
-          <button type="button" id="academy-enter" class="academy-enter">Masuk Academy <span aria-hidden="true">↗</span></button>
-          <div class="journey-steps" aria-label="Perjalanan belajar"><span>01 Pilih Academy</span><i></i><span>02 Pelajari modul</span><i></i><span>03 Naik level</span></div>
-        </section>
-      </div>
-      <a class="lobby-explore" href="#practices">Jelajahi semua Academy <span aria-hidden="true">↓</span></a>
+      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Energi masa depan.<em>Peranmu dimulai di sini.</em></h1></header>
+      <section class="career-stage" aria-label="Karakter dan dunia Academy pilihan">
+        <div class="stage-wordmark" aria-hidden="true">ELECTRA</div>
+        <div id="career-world" class="career-world" role="img" aria-label="Engineer Solar dengan panel surya"></div>
+        <div class="stage-corner"><span class="stage-signal" aria-hidden="true"></span> CAREER SELECT <span id="academy-number">10 / 16</span></div>
+        <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Jeda animasi">Ⅱ</button>
+        <button class="career-arrow career-prev" id="academy-prev" type="button" aria-label="Academy sebelumnya">←</button>
+        <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Academy berikutnya">→</button>
+        <div class="career-caption" aria-live="polite"><span id="career-role">SOLAR ENGINEER</span><h2 id="academy-selected-name">Solar Academy</h2><p id="academy-selected-description">Panel surya · Desain PLTS · Energi bersih</p></div>
+      </section>
+      <div class="career-actions"><button type="button" id="academy-enter" class="academy-enter">Masuk Academy <span aria-hidden="true">↗</span></button><span id="academy-status">Kurikulum siap · Video bertahap</span></div>
+      <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih jalur karir Academy"></div>
+      <noscript><p>Aktifkan JavaScript untuk memilih karakter dan membuka Academy.</p></noscript>
     </div>
   </section>
 
@@ -3691,7 +3678,7 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
-<script src="/academy-lobby.js" defer></script>
+<script src="/academy-lobby.js?v=2" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.
