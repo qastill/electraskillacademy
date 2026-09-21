@@ -123,6 +123,8 @@
     }
     const modules = window.esaTrackModuleCount?.(id) || 0;
     document.getElementById('academy-modules').textContent = modules ? modules + ' modul' : 'Kurikulum disiapkan';
+    // Program fast track PLN adalah bagian dari Distribution Academy.
+    document.getElementById('academy-fasttrack').hidden = id !== 'S3';
   }
   window.esaLobbySelect = select;
   window.esaLobbyCurrent = () => selected;

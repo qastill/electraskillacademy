@@ -70,6 +70,10 @@
 .career-panel-eyebrow{font:9px/1.4 sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8ea897}
 .career-panel-body h3{margin:0;font:500 19px/1.25 sans-serif;color:#eef3e6;letter-spacing:-.01em}
 .career-panel-count{font:700 10px/1 sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.career-panel-fasttrack{display:inline-flex;align-items:center;gap:8px;margin-top:2px;padding:8px 11px;border:1px solid #e0c58a40;border-radius:10px;background:#e0c58a0f;color:#e6d5ab;font:600 10px/1.3 sans-serif;text-decoration:none;transition:background .2s,border-color .2s}
+.career-panel-fasttrack:hover{background:#e0c58a1f;border-color:#e0c58a80}
+.career-panel-fasttrack[hidden]{display:none}
+.fasttrack-tag{padding:3px 7px;border-radius:20px;background:#e0c58a;color:#1c2a20;font:800 8px/1 sans-serif;letter-spacing:.1em;text-transform:uppercase}
 .career-panel .academy-enter{width:100%;margin-top:auto;gap:12px}
 .career-panel #academy-status{max-width:none;text-align:center}
 @media(max-width:1000px){
