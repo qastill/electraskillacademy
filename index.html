@@ -540,7 +540,7 @@ if ('serviceWorker' in navigator) {
 #view-modul .ai-tutor-messages::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
 
 </style>
-<link rel="stylesheet" href="/academy-lobby.css?v=2">
+<link rel="stylesheet" href="/academy-lobby.css?v=3">
 </head>
 <body>
 
@@ -608,11 +608,20 @@ if ('serviceWorker' in navigator) {
         <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Academy berikutnya">→</button>
         <div class="career-caption" aria-live="polite"><span id="career-role">SOLAR ENGINEER</span><h2 id="academy-selected-name">Solar Academy</h2><p id="academy-selected-description">Panel surya · Desain PLTS · Energi bersih</p></div>
       </section>
-      <div class="career-actions"><button type="button" id="academy-enter" class="academy-enter">Masuk Academy <span aria-hidden="true">↗</span></button><span id="academy-status">Kurikulum siap · Video bertahap</span></div>
+      <div class="career-actions"><button type="button" id="academy-enter" class="academy-enter">Lihat perjalanan belajar <span aria-hidden="true">↓</span></button><span id="academy-status">Kurikulum siap · Video bertahap</span></div>
       <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih jalur karir Academy"></div>
       <noscript><p>Aktifkan JavaScript untuk memilih karakter dan membuka Academy.</p></noscript>
     </div>
   </section>
+
+<section id="academy-learning" class="academy-learning" aria-labelledby="academy-learning-title">
+  <div class="academy-learning-inner">
+    <div class="learning-heading"><div><span class="learning-eyebrow">YOUR LEARNING JOURNEY</span><h2 id="academy-learning-title">Solar Academy</h2><p id="academy-learning-summary">Menyiapkan perjalanan belajarmu…</p></div><button type="button" class="learning-unlock" id="academy-unlock" onclick="esaRequireAccess()">Buka akses video ↗</button></div>
+    <nav id="academy-level-nav" class="academy-level-nav" aria-label="Tingkatan belajar"></nav>
+    <p class="learning-access-note" id="academy-access-note">Jelajahi seluruh kurikulum. Aktifkan akses untuk menonton video.</p>
+    <div id="academy-learning-list" aria-live="polite"></div>
+  </div>
+</section>
 
 <!-- USER PROGRESS PANEL — dihapus dari home (bar gelap di bawah hero membingungkan);
      updateHomeProgress() aman karena sudah guard if(!panel) return. -->
@@ -3678,7 +3687,8 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
-<script src="/academy-lobby.js?v=2" defer></script>
+<script src="/academy-curriculum.js?v=1" defer></script>
+<script src="/academy-lobby.js?v=3" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.

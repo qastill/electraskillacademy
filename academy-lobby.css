@@ -50,3 +50,31 @@
 .academy-lobby.lobby-offscreen *{animation-play-state:paused!important}
 /* Selection icons remain still; movement belongs to the central scene. */
 .academy-choices svg *{animation:none!important}
+/* Realistic career films: four generated action frames, not a moving vector avatar. */
+.career-stage{min-height:0;background:#12211b;aspect-ratio:16/7.8;max-height:620px}
+.career-world{position:absolute;inset:0;width:100%;height:100%}
+.career-film{position:absolute;inset:0;overflow:hidden}
+.career-film-frame{position:absolute;width:100%;height:100%;background-image:var(--scene-image);background-size:200% 200%;background-position:0 0;animation:career-frames 3.2s steps(1,end) infinite}
+.career-film-shade{position:absolute;inset:0;background:linear-gradient(180deg,#0c1a1759 0%,transparent 30%,#0c1a170a 50%,#0c1a17ed 100%)}
+.stage-wordmark{z-index:1;top:30px;left:auto;right:28px;font-size:clamp(22px,5vw,62px);letter-spacing:.2em;color:#ffffff17}
+.stage-corner,.motion-toggle,.career-arrow,.career-caption{z-index:2}
+.career-caption{position:absolute;bottom:0;left:0;right:0;margin:0;padding:28px 20px}
+.career-caption h2{text-shadow:0 2px 20px #0008;color:#fff;font-size:clamp(28px,3.6vw,47px)}
+.career-caption p{color:#d0dbd1}.career-caption>span{color:#e1eac7}.stage-corner{color:#f3f1e4}.stage-corner>span:last-child{color:#d2d8ca}
+@keyframes career-frames{0%,100%{background-position:0 0}25%{background-position:100% 0}50%{background-position:0 100%}75%{background-position:100% 100%}}
+.academy-learning{background:#f2f2eb;padding:64px 32px 32px;scroll-margin-top:30px}
+.academy-learning-inner{max-width:1280px;margin:auto}.learning-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:30px}.learning-eyebrow{font:10px sans-serif;letter-spacing:.2em;color:#687b6b}.learning-heading h2{font-size:clamp(27px,3vw,42px);font-weight:400;letter-spacing:-.03em;color:#20382c;margin:10px 0}.learning-heading p{font:13px/1.6 sans-serif;color:#667263}.learning-unlock{background:#203e2d;color:#edf0dc;border:0;padding:14px 22px;border-radius:30px;font:12px sans-serif;cursor:pointer;white-space:nowrap}.learning-unlock[hidden]{display:none}
+.academy-level-nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:20px}.academy-level-nav a{display:flex;flex-direction:column;gap:7px;padding:18px;border:1px solid #254f2924;border-radius:12px;text-decoration:none;color:#253e2d;background:#fff8;transition:background .2s}.academy-level-nav a:hover{background:#e0e9d9}.academy-level-nav span{font:20px Georgia,serif;color:#799168}.academy-level-nav b{font:500 12px sans-serif}.academy-level-nav small{font:10px sans-serif;color:#6e7d6d}.learning-access-note{font:12px/1.7 sans-serif;color:#6e7968;margin:20px 0 40px;max-width:690px}.learning-level{scroll-margin-top:30px;margin:0 0 58px}.learning-level>header{display:flex;align-items:center;gap:18px;padding:0 0 20px;border-bottom:1px solid #173b2222;margin-bottom:24px}.learning-level-number{font:40px Georgia,serif;color:#a3b293}.learning-level header p{font:9px sans-serif;letter-spacing:.16em;color:#728269;margin-bottom:7px}.learning-level h3{font-size:25px;font-weight:400;color:#213b2b;margin:0}.learning-level-count{margin-left:auto;color:#73846c;font:11px sans-serif;white-space:nowrap}.academy-video-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.academy-video-grid .crs-card{position:relative;padding-bottom:37px}.academy-lock-badge{position:absolute;bottom:12px;left:16px;display:flex;align-items:center;gap:7px;font:10px sans-serif;color:#6f7c69}.academy-lock-badge svg{width:13px;height:13px}.academy-video-locked .crs-thumb:after{content:'';position:absolute;inset:0;background:linear-gradient(transparent,#17231533);pointer-events:none}.learning-empty{color:#75826d;font:13px sans-serif}
+/* The selected curriculum follows the lobby before marketing sections. */
+#view-home .practices-section{display:none}
+@media(max-width:1000px){.academy-video-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.academy-level-nav{grid-template-columns:repeat(3,minmax(0,1fr))}.career-stage{min-height:380px;aspect-ratio:auto}.career-film-frame{width:100%;height:100%}}
+@media(max-width:600px){.career-stage{min-height:370px}.career-film{width:170%;left:-35%}.career-caption{padding:20px 35px}.career-caption h2{font-size:29px}.stage-wordmark{top:46px;right:16px;font-size:29px}.academy-learning{padding:42px 16px 16px}.learning-heading{align-items:flex-start;flex-direction:column;gap:14px}.learning-heading h2{font-size:30px}.academy-level-nav{gap:6px}.academy-level-nav a{padding:13px 10px}.academy-level-nav b{font-size:10px}.academy-video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.learning-level h3{font-size:19px}.learning-level-count{font-size:9px}.learning-level-number{font-size:32px}.academy-lock-badge{left:12px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){.career-film-frame{animation:none!important}}
+/* Gentle frame dissolves keep the short rendered action loops calm and cinematic. */
+.career-film-frame{opacity:0;animation:career-dissolve 8s linear infinite}
+.career-film-frame.frame-one{background-position:0 0;animation-delay:0s}
+.career-film-frame.frame-two{background-position:100% 0;animation-delay:-6s}
+.career-film-frame.frame-three{background-position:0 100%;animation-delay:-4s}
+.career-film-frame.frame-four{background-position:100% 100%;animation-delay:-2s}
+@keyframes career-dissolve{0%,20%{opacity:1}25%,95%{opacity:0}100%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.career-film-frame{animation:none!important;opacity:0}.career-film-frame.frame-one{opacity:1}}
