@@ -2,11 +2,11 @@
 
 ## Current implementation
 
-The homepage uses `career-viewer.js` to embed the public Sketchfab model **Worker talk animation** by Bazsi1986. See `CHARACTER-SOURCE.md` for its source, CC BY 4.0 attribution and limitations. One worker with a single body/hand gesture animation is shared by all Academies. The model is not a locally downloaded GLB, and the current viewer does not supply walking, facial animation, profession-specific activities or environments. Actual animation playback in the deployed page has not been visually verified.
+At the user's request, the homepage has been restored to the original illustrated green career lobby from commit `985956b`. `academy-lobby.js` renders the original inline SVG engineers and profession-specific equipment, with CSS animation for their head, arm, breathing, blinking and machinery. These are 2D illustrations, not 3D models or videos.
 
-The previous procedural `career-three.js` renderer and concept sheets remain in the repository for reference, but that renderer is no longer imported by the homepage. `career-assets.js` still defines the Academy identities; its video fields are not used by the current model viewer.
+The Sketchfab and procedural Three.js adapters remain as historical code but are no longer imported by the homepage. The page makes no viewer SDK or model requests. Pause, reduced motion, offscreen and hidden-tab states stop the illustrated animation. The complete header, 16 Academy choices, real six-level curriculum, compact video thumbnails and access flow remain. EV is the default when no saved Academy choice exists.
 
-The viewer adapter handles pause, reduced motion, offscreen/hidden tab state and a labelled local source-thumbnail fallback. Curriculum selection and the full original header are preserved. The briefs below describe outstanding production assets, not features completed by this preview.
+The following briefs describe possible future production assets, not the restored design requested in the latest instruction.
 
 ## EV first: concrete production brief
 
@@ -46,6 +46,6 @@ Every profession needs a distinct face, silhouette, clothing, posture, props, en
 
 Preferred delivery: licensed/original rigged GLB per profession with PBR textures, authored idle/task clips, correct hand/prop constraints and facial morph targets. Add a native Three.js GLTFLoader/AnimationMixer adapter only after the assets can be downloaded legitimately and their license permits web delivery. Validate the actual rendered motion, loop, anatomy, props, mobile performance and fallback before calling the result complete.
 
-An accepted alternative is a reviewed MP4 H.264 video render, 24/30 fps, 6–10 seconds, seamless beginning/end, no audio track, with an ordinary poster. That would require a video adapter in place of the current Sketchfab adapter and explicit video labelling. Merely setting a video field in `career-assets.js` does not enable video playback in the current implementation.
+An accepted alternative is a reviewed MP4 H.264 video render, 24/30 fps, 6–10 seconds, seamless beginning/end, no audio track, with an ordinary poster. That would require a video adapter in place of the current SVG renderer and explicit video labelling. Merely setting a video field in `career-assets.js` does not enable video playback in the restored implementation.
 
-No source GLB was downloaded during the latest replacement: the attempted Sketchfab sign-in callback returned HTTP 502. The public embed is used without extracting private viewer assets. No paid generation or asset purchase was performed.
+During the earlier 3D attempt, no source GLB was downloaded: the Sketchfab sign-in callback returned HTTP 502. A public embed was briefly used and has now been replaced by the original SVG lobby at the user’s request. No private viewer assets were extracted and no paid generation or asset purchase was performed.
