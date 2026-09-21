@@ -613,17 +613,7 @@ if ('serviceWorker' in navigator) {
       <noscript><p>Aktifkan JavaScript untuk memilih karakter dan membuka Academy.</p></noscript>
     </div>
   </section>
-<section id="academy-learning" class="academy-learning" aria-labelledby="academy-learning-title">
-  <div class="academy-learning-inner">
-    <div class="learning-heading"><div><span class="learning-eyebrow">JALUR BELAJARMU</span><h2 id="academy-learning-title">EV Academy</h2><p id="academy-learning-description"></p><p id="academy-learning-summary">Menyiapkan perjalanan belajarmu…</p></div><button type="button" class="learning-unlock" id="academy-unlock">Buka Akses Academy ↗</button></div>
-    <div class="learning-skills"><h3>Keterampilan yang akan kamu kuasai</h3><ul id="academy-learning-skills"></ul></div>
-    <nav id="academy-level-nav" class="academy-level-nav" aria-label="Tingkatan belajar"></nav>
-    <p class="learning-access-note" id="academy-access-note"></p>
-    <div id="academy-learning-list"></div>
-    <section class="academy-membership"><span class="learning-eyebrow">LANGKAH BERIKUTNYA</span><h2 id="academy-membership-title">Mulai perjalananmu.</h2><p>Akses materi premium, belajar berurutan, dan lanjutkan dari progres terakhir.</p><ul><li>Kurikulum enam tingkat</li><li>Video sesuai bidang pilihan</li><li>Progres belajar per modul</li></ul><button class="academy-enter" id="academy-membership-unlock" type="button">Buka Akses Academy ↗</button><p class="membership-note">Akses mengikuti status keanggotaan. Materi yang belum tersedia tetap ditandai.</p></section>
-  </div>
-</section>
-<dialog id="academy-access-dialog" class="academy-dialog" aria-labelledby="academy-dialog-title"><button class="dialog-close" type="button" aria-label="Tutup">×</button><span class="learning-eyebrow">ELECTRA ACADEMY</span><h2 id="academy-dialog-title">Buka akses belajarmu</h2><p id="academy-dialog-copy"></p><div id="academy-player"></div><button class="academy-enter" id="academy-dialog-unlock" type="button">Buka Akses Academy ↗</button><p id="academy-dialog-status" role="status"></p></dialog>
+
 
 <!-- USER PROGRESS PANEL — dihapus dari home (bar gelap di bawah hero membingungkan);
      updateHomeProgress() aman karena sudah guard if(!panel) return. -->
@@ -3689,9 +3679,7 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
-<script src="/career-assets.js?v=1" defer></script>
-<script src="/academy-curriculum.js?v=3" defer></script>
-<script src="/academy-lobby.js?v=8" defer></script>
+<script src="/academy-lobby.js?v=9" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.

@@ -108,7 +108,6 @@
     document.getElementById('academy-status').textContent = Number(id.slice(1)) > 8 ? 'Kurikulum siap · Video bertahap' : 'Perjalanan Level 1–6';
     document.getElementById('academy-enter').setAttribute('aria-label', 'Masuk ' + ACADEMY_NAMES[id]);
     save('esa-lobby-academy', id);
-    window.esaRenderAcademyLearning?.(id);
   }
   ids.forEach(id => {
     const button = document.createElement('button'); button.type = 'button'; button.dataset.academy = id;
@@ -118,7 +117,11 @@
   });
   document.getElementById('academy-prev').addEventListener('click', () => select(ids[(ids.indexOf(selected) + ids.length - 1) % ids.length]));
   document.getElementById('academy-next').addEventListener('click', () => select(ids[(ids.indexOf(selected) + 1) % ids.length]));
-  document.getElementById('academy-enter').addEventListener('click', () => document.getElementById('academy-learning').scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'}));
+  // "Masuk Academy" opens the same jalur detail as the existing career cards below.
+  document.getElementById('academy-enter').addEventListener('click', () => {
+    if (typeof window.openJalur === 'function') { window.openJalur(selected); return; }
+    document.getElementById('practices')?.scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'});
+  });
   const motion = document.getElementById('motion-toggle');
   function updateMotion() {
     stage.classList.toggle('is-paused', paused || !visible || document.hidden || reduced.matches);
