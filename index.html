@@ -589,7 +589,6 @@ if ('serviceWorker' in navigator) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           <span>Cari</span>
         </button>
-        <a class="nav-right" href="peta-dunia.html" title="Peta pembangkit listrik dunia — kapasitas, bahan bakar, dan bauran energi">World Electricity Maps</a>
         <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
         <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
@@ -599,7 +598,7 @@ if ('serviceWorker' in navigator) {
     </nav>
 
     <div class="academy-lobby">
-      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Energi masa depan.<em>Peranmu dimulai di sini.</em></h1></header>
+      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Dunia bertransisi energi. <em>Kamu jadi ahli apa?</em></h1><p class="lobby-sub">Pilih. Pelajari. Kuasai. 16 jalur spesialis energi menunggumu.</p></header>
       <div class="career-layout">
       <section class="career-stage" aria-label="Karakter dan dunia Academy pilihan">
         <div class="stage-wordmark" aria-hidden="true">ELECTRA</div>
@@ -640,6 +639,55 @@ if ('serviceWorker' in navigator) {
        PETA KELISTRIKAN INDONESIA · FEATURE BANNER
   ================================================ -->
 
+<!-- ================================================
+     ALUR BELAJAR — daftar sampai sertifikat terbit.
+     Ditambahkan karena pertanyaan "cara dapat sertifikatnya gimana?"
+     paling sering masuk ke admin, sementara aturannya hanya tersimpan
+     di dalam kode (checkLevelCompletion: semua modul lulus + rata-rata 70%).
+================================================ -->
+<section class="esa-flow" id="alur-belajar" aria-labelledby="esa-flow-title">
+  <div class="esa-flow-inner">
+    <div class="esa-flow-head">
+      <span class="esa-flow-eyebrow">Alur Belajar</span>
+      <h2 id="esa-flow-title">Dari daftar sampai sertifikat <span class="italic">terbit</span></h2>
+      <p>Lima langkah, tidak ada syarat tersembunyi. Sertifikat terbit otomatis begitu satu level tuntas.</p>
+    </div>
+    <ol class="esa-flow-steps">
+      <li>
+        <span class="esa-flow-num">01</span>
+        <h3>Daftar akun</h3>
+        <p>Gratis, pakai email atau Google. Begitu masuk kamu sudah bisa memakai katalog, materi PPT, kuis tiap modul, lab simulator, dan AI tutor.</p>
+        <span class="esa-flow-tag">Gratis</span>
+      </li>
+      <li>
+        <span class="esa-flow-num">02</span>
+        <h3>Pilih Academy</h3>
+        <p>Pilih satu dari 16 jalur di lobby beranda. Kurikulumnya sudah tersusun berurutan dari Level 1 (fondasi) sampai Level 6 (konsultan).</p>
+        <span class="esa-flow-tag">Gratis</span>
+      </li>
+      <li>
+        <span class="esa-flow-num">03</span>
+        <h3>Pelajari tiap modul</h3>
+        <p>Tonton video modul, baca materinya, tanya AI tutor kalau ada yang belum jelas. Hanya pemutaran video yang butuh akses penuh.</p>
+        <span class="esa-flow-tag esa-flow-tag-paid">Video: akses penuh</span>
+      </li>
+      <li>
+        <span class="esa-flow-num">04</span>
+        <h3>Kerjakan kuis modul</h3>
+        <p>Tiap modul punya kuisnya sendiri. Skor minimal <strong>70%</strong> untuk dinyatakan lulus modul, dan boleh diulang sebanyak yang kamu mau tanpa penalti.</p>
+        <span class="esa-flow-tag">Gratis</span>
+      </li>
+      <li>
+        <span class="esa-flow-num">05</span>
+        <h3>Tuntaskan satu level → sertifikat</h3>
+        <p>Begitu <strong>seluruh modul di satu level lulus</strong> dan rata-rata skormu <strong>minimal 70%</strong>, sertifikat level itu terbit otomatis: ada nomor unik dan QR, bisa diunduh, dibagikan ke LinkedIn, dan dicek siapa pun lewat halaman verifikasi.</p>
+        <span class="esa-flow-tag esa-flow-tag-cert">Sertifikat ber-QR</span>
+      </li>
+    </ol>
+    <p class="esa-flow-note">Sertifikat Electra adalah sertifikat penyelesaian (knowledge competency), bukan sertifikat uji kompetensi negara. Untuk sertifikasi profesi resmi, lanjutkan ke lembaga sertifikasi lewat menu Certification. Cek keaslian sertifikat kapan saja di <a href="/verify.html">halaman verifikasi</a>.</p>
+  </div>
+</section>
+
 <section class="esa-membership" id="membership" aria-labelledby="esa-membership-title">
     <div class="esa-pack-shell">
 
@@ -647,7 +695,7 @@ if ('serviceWorker' in navigator) {
 
       <div class="esa-pack-card">
         <div class="esa-pack-value">
-          <div class="esa-pack-value-heading"><h3>Satu akses, banyak langkah maju.</h3>
+          <div class="esa-pack-value-heading"><h3>Investasi terbaik bukan di emas. Di kepalamu.</h3>
     <button type="button" class="esa-pack-detail-trigger" data-pack-open aria-haspopup="dialog">Detail fasilitas <span aria-hidden="true">↗</span></button>
 </div>
 
@@ -677,10 +725,13 @@ if ('serviceWorker' in navigator) {
           <div class="esa-pack-bonus"><img src="/kang-listrik-cover.jpeg" width="38" height="54" loading="lazy" alt="Sampul e-book Kang Listrik 5.0"><div><span>BONUS MEMBER</span><strong>Kang Listrik 5.0</strong><p>Panduan memulai karir ketenagalistrikan.</p></div><a href="/api/ebook" onclick="return esaDownloadEbook(event)" aria-label="Unduh e-book Kang Listrik 5.0">Unduh <span aria-hidden="true">↗</span></a></div>
         </div>
 
-    <aside class="esa-pack-price" aria-label="Harga keanggotaan lifetime">
-          <div class="esa-pack-pass-top"><span>ELECTRA MEMBERSHIP</span><svg viewBox="0 0 44 44" fill="none" aria-hidden="true"><circle cx="22" cy="22" r="20"/><path d="m22 8 7 14-7 14-7-14zM8 22h28M22 8v28"/><circle cx="22" cy="22" r="3"/></svg></div>
-          <span class="esa-pack-lifetime">LIFETIME · FULL ACCESS</span>
-          <p class="esa-pack-price-label">Bekal karirmu, hanya</p><div class="esa-pack-amount"><span>Rp</span><strong>299.000</strong></div><p class="esa-pack-once">Sekali bayar. Akses selamanya.</p>
+    <aside class="esa-pack-price" aria-label="Investasi akses seumur hidup">
+          <div class="esa-pack-pass-top"><span>INVESTASI KEAHLIAN</span><svg viewBox="0 0 44 44" fill="none" aria-hidden="true"><circle cx="22" cy="22" r="20"/><path d="m22 8 7 14-7 14-7-14zM8 22h28M22 8v28"/><circle cx="22" cy="22" r="3"/></svg></div>
+          <span class="esa-pack-lifetime">SEKALI TANAM · SEUMUR HIDUP</span>
+          <p class="esa-pack-price-label">Investasi sekali, untuk dirimu sendiri</p><div class="esa-pack-amount"><span>Rp</span><strong>299.000</strong></div><p class="esa-pack-once">Sekali bayar. Akses selamanya.</p>
+          <p class="esa-pack-invest">Ini bukan biaya langganan — ini <strong>investasi ke kepalamu</strong>. Angka 299 ribu habis dalam sekali jalan-jalan akhir pekan, tapi keahlian yang kamu bangun di sini terpakai sepanjang karir.</p>
+          <p class="esa-pack-invest">Mesin bisa rusak, emas bisa hilang, tabungan bisa terpakai. Yang kamu tanam di kepala tidak bisa diambil siapa pun, dan nilainya justru naik tiap kali dipakai — di proyek, di wawancara kerja, di kenaikan jabatan.</p>
+          <p class="esa-pack-invest">Sekali bayar hari ini, kamu meng-upgrade dirimu sendiri: 16 Academy, 1.117 modul, lab simulator, dan sertifikat ber-QR. <strong>Investasi paling aman adalah investasi pada kemampuanmu sendiri.</strong></p>
 
     <ul class="esa-pack-included">
     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>16 Academy · 6 level belajar</li>
@@ -1579,10 +1630,11 @@ if ('serviceWorker' in navigator) {
           <div class="quiz-header">
             <div class="quiz-header-info">
               <h3>Quiz Pemahaman</h3>
-              <p>25 soal pilihan ganda · batas waktu <strong>15 menit</strong> · skor minimum 70% untuk lulus</p>
+              <p><strong id="quiz-total-label">25</strong> soal · skor minimum 70% untuk lulus</p>
+              <p class="quiz-source-note" id="quiz-source-note" hidden></p>
             </div>
             <div class="quiz-progress">
-              Terjawab: <strong id="quiz-answered">0</strong>/25
+              Terjawab: <strong id="quiz-answered">0</strong>/<span id="quiz-total">25</span>
               <span id="quiz-timer" style="margin-left:16px;padding:4px 10px;border-radius:6px;background:rgba(212,175,106,0.15);color:var(--gold-dark);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:0.05em;">⏱ 15:00</span>
             </div>
           </div>
@@ -1847,6 +1899,7 @@ if ('serviceWorker' in navigator) {
         <button class="labs-tab-btn" data-panel="design-calc" onclick="labsShowSection('design-calc')">Design Calculators</button>
         <button class="labs-tab-btn" data-panel="vlab" onclick="labsShowSection('vlab')">Virtual Labs</button>
         <button class="labs-tab-btn" data-panel="praktikum" onclick="labsShowSection('praktikum')">Kelas Praktikum</button>
+        <button class="labs-tab-btn" data-panel="worldmap" onclick="labsShowSection('worldmap')">World Electricity Maps</button>
       </div>
     </div>
   </section>
@@ -1937,6 +1990,31 @@ if ('serviceWorker' in navigator) {
         <p class="lab-section-sub">Delapan kelas praktikum di fasilitas partner ESA — dari wiring instalasi sampai commissioning gardu 20kV. Bawa pulang skill yang siap kerja.</p>
       </div>
       <div class="praktikum-grid" id="praktikum-grid"></div>
+    </div>
+  </section>
+
+  <!-- World Electricity Maps — dulu berdiri sendiri di menu header. Dipindahkan
+       ke dalam Labs karena sifatnya sama: alat eksplorasi, bukan halaman utama. -->
+  <section class="worldmap-section labs-panel" id="lab-worldmap">
+    <div class="lab-section-inner">
+      <div class="lab-section-header">
+        <div class="lab-section-eyebrow">Peta Interaktif</div>
+        <h2 class="lab-section-title">World <span class="italic">Electricity</span> Maps</h2>
+        <p class="lab-section-sub">Peta pembangkit listrik dunia — kapasitas, bahan bakar, dan bauran energi (EBT/fosil/nuklir) di 167 negara. Bisa difilter per negara, termasuk detail Indonesia dengan jaringan transmisi &amp; gardu induk.</p>
+      </div>
+      <a href="peta-dunia.html" class="worldmap-card">
+        <div class="worldmap-card-body">
+          <div class="worldmap-stats">
+            <div><b>34.900+</b><span>Pembangkit</span></div>
+            <div><b>167</b><span>Negara</span></div>
+            <div><b>~5.700 GW</b><span>Kapasitas global</span></div>
+          </div>
+          <span class="worldmap-cta">Buka World Electricity Maps
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+        <div class="worldmap-card-globe" aria-hidden="true">🌐</div>
+      </a>
     </div>
   </section>
 
@@ -5252,13 +5330,13 @@ function esaRequireAccess() {
   return false;
 }
 window.esaRequireAccess = esaRequireAccess;
-// esaIsFreeLab(sim) → true untuk lab WIRING (wiring trainer + wiring lab) yang
-// GRATIS dibuka siapa saja (pemikat). Lab lain (simulator hitung, capbank,
-// hub ElectraSim) tetap terkunci → butuh daftar + bayar.
+// esaIsFreeLab(sim) → SELURUH lab & simulator terbuka untuk siapa saja.
+// Sebelumnya hanya lab wiring yang gratis, sehingga simulator listrik ikut
+// terkunci — padahal model akses situs ini hanya mengunci VIDEO modul
+// (lihat esaModuleLocked). Ketidakcocokan itu membuat peserta yang sudah
+// membayar pun melihat gembok di simulator. Satu aturan, satu perilaku.
 function esaIsFreeLab(sim) {
-  if (!sim) return false;
-  var e = String(sim.embed || '');
-  return /^(wiring|wlab)\.html/.test(e);
+  return true;
 }
 window.esaIsFreeLab = esaIsFreeLab;
 // Unduh e-book premium "Kang Listrik 5.0" lewat endpoint ber-otorisasi.
@@ -5481,9 +5559,8 @@ function openSimulator(simId) {
   const sim = SIMULATORS.find(s => s.id === simId);
   if (!sim || !sim.working) return;
 
-  // Paywall: menelusuri daftar lab gratis. Lab WIRING bebas dibuka siapa saja
-  // (gratis); lab lainnya memerlukan akses penuh (daftar + bayar).
-  if (!esaIsFreeLab(sim) && !esaRequireAccess()) return;
+  // Lab & simulator terbuka untuk semua — tidak ada paywall di sini.
+  // Yang berbayar hanya pemutaran video modul (esaModuleLocked).
 
   // Kode lab (245 KB) baru diunduh saat lab benar-benar dibuka. Modal dibuka
   // duluan supaya klik terasa langsung merespons, lalu fungsi ini dipanggil
@@ -9309,15 +9386,29 @@ function renderQuiz(module) {
   }
   if (cleaned.length >= 5) pool = cleaned;
 
-  // Quiz selalu set 25 soal. Kalau pool < 25, pad dengan re-shuffle pool
-  // berulang — soal mungkin terulang tapi posisinya acak. Modul tipis (handcraft
-  // < 25) tetap dapat 25 soal sesuai requirement.
+  // Maksimal 25 soal, tetapi TIDAK pernah mengulang soal yang sama demi
+  // menggenapkan jumlah. Modul dengan bank soal tipis lebih baik memberi 10 soal
+  // berbeda daripada 25 soal yang itu-itu juga; jumlah sebenarnya ditampilkan di
+  // header dan dipakai sebagai penyebut skor.
   const TARGET_QUIZ_SIZE = 25;
-  let shuffledPool = shuffleArr(pool);
-  while (shuffledPool.length < TARGET_QUIZ_SIZE && pool.length > 0) {
-    shuffledPool = shuffledPool.concat(shuffleArr(pool));
+  let quiz = shuffleArr(pool).slice(0, TARGET_QUIZ_SIZE);
+  window.esaQuizTotal = quiz.length;
+  const totalEl = document.getElementById('quiz-total');
+  if (totalEl) totalEl.textContent = String(quiz.length);
+  const totalLabel = document.getElementById('quiz-total-label');
+  if (totalLabel) totalLabel.textContent = String(quiz.length);
+
+  // Katakan apa adanya kalau soal yang tampil bukan soal khusus modul ini.
+  // Sebelumnya soal umum disajikan seolah-olah soal dari video modul, sehingga
+  // peserta bingung karena isinya tidak nyambung dengan yang baru ditonton.
+  const noteEl = document.getElementById('quiz-source-note');
+  if (noteEl) {
+    const usingGeneric = !(handcrafted && handcrafted.length > 0);
+    noteEl.hidden = !usingGeneric;
+    noteEl.innerHTML = usingGeneric
+      ? '⚠️ Bank soal khusus modul ini sedang disusun. Sementara itu yang tampil adalah <strong>latihan dasar kelistrikan umum</strong> — bukan soal dari video modul ini.'
+      : '';
   }
-  let quiz = shuffledPool.slice(0, TARGET_QUIZ_SIZE);
   // Now shuffle option positions within each question.
   quiz = quiz.map(shuffleOptions);
 
@@ -9619,7 +9710,7 @@ function generateAIResponse(q) {
     return `Untuk rumus${moduleCtx}, buka tab <strong>Materi (PPT)</strong> lalu navigasi ke slide 5 "Rumus & Perhitungan". Di situ ada formula lengkap dengan contoh soal. Kalau ada yang belum clear, tanya lagi ke saya ya!`;
   }
   if (lower.includes('quiz') || lower.includes('soal') || lower.includes('latihan')) {
-    return `Quiz 25 soal tersedia di tab <strong>Quiz</strong>. Klik salah satu opsi jawaban, langsung muncul jawaban benar + pembahasan. Target: minimal 18/25 benar (72%) untuk yakin paham. Mau saya jelaskan topik soal tertentu sebelum kamu coba?`;
+    return `Quiz tersedia di tab <strong>Quiz</strong>. Klik salah satu opsi jawaban, langsung muncul jawaban benar + pembahasan. Target: minimal 70% benar untuk lulus modul. Mau saya jelaskan topik soal tertentu sebelum kamu coba?`;
   }
   if (lower.includes('video') || lower.includes('durasi')) {
     return `Video pembelajaran${moduleCtx} berdurasi sekitar 25-40 menit. Bisa dipause, rewind, dan ditonton berulang. Kalau ada bagian yang belum paham, kasih timestamp-nya, saya bantu jelaskan ulang dengan kata-kata sendiri.`;
@@ -9716,8 +9807,9 @@ function setupModulNavigation(trackId, levelId, currentCode) {
     nextBtn.onclick = () => {
       if (typeof window.esaIsModulePassed === 'function' && !window.esaIsModulePassed(currentCode)) {
         const stats = (typeof window.esaGetQuizProgress === 'function') ? window.esaGetQuizProgress() : null;
-        const detail = stats && stats.answered < 25
-          ? `Baru ${stats.answered}/25 soal terjawab. Selesaikan semua soal dulu.`
+        const quizTotal = window.esaQuizTotal || 25;
+        const detail = stats && stats.answered < quizTotal
+          ? `Baru ${stats.answered}/${quizTotal} soal terjawab. Selesaikan semua soal dulu.`
           : `Skor terbaik kamu di modul ${currentCode} belum 70%. Coba lagi quiz-nya.`;
         if (typeof window.esaToast === 'function') {
           window.esaToast('🔒 Tuntaskan Quiz Dulu', detail, '🔒');
@@ -11615,8 +11707,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (isCorrect) currentQuizStats.correct++;
     else currentQuizStats.wrong++;
 
-    // Check if all 25 answered
-    if (currentQuizStats.answered.size >= 25 && currentQuizModule) {
+    // Selesai bila semua soal yang ditampilkan sudah dijawab (jumlahnya bisa
+    // < 25 untuk modul dengan bank soal tipis).
+    const quizTotal = window.esaQuizTotal || 25;
+    if (currentQuizStats.answered.size >= quizTotal && currentQuizModule) {
       setTimeout(() => showModuleCompletion(), 800);
     }
   }
@@ -11625,7 +11719,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   function showModuleCompletion() {
     if (!currentQuizModule) return;
     stopQuizTimer();
-    const total = 25;
+    const total = window.esaQuizTotal || 25;
     // Hitung skor otoritatif dari peta jawaban per-soal (sumber kebenaran),
     // bukan dari counter berjalan yang bisa desync kalau jawaban diubah-ubah.
     const answerMap = currentQuizStats.answers || {};
@@ -14098,13 +14192,8 @@ else{setTimeout(init,200);}
     if(sert)sert.textContent='Certification';
     if(sert)sert.onclick=function(e){e.preventDefault();showView('sertifikasi');};
 
-    // World Electricity Maps — halaman peta pembangkit listrik dunia. Menggantikan
-    // menu "Kursus"; katalog kursus tetap dapat dibuka lewat pencarian dan footer.
-    var mapsLink=document.createElement('a');
-    mapsLink.className='nav-right';
-    mapsLink.href='peta-dunia.html';
-    mapsLink.textContent='World Electricity Maps';
-    mapsLink.title='Peta pembangkit listrik dunia — kapasitas, bahan bakar, dan bauran energi';
+    // World Electricity Maps tidak lagi berdiri sendiri di menu — sekarang
+    // menjadi salah satu tab di halaman Labs (#lab-worldmap).
 
     // About Us link — public, bypass auth gate
     var aboutUs=document.createElement('a');
@@ -14158,7 +14247,6 @@ else{setTimeout(init,200);}
     workshopLink.onclick=function(e){e.preventDefault(); publicShow('expert-workshop'); if(typeof window.renderExpertWorkshop==='function') window.renderExpertWorkshop();};
 
     navGroup.innerHTML='';
-    navGroup.appendChild(mapsLink);
     // "About Us" sengaja TIDAK dipasang di menu. Halamannya tetap ada supaya
     // tautan lama dan hasil pencarian tidak mati — hanya pintunya yang ditutup,
     // agar menu berisi hal yang dipakai orang untuk belajar.
