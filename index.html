@@ -540,6 +540,7 @@ if ('serviceWorker' in navigator) {
 #view-modul .ai-tutor-messages::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
 
 </style>
+<link rel="stylesheet" href="/academy-lobby.css?v=10">
 </head>
 <body>
 
@@ -596,31 +597,35 @@ if ('serviceWorker' in navigator) {
       <button class="nav-burger" id="navBurger" type="button" aria-label="Buka menu" aria-expanded="false" onclick="esaToggleNav()"><span></span><span></span><span></span></button>
     </nav>
 
-    <div class="hero-content">
-      <div class="hero-inner">
-        <div class="hero-eyebrow">Akademi Kelistrikan Indonesia</div>
-        <h1 class="hero-headline">
-          Siap Memulai Karir sebagai<br>
-          <em>Profesional Electrician &amp; Energy Expert</em>
-        </h1>
-        <div class="hero-cta-row">
-          <a href="#practices" class="hero-cta">Mulai Belajar
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <button class="hero-cta--ghost hero-daftar-btn" onclick="esaShowAuthModal()">Daftar / Masuk</button>
-          <a href="peta-dunia.html" class="hero-cta--ghost" title="World Electricity Maps — peta pembangkit listrik dunia">
-            <span style="margin-right:9px;" aria-hidden="true">🌐</span>World Electricity Maps
-          </a>
+    <div class="academy-lobby">
+      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Energi masa depan.<em>Peranmu dimulai di sini.</em></h1></header>
+      <div class="career-layout">
+      <section class="career-stage" aria-label="Karakter dan dunia Academy pilihan">
+        <div class="stage-wordmark" aria-hidden="true">ELECTRA</div>
+        <div id="career-world" class="career-world" role="img" aria-label="Engineer EV dengan charging unit dan kendaraan listrik"></div>
+        <div class="stage-corner"><span class="stage-signal" aria-hidden="true"></span> CAREER SELECT <span id="academy-number">12 / 16</span></div>
+        <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Jeda animasi">Ⅱ</button>
+        <button class="career-arrow career-prev" id="academy-prev" type="button" aria-label="Academy sebelumnya">←</button>
+        <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Academy berikutnya">→</button>
+        <div class="career-caption" aria-live="polite"><span id="career-role">EV CHARGING ENGINEER</span><h2 id="academy-selected-name">EV Academy</h2><p id="academy-selected-description">SPKLU · Kendaraan listrik · Charging system</p></div>
+      </section>
+      <aside class="career-panel" aria-label="Academy terpilih">
+        <div class="career-panel-photo"><img id="academy-photo" src="" alt="" decoding="async"><span class="career-panel-badge">Jalur <strong id="academy-jalur">04</strong></span></div>
+        <div class="career-panel-body">
+          <span class="career-panel-eyebrow">Masuk langsung ke</span>
+          <h3 id="academy-panel-name">Transmission Academy</h3>
+          <span class="career-panel-count" id="academy-modules">57 modul</span>
+          <a class="career-panel-fasttrack" id="academy-fasttrack" href="https://plnakademi.vercel.app/" target="_blank" rel="noopener" hidden><span class="fasttrack-tag">S · Special</span> Fast Track PLN Akademi <span aria-hidden="true">↗</span></a>
+          <button type="button" id="academy-enter" class="academy-enter">Masuk Academy <span aria-hidden="true">↗</span></button>
+          <span id="academy-status">Kurikulum siap · Video bertahap</span>
         </div>
-        <div class="hero-stats" aria-label="Electra Skill Academy dalam angka">
-          <div class="hero-stat"><div class="hero-stat-num">16</div><div class="hero-stat-label">Jalur Karir</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">1.117</div><div class="hero-stat-label">Modul &amp; Video</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">SKKNI</div><div class="hero-stat-label">Selaras Standar</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">24/7</div><div class="hero-stat-label">AI Tutor</div></div>
-        </div>
+      </aside>
       </div>
+      <noscript><p>Aktifkan JavaScript untuk memilih Academy dan membuka kurikulumnya.</p></noscript>
+      <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih jalur karir Academy"></div>
     </div>
   </section>
+
 
 <!-- USER PROGRESS PANEL — dihapus dari home (bar gelap di bawah hero membingungkan);
      updateHomeProgress() aman karena sudah guard if(!panel) return. -->
@@ -628,77 +633,7 @@ if ('serviceWorker' in navigator) {
 <!-- REFERRAL DASHBOARD WIDGET — dihilangkan dari main page -->
 
 
-  <section class="practices-section" id="practices">
-    <div class="practices-inner">
-      <div class="practices-header">
-        <div class="practices-eyebrow reveal">Jalur Karir</div>
-        <h2 class="practices-title reveal">
-          Pilih <span class="italic">Jalur Karirmu</span>
-        </h2>
-        <p class="practices-sub reveal">
-          Enam belas jalur karir, dirancang dari pemula sampai ahli. Delapan jalur sudah lengkap sampai Level 6; delapan lainnya kurikulumnya siap dan videonya sedang diproduksi.
-        </p>
-      </div>
 
-      <div class="practices-grid" id="practicesGrid">
-        <!-- Filled by JS -->
-      </div>
-
-      <!-- Jalan pintas ke katalog: buat yang sudah tahu topik yang dicari -->
-      <div class="reveal" style="text-align:center;margin-top:52px;padding-top:40px;border-top:1px solid var(--line-gold);">
-        <p style="color:var(--ink-mute);font-size:0.95rem;margin-bottom:18px;">
-          Sudah tahu topik yang kamu cari? Lewati pemilihan jalur —
-          telusuri seluruh materi video langsung dari katalog.
-        </p>
-        <button type="button" onclick="openCourses()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:15px 38px;font-family:var(--sans);font-size:0.82rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-          Buka Katalog Kursus →
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================
-       PLN DISTRIBUTION ACADEMY · FAST TRACK PROGRAM (S13 / S Special)
-       Dipisahkan dari 12 jalur reguler. Click → external PLN Akademi.
-  ================================================ -->
-  <section class="pln-fasttrack-section" id="plnFastTrack">
-    <div class="pln-fasttrack-inner">
-      <div class="pln-fasttrack-card reveal">
-        <div class="pln-fasttrack-photo" aria-hidden="true">
-          <div class="pln-fasttrack-photo-overlay"></div>
-        </div>
-        <div class="pln-fasttrack-content">
-          <div class="pln-fasttrack-badge-row">
-            <span class="pln-fasttrack-badge-special">S · SPECIAL</span>
-            <span class="pln-fasttrack-badge-partner">Powered by PLN Akademi</span>
-          </div>
-          <div class="pln-fasttrack-eyebrow">S13 · Fast Track Program</div>
-          <h2 class="pln-fasttrack-title">
-            PLN Distribution Academy<br>
-            <span class="italic">Package · Fast Track</span>
-          </h2>
-          <p class="pln-fasttrack-desc">
-            Jalur khusus untuk kandidat yang ingin <strong>langsung jadi pekerja PLN</strong>. Kurikulum terintegrasi distribusi 20 kV, gardu, SCADA, K3, dan culture PLN — disusun bersama PLN Akademi untuk mempercepat onboarding ke lapangan.
-          </p>
-          <ul class="pln-fasttrack-list">
-            <li><span class="pln-ft-dot"></span> Materi inti distribusi PLN 20 kV, gardu, SCADA &amp; smart grid</li>
-            <li><span class="pln-ft-dot"></span> Modul K3 ketenagalistrikan + sertifikasi kompetensi</li>
-            <li><span class="pln-ft-dot"></span> Praktikum lapangan &amp; simulasi gardu distribusi</li>
-            <li><span class="pln-ft-dot"></span> Channel direct ke recruitment PLN Group &amp; Anak Usaha</li>
-          </ul>
-          <div class="pln-fasttrack-cta-row">
-            <a href="https://plnakademi.vercel.app/" target="_blank" rel="noopener" class="pln-fasttrack-cta">
-              <span>Buka PLN Akademi</span>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-              </svg>
-            </a>
-            <span class="pln-fasttrack-cta-note">External · plnakademi.vercel.app</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ================================================
        PETA KELISTRIKAN INDONESIA · FEATURE BANNER
@@ -1633,6 +1568,50 @@ if ('serviceWorker' in navigator) {
       </div>
       <div class="level-list" id="level-list">
         <!-- Filled by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       PLN DISTRIBUTION ACADEMY · FAST TRACK PROGRAM (S13 / S Special)
+       Menyatu dengan Distribution Academy: hanya tampil di halaman jalur S3.
+       Click → external PLN Akademi.
+  ================================================ -->
+  <section class="pln-fasttrack-section" id="plnFastTrack" hidden>
+    <div class="pln-fasttrack-inner">
+      <div class="pln-fasttrack-card reveal">
+        <div class="pln-fasttrack-photo" aria-hidden="true">
+          <div class="pln-fasttrack-photo-overlay"></div>
+        </div>
+        <div class="pln-fasttrack-content">
+          <div class="pln-fasttrack-badge-row">
+            <span class="pln-fasttrack-badge-special">S · SPECIAL</span>
+            <span class="pln-fasttrack-badge-partner">Powered by PLN Akademi</span>
+          </div>
+          <div class="pln-fasttrack-eyebrow">Distribution Academy · Fast Track Program</div>
+          <h2 class="pln-fasttrack-title">
+            PLN Distribution Academy<br>
+            <span class="italic">Package · Fast Track</span>
+          </h2>
+          <p class="pln-fasttrack-desc">
+            Jalur khusus untuk kandidat yang ingin <strong>langsung jadi pekerja PLN</strong>. Kurikulum terintegrasi distribusi 20 kV, gardu, SCADA, K3, dan culture PLN — disusun bersama PLN Akademi untuk mempercepat onboarding ke lapangan.
+          </p>
+          <ul class="pln-fasttrack-list">
+            <li><span class="pln-ft-dot"></span> Materi inti distribusi PLN 20 kV, gardu, SCADA &amp; smart grid</li>
+            <li><span class="pln-ft-dot"></span> Modul K3 ketenagalistrikan + sertifikasi kompetensi</li>
+            <li><span class="pln-ft-dot"></span> Praktikum lapangan &amp; simulasi gardu distribusi</li>
+            <li><span class="pln-ft-dot"></span> Channel direct ke recruitment PLN Group &amp; Anak Usaha</li>
+          </ul>
+          <div class="pln-fasttrack-cta-row">
+            <a href="https://plnakademi.vercel.app/" target="_blank" rel="noopener" class="pln-fasttrack-cta">
+              <span>Buka PLN Akademi</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </a>
+            <span class="pln-fasttrack-cta-note">External · plnakademi.vercel.app</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -3685,6 +3664,8 @@ if ('serviceWorker' in navigator) {
 
 
 <script src="/data/app-data.js"></script>
+<script src="/academy-names.js"></script>
+<script src="/academy-lobby.js?v=12" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.
@@ -4214,13 +4195,16 @@ function esaTrackModuleCount(trackId) {
 window.esaTrackModuleCount = esaTrackModuleCount;
 
 function renderPractices() {
+  // Grid kartu jalur sudah tidak ada di beranda — pemilihan Academy ditangani
+  // lobby karakter. Fungsi dibiarkan agar pemanggil lama tetap aman.
   const grid = document.getElementById('practicesGrid');
+  if (!grid) return;
   // S13 (PLN Distribution Academy fast track) is rendered in its own dedicated
   // banner section below, so it's excluded from the regular 12-track grid.
   grid.innerHTML = PRACTICE_CARDS.filter(p => !p.isFastTrack).map(p => {
     const n = esaTrackModuleCount(p.id);
     return `
-    <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}" onclick="openJalur('${p.id}')">
+    <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}${window.esaLobbyCurrent?.() === p.id ? ' is-active' : ''}" data-track="${p.id}" onclick="esaOpenAcademy('${p.id}')">
       <div class="practice-card-photo">
         <img class="practice-card-photo-img" src="${p.photo}" alt="" loading="lazy" decoding="async">
         <span class="practice-card-badge">Jalur <strong>${p.num}</strong></span>
@@ -4231,7 +4215,7 @@ function renderPractices() {
         <p class="practice-desc">${p.desc}</p>
         ${n ? `<span class="practice-count">${n} modul</span>` : ''}
         <span class="practice-cta">
-          Lihat Jalur
+          Masuk Academy
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
             <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -7973,6 +7957,11 @@ function openJalur(trackId) {
 
   // Render user-friendly progress profile per level (L1..L6)
   renderJalurProgress(trackId);
+
+  // Program fast track PLN menyatu dengan Distribution Academy — hanya jalur
+  // itu yang menampilkannya.
+  const plnCard = document.getElementById('plnFastTrack');
+  if (plnCard) plnCard.hidden = trackId !== 'S3';
 
   // Render levels accordion (modules per level)
   renderLevels(trackId);
@@ -13249,8 +13238,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         if (!state.profile || !state.profile.name) {
           e.preventDefault();
           pendingAction = () => {
-            // After login, scroll to practices section
-            const target = document.getElementById('practices');
+            // After login, scroll to the Academy lobby (the career cards
+            // section it used to target is no longer on the home page).
+            const target = document.getElementById('practices') || document.querySelector('.academy-lobby');
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           };
           showOnboardingModal();
