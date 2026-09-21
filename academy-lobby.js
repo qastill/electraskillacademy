@@ -1,4 +1,4 @@
-/* Profession selection with an on-demand Three.js character stage. */
+/* Profession selection with a licensed public 3D character viewer. */
 (() => {
   const choices = document.getElementById('academy-choices');
   const careers = window.ELECTRA_CAREERS;
@@ -12,7 +12,7 @@
   const ids = ['S12','S10','S3','S6','S15','S16',...Object.keys(careers).filter(id => !['S12','S10','S3','S6','S15','S16'].includes(id))];
   let selected = 'S12', paused = false, visible = true, generation = 0, engine = null, enginePromise = null;
   const modes = document.getElementById('career-motion-modes');
-  function fallback() { world.classList.remove('three-ready'); motion.hidden = true; modes.hidden = true; status.textContent = '3D tidak tersedia di perangkat ini · Menampilkan concept art'; }
+  function fallback() { world.classList.remove('three-ready'); motion.hidden = true; modes.hidden = true; status.textContent = 'Model 3D belum termuat · Gambar pratinjau'; }
   function syncMotion() {
     motion.setAttribute('aria-pressed', String(paused));
     motion.setAttribute('aria-label', paused ? 'Lanjutkan animasi' : 'Jeda animasi');
@@ -28,21 +28,24 @@
     choices.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.academy === id)));
     if (reveal) choices.querySelector(`[data-academy="${id}"]`).scrollIntoView({block:'nearest',inline:'center',behavior:reduced.matches?'auto':'smooth'});
     lobby.style.setProperty('--accent',c.accent);
-    world.replaceChildren();
-    const poster = document.createElement('div'); poster.className = 'career-poster';
-    poster.style.backgroundImage = `url("${c.poster}")`;
-    poster.setAttribute('role','img'); poster.setAttribute('aria-label',`Concept art ${c.role}`);
-    world.append(poster);
-    world.classList.remove('three-ready');
+    let poster = world.querySelector('.career-poster');
+    if (!poster) {
+      poster = document.createElement('div'); poster.className = 'career-poster';
+      poster.style.backgroundImage = 'url("/career-scenes/worker-poster.jpg")';
+      poster.setAttribute('role','img'); poster.setAttribute('aria-label','Pratinjau model pekerja oleh Bazsi1986');
+      world.append(poster);
+    }
     status.textContent = 'Memuat karakter 3D…'; motion.hidden = true; modes.hidden = true;
-    if (!enginePromise) enginePromise = import('/career-three.js?v=1').then(module => {
+    if (!enginePromise) enginePromise = import('/career-viewer.js?v=1').then(module => {
       engine = module.createCareerRenderer(world, fallback); return engine;
     });
-    enginePromise.then(instance => {
+    enginePromise.then(async instance => {
       if (version !== generation) return;
-      instance.select(id); world.classList.add('three-ready');
-      status.textContent = reduced.matches ? '3D · Gerakan dikurangi' : '3D interaktif · Model prosedural';
-      motion.hidden = reduced.matches; modes.hidden = reduced.matches;
+      await instance.select(id);
+      if (version !== generation) return;
+      world.classList.add('three-ready');
+      status.textContent = reduced.matches ? '3D · Gerakan dikurangi' : '3D interaktif · Sketchfab';
+      motion.hidden = reduced.matches; modes.hidden = true;
       modes.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.motion==='work')));
       syncMotion();
     }).catch(() => { if (version === generation) fallback(); });

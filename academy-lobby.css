@@ -20,3 +20,15 @@
 /* Native WebGL stage; all animation belongs to articulated 3D geometry. */
 .career-world{max-width:1000px;height:365px;top:0;mask-image:none}.career-webgl{display:block;width:100%;height:100%;position:absolute;inset:0;z-index:1}.career-world.three-ready .career-poster{display:none}.career-motion-modes{position:absolute;z-index:3;right:74px;top:20px;display:flex;gap:4px;padding:3px;border:1px solid #ffffff18;border-radius:30px;background:#10201899}.career-motion-modes[hidden]{display:none}.career-motion-modes button{background:transparent;border:0;border-radius:20px;padding:8px 11px;color:#a7bda8;font:10px Arial,sans-serif;cursor:pointer;min-height:32px}.career-motion-modes button[aria-pressed=true]{background:#d7e6a6;color:#162d1c}.career-stage:after{pointer-events:none}.career-caption{pointer-events:none}.career-caption .career-skills{pointer-events:auto}
 @media(max-width:650px){.career-world{height:290px;top:16px}.career-motion-modes{right:12px;top:70px}.career-motion-modes button{font-size:9px;padding:6px 8px;min-height:30px}.career-stage{height:440px}.career-caption{bottom:23px}}
+/* Textured character served by the artist's official public 3D viewer. */
+.career-stage{height:560px}
+.career-world{height:430px;max-width:1050px;top:0}
+.career-model-viewer{position:absolute;inset:0;display:block;width:100%;height:100%;border:0;background:transparent;opacity:0;transition:opacity .3s}
+.career-world.three-ready .career-model-viewer{opacity:1}
+.career-world .career-poster{background-size:cover;background-position:center;mask-image:none;opacity:.85}
+.career-model-credit{margin:10px auto 0;text-align:center;color:#809487;font:9px/1.8 Arial,sans-serif;max-width:620px}
+.career-model-credit a{color:#aab9a7;text-decoration:underline;text-underline-offset:2px}
+.career-model-credit span{display:block;color:#829583}
+.career-stage .stage-corner,.career-stage .asset-status{pointer-events:none}
+.career-stage .asset-status{max-width:300px}
+@media(max-width:650px){.career-stage{height:490px}.career-world{height:350px;top:15px}.career-model-viewer{pointer-events:none}.career-model-credit{font-size:8px}.career-world .career-poster{background-size:auto 100%;background-repeat:no-repeat;background-color:#959a9b}}
