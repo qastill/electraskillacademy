@@ -2552,18 +2552,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Bahan apa yang sering dipakai untuk inti rotor/stator motor induksi?",
-   "opts": [
-    "Karet",
-    "Lembaran silicon steel (electrical steel, Si-Fe alloy) yang dilaminasi",
-    "Plastik PVC",
-    "Kaca"
-   ],
-   "a": 1,
-   "explain": "Inti motor: silicon steel laminasi (sama dengan trafo). Tipe Non-Grain-Oriented (NGO) untuk motor (medan rotasi multi-arah). Tipe Grain-Oriented (GO) untuk trafo (medan unidireksional). Laminasi tipis 0,35-0,5 mm dilekat dengan varnish isolasi. Si dalam Fe meningkatkan ρ → kurangi eddy loss. Ada juga inti motor amorphous (Metglas) untuk efisiensi premium IE5."
-  },
-  {
-   "type": "theory",
    "q": "Karbon (grafit) memiliki properti yang BERBEDA dari logam konduktor lain dalam hal…",
    "opts": [
     "TCR positif sangat besar",
@@ -2741,18 +2729,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "μ = μ₀ × μr = (4π × 10⁻⁷) × 5.000"
-  },
-  {
-   "type": "theory",
-   "q": "Pada panel distribusi 20 kV, isolator jenis apa yang umum dipakai untuk gardu portal/cantol?",
-   "opts": [
-    "Plastik PVC",
-    "Porselin atau gelas/glass insulator (post-type, suspension)",
-    "Karet",
-    "Kayu"
-   ],
-   "a": 1,
-   "explain": "Isolator jaringan udara TM/TT: PORSELIN (ceramic) atau GLASS karena: (1) Tahan UV, hujan, polusi, kelelahan termal-mekanis selama 30+ tahun, (2) Dielectric strength tinggi, (3) Self-cleaning saat hujan. Tipe: pin-type (TM single point), suspension (TT multi-disc untuk insulasi tinggi). Modern: composite/silicone rubber + fiberglass core (lighter, hydrophobic, tahan vandalism). Masing-masing isolator porselin TM ~ 100 kV impulse withstand."
   },
   {
    "type": "theory",
@@ -3986,18 +3962,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Face shield arc-rated dipakai untuk proteksi dari…",
-   "opts": [
-    "Debu",
-    "UV radiation, panas radiasi, vapor logam panas saat arc flash",
-    "Hujan",
-    "Gas beracun"
-   ],
-   "a": 1,
-   "explain": "Face shield arc-rated: PROTEKSI dari (1) UV radiation arc plasma yang merusak retina, (2) Panas radiasi, (3) Vapor logam panas, (4) Debris terbang. Wajib bersama safety glass + arc flash hood untuk Cat 3-4. Rating ATPV harus ≥ incident energy panel."
-  },
-  {
-   "type": "theory",
    "q": "Voltage detector (NCV — Non-Contact Voltage) berfungsi untuk…",
    "opts": [
     "Mengukur tegangan akurat",
@@ -4480,18 +4444,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Pada PLN, dokumen yang setara/mendukung PTW disebut…",
-   "opts": [
-    "SP3 (Surat Perintah Pelaksanaan Pekerjaan)",
-    "KTP",
-    "NPWP",
-    "SIM"
-   ],
-   "a": 0,
-   "explain": "SP3 = Surat Perintah Pelaksanaan Pekerjaan PLN — dokumen formal otorisasi pekerjaan operasional/maintenance jaringan. Issued oleh APP/UP3 (Area Pelayanan & Penyaluran). Plus dokumen pendukung: SOP spesifik, manuver perintah, riwayat sistem. Setara konsep PTW di industri."
-  },
-  {
-   "type": "theory",
    "q": "Untuk pekerjaan dengan 5 isolation point dan 4 pekerja, total LOCK yang dibutuhkan minimum?",
    "opts": [
     "5 lock",
@@ -4959,18 +4911,6 @@ window.QUIZ_BANK = {
    ],
    "a": 3,
    "explain": "P = E/t = 200 J / 0,01 s = 20.000 W = 20 kW."
-  },
-  {
-   "type": "theory",
-   "q": "Korban tersengat 220V dengan resistansi tubuh 1.000 Ω. Arus yang melewati tubuh?",
-   "opts": [
-    "22 mA (let-go limit)",
-    "220 mA (FATAL — di atas threshold fibrilasi)",
-    "2,2 A",
-    "22 A"
-   ],
-   "a": 1,
-   "explain": "I = V/R = 220/1.000 = 0,22 A = 220 mA."
   },
   {
    "type": "theory",
@@ -6313,18 +6253,6 @@ window.QUIZ_BANK = {
    "explain": "PUIL 2011 pasal 3: R_ground ≤ 5 Ω untuk sistem pentanahan umum. Untuk tempat khusus (rumah sakit, substation): lebih rendah 1-2 Ω."
   },
   {
-   "type": "pg",
-   "q": "Metode Fall-of-Potential (3-pin) untuk earth test:",
-   "opts": [
-    "Pakai 1 pin",
-    "3 pin: ground electrode + voltage probe + current probe, inject current dan ukur V",
-    "2 pin",
-    "5 pin"
-   ],
-   "a": 1,
-   "explain": "3-pin: E (test ground) - P (potential probe at 62% distance) - C (current probe at 100% distance). Inject I dari E ke C, ukur V di P. R = V/I. Standar IEEE 81."
-  },
-  {
    "type": "calc",
    "calc": "R = V/I",
    "q": "Earth test: inject 1A, drop voltage di P-E = 3.5V. Resistansi ground:",
@@ -6432,18 +6360,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Saat fault, arus besar mengalir ke tanah via grounding → potensi tanah naik. Touch V (tangan-kaki) & step V (langkah) → bisa fatal. IEEE 80 standar desain."
-  },
-  {
-   "type": "pg",
-   "q": "IEEE 80 mengatur:",
-   "opts": [
-    "Earth resistance saja",
-    "Desain grounding substation (grid design, touch/step voltage, safety)",
-    "Kabel",
-    "Relay"
-   ],
-   "a": 1,
-   "explain": "IEEE Std 80 - 'Guide for Safety in AC Substation Grounding'. Cover: soil resistivity measurement, grid conductor sizing, touch/step voltage calculation, safety criteria."
   },
   {
    "type": "calc",
@@ -6567,18 +6483,6 @@ window.QUIZ_BANK = {
  "1.15": [
   {
    "type": "pg",
-   "q": "CAT (Category) rating IEC 61010 menentukan:",
-   "opts": [
-    "Warna alat",
-    "Ketahanan alat ukur terhadap transient voltage di lingkungan kerja",
-    "Merek",
-    "Harga"
-   ],
-   "a": 1,
-   "explain": "CAT I/II/III/IV = rating transient impulse voltage. CAT IV paling tinggi (incoming utility). Pilih rating sesuai lokasi pengukuran, BUKAN cuma max voltage."
-  },
-  {
-   "type": "pg",
    "q": "CAT III 600V vs CAT II 1000V — mana lebih aman untuk panel distribusi gedung?",
    "opts": [
     "CAT II 1000V (V lebih tinggi)",
@@ -6600,18 +6504,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Three-point verification mandatory OSHA. Mencegah false negative: detector bisa rusak diam-diam. Verifikasi pre-and-post."
-  },
-  {
-   "type": "pg",
-   "q": "Interpretasi reading DMM '.OL' pada layar:",
-   "opts": [
-    "Overload / out of range — pilih range lebih tinggi",
-    "Battery low",
-    "Off",
-    "Error"
-   ],
-   "a": 0,
-   "explain": ".OL / 'OL' / '1' = Out of Limit / Overload. Pilih range lebih tinggi atau gunakan auto-range. Jangan bingung dengan error."
   },
   {
    "type": "calc",
@@ -7002,18 +6894,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Fuse 'slow-blow' (delay-action) vs 'fast-acting':",
-   "opts": [
-    "Sama saja",
-    "Slow-blow tahan transient inrush (motor). Fast-acting untuk semikonduktor (instant protection)",
-    "Warna",
-    "Harga"
-   ],
-   "a": 1,
-   "explain": "Slow-blow (M, T class): tahan surge sesaat, trip saat sustained overcurrent. Fast-acting (gG, aR): instant untuk protect semikonduktor (SCR, diode) yang sensitive to I²t."
-  },
-  {
-   "type": "pg",
    "q": "'I²t' dalam fuse characteristic berarti:",
    "opts": [
     "Integral arus² × waktu — energi thermal yang melewati fuse",
@@ -7081,18 +6961,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Typical: fuse upstream (high breaking) as backup, MCB downstream (distribute + reset-able). Cascade: MCB trip for normal overload/small faults; fuse handle catastrophic Isc."
-  },
-  {
-   "type": "pg",
-   "q": "Breaker de-rating di temperatur tinggi:",
-   "opts": [
-    "Tidak ada",
-    "Ya — setiap CB ada kurva derating (ambient > 30°C → capacity turun)",
-    "Naik",
-    "Acak"
-   ],
-   "a": 1,
-   "explain": "CB rated 30°C/40°C ambient. Di 55°C: thermal bimetal trip lebih cepat → effective rating turun ~15-20%. Datasheet manufacturer provide correction factor."
   },
   {
    "type": "pg",
@@ -7420,18 +7288,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "PUIL 2011 Tabel: NYA 2.5 mm² dalam conduit = KHA 18A. Continuous load 80%: 14.4A. Lebih dari itu over-heat accelerate aging."
-  },
-  {
-   "type": "pg",
-   "q": "KHA (Kapasitas Hantar Arus) tergantung:",
-   "opts": [
-    "Panjang kabel",
-    "Ukuran penampang, bahan isolasi, metode instalasi, suhu ambient, grouping",
-    "Merek",
-    "Warna"
-   ],
-   "a": 1,
-   "explain": "Faktor KHA: (1) penampang (A), (2) isolasi (PVC 70°, XLPE 90°), (3) metode (udara/conduit/tanah), (4) suhu ambient, (5) grouping factor (kabel berdempetan derate)."
   },
   {
    "type": "calc",
@@ -8214,18 +8070,6 @@ window.QUIZ_BANK = {
    "explain": "BENAR. SLD: 1 line = multi-phase. Detail konduktor jumlah di legenda / table. Contoh: '3ph+N+PE' notation di kabel spec. Visualisasi simplified, maintenance detail di wiring/cable schedule."
   },
   {
-   "type": "pg",
-   "q": "Software standar untuk drawing kelistrikan industri:",
-   "opts": [
-    "Paint",
-    "AutoCAD Electrical, EPLAN Electric P8, SEE Electrical, SolidWorks Electrical",
-    "Excel",
-    "PowerPoint"
-   ],
-   "a": 1,
-   "explain": "Industrial-grade tools: symbol library IEC, auto cross-reference, BOM auto-generate, panel layout 3D (EPLAN Pro), PLC interface integration. Learning curve tapi 10× productivity vs manual AutoCAD."
-  },
-  {
    "type": "case",
    "caseText": "Audit SLO gardu industri: inspector minta drawing as-built dan Arc Flash Study. Engineer provide SLD original (6 tahun lalu), tidak ada AF study.",
    "q": "Bisa SLO lolos?",
@@ -8274,30 +8118,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Electrical plan overlay architect floor plan. Show position outlets, switches, lights, panels, cable tray. Dimensioning optional tapi recommended untuk installation."
-  },
-  {
-   "type": "pg",
-   "q": "Simbol titik lampu di denah:",
-   "opts": [
-    "Segitiga",
-    "Lingkaran (dengan X inside untuk ceiling, atau dengan garis bawah untuk wall)",
-    "Kotak",
-    "Bebas"
-   ],
-   "a": 1,
-   "explain": "Lampu: lingkaran dengan 'x' (crossed circle) = ceiling mount. Wall-mount: lingkaran dengan garis (bracket). Fluorescent: rectangle. Emergency: E inside circle."
-  },
-  {
-   "type": "pg",
-   "q": "Tinggi standar stop kontak dari lantai untuk rumah:",
-   "opts": [
-    "10 cm",
-    "30 cm",
-    "80 cm (counter height) atau 30 cm (dekat lantai)",
-    "200 cm"
-   ],
-   "a": 2,
-   "explain": "PUIL flexibility: 30 cm lantai (umum), 80-110 cm counter top/work surface (dapur, meja kerja), 130 cm ceiling-high (jarang). Tidak ada absolute, sesuai use case + accessibility."
   },
   {
    "type": "pg",
@@ -8419,18 +8239,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Skala denah instalasi umumnya:",
-   "opts": [
-    "1:1",
-    "1:50 atau 1:100 (fit to A3/A1 paper for building plan)",
-    "1:10",
-    "1:1000"
-   ],
-   "a": 1,
-   "explain": "Standard skala arsitektur: 1:100 untuk floor plan keseluruhan, 1:50 untuk detail ruangan, 1:20 untuk detail installation/wiring close-up. Drawing paper A3/A1/A0 sesuai project size."
-  },
-  {
-   "type": "pg",
    "q": "Circuit schedule / panel directory info:",
    "opts": [
     "Hanya nomor",
@@ -8440,18 +8248,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Per circuit: ID, CB rating, cable size, load description (e.g., 'Kitchen outlets'), estimated load. Panel directory sticker di pintu panel untuk quick reference."
-  },
-  {
-   "type": "pg",
-   "q": "Power density (W/m²) residensial:",
-   "opts": [
-    "1",
-    "20-40 W/m² (umum Indonesia modern dengan AC)",
-    "500",
-    "Infinite"
-   ],
-   "a": 1,
-   "explain": "Rough estimate: rumah modern dengan AC dan appliance: 20-40 W/m². Kantor: 40-60. Industri ringan: 100-300. Basis untuk load estimate + sizing panel."
   },
   {
    "type": "tf",
@@ -8477,30 +8273,6 @@ window.QUIZ_BANK = {
   }
  ],
  "1.23": [
-  {
-   "type": "pg",
-   "q": "UU 30/2009 mengatur tentang:",
-   "opts": [
-    "Investasi",
-    "Ketenagalistrikan Indonesia (usaha penyediaan, pemanfaatan tenaga listrik)",
-    "Migas",
-    "Air"
-   ],
-   "a": 1,
-   "explain": "UU No. 30 Tahun 2009 = Undang-Undang Ketenagalistrikan. Payung hukum sektor listrik: usaha pembangkit, transmisi, distribusi, penjualan, perizinan, sertifikasi, sanksi."
-  },
-  {
-   "type": "pg",
-   "q": "PP 14/2012 mengatur:",
-   "opts": [
-    "Upah",
-    "Kegiatan usaha penyediaan tenaga listrik (aturan pelaksanaan UU 30/2009)",
-    "Pajak",
-    "Transportasi"
-   ],
-   "a": 1,
-   "explain": "PP No. 14/2012 = peraturan pelaksana UU 30/2009. Mengatur detail: IUPTL, IUJPTL, jenis usaha, sertifikat, tarif, safety."
-  },
   {
    "type": "pg",
    "q": "PUIL kepanjangan:",
@@ -8595,18 +8367,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Kontraktor listrik compliance: (1) Akta perusahaan + NIB, (2) IUJPTL sesuai bidang/kualifikasi (K/M/B), (3) SBU oleh asosiasi (AKLI, APEI, dll), (4) SKTTK (Sertifikat Kompetensi Tenaga Teknik Ketenagalistrikan) personel sesuai level, (5) SMK3 + ISO 45001 bonus."
-  },
-  {
-   "type": "pg",
-   "q": "Permenaker 12/2015 tentang:",
-   "opts": [
-    "K3 konstruksi",
-    "K3 Listrik di Tempat Kerja — wajib implementasi, Ahli K3 Listrik bersertifikat",
-    "Umum",
-    "Upah"
-   ],
-   "a": 1,
-   "explain": "Permenaker 12/2015: K3 Listrik wajib di tempat kerja. Mengatur: Ahli K3 Listrik, teknisi K3 Listrik, pemeriksaan & pengujian, jadwal inspeksi, kewajiban pengusaha."
   },
   {
    "type": "pg",
@@ -8990,18 +8750,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tinggi minimum stop kontak dari lantai di kamar biasa:",
-   "opts": [
-    "30 cm",
-    "125-150 cm (standar lama); 30-40 cm modern",
-    "2 m",
-    "Bebas"
-   ],
-   "a": 1,
-   "explain": "Standar lama Indonesia: 125-150 cm. Modern/internasional: 30-40 cm (lebih praktis untuk perabot & kabel listrik). Di kamar mandi ≥ 100 cm dari bath tub, outside zone 1-2 IEC 60364-7-701."
-  },
-  {
-   "type": "pg",
    "q": "Kabel NYM 3×2.5 mm² dipakai untuk:",
    "opts": [
     "Penerangan (stop kontak small)",
@@ -9119,18 +8867,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Kabel dalam rumah: NYM (multicore with inner sheath) atau NYA (single core) dalam conduit PVC. NYY untuk outdoor/tanah. NYFGBY untuk armored outdoor."
-  },
-  {
-   "type": "pg",
-   "q": "Setiap stop kontak rumah modern wajib punya:",
-   "opts": [
-    "Saklar",
-    "Grounding pin (PE) terhubung ke MET — tiga-pin",
-    "Fuse",
-    "Timer"
-   ],
-   "a": 1,
-   "explain": "Socket modern: Live + Neutral + Earth (3-pin). Earth terhubung ke busbar PE panel → MET → rod grounding. Appliance dengan metal casing otomatis grounded."
   },
   {
    "type": "pg",
@@ -9388,18 +9124,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "MDP (Main Distribution Panel) IP rating indoor:",
-   "opts": [
-    "IP00",
-    "IP2X minimum (finger protection), IP4X ideal",
-    "IP68",
-    "Tidak perlu"
-   ],
-   "a": 1,
-   "explain": "IP2X: protected against finger (12.5mm object), debu basic. Commercial MDP: IP4X (1mm object) ideal untuk indoor. Outdoor: IP54-IP65. Electrical room: IP2X cukup bila kunci."
-  },
-  {
-   "type": "pg",
    "q": "Arc fault protection di panel comercial:",
    "opts": [
     "Tidak ada",
@@ -9484,18 +9208,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Sambungan crimping failure mode terbesar:",
-   "opts": [
-    "Arc",
-    "Cold joint (kurang pressure) → high resistance, heating, eventual failure",
-    "Spark",
-    "Glow"
-   ],
-   "a": 1,
-   "explain": "Under-crimped: kontak tidak rapat → R tinggi → I²R heat → thermal runaway → connection burn. Use calibrated tool, correct die size, inspect pull-test. Color-code die sizes."
-  },
-  {
-   "type": "pg",
    "q": "Untuk terminasi kabel fleksibel/stranded ke terminal sekrup, penggunaan yang benar:",
    "opts": [
     "Langsung pluck",
@@ -9543,18 +9255,6 @@ window.QUIZ_BANK = {
    "explain": "Wago 221/222: spring clamp. Insert stripped wire → flip lever. Certified UL/IEC, pull strength ≥ 80N (2.5mm²). Saves time di junction box. Alternatif Wago 773 push-in (stranded needs ferrule)."
   },
   {
-   "type": "pg",
-   "q": "Wire stripping tool yang benar untuk NYM 2.5 mm²:",
-   "opts": [
-    "Cutter biasa",
-    "Automatic wire stripper adjustable, jangan merusak konduktor",
-    "Gigi",
-    "Knife"
-   ],
-   "a": 1,
-   "explain": "Stripper: precise cut depth (jangan nick konduktor). Nicked Cu = stress concentrator, break on flex. Automatic models adjust depth. Flatblade knife dangerous tapi cepat untuk skilled."
-  },
-  {
    "type": "tf",
    "q": "Direct bury (tanam langsung) sambungan kabel tanpa junction box diperbolehkan bila pakai heat-shrink insulated.",
    "opts": [
@@ -9563,18 +9263,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "SALAH di PUIL. Sambungan harus accessible (junction box / pull box). Exception: specialized waterproof gel-filled splice untuk direct bury kabel utility (factory-approved) — bukan standar rumah. Alasan: inspection, troubleshoot."
-  },
-  {
-   "type": "pg",
-   "q": "Inspeksi crimping manual (tanpa tool analysis):",
-   "opts": [
-    "Visual OK cukup",
-    "Visual + pull test (tarik fisik, tidak boleh lepas dengan expected force)",
-    "Suara",
-    "Cium"
-   ],
-   "a": 1,
-   "explain": "Field inspect: (1) visual crimp markings even, no cracks, (2) pull test force sesuai spec (mis. 200N untuk 6mm²), (3) resistance measure (milliohm meter) — advanced. Reject bila ragu."
   },
   {
    "type": "pg",
@@ -9614,30 +9302,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Insulation piercing connector (IPC) untuk:",
-   "opts": [
-    "Tidak pernah",
-    "Tap to insulated conductor without stripping — outdoor service drop PLN",
-    "Lab",
-    "Rumah"
-   ],
-   "a": 1,
-   "explain": "IPC (Insulation Piercing Connector): teeth penetrate insulation & grip conductor. Waterproof gel. Utility use untuk service drop LV aerial. PLN gunakan untuk tap sambungan rumah ke jaringan."
-  },
-  {
-   "type": "pg",
-   "q": "Sekrup terminal yang lepas sendiri (self-loosening) akibat:",
-   "opts": [
-    "Tidak pernah",
-    "Vibrasi + thermal cycling — perlu Belleville washer atau torque-retention design",
-    "Hot",
-    "Cold"
-   ],
-   "a": 1,
-   "explain": "Industrial terminal blocks: spring pressure (cage clamp) atau Belleville washer maintain tension meski creep. Non-maintained screw terminal perlu re-torque periodic. Vibration area (motor starter): prefer spring clamp."
-  },
-  {
-   "type": "pg",
    "q": "Aluminum conductor connection requirement:",
    "opts": [
     "Sama dengan Cu",
@@ -9647,18 +9311,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Al oxide insulator & creep tinggi. Proper: (1) brush clean, (2) NO-OX-ID grease, (3) Al-rated lug (CO/ALR), (4) correct torque (higher than Cu), (5) re-torque 24h after. Failure → joint heat → fire (historic Al wiring fires)."
-  },
-  {
-   "type": "pg",
-   "q": "Kualitas sambungan dievaluasi dengan:",
-   "opts": [
-    "Visual only",
-    "Milliohm meter (< target mΩ), thermograph (ΔT<10°C ambient), mechanical pull test",
-    "Suara",
-    "Bau"
-   ],
-   "a": 1,
-   "explain": "Triad: (1) 4-wire milliohm measurement precision, (2) thermal imaging under load, (3) destructive pull test sample. Commercial commission documented. Trending cocok untuk predictive maintenance."
   }
  ],
  "2.04": [
@@ -9817,18 +9469,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "IEC 61439 tests: (1) HiPot proof, (2) insulation megger, (3) functional (trip test), (4) ground continuity, (5) phase rotation. FAT (Factory Acceptance Test) + SAT (Site Acceptance Test). Documentation required."
-  },
-  {
-   "type": "pg",
-   "q": "Future expansion capacity at PHB:",
-   "opts": [
-    "Tidak perlu",
-    "20-30% spare capacity typical for future load growth",
-    "Full",
-    "0%"
-   ],
-   "a": 1,
-   "explain": "Standard practice: 25% spare capacity + 20% empty DIN rail untuk circuit baru. MCCB utama + trafo + kabel sized for future. Over-sizing awal lebih murah daripada retrofitting."
   }
  ],
  "2.05": [
@@ -9845,18 +9485,6 @@ window.QUIZ_BANK = {
    "explain": "Ladder tray: max ventilation, easy inspect (power). Perforated: balanced (power+control). Solid bottom: dust/water protection (outdoor/comms). Wire basket: pre-galvanized, quick install."
   },
   {
-   "type": "pg",
-   "q": "Fill capacity conduit PVC per NEC/SNI:",
-   "opts": [
-    "100%",
-    "40% maximum fill bila banyak kabel (3+), 53% (2 kabel), 60% (1 kabel)",
-    "Bebas",
-    "10%"
-   ],
-   "a": 1,
-   "explain": "Fill ratio: heat dissipation, pulling effort. NEC 376/344: 40% untuk 3+ conductors. Lebih banyak kabel = derating KHA faktor 0.7-0.8. Tabel PUIL sesuai type."
-  },
-  {
    "type": "calc",
    "calc": "Area fill ≤ 50%",
    "q": "Cable tray ladder 300mm wide, fill 10 kabel NYY 4×16 mm² (diameter 25mm each). Tray yang tepat:",
@@ -9868,18 +9496,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Calc: 10 × 25mm = 250mm. Plus 10% separation recommended = 275mm. 300mm tray: fits single layer OK. Multi-layer = derating significant; prefer single layer horizontal."
-  },
-  {
-   "type": "pg",
-   "q": "Labelling kabel per IEC 61346 / IEC 81346:",
-   "opts": [
-    "Optional",
-    "Systematic codes: location + equipment + function at every termination + every few meters",
-    "Bebas",
-    "Warna"
-   ],
-   "a": 1,
-   "explain": "Cable tagging: origin+destination (e.g., +E1-K1 to +MDP1), function code, cable number. Shrink tubing permanent. Tree system for large plant. Tracing troubleshoot jauh lebih cepat."
   },
   {
    "type": "tf",
@@ -9938,30 +9554,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "EMT: lightweight steel conduit, press-on fittings. Indoor wet/dry. EMI shielding bila bonded. Alternative: RMC (rigid metal, heaviest), IMC (intermediate), ENT (PVC flexible smurf)."
-  },
-  {
-   "type": "pg",
-   "q": "Cable gland untuk penetration ke panel:",
-   "opts": [
-    "Tidak penting",
-    "IP-rated gland: strain relief + sealing + grounding bila armoured",
-    "Tape",
-    "Paste"
-   ],
-   "a": 1,
-   "explain": "Cable gland (stuffing box): strain relief (cable tidak lepas saat ditarik), IP sealing (IP66-68), EMI bonding untuk armoured. Thread size: M16/M20/M25/M32 tergantung cable OD. Ex-rated untuk hazardous area."
-  },
-  {
-   "type": "pg",
-   "q": "Pada cable tray, kabel 'tied' dengan:",
-   "opts": [
-    "Wire lilit",
-    "Cable tie plastic (nylon, UV-resistant outdoor) atau stainless steel tie",
-    "Rope",
-    "Tape"
-   ],
-   "a": 1,
-   "explain": "Nylon cable tie: indoor. Black UV-resistant: outdoor. SS tie: high temp/chemical. Velcro: reusable (data center). Jangan over-tighten (crush insulation). Spacing 300-500mm."
   },
   {
    "type": "pg",
@@ -10388,18 +9980,6 @@ window.QUIZ_BANK = {
  "2.08": [
   {
    "type": "pg",
-   "q": "Lightning protection 3-component system per IEC 62305:",
-   "opts": [
-    "Hanya air rod",
-    "External (air rod+down conductor+earth termination), Internal (SPD, bonding), Isolation",
-    "Cat",
-    "Rod"
-   ],
-   "a": 1,
-   "explain": "IEC 62305: (1) External LPS — intercept, conduct, dissipate, (2) Internal — SPD & bonding, (3) Isolation — prevent side-flash. Complete system reduce risk, tidak eliminate 100%."
-  },
-  {
-   "type": "pg",
    "q": "Air terminal konvensional (Franklin rod):",
    "opts": [
     "Tidak efektif",
@@ -10421,18 +10001,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "ESE: device klaim ionize udara lebih cepat → streamer earlier → larger protection radius. NF C17-102 (French). Research independent (Uman, Rakov): tidak superior vs Franklin dalam real strike test. Consider regulasi lokal."
-  },
-  {
-   "type": "pg",
-   "q": "Down conductor spacing di keliling bangunan:",
-   "opts": [
-    "1 saja",
-    "Class I LPS: 10m. Class IV: 20m. Evenly distributed around perimeter",
-    "100m",
-    "Bebas"
-   ],
-   "a": 1,
-   "explain": "IEC 62305 protection class (I-IV): Class I (20% risk reduction) → 10m spacing. Class IV → 20m. Down conductor distribute strike current, reduce individual burden."
   },
   {
    "type": "pg",
@@ -10472,18 +10040,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Lightning strike current peak tipikal:",
-   "opts": [
-    "1A",
-    "10-200 kA (negative CG strike median ~30 kA)",
-    "1MA",
-    "1kA"
-   ],
-   "a": 1,
-   "explain": "Negative cloud-ground strike (common): peak 10-40 kA. Positive CG (rare 10%): 40-300 kA. Pulse shape 8/20μs or 10/350μs. Rise time 1-2μs. Total energy substantial but short duration."
-  },
-  {
-   "type": "pg",
    "q": "Rolling sphere method untuk protection zone:",
    "opts": [
     "Decorative",
@@ -10515,18 +10071,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "SALAH. MOV designed multi-trigger (rating impulse e.g., I_n 20kA: 20 shots). Cumulative degradation indicator (status window). Ganti bila indicator red, atau post major strike investigation."
-  },
-  {
-   "type": "pg",
-   "q": "Indicator SPD end-of-life:",
-   "opts": [
-    "Tidak ada",
-    "Visual window (green=OK, red=failed) atau remote monitoring kontak",
-    "Suara",
-    "Bau"
-   ],
-   "a": 1,
-   "explain": "Modern SPD: mechanical indicator flag (spring release bila thermal disconnect). Remote contact dry (NO/NC) untuk SCADA alert. Replace cartridge ke base modular — cost effective."
   },
   {
    "type": "pg",
@@ -10613,18 +10157,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Selectivity/discrimination: proteksi terdekat fault clear dulu → upstream stay on → minimal disruption. Design dengan TCC grading (current + time)."
-  },
-  {
-   "type": "pg",
-   "q": "Time-selective discrimination:",
-   "opts": [
-    "Sama",
-    "Upstream delay 100-500ms lebih lambat dari downstream → hilir clear dulu",
-    "Upstream lebih cepat",
-    "Bebas"
-   ],
-   "a": 1,
-   "explain": "Adjustable-time MCCB/relay: upstream intentional delay (ST - Short Time). Downstream instant. Bila fault di hilir: hilir trip dulu → arus hilang sebelum upstream timer expire."
   },
   {
    "type": "calc",
@@ -10858,18 +10390,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Winding connection: Star (Y) vs Delta (Δ):",
-   "opts": [
-    "Sama",
-    "Y = V_L = √3×V_ph, I_L = I_ph. Δ = V_L = V_ph, I_L = √3×I_ph",
-    "Bebas",
-    "Tidak penting"
-   ],
-   "a": 1,
-   "explain": "Star: phase voltage lower (safer untuk winding), line current = phase current. Delta: full voltage phase, higher current. Motor 380/660V Y-Δ: bisa diconnect dua cara sesuai supply voltage."
-  },
-  {
-   "type": "pg",
    "q": "Motor 400V 50Hz + 60Hz supply → efek:",
    "opts": [
     "OK",
@@ -10987,18 +10507,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor 2-pole 3000 rpm bearing life factor:",
-   "opts": [
-    "Sama",
-    "Higher speed = bearing stress naik, life design pendek atau grease interval pendek",
-    "Lower",
-    "Tidak relevan"
-   ],
-   "a": 1,
-   "explain": "L10 bearing life ∝ 1/n (inversely proportional to speed). 2-pole vs 4-pole sama load → L10 pendek. Mitigation: better grease, precision bearing, regreasing interval lebih sering."
-  },
-  {
-   "type": "pg",
    "q": "Motor 3-fasa konsumsi no-load current:",
    "opts": [
     "Zero",
@@ -11035,18 +10543,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "DOL: contactor close → full V langsung. Inrush 5-7× FLA durasi 0.5-3 detik. Simpel + murah. Cocok motor <5.5kW atau start jarang. Batasan PLN starting current regulation."
-  },
-  {
-   "type": "pg",
-   "q": "Star-Delta starter: saat start motor di connection:",
-   "opts": [
-    "Delta",
-    "Star (Y) — reduce voltage per phase √3× → current & torque turun 3×",
-    "Parallel",
-    "Seri"
-   ],
-   "a": 1,
-   "explain": "Y-Δ start: start di Y (V_phase = V_L/√3), current drop 3× & torque 3×. Kurang 2-3 detik → switch ke Δ full voltage. Transition: open atau closed (no-break)."
   },
   {
    "type": "calc",
@@ -11119,18 +10615,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "SALAH. Plugging: reverse polarity saat motor masih spinning → current HUGE (8-10× FLA), torque reverse. Mechanical shock, winding stress. Wajib: zero-speed detector atau time delay before direction change. Modern: regenerative brake via VFD."
-  },
-  {
-   "type": "pg",
-   "q": "Thermal overload relay setting untuk motor:",
-   "opts": [
-    "100% FLA",
-    "105-115% FLA dengan Class 10/20 (time curve)",
-    "50%",
-    "200%"
-   ],
-   "a": 1,
-   "explain": "Thermal overload: setting 105-115% FLA (accommodate service factor). Class 10 (trip 10s @ 6× FLA), Class 20 (20s), Class 30. Class 10 common, Class 20 untuk long starting load. IEC 60947-4-1."
   },
   {
    "type": "pg",
@@ -11424,30 +10908,6 @@ window.QUIZ_BANK = {
  "2.13": [
   {
    "type": "pg",
-   "q": "Sistem tenaga listrik Indonesia level tegangan:",
-   "opts": [
-    "20kV saja",
-    "500kV (SUTET) - 150kV (SUTT) - 20kV (TM) - 230/400V (TR)",
-    "10kV",
-    "100V"
-   ],
-   "a": 1,
-   "explain": "Hierarki PLN: pembangkit 11-20kV → step-up 150/500kV transmisi → gardu induk 150/20kV → 20kV distribusi primer → 20/0.4kV distribusi sekunder → 230/400V customer."
-  },
-  {
-   "type": "pg",
-   "q": "Pembangkit terbesar Indonesia:",
-   "opts": [
-    "Hydro",
-    "Fosil (batubara PLTU, gas PLTG/PLTGU) ~60% bauran energi",
-    "Nuklir",
-    "Angin"
-   ],
-   "a": 1,
-   "explain": "Bauran PLN 2024: batubara ~55%, gas ~20%, hydro 8%, geothermal 5%, diesel 3%, EBT lain ~9%. Target net-zero 2060: EBT 60%+. Transisi via RUPTL."
-  },
-  {
-   "type": "pg",
    "q": "Transmisi HV 150/500 kV alasan:",
    "opts": [
     "Estetika",
@@ -11543,18 +11003,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Losses transmisi Indonesia rata-rata:",
-   "opts": [
-    "< 1%",
-    "8-10% (target PLN turun via smart grid, cable upgrade, PF correction)",
-    "50%",
-    "0"
-   ],
-   "a": 1,
-   "explain": "PLN losses ~9% (T&D): technical (I²R di konduktor, trafo iron loss) ~7% + non-technical (theft, tampering) ~2%. Reduction: cable upsize, voltage raise 20kV, meter tampering detection (AI Claude tahu :))."
-  },
-  {
-   "type": "pg",
    "q": "Spinning reserve grid:",
    "opts": [
     "Tidak ada",
@@ -11564,18 +11012,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Spinning reserve: 5-10% grid capacity online yang ramp up cepat. AGC (Automatic Generation Control) maintain freq 50 Hz. Hidden cost efficiency lower tapi stability critical."
-  },
-  {
-   "type": "pg",
-   "q": "Frekuensi grid PLN target:",
-   "opts": [
-    "50 Hz ± 2",
-    "50 Hz ± 0.5 Hz (statutory), ± 0.2 Hz (operasional target)",
-    "60 Hz",
-    "Bebas"
-   ],
-   "a": 1,
-   "explain": "Aturan Grid Code PLN: 50 Hz ± 0.5 Hz normal, ± 2 Hz emergency. Generator trip bila di luar band. AGC control gen output untuk balance load-supply real-time."
   },
   {
    "type": "pg",
@@ -11688,18 +11124,6 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Trafo oil ONAN cooling vs ONAF:",
-   "opts": [
-    "Sama",
-    "ONAN: natural oil circulation, no fan. ONAF: forced air fan di radiator → capacity naik 25-50%",
-    "ONAN better",
-    "DC"
-   ],
-   "a": 1,
-   "explain": "ONAN (Oil Natural Air Natural): thermal convection. ONAF: fan force air across radiator → remove heat faster. Dual rating nameplate (e.g., 100/125 MVA ONAN/ONAF)."
-  },
-  {
-   "type": "pg",
    "q": "Trafo dry-type (cast-resin) vs oil:",
    "opts": [
     "Sama",
@@ -11781,18 +11205,6 @@ window.QUIZ_BANK = {
    ],
    "a": 0,
    "explain": "BENAR. Oil mineral insulating berangsur aged: oxidation → asam + sludge, moisture ingress. Test: BDV (dielectric strength ≥50 kV/2.5mm), water <20 ppm, acidity <0.1 mg KOH/g. Filter atau replace bila degraded."
-  },
-  {
-   "type": "pg",
-   "q": "Trafo core step-lap vs butt-lap:",
-   "opts": [
-    "Sama",
-    "Step-lap overlap joint lamination → reduce no-load loss + noise. Modern preferred",
-    "Sama",
-    "Old"
-   ],
-   "a": 1,
-   "explain": "Step-lap (modern): multi-step overlap lamination → lower reluctance di joint → lower magnetizing current + quieter. Butt-lap (old): single plane, more loss. Delivered trafo mostly step-lap."
   }
  ],
  "2.15": [
@@ -11854,18 +11266,6 @@ window.QUIZ_BANK = {
    ],
    "a": 1,
    "explain": "Tangga daya PLN R1: 450, 900, 1300 VA (subsidi sampai 900). 2200 VA mulai non-subsidi. Hingga 5500 VA R2. Upgrade: pelanggan apply ke PLN, ganti MCB utama + cable bila perlu."
-  },
-  {
-   "type": "pg",
-   "q": "Error kelas meter kWh residential:",
-   "opts": [
-    "±10%",
-    "Class 2 = ±2% (domestic); Class 1 = ±1% (komersial); Class 0.5 = ±0.5% (industri)",
-    "±50%",
-    "Tidak diatur"
-   ],
-   "a": 1,
-   "explain": "IEC 62053 / SPLN D3.019: residential Class 2 acceptable. Komersial/industri higher accuracy. Verifikasi tera ulang: periodic 10 tahun (residential), 5 tahun (komersial). BMSJ (Balai Metrologi)."
   },
   {
    "type": "pg",
@@ -12012,30 +11412,6 @@ window.QUIZ_BANK = {
    "explain": "Discharge R (2-5kΩ) bleed ke <50V dalam 5-10 menit. Grounding stick confirm 0V. Safety critical."
   },
   {
-   "type": "pg",
-   "q": "Cap bank bulge/melar:",
-   "opts": [
-    "Normal",
-    "Aging/over-heating gas buildup → explosion risk. Replace segera",
-    "OK",
-    "Cool"
-   ],
-   "a": 1,
-   "explain": "Inspection visual + thermography periodic. Cap aging → dielectric break → short → gas. Replace before fail catastrophically."
-  },
-  {
-   "type": "pg",
-   "q": "LED driver modern PF:",
-   "opts": [
-    "0.5",
-    "PF >0.9 built-in active PFC, tidak butuh external cap",
-    "Leading",
-    "Bad"
-   ],
-   "a": 1,
-   "explain": "Quality LED driver: active PFC (boost converter) capture reactive. THD <10%. Legacy fluorescent magnetic ballast PF 0.5 butuh cap."
-  },
-  {
    "type": "tf",
    "q": "Power quality analyzer dapat log PF trending + harmonic untuk sizing cap bank.",
    "opts": [
@@ -12123,18 +11499,6 @@ window.QUIZ_BANK = {
  "2.19": [
   {
    "type": "pg",
-   "q": "Proximity sensor induktif prinsip:",
-   "opts": [
-    "Cahaya",
-    "Medan magnet AC osilasi: metal object decrease amplitudo → detect",
-    "Laser",
-    "Suara"
-   ],
-   "a": 1,
-   "explain": "Induktif: LC oscillator di ujung sensor. Metal object absorb energi (eddy current) → Q-factor turun → threshold detect. Range sensing 1-50mm. Untuk metal objects only."
-  },
-  {
-   "type": "pg",
    "q": "Proximity kapasitif:",
    "opts": [
     "Metal only",
@@ -12194,19 +11558,6 @@ window.QUIZ_BANK = {
   }
  ],
  "2.22": [
-  {
-   "type": "svg",
-   "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='30' width='260' height='140' fill='none' stroke='#1a1d2e' stroke-width='2'/><text x='170' y='50' text-anchor='middle' font-family='Georgia' font-size='12' fill='#1a1d2e' font-weight='700'>PANEL SCHEDULE - MDP-01</text><line x1='40' y1='60' x2='300' y2='60' stroke='#1a1d2e' stroke-width='1'/><text x='60' y='80' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>CB#</text><text x='110' y='80' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>Load</text><text x='190' y='80' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>Rating</text><text x='250' y='80' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>Cable</text><line x1='40' y1='90' x2='300' y2='90' stroke='#1a1d2e' stroke-width='0.5'/><text x='60' y='110' font-family='Georgia' font-size='10' fill='#1a1d2e'>L1</text><text x='110' y='110' font-family='Georgia' font-size='10' fill='#1a1d2e'>Lighting GF</text><text x='190' y='110' font-family='Georgia' font-size='10' fill='#1a1d2e'>10A/1P</text><text x='250' y='110' font-family='Georgia' font-size='10' fill='#1a1d2e'>NYM 3×1.5</text><text x='60' y='130' font-family='Georgia' font-size='10' fill='#1a1d2e'>S1</text><text x='110' y='130' font-family='Georgia' font-size='10' fill='#1a1d2e'>SK Umum</text><text x='190' y='130' font-family='Georgia' font-size='10' fill='#1a1d2e'>16A/1P</text><text x='250' y='130' font-family='Georgia' font-size='10' fill='#1a1d2e'>NYM 3×2.5</text><text x='60' y='150' font-family='Georgia' font-size='10' fill='#1a1d2e'>A1</text><text x='110' y='150' font-family='Georgia' font-size='10' fill='#1a1d2e'>AC Ruang</text><text x='190' y='150' font-family='Georgia' font-size='10' fill='#1a1d2e'>20A/1P</text><text x='250' y='150' font-family='Georgia' font-size='10' fill='#1a1d2e'>NYM 3×4</text></svg>",
-   "q": "Dari panel schedule, kolom wajib minimum:",
-   "opts": [
-    "Nama pelanggan",
-    "CB#, load, rating breaker, kabel size (phase assignment bila 3-fasa)",
-    "Logo",
-    "Price"
-   ],
-   "a": 1,
-   "explain": "Complete panel schedule: CB#, description, rating, cable size+type, phase, load A. Plus legend/notes. Optional: run length, notes special. Print + attach di panel door."
-  },
   {
    "type": "tf",
    "q": "Segel PLN pada meter setelah handover tidak boleh dibuka kontraktor.",

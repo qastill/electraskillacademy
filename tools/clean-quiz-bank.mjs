@@ -43,10 +43,28 @@ export function alasanBuang(q) {
   const jumlahPlaceholder = q.opts.filter(o => PLACEHOLDER.test(String(o))).length;
   if (jumlahPlaceholder >= 1) return `opsi placeholder (${jumlahPlaceholder})`;
 
+  // Opsi kembar: peserta melihat dua pilihan yang sama persis, jadi soal 4 opsi
+  // sebenarnya hanya 3 opsi dan salah satunya jelas bukan jawaban.
+  const normal = q.opts.map(o => String(o).trim().toLowerCase());
+  if (new Set(normal).size !== normal.length) return 'ada opsi yang kembar';
+  if (normal.some(o => o.length === 0)) return 'ada opsi kosong';
+
   const panjang = q.opts.map(o => String(o).length);
   const terpanjang = Math.max(...panjang);
   const pengecoh = panjang.filter((_, i) => i !== q.a);
   const pengecohTerpanjang = Math.max(...pengecoh, 1);
+  // Pengecoh absurd pendek: opsi seperti "Sama", "Old", "Ya" bukan pengecoh
+  // sungguhan. Kalau dua atau lebih pengecoh sependek itu sementara jawabannya
+  // sebuah kalimat, soal bisa dijawab tanpa membacanya. Ini menangkap kasus
+  // seperti "Trafo core step-lap vs butt-lap:" yang pengecohnya "Sama" dan
+  // "Old" — lolos dari aturan panjang di bawah karena jawabannya "hanya" 90
+  // karakter. Ambang panjang tetap 120 agar soal definisi yang jawabannya
+  // memang panjang tidak ikut terbuang.
+  const pengecohKerdil = pengecoh.filter(n => n < 6).length;
+  if (pengecohKerdil >= 2 && panjang[q.a] > 40) {
+    return `${pengecohKerdil} pengecoh terlalu pendek untuk jadi pilihan sungguhan`;
+  }
+
   if (panjang[q.a] === terpanjang && terpanjang > 120 && terpanjang > 3 * pengecohTerpanjang) {
     return `jawaban ${Math.round(terpanjang / pengecohTerpanjang)}x lebih panjang dari pengecoh terpanjang`;
   }

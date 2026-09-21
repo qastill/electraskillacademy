@@ -9388,10 +9388,14 @@ function renderQuiz(module) {
     }
     if (!trackModul) return [];
     const saudara = (CURRICULUM[trackModul] || []).filter(x => x.code !== kode);
-    const soalDari = (daftar) => daftar.reduce((acc, x) => acc.concat(
-      ((typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[x.code]) || []),
-      ((window.QUIZ_BANK_EXT && window.QUIZ_BANK_EXT[x.code]) || [])
-    ), []);
+    const soalDari = (daftar) => daftar.reduce((acc, x) => {
+      const hintAsal = (window.QUIZ_HINTS && window.QUIZ_HINTS[x.code]) || '';
+      const milik = [].concat(
+        ((typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[x.code]) || []),
+        ((window.QUIZ_BANK_EXT && window.QUIZ_BANK_EXT[x.code]) || [])
+      ).map(q => ({ ...q, __hintModul: hintAsal }));
+      return acc.concat(milik);
+    }, []);
     // Prioritas: kategori sama → level sama → satu Academy.
     const berjenjang = [
       soalDari(saudara.filter(x => x.category === kategoriModul)),
@@ -9405,7 +9409,10 @@ function renderQuiz(module) {
         const kunci = String(q.q || '').slice(0, 80);
         if (sudah.has(kunci)) continue;
         sudah.add(kunci);
-        hasil.push({ ...q, __pendalaman: true });
+        // Soal pendalaman membawa hint milik MODUL ASALNYA. Kalau dibiarkan
+        // memakai hint modul yang sedang dibuka, petunjuknya akan membahas
+        // topik lain dan justru menyesatkan.
+        hasil.push({ ...q, __pendalaman: true, hint: q.hint || q.__hintModul || '' });
         if (hasil.length >= butuh) return hasil;
       }
     }
@@ -11913,7 +11920,11 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
             <button class="esa-cert-download-btn" onclick="esaDownloadCertificate('${levelKey}')">⬇ Unduh Sertifikat PDF</button>
           </div>
         </div>`;
-    } else if (!levelJustCompleted) {
+    } else if (!levelJustCompleted && levelProgress.total > 0) {
+      // Hanya tampilkan kalau level modulnya benar-benar dikenali. Kalau
+      // levelProgress.total = 0 (mis. data modul tidak lengkap), blok ini akan
+      // berbunyi "Menuju sertifikat null — 0 dari 0 modul lulus" yang justru
+      // membingungkan; lebih baik tidak ditampilkan sama sekali.
       const kurang = [];
       if (sisaModul > 0) kurang.push(`${sisaModul} modul lagi harus lulus`);
       if (rataKurang) kurang.push(`rata-rata skor naik ke 70 (sekarang ${levelProgress.avgScore}%)`);
