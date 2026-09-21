@@ -5378,21 +5378,24 @@ window.esaLoadModuleMedia = esaLoadModuleMedia;
 // Memuat bank soal DAN soal generic cadangan. Keduanya hanya dipakai saat
 // quiz dibuka, jadi tidak ada gunanya ikut di index.html.
 function esaLoadQuizBank(cb) {
-  if (typeof window.QUIZ_BANK !== 'undefined') { if (cb) cb(); return; }
+  if (typeof window.QUIZ_BANK !== 'undefined' && typeof window.QUIZ_BANK_EXT !== 'undefined') { if (cb) cb(); return; }
   window.__esaQBcbs = window.__esaQBcbs || [];
   if (cb) window.__esaQBcbs.push(cb);
   if (window.__esaQBloading) return;
   window.__esaQBloading = true;
-  var sisa = 2;
+  var berkas = ['/data/quiz-bank.js', '/data/quiz-template.js', '/data/quiz-bank-ext.js', '/data/quiz-hints.js'];
+  var sisa = berkas.length;
   var selesai = function () {
     if (--sisa > 0) return;
     if (typeof window.QUIZ_BANK === 'undefined') window.QUIZ_BANK = {};       // fail-soft
     if (typeof window.QUIZ_TEMPLATE === 'undefined') window.QUIZ_TEMPLATE = []; // fail-soft
+    if (typeof window.QUIZ_BANK_EXT === 'undefined') window.QUIZ_BANK_EXT = {}; // fail-soft
+    if (typeof window.QUIZ_HINTS === 'undefined') window.QUIZ_HINTS = {};       // fail-soft
     window.__esaQBloading = false;
     var cbs = window.__esaQBcbs || []; window.__esaQBcbs = [];
     cbs.forEach(function (f) { try { f(); } catch (e) {} });
   };
-  ['/data/quiz-bank.js', '/data/quiz-template.js'].forEach(function (src) {
+  berkas.forEach(function (src) {
     var s = document.createElement('script');
     s.src = src;
     s.onload = s.onerror = selesai;
@@ -9357,14 +9360,86 @@ function renderQuiz(module) {
   //    keluar tema (mis. modul "Hukum Coulomb" dapat soal "Frekuensi 50 Hz").
   //  - handcrafted kosong total → barulah fallback ke QUIZ_TEMPLATE generic
   //    sebagai safety net (lebih baik daripada modul tanpa quiz sama sekali).
-  const handcrafted = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : null;
+  // Bank soal modul kini datang dari dua berkas: quiz-bank.js (bank lama) dan
+  // quiz-bank-ext.js (bank susulan untuk modul yang dulu tidak punya soal sama
+  // sekali, atau cuma punya 1-2 soal). Keduanya digabung supaya modul yang dulu
+  // "kuisnya satu soal" sekarang punya bank yang layak.
+  const bankUtama = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : [];
+  const bankTambahan = (window.QUIZ_BANK_EXT && window.QUIZ_BANK_EXT[module.code]) ? window.QUIZ_BANK_EXT[module.code] : [];
+  const gabungan = [].concat(bankUtama, bankTambahan);
+  const handcrafted = gabungan.length > 0 ? gabungan : null;
   const generic = Array.isArray(window.QUIZ_TEMPLATE) ? window.QUIZ_TEMPLATE.map(q => ({ ...q, type: q.type || 'pg' })) : [];
 
+  // Hint tingkat modul dipakai kalau sebuah soal belum punya hint sendiri.
+  const hintModul = (window.QUIZ_HINTS && window.QUIZ_HINTS[module.code]) || '';
+
+  // Kalau bank modul ini masih tipis, kekurangannya diambil dari modul LAIN di
+  // Academy yang sama (utamakan level yang sama, lalu kategori yang sama).
+  // Ini jauh lebih nyambung daripada soal kelistrikan umum: peserta EV Academy
+  // tetap mendapat soal EV, bukan soal PUIL instalasi rumah. Jumlah soal modul
+  // sendiri dan soal pendalaman dilaporkan apa adanya di bawah judul kuis.
+  const MIN_SOAL_KUIS = 6;
+  const ambilSoalSeAcademy = (kode, butuh) => {
+    if (butuh <= 0 || typeof CURRICULUM === 'undefined') return [];
+    let trackModul = null, levelModul = null, kategoriModul = null;
+    for (const t of Object.keys(CURRICULUM)) {
+      const found = (CURRICULUM[t] || []).find(x => x.code === kode);
+      if (found) { trackModul = t; levelModul = found.level; kategoriModul = found.category; break; }
+    }
+    if (!trackModul) return [];
+    const saudara = (CURRICULUM[trackModul] || []).filter(x => x.code !== kode);
+    const soalDari = (daftar) => daftar.reduce((acc, x) => {
+      const hintAsal = (window.QUIZ_HINTS && window.QUIZ_HINTS[x.code]) || '';
+      const milik = [].concat(
+        ((typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[x.code]) || []),
+        ((window.QUIZ_BANK_EXT && window.QUIZ_BANK_EXT[x.code]) || [])
+      ).map(q => ({ ...q, __hintModul: hintAsal }));
+      return acc.concat(milik);
+    }, []);
+    // Prioritas: kategori sama → level sama → satu Academy.
+    const berjenjang = [
+      soalDari(saudara.filter(x => x.category === kategoriModul)),
+      soalDari(saudara.filter(x => x.level === levelModul)),
+      soalDari(saudara)
+    ];
+    const hasil = [];
+    const sudah = new Set();
+    for (const kelompok of berjenjang) {
+      for (const q of shuffleArr(kelompok)) {
+        const kunci = String(q.q || '').slice(0, 80);
+        if (sudah.has(kunci)) continue;
+        sudah.add(kunci);
+        // Soal pendalaman membawa hint milik MODUL ASALNYA. Kalau dibiarkan
+        // memakai hint modul yang sedang dibuka, petunjuknya akan membahas
+        // topik lain dan justru menyesatkan.
+        hasil.push({ ...q, __pendalaman: true, hint: q.hint || q.__hintModul || '' });
+        if (hasil.length >= butuh) return hasil;
+      }
+    }
+    return hasil;
+  };
+
   let pool;
+  let jumlahSoalModul = 0;
+  let jumlahPendalaman = 0;
   if (handcrafted && handcrafted.length > 0) {
     pool = handcrafted.slice();
+    jumlahSoalModul = pool.length;
+    if (pool.length < MIN_SOAL_KUIS) {
+      const tambahan = ambilSoalSeAcademy(module.code, MIN_SOAL_KUIS - pool.length);
+      jumlahPendalaman = tambahan.length;
+      pool = pool.concat(tambahan);
+    }
   } else {
-    pool = generic.slice();
+    // Belum ada satu pun soal khusus modul ini — coba dulu soal se-Academy,
+    // baru jatuh ke soal kelistrikan umum sebagai jaring pengaman terakhir.
+    const seAcademy = ambilSoalSeAcademy(module.code, MIN_SOAL_KUIS * 2);
+    if (seAcademy.length >= MIN_SOAL_KUIS) {
+      pool = seAcademy;
+      jumlahPendalaman = seAcademy.length;
+    } else {
+      pool = generic.slice();
+    }
   }
 
   // Filter "no-info" soal: bertahap, jaga supaya pool tidak jadi terlalu kecil.
@@ -9403,11 +9478,21 @@ function renderQuiz(module) {
   // peserta bingung karena isinya tidak nyambung dengan yang baru ditonton.
   const noteEl = document.getElementById('quiz-source-note');
   if (noteEl) {
-    const usingGeneric = !(handcrafted && handcrafted.length > 0);
-    noteEl.hidden = !usingGeneric;
-    noteEl.innerHTML = usingGeneric
-      ? '⚠️ Bank soal khusus modul ini sedang disusun. Sementara itu yang tampil adalah <strong>latihan dasar kelistrikan umum</strong> — bukan soal dari video modul ini.'
-      : '';
+    // Katakan apa adanya dari mana soal yang tampil berasal. Sebelumnya soal
+    // umum disajikan seolah-olah soal dari video modul, sehingga peserta
+    // bingung karena isinya tidak nyambung dengan yang baru ditonton.
+    const tampilModul = quiz.filter(q => !q.__pendalaman).length;
+    const tampilPendalaman = quiz.length - tampilModul;
+    let catatan = '';
+    if (jumlahSoalModul === 0 && jumlahPendalaman === 0) {
+      catatan = '⚠️ Bank soal khusus modul ini sedang disusun. Yang tampil sekarang adalah <strong>latihan dasar kelistrikan umum</strong> — bukan soal dari materi modul ini.';
+    } else if (jumlahSoalModul === 0) {
+      catatan = '📘 Soal khusus modul ini sedang disusun. Sementara itu kuis diisi <strong>soal pendalaman dari Academy yang sama</strong>, jadi tetap satu bidang dengan materimu.';
+    } else if (tampilPendalaman > 0) {
+      catatan = `📘 ${tampilModul} soal dari materi modul ini, ditambah ${tampilPendalaman} soal pendalaman dari Academy yang sama.`;
+    }
+    noteEl.hidden = !catatan;
+    noteEl.innerHTML = catatan;
   }
   // Now shuffle option positions within each question.
   quiz = quiz.map(shuffleOptions);
@@ -9438,11 +9523,25 @@ function renderQuiz(module) {
     // Options: TF uses 2-column layout
     const optsClass = type === 'tf' ? 'quiz-options quiz-tf-options' : 'quiz-options';
 
+    // Hint: bantuan yang mengarahkan cara berpikir tanpa memberi jawaban.
+    // Dipakai hint milik soal kalau ada; kalau tidak, hint tingkat modul.
+    // Untuk soal hitungan, rumusnya sudah tampil di kotak rumus, jadi hint
+    // diarahkan ke langkah pengerjaannya.
+    const hintTeks = (q.hint && String(q.hint).trim()) || hintModul || '';
+    const hintHTML = hintTeks ? `
+        <div class="quiz-hint-wrap">
+          <button type="button" class="quiz-hint-btn" onclick="esaToggleHint(${i})" id="quiz-hint-btn-${i}" aria-expanded="false" aria-controls="quiz-hint-${i}">
+            <span aria-hidden="true">💡</span> Butuh petunjuk?
+          </button>
+          <div class="quiz-hint-box" id="quiz-hint-${i}" hidden><strong>Petunjuk:</strong> ${hintTeks}</div>
+        </div>` : '';
+
     return `
       <div class="quiz-item" id="quiz-${i}">
         <div class="quiz-q-num">SOAL ${String(i+1).padStart(2, '0')}<span class="quiz-tag ${tag.cls}">${tag.label}</span></div>
         ${contextHTML}
         <div class="quiz-q-text">${q.q}</div>
+        ${hintHTML}
         <div class="${optsClass}">
           ${q.opts.map((opt, oi) => `
             <button class="quiz-option" onclick="answerQuiz(${i}, ${oi}, ${q.a})">
@@ -9455,6 +9554,9 @@ function renderQuiz(module) {
       </div>
     `;
   }).join('');
+
+  // Reset catatan hint tiap kali kuis dirender ulang.
+  window.esaHintDibuka = new Set();
 
   // Reset progress
   const answeredEl = document.getElementById('quiz-answered');
@@ -9481,6 +9583,29 @@ function renderQuiz(module) {
 
 let answeredCount = 0;
 let answeredQuestions = new Set();
+
+// Petunjuk soal: dibuka manual oleh peserta. Dicatat ke statistik supaya
+// nanti bisa dilihat soal mana yang paling sering butuh bantuan — sinyal bahwa
+// materinya belum jelas di video.
+function esaToggleHint(idx) {
+  const box = document.getElementById('quiz-hint-' + idx);
+  const btn = document.getElementById('quiz-hint-btn-' + idx);
+  if (!box) return;
+  const akanTampil = box.hidden;
+  box.hidden = !akanTampil;
+  if (btn) {
+    btn.setAttribute('aria-expanded', akanTampil ? 'true' : 'false');
+    btn.classList.toggle('is-open', akanTampil);
+    btn.innerHTML = akanTampil
+      ? '<span aria-hidden="true">💡</span> Sembunyikan petunjuk'
+      : '<span aria-hidden="true">💡</span> Butuh petunjuk?';
+  }
+  if (akanTampil) {
+    window.esaHintDibuka = window.esaHintDibuka || new Set();
+    window.esaHintDibuka.add(idx);
+  }
+}
+window.esaToggleHint = esaToggleHint;
 
 function answerQuiz(qIdx, selected, correct) {
   const item = document.getElementById(`quiz-${qIdx}`);
@@ -11758,11 +11883,11 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const statusTitle = passed ? 'Lulus!' : 'Belum Lulus';
     const cdInfo = getModuleCooldownInfo(currentQuizModule.code);
     const inCooldown = !passed && cdInfo.active;
+    // Kuis tidak pernah dikunci (recordModuleResult selalu menyetel cooldownUntil
+    // = null), jadi jangan menakut-nakuti dengan sisa percobaan atau kunci 1 jam.
     const statusSub = passed
       ? (isFirstPass ? `Skor memuaskan — modul ${currentQuizModule.code} tuntas.` : `Skor meningkat — skor terbaikmu ${result.bestScore}%`)
-      : (inCooldown
-          ? `Sudah ${MAX_FAILED_ATTEMPTS}× gagal berturut-turut. Quiz dikunci 1 jam — pelajari ulang materinya, lalu coba lagi.`
-          : `Butuh minimal 70% untuk lulus. Sisa ${cdInfo.attemptsLeft} percobaan sebelum quiz dikunci 1 jam.`);
+      : `Batas lulus 70%. Kuis ini boleh diulang sebanyak yang kamu mau — skor terbaikmu yang dipakai.`;
 
     // Check if this completes a level
     const levelProgress = getLevelProgress(currentQuizModule.levelId, currentQuizModule.trackId);
@@ -11772,6 +11897,47 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const levelJustCompleted = passed && levelProgress.complete &&
       state.levels[levelKey] && state.levels[levelKey].certIssued &&
       new Date(state.levels[levelKey].completedDate).getTime() > Date.now() - 5000;
+
+    // Jalur ke sertifikat, ditampilkan tiap kali kuis selesai supaya peserta
+    // tahu persis posisinya. Syarat sertifikat level: SEMUA modul level ini
+    // lulus (≥70%) DAN rata-rata skornya ≥70. Sebelumnya syarat ini cuma hidup
+    // di dalam kode, jadi peserta bertanya-tanya "sertifikatnya bagaimana?".
+    const sertifikatTerbit = !!(state.levels[levelKey] && state.levels[levelKey].certIssued);
+    const sisaModul = Math.max(0, levelProgress.total - levelProgress.passed);
+    const rataKurang = levelProgress.passed > 0 && levelProgress.avgScore < 70;
+    const levelLabel = (typeof TIER !== 'undefined' && TIER[currentQuizModule.levelId])
+      ? `${currentQuizModule.levelId} ${TIER[currentQuizModule.levelId].label}`
+      : currentQuizModule.levelId;
+
+    let jalurSertifikatHTML = '';
+    if (sertifikatTerbit && !levelJustCompleted) {
+      // Sudah pernah terbit — tawarkan unduhannya lagi, jangan disembunyikan.
+      jalurSertifikatHTML = `
+        <div class="esa-cert-path esa-cert-path-done">
+          <div class="esa-cert-path-head"><span aria-hidden="true">🎓</span> Sertifikat ${levelLabel} sudah terbit</div>
+          <p class="esa-cert-path-note">Sertifikatmu bisa diunduh kapan saja, juga dari halaman Sertifikasi.</p>
+          <div class="esa-cert-path-actions">
+            <button class="esa-cert-download-btn" onclick="esaDownloadCertificate('${levelKey}')">⬇ Unduh Sertifikat PDF</button>
+          </div>
+        </div>`;
+    } else if (!levelJustCompleted && levelProgress.total > 0) {
+      // Hanya tampilkan kalau level modulnya benar-benar dikenali. Kalau
+      // levelProgress.total = 0 (mis. data modul tidak lengkap), blok ini akan
+      // berbunyi "Menuju sertifikat null — 0 dari 0 modul lulus" yang justru
+      // membingungkan; lebih baik tidak ditampilkan sama sekali.
+      const kurang = [];
+      if (sisaModul > 0) kurang.push(`${sisaModul} modul lagi harus lulus`);
+      if (rataKurang) kurang.push(`rata-rata skor naik ke 70 (sekarang ${levelProgress.avgScore}%)`);
+      jalurSertifikatHTML = `
+        <div class="esa-cert-path">
+          <div class="esa-cert-path-head"><span aria-hidden="true">🎓</span> Menuju sertifikat ${levelLabel}</div>
+          <div class="esa-cert-path-bar"><span style="width:${levelProgress.pct}%"></span></div>
+          <div class="esa-cert-path-meta">${levelProgress.passed} dari ${levelProgress.total} modul lulus${levelProgress.passed > 0 ? ` · rata-rata ${levelProgress.avgScore}%` : ''}</div>
+          <p class="esa-cert-path-note">${kurang.length
+            ? `Kurang ${kurang.join(' dan ')}. Sertifikat terbit otomatis begitu syaratnya terpenuhi — tidak perlu mengajukan.`
+            : 'Syaratnya sudah terpenuhi. Sertifikat sedang diterbitkan.'}</p>
+        </div>`;
+    }
 
     const html = `
       <div class="esa-modal-overlay active" id="esa-completion-modal" onclick="if(event.target===this) esaCloseCompletion()">
@@ -11825,15 +11991,14 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
             </div>
           ` : ''}
 
+          ${jalurSertifikatHTML}
+
           <div class="esa-completion-actions">
             ${passed
               ? `<button class="esa-btn-primary" onclick="esaNextModule()">Modul Selanjutnya →</button>
                  <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
-              : (inCooldown
-                  ? `<button class="esa-btn-primary" disabled style="opacity:0.55;cursor:not-allowed;">⏳ Cooldown <span id="esa-cd-timer">${formatCooldown(cdInfo.remainingMs)}</span></button>
-                     <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
-                  : `<button class="esa-btn-primary" onclick="esaRetryModule()">Coba Lagi (${cdInfo.attemptsLeft} tersisa)</button>
-                     <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`)
+              : `<button class="esa-btn-primary" onclick="esaRetryModule()">Ulangi Kuis</button>
+                 <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
             }
           </div>
         </div>

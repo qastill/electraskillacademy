@@ -32,17 +32,19 @@ function mentionsMissingFigure(text, hasFigure) {
 
 // Rujukan yang sudah ditinjau manual dan memang tidak butuh ilustrasi: kalimat
 // itu menyebut konsep bakunya, bukan menyuruh pembaca melihat sebuah gambar.
-const REVIEWED_OK = new Set([
-  '1.03#19:explain',  // "clockwise pada diagram fasor" — sifat urutan fasa
-  '1.03#41:q',        // soal menjelaskan sendiri isi diagram fasornya
-  '1.04#48:q',        // seluruh angka aliran energi ada di kalimat soal
-  '1.05#42:q',        // klasifikasi band energi, konsep baku
-  '1.20#7:q',         // SLD = jenis dokumen gambar teknik
-  '1.20#9:q',         // konvensi penggambaran kabel silang
-  '1.24#15:explain',  // menyebut dokumen, bukan ilustrasi soal
-  '2.06#18:explain',  // gambar as-built = dokumen proyek
-  '2.23#12:explain'   // aturan penomoran gambar di laporan teknis
-]);
+// Dicocokkan berdasarkan POTONGAN TEKS soal, bukan nomor urut, supaya
+// allowlist tidak ikut bergeser setiap ada soal yang dibuang atau ditambahkan
+// (dulu memakai indeks, lalu rusak begitu bank soal dibersihkan).
+const REVIEWED_OK_TEKS = [
+  'clockwise pada diagram fasor',              // sifat urutan fasa, konsep baku
+  'Pada diagram fasor sistem 3 fasa seimbang', // isi diagramnya dijelaskan di kalimat soal
+  'Berdasarkan diagram band energi',           // klasifikasi band energi, konsep baku
+  'Dalam diagram SLD (Single Line Diagram)',   // SLD = jenis dokumen gambar teknik
+  'Crossover kabel di diagram',                // konvensi penggambaran kabel silang
+  'seluruh angka aliran energi'                // angka-angkanya ada di kalimat soal
+];
+const sudahDitinjau = (teks) =>
+  typeof teks === 'string' && REVIEWED_OK_TEKS.some(t => teks.includes(t));
 
 const offenders = [];
 let totalQuestions = 0;
@@ -56,7 +58,7 @@ for (const [code, list] of Object.entries(BANK)) {
     assert(Number.isInteger(q.a) && q.a >= 0 && q.a < q.opts.length, `${where}: kunci jawaban dalam rentang opsi`);
     const hasFigure = !!(q.svg || q.img || q.image);
     for (const field of ['q', 'caseText', 'explain']) {
-      if (REVIEWED_OK.has(`${where}:${field}`)) continue;
+      if (sudahDitinjau(q[field])) continue;
       if (mentionsMissingFigure(q[field], hasFigure)) offenders.push(`${where} (${field}): ${String(q[field]).slice(0, 80)}`);
     }
   });
