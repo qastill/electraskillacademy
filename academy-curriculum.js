@@ -39,7 +39,7 @@
       const rows=modules(l.id), complete=rows.filter(m=>passed(m.code)).length;
       const title=window.LEVEL_OVERRIDES?.[track+'_'+l.id]?.name || l.name;
       const key=track+'_'+l.id;
-      return `<details class="learning-level" id="home-${l.id}" data-level="${l.id}"${(expanded.has(key)?expanded.get(key):i===0)?' open':''}><summary><span class="learning-level-number">${String(i+1).padStart(2,'0')}</span><div><p>${i<2?'FONDASI SEMUA ACADEMY':esc(name.toUpperCase())}</p><h3>${esc(title)}</h3></div><span class="learning-level-count">${complete} / ${rows.length} selesai<progress value="${complete}" max="${rows.length||1}" aria-label="Progres ${esc(title)}"></progress></span></summary><div class="crs-grid academy-video-grid">${rows.map(m=>{
+      return `<details class="learning-level" id="home-${l.id}" data-level="${l.id}"${(expanded.has(key)?expanded.get(key):true)?' open':''}><summary><span class="learning-level-number">${String(i+1).padStart(2,'0')}</span><div><p>${i<2?'FONDASI SEMUA ACADEMY':esc(name.toUpperCase())}</p><h3>${esc(title)}</h3></div><span class="learning-level-count">${complete} / ${rows.length} selesai<progress value="${complete}" max="${rows.length||1}" aria-label="Progres ${esc(title)}"></progress></span></summary><div class="crs-grid academy-video-grid">${rows.map(m=>{
         const isFree=free(m,l.id), locked=!active&&!isFree;
         let html;
         try { html=esaModuleCardHtml(m,track,l.id); } catch (_) { html=`<button type="button" class="crs-card"><h4>${esc(m.title)}</h4></button>`; }
