@@ -1,3 +1,9 @@
+# Current revision
+
+The frame-based animation described below has been removed. Assets are now static concept art. See [ANIMATION-DELIVERY.md](ANIMATION-DELIVERY.md) for the missing real animation assets and integration brief.
+
+## Historical asset provenance
+
 # Electra career scenes
 
 Generated with the built-in imagegen tool. These assets are realistic, rendered-looking **four-frame scene sheets**, not rigged 3D models or real-time WebGL animation. The lobby dissolves between the four frames and supports pause and reduced motion.

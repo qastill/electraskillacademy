@@ -11,7 +11,7 @@ window.ACADEMY_NAMES = {
   "S9": "Technical Sales Academy",
   "S10": "Solar Academy",
   "S11": "Sustainability & Carbon Academy",
-  "S12": "EV Charging Academy",
+  "S12": "EV Academy",
   "S13": "Waste to Energy Academy",
   "S14": "Hydrogen Academy",
   "S15": "Battery & BESS Academy",

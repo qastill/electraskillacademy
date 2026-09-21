@@ -540,7 +540,7 @@ if ('serviceWorker' in navigator) {
 #view-modul .ai-tutor-messages::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
 
 </style>
-<link rel="stylesheet" href="/academy-lobby.css?v=3">
+<link rel="stylesheet" href="/academy-lobby.css?v=4">
 </head>
 <body>
 
@@ -598,30 +598,40 @@ if ('serviceWorker' in navigator) {
     </nav>
 
     <div class="academy-lobby">
-      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Energi masa depan.<em>Peranmu dimulai di sini.</em></h1></header>
-      <section class="career-stage" aria-label="Karakter dan dunia Academy pilihan">
-        <div class="stage-wordmark" aria-hidden="true">ELECTRA</div>
-        <div id="career-world" class="career-world" role="img" aria-label="Engineer Solar dengan panel surya"></div>
-        <div class="stage-corner"><span class="stage-signal" aria-hidden="true"></span> CAREER SELECT <span id="academy-number">10 / 16</span></div>
-        <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Jeda animasi">Ⅱ</button>
-        <button class="career-arrow career-prev" id="academy-prev" type="button" aria-label="Academy sebelumnya">←</button>
-        <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Academy berikutnya">→</button>
-        <div class="career-caption" aria-live="polite"><span id="career-role">SOLAR ENGINEER</span><h2 id="academy-selected-name">Solar Academy</h2><p id="academy-selected-description">Panel surya · Desain PLTS · Energi bersih</p></div>
-      </section>
-      <div class="career-actions"><button type="button" id="academy-enter" class="academy-enter">Lihat perjalanan belajar <span aria-hidden="true">↓</span></button><span id="academy-status">Kurikulum siap · Video bertahap</span></div>
-      <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih jalur karir Academy"></div>
-      <noscript><p>Aktifkan JavaScript untuk memilih karakter dan membuka Academy.</p></noscript>
+      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA ACADEMY / PILIH MASA DEPANMU</span><h1>Pilih Peranmu.<br><em>Bangun Masa Depan Energi.</em></h1><p>Pelajari keahlian nyata melalui jalur belajar yang sesuai dengan tujuanmu.</p></header>
+      <div class="career-layout">
+        <section class="career-stage" aria-label="Dunia profesi pilihan">
+          <div id="career-world" class="career-world"></div>
+          <div class="stage-corner"><span class="stage-signal" aria-hidden="true"></span> ELECTRA <span id="academy-number">12 / 16</span></div>
+          <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Jeda animasi" hidden>Ⅱ</button>
+          <button class="career-arrow career-prev" id="academy-prev" type="button" aria-label="Profesi sebelumnya">←</button>
+          <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Profesi berikutnya">→</button>
+          <p class="asset-status" id="academy-status" role="status">Concept art · Aset animasi belum tersedia</p>
+        </section>
+        <div class="career-caption" aria-live="polite">
+          <span class="lobby-eyebrow">YOUR NEXT CHAPTER</span><h2 id="career-role">EV Engineer</h2>
+          <span id="academy-selected-name">EV Academy</span><p id="academy-selected-description"></p>
+          <ul id="career-skills" class="career-skills" aria-label="Tiga keahlian utama"></ul>
+          <button type="button" id="academy-enter" class="academy-enter">Jelajahi Academy <span aria-hidden="true">↓</span></button>
+          <small>Jelajahi kurikulum sebelum membuka akses.</small>
+        </div>
+      </div>
+      <div class="selection-heading"><span>PILIH PROFESIMU</span><span>Geser untuk menjelajah →</span></div>
+      <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih profesi Academy"></div>
+      <noscript><p>Aktifkan JavaScript untuk memilih profesi dan membuka Academy.</p></noscript>
     </div>
   </section>
-
 <section id="academy-learning" class="academy-learning" aria-labelledby="academy-learning-title">
   <div class="academy-learning-inner">
-    <div class="learning-heading"><div><span class="learning-eyebrow">YOUR LEARNING JOURNEY</span><h2 id="academy-learning-title">Solar Academy</h2><p id="academy-learning-summary">Menyiapkan perjalanan belajarmu…</p></div><button type="button" class="learning-unlock" id="academy-unlock" onclick="esaRequireAccess()">Buka akses video ↗</button></div>
+    <div class="learning-heading"><div><span class="learning-eyebrow">JALUR BELAJARMU</span><h2 id="academy-learning-title">EV Academy</h2><p id="academy-learning-description"></p><p id="academy-learning-summary">Menyiapkan perjalanan belajarmu…</p></div><button type="button" class="learning-unlock" id="academy-unlock">Buka Akses Academy ↗</button></div>
+    <div class="learning-skills"><h3>Keterampilan yang akan kamu kuasai</h3><ul id="academy-learning-skills"></ul></div>
     <nav id="academy-level-nav" class="academy-level-nav" aria-label="Tingkatan belajar"></nav>
-    <p class="learning-access-note" id="academy-access-note">Jelajahi seluruh kurikulum. Aktifkan akses untuk menonton video.</p>
-    <div id="academy-learning-list" aria-live="polite"></div>
+    <p class="learning-access-note" id="academy-access-note"></p>
+    <div id="academy-learning-list"></div>
+    <section class="academy-membership"><span class="learning-eyebrow">LANGKAH BERIKUTNYA</span><h2 id="academy-membership-title">Mulai perjalananmu.</h2><p>Akses materi premium, belajar berurutan, dan lanjutkan dari progres terakhir.</p><ul><li>Kurikulum enam tingkat</li><li>Video sesuai bidang pilihan</li><li>Progres belajar per modul</li></ul><button class="academy-enter" id="academy-membership-unlock" type="button">Buka Akses Academy ↗</button><p class="membership-note">Akses mengikuti status keanggotaan. Materi yang belum tersedia tetap ditandai.</p></section>
   </div>
 </section>
+<dialog id="academy-access-dialog" class="academy-dialog" aria-labelledby="academy-dialog-title"><button class="dialog-close" type="button" aria-label="Tutup">×</button><span class="learning-eyebrow">ELECTRA ACADEMY</span><h2 id="academy-dialog-title">Buka akses belajarmu</h2><p id="academy-dialog-copy"></p><div id="academy-player"></div><button class="academy-enter" id="academy-dialog-unlock" type="button">Buka Akses Academy ↗</button><p id="academy-dialog-status" role="status"></p></dialog>
 
 <!-- USER PROGRESS PANEL — dihapus dari home (bar gelap di bawah hero membingungkan);
      updateHomeProgress() aman karena sudah guard if(!panel) return. -->
@@ -3687,8 +3697,9 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
-<script src="/academy-curriculum.js?v=1" defer></script>
-<script src="/academy-lobby.js?v=3" defer></script>
+<script src="/career-assets.js?v=1" defer></script>
+<script src="/academy-curriculum.js?v=2" defer></script>
+<script src="/academy-lobby.js?v=4" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.
