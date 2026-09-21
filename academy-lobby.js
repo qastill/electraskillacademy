@@ -1,8 +1,9 @@
 /* Career selection: each track owns its engineer, equipment and animated world. */
 (() => {
   const choices = document.getElementById('academy-choices');
-  if (!choices || !window.ACADEMY_NAMES) return;
   const world = document.getElementById('career-world');
+  if (!choices || !world || !window.ACADEMY_NAMES) return;
+  const panelPhoto = document.getElementById('academy-photo');
   const stage = document.querySelector('.career-stage');
   const lobby = document.querySelector('.academy-lobby');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -107,9 +108,26 @@
     document.getElementById('academy-selected-description').textContent = c[1];
     document.getElementById('academy-status').textContent = Number(id.slice(1)) > 8 ? 'Kurikulum siap · Video bertahap' : 'Perjalanan Level 1–6';
     document.getElementById('academy-enter').setAttribute('aria-label', 'Masuk ' + ACADEMY_NAMES[id]);
+    fillPanel(id, c);
     save('esa-lobby-academy', id);
-    window.esaRenderAcademyLearning?.(id);
   }
+  // Panel di sebelah panggung: foto jalur, jumlah modul, dan tombol yang
+  // langsung membuka kurikulum Academy yang sedang tampil.
+  function fillPanel(id, c) {
+    const card = (window.PRACTICE_CARDS || []).find(item => item.id === id);
+    document.getElementById('academy-jalur').textContent = id.slice(1).padStart(2, '0');
+    document.getElementById('academy-panel-name').textContent = ACADEMY_NAMES[id];
+    if (panelPhoto) {
+      panelPhoto.src = card?.photo || '';
+      panelPhoto.alt = 'Suasana kerja ' + (c ? c[0].toLowerCase() : ACADEMY_NAMES[id]);
+    }
+    const modules = window.esaTrackModuleCount?.(id) || 0;
+    document.getElementById('academy-modules').textContent = modules ? modules + ' modul' : 'Kurikulum disiapkan';
+    // Program fast track PLN adalah bagian dari Distribution Academy.
+    document.getElementById('academy-fasttrack').hidden = id !== 'S3';
+  }
+  window.esaLobbySelect = select;
+  window.esaLobbyCurrent = () => selected;
   ids.forEach(id => {
     const button = document.createElement('button'); button.type = 'button'; button.dataset.academy = id;
     button.innerHTML = icon(careers[id][3]);
@@ -118,7 +136,8 @@
   });
   document.getElementById('academy-prev').addEventListener('click', () => select(ids[(ids.indexOf(selected) + ids.length - 1) % ids.length]));
   document.getElementById('academy-next').addEventListener('click', () => select(ids[(ids.indexOf(selected) + 1) % ids.length]));
-  document.getElementById('academy-enter').addEventListener('click', () => document.getElementById('academy-learning').scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'}));
+  // "Masuk Academy" opens the curriculum of the Academy currently on stage.
+  document.getElementById('academy-enter').addEventListener('click', () => window.openJalur?.(selected));
   const motion = document.getElementById('motion-toggle');
   function updateMotion() {
     stage.classList.toggle('is-paused', paused || !visible || document.hidden || reduced.matches);
@@ -136,10 +155,10 @@
   document.addEventListener('visibilitychange', updateMotion);
   reduced.addEventListener?.('change', updateMotion);
   function step(delta) { select(ids[(ids.indexOf(selected) + delta + ids.length) % ids.length]); }
-  choices.addEventListener('keydown', e => {
+  for (const el of [stage, choices]) el.addEventListener('keydown', e => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     e.preventDefault(); step(e.key === 'ArrowRight' ? 1 : -1);
-    choices.querySelector(`[data-academy="${selected}"]`).focus({preventScroll:true});
+    if (el === choices) choices.querySelector(`[data-academy="${selected}"]`)?.focus({preventScroll:true});
   });
   let touch;
   stage.addEventListener('touchstart', e => { const t=e.changedTouches[0]; touch={x:t.clientX,y:t.clientY}; }, {passive:true});
