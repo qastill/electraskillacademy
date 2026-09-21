@@ -1,0 +1,49 @@
+/* Scoped lobby styles: the learning, payment and account views keep their UI. */
+#view-home .hero{background:#111713;min-height:auto;overflow:hidden}
+#view-home .hero-bg{display:none}
+#view-home .nav{padding:26px max(5vw,24px);border-bottom:1px solid #ffffff12}
+#view-home .nav-logo-mark{width:34px;height:34px}
+#view-home .nav-logo-text{font-size:22px}
+#view-home .nav-right-group{gap:20px}
+#view-home .nav-right{font-size:11px;letter-spacing:.04em}
+.academy-lobby{max-width:1320px;margin:auto;padding:54px 40px 28px;color:#f2f2e7}
+.lobby-intro{max-width:740px;margin-bottom:36px}
+.lobby-eyebrow,.stage-top,.selector-heading>span:last-child{font:10px/1.5 sans-serif;letter-spacing:.18em;color:#a8b3a2}
+.lobby-intro h1{font-size:clamp(32px,3.4vw,52px);line-height:1.12;font-weight:400;letter-spacing:-.035em;margin:16px 0}
+.lobby-intro h1 em{color:#d9e9a1;font-style:normal}
+.lobby-intro p{max-width:600px;font:14px/1.75 sans-serif;color:#a9b4ab}
+.lobby-layout{display:grid;grid-template-columns:1fr 1.05fr;gap:36px;align-items:stretch}
+.character-stage{position:relative;min-height:570px;overflow:hidden;border:1px solid #d9e9a128;border-radius:22px;background:#202c23}
+.character-stage>img{width:100%;height:100%;position:absolute;object-fit:cover;object-position:58% center;animation:lobby-reveal .8s ease both}
+.character-stage:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#101813a6,transparent 22%,#10181322 42%,#101813 92%);pointer-events:none}
+.stage-top{position:absolute;top:24px;left:24px;right:24px;z-index:1;display:flex;justify-content:space-between;color:#e4eadc;gap:20px}
+.stage-dot{font-size:8px;letter-spacing:.08em}.stage-dot:before{content:'';display:inline-block;width:5px;height:5px;background:#d9e9a1;border-radius:50%;margin-right:7px;box-shadow:0 0 12px #d9e9a1}
+.character-caption{position:absolute;bottom:28px;left:28px;right:28px;z-index:1}
+.character-caption>span{font:10px sans-serif;letter-spacing:.22em;color:#d9e9a1}
+.character-caption h2{font-size:38px;font-weight:400;letter-spacing:-.025em;margin:10px 0}
+.character-caption p{font:13px/1.6 sans-serif;color:#cad2c9;margin-bottom:24px}
+.character-options{display:flex;gap:8px}
+.character-options button{flex:1;padding:12px 5px;border-radius:8px;border:1px solid #ffffff35;background:#18211cc9;color:#dfe5dc;cursor:pointer;font:12px sans-serif}
+.character-options button[aria-pressed=true]{background:#d9e9a1;color:#172016;border-color:#d9e9a1}
+.character-caption small{display:block;font:10px/1.6 sans-serif;color:#a5b1a7;margin-top:14px}
+.selector-heading{display:flex;justify-content:space-between;gap:10px}
+.academy-selector h2{font-size:25px;font-weight:400;letter-spacing:-.025em;margin:12px 0 22px}
+.academy-choices{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.academy-choices button{display:flex;align-items:center;gap:10px;text-align:left;min-height:43px;padding:8px 10px;background:#ffffff03;border:1px solid #ffffff13;border-radius:8px;color:#c5cfc6;font:11px/1.35 sans-serif;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.academy-choices button>span:first-child{color:#7f9081;font-size:9px;font-variant-numeric:tabular-nums}
+.academy-choices button:hover{background:#ffffff0c;transform:translateY(-1px);border-color:#d9e9a16b}
+.academy-choices button[aria-pressed=true]{background:#d9e9a113;border-color:#d9e9a1;color:#e5efc7}
+.academy-preview{padding:18px 0 14px;min-height:104px}
+.academy-preview>span{font:9px sans-serif;letter-spacing:.13em;color:#9eaf91}
+.academy-preview h3{font-size:23px;font-weight:400;margin:7px 0}
+.academy-preview p{font:12px/1.6 sans-serif;color:#a9b4ab}
+.academy-enter{width:100%;display:flex;justify-content:space-between;align-items:center;padding:17px 20px;border:0;border-radius:10px;background:#d9e9a1;color:#1a2418;font:600 13px sans-serif;cursor:pointer;transition:background .2s,transform .2s}
+.academy-enter:hover{background:#e6f3bc;transform:translateY(-2px)}.academy-enter span{font-size:22px}
+.journey-steps{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-top:18px;color:#9aa99c;font:9px sans-serif}.journey-steps i{height:1px;flex:1;background:#ffffff18}
+.lobby-explore{display:flex;justify-content:center;gap:24px;color:#a9b4ab;font:11px sans-serif;text-decoration:none;padding:32px 0 0}
+.academy-lobby button:focus-visible,.lobby-explore:focus-visible{outline:3px solid #f4dca0;outline-offset:4px}
+#view-home .practices-section{padding-top:64px}#view-home .practice-name{font-size:25px}
+@keyframes lobby-reveal{from{opacity:0;transform:scale(1.025)}to{opacity:1;transform:scale(1)}}
+@media(min-width:1000px){#view-home .nav-right-group .nav-right:nth-of-type(n+3){display:none}}
+@media(max-width:760px){.academy-lobby{padding:32px 20px 24px}.lobby-intro{margin-bottom:26px}.lobby-layout{grid-template-columns:1fr;gap:30px}.character-stage{min-height:420px}.character-caption{left:22px;right:22px;bottom:22px}.character-caption h2{font-size:32px}.stage-top{left:22px;right:22px}.academy-selector h2{font-size:24px}.academy-choices button{min-height:48px}.lobby-intro p{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.academy-lobby *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
