@@ -1,18 +1,12 @@
-# Three.js implementation update
-
-The homepage now renders original procedural 3D humans and career equipment using vendored Three.js r180 (MIT). Joint animation is sampled into AnimationClips and played/blended with AnimationMixer. Work, walk-in-place, and idle modes are available. These are articulated mesh models, not a downloaded photorealistic skinned GLB. Their appearance is simplified and is not AAA/ultra-realistic. No video generation or paid assets were used. The production-art brief below remains relevant for replacing these prototypes with high-detail rigged assets.
-
-All 16 careers use their own scene, colors and profession props. WebGL failure falls back to the existing labelled concept art. Reduced motion renders a still 3D scene. Only one renderer and active career scene are retained.
-
-## Previous asset handoff
-
 # Electra character animation — asset handoff
 
-## Current state
+## Current implementation
 
-The preview has **no animated human asset**. The former four-frame image dissolves have been removed. All 16 visuals are static concept art, explicitly labelled in the interface. `career-assets.js` has `video: null` for every profession. Do not describe the preview as a completed AAA animation or interactive 3D.
+The homepage uses `career-viewer.js` to embed the public Sketchfab model **Worker talk animation** by Bazsi1986. See `CHARACTER-SOURCE.md` for its source, CC BY 4.0 attribution and limitations. One worker with a single body/hand gesture animation is shared by all Academies. The model is not a locally downloaded GLB, and the current viewer does not supply walking, facial animation, profession-specific activities or environments. Actual animation playback in the deployed page has not been visually verified.
 
-The implemented video adapter uses only the selected profession, with muted inline looping playback, an underlying still while loading, explicit error fallback, offscreen/tab pause, manual pause, reduced-motion support, and disposal when switching. No production video source is fabricated. A rigged model viewer has not been implemented because no suitable model is available.
+The previous procedural `career-three.js` renderer and concept sheets remain in the repository for reference, but that renderer is no longer imported by the homepage. `career-assets.js` still defines the Academy identities; its video fields are not used by the current model viewer.
+
+The viewer adapter handles pause, reduced motion, offscreen/hidden tab state and a labelled local source-thumbnail fallback. Curriculum selection and the full original header are preserved. The briefs below describe outstanding production assets, not features completed by this preview.
 
 ## EV first: concrete production brief
 
@@ -50,10 +44,8 @@ Every profession needs a distinct face, silhouette, clothing, posture, props, en
 
 ## Delivery and integration
 
-Preferred source: licensed/original rigged GLB with PBR textures, authored idle/task clips, correct hand/prop constraints and facial morph targets. That route requires implementing and validating a real model renderer after the asset exists.
+Preferred delivery: licensed/original rigged GLB per profession with PBR textures, authored idle/task clips, correct hand/prop constraints and facial morph targets. Add a native Three.js GLTFLoader/AnimationMixer adapter only after the assets can be downloaded legitimately and their license permits web delivery. Validate the actual rendered motion, loop, anatomy, props, mobile performance and fallback before calling the result complete.
 
-Accepted alternative implemented here: reviewed MP4 H.264 video render, 24/30 fps, 6–10 seconds, seamless beginning/end, no audio track. Target 1080p desktop with a mobile crop and compressed download; deliver an ordinary poster image as well. Check faces, hands, looping, technical safety and commercial use rights before adding to the site. AI-generated video should be labelled as video animation, not as a freely interactive model.
+An accepted alternative is a reviewed MP4 H.264 video render, 24/30 fps, 6–10 seconds, seamless beginning/end, no audio track, with an ordinary poster. That would require a video adapter in place of the current Sketchfab adapter and explicit video labelling. Merely setting a video field in `career-assets.js` does not enable video playback in the current implementation.
 
-Place approved video under `/career-scenes/ev-engineer.mp4` and set `ELECTRA_CAREERS.S12.video` to that URL in `career-assets.js`. Repeat per ID only when its own approved asset exists. Currently poster assets are 2×2 concept sheets; the UI crops the first cell. Replace the sheet/crop styling when ordinary posters are delivered.
-
-Higgsfield was discovered as an available, unconnected video-generation integration. A connection is needed before using it here. No credits have been spent, no video created, and no model downloaded during this revision.
+No source GLB was downloaded during the latest replacement: the attempted Sketchfab sign-in callback returned HTTP 502. The public embed is used without extracting private viewer assets. No paid generation or asset purchase was performed.
