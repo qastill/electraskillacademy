@@ -1,4 +1,4 @@
-/* Profession selection. Static concept art is never presented as character animation. */
+/* Profession selection with an on-demand Three.js character stage. */
 (() => {
   const choices = document.getElementById('academy-choices');
   const careers = window.ELECTRA_CAREERS;
@@ -10,25 +10,16 @@
   const motion = document.getElementById('motion-toggle');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const ids = ['S12','S10','S3','S6','S15','S16',...Object.keys(careers).filter(id => !['S12','S10','S3','S6','S15','S16'].includes(id))];
-  let selected = 'S12', video = null, paused = false, visible = true, generation = 0;
+  let selected = 'S12', paused = false, visible = true, generation = 0, engine = null, enginePromise = null;
+  const modes = document.getElementById('career-motion-modes');
+  function fallback() { world.classList.remove('three-ready'); motion.hidden = true; modes.hidden = true; status.textContent = '3D tidak tersedia di perangkat ini · Menampilkan concept art'; }
   function syncMotion() {
     motion.setAttribute('aria-pressed', String(paused));
     motion.setAttribute('aria-label', paused ? 'Lanjutkan animasi' : 'Jeda animasi');
     motion.textContent = paused ? '▷' : 'Ⅱ';
-    if (!video) return;
-    if (paused || reduced.matches || !visible || document.hidden) { video.pause(); return; }
-    const active = video;
-    active.play().catch(() => {
-      if (video !== active) return;
-      paused = true; motion.hidden = false;
-      status.textContent = 'Tekan putar untuk melihat animasi';
-      motion.setAttribute('aria-label', 'Putar animasi'); motion.textContent = '▷';
-    });
+    engine?.setRunning(!paused && !reduced.matches && visible && !document.hidden);
   }
-  function dispose() {
-    if (!video) return;
-    video.pause(); video.removeAttribute('src'); video.load(); video.remove(); video = null;
-  }
+  function dispose() { engine?.setRunning(false); }
   function select(id, reveal = false) {
     if (!Object.hasOwn(careers,id)) return;
     generation++; const version = generation;
@@ -42,26 +33,19 @@
     poster.style.backgroundImage = `url("${c.poster}")`;
     poster.setAttribute('role','img'); poster.setAttribute('aria-label',`Concept art ${c.role}`);
     world.append(poster);
-    status.textContent = 'Concept art · Aset animasi belum tersedia';
-    motion.hidden = true;
-    // Only the active profession receives a video element and downloads a heavy asset.
-    if (c.video && !reduced.matches) {
-      const active = document.createElement('video'); video = active;
-      active.muted = true; active.defaultMuted = true; active.loop = true;
-      active.autoplay = true; active.playsInline = true; active.preload = 'metadata';
-      active.setAttribute('aria-label',`Video render animasi ${c.role}`);
-      active.className = 'career-video'; active.src = c.video;
-      status.textContent = 'Memuat animasi…'; motion.hidden = false;
-      active.addEventListener('playing',() => {
-        if (version !== generation) return;
-        active.classList.add('is-ready'); status.textContent = 'Video animasi · Bukan model 3D interaktif';
-      });
-      active.addEventListener('error',() => {
-        if (version !== generation) return;
-        dispose(); motion.hidden = true; status.textContent = 'Animasi tidak dapat dimuat · Menampilkan concept art';
-      });
-      world.append(active); syncMotion();
-    } else if (c.video) status.textContent = 'Gambar diam · Preferensi kurangi gerakan aktif';
+    world.classList.remove('three-ready');
+    status.textContent = 'Memuat karakter 3D…'; motion.hidden = true; modes.hidden = true;
+    if (!enginePromise) enginePromise = import('/career-three.js?v=1').then(module => {
+      engine = module.createCareerRenderer(world, fallback); return engine;
+    });
+    enginePromise.then(instance => {
+      if (version !== generation) return;
+      instance.select(id); world.classList.add('three-ready');
+      status.textContent = reduced.matches ? '3D · Gerakan dikurangi' : '3D interaktif · Model prosedural';
+      motion.hidden = reduced.matches; modes.hidden = reduced.matches;
+      modes.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.motion==='work')));
+      syncMotion();
+    }).catch(() => { if (version === generation) fallback(); });
     document.getElementById('career-role').textContent = c.role;
     document.getElementById('academy-number').textContent = `${id.slice(1).padStart(2,'0')} / 16`;
     document.getElementById('academy-selected-name').textContent = ACADEMY_NAMES[id];
@@ -96,6 +80,7 @@
     touch=null;
   },{passive:true});
   document.getElementById('academy-enter').addEventListener('click',() => document.getElementById('academy-learning').scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'}));
+  modes.addEventListener('click', e => { const button=e.target.closest('button[data-motion]'); if(!button||!engine)return; engine.setMode(button.dataset.motion); modes.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button))); });
   motion.addEventListener('click',() => { paused=!paused; syncMotion(); });
   document.addEventListener('visibilitychange',syncMotion);
   if ('IntersectionObserver' in window) new IntersectionObserver(entries => { visible=entries[0].isIntersecting; syncMotion(); },{threshold:.05}).observe(stage);

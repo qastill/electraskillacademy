@@ -540,7 +540,7 @@ if ('serviceWorker' in navigator) {
 #view-modul .ai-tutor-messages::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
 
 </style>
-<link rel="stylesheet" href="/academy-lobby.css?v=5">
+<link rel="stylesheet" href="/academy-lobby.css?v=6">
 </head>
 <body>
 
@@ -606,7 +606,8 @@ if ('serviceWorker' in navigator) {
           <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Jeda animasi" hidden>Ⅱ</button>
           <button class="career-arrow career-prev" id="academy-prev" type="button" aria-label="Profesi sebelumnya">←</button>
           <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Profesi berikutnya">→</button>
-          <p class="asset-status" id="academy-status" role="status">Concept art · Aset animasi belum tersedia</p>
+          <p class="asset-status" id="academy-status" role="status">Memuat karakter 3D…</p>
+          <div id="career-motion-modes" class="career-motion-modes" role="group" aria-label="Gerakan karakter" hidden><button type="button" data-motion="work" aria-pressed="true">Aktivitas</button><button type="button" data-motion="walk" aria-pressed="false">Berjalan</button><button type="button" data-motion="idle" aria-pressed="false">Santai</button></div>
         <div class="career-caption" aria-live="polite">
           <span id="career-role">EV Engineer</span>
           <h2 id="academy-selected-name">EV Academy</h2><p id="academy-selected-description"></p>
@@ -3698,7 +3699,7 @@ if ('serviceWorker' in navigator) {
 <script src="/academy-names.js"></script>
 <script src="/career-assets.js?v=1" defer></script>
 <script src="/academy-curriculum.js?v=3" defer></script>
-<script src="/academy-lobby.js?v=4" defer></script>
+<script src="/academy-lobby.js?v=6" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.

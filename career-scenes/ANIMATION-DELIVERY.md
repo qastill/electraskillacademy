@@ -1,3 +1,11 @@
+# Three.js implementation update
+
+The homepage now renders original procedural 3D humans and career equipment using vendored Three.js r180 (MIT). Joint animation is sampled into AnimationClips and played/blended with AnimationMixer. Work, walk-in-place, and idle modes are available. These are articulated mesh models, not a downloaded photorealistic skinned GLB. Their appearance is simplified and is not AAA/ultra-realistic. No video generation or paid assets were used. The production-art brief below remains relevant for replacing these prototypes with high-detail rigged assets.
+
+All 16 careers use their own scene, colors and profession props. WebGL failure falls back to the existing labelled concept art. Reduced motion renders a still 3D scene. Only one renderer and active career scene are retained.
+
+## Previous asset handoff
+
 # Electra character animation — asset handoff
 
 ## Current state
