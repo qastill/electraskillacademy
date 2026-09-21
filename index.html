@@ -14238,7 +14238,9 @@ else{setTimeout(init,200);}
     galleryLink.style.cursor='pointer';
     galleryLink.onclick=function(e){e.preventDefault(); publicShow('gallery');};
 
-    // Expert Workshop — live class rutin tiap Jumat, public access
+    // Expert Workshop — live class rutin tiap Jumat, public access.
+    // Tautannya tetap dibangun di sini meski sedang disembunyikan dari menu,
+    // supaya pengembaliannya cukup membuka satu baris appendChild di bawah.
     var workshopLink=document.createElement('a');
     workshopLink.className='nav-right';
     workshopLink.href='#';
@@ -14255,7 +14257,11 @@ else{setTimeout(init,200);}
     if(cert)navGroup.appendChild(cert);
     navGroup.appendChild(libraryLink);
     navGroup.appendChild(galleryLink);
-    navGroup.appendChild(workshopLink);
+    // Expert Workshop DISEMBUNYIKAN SEMENTARA dari menu atas permintaan.
+    // Halaman, pendaftaran peserta, dan pendaftaran pematerinya tetap utuh —
+    // hanya tautan di header yang dilepas. Untuk mengembalikannya, aktifkan
+    // kembali satu baris di bawah ini.
+    // navGroup.appendChild(workshopLink);
     if(daftar)navGroup.appendChild(daftar);
   }
   
