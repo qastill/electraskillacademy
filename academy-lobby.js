@@ -1,8 +1,7 @@
 /* Career selection: each track owns its engineer, equipment and animated world. */
 (() => {
-  const choices = document.getElementById('academy-choices');
-  if (!choices || !window.ACADEMY_NAMES) return;
   const world = document.getElementById('career-world');
+  if (!world || !window.ACADEMY_NAMES) return;
   const stage = document.querySelector('.career-stage');
   const lobby = document.querySelector('.academy-lobby');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -55,7 +54,6 @@
   const save = (key, value) => { try { localStorage.setItem(key, value); } catch (_) {} };
   let selected = Object.hasOwn(careers, read('esa-lobby-academy')) ? read('esa-lobby-academy') : 'S12';
   let paused = read('esa-lobby-paused') === 'true';
-  function icon(kind) { return `<svg viewBox="-8 0 112 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${art[kind]}</svg>`; }
   function scene(c) {
     const helmet = c[5] === 'helmet';
     return `<svg viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -97,7 +95,6 @@
     if (!Object.hasOwn(careers, id)) return;
     selected = id;
     const c = careers[id];
-    choices.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.academy === id)));
     lobby.style.setProperty('--accent', c[2]);
     world.innerHTML = scene(c);
     world.setAttribute('aria-label', c[0] + ' — ' + c[1]);
@@ -108,13 +105,20 @@
     document.getElementById('academy-status').textContent = Number(id.slice(1)) > 8 ? 'Kurikulum siap · Video bertahap' : 'Perjalanan Level 1–6';
     document.getElementById('academy-enter').setAttribute('aria-label', 'Masuk ' + ACADEMY_NAMES[id]);
     save('esa-lobby-academy', id);
+    markCards();
   }
-  ids.forEach(id => {
-    const button = document.createElement('button'); button.type = 'button'; button.dataset.academy = id;
-    button.innerHTML = icon(careers[id][3]);
-    const label = document.createElement('span'); label.textContent = ACADEMY_NAMES[id]; button.append(label);
-    button.addEventListener('click', () => select(id)); choices.append(button);
-  });
+  // The career cards below the lobby are the full Academy list; keep the card of
+  // the character on stage visibly marked so both sections read as one choice.
+  function markCards() {
+    document.querySelectorAll('#practicesGrid [data-track]').forEach(card => {
+      const on = card.dataset.track === selected;
+      card.classList.toggle('is-active', on);
+      if (on) card.setAttribute('aria-current', 'true'); else card.removeAttribute('aria-current');
+    });
+  }
+  window.esaLobbySelect = select;
+  window.esaLobbyCurrent = () => selected;
+  window.esaLobbyMarkCards = markCards;
   document.getElementById('academy-prev').addEventListener('click', () => select(ids[(ids.indexOf(selected) + ids.length - 1) % ids.length]));
   document.getElementById('academy-next').addEventListener('click', () => select(ids[(ids.indexOf(selected) + 1) % ids.length]));
   // "Masuk Academy" opens the same jalur detail as the existing career cards below.
@@ -139,10 +143,9 @@
   document.addEventListener('visibilitychange', updateMotion);
   reduced.addEventListener?.('change', updateMotion);
   function step(delta) { select(ids[(ids.indexOf(selected) + delta + ids.length) % ids.length]); }
-  choices.addEventListener('keydown', e => {
+  stage.addEventListener('keydown', e => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     e.preventDefault(); step(e.key === 'ArrowRight' ? 1 : -1);
-    choices.querySelector(`[data-academy="${selected}"]`).focus({preventScroll:true});
   });
   let touch;
   stage.addEventListener('touchstart', e => { const t=e.changedTouches[0]; touch={x:t.clientX,y:t.clientY}; }, {passive:true});

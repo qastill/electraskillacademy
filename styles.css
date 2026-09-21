@@ -425,14 +425,14 @@ body {
    OUR MAIN PRACTICES
 ================================================ */
 .practices-section {
-  padding: 120px 80px;
+  padding: 56px 80px 96px;
   background: var(--cream-soft);
   scroll-margin-top: 20px;
 }
 
 .practices-inner { max-width: 1400px; margin: 0 auto; }
 
-.practices-header { text-align: center; margin-bottom: 60px; }
+.practices-header { text-align: center; margin-bottom: 34px; }
 
 .practices-eyebrow, .page-eyebrow {
   display: inline-flex;
@@ -484,8 +484,8 @@ body {
 
 .practices-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  gap: 16px;
 }
 
 /* ── Elegant LMS course card ───────────────────────────── */
@@ -539,7 +539,7 @@ body {
 /* Photo: full-bleed top, gentle zoom on hover */
 .practice-card-photo {
   width: 100%;
-  height: 188px;
+  height: 124px;
   position: relative;
   overflow: hidden;
   background-color: var(--navy-deep);
@@ -572,8 +572,8 @@ body {
 /* "Jalur 01" pill overlaid on photo */
 .practice-card-badge {
   position: absolute;
-  left: 14px;
-  bottom: 14px;
+  left: 10px;
+  bottom: 10px;
   z-index: 2;
   display: inline-flex;
   align-items: center;
@@ -594,7 +594,7 @@ body {
 .practice-card-badge strong { color: var(--gold); font-weight: 800; }
 
 .practice-card-inner {
-  padding: 22px 24px 24px;
+  padding: 14px 16px 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -603,9 +603,9 @@ body {
 
 .practice-name {
   font-family: var(--serif);
-  font-size: 23px;
+  font-size: 16px;
   font-weight: 600;
-  line-height: 1.14;
+  line-height: 1.2;
   letter-spacing: 0.005em;
   color: var(--navy-deep);
   text-transform: uppercase;
@@ -615,14 +615,14 @@ body {
 
 .practice-desc {
   font-family: var(--sans);
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--ink-mute);
   font-weight: 400;
-  margin: 0 0 18px;
+  margin: 0 0 12px;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -632,11 +632,11 @@ body {
   margin-top: auto;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding-top: 15px;
+  gap: 7px;
+  padding-top: 11px;
   border-top: 1px solid var(--line);
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -12064,9 +12064,9 @@ button:active:not(:disabled),
    diambil dari CURRICULUM lewat esaTrackModuleCount(). */
 .practice-count {
   display: inline-block;
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;

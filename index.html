@@ -609,8 +609,7 @@ if ('serviceWorker' in navigator) {
         <div class="career-caption" aria-live="polite"><span id="career-role">EV CHARGING ENGINEER</span><h2 id="academy-selected-name">EV Academy</h2><p id="academy-selected-description">SPKLU · Kendaraan listrik · Charging system</p></div>
       </section>
       <div class="career-actions"><button type="button" id="academy-enter" class="academy-enter">Masuk Academy <span aria-hidden="true">↗</span></button><span id="academy-status">Kurikulum siap · Video bertahap</span></div>
-      <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih jalur karir Academy"></div>
-      <noscript><p>Aktifkan JavaScript untuk memilih karakter dan membuka Academy.</p></noscript>
+      <noscript><p>Aktifkan JavaScript untuk memilih karakter. Seluruh jalur tetap dapat dibuka dari daftar Academy di bawah.</p></noscript>
     </div>
   </section>
 
@@ -3679,7 +3678,7 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
-<script src="/academy-lobby.js?v=9" defer></script>
+<script src="/academy-lobby.js?v=10" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.
@@ -4208,6 +4207,14 @@ function esaTrackModuleCount(trackId) {
 }
 window.esaTrackModuleCount = esaTrackModuleCount;
 
+// Kartu jalur dan lobby karakter di atasnya adalah satu pilihan yang sama:
+// membuka jalur dari kartu juga memindahkan karakter lobby ke Academy itu.
+function esaOpenAcademy(trackId) {
+  window.esaLobbySelect?.(trackId);
+  openJalur(trackId);
+}
+window.esaOpenAcademy = esaOpenAcademy;
+
 function renderPractices() {
   const grid = document.getElementById('practicesGrid');
   // S13 (PLN Distribution Academy fast track) is rendered in its own dedicated
@@ -4215,7 +4222,7 @@ function renderPractices() {
   grid.innerHTML = PRACTICE_CARDS.filter(p => !p.isFastTrack).map(p => {
     const n = esaTrackModuleCount(p.id);
     return `
-    <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}" onclick="openJalur('${p.id}')">
+    <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}${window.esaLobbyCurrent?.() === p.id ? ' is-active' : ''}" data-track="${p.id}" onclick="esaOpenAcademy('${p.id}')">
       <div class="practice-card-photo">
         <img class="practice-card-photo-img" src="${p.photo}" alt="" loading="lazy" decoding="async">
         <span class="practice-card-badge">Jalur <strong>${p.num}</strong></span>
@@ -4234,6 +4241,7 @@ function renderPractices() {
       </div>
     </button>`;
   }).join('');
+  window.esaLobbyMarkCards?.();
 }
 
 // ================================================
