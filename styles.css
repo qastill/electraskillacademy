@@ -12158,3 +12158,70 @@ button:active:not(:disabled),
 .esa-flow-note a{color:var(--gold);text-decoration:underline}
 @media(max-width:1024px){.esa-flow{padding:60px 40px}}
 @media(max-width:640px){.esa-flow{padding:48px 20px}.esa-flow-steps{grid-template-columns:1fr;gap:12px}.esa-flow-steps li{padding:20px 18px}}
+
+/* ===== Petunjuk soal kuis =====
+   Bantuan yang mengarahkan cara berpikir tanpa membocorkan jawaban. Sengaja
+   dibuat tidak mencolok supaya peserta mencoba dulu, bukan langsung membuka. */
+.quiz-hint-wrap { margin: 10px 0 14px; }
+.quiz-hint-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: transparent;
+  border: 1px dashed rgba(212, 175, 106, .5);
+  color: var(--ink-mute, #8a8f98);
+  font: inherit; font-size: 13px; font-weight: 600;
+  padding: 7px 13px; border-radius: 999px; cursor: pointer;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+.quiz-hint-btn:hover,
+.quiz-hint-btn:focus-visible {
+  background: rgba(212, 175, 106, .1);
+  border-color: rgba(212, 175, 106, .85);
+  color: #d4af6a;
+}
+.quiz-hint-btn.is-open { border-style: solid; color: #d4af6a; }
+.quiz-hint-box {
+  margin-top: 10px; padding: 12px 14px;
+  border-left: 3px solid #d4af6a;
+  background: rgba(212, 175, 106, .08);
+  border-radius: 0 8px 8px 0;
+  font-size: 14px; line-height: 1.6;
+  color: var(--ink, #e8eaed);
+}
+.quiz-hint-box strong { color: #d4af6a; }
+
+/* ===== Jalur menuju sertifikat (muncul tiap kuis selesai) =====
+   Menjawab pertanyaan peserta "sertifikatnya bagaimana?" tepat di momen mereka
+   paling ingin tahu: begitu satu kuis selesai. */
+.esa-cert-path {
+  margin: 20px 0 6px; padding: 16px 18px;
+  border: 1px solid rgba(212, 175, 106, .32);
+  background: rgba(212, 175, 106, .07);
+  border-radius: 12px; text-align: left;
+}
+.esa-cert-path-done {
+  border-color: rgba(76, 175, 80, .45);
+  background: rgba(76, 175, 80, .09);
+}
+.esa-cert-path-head {
+  font-size: 14px; font-weight: 700; letter-spacing: .01em;
+  color: #d4af6a; margin-bottom: 10px;
+}
+.esa-cert-path-done .esa-cert-path-head { color: #7bc67e; }
+.esa-cert-path-bar {
+  height: 7px; border-radius: 999px; overflow: hidden;
+  background: rgba(255, 255, 255, .09);
+}
+.esa-cert-path-bar > span {
+  display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, #d4af6a, #f0d9a8);
+  transition: width .5s ease;
+}
+.esa-cert-path-meta {
+  margin-top: 8px; font-size: 13px; font-weight: 600;
+  color: var(--ink, #e8eaed);
+}
+.esa-cert-path-note {
+  margin: 8px 0 0; font-size: 13px; line-height: 1.6;
+  color: var(--ink-mute, #9aa0a6);
+}
+.esa-cert-path-actions { margin-top: 12px; }
