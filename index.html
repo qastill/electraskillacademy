@@ -540,7 +540,7 @@ if ('serviceWorker' in navigator) {
 #view-modul .ai-tutor-messages::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
 
 </style>
-<link rel="stylesheet" href="/academy-lobby.css?v=8">
+<link rel="stylesheet" href="/academy-lobby.css?v=9">
 </head>
 <body>
 
@@ -599,6 +599,7 @@ if ('serviceWorker' in navigator) {
 
     <div class="academy-lobby">
       <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Energi masa depan.<em>Peranmu dimulai di sini.</em></h1></header>
+      <div class="career-layout">
       <section class="career-stage" aria-label="Karakter dan dunia Academy pilihan">
         <div class="stage-wordmark" aria-hidden="true">ELECTRA</div>
         <div id="career-world" class="career-world" role="img" aria-label="Engineer EV dengan charging unit dan kendaraan listrik"></div>
@@ -608,8 +609,19 @@ if ('serviceWorker' in navigator) {
         <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Academy berikutnya">→</button>
         <div class="career-caption" aria-live="polite"><span id="career-role">EV CHARGING ENGINEER</span><h2 id="academy-selected-name">EV Academy</h2><p id="academy-selected-description">SPKLU · Kendaraan listrik · Charging system</p></div>
       </section>
-      <div class="career-actions"><button type="button" id="academy-enter" class="academy-enter">Masuk Academy <span aria-hidden="true">↗</span></button><span id="academy-status">Kurikulum siap · Video bertahap</span></div>
-      <noscript><p>Aktifkan JavaScript untuk memilih karakter. Seluruh jalur tetap dapat dibuka dari daftar Academy di bawah.</p></noscript>
+      <aside class="career-panel" aria-label="Academy terpilih">
+        <div class="career-panel-photo"><img id="academy-photo" src="" alt="" decoding="async"><span class="career-panel-badge">Jalur <strong id="academy-jalur">04</strong></span></div>
+        <div class="career-panel-body">
+          <span class="career-panel-eyebrow">Masuk langsung ke</span>
+          <h3 id="academy-panel-name">Transmission Academy</h3>
+          <span class="career-panel-count" id="academy-modules">57 modul</span>
+          <button type="button" id="academy-enter" class="academy-enter">Masuk Academy <span aria-hidden="true">↗</span></button>
+          <span id="academy-status">Kurikulum siap · Video bertahap</span>
+        </div>
+      </aside>
+      </div>
+      <noscript><p>Aktifkan JavaScript untuk memilih Academy dan membuka kurikulumnya.</p></noscript>
+      <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih jalur karir Academy"></div>
     </div>
   </section>
 
@@ -620,34 +632,6 @@ if ('serviceWorker' in navigator) {
 <!-- REFERRAL DASHBOARD WIDGET — dihilangkan dari main page -->
 
 
-  <section class="practices-section" id="practices">
-    <div class="practices-inner">
-      <div class="practices-header">
-        <div class="practices-eyebrow reveal">Jalur Karir</div>
-        <h2 class="practices-title reveal">
-          Temukan <span class="italic">Academy-mu</span>
-        </h2>
-        <p class="practices-sub reveal">
-          Enam belas jalur karir, dirancang dari pemula sampai ahli. Delapan jalur sudah lengkap sampai Level 6; delapan lainnya kurikulumnya siap dan videonya sedang diproduksi.
-        </p>
-      </div>
-
-      <div class="practices-grid" id="practicesGrid">
-        <!-- Filled by JS -->
-      </div>
-
-      <!-- Jalan pintas ke katalog: buat yang sudah tahu topik yang dicari -->
-      <div class="reveal" style="text-align:center;margin-top:52px;padding-top:40px;border-top:1px solid var(--line-gold);">
-        <p style="color:var(--ink-mute);font-size:0.95rem;margin-bottom:18px;">
-          Sudah tahu topik yang kamu cari? Lewati pemilihan jalur —
-          telusuri seluruh materi video langsung dari katalog.
-        </p>
-        <button type="button" onclick="openCourses()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:15px 38px;font-family:var(--sans);font-size:0.82rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-          Buka Katalog Kursus →
-        </button>
-      </div>
-    </div>
-  </section>
 
   <!-- ================================================
        PLN DISTRIBUTION ACADEMY · FAST TRACK PROGRAM (S13 / S Special)
@@ -3678,7 +3662,7 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
-<script src="/academy-lobby.js?v=10" defer></script>
+<script src="/academy-lobby.js?v=11" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.
@@ -4207,16 +4191,11 @@ function esaTrackModuleCount(trackId) {
 }
 window.esaTrackModuleCount = esaTrackModuleCount;
 
-// Kartu jalur dan lobby karakter di atasnya adalah satu pilihan yang sama:
-// membuka jalur dari kartu juga memindahkan karakter lobby ke Academy itu.
-function esaOpenAcademy(trackId) {
-  window.esaLobbySelect?.(trackId);
-  openJalur(trackId);
-}
-window.esaOpenAcademy = esaOpenAcademy;
-
 function renderPractices() {
+  // Grid kartu jalur sudah tidak ada di beranda — pemilihan Academy ditangani
+  // lobby karakter. Fungsi dibiarkan agar pemanggil lama tetap aman.
   const grid = document.getElementById('practicesGrid');
+  if (!grid) return;
   // S13 (PLN Distribution Academy fast track) is rendered in its own dedicated
   // banner section below, so it's excluded from the regular 12-track grid.
   grid.innerHTML = PRACTICE_CARDS.filter(p => !p.isFastTrack).map(p => {
@@ -4241,7 +4220,6 @@ function renderPractices() {
       </div>
     </button>`;
   }).join('');
-  window.esaLobbyMarkCards?.();
 }
 
 // ================================================
@@ -13252,8 +13230,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         if (!state.profile || !state.profile.name) {
           e.preventDefault();
           pendingAction = () => {
-            // After login, scroll to practices section
-            const target = document.getElementById('practices');
+            // After login, scroll to the Academy lobby (the career cards
+            // section it used to target is no longer on the home page).
+            const target = document.getElementById('practices') || document.querySelector('.academy-lobby');
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           };
           showOnboardingModal();

@@ -39,20 +39,47 @@
 @keyframes energy-glow{50%{opacity:.4}}
 @keyframes machine-turn{to{transform:rotate(360deg)}}
 @keyframes machine-work{50%{transform:rotate(-12deg)}}
-@media(max-width:1000px){.academy-lobby{padding:8px 28px 32px}.career-stage{min-height:390px}.career-world{height:310px}}
-@media(max-width:600px){.academy-lobby{padding:8px 16px 28px}.lobby-intro h1{font-size:27px}.lobby-intro h1 em{display:block;margin:3px 0 0}.lobby-eyebrow{font-size:8px}.career-stage{border-radius:18px;min-height:365px}.career-world{height:280px}.career-world svg{width:145%;max-width:none;margin-left:-22.5%}.stage-wordmark{top:64px;font-size:63px}.stage-corner{top:16px;left:16px;font-size:8px}.stage-corner>span:last-child{margin-left:2px}.career-arrow{width:32px;height:32px;top:47%;font-size:17px}.career-prev{left:10px}.career-next{right:10px}.career-caption h2{font-size:25px}.career-caption p{font-size:10px}.career-actions{gap:12px}.academy-enter{padding:12px 20px;gap:24px}#academy-status{font-size:9px;max-width:112px}.motion-toggle{right:13px;top:11px}}
+@media(max-width:1000px){.academy-lobby{padding:8px 28px 32px}.academy-choices{grid-template-columns:repeat(4,minmax(0,1fr))}.academy-choices button{min-height:65px;flex-direction:row;text-align:left;justify-content:flex-start;padding:10px 12px}.career-stage{min-height:390px}.career-world{height:310px}}
+@media(max-width:600px){.academy-lobby{padding:8px 16px 28px}.lobby-intro h1{font-size:27px}.lobby-intro h1 em{display:block;margin:3px 0 0}.lobby-eyebrow{font-size:8px}.career-stage{border-radius:18px;min-height:365px}.career-world{height:280px}.career-world svg{width:145%;max-width:none;margin-left:-22.5%}.stage-wordmark{top:64px;font-size:63px}.stage-corner{top:16px;left:16px;font-size:8px}.stage-corner>span:last-child{margin-left:2px}.career-arrow{width:32px;height:32px;top:47%;font-size:17px}.career-prev{left:10px}.career-next{right:10px}.career-caption h2{font-size:25px}.career-caption p{font-size:10px}.career-actions{gap:12px}.academy-enter{padding:12px 20px;gap:24px}#academy-status{font-size:9px}.academy-choices{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.academy-choices button{min-height:86px;flex-direction:column;justify-content:center;text-align:center;font-size:9px;padding:8px 5px}.motion-toggle{right:13px;top:11px}}
 @media(prefers-reduced-motion:reduce){.academy-lobby *{animation:none!important;transition:none!important}.motion-toggle{display:none}}
 .academy-lobby.lobby-offscreen *{animation-play-state:paused!important}
 
 
 .career-stage{touch-action:pan-y}
 
-/* ---- Lobby ↔ daftar Academy ------------------------------------------------
-   Grid pemilih di dalam lobby dihapus: daftar lengkap Academy adalah kartu
-   "Temukan Academy-mu" tepat di bawahnya. Keduanya satu pilihan, jadi kartu
-   milik karakter yang sedang tampil ikut ditandai. */
-.academy-lobby{padding-bottom:0}
-.practice-card.is-active{border-color:var(--gold,#c9a96e);box-shadow:0 0 0 2px rgba(201,169,110,.55),0 14px 32px rgba(26,29,46,.14)}
-.practice-card.is-active .practice-card-badge{background:rgba(201,169,110,.92);color:#1a1d2e}
-.practice-card.is-active .practice-card-badge strong{color:#1a1d2e}
-@media(prefers-reduced-motion:reduce){.practice-card{transition:none!important}}
+/* Grid 16 Academy di bawah panggung. */
+.academy-choices{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px}
+.academy-choices button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:79px;padding:10px 7px;border-radius:12px;border:1px solid #ffffff12;background:#ffffff03;color:#b4c6b9;font:10px/1.4 sans-serif;text-align:center;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.academy-choices button svg{width:21px;height:21px;opacity:.65;flex-shrink:0}
+.academy-choices button:hover{background:#ffffff08;transform:translateY(-2px);border-color:#d9e9a15c}
+.academy-choices button[aria-pressed=true]{border-color:var(--accent);background:#c5e3ac0c;color:#e6f0d9}
+.academy-choices button[aria-pressed=true] svg{opacity:1;color:var(--accent)}
+.academy-choices svg *{animation:none!important}
+
+/* ---- Lobby dua kolom -------------------------------------------------------
+   Panggung karakter di kiri, panel masuk Academy di kanan: satu layar, tanpa
+   perlu menggulir ke daftar jalur. Grid 16 Academy tetap di bawahnya. */
+.career-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px;align-items:stretch;margin-bottom:16px}
+.career-panel{display:flex;flex-direction:column;overflow:hidden;border:1px solid #ffffff14;border-radius:20px;background:linear-gradient(160deg,#1b2a26,#111c18)}
+.career-panel-photo{position:relative;flex:1 1 auto;min-height:170px;background:#0e1915;overflow:hidden}
+.career-panel-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.career-panel-photo:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,22,18,0) 45%,rgba(12,22,18,.9))}
+.career-panel-badge{position:absolute;left:14px;bottom:12px;z-index:2;display:inline-flex;gap:6px;padding:6px 11px;border-radius:30px;background:#0f1a16b8;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#d7e6c6;font:9px/1 sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.career-panel-badge strong{color:var(--accent);font-weight:800}
+.career-panel-body{display:flex;flex-direction:column;flex:1;gap:9px;padding:18px 18px 20px}
+.career-panel-eyebrow{font:9px/1.4 sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8ea897}
+.career-panel-body h3{margin:0;font:500 19px/1.25 sans-serif;color:#eef3e6;letter-spacing:-.01em}
+.career-panel-count{font:700 10px/1 sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.career-panel .academy-enter{width:100%;margin-top:auto;gap:12px}
+.career-panel #academy-status{max-width:none;text-align:center}
+@media(max-width:1000px){
+  .career-layout{grid-template-columns:1fr;gap:12px}
+  .career-panel{flex-direction:row}
+  .career-panel-photo{flex:0 0 38%;width:38%;min-height:136px}
+  .career-panel-body{flex:1;padding:14px 16px 16px}
+}
+@media(max-width:600px){
+  .career-panel{flex-direction:column}
+  .career-panel-photo{flex:0 0 auto;width:100%;height:132px;min-height:0}
+  .career-panel-body h3{font-size:17px}
+}
