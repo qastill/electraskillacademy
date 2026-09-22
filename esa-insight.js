@@ -103,9 +103,17 @@
 
   var lastPath = null;
 
-  function track(isFirst) {
+  function track(isFirst, virtualPath, titleOverride) {
     if (privacyOptOut()) return;
-    var path = location.pathname || '/';
+    // Kunjungan tim sendiri tidak dihitung. Di situs yang trafiknya masih
+    // kecil, browsing admin bisa menenggelamkan trafik asli.
+    if (isAdminEmail(currentEmail())) return;
+
+    // Halaman biasa memakai pathname (hash sengaja tidak ikut: server juga
+    // membuangnya di cleanPath, dan jangkar seperti "#faq" tidak boleh
+    // memecah laporan halaman pendaratan). Layar SPA memakai jalur maya dari
+    // esaInsightView(), mis. "/app/courses".
+    var path = virtualPath || location.pathname || '/';
     if (!isFirst && path === lastPath) return; // hindari ketukan ganda
     lastPath = path;
 
@@ -117,7 +125,7 @@
     var q = new URLSearchParams(location.search);
     send({
       path: path,
-      title: (document.title || '').slice(0, 200),
+      title: String(titleOverride || document.title || '').slice(0, 200),
       referrer: document.referrer || null,
       session_id: s.id,
       is_entry: !!(isFirst && s.fresh),
@@ -127,6 +135,18 @@
       email: currentEmail()
     });
   }
+
+  // Beranda adalah aplikasi satu halaman: showView() berganti layar lewat
+  // kelas CSS tanpa menyentuh URL, jadi tidak ada peristiwa browser yang bisa
+  // ditumpangi. showView() memanggil fungsi ini sendiri supaya tiap layar
+  // (courses, jalur, modul, labs, ...) punya barisnya sendiri di dashboard.
+  window.esaInsightView = function (view, title) {
+    try {
+      var slug = String(view || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40);
+      if (!slug) return;
+      track(false, '/app/' + slug, title);
+    } catch (e) {}
+  };
 
   /* ---------- 2. TOMBOL ADMIN ---------- */
 
@@ -186,8 +206,8 @@
     start();
   }
 
-  // Beranda adalah aplikasi satu halaman: kalau URL-nya berubah tanpa
-  // memuat ulang, hitung sebagai tampilan halaman baru.
+  // Kalau pathname berubah tanpa memuat ulang (pushState + tombol kembali),
+  // hitung sebagai tampilan halaman baru. Perpindahan layar di dalam beranda
+  // tidak lewat sini — showView() memanggil esaInsightView() langsung.
   window.addEventListener('popstate', function () { try { track(false); } catch (e) {} });
-  window.addEventListener('hashchange', function () { try { track(false); } catch (e) {} });
 })();

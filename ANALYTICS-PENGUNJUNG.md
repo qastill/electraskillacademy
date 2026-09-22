@@ -54,6 +54,16 @@ admin. Pengunjung biasa tidak pernah melihatnya.
 
 Tiap halaman dibuka, `/esa-insight.js` mengirim satu ketukan ke `/api/visit`.
 
+Beranda adalah aplikasi satu halaman: berpindah ke Katalog, Jalur, Modul,
+Labs, dan seterusnya tidak mengubah URL. Supaya perpindahan itu tetap
+terlihat, `showView()` memanggil `esaInsightView()` dan mencatatnya sebagai
+**jalur maya** `/app/<nama-view>` — misalnya `/app/courses`, `/app/modul`,
+`/app/labs`. Di tab Pengunjung, baris `/` berarti *pendaratan di beranda*,
+sedangkan `/app/*` berarti *layar yang dibuka setelahnya*.
+
+Kunjungan dari akun admin (daftar `ADMIN_EMAILS`) **tidak dicatat sama
+sekali**, supaya browsing tim sendiri tidak menenggelamkan trafik asli.
+
 **Disimpan:** path halaman, judul, host perujuk, parameter `utm_*`, jenis
 perangkat, kode negara, penanda sesi, dan `visitor_id`.
 

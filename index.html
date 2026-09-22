@@ -4043,6 +4043,10 @@ function showView(view) {
     target.classList.add('active');
     currentView = view;
     window.scrollTo({ top: 0, behavior: 'instant' });
+    // Catat perpindahan layar ke analitik pengunjung. URL tidak berubah saat
+    // view berganti, jadi tanpa ini seluruh navigasi di dalam beranda tak
+    // terlihat di tab Pengunjung admin.html.
+    if (typeof window.esaInsightView === 'function') window.esaInsightView(view);
     // Labs: selalu mulai dari panel pertama (Simulator) tiap kali dibuka.
     if (view === 'labs') {
       document.querySelectorAll('.labs-tab-btn').forEach(t =>
