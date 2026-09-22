@@ -542,6 +542,7 @@ if ('serviceWorker' in navigator) {
 </style>
 <link rel="stylesheet" href="/academy-lobby.css?v=10">
 <link rel="stylesheet" href="/membership.css?v=1">
+<link rel="stylesheet" href="/academy-journey.css?v=1">
 <script src="/membership.js?v=1" defer></script>
 </head>
 <body>
@@ -3454,6 +3455,7 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
+<script src="/academy-journey.js?v=1"></script>
 <script src="/academy-lobby.js?v=12" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
@@ -7726,6 +7728,7 @@ function openJalur(trackId) {
     return;
   }
 
+  if (currentTrackId !== trackId) _esaActiveLevel = 'L1';
   currentTrackId = trackId;
   const trackModules = CURRICULUM[trackId] || [];
   const foundationL1 = CURRICULUM['L1'] || [];
@@ -7934,7 +7937,9 @@ window.esaSetLevel = function (levelId, trackId) {
   const el = document.getElementById('esa-level-panel');
   if (el) {
     const y = el.getBoundingClientRect().top + window.scrollY - 92;
-    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    window.scrollTo({ top: Math.max(0, y), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    el.setAttribute('tabindex', '-1');
+    el.focus({preventScroll:true});
   }
 };
 
@@ -8005,7 +8010,7 @@ function renderLevels(trackId) {
       <li class="${cls.join(' ')}">
         <button type="button" onclick="esaSetLevel('${d.lvl.id}','${trackId}')"
                 aria-current="${d.lvl.id === _esaActiveLevel ? 'step' : 'false'}">
-          <span class="lvlflow-thumb" style="background:${esaLevelCoverBg(d.lvl.id)}">${esaLevelCover(d.lvl.id)}<span class="n">${tick}</span></span>
+          <span class="lvlflow-thumb" style="background:${esaLevelCoverBg(d.lvl.id)}">${window.esaJourneyCover ? esaJourneyCover(trackId, d.lvl.id) : esaLevelCover(d.lvl.id)}<span class="n">${tick}</span></span>
           <span class="lvlflow-name">${escapeHtml(LEVELS[i].name)}</span>
           <span class="lvlflow-tag">${escapeHtml(LEVEL_TAGLINES[d.lvl.id] || d.lvl.subtitle || '')}</span>
           <span class="lvlflow-meta">${d.total} modul${d.passed ? ` · ${d.passed} lulus` : ''}</span>
@@ -8014,11 +8019,11 @@ function renderLevels(trackId) {
   }).join('');
 
   const flow = `
-    <div class="lvlflow">
+    <div class="lvlflow" id="academy-roadmap">
       <div class="lvlflow-head">
         <div class="lvlflow-title">
-          <b>Alur belajar</b>
-          <span>Dari nol sampai konsultan — klik tingkat mana pun untuk langsung lompat</span>
+          <b>Enam tahap. Satu perjalanan.</b>
+          <span>Fondasi → spesialisasi → pendalaman. Pilih tahap untuk melihat modul dan misinya.</span>
         </div>
         <div class="lvlflow-nav">
           <button type="button" class="lvlflow-btn" ${prev ? `onclick="esaSetLevel('${prev.lvl.id}','${trackId}')"` : 'disabled'}>‹ Sebelumnya</button>
@@ -8052,7 +8057,7 @@ function renderLevels(trackId) {
   const panel = `
     <div class="lvlpanel" id="esa-level-panel">
       <div class="lvlpanel-hero">
-        <div class="lvlpanel-cover" style="background:${esaLevelCoverBg(a.lvl.id)}">${esaLevelCover(a.lvl.id)}</div>
+        <div class="lvlpanel-cover" style="background:${esaLevelCoverBg(a.lvl.id)}">${window.esaJourneyCover ? esaJourneyCover(trackId, a.lvl.id) : esaLevelCover(a.lvl.id)}</div>
         <div class="lvlpanel-info">
           <div class="lvlpanel-eyebrow">Tingkat ${a.num} dari ${data.length} · ${a.total} modul ${doneBadge}</div>
           <h3>${escapeHtml(a.lvl.name)}</h3>
@@ -8060,7 +8065,7 @@ function renderLevels(trackId) {
           <div class="lvlpanel-bar"><i style="width:${pct}%"></i></div>
           <div class="lvlpanel-actions">
             ${a.total ? `<button type="button" class="level-start-btn" onclick="startLevel('${a.lvl.id}','${trackId}')">
-              <span>Mulai ${escapeHtml(LEVELS[a.idx].name)}</span>
+              <span>${a.complete ? 'Ulangi' : (a.passed ? 'Lanjutkan' : 'Mulai')} ${escapeHtml(LEVELS[a.idx].name)}</span>
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>` : ''}
             ${a.locked ? `<button type="button" class="lvlpanel-unlock" onclick="esaRequireAccess()">Buka akses penuh</button>` : ''}
@@ -8068,6 +8073,7 @@ function renderLevels(trackId) {
           ${a.locked ? `<div class="lvlpanel-note">Materi PPT, quiz 25 soal, dan asisten modul terbuka untuk semua. Hanya pemutaran video yang memerlukan akses penuh.</div>` : ''}
         </div>
       </div>
+      ${window.esaJourneyMission ? esaJourneyMission(a) : ''}
       ${grid}
       <div class="lvlpanel-foot">
         ${prev ? `<button type="button" class="lvlflow-btn" onclick="esaSetLevel('${prev.lvl.id}','${trackId}')">‹ ${escapeHtml(LEVELS[prev.idx].name)}</button>` : '<span></span>'}
@@ -8075,7 +8081,7 @@ function renderLevels(trackId) {
       </div>
     </div>`;
 
-  list.innerHTML = flow + panel;
+  list.innerHTML = (window.esaJourneyHero ? esaJourneyHero(trackId, data) : '') + flow + panel;
 }
 
 function toggleLevel(levelId) {
@@ -8098,7 +8104,7 @@ function startLevel(levelId, trackId) {
   }
 
   // Open first module
-  const firstMod = modules[0];
+  const firstMod = modules.find(m => !(typeof window.esaIsModulePassed === 'function' && window.esaIsModulePassed(m.code))) || modules[0];
   openModul(firstMod.code, trackId, levelId);
 }
 
