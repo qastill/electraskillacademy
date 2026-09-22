@@ -23,7 +23,9 @@
   window.esaJourneyCover = (trackId, levelId) => {
     const t = themes[trackId];
     if (!t) return '';
-    return `<img src="/track-art/${trackId.toLowerCase()}.webp" alt="" loading="lazy" decoding="async"><span class="journey-cover-topic">${esc(t[5])}</span><span class="journey-cover-level">TAHAP ${esc(levelId.slice(1))}</span>`;
+    const stageNames = {L1:'Pemula',L2:'Teknisi pemula',L3:'Praktisi',L4:'Perancang',L5:'Ahli',L6:'Konsultan'};
+    if (!stageNames[levelId]) return '';
+    return `<img class="journey-stage-world" src="/track-art/${trackId.toLowerCase()}.webp" alt="" loading="lazy" decoding="async"><span class="journey-stage-shade" aria-hidden="true"></span><img class="journey-stage-person" src="/img/journey/${levelId.toLowerCase()}.png" alt="${esc(stageNames[levelId])} — ${esc(window.ACADEMY_NAMES[trackId])}" loading="lazy" decoding="async"><span class="journey-cover-topic">${esc(t[5])}</span><span class="journey-cover-level">TAHAP ${esc(levelId.slice(1))}</span>`;
   };
   window.esaJourneyHero = (trackId, data) => {
     const t = themes[trackId];
@@ -48,9 +50,5 @@
     <section class="journey-brief" aria-label="Cara belajar dan hasilnya"><div class="journey-outcome"><span class="journey-eyebrow">TUJUAN BELAJARMU</span><h2>Selesai belajar, <br>kamu memahami apa?</h2><p>${esc(t[4])}</p></div>
       <ol class="journey-missions"><li><span>01</span><div><strong>Pelajari materinya</strong><p>Pilih modul. Baca materi dan tonton video yang tersedia.</p></div></li><li><span>02</span><div><strong>Tuntaskan misi kuis</strong><p>Uji pemahamanmu. Raih nilai minimal 70%; ulangi jika belum lulus.</p></div></li><li><span>03</span><div><strong>Kumpulkan sertifikat</strong><p>Lulus semua modul dalam satu tingkat untuk memperoleh sertifikat tingkat tersebut.</p></div></li></ol>
     </section>`;
-  };
-  window.esaJourneyMission = (active) => {
-    const topics = [...new Set(active.modules.map(m => m.category).filter(Boolean))].slice(0,3);
-    return `<div class="journey-level-mission"><div><span class="journey-eyebrow">FOKUS TAHAP INI</span><p>${topics.map(esc).join(' · ') || 'Materi sedang disiapkan'}</p></div><div><span class="journey-eyebrow">MISIMU</span><p>${active.complete ? 'Semua modul sudah lulus. Kamu bisa mengulang materi atau lanjut ke tahap berikutnya.' : `Pelajari materi → lulus ${active.total} kuis modul → sertifikat tingkat.`}</p></div></div><div class="journey-episodes"><h4>Episode belajarmu</h4><span>${active.passed}/${active.total} modul lulus · pilih untuk mulai</span></div>`;
   };
 })();

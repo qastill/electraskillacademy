@@ -542,7 +542,7 @@ if ('serviceWorker' in navigator) {
 </style>
 <link rel="stylesheet" href="/academy-lobby.css?v=10">
 <link rel="stylesheet" href="/membership.css?v=1">
-<link rel="stylesheet" href="/academy-journey.css?v=1">
+<link rel="stylesheet" href="/academy-journey.css?v=2">
 <script src="/membership.js?v=1" defer></script>
 </head>
 <body>
@@ -3455,7 +3455,7 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
-<script src="/academy-journey.js?v=1"></script>
+<script src="/academy-journey.js?v=2"></script>
 <script src="/academy-lobby.js?v=12" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
@@ -8035,11 +8035,6 @@ function renderLevels(trackId) {
 
   // --- Panel tingkat aktif ---
   const a = active;
-  const doneBadge = a.complete
-    ? `<span class="lvlpanel-chip done">✓ Tuntas · ${a.avg}% · ${fmtDate(a.lastDate)}</span>`
-    : (a.passed > 0 ? `<span class="lvlpanel-chip prog">${a.passed}/${a.total} modul lulus</span>` : '');
-  const pct = a.total ? Math.round((a.passed / a.total) * 100) : 0;
-
   const grid = a.total
     ? `<div class="crs-grid esa-modgrid">${a.modules.map(m => {
         try { return esaModuleCardHtml(m, trackId, a.lvl.id); }
@@ -8056,24 +8051,7 @@ function renderLevels(trackId) {
 
   const panel = `
     <div class="lvlpanel" id="esa-level-panel">
-      <div class="lvlpanel-hero">
-        <div class="lvlpanel-cover" style="background:${esaLevelCoverBg(a.lvl.id)}">${window.esaJourneyCover ? esaJourneyCover(trackId, a.lvl.id) : esaLevelCover(a.lvl.id)}</div>
-        <div class="lvlpanel-info">
-          <div class="lvlpanel-eyebrow">Tingkat ${a.num} dari ${data.length} · ${a.total} modul ${doneBadge}</div>
-          <h3>${escapeHtml(a.lvl.name)}</h3>
-          <p>${escapeHtml(a.lvl.desc || '')}</p>
-          <div class="lvlpanel-bar"><i style="width:${pct}%"></i></div>
-          <div class="lvlpanel-actions">
-            ${a.total ? `<button type="button" class="level-start-btn" onclick="startLevel('${a.lvl.id}','${trackId}')">
-              <span>${a.complete ? 'Ulangi' : (a.passed ? 'Lanjutkan' : 'Mulai')} ${escapeHtml(LEVELS[a.idx].name)}</span>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>` : ''}
-            ${a.locked ? `<button type="button" class="lvlpanel-unlock" onclick="esaRequireAccess()">Buka akses penuh</button>` : ''}
-          </div>
-          ${a.locked ? `<div class="lvlpanel-note">Materi PPT, quiz 25 soal, dan asisten modul terbuka untuk semua. Hanya pemutaran video yang memerlukan akses penuh.</div>` : ''}
-        </div>
-      </div>
-      ${window.esaJourneyMission ? esaJourneyMission(a) : ''}
+      <div class="journey-episodes"><div><span class="journey-eyebrow">TAHAP ${a.num} DARI ${data.length}</span><h3>${escapeHtml(a.lvl.name)} · Episode belajar</h3></div><span>${a.passed}/${a.total} modul lulus</span></div>
       ${grid}
       <div class="lvlpanel-foot">
         ${prev ? `<button type="button" class="lvlflow-btn" onclick="esaSetLevel('${prev.lvl.id}','${trackId}')">‹ ${escapeHtml(LEVELS[prev.idx].name)}</button>` : '<span></span>'}

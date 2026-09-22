@@ -29,3 +29,15 @@ test('resume opens the first unpassed module and completed levels remain replaya
  c.esaIsModulePassed=code=>code===mods[0].code;c.startLevel('L3','S14');assert.equal(opened[0],mods[1].code);
  c.esaIsModulePassed=()=>true;c.startLevel('L3','S14');assert.equal(opened[0],mods[0].code);
 });
+test('each Academy pairs its own world with six distinct career portraits',()=>{
+ const c=setup();for(let i=1;i<=16;i++){
+  const covers=[];for(let j=1;j<=6;j++){
+   const html=c.esaJourneyCover('S'+i,'L'+j);
+   assert(html.includes(`/track-art/s${i}.webp`));
+   assert(html.includes(`/img/journey/l${j}.png`));
+   assert(fs.existsSync(path.join(root,`img/journey/l${j}.png`)));
+   covers.push(html);
+  }
+  assert.equal(new Set(covers).size,6);
+ }
+});

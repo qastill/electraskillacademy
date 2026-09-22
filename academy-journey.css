@@ -75,3 +75,13 @@
 .has-journey .lvlflow-node{flex:1 0 155px}
 @media(max-width:560px){.has-journey .lvlflow-node{flex:0 0 156px}.has-journey .esa-modgrid{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:245px;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:16px}.has-journey .esa-modgrid>*{scroll-snap-align:start;min-width:0}}
 @media(max-width:560px){body:has(#view-jalur.active) #esa-sticky-mobile-cta{display:none!important}.has-journey .journey-episodes>span:after{content:' · geser untuk melihat lainnya'}}
+/* Six distinct career portraits layered over each Academy's own engineering world. */
+.has-journey .lvlflow-thumb{aspect-ratio:4/3}
+.has-journey .lvlflow-thumb .journey-stage-world{object-position:center;opacity:.58;filter:saturate(.8)}
+.journey-stage-shade{position:absolute;inset:0;background:linear-gradient(90deg,var(--journey-dark),transparent 80%);z-index:1}
+.has-journey .lvlflow-thumb .journey-stage-person{inset:auto 0 0;width:100%;height:95%;object-fit:contain;object-position:center bottom;z-index:2;filter:none}
+.has-journey .lvlflow-thumb:after{z-index:3;background:linear-gradient(0deg,rgba(5,17,23,.85),transparent 38%)}
+.has-journey .journey-cover-level,.has-journey .journey-cover-topic,.has-journey .lvlflow-thumb .n{z-index:4}
+.has-journey .journey-cover-level{font-size:8px;padding:3px 6px;top:7px;left:7px}
+.journey-episodes h3{font:500 26px/1.2 var(--serif,Georgia);margin:5px 0 0;color:#21352d}
+@media(max-width:560px){.journey-episodes h3{font-size:23px}}
