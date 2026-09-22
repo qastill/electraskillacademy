@@ -11,6 +11,7 @@ node tests/quiz-kejelasan.test.mjs   # tanpa browser
 node tests/quiz-coverage.test.mjs --backlog   # + daftar modul yang banknya masih tipis
 node tests/academy-labs.test.mjs     # tanpa browser
 node tests/lab-handson.test.mjs      # tanpa browser
+node tests/aset-ringan.test.mjs      # tanpa browser
 node tests/youtube-map.test.mjs      # tanpa browser
 node tests/module-thumbs.test.mjs    # tanpa browser
 node tests/sertifikat-profil.test.mjs # tanpa browser
@@ -19,6 +20,7 @@ node tests/youtube-map.test.mjs --drive       # + daftar modul yang masih dari G
 # butuh server statis + Chromium
 npx http-server . -p 8080 --cors -s &
 PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node tests/alur-sertifikat.test.mjs
+PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node tests/mobile-ringan.test.mjs
 ```
 
 ## Apa yang dijaga masing-masing
@@ -68,6 +70,24 @@ Yang dijaga: setiap id di `ESA_HANDSON_LABS` punya pembangun di
 jalur yang sah, punya entri `SIM_INFO`, dan — yang paling penting — tidak ada
 satu pun dari keenam belas Academy yang kembali nol lab berbasis aksi. Menghapus
 sebuah lab tanpa menggantinya gagal di sini, bukan di keluhan peserta.
+
+### `aset-ringan.test.mjs` — halaman tidak diam-diam jadi berat di ponsel
+Audit ponsel menemukan dua hal yang tidak pernah memunculkan galat: halaman
+Academy mengunduh enam PNG potret 1,5–2,1 MB (9,8 MB) untuk kartu selebar
+±140 px, dan grid 16 Academy jatuh ke 8 kolom selebar 38 px di layar 390 px
+karena aturan dasarnya ditulis setelah media query-nya. Tes ini, tanpa
+browser, menolak gambar yang dirujuk tetapi > 300 KB atau tidak ada, potret
+jalur yang bukan WebP ≤ 60 KB, aturan grid lobby yang urutannya terbalik,
+dan skrip data berat (bank soal, pembangun lab, media modul) yang dimuat
+eager lewat `<script src>`.
+
+### `mobile-ringan.test.mjs` — alur peserta di iPhone (butuh server + Chromium)
+Menjalankan alur peserta berbayar di iPhone 12 dengan CPU 4× lebih lambat:
+beranda → lobby → jalur → modul → kuis → tiga lab → view Labs → Talent →
+view lain. Menjaga: tidak ada overflow horizontal di view mana pun, 16
+tombol Academy ≥ 44 px, jalur tidak mengunduh PNG potret, beranda tidak
+merakit grid Labs/Talent (< 10.000 node; dulu 11.921), dan kuis serta lab
+tetap bekerja setelah skrip labnya dipindah ke berkas yang dimuat lazy.
 
 ### `module-thumbs.test.mjs` — sampul modul tidak menunjuk berkas yang tidak ada
 `data/module-thumbs.js` mengisi thumbnail modul yang videonya belum di YouTube.

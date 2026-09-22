@@ -1,0 +1,9 @@
+# Berkas yang tidak perlu ikut ke deploy (tidak pernah dirujuk halaman mana pun).
+# PNG master potret jalur (1,5–2,1 MB per berkas) — halaman memakai versi WebP.
+img/journey/*.png
+# Foto sumber 16 × 2,5 MB yang tidak dirujuk oleh HTML/JS/CSS mana pun.
+foto home/
+# Pengujian, perkakas, dan dokumentasi pengembang.
+tests/
+tools/
+docs/

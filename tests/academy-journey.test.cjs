@@ -35,8 +35,8 @@ test('each Academy pairs its own world with six distinct career portraits',()=>{
   const covers=[];for(let j=1;j<=6;j++){
    const html=c.esaJourneyCover('S'+i,'L'+j);
    assert(html.includes(`/track-art/s${i}.webp`));
-   assert(html.includes(`/img/journey/l${j}.png`));
-   assert(fs.existsSync(path.join(root,`img/journey/l${j}.png`)));
+   assert(html.includes(`/img/journey/l${j}.webp`));
+   assert(fs.existsSync(path.join(root,`img/journey/l${j}.webp`)));
    covers.push(html);
   }
   assert.equal(new Set(covers).size,6);

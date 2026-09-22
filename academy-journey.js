@@ -20,12 +20,16 @@
   };
   window.ESA_ACADEMY_THEMES = themes;
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // Potret tiap tingkat dipakai sebagai WebP 480 px (±28 KB), bukan PNG
+  // master 1.145×1.374 px (1,5–2,1 MB). Kartunya sendiri hanya ±140 px di
+  // ponsel; enam PNG itu (9,8 MB) dulu ikut terunduh setiap kali sebuah
+  // Academy dibuka dan menjadi penyebab utama halaman terasa berat di HP.
   window.esaJourneyCover = (trackId, levelId) => {
     const t = themes[trackId];
     if (!t) return '';
     const stageNames = {L1:'Pemula',L2:'Teknisi pemula',L3:'Praktisi',L4:'Perancang',L5:'Ahli',L6:'Konsultan'};
     if (!stageNames[levelId]) return '';
-    return `<img class="journey-stage-world" src="/track-art/${trackId.toLowerCase()}.webp" alt="" loading="lazy" decoding="async"><span class="journey-stage-shade" aria-hidden="true"></span><img class="journey-stage-person" src="/img/journey/${levelId.toLowerCase()}.png" alt="${esc(stageNames[levelId])} — ${esc(window.ACADEMY_NAMES[trackId])}" loading="lazy" decoding="async"><span class="journey-cover-topic">${esc(t[5])}</span><span class="journey-cover-level">TAHAP ${esc(levelId.slice(1))}</span>`;
+    return `<img class="journey-stage-world" src="/track-art/${trackId.toLowerCase()}.webp" alt="" loading="lazy" decoding="async"><span class="journey-stage-shade" aria-hidden="true"></span><img class="journey-stage-person" src="/img/journey/${levelId.toLowerCase()}.webp" alt="${esc(stageNames[levelId])} — ${esc(window.ACADEMY_NAMES[trackId])}" loading="lazy" decoding="async"><span class="journey-cover-topic">${esc(t[5])}</span><span class="journey-cover-level">TAHAP ${esc(levelId.slice(1))}</span>`;
   };
   // Lompat ke salah satu dari dua bagian halaman Academy. Dibuat sebagai satu
   // fungsi supaya penanda tombol aktif dan sasaran gulirnya tidak pernah
