@@ -141,9 +141,9 @@
       <section class="journey-practice" aria-labelledby="prak-judul">
         <header class="prak-head">
           <div>
-            <span class="prak-eyebrow">Teori → Praktik</span>
+            <span class="prak-eyebrow">Mulai dari praktik</span>
             <h3 id="prak-judul">Praktik bidang ini</h3>
-            <p>Teorinya sudah. Sekarang coba sendiri — ubah angkanya, lihat akibatnya.</p>
+            <p>Coba dulu: ubah angkanya, rangkai sendiri, lihat akibatnya. Materi dan videonya ada di bawah.</p>
           </div>
           <span class="prak-count">${semua.length} lab</span>
         </header>

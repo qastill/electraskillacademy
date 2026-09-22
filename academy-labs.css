@@ -2,14 +2,14 @@
  *
  * Warnanya sengaja meminjam token halaman journey (--journey-dark /
  * --journey-accent) supaya bagian ini terbaca sebagai lanjutan dari daftar
- * modul, bukan tempelan dari menu lain. Satu garis pemisah di atas, judul
- * pendek, lalu kartu-kartu lab: cukup untuk menandai pergantian dari teori
- * ke praktik tanpa menambah hiasan baru.
+ * modul, bukan tempelan dari menu lain. Sejak bagian ini naik ke atas daftar
+ * modul, garis pemisahnya pindah ke bawah: ia menandai pergantian dari praktik
+ * ke teori, bukan sebaliknya.
  */
 .journey-practice {
-  margin: 28px 0 4px;
-  padding-top: 24px;
-  border-top: 1px solid #21352d1f;
+  margin: 26px 0 4px;
+  padding-bottom: 26px;
+  border-bottom: 1px solid #21352d1f;
 }
 
 .prak-head {
@@ -124,7 +124,7 @@
 .prak-more:hover { opacity: .75; }
 
 @media (max-width: 560px) {
-  .journey-practice { margin-top: 22px; padding-top: 20px; }
+  .journey-practice { margin-top: 20px; padding-bottom: 20px; }
   .prak-head { flex-direction: column; align-items: flex-start; gap: 8px; }
   .prak-head h3 { font-size: 21px; }
   .prak-grid { grid-template-columns: 1fr; gap: 12px; }
