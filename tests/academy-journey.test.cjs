@@ -16,7 +16,8 @@ test('all 16 Academies have real art, curriculum-derived counts and the next inc
   const data=c.LEVELS.map((lvl,index)=>{const modules=index<2?c.CURRICULUM[lvl.id]:c.CURRICULUM[id].filter(m=>m.level===lvl.id);return {lvl,total:modules.length,passed:index===0?modules.length:0,complete:index===0};});
   const html=c.esaJourneyHero(id,data);assert(html.includes(c.ACADEMY_NAMES[id].replace(/&/g,'&amp;')));
   assert(html.includes(`startLevel('L2','${id}')`));
-  assert(html.includes(`${data.reduce((n,d)=>n+d.total,0)} modul dalam kurikulum`));
+  // Chip informasi diganti pemilih dua arah; yang dijaga sekarang keduanya ada.
+  assert(html.includes(`esaJourneyGo('teori'`) && html.includes(`esaJourneyGo('praktik'`));
   assert.equal((html.match(/<li>/g)||[]).length,3);
  }
 });

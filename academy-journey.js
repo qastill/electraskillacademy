@@ -27,6 +27,23 @@
     if (!stageNames[levelId]) return '';
     return `<img class="journey-stage-world" src="/track-art/${trackId.toLowerCase()}.webp" alt="" loading="lazy" decoding="async"><span class="journey-stage-shade" aria-hidden="true"></span><img class="journey-stage-person" src="/img/journey/${levelId.toLowerCase()}.png" alt="${esc(stageNames[levelId])} — ${esc(window.ACADEMY_NAMES[trackId])}" loading="lazy" decoding="async"><span class="journey-cover-topic">${esc(t[5])}</span><span class="journey-cover-level">TAHAP ${esc(levelId.slice(1))}</span>`;
   };
+  // Lompat ke salah satu dari dua bagian halaman Academy. Dibuat sebagai satu
+  // fungsi supaya penanda tombol aktif dan sasaran gulirnya tidak pernah
+  // berbeda pendapat.
+  window.esaJourneyGo = (bagian, btn) => {
+    const wadah = btn && btn.parentElement;
+    if (wadah) for (const b of wadah.querySelectorAll('.jswitch-btn')) {
+      b.classList.toggle('is-active', b === btn);
+    }
+    // Bagian praktik baru ada setelah panel tingkat dirender; kalau belum ada,
+    // daftar modul tetap sasaran yang masuk akal daripada tidak terjadi apa-apa.
+    const sasaran = (bagian === 'praktik' && document.querySelector('.journey-practice'))
+      || document.getElementById('academy-roadmap');
+    if (!sasaran) return;
+    const halus = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    sasaran.scrollIntoView({ behavior: halus ? 'smooth' : 'auto', block: 'start' });
+  };
+
   window.esaJourneyHero = (trackId, data) => {
     const t = themes[trackId];
     if (!t) return '';
@@ -42,8 +59,11 @@
       <div class="journey-copy"><div class="journey-kicker">ELECTRA ORIGINAL LEARNING PATH <span>● ${data.length} TAHAP</span></div>
       <h1>${esc(name.replace(' Academy',''))}<em>${esc(t[2])}</em></h1>
       <p class="journey-learn"><strong>Di sini kamu akan belajar</strong> ${esc(t[3])} Mulai dari fondasi listrik, lalu masuk ke spesialisasimu.</p>
-      <div class="journey-tags"><span>${total} modul dalam kurikulum</span><span>Misi & kuis</span><span>Sertifikat per tingkat</span></div>
-      <div class="journey-actions"><button type="button" class="journey-play" onclick="startLevel('${next.lvl.id}','${trackId}')">▶ ${passed ? (passed===total ? 'Ulangi perjalanan' : 'Lanjutkan belajar') : 'Mulai perjalanan'} <span>→</span></button><button type="button" class="journey-secondary" onclick="document.getElementById('academy-roadmap').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})">Lihat tahapan ↓</button></div>
+      <div class="journey-switch" role="group" aria-label="Pilih bagian">
+        <button type="button" class="jswitch-btn is-active" data-bagian="teori" onclick="esaJourneyGo('teori', this)"><b>Teori</b><small>Modul &amp; video</small></button>
+        <button type="button" class="jswitch-btn" data-bagian="praktik" onclick="esaJourneyGo('praktik', this)"><b>Praktik</b><small>Lab &amp; simulator</small></button>
+      </div>
+      <div class="journey-actions"><button type="button" class="journey-play" onclick="startLevel('${next.lvl.id}','${trackId}')">▶ ${passed ? (passed===total ? 'Ulangi perjalanan' : 'Lanjutkan belajar') : 'Mulai perjalanan'} <span>→</span></button></div>
       <div class="journey-progress"><span>${passed} dari ${total} modul lulus</span><span>${Math.round(passed/Math.max(total,1)*100)}%</span><progress aria-label="Progres modul Academy" value="${passed}" max="${total||1}"></progress></div>
       </div><div class="journey-art"><img src="/track-art/${trackId.toLowerCase()}.webp" alt="Ilustrasi ${esc(name)}" fetchpriority="high"><div class="journey-art-label"><span>YOUR NEXT CHAPTER</span><strong>${esc(t[5])}</strong></div></div>
     </section>
