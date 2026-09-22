@@ -1,0 +1,77 @@
+[
+  {
+    "key": "wiring",
+    "prompt": "Use case: stylized-concept. Create ONE premium photorealistic 3D editorial artwork for Electra Academy electrical installation textbook covers and simulator thumbnails. Portrait 2:3. Subject: open electrical distribution board with orderly circuit breakers and neatly routed red blue yellow green insulated wiring, copper busbars, a few realistic electrical tools in foreground. Dramatic dark midnight teal workshop, brass rim lighting, exquisite realistic metal and plastic materials, subtle blueprint lines behind. Main equipment contained in middle 60% vertically, dark calm top 22% and bottom 15% reserved for HTML title overlay. Match luxury technical textbook illustration quality. No text, no letters, no logos, no watermark, no page mockup or border. Single standalone image.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "light",
+    "prompt": "Use case: stylized-concept. ONE premium photorealistic 3D editorial illustration for an electrical lighting textbook. Portrait 2:3. A beautifully detailed architectural lighting study: miniature modern room cutaway with warm ceiling luminaires and LED strips, in foreground an elegant exposed LED bulb, bulb socket and small lux meter, resting on dark brass-accented drafting desk. Midnight blue and amber cinematic light, realistic glass metal and frosted diffuser textures, faint technical blueprint drawing in background. Rich realistic textbook cover style. Main subject in middle 60%, dark calm top 22% for HTML book title and bottom 15% for author. No text, lettering, logos, watermark, frame, or book mockup.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "control",
+    "prompt": "Use case: stylized-concept. Single portrait 2:3 premium photorealistic technical editorial artwork. Subject: polished industrial automation laboratory with a compact robotic arm, PLC controller with neatly connected terminals, proximity sensors and a small conveyor module on a dark engineering bench. Rich blue-teal shadows and copper-gold rim light, realistic machined metal, brushed steel, cables, subtle faint blueprint network lines. Equipment grouped in middle 60% of frame, quiet dark top 22% and bottom 15% for HTML book title and metadata overlay. Luxury realistic 3D engineering textbook cover, highly detailed and grounded. No typography, no logo, no watermark, no mockup or borders.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "math",
+    "prompt": "Use case: stylized-concept. One premium realistic 3D editorial illustration for university mathematics and numerical modeling textbooks. Portrait 2:3. A sculptural translucent blue three-dimensional mathematical saddle surface on a brass Cartesian coordinate apparatus, delicate wireframe curves and intersecting geometric solids, a drafting compass and ruler on a dark midnight navy desk. Precise elegant scientific visualization, photoreal materials, warm gold rim light, quiet subtle coordinate grid in background. Hero objects concentrated in central 60%; leave top 22% and bottom 15% dark and low-detail for book title and author overlay. No numbers or equations or text, no logos, no watermark, no book mockup, no border.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "signal",
+    "prompt": "Use case: stylized-concept. Create one portrait 2:3 premium photorealistic technical textbook cover artwork for Signals and Systems, digital signal processing and circuit analysis. A highly detailed modern oscilloscope displaying clean green and amber sine wave traces without lettering, realistic probes connected to a small breadboard with resistors capacitors and a copper inductor on a dark laboratory bench. Midnight navy, deep emerald, warm gold rim lighting, fine reflective materials, faint waveform blueprint background. Main apparatus in center 60%, quiet dark top 22% and bottom 15% for HTML text overlays. No words, digits, brand marks, logos, watermarks, borders or book mockup.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "antenna",
+    "prompt": "Use case: stylized-concept. One premium realistic portrait 2:3 technical textbook illustration for communication systems and antenna theory. Central hero: detailed brushed-metal parabolic satellite dish beside a slim telecommunications antenna, fiber-optic strands glowing softly teal and a small realistic RF circuit module on a dark engineering desk. A distant night city barely visible, subtle concentric wave arcs as blueprint accents. Cinematic navy and teal with restrained gold rim lights, premium 3D realism and precise material detail. Main subjects contained in middle 60% vertically, dark empty top 22% and bottom 15% for readable HTML book-title/author overlays. No typography, words, logos, watermark or mockup frame.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "physics",
+    "prompt": "Use case: stylized-concept. One portrait 2:3 premium photorealistic editorial illustration for university physics and electromagnetics textbooks. On a dark navy laboratory table: a beautiful copper solenoid and horseshoe magnet with delicate iron filing field patterns, a glass prism refracting a thin beam of light, and a small brass pendulum apparatus behind. Realistic science laboratory materials and credible precision apparatus. Dramatic warm brass highlights and deep cool blue shadows, faint scientific curves in background. Large central objects occupying middle 60%, top 22% and bottom 15% very dark quiet negative space for HTML title and author. No words, numbers, logos, watermark, border, or book mockup.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "pneumatic",
+    "prompt": "Use case: stylized-concept. Single premium photorealistic portrait 2:3 technical textbook artwork for Pneumatics and Hydraulics. Hero objects on an engineering bench: polished pneumatic piston cylinder with extended steel rod, blue air hoses connected to a valve manifold, pressure gauge, and a hydraulic cylinder cutaway revealing the piston. Precise tactile metal, brass fittings, dark navy and teal studio, warm copper rim lighting, subtle engineering blueprint in background. Objects centered in middle 60%, calm dark top 22% and bottom 15% reserved for title and metadata overlay. No lettering, digits, logos, watermark, border, or book mockup.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "safety",
+    "prompt": "Use case: stylized-concept. One photorealistic premium editorial electrical safety artwork, portrait 2:3. Close-up of a red industrial safety padlock properly attached to a breaker lockout device on an isolated electrical cabinet handle, blank white tag with red border hanging beside it, insulated electrician gloves and a protective face shield resting below on dark workbench. No people. Dramatic midnight navy workshop and warm gold highlights, detailed brushed metal and red polymer, subtle electrical blueprint accents. Main objects in central 60%, low-detail dark top 22% and bottom 15%. Useful for LOTO and arc-flash safety training thumbnails. No text or logos, no watermarks or book mockups.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "earth",
+    "prompt": "Use case: stylized-concept. Single premium photorealistic portrait 2:3 technical editorial artwork about electrical grounding and residual-current protection. Central close-up on a dark workbench of a copper earth busbar with bolted green-yellow protective conductors, copper grounding rod with a clamp beside it, and a realistic residual-current breaker and earth resistance tester. Crisp tactile copper and steel, dark teal and midnight navy background, elegant amber studio rim lighting, faint schematic accents. Main components middle 60% vertically, dark low-detail top 22% and bottom 15% for HTML titles. No words, logos, watermark, book mockup or border.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "book",
+    "prompt": "Use case: stylized-concept. One premium photorealistic portrait 2:3 editorial textbook illustration for education, study and teaching engineering. A beautifully arranged dark university desk with open blank cream notebook, two closed leather-bound books without lettering, brass desk lamp, fountain pen and a small electrical circuit teaching kit, subtle blurred classroom shelving behind. Rich midnight teal shadows, warm amber pool of light, tactile paper and wood, polished high-end 3D realism. Composition main still life in middle 60%, top 22% and bottom 15% dark quiet for HTML title and author overlay. No text, words, logos, watermark, border, no book cover mockup.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "tower",
+    "prompt": "Use case: stylized-concept. One premium photorealistic portrait 2:3 technical editorial book-cover image for power transmission and high-voltage engineering. A majestic realistic lattice transmission tower and substation transformer with ceramic bushings, copper conductors and insulator strings, seen as a detailed engineering diorama at blue hour. Dark midnight navy sky and restrained gold operational lighting, rich metallic detail, faint blueprint linework merging into background. Equipment in central 60%, quiet dark top 22% and bottom 15% for overlaid HTML title and author. No text, lettering, logos, watermark, frame or book mockup.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "refrigeration",
+    "prompt": "Use case: stylized-concept. One photorealistic portrait 2:3 premium technical editorial illustration for refrigeration and air conditioning engineering textbooks. A detailed HVAC training apparatus on a dark bench: finned condenser coil with circular fan, black compressor, curved copper refrigerant tubing, manifold gauges with blue and red hoses. Realistic grounded mechanical arrangement, no people. Midnight navy and dark teal backdrop, warm copper-gold rim illumination, faint engineering schematic lines. Central 60% holds the equipment, top 22% and bottom 15% dark negative space for HTML title author. No lettering, brand logos, watermark, border or book mockup.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "chart",
+    "prompt": "Use case: stylized-concept. One premium photorealistic portrait 2:3 technical editorial illustration for engineering economy, entrepreneurship and statistics textbooks. An elegant dark analyst desk with brass mechanical balance, small ascending brushed-gold bars, a scientific calculator without readable characters, rolled plans, and a monitor showing clean unlabeled teal data curves and distribution plots. Sophisticated realistic materials, midnight navy backdrop and warm amber rim light, restrained financial engineering still life. Main objects centered in middle 60%, dark calm top 22% and bottom 15% for HTML book title/author overlay. No text, words, logos, watermark, border, or book mockup.",
+    "tool": "built-in image_gen"
+  },
+  {
+    "key": "drafting",
+    "prompt": "Use case: stylized-concept. One photorealistic portrait 2:3 premium editorial artwork for electrical technical drawing textbook. A beautiful dark drafting desk with an unlettered blueprint of electrical installation and an isometric switchboard sketch, polished brass drafting compass, steel ruler, set square, mechanical pencil, and a small machined electrical component. Rich paper texture, navy blueprint surface, warm gold desk lamp light and dark teal shadows, sophisticated realistic 3D materials. Hero arrangement in central 60%, top 22% and bottom 15% dark negative space for HTML title and author overlay. No words, no numbers, no logos, watermark, borders or book mockup.",
+    "tool": "built-in image_gen"
+  }
+]

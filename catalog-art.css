@@ -1,0 +1,38 @@
+/* Cohesive technical illustrations; labels and book titles remain selectable. */
+.catalog-art{display:block;position:relative;overflow:hidden;width:100%;aspect-ratio:16/10;background:var(--art-bg);color:var(--art-ink);isolation:isolate;border-radius:9px}
+.catalog-art svg{display:block;width:100%;height:100%}
+.catalog-art-label,.catalog-art-mark{position:absolute;font:600 8px/1.3 var(--sans,Arial,sans-serif);text-transform:uppercase;letter-spacing:.12em;color:var(--art-gold)}
+.catalog-art-label{bottom:10px;left:14px}.catalog-art-mark{right:14px;top:11px}
+.prak-card>.catalog-art{width:calc(100% + 32px);max-width:none;margin:-16px -16px 9px;flex-shrink:0;border-radius:13px 13px 0 0}
+.prak-card:focus-visible{outline:3px solid #b78d49;outline-offset:4px}
+.lab-tile>.catalog-art{position:absolute;inset:0;width:100%;height:100%;border-radius:inherit;aspect-ratio:auto}
+.lab-tile>.catalog-art svg{height:72%;margin-top:-4%;opacity:.9}.lab-tile>.catalog-art .catalog-art-label{display:none}
+.vlab-card>.catalog-art{margin-bottom:18px}
+.calc-card-thumb>.catalog-art{height:100%;border-radius:inherit;aspect-ratio:auto}
+.esa-book-cover{min-height:360px;height:auto;aspect-ratio:auto;display:flex;flex-direction:column;justify-content:flex-start}
+.esa-book-cover-title{flex:0;font-size:clamp(1.05rem,1.5vw,1.28rem);line-height:1.24;overflow-wrap:anywhere}
+.esa-book-cover>.catalog-art--book{flex:1;min-height:105px;max-height:155px;margin:2px 0 14px;aspect-ratio:16/9;background:transparent;border-radius:0;position:relative;z-index:2}
+.catalog-art--book .catalog-art-label,.catalog-art--book .catalog-art-mark{display:none}
+.esa-book-cover-author{margin-top:auto}.esa-book-cover-edition{line-height:1.5;padding-bottom:9px}
+/* Book typography remains readable over decorative artwork. */
+.esa-book-cover.has-cover-art .esa-book-cover-title{flex:1;min-height:145px}
+.esa-book-cover.has-cover-art .esa-book-cover-shade{background:linear-gradient(180deg,#050a14e8, #050a1499 40%,#050a1433 60%,#050a14ed 88%)}
+@media(max-width:600px){.esa-book-cover{min-height:350px;padding:18px 14px 24px 22px}.esa-book-cover-title{font-size:1.05rem}.esa-book-cover-band{letter-spacing:.10em}.esa-book-cover>.catalog-art--book{min-height:95px}}
+@media(max-width:560px){.prak-card>.catalog-art{width:calc(100% + 28px);margin:-14px -14px 9px}.prak-card>.catalog-art{aspect-ratio:16/9}}
+.esa-book{min-width:0}.esa-book-cover-band{overflow-wrap:anywhere}
+@media(max-width:480px){.esa-ref-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.esa-book-cover{padding:16px 12px 24px 18px}.esa-book-cover-title{font-size:1rem}.esa-book-cover-author{letter-spacing:.02em}}
+@media(max-width:360px){.esa-ref-grid{grid-template-columns:minmax(0,1fr)}.esa-book-cover{min-height:390px}.esa-book-cover-title{font-size:1.35rem}}
+.esa-book-cover.has-cover-art>.catalog-art--book{display:none}
+
+/* Realistic editorial artwork, with the existing SVG behind each image. */
+.catalog-art-photo{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center 53%}
+.catalog-art-photo-shade{position:absolute;inset:0;background:linear-gradient(180deg,#07131b0a 50%,#07131bc9 100%);pointer-events:none}
+.catalog-art-label,.catalog-art-mark{z-index:1;color:#f1d5a0;text-shadow:0 1px 3px #000}
+.lab-tile .catalog-art-photo{object-position:center 48%}
+.esa-book-cover.has-cover-art{min-height:370px;background:#07131b}
+.esa-book-cover.has-cover-art .esa-book-cover-title{flex:0;min-height:0;margin-bottom:0;font-size:clamp(1rem,1.2vw,1.1rem);line-height:1.24;hyphens:auto}
+.esa-book-cover.has-cover-art .esa-book-cover-author{margin-top:auto;padding-top:120px;color:#f4eddf}
+.esa-book-cover.has-cover-art .esa-book-cover-shade{background:linear-gradient(180deg,#050a14e6 0%,#050a1499 25%,#050a1414 44%,#050a140a 60%,#050a14d9 80%,#050a14fa 100%)}
+.esa-book-cover-art{object-position:center 52%}
+@media(max-width:600px){.esa-book-cover.has-cover-art{min-height:340px}.esa-book-cover.has-cover-art .esa-book-cover-title{font-size:1rem}.esa-book-cover.has-cover-art .esa-book-cover-author{padding-top:105px}}
+@media(max-width:360px){.esa-book-cover.has-cover-art{min-height:410px}.esa-book-cover.has-cover-art .esa-book-cover-title{font-size:1.35rem}.esa-book-cover.has-cover-art .esa-book-cover-author{padding-top:140px}}

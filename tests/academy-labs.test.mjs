@@ -77,6 +77,7 @@ assert(sandbox.SIMULATORS.length < sisaLiteral,
   'saringan simulator ikut dijalankan (jumlahnya harus menyusut dari daftar mentah)');
 
 ctx.window.ESA_LABS_INDEX = { sim: sandbox.SIMULATORS, vlab: sandbox.VIRTUAL_LABS, calc: sandbox.CALCULATORS };
+vm.runInContext(fs.readFileSync(path.join(ROOT, 'catalog-art.js'), 'utf8'), ctx, { filename: 'catalog-art.js' });
 vm.runInContext(fs.readFileSync(path.join(ROOT, 'academy-labs.js'), 'utf8'), ctx, { filename: 'academy-labs.js' });
 
 const PETA = ctx.window.ESA_ACADEMY_LABS;
@@ -152,3 +153,29 @@ console.log(`Lab tersedia : ${punya.sim.size} simulator · ${punya.vlab.size} vi
 const rinci = Object.keys(PETA)
   .map(t => `${t}:${(praktik(t).match(/class="prak-card"/g) || []).length}`).join(' ');
 console.log(`Kartu/Academy: ${rinci}`);
+
+// Every visible practice card has artwork, and every book can render a fallback.
+for (const track of Object.keys(PETA)) {
+  const markup = praktik(track);
+  assert.equal((markup.match(/class="prak-card"/g) || []).length,
+    (markup.match(/class="catalog-art /g) || []).length, `${track}: every card illustrated`);
+}
+vm.runInContext(fs.readFileSync(path.join(ROOT, 'data/books.js'), 'utf8'), ctx);
+for (const item of [...sandbox.SIMULATORS, ...sandbox.VIRTUAL_LABS, ...sandbox.CALCULATORS, ...ctx.BOOKS]) {
+  const art = ctx.esaCatalogArt(item);
+  assert(art.includes('<svg') && !art.includes('undefined'), `Valid illustration: ${item.id || item.lab}`);
+}
+assert(!ctx.esaCatalogArt({title:'<img src=x onerror=alert(1)>'}).includes('onerror=alert(1)'), 'Catalog metadata cannot inject markup');
+console.log(`PASS artwork: ${ctx.BOOKS.length} books plus all simulator, virtual lab and calculator entries`);
+
+for (const item of [...sandbox.SIMULATORS, ...sandbox.VIRTUAL_LABS, ...sandbox.CALCULATORS, ...ctx.BOOKS]) {
+  const cover = item.cover || ctx.esaCatalogCover(item);
+  assert(cover.startsWith('/'), 'All artwork is hosted locally');
+  assert(fs.existsSync(path.join(ROOT, cover)), `Missing artwork: ${cover}`);
+}
+assert.equal(ctx.esaCatalogTopic({title:'Fundamentals of Physics'}), 'physics');
+assert.equal(ctx.esaCatalogTopic({title:'Pneumatik dan Hidrolik'}), 'pneumatic');
+assert.equal(ctx.esaCatalogTopic({title:'Kontrol Refrigerasi dan Tata Udara'}), 'refrigeration');
+assert.equal(ctx.esaCatalogTopic({title:'Signals and Systems'}), 'signal');
+assert.equal(ctx.esaCatalogTopic({title:'Teknik Kontrol 1'}), 'control');
+console.log('PASS realistic assets: all 120 books and 73 labs resolve to local artwork');
