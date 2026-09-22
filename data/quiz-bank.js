@@ -1572,7 +1572,7 @@ window.QUIZ_BANK = {
     "Menambah jumlah kabel"
    ],
    "a": 1,
-   "explain": "PF rendah disebabkan beban induktif (motor, ballast, trafo). Solusi standar: kapasitor bank yang menyuplai kVAR lokal sehingga arus reaktif tidak lagi ditarik dari PLN. APFC (Automatic Power Factor Controller) menghidupkan/mematikan step kapasitor sesuai PF real-time. Ini bisnis utama Envisor (energy consulting) — ROI biasanya < 1 tahun karena denda kVARh dan diskon kVA langsung berkurang."
+   "explain": "PF rendah disebabkan beban induktif (motor, ballast, trafo). Solusi standar: kapasitor bank yang menyuplai kVAR lokal sehingga arus reaktif tidak lagi ditarik dari PLN. APFC (Automatic Power Factor Controller) menghidupkan/mematikan step kapasitor sesuai PF real-time."
   },
   {
    "type": "theory",
@@ -2162,7 +2162,7 @@ window.QUIZ_BANK = {
     "Negosiasi dengan PLN agar tidak didenda"
    ],
    "a": 0,
-   "explain": "PF 0,7 → arus reaktif besar → denda kVARh. Investasi APFC dengan kapasitor bank biasanya Rp 50-200 juta tergantung kVAR yang dibutuhkan, ROI 4-12 bulan dari pemotongan denda kVARh + diskon kVA tersambung. Ini contoh konkret bisnis Envisor — sizing yang tepat penting (jangan sampai over-compensate menjadi leading)."
+   "explain": "PF 0,7 → arus reaktif besar → denda kVARh. Investasi APFC dengan kapasitor bank biasanya Rp 50-200 juta tergantung kVAR yang dibutuhkan, ROI 4-12 bulan dari pemotongan denda kVARh + diskon kVA tersambung."
   },
   {
    "type": "theory",
@@ -2210,7 +2210,7 @@ window.QUIZ_BANK = {
     "Kurangi semua peralatan listrik"
    ],
    "a": 0,
-   "explain": "Standar audit ASHRAE Level 1: walk-through audit identifikasi quick win (no-cost / low-cost). LED retrofit ROI 1-2 tahun, optimasi BMS setpoint AC dari 22°C → 24°C bisa hemat 15%, behavior change (matikan saat tidak dipakai) gratis. Setelah quick win selesai, baru evaluasi investasi besar (Level 2: detailed audit). Inilah pendekatan pragmatis Envisor."
+   "explain": "Standar audit ASHRAE Level 1: walk-through audit identifikasi quick win (no-cost / low-cost). LED retrofit ROI 1-2 tahun, optimasi BMS setpoint AC dari 22°C → 24°C bisa hemat 15%, behavior change (matikan saat tidak dipakai) gratis. Setelah quick win selesai, baru evaluasi investasi besar (Level 2: detailed audit)."
   },
   {
    "type": "theory",
@@ -3516,15 +3516,16 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Sarung tangan isolasi listrik harus DIUJI ulang resistansinya setiap…",
+   "q": "Menurut ASTM F496 dan IEC 60903, bagaimana jadwal pemeriksaan dan pengujian sarung tangan isolasi listrik?",
    "opts": [
-    "Setiap hari (visual + air pressure test)",
-    "Setiap 6 bulan (re-testing electrical)",
-    "A dan B benar — visual harian + dielectric test 6 bulanan",
-    "Tidak perlu pengujian"
+    "Pemeriksaan visual dan uji tiup setiap hari sebelum dipakai, ditambah uji dielektrik laboratorium setiap 6 bulan",
+    "Cukup uji dielektrik laboratorium setiap 6 bulan tanpa pemeriksaan harian",
+    "Cukup pemeriksaan visual harian tanpa uji laboratorium",
+    "Cukup sekali saat sarung tangan dibeli"
    ],
-   "a": 2,
-   "explain": "Per ASTM F496 / IEC 60903: HARIAN inspeksi visual + air inflation test, SETIAP 6 BULAN dielectric test laboratorium. Sarung tangan rusak HARUS DIBUANG."
+   "a": 0,
+   "explain": "Standar mensyaratkan dua lapis pemeriksaan. Sebelum tiap pemakaian, sarung tangan diperiksa visual dan diuji tiup untuk menemukan lubang kecil. Setiap 6 bulan, sarung tangan diuji dielektrik di laboratorium. Sarung tangan yang gagal salah satu pengujian harus dimusnahkan, bukan diperbaiki.",
+   "hint": "Ada dua tingkat pemeriksaan: yang bisa dilakukan sendiri tiap hari, dan yang perlu laboratorium."
   },
   {
    "type": "theory",
@@ -4516,15 +4517,16 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Audit safety mengungkap 30% pekerjaan listrik pabrik dilakukan TANPA PTW. Risk score 30 × likelihood × severity. Estimasi annual fatality risk increment?",
+   "q": "Audit keselamatan menemukan 30% pekerjaan listrik di sebuah pabrik dilakukan tanpa izin kerja (PTW). Berdasarkan studi OSHA dan industri, seberapa besar kenaikan risiko kecelakaan fatal dibandingkan pekerjaan dengan PTW yang disiplin?",
    "opts": [
-    "0 (tidak ada perubahan)",
-    "5-10× lebih tinggi dibanding dengan PTW disiplin (study OSHA & industri)",
-    "Sama saja",
-    "Lebih rendah"
+    "Tidak ada perbedaan",
+    "Sekitar 5–10 kali lebih tinggi",
+    "Sekitar 2 kali lebih tinggi",
+    "Lebih rendah, karena pekerjaan selesai lebih cepat"
    ],
    "a": 1,
-   "explain": "Studi OSHA & industri: pekerjaan tanpa PTW vs dengan PTW disiplin → risiko fatal 5-10× lebih tinggi. Sebab: (1) Tidak ada hazard identification systematic, (2) Tidak ada otorisasi/akuntabilitas, (3) APD/LOTO tidak verified, (4) Komunikasi gap antar shift, (5) Tidak ada audit trail. Investasi PTW system + training = ROI safety besar."
+   "explain": "Studi OSHA dan industri menunjukkan pekerjaan tanpa PTW berisiko fatal 5–10 kali lebih tinggi, karena tidak ada identifikasi bahaya yang sistematis, tidak ada otorisasi dan akuntabilitas, APD dan LOTO tidak diverifikasi, komunikasi antar shift terputus, dan tidak ada jejak audit.",
+   "hint": "Apa saja yang hilang ketika pekerjaan dilakukan tanpa izin kerja?"
   },
   {
    "type": "theory",
@@ -5758,7 +5760,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Tang ampere AC range 20A (TRMS). Reading kabel motor 14,3A. Akurasi ±(2% + 5 digit), resolusi 0,1A. Error maksimum?",
+   "q": "Tang ampere True RMS rentang 20 A membaca arus motor 14,3 A. Akurasi alat ±(2% + 5 digit), resolusi 0,1 A. Berapa kesalahan maksimumnya?",
    "opts": [
     "± 0,29 A",
     "± 0,79 A",
@@ -5766,7 +5768,8 @@ window.QUIZ_BANK = {
     "± 5 A"
    ],
    "a": 1,
-   "explain": "Error = (2% × 14,3) + (5 × 0,1)"
+   "explain": "Kesalahan = 2% × 14,3 A + 5 × 0,1 A = 0,286 + 0,5 = ±0,79 A. Bagian 'digit' dihitung dari resolusi tampilan, sehingga pada rentang besar bagian ini bisa lebih dominan daripada persentasenya.",
+   "hint": "Jumlahkan bagian persentase dan bagian digit (digit × resolusi)."
   },
   {
    "type": "theory",
@@ -5782,15 +5785,16 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Sebuah multimeter berkategori keselamatan CAT III 600 V. Pengukuran pada rangkaian mana saja yang boleh dilakukan dengan alat itu?",
+   "q": "Sebuah multimeter berkategori CAT III 600 V. Pada rangkaian mana alat itu boleh dipakai?",
    "opts": [
-    "Stop kontak rumah 220V (CAT II)",
-    "Panel distribusi 380V (CAT III)",
-    "SUTR / meter PLN (CAT IV)",
-    "A dan B benar — CAT III mencakup CAT II"
+    "Panel distribusi 380 V dan stop kontak rumah 220 V, tetapi tidak boleh pada sisi masuk layanan PLN (CAT IV)",
+    "Hanya pada stop kontak rumah 220 V",
+    "Semua rangkaian, termasuk sisi masuk layanan PLN",
+    "Hanya pada rangkaian elektronika bertegangan rendah"
    ],
-   "a": 3,
-   "explain": "CAT rating: meter dengan CAT yang TINGGI bisa dipakai di kategori yang LEBIH RENDAH (overprotected = aman). Tidak boleh sebaliknya. CAT III 600V mencakup CAT II + CAT I sampai 600V. JANGAN dipakai di CAT IV (source utama PLN) — wajib CAT IV rating untuk itu. Modern best-practice: CAT IV 1000V multimeter (Fluke 87V, 287/289) untuk industri serbaguna."
+   "a": 0,
+   "explain": "Alat berkategori lebih tinggi boleh dipakai pada kategori yang lebih rendah, tidak sebaliknya. CAT III 600 V mencakup CAT III, CAT II, dan CAT I sampai 600 V — jadi panel distribusi dan stop kontak rumah aman. Sisi masuk layanan PLN termasuk CAT IV yang transiennya jauh lebih besar dan menuntut alat berperingkat CAT IV.",
+   "hint": "Kategori yang lebih tinggi mencakup yang lebih rendah — ke arah mana alat CAT III boleh \"turun\"?"
   },
   {
    "type": "theory",
@@ -5854,15 +5858,16 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Maintenance team report 'reading multimeter aneh — bahkan kabel disconnect tapi masih ada V'. Diagnosa?",
+   "q": "Tim pemeliharaan melaporkan pembacaan multimeter yang aneh: kabel sudah diputus dari sumber, tetapi multimeter masih menunjukkan puluhan volt. Apa penyebab yang paling mungkin?",
    "opts": [
-    "Ghost voltage — induksi capacitive dari kabel terdekat yang energized; multimeter high-impedance pickup",
-    "Multimeter rusak",
-    "Sumber lain belum diisolasi",
-    "A dan C — kombinasi possible"
+    "Tegangan hantu (ghost voltage): induksi kapasitif dari kabel bertegangan di dekatnya, yang tertangkap multimeter berimpedansi masukan tinggi",
+    "Multimeter pasti rusak",
+    "Baterai multimeter lemah",
+    "Kabel yang sudah diputus tidak mungkin menunjukkan tegangan"
    ],
-   "a": 3,
-   "explain": "GHOST VOLTAGE phenomenon: kabel disconnect tapi paralel dengan kabel energized → capacitive coupling → induksi voltage 1-100V tergantung jarak/panjang. Multimeter input impedance tinggi (10MΩ) → pickup ghost. SOLUSI: (1) Pakai LOW-IMPEDANCE TESTER (LoZ mode di Fluke T6, Fluke T+) — ~3 kΩ load → ghost dissipated → real reading 0V, (2) Verify multi-source isolation (UPS, genset back-feed), (3) Pakai voltage proving unit. Untuk safety-critical: LoZ tester + non-contact + DMM verification ALL three confirm zero."
+   "a": 0,
+   "explain": "Kabel yang diputus tetapi berjalan sejajar dengan kabel bertegangan mendapat induksi kapasitif; multimeter dengan impedansi masukan 10 MΩ menangkap tegangan 1–100 V itu. Untuk memastikan, gunakan tester berimpedansi rendah (mode LoZ) yang 'membebani' tegangan hantu hingga hilang, dan tetap verifikasi bahwa semua sumber sudah diisolasi.",
+   "hint": "Apa yang terjadi pada dua kabel sejajar jika salah satunya bertegangan?"
   },
   {
    "type": "theory",
@@ -6061,27 +6066,29 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "R_min = (kV + 1) MΩ (IEEE)",
-   "q": "Megger 1000V pada trafo. Reading 200 MΩ. Standar minimum generator (1 MΩ per kV + 1): trafo 11 kV cocokkah?",
+   "q": "Trafo 11 kV diuji megger 1.000 V dan terbaca 200 MΩ. Dengan acuan minimum (tegangan nominal dalam kV + 1) MΩ, apakah nilainya memenuhi?",
    "opts": [
-    "OK, > 12 MΩ",
-    "Gagal, harus > 100 MΩ",
-    "Gagal, harus > 500 MΩ",
-    "Tidak jelas"
+    "Memenuhi — batas minimumnya 12 MΩ",
+    "Gagal — harus di atas 100 MΩ",
+    "Gagal — harus di atas 500 MΩ",
+    "Tidak dapat disimpulkan"
    ],
    "a": 0,
-   "explain": "Rule of thumb (IEEE): R_min = (V_rated kV + 1) MΩ = 11 + 1 = 12 MΩ. 200 MΩ >> 12 MΩ = excellent. Pasif acceptance."
+   "explain": "Aturan praktis IEEE: R_min = (kV + 1) MΩ = 11 + 1 = 12 MΩ. Pembacaan 200 MΩ jauh di atasnya, sehingga isolasi trafo dalam kondisi sangat baik.",
+   "hint": "Hitung (11 + 1) MΩ lalu bandingkan dengan 200 MΩ."
   },
   {
    "type": "pg",
-   "q": "Kapan WAJIB megger test instalasi?",
+   "q": "Kapan pengujian tahanan isolasi (megger) wajib dilakukan pada sebuah instalasi?",
    "opts": [
-    "Saat komisioning baru",
-    "Setelah major repair",
-    "Periodic maintenance (annual / triennial tergantung criticality)",
-    "Semua benar"
+    "Hanya saat komisioning instalasi baru",
+    "Saat komisioning, setelah perbaikan besar, dan pada pemeliharaan berkala",
+    "Hanya setelah terjadi gangguan",
+    "Hanya jika diminta perusahaan asuransi"
    ],
-   "a": 3,
-   "explain": "Trigger: (1) commissioning, (2) post-fault repair, (3) scheduled preventive, (4) purchase receiving, (5) before LOTO removal. Dokumentasi trend untuk baseline."
+   "a": 1,
+   "explain": "Pengujian dilakukan saat komisioning (nilai acuan), setelah perbaikan pasca gangguan, pada jadwal pemeliharaan berkala, saat penerimaan barang, dan sebelum LOTO dilepas. Hasilnya dicatat agar trennya bisa dibandingkan.",
+   "hint": "Isolasi menua — cukupkah diuji sekali seumur hidup instalasi?"
   },
   {
    "type": "pg",
@@ -6122,13 +6129,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Reading megger yang konstan tidak naik selama test 10 menit mengindikasikan isolasi baik.",
+   "q": "Pembacaan megger yang tetap datar (tidak naik) selama pengujian 10 menit menandakan isolasi dalam kondisi baik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Isolasi baik: R meningkat over time (polarization builds up). Flat/declining = basah/kontaminasi/damage. PI = R10/R1 < 1 = bad. Normal PI: 2-4."
+   "explain": "SALAH. Isolasi yang baik menunjukkan nilai yang naik seiring waktu karena polarisasi. Nilai yang datar atau turun menandakan isolasi basah, terkontaminasi, atau rusak. Indeks polarisasi (PI = R₁₀ menit / R₁ menit) yang normal berkisar 2–4; PI di bawah 1 berarti buruk.",
+   "hint": "Apa yang terjadi pada pembacaan isolasi sehat jika tegangan uji dipertahankan lebih lama?"
   },
   {
    "type": "pg",
@@ -6447,25 +6455,27 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Dalam kondisi apa counterpoise (penghantar pentanahan horizontal) dipakai?",
+   "q": "Dalam kondisi apa counterpoise (penghantar pembumian horizontal) biasanya dipakai?",
    "opts": [
-    "Rod vertikal tidak bisa (batuan)",
-    "Large area grid (SUTT, tower)",
-    "Peningkatan ground plane",
-    "Semua benar"
+    "Hanya di tanah lembap yang tahanannya sudah rendah",
+    "Saat batang vertikal sulit ditanam (tanah berbatu) atau untuk pembumian tower dan area luas",
+    "Hanya di dalam gedung",
+    "Sebagai pengganti penghantar PE di dalam kabel"
    ],
-   "a": 3,
-   "explain": "Counterpoise: konduktor horizontal di tanah dangkal. Alternatif/tambahan untuk rod vertikal. Digunakan di area batuan, atau untuk SUTT tower foundation grounding."
+   "a": 1,
+   "explain": "Counterpoise adalah konduktor yang ditanam mendatar di kedalaman dangkal. Ia menjadi alternatif atau pelengkap batang vertikal di daerah berbatu, dan lazim dipakai untuk pembumian kaki tower SUTT.",
+   "hint": "Bagaimana membumikan tower di puncak bukit berbatu yang tidak bisa dibor?"
   },
   {
    "type": "tf",
-   "q": "Tahanan grounding yang lebih rendah SELALU lebih baik, tanpa batas rendah.",
+   "q": "Menurunkan tahanan pembumian selalu sepadan dengan biayanya, berapa pun nilai yang sudah dicapai.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR secara umum (dari safety perspective). Namun diminishing return: effort/biaya untuk turun dari 5→1 Ω sudah besar; 1→0.1 Ω huge cost. Optimize by cost-benefit. Untuk critical installation (substation, rumah sakit) warrant low R."
+   "a": 1,
+   "explain": "SALAH. Dari sisi keselamatan, makin rendah memang makin baik, tetapi biayanya naik tajam: menurunkan dari 5 Ω ke 1 Ω sudah mahal, dari 1 Ω ke 0,1 Ω sangat mahal. Nilai sasaran ditetapkan dari kebutuhan (instalasi umum sekitar ≤ 5 Ω, gardu dan rumah sakit jauh lebih rendah) dengan pertimbangan biaya-manfaat.",
+   "hint": "Berapa biaya tambahan untuk menurunkan 1 Ω menjadi 0,1 Ω, dan apa manfaat tambahannya?"
   },
   {
    "type": "pg",
@@ -6483,15 +6493,16 @@ window.QUIZ_BANK = {
  "1.15": [
   {
    "type": "pg",
-   "q": "CAT III 600V vs CAT II 1000V — mana lebih aman untuk panel distribusi gedung?",
+   "q": "Untuk mengukur di panel distribusi gedung, mana yang lebih aman: multimeter CAT III 600 V atau CAT II 1000 V?",
    "opts": [
-    "CAT II 1000V (V lebih tinggi)",
-    "CAT III 600V (transient withstand lebih tinggi)",
+    "CAT II 1000 V, karena angka tegangannya lebih tinggi",
+    "CAT III 600 V, karena ketahanannya terhadap transien di panel distribusi lebih tinggi",
     "Sama saja",
     "CAT I"
    ],
    "a": 1,
-   "explain": "CAT III lebih tahan impulse transient dari panel distribusi. CAT II 1000V cuma untuk appliance rumah walau V-nya tinggi. Category > absolute V rating."
+   "explain": "Kategori pengukuran menyatakan ketahanan terhadap lonjakan transien, bukan sekadar tegangan kerja. CAT III dirancang untuk panel distribusi yang transiennya besar; CAT II hanya untuk peralatan rumah tangga meskipun angka voltnya lebih tinggi.",
+   "hint": "Apa yang lebih penting di panel distribusi: angka volt atau ketahanan terhadap lonjakan?"
   },
   {
    "type": "pg",
@@ -6520,13 +6531,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Dua alat ukur menunjukkan hasil berbeda pada objek sama — yang lebih akurat selalu yang display-nya digital.",
+   "q": "Jika dua alat ukur memberi hasil berbeda pada objek yang sama, alat digital pasti yang lebih akurat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Digital tidak otomatis lebih akurat. Cek: kalibrasi (sertifikat), CAT rating, accuracy spec. Analog bisa lebih akurat untuk trending & peak detection."
+   "explain": "SALAH. Tampilan digital tidak menjamin akurasi. Yang menentukan adalah kalibrasi (sertifikat yang masih berlaku), spesifikasi akurasi, dan kesesuaian rentang ukur. Alat analog yang terkalibrasi bisa lebih akurat, dan lebih baik untuk melihat tren dan puncak sesaat.",
+   "hint": "Apa yang membuktikan sebuah alat ukur akurat: jenis tampilannya atau sertifikat kalibrasinya?"
   },
   {
    "type": "case",
@@ -6567,15 +6579,16 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "'Burden' pada current transformer (CT) = ",
+   "q": "Apa yang dimaksud dengan 'burden' pada trafo arus (CT)?",
    "opts": [
-    "Berat CT",
-    "Total impedansi yang terhubung ke sekunder CT (meter, kabel, relay)",
-    "Rating maksimum",
-    "Suhu operasi"
+    "Berat fisik CT",
+    "Total impedansi yang tersambung ke sekunder CT (meter, kabel, relai)",
+    "Arus primer maksimum CT",
+    "Suhu operasi maksimum CT"
    ],
    "a": 1,
-   "explain": "Burden CT (VA rating) harus match: impedansi load < rated burden. Under-burden → saturation. Over-burden → accuracy turun + core saturation."
+   "explain": "Burden dinyatakan dalam VA dan menyatakan beban yang boleh dipikul sekunder CT. Impedansi meter, relai, dan kabel sekunder harus lebih kecil dari burden pengenal; bila melebihi, inti CT jenuh dan akurasinya turun.",
+   "hint": "Apa yang 'dibebankan' pada sisi sekunder sebuah CT?"
   },
   {
    "type": "calc",
@@ -6614,15 +6627,16 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Untuk apa data hasil pengukuran perlu dicatat dan disimpan secara berkala?",
+   "q": "Mengapa data hasil pengukuran perlu dicatat dan disimpan secara berkala?",
    "opts": [
-    "Kompliance audit",
-    "Trending & predictive maintenance",
-    "Investigasi insiden",
-    "Semua benar"
+    "Hanya untuk memenuhi formalitas laporan",
+    "Untuk melihat tren penurunan kondisi, mendukung pemeliharaan prediktif, dan menjadi bukti saat audit atau investigasi",
+    "Agar alat ukur tidak perlu dikalibrasi lagi",
+    "Hanya diperlukan setelah terjadi insiden"
    ],
-   "a": 3,
-   "explain": "Logging: trend degradasi isolasi, spike transient, baseline operasi. Wajib SMK3 + ISO 50001. Modern DMM punya Bluetooth/SD card untuk export."
+   "a": 1,
+   "explain": "Catatan pengukuran memperlihatkan tren penurunan isolasi, lonjakan transien, dan kondisi acuan operasi. SMK3 dan ISO 50001 mensyaratkannya. Multimeter modern dapat mengekspor data lewat Bluetooth atau kartu memori.",
+   "hint": "Bagaimana tahu isolasi memburuk jika nilai tahun lalu tidak disimpan?"
   },
   {
    "type": "pg",
@@ -6712,13 +6726,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Pengukuran single-point cukup untuk karakterisasi performa instalasi.",
+   "q": "Satu kali pengukuran di satu titik sudah cukup untuk menggambarkan kinerja sebuah instalasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Single-point = snapshot, bisa error/outlier. Trending (time-series) + multiple locations = gambaran lengkap. Monitor juga variasi harian/musiman."
+   "explain": "SALAH. Pengukuran tunggal hanya potret sesaat yang bisa kebetulan menyimpang. Gambaran yang lengkap membutuhkan pengukuran berulang dari waktu ke waktu (tren) dan di beberapa titik, termasuk variasi harian dan musiman.",
+   "hint": "Beban pukul 10 pagi dan pukul 7 malam — apakah sama?"
   },
   {
    "type": "pg",
@@ -6871,13 +6886,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Fuse bekerja lebih cepat dari MCB untuk arus fault SANGAT tinggi.",
+   "q": "Untuk arus gangguan yang sangat besar, sekering HRC memutus lebih cepat daripada MCB.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Fuse HRC: current limiting mode (cut fault sebelum peak). MCB: electromechanical delay. Untuk Isc besar (50kA+), fuse sering lebih cepat & aman."
+   "explain": "BENAR. Sekering HRC bekerja secara pembatas arus (current limiting): elemennya melebur sebelum arus gangguan mencapai puncaknya. MCB memerlukan waktu gerak mekanis. Pada arus hubung singkat 50 kA ke atas, sekering sering lebih cepat dan lebih aman.",
+   "hint": "Mana yang bisa memutus arus sebelum gelombang pertama mencapai puncak: elemen yang melebur atau kontak yang bergerak?"
   },
   {
    "type": "case",
@@ -6942,13 +6958,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Fuse bisa dipakai ulang setelah blow asalkan tidak hangus parah.",
+   "q": "Sekering yang sudah putus boleh dipakai kembali selama tidak hangus parah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Fuse = one-time device. Element inside melted, material ablated. Ganti dengan rating & tipe yang SAMA. Jangan substitusi spec."
+   "explain": "SALAH. Sekering adalah pengaman sekali pakai: elemennya sudah melebur dan bahannya terkikis. Ganti dengan sekering baru yang rating dan tipenya sama persis — jangan diganti dengan kawat atau rating lain.",
+   "hint": "Apa yang terjadi di dalam sekering saat ia memutus arus?"
   },
   {
    "type": "pg",
@@ -7147,13 +7164,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "RCD mendeteksi arus bocor DC (pure DC) dengan Type AC.",
+   "q": "RCD tipe AC mampu mendeteksi arus bocor DC murni.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. RCD Type AC hanya deteksi sinusoidal AC residual. Untuk DC residual (VFD, EV charger, solar inverter) butuh Type B yang lebih canggih. Salah pilih → silent failure."
+   "explain": "SALAH. RCD tipe AC hanya mendeteksi arus bocor sinusoidal. Peralatan seperti VFD, pengisi daya kendaraan listrik, dan inverter PLTS dapat menghasilkan arus bocor DC yang membutuhkan RCD tipe B. Salah pilih tipe berarti RCD diam saat seharusnya trip.",
+   "hint": "Peralatan apa di rumah modern yang bisa membocorkan arus DC ke tanah?"
   },
   {
    "type": "pg",
@@ -7218,13 +7236,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "RCD menggantikan fungsi grounding yang baik.",
+   "q": "Bila sudah ada RCD, pembumian yang baik tidak lagi diperlukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. RCD = layer tambahan. Grounding tetap fundamental. RCD bekerja lebih andal dengan grounding bagus (low Zs → larger fault current → reliable trip). RCD TIDAK substitute ground."
+   "explain": "SALAH. RCD adalah lapisan tambahan, bukan pengganti pembumian. Pembumian tetap menjadi dasar keselamatan, dan RCD justru bekerja lebih andal jika pembumiannya baik karena arus bocor mengalir lebih jelas. Keduanya harus ada.",
+   "hint": "Ke mana arus bocor harus mengalir agar RCD bisa mendeteksinya?"
   },
   {
    "type": "pg",
@@ -7341,13 +7360,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Voltage drop PUIL max untuk sirkuit penerangan = 3% dari nominal.",
+   "q": "Menurut PUIL, jatuh tegangan maksimum untuk sirkuit penerangan adalah 3% dari tegangan nominal.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PUIL 2011: max voltage drop 3% untuk penerangan (dari tempat origin ke fitting), 5% untuk lainnya (motor, dll). Untuk 220V: 6.6V lighting, 11V motor."
+   "explain": "BENAR. PUIL 2011 membatasi jatuh tegangan 3% untuk penerangan dan 5% untuk beban lain seperti motor, dihitung dari titik asal sampai titik beban. Pada 220 V, 3% berarti sekitar 6,6 V.",
+   "hint": "Berapa volt 3% dari 220 V?"
   },
   {
    "type": "pg",
@@ -7422,15 +7442,16 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Cable tray vs conduit — mana untuk installasi industri fleksibel?",
+   "q": "Untuk instalasi industri yang sering berubah dan berkembang, mana yang lebih sesuai: cable tray atau konduit?",
    "opts": [
-    "Conduit always",
-    "Cable tray — easier installation, future expansion, better heat dissipation",
-    "Direct burial",
-    "Tidak pakai apapun"
+    "Konduit selalu lebih baik",
+    "Cable tray — pemasangan lebih mudah, pengembangan lebih fleksibel, dan pelepasan panas lebih baik",
+    "Tanam langsung di lantai",
+    "Tanpa penyangga apa pun"
    ],
    "a": 1,
-   "explain": "Cable tray: open, perforated, trefoil/bunched configurations. Advantage: mechanical support, heat dissipation, future-proof. PUIL & NEC allow untuk industrial. Proper grounding tray mandatory."
+   "explain": "Cable tray terbuka atau berlubang memberi penyangga mekanis, pelepasan panas yang baik, dan kemudahan menambah kabel di kemudian hari. PUIL dan NEC mengizinkannya untuk industri, dengan syarat tray dibumikan dengan benar.",
+   "hint": "Bagaimana menambah lima kabel baru tahun depan pada konduit yang sudah penuh?"
   },
   {
    "type": "calc",
@@ -7606,13 +7627,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Kabel tembaga 2.5 mm² bisa langsung disambung dengan kabel aluminium 2.5 mm² dengan terminal biasa.",
+   "q": "Kabel tembaga 2,5 mm² boleh disambung langsung ke kabel aluminium 2,5 mm² memakai terminal biasa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Cu-Al direct contact → korosi galvanis + oksidasi → hot spot. Pakai bimetal connector (Cu-Al transition) atau anti-oxidation grease + special terminal. Issue umum di gangguan PLN Al conductor."
+   "explain": "SALAH. Kontak langsung tembaga-aluminium menimbulkan korosi galvanis dan oksidasi yang menaikkan tahanan sambungan dan menjadi titik panas. Gunakan konektor bimetal khusus Cu-Al atau terminal dengan gemuk anti-oksidasi.",
+   "hint": "Apa yang terjadi bila dua logam berbeda bersentuhan dalam kondisi lembap?"
   },
   {
    "type": "pg",
@@ -7893,13 +7915,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Semua drawing kelistrikan harus punya North arrow (panah utara).",
+   "q": "Semua gambar kelistrikan wajib mencantumkan panah arah utara.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. North arrow dibutuhkan untuk PLAN / site layout drawings (denah). Tidak dibutuhkan untuk schematic atau SLD (logical, bukan spasial). Follow drawing type convention."
+   "explain": "SALAH. Panah utara diperlukan untuk denah dan tata letak lokasi yang bersifat spasial. Diagram skematik dan diagram satu garis bersifat logis, bukan spasial, sehingga tidak memerlukannya.",
+   "hint": "Apakah diagram satu garis menggambarkan posisi geografis peralatan?"
   },
   {
    "type": "pg",
@@ -8072,15 +8095,16 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Audit SLO gardu industri: inspector minta drawing as-built dan Arc Flash Study. Engineer provide SLD original (6 tahun lalu), tidak ada AF study.",
-   "q": "Bisa SLO lolos?",
+   "q": "Sebuah pabrik mengajukan perpanjangan SLO hanya dengan diagram satu garis lama — gambar as-built tidak diperbarui dan belum ada studi arc flash untuk panel industrinya. Apakah instalasi ini akan lolos audit SLO?",
    "opts": [
-    "Ya, SLD saja cukup",
-    "Tidak — as-built missing + AF study required modern industrial → fail audit, perlu update drawing + do AF study",
-    "Tergantung inspector",
-    "Lolos dengan bayaran"
+    "Ya, diagram satu garis lama sudah cukup",
+    "Tidak — gambar as-built harus diperbarui dan studi arc flash harus dilakukan lebih dulu",
+    "Tergantung kemurahan hati inspektur",
+    "Lolos asalkan kontraktornya berpengalaman"
    ],
    "a": 1,
-   "explain": "Modern SLO audit (IEC 60364, IEEE 1584 for AF): as-built wajib current. AF study untuk industrial dengan arc flash hazard. Prepare: (1) site survey update, (2) revised SLD, (3) AF calculation per IEEE 1584, (4) labeling panels."
+   "explain": "Audit SLO modern mengacu IEC 60364 dan, untuk instalasi industri berbahaya busur api, IEEE 1584. Gambar as-built wajib mencerminkan kondisi terkini, dan panel industri memerlukan studi arc flash beserta labelnya. Persiapannya: survei lapangan, revisi diagram satu garis, perhitungan arc flash, dan pelabelan panel.",
+   "hint": "Dokumen apa yang harus mencerminkan kondisi instalasi saat ini, dan studi apa yang diwajibkan untuk panel industri?"
   },
   {
    "type": "svg",
@@ -8097,13 +8121,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Drawing format DIGITAL (PDF/DWG/EPLAN) sekarang sudah pengganti drawing kertas (printed) di handover proyek modern.",
+   "q": "Pada serah terima proyek modern, gambar dalam bentuk digital (PDF/DWG) sudah sepenuhnya menggantikan gambar cetak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH (sebagian, perlu nuansa). Drawing modern menggunakan FORMAT GANDA — digital + printed, tergantung use case: (1) DIGITAL — PDF (universal viewer, signature electronic), .dwg (editable AutoCAD), EPLAN/AutoCAD project files (full editability), CAD Cloud (BIM 360, Revizto). Keunggulan: editable, search-able, version control, share via cloud, file size kecil; (2) PRINTED — A1/A2/A3 hardcopy untuk operator panel di pabrik, untuk audit fisik LIT, untuk arsip legal (50 tahun retention untuk gedung kritis). Keunggulan: tidak butuh listrik/komputer di lapangan, mudah scribble notes, surveyable visual; (3) HYBRID PRACTICE — banyak perusahaan: (a) drawing PDF di-print untuk operator (panel control room dilampirkan); (b) digital DWG/EPLAN di-archive untuk update masa depan; (c) PDF di-share via email/cloud untuk komunikasi. UU 11/2008 ITE Pasal 5 menetapkan dokumen elektronik sah secara hukum dengan tanda tangan digital. Tapi practice industri kelistrikan masih sering minta PRINTED + WET SIGNATURE untuk dokumen kritis (SLO, AsBuilt) karena: (a) audit lapangan dari LIT bawa hardcopy; (b) operator panel akses tanpa device; (c) kultur formal Indonesia. Modern best practice: digital sebagai primary + printed sebagai supplementary untuk operasional. Untuk archival 10-30 tahun: print di kertas archival quality + simpan digital + cloud backup."
+   "explain": "SALAH. Praktik yang lazim adalah keduanya: berkas digital (PDF untuk dibaca, DWG/EPLAN untuk diubah) sebagai arsip utama, dan cetakan untuk operator di lapangan, inspeksi LIT, serta dokumen resmi seperti SLO yang sering masih meminta tanda tangan basah. Dokumen elektronik sah secara hukum (UU ITE), tetapi kebutuhan lapangan tetap ada.",
+   "hint": "Bagaimana operator membaca gambar panel saat listrik dan komputer padam?"
   }
  ],
  "1.22": [
@@ -8169,15 +8194,16 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='280' height='140' fill='none' stroke='#1a1d2e' stroke-width='2'/><text x='170' y='20' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e'>Kamar 4×3m</text><circle cx='100' cy='60' r='8' fill='white' stroke='#1a1d2e' stroke-width='2'/><line x1='94' y1='54' x2='106' y2='66' stroke='#1a1d2e' stroke-width='1.5'/><line x1='94' y1='66' x2='106' y2='54' stroke='#1a1d2e' stroke-width='1.5'/><circle cx='240' cy='60' r='8' fill='white' stroke='#1a1d2e' stroke-width='2'/><line x1='234' y1='54' x2='246' y2='66' stroke='#1a1d2e' stroke-width='1.5'/><line x1='234' y1='66' x2='246' y2='54' stroke='#1a1d2e' stroke-width='1.5'/><rect x='55' y='150' width='12' height='8' fill='#c9a96e' stroke='#1a1d2e' stroke-width='1.5'/><text x='61' y='170' text-anchor='middle' font-family='Arial' font-size='9' fill='#1a1d2e'>SK</text><rect x='275' y='150' width='12' height='8' fill='#c9a96e' stroke='#1a1d2e' stroke-width='1.5'/><text x='281' y='170' text-anchor='middle' font-family='Arial' font-size='9' fill='#1a1d2e'>SK</text><circle cx='170' cy='150' r='6' fill='none' stroke='#1a1d2e' stroke-width='1.5'/><line x1='170' y1='150' x2='180' y2='160' stroke='#1a1d2e' stroke-width='1.5'/><text x='170' y='175' text-anchor='middle' font-family='Arial' font-size='9' fill='#1a1d2e'>Saklar</text></svg>",
-   "q": "Dari denah kamar 4×3m, 2 lampu ceiling + 2 stop kontak + 1 saklar. Apakah adequate untuk kamar tidur?",
+   "q": "Dari denah kamar 4 × 3 m pada gambar: 2 lampu plafon, 2 stopkontak, dan 1 sakelar. Apakah tata letak ini sudah memadai untuk kamar tidur?",
    "opts": [
-    "Cukup untuk layout minimal",
-    "Kurang — tambah saklar kedua (entrance + bed-side) untuk comfort",
-    "Terlalu banyak",
-    "Tidak ada saklar"
+    "Cukup sebagai tata letak minimal",
+    "Kurang — tambah sakelar kedua (dekat tempat tidur) dan lebih banyak stopkontak",
+    "Terlalu banyak titik untuk kamar sekecil ini",
+    "Kamar tidur tidak memerlukan sakelar"
    ],
    "a": 1,
-   "explain": "Best practice kamar tidur: two-way switch (entrance + bedside) untuk matikan lampu tanpa bangun. Stop kontak minimum 4 untuk flexibilitas (bedside, desk, area). Bonus outlet dekat door untuk vacuum/iron."
+   "explain": "Praktik yang baik untuk kamar tidur: sakelar hotel (dua arah) di pintu masuk dan di sisi tempat tidur agar lampu bisa dimatikan tanpa bangun, serta minimal empat stopkontak (sisi tempat tidur, meja, area lain) untuk keleluasaan.",
+   "hint": "Bagaimana mematikan lampu dari tempat tidur dengan satu sakelar di dekat pintu?"
   },
   {
    "type": "pg",
@@ -8205,13 +8231,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Jarak antara outlet power dan outlet data (Cat6) minimum 30cm untuk menghindari EMI interference.",
+   "q": "Jalur kabel daya dan kabel data (Cat6) yang sejajar perlu dipisahkan minimal sekitar 30 cm untuk menghindari gangguan elektromagnetik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Paralel run: jaga jarak 300mm minimum. Crossing: 90° OK. EMI dari power cable induce noise ke data (menurunkan Cat6 performance). TIA/EIA standard recommend separation. Shielded cable (STP) lebih tahan."
+   "explain": "BENAR. Medan dari kabel daya menginduksi derau ke kabel data dan menurunkan kinerjanya. Standar TIA/EIA menganjurkan jarak pisah yang bertambah untuk arus yang lebih besar; persilangan tegak lurus 90° tidak masalah, dan kabel berpelindung (STP) lebih tahan.",
+   "hint": "Bagaimana jika kabel data harus menyeberangi kabel daya — sejajar atau tegak lurus?"
   },
   {
    "type": "pg",
@@ -8251,13 +8278,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Kabel data (Cat6) dan power kabel harus di conduit SAMA untuk efisiensi.",
+   "q": "Kabel data dan kabel daya boleh dimasukkan ke satu konduit yang sama demi efisiensi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Separate conduit wajib. EMI dari power induce noise di data. TIA/EIA-569 minimum separation. Power: metal conduit grounded. Data: separate non-conductive conduit atau basket tray dengan separator."
+   "explain": "SALAH. Keduanya harus di konduit terpisah. Selain gangguan elektromagnetik, ada risiko keselamatan bila isolasi kabel daya rusak dan membuat kabel data bertegangan. Konduit logam kabel daya dibumikan; kabel data memakai konduit atau tray tersendiri dengan pemisah.",
+   "hint": "Apa yang terjadi pada kabel data jika isolasi kabel daya di sebelahnya terkelupas?"
   },
   {
    "type": "pg",
@@ -8428,23 +8456,25 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "PUIL 2020 berlaku WAJIB untuk semua instalasi baru di Indonesia (post-2020), instalasi lama otomatis harus di-retrofit ke PUIL 2020.",
+   "q": "Semua instalasi lama wajib dibongkar dan dibangun ulang sesuai PUIL 2020 begitu PUIL 2020 berlaku.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH (sebagian). PUIL 2020 WAJIB untuk: (1) INSTALASI BARU (commissioning post-2020); (2) MODIFIKASI MAJOR — penambahan kapasitas, perubahan layout signifikan; (3) PERPANJANGAN SLO — banyak LIT mensyaratkan upgrade ke PUIL 2020. Tapi instalasi lama (pre-2020) yang tidak dimodifikasi TIDAK WAJIB retrofit total — dikenal sebagai 'GRANDFATHER CLAUSE'. Yang berlaku: instalasi lama bertahan dengan PUIL saat dibangun (mis. pre-2011 dengan PUIL 2000, 2011-2020 dengan PUIL 2011). Trigger upgrade: (a) modifikasi major; (b) SLO renewal — LIT bisa minta upgrade kalau standar baru lebih ketat dan instalasi lama berisiko; (c) pasca-incident; (d) regulasi sektor khusus mensyaratkan (mis. Permen ESDM EV charging mensyaratkan PUIL 2020 untuk titik baru). Praktis: kebanyakan komersial/industri voluntarily upgrade saat renovasi besar untuk safety + compliance forward-looking. Tenaga teknik: cek effective PUIL version di SLO sebelumnya, gunakan itu sebagai baseline; rekomendasikan upgrade kalau ada kesempatan modifikasi."
+   "explain": "SALAH. PUIL 2020 wajib untuk instalasi baru dan modifikasi besar. Instalasi lama yang tidak diubah boleh tetap memakai PUIL edisi saat dibangun (asas 'grandfather'). Pemicu penyesuaian adalah modifikasi besar, perpanjangan SLO bila LIT mensyaratkan, atau setelah insiden.",
+   "hint": "Apa yang memicu kewajiban menyesuaikan instalasi lama ke standar baru?"
   },
   {
    "type": "tf",
-   "q": "Permen Menteri (Permen ESDM, Permenaker, dll) langsung berlaku setelah diteken Menteri tanpa ratifikasi DPR atau persetujuan presiden.",
+   "q": "Peraturan Menteri mulai berlaku setelah ditandatangani menteri dan diundangkan, tanpa memerlukan persetujuan DPR.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Berdasarkan UU 12/2011 Pembentukan Peraturan Perundang-undangan, Permen Menteri adalah peraturan perundang-undangan yang dibentuk Menteri untuk melaksanakan UU/PP/Perpres yang sudah ada. Proses: (1) Drafting di kementerian (sosialisasi internal, mungkin konsultasi publik); (2) Menteri tanda tangan; (3) DIUNDANGKAN di Berita Negara RI; (4) BERLAKU pada tanggal yang disebutkan di Permen (biasanya tanggal pengundangan atau tanggal tertentu future). Tidak butuh persetujuan DPR atau Presiden — itu syarat UU/Perpu (DPR + Presiden) atau PP/Perpres (Presiden). Tapi Permen TIDAK BOLEH melebihi mandat UU/PP yang menjadi dasarnya — bisa di-judicial review di MA. Implikasi praktis: (a) regulasi Permen bisa BERUBAH CEPAT — dalam 1 tahun bisa ada beberapa revisi; (b) tenaga teknik harus PROACTIVE pantau update regulasi (subscribe portal ESDM, JDIH Kemnaker); (c) cek tanggal berlaku — kadang Permen baru di-issue tapi efektif beberapa bulan kemudian (transitional period); (d) Permen revisi harus comply dengan Permen sebelumnya kecuali eksplisit dicabut. Resource untuk update: jdih.esdm.go.id, jdih.kemnaker.go.id, peraturan.bpk.go.id."
+   "explain": "BENAR. Menurut UU 12/2011, Permen adalah peraturan pelaksana dari UU/PP/Perpres yang sudah ada, sehingga cukup ditandatangani menteri lalu diundangkan dalam Berita Negara. Persetujuan DPR diperlukan untuk undang-undang. Permen tidak boleh melampaui mandat peraturan di atasnya.",
+   "hint": "Peraturan tingkat apa yang memerlukan persetujuan DPR?"
   }
  ],
  "1.24": [
@@ -8506,23 +8536,25 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Sertifikat BNSP Indonesia otomatis berlaku & diakui di seluruh negara ASEAN tanpa proses tambahan.",
+   "q": "Sertifikat kompetensi BNSP otomatis diakui di seluruh negara ASEAN tanpa proses tambahan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH (sebagian). ASEAN MRA (Mutual Recognition Arrangement) untuk profesi tertentu sudah disepakati 8 sektor: insinyur, arsitek, akuntan, surveyor, dokter gigi, dokter umum, perawat, profesi pariwisata. Untuk MRA Insinyur (ASEAN Engineer): perlu daftar di Indonesia Monitoring Committee (PII), lulus uji ASEAN Chartered Professional Engineer (ACPE). Sertifikat BNSP saja TIDAK otomatis — itu sertifikat NASIONAL. Untuk profesi di luar 8 sektor MRA, masing-masing negara punya regulasi sendiri (mis. Singapura punya BCA, Malaysia BEM). Kelistrikan teknisi non-insinyur (SKTTK level 4-5) belum termasuk MRA — tetap perlu sertifikat lokal. Tip mobilitas: (1) translate sertifikat BNSP ke Inggris dengan stamp notaris; (2) submit ke regulator negara tujuan; (3) mungkin perlu ujian penyetaraan. Untuk Indonesia menerima tenaga asing: TKA (Tenaga Kerja Asing) per Permenaker 8/2021 — wajib RPTKA + IMTA, posisi tertentu only. Maka masing-masing arah perlu proses, BNSP saja tidak cukup."
+   "explain": "SALAH. Sertifikat BNSP bersifat nasional. Pengakuan lintas negara ASEAN hanya ada untuk profesi tertentu melalui MRA (misalnya insinyur lewat ASEAN Chartered Professional Engineer), dan tetap memerlukan pendaftaran serta penilaian. Teknisi bersertifikat SKTTK belum termasuk skema MRA.",
+   "hint": "Skema apa yang memungkinkan insinyur Indonesia diakui di negara ASEAN lain?"
   },
   {
    "type": "tf",
-   "q": "Pembangkit listrik milik PLN (PLTU/PLTGU/PLTA) tidak butuh SLO karena PLN sendiri yang operate.",
+   "q": "Pembangkit milik PLN tidak memerlukan SLO karena PLN sendiri yang mengoperasikannya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. UU 30/2009 + Permen ESDM 12/2021 mensyaratkan SEMUA instalasi tenaga listrik (pembangkit, transmisi, distribusi, instalasi konsumen) WAJIB punya SLO sebelum dioperasikan — TERMASUK milik PLN. Bedanya: (1) untuk PEMBANGKIT BESAR (>500 kW), SLO diterbitkan setelah commissioning oleh LIT khusus pembangkit; (2) PLN punya LIT internal terakreditasi (PLN UPMK — Unit Pelaksana Manajemen Konstruksi) untuk auto-inspect proyek-proyek mereka, tapi audit eksternal periodik dari DJK ESDM tetap dilakukan; (3) SLO Pembangkit berlaku 5 tahun, di-renewal dengan inspeksi major (overhaul); (4) GARDU INDUK 150 kV/500 kV juga punya SLO khusus. Pengecualian SLO terbatas untuk: instalasi sangat kecil di bawah threshold tertentu (mis. baterai cadangan <200 VA), instalasi sementara konstruksi <6 bulan (dengan registrasi alternatif). Sanksi PLN/IPP yang operate tanpa SLO valid: penghentian operasi, denda administratif, tanggung jawab pidana kalau ada kecelakaan. Mekanisme oversight: ESDM audit reguler + masyarakat bisa lapor via PSC kalau melihat instalasi mencurigakan tanpa SLO."
+   "explain": "SALAH. UU 30/2009 dan Permen ESDM 12/2021 mewajibkan SLO untuk semua instalasi tenaga listrik — pembangkit, transmisi, distribusi, dan instalasi pelanggan — termasuk milik PLN. SLO pembangkit diterbitkan setelah komisioning oleh lembaga inspeksi yang terakreditasi dan diperbarui secara berkala.",
+   "hint": "Apakah kepemilikan instalasi mengubah kewajiban kelaikan operasinya?"
   }
  ],
  "1.25": [
@@ -8631,13 +8663,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Asuransi Profesi (Professional Indemnity Insurance) menjamin tenaga teknik 100% bebas dari semua tuntutan hukum, termasuk pidana, akibat kelalaian profesional.",
+   "q": "Asuransi profesi (professional indemnity) membebaskan tenaga teknik dari semua tuntutan hukum, termasuk pidana.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. PI Insurance hanya menutup tanggung jawab PERDATA (ganti rugi finansial kepada korban/klien) atas kelalaian profesional yang TIDAK DISENGAJA — bukan pidana. Yang TIDAK ditanggung: (1) tindakan PIDANA (KUHP 359/360 kelalaian fatal, KUHP 263 pemalsuan, UU Tipikor) — pidana adalah urusan personal di pengadilan; (2) kelalaian SENGAJA atau gross negligence; (3) bekerja di luar lingkup kompetensi sertifikat; (4) klaim yang diketahui SEBELUM polis aktif. PI typical premium di Indonesia: Rp 5-50 juta/tahun untuk coverage Rp 1-10 miliar. Wajib bagi insinyur konsultan independen + sangat disarankan untuk yang sign-off design/SLO. Plus: simpan dokumentasi kerja minimal 10 tahun (statute of limitation). Jadi PI = perlindungan finansial, BUKAN immunity hukum."
+   "explain": "SALAH. Asuransi profesi hanya menanggung tanggung jawab perdata (ganti rugi) atas kelalaian yang tidak disengaja. Tuntutan pidana, kelalaian berat yang disengaja, dan pekerjaan di luar lingkup kompetensi tidak ditanggung. Asuransi adalah perlindungan finansial, bukan kekebalan hukum.",
+   "hint": "Bisakah asuransi membayar hukuman penjara?"
   },
   {
    "type": "pg",
@@ -8679,23 +8712,25 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Kontraktor utama bisa melepas tanggung jawab atas pekerjaan listrik dengan men-subkontrakkan ke perusahaan lain. Subkontraktor yang full bertanggung jawab.",
+   "q": "Kontraktor utama bebas dari tanggung jawab atas pekerjaan listrik yang disubkontrakkan; subkontraktorlah yang sepenuhnya bertanggung jawab kepada pemilik proyek.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Asas hukum 'principal-agent' di UU Jasa Konstruksi 2/2017 Pasal 56: KONTRAKTOR UTAMA TETAP bertanggung jawab penuh kepada pemilik proyek atas hasil akhir, walaupun pekerjaan disubkontrakkan. Pemilik proyek tidak punya hubungan kontrak dengan subkontraktor — kontraknya dengan kontraktor utama. Konsep 'vicarious liability' (UU 13/2003 Tenaga Kerja Pasal 65) membuat kontraktor utama bertanggung jawab atas perilaku subkontraktor di lokasi. Kewajiban kontraktor utama saat subkontrak: (1) cek SKTTK & kompetensi subkontraktor; (2) supervisi pekerjaan; (3) inspeksi sebelum sign-off; (4) memastikan K3 dipenuhi; (5) cover insurance. Kalau subkontraktor melakukan kesalahan: pemilik proyek tuntut KONTRAKTOR UTAMA, kontraktor utama bisa cross-claim ke subkontraktor (back-to-back contract), tapi yang first-line di-tuntut tetap kontraktor utama. Subkontrak BUKAN cara melepas tanggung jawab — itu cara distribusi risiko dengan tetap memegang akuntabilitas penuh."
+   "explain": "SALAH. Menurut UU Jasa Konstruksi 2/2017, kontraktor utama tetap bertanggung jawab penuh kepada pemilik proyek atas hasil akhir, karena pemilik hanya berkontrak dengan kontraktor utama. Kontraktor utama boleh menuntut balik subkontraktornya, tetapi yang dituntut pemilik tetap kontraktor utama.",
+   "hint": "Dengan siapa pemilik proyek menandatangani kontrak?"
   },
   {
    "type": "tf",
-   "q": "Standar IEC (International Electrotechnical Commission) bisa langsung dipakai sebagai dasar instalasi listrik di Indonesia tanpa adaptasi PUIL/SNI.",
+   "q": "Standar IEC boleh langsung dipakai sebagai dasar instalasi listrik di Indonesia tanpa merujuk PUIL/SNI.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. PUIL 2011 (SNI 0225:2011) mengadopsi IEC 60364 dengan modifikasi yang sesuai kondisi Indonesia (iklim tropis, infrastruktur PLN, regulasi domestik). Hukumnya: PUIL/SNI = WAJIB di Indonesia, IEC = REFERENSI internasional. Kalau ada konflik, PUIL menang untuk instalasi domestik. Beda contoh: (1) IEC 60364 detilkan TN-S/TN-C-S/TT/IT systems — Indonesia umumnya pakai TN-C-S; (2) tegangan: PUIL 230/400 V, IEC 230/400 V (sama, tapi ada legacy 220/380 V); (3) kabel coding: PUIL biru-netral hijau-kuning-PE (ikut IEC), tapi penambahan keterangan SNI; (4) RCD wajib 30 mA: PUIL & IEC sama, tapi PUIL spesifik area mana yang wajib (kamar mandi, dapur, outdoor); (5) standar tertentu BELUM diadopsi PUIL — boleh pakai sebagai supplement, bukan ganti. Untuk industri internasional (oil & gas, multinational), kontrak biasanya 'compliant with PUIL AND IEC, more stringent applies'. Audit dari LIT lokal pakai PUIL sebagai checklist primer. Kalau ragu, konsultasi BSN (Badan Standardisasi Nasional) untuk SNI terbaru. PUIL akan di-revisi jadi PUIL 2024 — perhatikan transisi."
+   "explain": "SALAH. Di Indonesia, PUIL/SNI berkedudukan wajib, sedangkan IEC adalah rujukan internasional. PUIL mengadopsi IEC 60364 dengan penyesuaian kondisi lokal. Bila ada perbedaan, PUIL yang berlaku; standar IEC yang belum diadopsi boleh dipakai sebagai pelengkap, bukan pengganti.",
+   "hint": "Dokumen mana yang dipakai LIT sebagai daftar periksa saat menerbitkan SLO?"
   }
  ],
  "2.01": [
@@ -8774,13 +8809,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Netral dan PE (ground) di rumah PLN harus terpisah di panel MCB (sistem TN-S).",
+   "q": "Di dalam instalasi rumah, penghantar netral dan PE harus terpisah setelah titik pemisahan di panel utama (sistem TN-C-S menjadi TN-S di sisi pelanggan).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR di sisi downstream MET. Modern install: TN-C-S (netral + PE gabung dari PLN, split di MET rumah jadi TN-S downstream). Bonding N-PE hanya di MET, tidak di MCB pun subpanel."
+   "explain": "BENAR. Dari PLN, netral dan PE biasanya menyatu (PEN). Di panel utama pelanggan keduanya dipisah dan hanya dihubungkan di satu titik itu; di sirkuit-sirkuit selanjutnya netral dan PE tidak boleh disatukan lagi.",
+   "hint": "Di titik mana saja netral dan PE boleh terhubung?"
   },
   {
    "type": "case",
@@ -9004,13 +9040,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Di bangunan komersial, penting untuk distribute beban 1-fasa ke 3 fasa secara merata.",
+   "q": "Pada bangunan komersial, beban satu fasa (lampu, stopkontak) harus dibagi merata ke ketiga fasa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Saat loading phase: assign beban lighting/socket merata antar L1, L2, L3. Monitor via clamp meter. Update wiring diagram bila load berubah. Best practice: ≤10% imbalance di full load."
+   "explain": "BENAR. Pembagian yang merata menjaga arus netral kecil dan tegangan tiap fasa seimbang. Praktik yang baik: ketidakseimbangan di bawah 10% pada beban penuh, diperiksa dengan tang ampere, dan catatan instalasi diperbarui bila beban berubah.",
+   "hint": "Apa yang terjadi pada arus netral jika 80% beban dipasang di fasa R?"
   },
   {
    "type": "pg",
@@ -9256,13 +9293,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Direct bury (tanam langsung) sambungan kabel tanpa junction box diperbolehkan bila pakai heat-shrink insulated.",
+   "q": "Sambungan kabel boleh ditanam langsung di dalam tanah tanpa kotak sambung asalkan dibungkus selongsong ciut panas (heat-shrink).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH di PUIL. Sambungan harus accessible (junction box / pull box). Exception: specialized waterproof gel-filled splice untuk direct bury kabel utility (factory-approved) — bukan standar rumah. Alasan: inspection, troubleshoot."
+   "explain": "SALAH. PUIL mensyaratkan sambungan dapat diakses untuk inspeksi dan perbaikan, yaitu di dalam kotak sambung. Pengecualian hanya untuk sambungan kabel utilitas berisi gel kedap air yang disetujui pabrikan, bukan untuk instalasi rumah.",
+   "hint": "Bagaimana memperbaiki sambungan yang rusak jika tidak diketahui letaknya di bawah tanah?"
   },
   {
    "type": "pg",
@@ -9499,13 +9537,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Cable tray harus grounded/bonded sepanjang seluruh run.",
+   "q": "Cable tray logam harus dibumikan dan disambung (bonding) di setiap sambungan sepanjang jalurnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Cable tray metallic (steel, galvanized, aluminum) = equipotential conductor. Bonding jumper di setiap section joint. PE conductor in separate cable pref, jangan rely tray alone (PUIL)."
+   "explain": "BENAR. Tray baja atau aluminium menjadi penghantar ekipotensial yang melindungi dari tegangan sentuh bila isolasi kabel rusak. Setiap sambungan antar seksi diberi jumper bonding. Kabel tetap harus membawa penghantar PE sendiri.",
+   "hint": "Apa yang terjadi jika kabel yang terkelupas menyentuh tray yang tidak dibumikan?"
   },
   {
    "type": "pg",
@@ -9605,13 +9644,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Cable tray dapat digunakan sebagai PE (protective earth) conductor asal kontinyu dan bonded.",
+   "q": "Cable tray yang kontinu dan dibumikan boleh dipakai sebagai pengganti penghantar PE kabel.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH per PUIL 2011. Cable tray bonded as equipotential, TAPI harus ada dedicated PE conductor dalam cable. Tray-only grounding tidak boleh untuk fault current path (korosi, joint unreliability over time). Rely dedicated PE wire."
+   "explain": "SALAH. PUIL mengharuskan penghantar PE tersendiri di dalam kabel. Tray hanya dibonding sebagai ekipotensial; sambungan baut tray bisa berkarat dan longgar seiring waktu, sehingga tidak boleh diandalkan sebagai jalur arus gangguan.",
+   "hint": "Seberapa andal sambungan baut tray setelah 15 tahun di lingkungan lembap?"
   }
  ],
  "2.06": [
@@ -9739,13 +9779,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Instalasi rumah selesai = siap huni tanpa perlu test/commission.",
+   "q": "Instalasi rumah yang sudah selesai dipasang bisa langsung dihuni tanpa pengujian dan komisioning.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Commissioning WAJIB: megger, polarity, earth loop, RCD test, visual, load test. SLO mandatory before PLN energize permanent. Tanpa SLO = PLN tidak commission + insurance issue bila kebakaran."
+   "explain": "SALAH. Sebelum dihuni, instalasi wajib diuji: tahanan isolasi, polaritas, kontinuitas PE, impedansi lingkar, uji RCD, dan pemeriksaan visual. SLO harus terbit sebelum PLN menyambung permanen; tanpa SLO, klaim asuransi kebakaran pun bisa ditolak.",
+   "hint": "Apa yang harus terbit sebelum PLN memasang meter dan menyalakan listrik permanen?"
   },
   {
    "type": "pg",
@@ -9824,13 +9865,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Pada TN-S system, arus fault lebih tinggi dari TT system.",
+   "q": "Pada sistem TN-S, arus gangguan ke tanah lebih besar daripada pada sistem TT.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. TN-S: loop impedance lewat PE wire (Z rendah) → I_fault tinggi → MCB cepat trip (magnetic). TT: loop lewat 2 ground rod resistance (tinggi) → I_fault rendah → RCD mandatory."
+   "explain": "BENAR. Pada TN-S, jalur gangguan kembali melalui penghantar PE yang impedansinya rendah, sehingga arus gangguan besar dan MCB cepat trip. Pada TT, jalurnya melewati dua elektrode tanah yang tahanannya tinggi, arusnya kecil, sehingga RCD wajib dipasang.",
+   "hint": "Melalui apa arus gangguan kembali ke sumber pada TN-S dan pada TT?"
   },
   {
    "type": "pg",
@@ -10064,13 +10106,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "SPD sekali trigger = langsung rusak dan harus diganti.",
+   "q": "SPD langsung rusak setelah sekali bekerja dan harus segera diganti.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. MOV designed multi-trigger (rating impulse e.g., I_n 20kA: 20 shots). Cumulative degradation indicator (status window). Ganti bila indicator red, atau post major strike investigation."
+   "explain": "SALAH. SPD berbasis MOV dirancang menahan banyak kali surja sesuai ratingnya (misalnya I_n 20 kA sekitar 20 kali). Ia menua secara bertahap; jendela indikator berubah warna saat sudah habis, dan saat itulah diganti — atau setelah sambaran petir besar yang mencurigakan.",
+   "hint": "Apa fungsi jendela indikator pada badan SPD?"
   },
   {
    "type": "pg",
@@ -10161,15 +10204,16 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "B16 trip @ 5×16=80A, B32 trip @ 5×32=160A",
-   "q": "MCB B16 downstream + MCB B32 upstream. Fault arus 150A di downstream. Selective?",
+   "q": "MCB B16 di hilir dan MCB B32 di hulu. Terjadi gangguan 150 A di sisi hilir. Apakah keduanya bekerja selektif?",
    "opts": [
-    "Ya, B16 trip dulu (mag 80A), B32 tidak trip (150A < 160A threshold)",
-    "Tidak",
-    "B32 trip dulu",
-    "Keduanya trip"
+    "Ya — B16 trip lebih dulu (ambang magnetik 48–80 A), sedangkan B32 kemungkinan tidak trip (ambang 96–160 A)",
+    "Tidak — B32 selalu trip lebih dulu",
+    "Keduanya pasti trip bersamaan",
+    "Tidak ada yang trip"
    ],
    "a": 0,
-   "explain": "B16 magnetic threshold 3-5× In = 48-80A. B32 threshold 3-5× In = 96-160A. Fault 150A: B16 trip instant, B32 di edge (tergantung toleransi). Marginal → upgrade B32 ke C/D curve atau timed."
+   "explain": "Ambang magnetik kurva B adalah 3–5 × In: B16 → 48–80 A, B32 → 96–160 A. Pada 150 A, B16 trip seketika, sedangkan B32 berada di tepi ambangnya (bergantung toleransi). Selektivitasnya marginal; untuk lebih aman, MCB hulu diganti kurva C/D atau memakai pengaman bertunda.",
+   "hint": "Bandingkan 150 A dengan rentang ambang magnetik masing-masing MCB."
   },
   {
    "type": "pg",
@@ -10235,13 +10279,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Fuse lebih mudah selektif dari MCB karena karakteristik i²t yang tajam.",
+   "q": "Sekering lebih mudah dikoordinasikan secara selektif daripada MCB karena karakteristik I²t-nya lebih tajam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Fuse TCC very defined, i²t low. Rasio 1.6:1 ratio biasanya selective untuk series fuse. MCB lebih susah karena band tolerance lebar. Industri kadang kombinasi fuse + MCB."
+   "explain": "BENAR. Kurva sekering sangat terdefinisi dengan I²t rendah; dua sekering seri berasio rating 1,6:1 umumnya sudah selektif. MCB memiliki pita toleransi yang lebar sehingga koordinasinya lebih sulit; industri sering memadukan keduanya.",
+   "hint": "Mengapa pita toleransi yang lebar menyulitkan koordinasi?"
   },
   {
    "type": "pg",
@@ -10281,13 +10326,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Koordinasi bisa dilakukan manual dengan tabel TCC dari datasheet.",
+   "q": "Koordinasi proteksi dapat dilakukan secara manual dengan memplot kurva waktu-arus dari lembar data pabrikan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Untuk network sederhana, manual plot TCC dari datasheet. Network kompleks (>20 breaker) software. Traceable + documented study, revise saat ada change."
+   "explain": "BENAR. Untuk jaringan sederhana, kurva TCC dari lembar data cukup diplot pada kertas log-log. Jaringan yang rumit (puluhan pemutus) lebih praktis memakai perangkat lunak. Apa pun caranya, studinya harus terdokumentasi dan diperbarui saat ada perubahan.",
+   "hint": "Kapan perangkat lunak menjadi keharusan, bukan pilihan?"
   },
   {
    "type": "pg",
@@ -10414,13 +10460,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Motor TEFC (Totally Enclosed Fan-Cooled) cocok untuk lingkungan berdebu/outdoor.",
+   "q": "Motor TEFC cocok untuk lingkungan berdebu atau luar ruangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. TEFC: housing tertutup, external fan cool fins. Debu/water splash tidak masuk winding. Open Drip-Proof (ODP) untuk clean indoor. TEFC + IP55 = industrial standard."
+   "explain": "BENAR. TEFC (Totally Enclosed Fan-Cooled) berumah tertutup dengan kipas luar yang meniup sirip pendingin, sehingga debu dan percikan air tidak masuk ke belitan. Motor ODP (open drip-proof) hanya untuk ruangan bersih. TEFC dengan IP55 adalah standar industri.",
+   "hint": "Apa arti 'totally enclosed' bagi belitan motor?"
   },
   {
    "type": "case",
@@ -10497,13 +10544,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Motor dengan inverter duty (VFD rated) butuh insulation isolasi lebih tinggi dari standar karena dV/dt pulse tinggi.",
+   "q": "Motor yang dijalankan VFD memerlukan isolasi belitan yang lebih kuat daripada motor standar karena pulsa tegangan VFD sangat curam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. VFD PWM output high dV/dt spike (kV/μs) → stress winding insulation. Inverter duty motor: class F+ insulation, reinforced, dV/dt ratings 1kV+. Standar motor non-VFD bisa premature fail dengan VFD."
+   "explain": "BENAR. Keluaran PWM VFD memiliki laju perubahan tegangan (dV/dt) yang tinggi dan menekan isolasi belitan. Motor inverter-duty memakai isolasi kelas F ke atas yang diperkuat. Motor standar yang dijalankan VFD tanpa filter bisa rusak lebih cepat.",
+   "hint": "Apa yang berbeda dari gelombang tegangan VFD dibanding sinus jaringan?"
   },
   {
    "type": "pg",
@@ -10608,13 +10656,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Plugging (reverse untuk brake) aman dilakukan tanpa time delay pada motor besar.",
+   "q": "Membalik arah putaran motor besar secara mendadak (plugging) aman dilakukan tanpa jeda waktu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Plugging: reverse polarity saat motor masih spinning → current HUGE (8-10× FLA), torque reverse. Mechanical shock, winding stress. Wajib: zero-speed detector atau time delay before direction change. Modern: regenerative brake via VFD."
+   "explain": "SALAH. Membalik polaritas saat motor masih berputar menarik arus 8–10 kali arus nominal dan menimbulkan sentakan mekanis serta panas belitan. Diperlukan penunda waktu atau detektor kecepatan nol sebelum arah dibalik; sistem modern memakai pengereman regeneratif lewat VFD.",
+   "hint": "Berapa arus yang ditarik motor saat medannya berputar berlawanan dengan rotornya?"
   },
   {
    "type": "pg",
@@ -10679,13 +10728,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Motor berpelat logam yang beroperasi dengan VFD WAJIB grounded dengan EMC cable shield dan jalur pendek ke ground.",
+   "q": "Motor yang dijalankan VFD harus dibumikan dengan kabel berpelindung EMC dan jalur pembumian yang pendek.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. VFD PWM = high freq content. EMC shield cable (screened) + bonding 360° di both ends (VFD & motor). Short ground path. Tanpa: EMI radiated, bearing current worse, regulation violation (CE, FCC)."
+   "explain": "BENAR. Pulsa PWM VFD berfrekuensi tinggi memancarkan gangguan elektromagnetik. Kabel motor berpelindung yang dibonding 360° di kedua ujung dan jalur pembumian pendek mengurangi interferensi dan arus bantalan, serta memenuhi persyaratan EMC.",
+   "hint": "Mengapa pelindung kabel harus disambung di kedua ujung, bukan satu saja?"
   },
   {
    "type": "pg",
@@ -10788,13 +10838,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Motor winding baru rewind punya resistance berbeda dari original — tidak perlu kuatir.",
+   "q": "Tahanan belitan motor hasil rewind boleh berbeda jauh dari nilai aslinya tanpa perlu dikhawatirkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 1,
-   "explain": "SALAH. Rewind QUALITY check: resistance winding harus match baseline ±5%. Berbeda = jumlah lilitan salah, wire gauge salah → performance tidak match (torque, current, eff). Reject & rewind."
+   "explain": "SALAH. Tahanan belitan hasil rewind harus mendekati nilai asli (dalam sekitar ±5%). Perbedaan besar menandakan jumlah lilitan atau ukuran kawat yang salah, sehingga torsi, arus, dan efisiensinya tidak sesuai. Motor seperti itu ditolak dan di-rewind ulang.",
+   "hint": "Apa yang berubah jika bengkel memakai kawat lebih tipis dari aslinya?"
   },
   {
    "type": "pg",
@@ -10896,13 +10947,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "VFD-fed motor lebih rentan bearing fluting daripada DOL-fed.",
+   "q": "Motor yang dijalankan VFD lebih rentan mengalami kerusakan bantalan (fluting) daripada motor yang dijalankan langsung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. VFD PWM → common-mode voltage → shaft current via bearing → electric discharge pit bearing race (fluting). Mitigation: insulated bearing NDE, shaft grounding brush (SGR). Standar untuk VFD>11kW."
+   "explain": "BENAR. Tegangan mode bersama dari VFD menimbulkan arus poros yang melompat melalui bantalan dan mengikis alurnya. Pencegahannya: bantalan berisolasi di sisi non-drive dan sikat pembumian poros, terutama untuk motor di atas sekitar 11 kW.",
+   "hint": "Melalui apa arus poros mengalir ke tanah?"
   }
  ],
  "2.13": [
@@ -10993,13 +11045,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "N-1 reliability criteria: sistem harus bisa jalan saat 1 komponen besar fail (transmission atau trafo).",
+   "q": "Kriteria keandalan N-1 berarti sistem harus tetap beroperasi normal walaupun satu komponen besar (saluran atau trafo) mengalami gangguan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. N-1: planning principle. Sistem reliable bila kehilangan 1 komponen (line trip, trafo fail) — restoration otomatis via redundancy + switching. Transmisi HV: N-1 mandatory. Distribusi urban: N-1 desired."
+   "explain": "BENAR. N-1 adalah prinsip perencanaan: kehilangan satu elemen dipulihkan lewat redundansi dan manuver tanpa memadamkan pelanggan. Pada transmisi tegangan tinggi N-1 wajib; pada distribusi perkotaan sangat diinginkan.",
+   "hint": "Apa yang harus terjadi pada pelanggan jika satu trafo gardu induk rusak?"
   },
   {
    "type": "pg",
@@ -11051,13 +11104,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Distributed Energy Resources (DER) seperti rooftop PV mengubah arah arus tradisional (unidirectional → bidirectional) di distribusi.",
+   "q": "Pembangkit tersebar seperti PLTS atap mengubah aliran daya di jaringan distribusi dari satu arah menjadi dua arah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Tradisional: power flow GI → customer. Dengan rooftop PV/BESS: export balik ke grid saat surplus. Protection coordination, voltage regulation, loss calc harus re-design. PLN: net-metering + anti-islanding req."
+   "explain": "BENAR. Secara tradisional daya mengalir dari gardu induk ke pelanggan. Dengan PLTS atap dan baterai, saat surplus pelanggan mengekspor daya ke jaringan. Koordinasi proteksi, pengaturan tegangan, dan perhitungan rugi harus dirancang ulang untuk itu.",
+   "hint": "Ke mana daya PLTS atap mengalir saat rumah kosong di siang hari?"
   },
   {
    "type": "pg",
@@ -11198,13 +11252,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Trafo oil-filled harus uji kualitas oil (dielectric strength, moisture, acidity) periodik.",
+   "q": "Minyak trafo perlu diuji secara berkala: kekuatan dielektrik, kadar air, dan keasaman.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Oil mineral insulating berangsur aged: oxidation → asam + sludge, moisture ingress. Test: BDV (dielectric strength ≥50 kV/2.5mm), water <20 ppm, acidity <0.1 mg KOH/g. Filter atau replace bila degraded."
+   "explain": "BENAR. Minyak isolasi menua karena oksidasi (asam dan endapan) dan kemasukan uap air. Batas yang lazim: tegangan tembus ≥ 50 kV/2,5 mm, kadar air < 20 ppm, keasaman < 0,1 mg KOH/g. Minyak yang menurun disaring atau diganti.",
+   "hint": "Apa yang terjadi pada kekuatan isolasi minyak yang mengandung air?"
   }
  ],
  "2.15": [
@@ -11281,13 +11336,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Pencurian listrik umum Indonesia: bypass kWh meter, tampering, tapping jaringan langsung.",
+   "q": "Modus pencurian listrik yang umum di Indonesia meliputi melewati (bypass) kWh meter, memanipulasi meter, dan menyadap jaringan secara langsung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Non-technical losses (NTL) 2-5% PLN. Modus: bypass jumper meter, magnetic tamper, illegal tap jaringan, meter slowing. PLN loss Rp 3T+ annual. AI detection (model Qastil!) bantu reduce."
+   "explain": "BENAR. Susut non-teknis PLN sekitar 2–5% dengan kerugian triliunan rupiah per tahun. Modusnya: jumper melewati meter, mengganggu meter dengan magnet, memperlambat meter, dan sadapan ilegal di jaringan. Analitik data konsumsi membantu mengarahkan pemeriksaan P2TL.",
+   "hint": "Sebutkan tiga cara umum orang mencuri listrik."
   },
   {
    "type": "pg",
@@ -11391,13 +11447,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Over-correction (PF leading) dapat sebabkan voltage rise + resonance.",
+   "q": "Kompensasi yang berlebihan (faktor daya leading) dapat menaikkan tegangan dan memicu resonansi harmonisa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Capacitor berlebih → leading PF, V naik. Harmonic resonance LC amplify THD. Target 0.95-0.98, hindari leading."
+   "explain": "BENAR. Kapasitor yang terlalu banyak membuat faktor daya leading, tegangan naik, dan rangkaian LC dengan induktansi jaringan dapat memperkuat harmonisa. Sasaran yang lazim 0,95–0,98 lagging; hindari leading.",
+   "hint": "Apa yang terjadi jika kapasitor bank tetap penuh saat beban induktif sudah mati?"
   },
   {
    "type": "pg",
@@ -11413,13 +11470,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Power quality analyzer dapat log PF trending + harmonic untuk sizing cap bank.",
+   "q": "Power quality analyzer dapat merekam tren faktor daya dan harmonisa dari waktu ke waktu sebagai dasar menentukan ukuran kapasitor bank.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Fluke 1760, Dranetz, Schneider PowerLogic: record minutes-hours, CSV export. Trending PF guide cap bank sizing + scheduling."
+   "explain": "BENAR. Alat seperti ini merekam per menit hingga berhari-hari dan mengekspor datanya. Dari tren faktor daya diketahui berapa kVAR yang dibutuhkan di tiap waktu, sehingga ukuran dan jumlah langkah kapasitor bisa ditentukan dengan tepat.",
+   "hint": "Mengapa ukuran kapasitor bank tidak bisa ditentukan dari satu pengukuran sesaat?"
   },
   {
    "type": "pg",
@@ -11449,13 +11507,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "E-stop button harus merah dengan background kuning, ISO 13850.",
+   "q": "Tombol darurat (E-stop) harus berwarna merah dengan latar kuning sesuai ISO 13850.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Mushroom-head red/yellow. Accessible no-tool, 0.6-1.7m height. Latching push-lock, twist-release. Multiple locations."
+   "explain": "BENAR. Bentuknya kepala jamur merah di atas latar kuning, mudah dijangkau tanpa alat, mengunci saat ditekan dan dilepas dengan diputar, dan dipasang di beberapa lokasi pada mesin besar.",
+   "hint": "Mengapa E-stop harus mengunci saat ditekan, bukan kembali sendiri?"
   }
  ],
  "2.18": [
@@ -11487,13 +11546,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Electrolytic capacitor aging reduce capacitance + ESR naik → power supply fail eventually.",
+   "q": "Kapasitor elektrolit menua: kapasitansinya turun dan ESR-nya naik, sehingga catu daya akhirnya gagal.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Dry-out electrolyte, C turun 20%+ → ripple naik → overheat → domino. PC PSU lifetime 5-10 years terbatas caps. High-temp rated (105°C) life 2x low-temp (85°C). Arrhenius."
+   "explain": "BENAR. Elektrolitnya mengering, kapasitansi turun 20% atau lebih, riak tegangan naik, komponen memanas, dan kerusakan menjalar. Kapasitor berperingkat 105 °C berumur sekitar dua kali lipat yang 85 °C pada suhu yang sama.",
+   "hint": "Komponen apa yang paling sering menjadi penyebab catu daya komputer mati setelah beberapa tahun?"
   }
  ],
  "2.19": [
@@ -11511,13 +11571,14 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Sensor output wajib di-debounce / filter bila dipakai di PLC input untuk prevent false trigger.",
+   "q": "Sinyal sensor yang masuk ke PLC perlu di-debounce atau disaring untuk mencegah pemicu palsu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Mechanical switch bounce + noise electrical. PLC input filter time (1-10ms) atau software debounce (2-3 scan stable). Long cable run need shielded pair + grounding."
+   "explain": "BENAR. Kontak mekanis memantul (bounce) dan derau listrik menimbulkan pulsa palsu. PLC menyediakan filter waktu masukan (1–10 ms) atau debounce di program (stabil selama 2–3 siklus pindai). Kabel panjang memerlukan pasangan berpelindung yang dibumikan.",
+   "hint": "Apa yang terjadi pada hitungan produk jika satu sentuhan sensor terbaca sebagai tiga pulsa?"
   }
  ],
  "2.20": [
@@ -11536,59 +11597,64 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "RAB harus include contingency + escalation untuk proyek jangka panjang agar budget tidak over.",
+   "q": "RAB proyek berjangka panjang harus menyertakan biaya tak terduga (contingency) dan kenaikan harga (escalation).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Proyek >6 bulan terkena material escalation + unknown risk. Contingency 5-10% + price escalation clause kontrak. Tanpa: kontraktor rugi / klien overcharge akhirnya."
+   "explain": "BENAR. Proyek lebih dari 6 bulan terpapar kenaikan harga material dan risiko yang belum diketahui. Kontingensi 5–10% dan klausul penyesuaian harga dalam kontrak melindungi kontraktor dari rugi dan pemilik dari tagihan tambahan yang tidak terduga.",
+   "hint": "Apa yang terjadi pada harga tembaga selama proyek dua tahun?"
   }
  ],
  "2.21": [
   {
    "type": "tf",
-   "q": "Koordinasi antar-disiplin (ME, sipil, arsitek) di proyek gedung penting untuk mencegah clash.",
+   "q": "Koordinasi antar disiplin (mekanikal-elektrikal, sipil, arsitek) pada proyek gedung penting untuk mencegah tabrakan jalur di lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. BIM clash detection modern (Revit + Navisworks) identify ME conflict dengan struktur/sipil pre-construction. Pipa vs kabel tray vs ducting: 3D model + coordination meeting weekly."
+   "explain": "BENAR. Pipa, tray kabel, dan ducting sering berebut ruang plafon yang sama. Deteksi tabrakan dengan model 3D (BIM) dan rapat koordinasi berkala menyelesaikannya sebelum konstruksi, bukan saat pekerja sudah di lokasi.",
+   "hint": "Siapa yang harus mengalah jika ducting dan tray kabel dirancang di elevasi yang sama?"
   }
  ],
  "2.22": [
   {
    "type": "tf",
-   "q": "Segel PLN pada meter setelah handover tidak boleh dibuka kontraktor.",
+   "q": "Setelah serah terima, segel PLN pada meter tidak boleh dibuka oleh kontraktor.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Segel/plombir = bukti tidak-tampered. Post-handover: hanya PLN yang authorized buka. Kontraktor buka = tampering → denda + pidana. Perawatan meter tanggung jawab PLN."
+   "explain": "BENAR. Segel adalah bukti meter tidak dimanipulasi. Setelah serah terima, hanya PLN yang berwenang membukanya; kontraktor yang membuka segel dianggap merusak dan dapat dikenai denda serta pidana. Perawatan meter menjadi tanggung jawab PLN.",
+   "hint": "Siapa yang berwenang membuka segel meter setelah listrik menyala?"
   }
  ],
  "2.23": [
   {
    "type": "tf",
-   "q": "Proofreading (cek grammar, angka, unit) harus SELALU dilakukan sebelum submit report teknis.",
+   "q": "Laporan teknis harus selalu diperiksa ulang (proofreading) — ejaan, angka, dan satuan — sebelum diserahkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Typo + kesalahan angka/unit damage credibility. Check: spelling, grammar, number consistency, unit (kW vs kVA), figure reference numbering, citation. Fresh eye setelah break."
+   "explain": "BENAR. Salah ketik dan kekeliruan angka atau satuan (kW tertukar kVA) merusak kredibilitas seluruh laporan. Periksa konsistensi angka, penomoran gambar, dan rujukan, sebaiknya dengan mata segar setelah jeda.",
+   "hint": "Apa yang dipikirkan pembaca jika menemukan 'kW' yang seharusnya 'kVA' di halaman pertama?"
   },
   {
    "type": "tf",
-   "q": "Kemampuan komunikasi sama penting atau lebih dari kemampuan teknis untuk karier engineer.",
+   "q": "Bagi karier seorang insinyur, kemampuan berkomunikasi sama penting atau bahkan lebih penting daripada kemampuan teknis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Engineer senior: 60%+ time communication (meeting, email, report, presentation). Technical knowledge wajib tapi tidak cukup. Promotion often correlated dengan komunikasi + leadership. Investasi skill."
+   "explain": "BENAR. Insinyur senior menghabiskan sebagian besar waktunya untuk rapat, surat, laporan, dan presentasi. Pengetahuan teknis wajib tetapi tidak cukup; promosi sering berkaitan dengan kemampuan komunikasi dan kepemimpinan.",
+   "hint": "Apa yang dilakukan manajer proyek sepanjang hari: menghitung atau berkomunikasi?"
   }
  ],
  "3A.01": [
@@ -11643,23 +11709,25 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Setiap gedung bertingkat wajib SLO sebelum operasional.",
+   "q": "Gedung bertingkat baru boleh dioperasikan sebelum Sertifikat Laik Operasi (SLO) terbit, asalkan kontraktornya sudah berpengalaman.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "UU 30/2009 + Permen ESDM 12/2021. SLO by Konsuil/PPILN."
+   "a": 1,
+   "explain": "SALAH. UU 30/2009 dan Permen ESDM 12/2021 mewajibkan SLO terbit lebih dulu sebelum instalasi dioperasikan, siapa pun kontraktornya. SLO diterbitkan lembaga inspeksi teknik independen setelah instalasi diperiksa.",
+   "hint": "Pikirkan siapa yang berwenang menyatakan instalasi laik: kontraktor atau lembaga inspeksi?"
   },
   {
    "type": "tf",
-   "q": "Lifecycle cost analysis (LCCA) lebih bermakna dari initial capex untuk decision long-term.",
+   "q": "Dalam memilih peralatan gedung, membandingkan biaya sepanjang umur pakai (harga beli + energi + perawatan) lebih tepat daripada hanya membandingkan harga beli.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. LCCA: capex + O&M + energy + replacement dalam 20-30 tahun. LED + VFD: capex tinggi tapi LCCA lebih rendah dari konvensional."
+   "explain": "BENAR. Analisis biaya siklus hidup (LCCA) menghitung harga beli, biaya energi, perawatan, dan penggantian selama 20–30 tahun. Lampu LED atau VFD harganya lebih mahal di awal, tetapi total biayanya jauh lebih rendah.",
+   "hint": "Peralatan gedung dipakai puluhan tahun — biaya mana yang paling besar dalam jangka panjang?"
   }
  ],
  "3A.02": [
@@ -11678,23 +11746,25 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "MCCB utama trip unit electronic (LSIG) memungkinkan fine-tune koordinasi downstream.",
+   "q": "Unit trip elektronik LSIG pada MCCB utama memungkinkan setelan arus dan waktu diatur, sehingga koordinasi dengan pengaman di bawahnya lebih mudah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "LSIG adjustable: Long (overload), Short (short-time), Instantaneous, Ground. Settings enable koordinasi."
+   "explain": "BENAR. LSIG berarti Long-time (beban lebih), Short-time (hubung singkat tunda), Instantaneous (seketika), dan Ground (gangguan tanah). Setiap fungsi bisa disetel, sehingga kurva trip MCCB utama bisa disusun agar pengaman cabang trip lebih dulu.",
+   "hint": "Apa arti keempat huruf L-S-I-G, dan mengapa setelan yang bisa diubah membantu koordinasi?"
   },
   {
    "type": "tf",
-   "q": "Arc flash study di LVMDP mandatory untuk NFPA 70E compliance facility >600V.",
+   "q": "Studi arc flash pada panel LVMDP hanya diperlukan untuk panel tegangan menengah; panel tegangan rendah 400 V tidak berbahaya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Arc flash study calculate incident energy → label panel + PPE recommendation. Mandatory OSHA/NFPA 70E. Update saat modification."
+   "a": 1,
+   "explain": "SALAH. Justru panel tegangan rendah berarus hubung singkat besar bisa menghasilkan energi busur api yang sangat tinggi. NFPA 70E dan IEEE 1584 mensyaratkan studi arc flash untuk panel ≥ 50 V yang dikerjakan dalam keadaan bertegangan, lalu hasilnya dipasang sebagai label dan dasar pemilihan APD.",
+   "hint": "Energi busur api bergantung pada arus gangguan dan lama gangguan, bukan hanya pada tegangan."
   }
  ],
  "3A.03": [
@@ -11713,67 +11783,73 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Lumen maintenance faktor LLF ≤1 karena dust + driver aging + voltage drop.",
+   "q": "Lux yang dihitung saat desain harus dikalikan faktor rugi cahaya (LLF) yang nilainya kurang dari 1, karena debu, penuaan driver, dan jatuh tegangan mengurangi cahaya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "LLF 0.7-0.9 typical. Cleaning schedule + quality driver improve. Design lumen initial × LLF = maintained."
+   "explain": "BENAR. LLF tipikal 0,7–0,9. Lumen awal × LLF = lumen terpelihara. Tanpa faktor ini, ruangan yang terang saat baru akan menjadi kurang terang setelah beberapa tahun.",
+   "hint": "Apakah lampu tetap seterang hari pertama setelah tiga tahun dipakai?"
   },
   {
    "type": "tf",
-   "q": "Lighting contribute 20-30% konsumsi energi gedung komersial sebelum retrofit LED.",
+   "q": "Sebelum diganti LED, pencahayaan biasanya menyumbang sekitar 20–30% konsumsi energi gedung perkantoran.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Commercial lighting 25-30% energy pre-LED. LED retrofit drop ke 10-15%. Combined dengan sensor + daylight → biggest saving per capex."
+   "explain": "BENAR. Pencahayaan konvensional (TL, halogen) menyumbang 25–30% energi gedung komersial. Setelah retrofit LED ditambah sensor dan pemanfaatan cahaya matahari, porsinya turun ke 10–15%.",
+   "hint": "Bandingkan porsi pencahayaan dengan pendingin ruangan dalam tagihan gedung."
   }
  ],
  "3A.04": [
   {
    "type": "tf",
-   "q": "Unbalance chronic memperpendek umur motor dan trafo.",
+   "q": "Ketidakseimbangan beban antar fasa yang berlangsung terus-menerus memperpendek umur motor dan transformator.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. NEMA derating 10% unbalance → motor capability 25% turun. Trafo heat fasa imbalance."
+   "explain": "BENAR. Ketidakseimbangan tegangan 10% membuat motor harus diturunkan kemampuannya sekitar 25% (kurva derating NEMA), dan fasa yang lebih berat pada trafo menjadi lebih panas.",
+   "hint": "Apa yang terjadi pada belitan yang menanggung arus lebih besar dari dua belitan lainnya?"
   },
   {
    "type": "tf",
-   "q": "Panel meter multifunction modern dapat log phase imbalance historical untuk analysis.",
+   "q": "Untuk mengetahui riwayat ketidakseimbangan fasa, cukup mengukur arus sekali dengan tang ampere saat inspeksi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Smart meter Schneider PM8000 etc: min-max-avg per minute/hour, histogram. Trending bulanan identify issue + solve systematik."
+   "a": 1,
+   "explain": "SALAH. Pengukuran sesaat hanya memotret satu waktu. Ketidakseimbangan berubah sepanjang hari mengikuti beban. Meter panel multifungsi modern merekam nilai minimum, maksimum, dan rata-rata per fasa sehingga polanya bisa dianalisis.",
+   "hint": "Apakah beban gedung pukul 10 pagi sama dengan pukul 8 malam?"
   }
  ],
  "3A.05": [
   {
    "type": "tf",
-   "q": "Rebar struktur beton dapat dijadikan sistem grounding bangunan.",
+   "q": "Tulangan baja (rebar) dalam pondasi beton dapat dimanfaatkan sebagai bagian sistem pembumian bangunan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Rebar bonding (welded intersection): luas permukaan massive → R sangat rendah. Standar modern mandatori."
+   "explain": "BENAR. Rebar yang disambung las di titik silangnya memiliki luas kontak dengan tanah yang sangat besar, sehingga tahanannya rendah. Standar modern (IEC 62305, PUIL) mengenal ini sebagai elektrode pondasi.",
+   "hint": "Elektrode pembumian yang baik butuh kontak seluas mungkin dengan tanah — apa yang sudah tertanam di pondasi?"
   },
   {
    "type": "tf",
-   "q": "Grounding resistance tahanan test setelah heavy rain bisa lebih rendah dari design baseline.",
+   "q": "Hasil pengukuran tahanan pembumian setelah hujan lebat mewakili kondisi terburuk yang bisa terjadi sepanjang tahun.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Moisture drop soil ρ. Test di musim kering (worst case). Trend seasonal. Document conditions saat measurement."
+   "a": 1,
+   "explain": "SALAH. Tanah basah justru menghantar lebih baik, sehingga nilainya lebih rendah dari biasanya. Kondisi terburuk terjadi saat musim kering. Karena itu pengukuran acuan dilakukan di musim kering dan kondisi cuaca dicatat pada laporan.",
+   "hint": "Air hujan membuat tahanan tanah naik atau turun?"
   }
  ],
  "3A.06": [
@@ -11792,6545 +11868,7119 @@ window.QUIZ_BANK = {
   },
   {
    "type": "tf",
-   "q": "Sistem penangkal petir wajib inspect tahunan + test setelah event petir besar.",
+   "q": "Sistem penangkal petir cukup diperiksa saat pertama dipasang; setelah itu tidak perlu inspeksi berkala.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "IEC 62305-3: annual visual + bi-annual test continuity. After strike: damage check. Log maintenance."
+   "a": 1,
+   "explain": "SALAH. IEC 62305-3 mensyaratkan inspeksi visual tahunan dan uji kontinuitas berkala, ditambah pemeriksaan setelah sambaran besar. Sambungan yang korosi atau konduktor turun yang putus membuat sistem tidak berfungsi tanpa terlihat.",
+   "hint": "Sambungan logam di atap gedung terpapar panas dan hujan bertahun-tahun — apa yang bisa terjadi?"
   },
   {
    "type": "tf",
-   "q": "SPD + grounding kombinasi essential: SPD shunt tidak efektif tanpa low-R ground path.",
+   "q": "SPD (pelindung tegangan lebih) tetap efektif walaupun tahanan pembumiannya tinggi, karena SPD bekerja sendiri memotong tegangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. SPD divert surge ke ground. High R ground = voltage build up → SPD kurang efektif + still damage equipment. Integrated design."
+   "a": 1,
+   "explain": "SALAH. SPD mengalihkan arus surja ke tanah. Jika jalur pembumiannya bertahanan tinggi, tegangan tetap naik dan peralatan tetap rusak. SPD dan pembumian bertahanan rendah harus dirancang sebagai satu kesatuan.",
+   "hint": "Ke mana arus surja dibuang oleh SPD, dan apa yang terjadi jika jalannya sempit?"
   }
  ],
  "3A.07": [
   {
    "type": "tf",
-   "q": "FA system wajib inspect + test bulanan, kuartalan, tahunan per SNI/NFPA 72.",
+   "q": "Sistem alarm kebakaran harus diuji secara berkala — mingguan, bulanan, kuartalan, dan tahunan — sesuai SNI dan NFPA 72.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Weekly visual, monthly MCP/battery, kuartalan detector function, annual full. Documented."
+   "explain": "BENAR. Jadwalnya: pemeriksaan visual mingguan, uji titik panggil manual dan baterai bulanan, uji fungsi detektor kuartalan, dan uji menyeluruh tahunan. Semuanya dicatat dalam buku log.",
+   "hint": "Detektor yang tidak pernah diuji — bagaimana kita tahu masih berfungsi?"
   },
   {
    "type": "tf",
-   "q": "Dokumentasi test + maintenance FA wajib tersedia untuk inspeksi Dinas Kebakaran + insurance audit.",
+   "q": "Catatan pengujian dan perawatan alarm kebakaran wajib tersedia untuk inspeksi Dinas Pemadam Kebakaran maupun audit asuransi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Log book FA sistem: inspection date, finding, corrective. Dinas Damkar audit periodic. Insurance claim require compliance proof."
+   "explain": "BENAR. Buku log berisi tanggal inspeksi, temuan, dan tindakan perbaikan. Dinas Damkar memeriksanya secara berkala, dan klaim asuransi kebakaran mensyaratkan bukti bahwa sistem dirawat.",
+   "hint": "Setelah kebakaran, apa yang akan ditanyakan pihak asuransi lebih dulu?"
   }
  ],
  "3A.08": [
   {
    "type": "tf",
-   "q": "Cable tray design harus koordinasi dengan arsitek + MEP untuk avoid clash + maintain ceiling height.",
+   "q": "Jalur cable tray harus dikoordinasikan dengan arsitek dan disiplin MEP lain sejak tahap desain agar tidak bertabrakan dengan pipa, ducting, dan struktur.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. BIM clash detection design phase. MEP zoning: tray priority route + elevation. Ceiling height after clearance semua MEP."
+   "explain": "BENAR. Deteksi tabrakan (clash detection) dengan model BIM pada tahap desain jauh lebih murah daripada memindahkan tray di lapangan. Elevasi dan prioritas jalur setiap disiplin disepakati lebih dulu agar tinggi plafon tetap terjaga.",
+   "hint": "Lebih murah memindahkan garis di gambar atau memindahkan tray yang sudah terpasang?"
   }
  ],
  "3A.09": [
   {
    "type": "tf",
-   "q": "Fire-rated cable install di jalur fire-protected, bukan bebas routing.",
+   "q": "Kabel tahan api (fire-rated) tetap berfungsi saat kebakaran walaupun terminasi, konduit, dan penyangganya bukan tipe tahan api.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "Fire cable survive tapi termination, conduit, support juga wajib fire-rated. Holistic integrity per manufacturer Cert."
+   "a": 1,
+   "explain": "SALAH. Ketahanan api berlaku sebagai satu sistem: kabel, sambungan, konduit, dan penyangga harus sama-sama tahan api sesuai sertifikat pabrikan. Penyangga biasa yang meleleh membuat kabel jatuh dan putus sebelum waktunya.",
+   "hint": "Apa gunanya kabel yang tahan api jika penggantungnya meleleh?"
   },
   {
    "type": "tf",
-   "q": "Derating factor cumulative: temperature × group × installation → total effective ampacity.",
+   "q": "Faktor derating suhu, pengelompokan, dan cara pemasangan dikalikan bersama untuk mendapatkan kuat hantar arus efektif kabel.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. I_effective = I_rated × F_temp × F_group × F_install. Multiple factor multiply. Engineer calc careful. Software automate."
+   "explain": "BENAR. I_efektif = I_nominal × F_suhu × F_kelompok × F_pemasangan. Faktor-faktor ini saling mengalikan, bukan dipilih salah satu, sehingga kabel yang dikelompokkan di ruangan panas bisa kehilangan lebih dari separuh kapasitasnya.",
+   "hint": "Jika dua faktor masing-masing 0,8, berapa faktor gabungannya?"
   }
  ],
  "3A.10": [
   {
    "type": "tf",
-   "q": "Separation kabel data dari power 100V+ untuk avoid interference.",
+   "q": "Kabel data harus dipisahkan dari kabel daya dengan jarak tertentu untuk mencegah gangguan elektromagnetik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "TIA-569: separation 100mm dari <100V, 600mm dari 20A branch. Longer run = more separation. Shielded cable reduce."
+   "explain": "BENAR. TIA-569 memberi jarak pisah minimum yang makin besar untuk arus dan tegangan yang makin tinggi, misalnya sekitar 100 mm untuk sirkuit kecil hingga 600 mm untuk sirkuit daya besar. Kabel berpelindung (shielded) mengurangi kebutuhan jarak.",
+   "hint": "Arus bolak-balik pada kabel daya menimbulkan medan magnet — apa akibatnya pada kabel data di sebelahnya?"
   },
   {
    "type": "tf",
-   "q": "Fiber termination ke konektor butuh fusion splice atau mechanical splice + polish + test.",
+   "q": "Sambungan fusion splice pada serat optik menghasilkan rugi lebih kecil daripada sambungan mekanis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Fusion splice 0.1 dB loss best. Mechanical 0.3 dB. Pre-terminated pigtail common skip install termination on-site. Polish UPC/APC."
+   "explain": "BENAR. Fusion splice melelehkan kedua ujung serat menjadi satu, rugi sekitar 0,1 dB. Sambungan mekanis hanya menjepit dan mensejajarkan serat, rugi sekitar 0,3 dB. Pigtail terminasi pabrik sering dipakai agar tidak perlu memoles konektor di lapangan.",
+   "hint": "Mana yang lebih rapi: dua kaca yang dilebur jadi satu, atau dua kaca yang ditempelkan?"
   }
  ],
  "3A.11": [
   {
    "type": "tf",
-   "q": "Cap bank discharge resistor + grounding stick sebelum work.",
+   "q": "Sebelum bekerja pada kapasitor bank, kapasitor harus dilepas muatannya melalui resistor dan diverifikasi nol dengan tongkat pembumian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Cap charged fatal. Discharge R (1-5 min <50V). Grounding stick verify zero. PUIL safety."
+   "explain": "BENAR. Kapasitor menyimpan muatan yang bisa mematikan meskipun sumber sudah diputus. Resistor pelepas membutuhkan 1–5 menit untuk menurunkan tegangan di bawah 50 V, lalu tongkat pembumian memastikan benar-benar nol.",
+   "hint": "Apa yang tersimpan di dalam kapasitor setelah sakelar dibuka?"
   },
   {
    "type": "tf",
-   "q": "APFC dengan thyristor switching respon lebih cepat dari contactor untuk load dinamis (welder, crane).",
+   "q": "Untuk beban yang berubah sangat cepat seperti mesin las dan crane, kapasitor bank yang disakelar kontaktor sama cepatnya dengan yang disakelar thyristor.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Thyristor-switched <20ms sync zero crossing. Contactor 100-500ms. Dynamic load need fast response. Static Var Generator premium."
+   "a": 1,
+   "explain": "SALAH. Kontaktor butuh 100–500 ms untuk menyambung, sedangkan thyristor menyambung kurang dari 20 ms tepat di titik nol tegangan. Beban yang berubah dalam hitungan detik memerlukan penyakelaran thyristor atau Static Var Generator.",
+   "hint": "Bandingkan waktu gerak kontak mekanis dengan penyakelaran elektronik."
   }
  ],
  "3A.12": [
   {
    "type": "tf",
-   "q": "Harmonic ukur butuh PQ analyzer, bukan DMM biasa.",
+   "q": "Multimeter biasa sudah cukup untuk mengukur kandungan harmonisa pada instalasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "DMM average-responding, True-RMS read total tapi tidak decompose. PQ analyzer FFT spectrum per harmonic + THD."
+   "a": 1,
+   "explain": "SALAH. Multimeter — bahkan yang True RMS — hanya membaca nilai total, tidak bisa memisahkan tiap orde harmonisa. Diperlukan power quality analyzer yang melakukan analisis spektrum (FFT) dan menampilkan THD serta besaran tiap orde.",
+   "hint": "Multimeter memberi satu angka; harmonisa adalah kumpulan banyak frekuensi."
   },
   {
    "type": "tf",
-   "q": "Harmonic mitigation holistic: combination source reduction + filter mungkin paling cost-effective.",
+   "q": "Cara paling hemat mengatasi harmonisa biasanya menggabungkan pengurangan di sumber (misalnya reaktor saluran, VFD 18-pulsa) dengan filter, bukan langsung memasang filter aktif besar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Pure AHF expensive. Line reactor + passive filter + source selection (18-pulse VFD) kombinasi achieve IEEE 519 cost-effectively."
+   "explain": "BENAR. Filter aktif (AHF) mahal. Memasang reaktor saluran, memilih VFD multi-pulsa, dan filter pasif di titik tertentu sering sudah memenuhi IEEE 519 dengan biaya jauh lebih rendah.",
+   "hint": "Lebih murah mencegah gangguan di sumbernya atau membersihkannya setelah menyebar?"
   }
  ],
  "3A.13": [
   {
    "type": "tf",
-   "q": "Low-R / ductor tester untuk bonding + busbar (mΩ range).",
+   "q": "Tahanan sambungan busbar dan bonding dalam orde miliohm dapat diukur dengan ohmmeter biasa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "Micro-ohmmeter inject 10A+ DC, 4-wire. Ideal joint quality (mΩ). Regular ohm meter tidak cukup resolusi."
+   "a": 1,
+   "explain": "SALAH. Ohmmeter biasa tidak punya resolusi di bawah 0,1 Ω. Diperlukan micro-ohmmeter (ductor) yang menyuntikkan arus DC 10 A atau lebih dengan metode 4 kawat, sehingga tahanan 50 µΩ pun terbaca.",
+   "hint": "Sambungan busbar yang baik hanya beberapa mikro-ohm — bisakah ohmmeter Anda membacanya?"
   },
   {
    "type": "tf",
-   "q": "Test report commissioning wajib diarsip minimal 10 tahun untuk referensi + audit + liability.",
+   "q": "Laporan pengujian komisioning sebaiknya disimpan minimal 10 tahun sebagai acuan tren, penelusuran gangguan, perpanjangan SLO, dan klaim asuransi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Instalasi 20-30 years life. Commissioning baseline = foundation future trending + troubleshoot + SLO renewal + insurance claim."
+   "explain": "BENAR. Instalasi hidup 20–30 tahun. Nilai awal tahanan isolasi, impedansi lingkar, dan waktu trip RCD menjadi pembanding saat pengujian berkala; tanpa acuan, penurunan mutu tidak terlihat.",
+   "hint": "Bagaimana mengetahui isolasi memburuk jika nilai awalnya tidak pernah dicatat?"
   }
  ],
  "3A.14": [
   {
    "type": "tf",
-   "q": "Commissioning record must retain minimum 10 years untuk liability + insurance + future.",
+   "q": "Catatan komisioning perlu disimpan sedikitnya 10 tahun karena menjadi dasar penelusuran gangguan, klaim asuransi, dan penyelesaian sengketa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Install 20-30 year lifespan. Record basis troubleshoot, insurance, dispute."
+   "explain": "BENAR. Umur instalasi 20–30 tahun. Ketika terjadi kegagalan atau sengketa dengan kontraktor bertahun-tahun kemudian, catatan komisioninglah yang membuktikan kondisi awal instalasi.",
+   "hint": "Siapa yang akan bertanya tentang kondisi awal instalasi lima tahun setelah serah terima?"
   },
   {
    "type": "tf",
-   "q": "Commissioning good: detect 90% issue sebelum handover, vs no commissioning = issue discover post-move-in.",
+   "q": "Komisioning yang baik menemukan sebagian besar masalah sebelum serah terima, sehingga biaya perbaikannya jauh lebih rendah daripada setelah gedung dihuni.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Study: formal Cx catch 80-95% issue. Cost fix pre-handover 1/10 post-handover (re-mobilize, disrupt occupancy). Investment Cx ROI."
+   "explain": "BENAR. Studi menunjukkan komisioning formal menangkap 80–95% masalah. Memperbaiki sebelum serah terima biayanya sekitar sepersepuluh dari memperbaiki setelah penghuni masuk, karena tidak perlu mobilisasi ulang dan mengganggu operasi.",
+   "hint": "Bayangkan mengganti kabel di ruang yang sudah berisi karyawan dan perabot."
   }
  ],
  "3A.15": [
   {
    "type": "tf",
-   "q": "SLO lembaga inspeksi harus independen dari kontraktor.",
+   "q": "Lembaga yang menerbitkan SLO harus independen dari kontraktor yang memasang instalasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Konflik kepentingan: kontraktor inspect diri = bias. Independent third-party prinsip compliance."
+   "explain": "BENAR. Kontraktor yang memeriksa pekerjaannya sendiri akan bias. Prinsip kepatuhan menuntut pihak ketiga independen (LIT terakreditasi) yang memeriksa dan menerbitkan SLO.",
+   "hint": "Bolehkah siswa menilai ujiannya sendiri?"
   },
   {
    "type": "tf",
-   "q": "Compliance PUIL bukan sekali urusan — continuous: install, periodic inspection, modification audit.",
+   "q": "Kepatuhan pada PUIL selesai begitu instalasi lulus inspeksi pertama; perubahan instalasi di kemudian hari tidak perlu diperiksa lagi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Compliance lifecycle: design, install, commissioning, periodic, modification, decommission. Annual review. Dynamic regulatory environment require vigilance."
+   "a": 1,
+   "explain": "SALAH. Kepatuhan berlaku sepanjang umur instalasi: pemasangan, komisioning, inspeksi berkala, dan setiap modifikasi. Penambahan beban atau perubahan tata letak yang tidak diperiksa bisa membatalkan kelaikan.",
+   "hint": "Instalasi yang laik hari ini, masihkah laik setelah ditambah tiga AC dan satu lift?"
   }
  ],
  "3A.16": [
   {
    "type": "tf",
-   "q": "Emergency light independent dari normal circuit — dedicated supply + battery.",
+   "q": "Lampu darurat boleh disuplai dari sirkuit penerangan biasa, karena baterainya akan mengambil alih saat listrik padam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "Shared circuit fail bersamaan. Dedicated own MCB + battery (self-contained) atau central UPS/inverter. SNI + NFPA."
+   "a": 1,
+   "explain": "SALAH. Lampu darurat harus punya suplai tersendiri (MCB khusus) dan baterai mandiri atau UPS/inverter sentral. Jika berbagi sirkuit, MCB yang trip akan mematikan keduanya sekaligus dan baterai lampu darurat mungkin tidak pernah terisi penuh.",
+   "hint": "Apa yang terjadi jika MCB sirkuit bersama itu trip karena hubung singkat?"
   },
   {
    "type": "tf",
-   "q": "Emergency lighting fail di test mengindikasikan battery aged atau driver fault — replace immediately.",
+   "q": "Lampu darurat yang gagal saat diuji harus segera diperbaiki, karena penyebab umumnya baterai yang sudah tua atau driver yang rusak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Test fail = actual emergency won't work. Battery aged typical cause (4-7 years). Replace, retest. Don't defer. Life safety."
+   "explain": "BENAR. Gagal saat uji berarti gagal saat darurat sungguhan. Baterai lampu darurat biasanya bertahan 4–7 tahun. Ganti, uji ulang, dan jangan ditunda — ini menyangkut keselamatan jiwa saat evakuasi.",
+   "hint": "Kapan lampu darurat benar-benar dibutuhkan, dan apa akibatnya jika saat itu mati?"
   }
  ],
  "3A.17": [
   {
    "type": "tf",
-   "q": "Genset load bank test annual verify kapasitas independent dari building load.",
+   "q": "Uji genset tanpa beban setiap bulan sudah cukup untuk memastikan genset sanggup memikul beban penuh saat listrik padam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "Monthly no-load insufficient (cylinder glaze). Annual load bank 80-100% 2h reveal true capacity. Prevent 'runs OK fails when needed'."
+   "a": 1,
+   "explain": "SALAH. Uji tanpa beban tidak mengungkap kemampuan sebenarnya dan malah menyebabkan pengerakan silinder (glazing). Diperlukan uji load bank tahunan pada 80–100% kapasitas selama sekitar 2 jam untuk memastikan genset benar-benar sanggup.",
+   "hint": "Mesin yang hanya dipanaskan tanpa pernah dibebani — apakah ototnya teruji?"
   },
   {
    "type": "tf",
-   "q": "Emergency power system end-to-end test wajib annual minimum verify chain reliability.",
+   "q": "Sistem daya darurat perlu diuji ujung ke ujung minimal setahun sekali: mensimulasikan padam PLN, ATS berpindah, genset start, dan UPS menjaga beban selama peralihan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Black start test: full sim mains fail. ATS transfer + genset start + UPS ride-through + load stable. Catch integration issue. NFPA 110 standard."
+   "explain": "BENAR. Uji per komponen tidak menangkap masalah integrasi. Uji black start penuh (standar NFPA 110) memastikan seluruh rantai bekerja berurutan, dari deteksi padam hingga beban stabil di genset.",
+   "hint": "Genset bagus, ATS bagus, UPS bagus — tetapi apakah ketiganya sudah pernah bekerja bersama?"
   }
  ],
  "3A.18": [
   {
    "type": "tf",
-   "q": "Cable PLN meter → MCB utama sebelum MDP internal.",
+   "q": "Pada instalasi gedung, kabel dari meter PLN masuk lebih dulu ke MCB pembatas daya sebelum ke panel distribusi utama internal.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "PUIL + PLN standard. MCB pembatas daya kontrak incoming → MDP. Isolate point service + PLN authority."
+   "explain": "BENAR. MCB pembatas di sisi PLN membatasi daya sesuai kontrak dan menjadi titik pemisah kewenangan: sebelum MCB adalah wilayah PLN, setelahnya tanggung jawab pelanggan.",
+   "hint": "Di mana batas antara milik PLN dan milik pelanggan?"
   },
   {
    "type": "tf",
-   "q": "Owner wajib maintain + monitor instalasi — negligence bisa sebabkan kecelakaan + legal liability.",
+   "q": "Setelah gedung diserahterimakan, seluruh tanggung jawab keamanan instalasi berpindah ke kontraktor; pemilik tidak perlu merawatnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. UU 30/2009: pemilik responsible. Fire from electrical negligence → owner liable. Insurance require maintenance record. Legal + practical. Recommended inspeksi 5 year residential (Konsuil) maintain SLO validity."
+   "a": 1,
+   "explain": "SALAH. UU 30/2009 menempatkan pemilik sebagai penanggung jawab instalasinya. Kebakaran akibat instalasi yang tidak dirawat menjadi tanggung jawab hukum pemilik, dan asuransi mensyaratkan catatan perawatan. Inspeksi berkala menjaga SLO tetap berlaku.",
+   "hint": "Setelah rumah dibeli, siapa yang bertanggung jawab merawatnya?"
   }
  ],
  "3B.01": [
   {
    "type": "tf",
-   "q": "Gardu customer wajib compliance PUIL + SPLN + inspected PLN sebelum energize.",
+   "q": "Gardu pelanggan tegangan menengah harus memenuhi PUIL dan SPLN, serta diperiksa PLN sebelum diberi tegangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "SPLN D3.002/D3.020. PLN Rayon inspect construction + setting sebelum energize."
+   "explain": "BENAR. SPLN D3.002 dan D3.020 mengatur konstruksi gardu pelanggan. PLN memeriksa konstruksi dan setelan proteksi sebelum menyambungkan, karena gardu pelanggan terhubung langsung ke jaringan 20 kV milik PLN.",
+   "hint": "Gardu pelanggan tersambung ke jaringan siapa, dan siapa yang menanggung akibat jika terjadi gangguan?"
   },
   {
    "type": "tf",
-   "q": "Gardu customer lifespan 30+ tahun dengan proper maintenance — LCCA menunjukkan long-term value.",
+   "q": "Dengan perawatan yang benar, gardu pelanggan dapat beroperasi lebih dari 30 tahun, sehingga membandingkan biaya sepanjang umur pakai lebih tepat daripada sekadar harga beli termurah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Trafo 30-40 year life proper oil + loading <80%. Switchgear modern 40+ year. LCCA superior vs short-term capex minimize."
+   "explain": "BENAR. Trafo berumur 30–40 tahun bila minyaknya dirawat dan pembebanan di bawah 80%; switchgear modern 40 tahun lebih. Menghemat sedikit di awal dengan komponen murah sering berakhir dengan biaya perbaikan dan gangguan yang jauh lebih besar.",
+   "hint": "Aset yang dipakai 30 tahun — apa yang lebih menentukan: harga beli atau biaya operasinya?"
   }
  ],
  "3B.02": [
   {
    "type": "tf",
-   "q": "Setiap feeder LVMDP wajib short-circuit + overload + (conditional) earth fault protection.",
+   "q": "Setiap feeder di LVMDP industri wajib memiliki proteksi hubung singkat dan beban lebih; proteksi gangguan tanah ditambahkan pada feeder yang kritis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Basic 3-element. MCB/MCCB integrate thermal (OL) + magnetic (SC). GF optional tapi recommended critical."
+   "explain": "BENAR. MCB/MCCB menggabungkan pengaman termal (beban lebih) dan magnetik (hubung singkat). Proteksi gangguan tanah bersifat tambahan, tetapi sangat dianjurkan untuk beban penting agar gangguan kecil ke tanah tidak berkembang jadi kebakaran.",
+   "hint": "Tiga jenis gangguan apa yang harus ditangkap pengaman feeder?"
   },
   {
    "type": "tf",
-   "q": "Panel industri LVMDP critical asset — investment PM annual save cost vs unplanned failure 10-50×.",
+   "q": "Menunda perawatan tahunan panel LVMDP industri lebih hemat karena biaya perawatan lebih besar daripada kerugian akibat panel rusak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Industrial downtime cost $10k-$100k/hour. PM annual shutdown 8h plan vs unplanned 1-3 day + safety risk + collateral damage. ROI PM proven."
+   "a": 1,
+   "explain": "SALAH. Kerugian berhenti produksi bisa mencapai puluhan hingga ratusan juta rupiah per jam, belum termasuk risiko keselamatan dan kerusakan ikutan. Shutdown terencana 8 jam setahun jauh lebih murah daripada gangguan tak terduga 1–3 hari.",
+   "hint": "Bandingkan biaya satu hari perawatan terencana dengan satu hari pabrik berhenti mendadak."
   }
  ],
  "3B.03": [
   {
    "type": "tf",
-   "q": "Silica gel breather prevent moisture masuk trafo oil saat thermal breathing.",
+   "q": "Silica gel pada pernapasan trafo menyerap uap air dari udara yang masuk saat minyak trafo menyusut, dan harus diganti ketika lebih dari separuhnya berubah warna.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Oil expand/contract. Silica gel (biru dry, pink saturated) absorb moisture. Replace >50% pink."
+   "explain": "BENAR. Minyak trafo memuai saat panas dan menyusut saat dingin, sehingga udara keluar-masuk. Silica gel kering berwarna biru dan berubah merah muda saat jenuh. Silica gel yang jenuh membiarkan uap air masuk dan merusak isolasi.",
+   "hint": "Mengapa trafo perlu bernapas, dan apa bahaya udara lembap bagi minyak isolasi?"
   },
   {
    "type": "tf",
-   "q": "Trafo asset management strategic: monitoring + maintenance extend life 30-50 tahun dengan proper care.",
+   "q": "Dua trafo hanya boleh diparalel jika kelompok vektornya sama; kelompok vektor yang berbeda (misalnya Dyn5 dengan Dyn11) menimbulkan arus sirkulasi besar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Trafo 1000-10000 kVA asset $50k-$500k. PdM investment small %. Replace unplanned: equipment + outage + secondary damage. Asset management ROI clear."
+   "explain": "BENAR. Kelompok vektor menyatakan pergeseran sudut fasa sekunder terhadap primer. Dyn5 dan Dyn11 berbeda 180°, sehingga saat diparalel tegangan sekundernya saling melawan dan menimbulkan arus sirkulasi seperti hubung singkat. Syarat paralel lainnya: rasio tegangan sama dan impedansi mirip.",
+   "hint": "Apa arti angka pada kelompok vektor, dan apa yang terjadi jika dua sumber dengan sudut fasa berbeda disambung langsung?"
   }
  ],
  "3B.04": [
   {
    "type": "tf",
-   "q": "Auto source transfer (ASCO) bisa <100ms closed transition.",
+   "q": "Perpindahan sumber otomatis dengan transisi tertutup (closed transition) membuat beban tidak merasakan pemadaman, karena kedua sumber sempat paralel sesaat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Open transition 200-500ms gap. Closed 20-100ms brief paralel sync. Sensitive ride-through."
+   "explain": "BENAR. Pada transisi terbuka ada celah 200–500 ms tanpa suplai. Pada transisi tertutup, sumber baru disinkronkan dulu lalu diparalel 20–100 ms sebelum sumber lama dilepas, sehingga beban sensitif tidak terganggu.",
+   "hint": "Apa bedanya 'putus dulu baru sambung' dengan 'sambung dulu baru putus'?"
   },
   {
    "type": "tf",
-   "q": "Distribution system design philosophy: balance capex, opex, reliability, future adaptability — no single 'best' solution.",
+   "q": "Sistem distribusi radial selalu menjadi pilihan terbaik untuk semua jenis fasilitas karena paling sederhana dan murah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Radial cheap urban density. Spot network downtown. Primary selective hospital. Decision context-specific + stakeholder requirement."
+   "a": 1,
+   "explain": "SALAH. Tidak ada satu konfigurasi yang terbaik untuk semua. Radial murah dan cocok untuk beban biasa, tetapi rumah sakit atau pusat data memerlukan konfigurasi selektif primer atau ring agar satu gangguan tidak memadamkan seluruh beban. Pilihan menimbang biaya, keandalan, dan kebutuhan pengembangan.",
+   "hint": "Apakah kebutuhan keandalan gudang sama dengan ruang operasi rumah sakit?"
   }
  ],
  "3B.05": [
   {
    "type": "tf",
-   "q": "VFD-driven motor rentan bearing fluting karena common mode voltage induce shaft current.",
+   "q": "Motor yang dijalankan VFD lebih rentan mengalami kerusakan bantalan (bearing fluting) daripada motor yang dijalankan langsung dari jaringan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "PWM dV/dt → capacitive coupling shaft-ground → bearing current → pitting. Insulated bearing NDE + grounding brush."
+   "explain": "BENAR. Tegangan mode bersama dari pulsa PWM VFD terkopel ke poros dan mengalir melalui bantalan ke tanah, mengikis alur bantalan (fluting). Penangkalnya: bantalan berisolasi di sisi non-drive dan sikat pembumian poros.",
+   "hint": "Pulsa tegangan cepat dari VFD mencari jalan ke tanah — lewat mana jalannya di dalam motor?"
   },
   {
    "type": "tf",
-   "q": "Premium efficient motor IE3+ + VFD + proper sizing kombinasi save 15-30% energy vs legacy setup.",
+   "q": "Mengganti motor lama dengan motor efisiensi tinggi (IE3 ke atas), menambah VFD, dan memilih ukuran yang tepat dapat menghemat 15–30% energi pada motor yang beroperasi ribuan jam per tahun.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Motor running 5000+ hr/year: saving compound multiple factor. Payback 2-4 tahun typical. Industrial energy initiative proven."
+   "explain": "BENAR. Penghematannya berlipat: efisiensi motor lebih tinggi, VFD mengurangi daya saat beban rendah, dan ukuran yang pas menghindari motor bekerja pada beban parsial yang boros. Waktu balik modal umumnya 2–4 tahun.",
+   "hint": "Motor pabrik menyala 5.000 jam setahun — berapa besar arti penghematan beberapa persen?"
   }
  ],
  "3B.06": [
   {
    "type": "tf",
-   "q": "PMAC ultra-efficient rentan demagnetization saat overheat.",
+   "q": "Motor magnet permanen (PMAC) sangat efisien, tetapi magnetnya bisa kehilangan kemagnetan secara permanen jika terlalu panas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Neodymium Curie ~310°C, irreversible demag >150°C continuous. Thermal monitor + derate."
+   "explain": "BENAR. Magnet neodymium mulai kehilangan sifat magnetnya secara permanen di atas sekitar 150 °C terus-menerus (titik Curie sekitar 310 °C). Karena itu motor PMAC memerlukan pemantauan suhu dan penurunan beban saat panas.",
+   "hint": "Apa yang terjadi pada magnet yang dipanaskan terlalu tinggi?"
   },
   {
    "type": "tf",
-   "q": "Motor selection holistic: type + efficiency class + enclosure + duty + environment — combined decision.",
+   "q": "Dalam memilih motor, harga termurah hampir selalu menghasilkan biaya total terendah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Decision factor: load type (torque profile), environment (hazardous, wet, temperature), duty cycle, efficiency target, budget. Engineer specify careful. Cheapest rarely optimal total cost."
+   "a": 1,
+   "explain": "SALAH. Pemilihan motor menimbang jenis beban, lingkungan (berdebu, basah, berbahaya), siklus kerja, kelas efisiensi, dan anggaran. Motor termurah sering paling boros dan paling cepat rusak, sehingga biaya totalnya justru tertinggi.",
+   "hint": "Motor dibeli sekali tetapi membayar listrik setiap hari selama belasan tahun."
   }
  ],
  "3B.07": [
   {
    "type": "tf",
-   "q": "Auto-tune VFD measure motor parameter untuk kalibrasi vector.",
+   "q": "Fungsi auto-tune pada VFD mengukur parameter motor (tahanan stator, induktansi, inersia) agar model kendali vektornya akurat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Inject test signal, measure R stator, Lm, Lr, inertia. Tuning model accurate. Without: sub-optimal performance."
+   "explain": "BENAR. VFD menyuntikkan sinyal uji dan mengukur parameter motor sebenarnya. Tanpa auto-tune, VFD memakai nilai perkiraan sehingga torsi dan pengaturan kecepatannya kurang optimal, terutama pada kecepatan rendah.",
+   "hint": "Bagaimana VFD bisa mengendalikan motor dengan tepat jika tidak tahu 'karakter' motornya?"
   },
   {
    "type": "tf",
-   "q": "VFD dominan energy saving opportunity di variable-demand load (pump, fan, conveyor) dengan ROI 1-3 tahun typical.",
+   "q": "Menurunkan kecepatan pompa sentrifugal 20% dengan VFD menghemat daya sekitar 20% juga.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Affinity law power∝speed³. Pump 20% speed reduction = 49% power save. Major energy initiative industrial. Rebate utility support."
+   "a": 1,
+   "explain": "SALAH. Menurut hukum afinitas, daya sebanding dengan pangkat tiga kecepatan. Kecepatan 80% berarti daya (0,8)³ ≈ 51%, jadi hematnya sekitar 49% — jauh lebih besar dari 20%. Inilah sebabnya VFD sangat menguntungkan pada pompa dan kipas.",
+   "hint": "Daya ∝ kecepatan³. Hitung 0,8 × 0,8 × 0,8."
   }
  ],
  "3B.08": [
   {
    "type": "tf",
-   "q": "Reduced-voltage starter kurangi starting torque dengan kuadrat voltage.",
+   "q": "Pada starter tegangan tereduksi, torsi awal motor turun sebanding dengan kuadrat penurunan tegangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "T ∝ V². Y-Δ V=V_L/√3 → T=33%. Soft starter 50% V → T=25%. Load T < reduced motor T, else stall."
+   "explain": "BENAR. T ∝ V². Pada bintang-segitiga tegangan belitan menjadi V/√3, sehingga torsi tinggal 33%. Soft starter pada 50% tegangan memberi torsi 25%. Beban yang butuh torsi awal besar bisa gagal berputar (stall).",
+   "hint": "Jika tegangan separuh, torsinya seperempat — mengapa?"
   },
   {
    "type": "tf",
-   "q": "Soft starter tidak provide speed control — hanya reduce starting current + torque, then run at line frequency.",
+   "q": "Soft starter dapat mengatur kecepatan motor secara terus-menerus seperti VFD.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Soft starter: phase-angle control DURING ramp. Run at line frequency (50Hz Indonesia). Speed control butuh VFD. Fundamental difference."
+   "a": 1,
+   "explain": "SALAH. Soft starter hanya mengatur sudut penyalaan selama proses start untuk mengurangi arus dan sentakan; setelah itu motor berjalan pada frekuensi jaringan 50 Hz. Pengaturan kecepatan memerlukan VFD yang mengubah frekuensi.",
+   "hint": "Apa yang menentukan kecepatan motor induksi: tegangan atau frekuensi?"
   }
  ],
  "3B.09": [
   {
    "type": "tf",
-   "q": "Resonance harmonic cap bank tanpa filter amplify THD 5-10×.",
+   "q": "Kapasitor bank tanpa reaktor peredam dapat beresonansi dengan induktansi jaringan dan memperbesar harmonisa hingga berlipat-lipat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Parallel resonance LC at 5th, 7th amplify. Detuned reactor 7% shift below critical."
+   "explain": "BENAR. Resonansi paralel LC pada orde ke-5 atau ke-7 dapat memperkuat THD 5–10 kali. Reaktor detuned (sekitar 7%) menggeser titik resonansi ke bawah orde harmonisa yang ada, sehingga kapasitor aman.",
+   "hint": "Kapasitor + induktansi jaringan membentuk rangkaian apa, dan apa yang terjadi pada frekuensi tertentu?"
   },
   {
    "type": "tf",
-   "q": "Harmonic mitigation cost-effective: combine source reduction (line reactor, 18-pulse) + filter than pure AHF.",
+   "q": "Mematuhi IEEE 519 paling hemat dicapai dengan memasang filter aktif besar di titik masuk, tanpa perlu memperbaiki sumber harmonisanya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. AHF expensive. Line reactor + passive filter + source selection multi-pulse achieve 519 cost-effective. Holistic > single solution."
+   "a": 1,
+   "explain": "SALAH. Filter aktif adalah solusi termahal. Mengurangi harmonisa di sumbernya — reaktor saluran, VFD 12/18-pulsa — dipadukan dengan filter pasif di titik yang tepat umumnya memenuhi IEEE 519 dengan biaya jauh lebih rendah.",
+   "hint": "Lebih murah mengurangi sampah di sumbernya atau membangun pabrik pengolah sampah besar?"
   }
  ],
  "3B.10": [
   {
    "type": "tf",
-   "q": "APFC Modbus/Profibus ke BMS/SCADA monitor + control remote.",
+   "q": "Pengendali kapasitor bank otomatis (APFC) modern dapat dihubungkan ke BMS atau SCADA melalui Modbus untuk pemantauan dan pengendalian jarak jauh.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "APFC modern: Janitza, Schneider Varset, ABB CM-UFS. Modbus RTU/TCP. Integration energy management."
+   "explain": "BENAR. APFC modern menyediakan Modbus RTU/TCP sehingga faktor daya, langkah kapasitor yang aktif, dan alarm bisa dipantau dari sistem manajemen energi tanpa mendatangi panel.",
+   "hint": "Bagaimana operator di ruang kontrol tahu berapa langkah kapasitor yang sedang aktif?"
   },
   {
    "type": "tf",
-   "q": "PF correction terbaik dipasang di design baru — retrofit meningkatkan biaya + downtime.",
+   "q": "Memasukkan perbaikan faktor daya sejak tahap desain lebih murah daripada memasangnya belakangan (retrofit) pada panel yang sudah beroperasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Design baru include space + controls + wiring forward. Retrofit: modification existing panel, downtime install. Cost 1.5-2× retrofit."
+   "explain": "BENAR. Pada desain baru, ruang panel, pengkabelan, dan pengendali sudah diperhitungkan. Retrofit memerlukan modifikasi panel yang ada dan waktu henti untuk pemasangan, sehingga biayanya sekitar 1,5–2 kali lipat.",
+   "hint": "Mana yang lebih mudah: menyediakan ruang sejak awal atau mencari ruang di panel yang sudah penuh?"
   }
  ],
  "3B.11": [
   {
    "type": "tf",
-   "q": "Passive filter bisa resonance dengan grid/cap bank lain bila tidak di-analyze.",
+   "q": "Filter harmonisa pasif dapat berinteraksi dengan kapasitor bank lain atau impedansi jaringan dan menimbulkan resonansi baru jika tidak dianalisis lebih dulu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "LC passive introduce resonance point. Interaction system impedance, cap bank lain → unwanted amplification. Analysis critical."
+   "explain": "BENAR. Filter pasif adalah rangkaian LC yang punya titik resonansinya sendiri. Tanpa analisis impedansi sistem, filter yang dimaksudkan meredam harmonisa justru bisa memperkuat orde lain.",
+   "hint": "Menambah satu rangkaian LC ke sistem yang sudah punya rangkaian LC lain — apa yang bisa terjadi?"
   },
   {
    "type": "tf",
-   "q": "Harmonic filter investment strategic: avoid penalty, extend equipment life, improve grid stability — multi-faceted ROI.",
+   "q": "Manfaat filter harmonisa hanya sebatas menghindari denda dari PLN.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Direct saving PLN tariff. Indirect: cap bank life, trafo loss, motor life, meter accuracy, production continuity. Holistic value."
+   "a": 1,
+   "explain": "SALAH. Selain menghindari denda, filter memperpanjang umur kapasitor bank, mengurangi rugi dan panas trafo, mengurangi kesalahan meter, dan mencegah motor serta elektronik rusak lebih cepat. Manfaatnya berlapis.",
+   "hint": "Ke mana harmonisa mengalir, dan komponen apa saja yang dilewatinya?"
   }
  ],
  "3B.12": [
   {
    "type": "tf",
-   "q": "Heat recovery kompresor bisa save 70-80% energi input sebagai heat utilization.",
+   "q": "Sebagian besar energi listrik yang masuk ke kompresor udara berubah menjadi panas, sehingga pemulihan panas (heat recovery) dapat memanfaatkan 70–80% energi tersebut.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "80-90% kompresor energy → heat. Recover heat exchanger: warm water, absorption chiller, process. ROI + sustainability."
+   "explain": "BENAR. Sekitar 80–90% energi kompresor menjadi panas. Penukar panas dapat memanfaatkannya untuk air panas, pemanasan proses, atau chiller absorpsi, sehingga energi yang tadinya terbuang menjadi berguna.",
+   "hint": "Sentuh tabung kompresor yang baru bekerja — ke mana energi listriknya pergi?"
   },
   {
    "type": "tf",
-   "q": "Commissioning HVAC properly save 10-30% energy vs default setting — investment Cx high ROI.",
+   "q": "Komisioning sistem HVAC yang benar dapat menghemat 10–30% energi dibandingkan membiarkan pengaturan pabrik (default) tanpa penyetelan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. HVAC commissioning: controls verification, setpoint optimize, sequence debug. Existing buildings: retro-commissioning similar saving. Standard practice."
+   "explain": "BENAR. Komisioning memverifikasi kontrol, mengoptimalkan setpoint, dan memperbaiki urutan operasi. Untuk gedung lama, retro-commissioning memberi penghematan serupa dengan biaya yang relatif kecil.",
+   "hint": "Apakah setelan pabrik chiller sudah pas untuk beban gedung Anda?"
   }
  ],
  "3B.13": [
   {
    "type": "tf",
-   "q": "Safety circuit independent dari control normal untuk fungsi walau control fail.",
+   "q": "Rangkaian keselamatan mesin harus terpisah dari kendali produksi biasa, agar tetap berfungsi walaupun kendali produksi gagal.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Categorical separation: safety + safety PLC vs production control. Control fail tidak affect safety. Diverse redundant SIL 3+."
+   "explain": "BENAR. Relai keselamatan atau safety PLC dipisahkan dari PLC produksi, dengan redundansi dan diagnosis mandiri (SIL/PL). Kegagalan program produksi tidak boleh melumpuhkan tombol darurat atau interlock pintu.",
+   "hint": "Jika PLC produksi hang, apakah tombol darurat masih harus bekerja?"
   },
   {
    "type": "tf",
-   "q": "Safety compliance non-negotiable: worker life, legal liability, insurance, reputation — multi-faceted driver.",
+   "q": "Kepatuhan pada standar keselamatan mesin bersifat pilihan dan bisa dikorbankan bila anggaran proyek terbatas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Life safety paramount. Pidana/civil liability negligence. Insurance requirement. Reputation brand damage. Investment safety justified."
+   "a": 1,
+   "explain": "SALAH. Keselamatan pekerja tidak bisa ditawar: ada tanggung jawab pidana dan perdata atas kelalaian, persyaratan asuransi, dan reputasi perusahaan. Kecelakaan satu kali biayanya jauh melampaui penghematan yang didapat.",
+   "hint": "Berapa 'harga' satu tangan operator dibanding satu relai keselamatan?"
   }
  ],
  "3B.14": [
   {
    "type": "tf",
-   "q": "Energized work >50V butuh dokumentasi justifikasi bila de-energize memungkinkan.",
+   "q": "Bekerja dalam keadaan bertegangan pada peralatan di atas 50 V harus dibenarkan secara tertulis bila sebenarnya peralatan bisa dipadamkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "NFPA 70E 110.8: de-energize default. Energized bila introduce hazard atau infeasible. Document + permit."
+   "explain": "BENAR. NFPA 70E menetapkan pemadaman sebagai pilihan utama. Kerja bertegangan hanya dibolehkan jika pemadaman justru menambah bahaya atau tidak mungkin dilakukan, dan itu harus didokumentasikan dengan izin kerja bertegangan.",
+   "hint": "Apa alasan yang sah untuk tetap bekerja pada peralatan hidup?"
   },
   {
    "type": "tf",
-   "q": "Arc flash management program: assessment + PPE + procedure + training + PdM — comprehensive approach.",
+   "q": "Memakai APD tahan busur api saja sudah cukup sebagai program pengelolaan arc flash.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Single tactic inadequate. Holistic: engineering controls, PPE, procedures, competency, maintenance. NFPA 70E comprehensive framework."
+   "a": 1,
+   "explain": "SALAH. APD adalah lapisan terakhir. Program yang utuh mencakup studi arc flash, pengendalian rekayasa (misalnya relai lebih cepat), prosedur kerja, pelatihan, dan pemeliharaan peralatan. Satu taktik saja tidak memadai.",
+   "hint": "Apa gunanya baju tahan api jika energi busur api jauh di atas kemampuan bajunya?"
   }
  ],
  "3B.15": [
   {
    "type": "tf",
-   "q": "Ex equipment cert wajib verify install + annual + dokumentasi.",
+   "q": "Sertifikat peralatan Ex harus diverifikasi cocok dengan zona, kelompok gas, dan kelas suhu saat pemasangan, lalu diinspeksi berkala dan didokumentasikan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Ex strict management. Initial verify cert match zone + group + T-class. Annual inspection EN 60079-17. Modification document."
+   "explain": "BENAR. Peralatan Ex hanya aman jika markanya sesuai zona dan gas di lokasi. Inspeksi berkala mengikuti IEC 60079-17, dan setiap modifikasi harus dicatat agar sertifikasinya tetap berlaku.",
+   "hint": "Lampu Ex untuk zona 2 dipasang di zona 1 — apakah tetap aman?"
   },
   {
    "type": "tf",
-   "q": "Compliance Ex zero-tolerance: non-compliant installation explosion risk fatal + legal penalty + insurance denial.",
+   "q": "Di area berbahaya, pemasangan yang tidak sepenuhnya memenuhi standar Ex masih bisa diterima asalkan peralatan bekerja normal.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Hazardous area installation: zero tolerance. Explosion catastrophic (BP Texas City, Buncefield). Pidana + civil liability massive. Absolute compliance essential."
+   "a": 1,
+   "explain": "SALAH. Di area berbahaya berlaku toleransi nol. Satu percikan kecil dapat memicu ledakan dahsyat (seperti kejadian BP Texas City dan Buncefield), dengan tanggung jawab pidana dan asuransi yang menolak klaim.",
+   "hint": "Peralatan bekerja normal hari ini — tetapi apa yang terjadi saat ada kebocoran gas?"
   }
  ],
  "3B.16": [
   {
    "type": "tf",
-   "q": "PM over-maintenance bisa harm equipment bila incorrect atau terlalu sering.",
+   "q": "Perawatan pencegahan yang terlalu sering atau tidak tepat justru bisa merusak peralatan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Infant mortality after re-assembly. Unnecessary shutdown risk. Wrong PM damaging. PdM better."
+   "explain": "BENAR. Setiap pembongkaran membawa risiko kesalahan pemasangan dan 'kematian dini' (infant mortality) setelah dirakit ulang. Perawatan berbasis kondisi (PdM) menghindari pembongkaran yang tidak perlu.",
+   "hint": "Apakah membongkar mesin yang sehat setiap bulan membuatnya lebih sehat?"
   },
   {
    "type": "tf",
-   "q": "World-class maintenance: proactive + predictive + autonomous + continuous improvement — comprehensive.",
+   "q": "Perawatan kelas dunia hanya mengandalkan satu pendekatan, yaitu perawatan pencegahan terjadwal.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Multi-faceted approach. Reactive (minimize) + preventive (systematic) + predictive (condition-based) + prescriptive (AI) + autonomous (operator) + culture (continuous). Holistic philosophy."
+   "a": 1,
+   "explain": "SALAH. Praktik matang memadukan beberapa pendekatan: reaktif diminimalkan, pencegahan terjadwal untuk yang sederhana, prediktif berbasis kondisi untuk yang kritis, perawatan mandiri operator, dan budaya perbaikan berkelanjutan.",
+   "hint": "Apakah trafo utama dan lampu koridor perlu strategi perawatan yang sama?"
   }
  ],
  "3B.17": [
   {
    "type": "tf",
-   "q": "Thermography malam/ambient stabil lebih akurat dari siang solar influence.",
+   "q": "Termografi peralatan luar ruangan lebih akurat dilakukan pada malam atau pagi hari daripada siang terik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Solar heating distort reading. Outdoor: awal pagi atau cloudy. Indoor stable. Timing outdoor critical."
+   "explain": "BENAR. Pemanasan matahari mengacaukan pembacaan suhu permukaan, sehingga titik panas bisa tertutup atau tampak palsu. Untuk peralatan luar ruangan, waktu terbaik adalah pagi, malam, atau saat berawan.",
+   "hint": "Apa yang membuat permukaan logam panas selain arus listrik?"
   },
   {
    "type": "tf",
-   "q": "Thermography best complement lain metode (vibration, DGA) untuk comprehensive equipment health.",
+   "q": "Termografi paling berguna bila dipadukan dengan metode lain seperti analisis getaran dan analisis gas terlarut, karena tiap metode melihat jenis kerusakan yang berbeda.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Thermography thermal. Vibration mechanical. DGA chemical. Combine reveal comprehensive. Multi-modal PdM standard practice mature reliability program."
+   "explain": "BENAR. Termografi melihat gejala panas, analisis getaran melihat kerusakan mekanis, dan DGA melihat perubahan kimia di minyak trafo. Program keandalan yang matang memakai beberapa metode sekaligus.",
+   "hint": "Bisakah kamera termal melihat bantalan yang mulai aus tetapi belum panas?"
   }
  ],
  "3B.18": [
   {
    "type": "tf",
-   "q": "Vibration + thermography lebih komprehensif dari satu tool.",
+   "q": "Analisis getaran dan termografi saling melengkapi karena mendeteksi jenis kerusakan yang berbeda.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "Vibration mechanical fault. Thermography thermal (electrical, bearing late, winding). Complete health combine."
+   "explain": "BENAR. Getaran menangkap ketidakseimbangan, misalignment, dan kerusakan bantalan sejak dini; termografi menangkap panas dari sambungan longgar, belitan, atau bantalan yang sudah parah. Keduanya bersama memberi gambaran kesehatan mesin yang lengkap.",
+   "hint": "Kerusakan bantalan tahap awal terasa lewat apa lebih dulu: getaran atau panas?"
   },
   {
    "type": "tf",
-   "q": "Vibration analysis skill require training + experience — certification ISO 18436 categorize Level I-IV.",
+   "q": "Siapa pun yang punya alat ukur getaran dapat langsung menganalisis kondisi mesin tanpa pelatihan khusus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. ISO 18436: Cat I basic data collection, II analysis + diagnosis, III+ advanced specialist. Certification path. Reliability engineer career development."
+   "a": 1,
+   "explain": "SALAH. Analisis getaran memerlukan pelatihan dan pengalaman. ISO 18436 membagi kompetensi dalam empat kategori: Kategori I pengumpulan data, II analisis dan diagnosis, III–IV spesialis lanjut. Salah tafsir spektrum bisa berakibat mesin dibongkar tanpa perlu.",
+   "hint": "Membaca spektrum getaran itu seperti membaca EKG — siapa yang boleh menafsirkannya?"
   }
  ],
  "3B.19": [
   {
    "type": "tf",
-   "q": "Condition-based superior dari time-based maintenance untuk equipment critical.",
+   "q": "Untuk peralatan kritis, perawatan berbasis kondisi lebih unggul daripada perawatan berbasis waktu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "CBM: replace bila degraded. TBM: schedule regardless. CBM extend life + save cost. Instrumentation + analyst investment."
+   "explain": "BENAR. Perawatan berbasis waktu mengganti komponen sesuai jadwal terlepas kondisinya — kadang terlalu dini, kadang terlambat. Perawatan berbasis kondisi mengganti saat data (PD, minyak, getaran) menunjukkan penurunan, sehingga umur aset lebih panjang dan biaya lebih rendah.",
+   "hint": "Lebih baik mengganti ban mobil setiap 2 tahun atau saat kembangnya sudah tipis?"
   },
   {
    "type": "tf",
-   "q": "Oil + PD + SFRA + bushing + thermal test kombinasi — comprehensive transformer health assessment.",
+   "q": "Satu jenis pengujian saja, misalnya analisis minyak, sudah cukup untuk menilai kesehatan trafo secara menyeluruh.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Multi-test paradigm modern: no single test tell all. Oil chemistry, electrical (PD, bushing, SFRA), thermal (IR, temperature trend). Holistic picture critical asset."
+   "a": 1,
+   "explain": "SALAH. Tidak ada satu uji yang mengungkap semuanya. Analisis minyak melihat kimia, partial discharge dan tan delta melihat isolasi, SFRA melihat deformasi belitan, termografi melihat panas. Penilaian menyeluruh memadukan semuanya.",
+   "hint": "Apakah tes darah saja cukup untuk menyatakan seseorang sehat sepenuhnya?"
   }
  ],
  "3B.20": [
   {
    "type": "tf",
-   "q": "Industrial panel maintenance program strategic: safety + reliability + efficiency + compliance — multi-value proposition.",
+   "q": "Program perawatan panel industri sebaiknya dipandang sebagai investasi, bukan biaya, karena mencegah cedera busur api, kehilangan produksi, denda kepatuhan, dan penggantian dini.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Maintenance bukan cost tapi investment. Avoid arc flash injury, production loss, compliance penalty, premature replacement. ROI holistic maintenance program consistently positive."
+   "explain": "BENAR. Hasil dari program perawatan yang konsisten hampir selalu positif: kecelakaan yang tercegah, produksi yang tidak terhenti, dan peralatan yang berumur lebih panjang bernilai jauh melampaui biaya perawatannya.",
+   "hint": "Hitung biaya satu insiden busur api: pengobatan, produksi berhenti, dan penggantian panel."
   }
  ],
  "3C.01": [
   {
    "type": "tf",
-   "q": "SUTM routing hindari tree, building close, hazardous area, river crossing tinggi.",
+   "q": "Jalur SUTM 20 kV sebaiknya menghindari pepohonan tinggi, bangunan yang terlalu dekat, area berbahaya, dan penyeberangan sungai yang lebar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Tree fault major outage. Building fire risk. Hazardous = gas explosion. River span long + clearance high. Route survey critical."
+   "explain": "BENAR. Sentuhan pohon adalah penyebab gangguan terbesar SUTM. Bangunan yang dekat berisiko kebakaran, area berbahaya berisiko ledakan, dan bentang sungai yang panjang menuntut tiang dan andongan khusus. Survei jalur menentukan keandalan jaringan bertahun-tahun.",
+   "hint": "Apa penyebab gangguan SUTM yang paling sering terjadi saat musim hujan dan angin?"
   },
   {
    "type": "tf",
-   "q": "SUTM asset PLN massive: 300,000+ km nasional, backbone electrifikasi Indonesia — investment besar + maintenance ongoing.",
+   "q": "Konduktor yang umum dipakai PLN untuk SUTM adalah AAAC (paduan aluminium tanpa inti baja), sedangkan SKTM memakai kabel XLPE berisolasi yang ditanam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Distribusi dominant PLN asset km-wise. Reliability + efficiency + modernization continuous priority. Qastil daily work context."
+   "explain": "BENAR. AAAC ringan, tahan korosi, dan kuat tariknya cukup untuk bentang tiang distribusi. SKTM (saluran kabel tegangan menengah) memakai kabel berisolasi XLPE 20 kV yang ditanam, biasanya di kota padat.",
+   "hint": "SU berarti saluran udara, SK berarti saluran kabel — apa bedanya bahan penghantarnya?"
   }
  ],
  "3C.02": [
   {
    "type": "tf",
-   "q": "SUTR rentan pencurian listrik via tap-off ilegal — P2TL target utama Qastil work.",
+   "q": "Kabel pilin (twisted cable) pada SUTR sama sekali tidak bisa disadap secara ilegal karena berisolasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Twisted cable susah tap tapi tetap ada: insulation puncture clamp, meter bypass. P2TL Sub-3C major functional Qastil UP3 Indramayu."
+   "a": 1,
+   "explain": "SALAH. Isolasi memang mempersulit, tetapi penyadapan tetap terjadi dengan klem penusuk isolasi atau bypass di meter. Karena itu SUTR tetap menjadi sasaran utama pemeriksaan P2TL.",
+   "hint": "Isolasi menghalangi, tetapi bisakah ditembus dengan alat khusus?"
   },
   {
    "type": "tf",
-   "q": "SUTR first-line interface PLN-customer; Yantek respond gangguan SUTR jadi major KPI distribusi.",
+   "q": "Gangguan pada SUTR berdampak langsung ke pelanggan, sehingga kecepatan respons regu pelayanan teknik menjadi ukuran kinerja penting di distribusi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SUTR customer-facing. Gangguan direct customer impact. Yantek response time KPI. SAIDI/SAIFI driven. Qastil UP3 performance metric."
+   "explain": "BENAR. SUTR 400 V adalah jaringan yang langsung menyuplai rumah dan usaha kecil. Setiap gangguan langsung dirasakan pelanggan, sehingga waktu respons dan waktu pemulihan regu Yantek dipantau sebagai KPI bersama SAIDI/SAIFI.",
+   "hint": "Siapa yang langsung merasakan jika SUTR putus: gardu induk atau rumah pelanggan?"
   }
  ],
  "3C.03": [
   {
    "type": "tf",
-   "q": "Konfigurasi distribusi Indonesia dominan radial karena cost + historical, upgrade selektif spot network urban.",
+   "q": "Sebagian besar jaringan distribusi di Indonesia berkonfigurasi radial karena paling murah dan sederhana, sedangkan loop dan spindle dipakai di kawasan perkotaan yang padat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Rural + suburban radial. Urban komersial padat loop + spindle. Premium (mall, hospital) spot network. Investment bertahap tier."
+   "explain": "BENAR. Radial cocok untuk daerah pedesaan dan pinggiran karena biaya rendah. Kawasan komersial padat memakai loop atau spindle agar beban dapat dipindahkan ke penyulang lain saat ada gangguan, dan pelanggan premium (mal, rumah sakit) dilayani spot network.",
+   "hint": "Mengapa jaringan di sawah dan jaringan di pusat kota tidak dibangun dengan cara yang sama?"
   },
   {
    "type": "tf",
-   "q": "Konfigurasi distribusi trade-off: radial murah → spot network mahal tapi ultra-reliable — pilih per kritikalitas + ekonomi.",
+   "q": "Pada konfigurasi radial, gangguan di ujung penyulang dapat dipulihkan cepat dengan memindahkan beban ke penyulang tetangga.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Cost vs reliability tier. Tier I rural radial. Tier II suburban loop. Tier III komersial spindle. Tier IV critical spot. Engineer design match customer need + afford."
+   "a": 1,
+   "explain": "SALAH. Ciri radial adalah satu jalur suplai tanpa alternatif; gangguan memadamkan semua beban di hilirnya sampai diperbaiki. Pemindahan beban ke penyulang tetangga memerlukan titik tie (loop) atau gardu hubung (spindle).",
+   "hint": "Radial seperti jalan buntu — kalau tertutup di tengah, adakah jalan lain?"
   }
  ],
  "3C.04": [
   {
    "type": "tf",
-   "q": "Recloser + sectionalizer + DA modern reduce SAIDI 50%+ dari konfigurasi manual konvensional.",
+   "q": "Recloser adalah pemutus yang otomatis menutup kembali setelah trip, sedangkan sectionalizer menghitung operasi recloser dan membuka saat jaringan tidak bertegangan untuk mengisolasi seksi yang terganggu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Studi PLN pilot FLISR: reduce outage duration 60-80%. Auto-restoration seconds vs manual patrol hours. Investment justified customer satisfaction + regulatory."
+   "explain": "BENAR. Sekitar 80% gangguan SUTM bersifat sementara (ranting, burung), sehingga recloser memulihkan pasokan dalam hitungan detik. Sectionalizer tidak mampu memutus arus gangguan; ia membuka saat jaringan mati agar recloser berikutnya hanya menyuplai seksi yang sehat.",
+   "hint": "Mana yang bisa memutus arus gangguan: recloser atau sectionalizer?"
   },
   {
    "type": "tf",
-   "q": "Switching asset distribusi investment bukan optional — reliability + safety + customer satisfaction driver modernisasi PLN.",
+   "q": "LBS (Load Break Switch) mampu memutus arus hubung singkat seperti halnya recloser.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Recloser + sectionalizer + DA capex tinggi. ROI via: reduced SAIDI penalty, customer service, avoided manual patrol, safer network. PLN RUPTL modernisasi priority."
+   "a": 1,
+   "explain": "SALAH. LBS hanya sanggup memutus arus beban normal, bukan arus gangguan. Untuk memutus arus hubung singkat diperlukan pemutus tenaga (PMT) atau recloser. Membuka LBS saat gangguan masih berlangsung sangat berbahaya.",
+   "hint": "Perhatikan namanya: 'load break' — arus apa yang boleh diputusnya?"
   }
  ],
  "3C.05": [
   {
    "type": "tf",
-   "q": "Gardu distribusi titik kritis keandalan: trafo fail = SUTR downstream out sampai restore/backup.",
+   "q": "Gardu cantol memakai satu tiang dan umumnya untuk trafo kecil (sampai sekitar 100 kVA), sedangkan gardu portal memakai dua tiang untuk trafo yang lebih besar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Gardu distribusi serve 50-500 customer. Outage severe. Design redundant (tie, mobile trafo ready). Maintenance priority. Qastil UP3 daily work manage gardu assets."
+   "explain": "BENAR. Gardu cantol menggantung trafo kecil pada satu tiang, cocok untuk beban ringan. Gardu portal berkerangka H di dua tiang menampung trafo hingga sekitar 400 kVA. Trafo yang lebih besar lagi ditempatkan di gardu beton atau kios.",
+   "hint": "Berapa berat trafo yang sanggup dipikul satu tiang?"
   },
   {
    "type": "tf",
-   "q": "Gardu distribusi asset PLN bernilai tinggi: investasi maintenance ROI via reliability + extended life + avoided replacement.",
+   "q": "Kerusakan trafo pada satu gardu distribusi hanya memadamkan satu rumah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Gardu kVA 500-2500 asset IDR 500jt-5M. Maintenance 2-3% annual murah vs replacement. Trafo 30-40 year life proper care. Qastil UP3 manages gardu portfolio strategic."
+   "a": 1,
+   "explain": "SALAH. Satu gardu distribusi melayani puluhan hingga ratusan pelanggan di hilir SUTR-nya. Kerusakan trafo memadamkan semuanya sampai trafo diganti atau beban dipindahkan, sehingga gardu menjadi titik kritis keandalan dan prioritas perawatan.",
+   "hint": "Hitung berapa rumah yang tersambung ke satu trafo 160 kVA."
   }
  ],
  "3C.06": [
   {
    "type": "tf",
-   "q": "Trafo distribusi PLN asset paling banyak — ribuan unit per UP3. Manajemen portfolio strategic.",
+   "q": "Tap changer pada trafo distribusi umumnya berjenis off-load, sehingga posisi tap hanya boleh diubah saat trafo tidak bertegangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. UP3 Indramayu 1000+ gardu distribusi. Each trafo aging curve + condition. Priority replace + major maintenance. Asset management system critical."
+   "explain": "BENAR. Trafo distribusi memakai tap changer tanpa beban dengan langkah ±2,5% (biasanya 5 posisi). Mengubah tap dalam keadaan bertegangan menimbulkan busur api di dalam tangki. Tap changer berbeban (OLTC) hanya ada di trafo besar gardu induk.",
+   "hint": "Apa yang terjadi jika kontak tap digeser saat arus masih mengalir di belitan?"
   },
   {
    "type": "tf",
-   "q": "Trafo distribusi core asset PLN: optimal operation + maintenance + strategic replacement — bottom-line reliability + cost.",
+   "q": "Karena jumlahnya ribuan per unit pelaksana, trafo distribusi perlu dikelola sebagai portofolio aset dengan prioritas penggantian berdasarkan kondisi dan umur.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Trafo failure: extended outage customer + equipment loss + safety event. Asset management mature PLN practice. DGA + condition assessment + planned replacement strategic."
+   "explain": "BENAR. Satu UP3 dapat mengelola lebih dari seribu gardu. Tidak semua bisa diganti sekaligus, sehingga penilaian kondisi (pembebanan, suhu, uji minyak) menentukan mana yang diganti lebih dulu.",
+   "hint": "Dengan anggaran terbatas, bagaimana memilih trafo mana yang diganti tahun ini?"
   }
  ],
  "3C.07": [
   {
    "type": "tf",
-   "q": "PHB-TR titik integrasi kritis: fail → gardu seluruh feeder out — design reliability primary concern.",
+   "q": "Pada PHB-TR gardu distribusi, setiap jurusan SUTR dilindungi sekering NH tersendiri sehingga gangguan di satu jurusan tidak memadamkan jurusan lain.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PHB-TR single point feeder SUTR. Failure = full gardu outage. Quality component + testing + maintenance + spare contactor critical."
+   "explain": "BENAR. Panel hubung bagi tegangan rendah membagi keluaran trafo menjadi beberapa jurusan, masing-masing dengan sekering NH. Gangguan di satu jurusan hanya memutus sekeringnya sendiri.",
+   "hint": "Apa fungsi membagi keluaran trafo menjadi beberapa jurusan?"
   },
   {
    "type": "tf",
-   "q": "PHB-TR design modernisasi: smart monitoring + SCADA + automation — transform PLN gardu ke distribution 4.0.",
+   "q": "Kerusakan PHB-TR hanya berdampak kecil karena hanya satu jurusan yang terganggu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Qastil context PLNlytics + OctoAgent: leverage data PHB-TR + gardu smart. Real-time visibility + predictive analytics. Transformation PLN ongoing priority strategic."
+   "a": 1,
+   "explain": "SALAH. PHB-TR adalah titik tunggal tempat seluruh keluaran trafo dibagi. Kerusakan pada bagian utamanya (saklar utama atau busbar) memadamkan semua jurusan sekaligus, sehingga mutu komponen dan perawatannya sangat menentukan.",
+   "hint": "Di mana letak PHB-TR dalam rantai: sebelum atau sesudah percabangan jurusan?"
   }
  ],
  "3C.08": [
   {
    "type": "tf",
-   "q": "Conductor sizing balance: ampacity + V drop + mechanical + economic — multi-criteria engineering decision.",
+   "q": "ACSR memiliki inti baja sehingga kuat tariknya tinggi, sedangkan AAAC seluruhnya paduan aluminium sehingga lebih ringan dan lebih tahan korosi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Size up: less loss + V drop + upgrade later. Size down: cheap + light + short span more tower. Life-cycle cost analysis typical PLN engineering."
+   "explain": "BENAR. Inti baja ACSR cocok untuk bentang panjang yang butuh kekuatan tarik besar. AAAC tanpa baja lebih ringan, tidak berkarat, dan konduktivitasnya baik, sehingga banyak dipakai untuk SUTM.",
+   "hint": "Apa yang diberikan inti baja, dan apa kelemahannya di daerah pantai?"
   },
   {
    "type": "tf",
-   "q": "Conductor core asset: material, sizing, installation, maintenance — fundamental distribusi reliability + efficiency.",
+   "q": "Memilih ukuran penghantar hanya perlu memperhatikan kuat hantar arusnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Konduktor 30+ year service life. Selection impact loss + capacity + reliability decades. PLN long-term asset planning. Upgrade selective capex tinggi."
+   "a": 1,
+   "explain": "SALAH. Selain KHA, pemilihan penghantar menimbang jatuh tegangan sepanjang jaringan, kekuatan mekanis untuk bentang dan angin, serta biaya sepanjang umur. Penghantar yang terlalu kecil menyebabkan tegangan ujung rendah walaupun arusnya masih di bawah KHA.",
+   "hint": "Penyulang 10 km dengan arus aman — apakah tegangan di ujungnya pasti aman?"
   }
  ],
  "3C.09": [
   {
    "type": "tf",
-   "q": "Stringing SUTM SKILLED + EQUIPMENT specialist: tension control + sag measurement + safety critical.",
+   "q": "Andongan (sag) konduktor bertambah saat suhu naik, sehingga jarak bebas ke tanah harus dihitung pada kondisi konduktor paling panas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Not casual. Crew trained stringing. Puller + tensioner + dynamometer. Drone/theodolite verify sag. Improper = safety + reliability issue."
+   "explain": "BENAR. Konduktor memuai saat panas karena arus tinggi dan terik matahari, sehingga melendut lebih rendah. Tarikan (tension) saat stringing disetel agar pada suhu maksimum jarak bebas masih terpenuhi, dan pada suhu terendah tarikannya tidak melampaui batas tiang.",
+   "hint": "Kapan kawat paling kendur: pagi yang dingin atau siang yang terik dengan beban penuh?"
   }
  ],
  "3C.10": [
   {
    "type": "tf",
-   "q": "Kabel MV investment tinggi: desain + install + test + maintenance critical — asset 30+ year.",
+   "q": "Sambungan (joint) adalah titik terlemah kabel tanah XLPE, sehingga kebersihan, keahlian penyambung, dan pengujian setelah pemasangan sangat menentukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. MV cable installation cost $200-1000/m full installed. Failure = extended outage + excavation repair. Quality investment upfront. Diagnostic + predictive maintenance cost-effective."
+   "explain": "BENAR. Sebagian besar kegagalan kabel tanah terjadi di sambungan dan terminasi, bukan di badan kabel. Debu, kelembapan, atau pengupasan yang salah menimbulkan partial discharge yang perlahan merusak isolasi. Uji VLF/PD setelah pemasangan memastikan mutunya.",
+   "hint": "Bagian mana dari kabel yang dikerjakan dengan tangan di lapangan?"
   }
  ],
  "3C.11": [
   {
    "type": "tf",
-   "q": "Duct bank + manhole system: 50-100 year infrastructure. Strategic investment urban distribusi.",
+   "q": "Duct bank dan manhole adalah infrastruktur sipil berumur puluhan tahun yang memungkinkan kabel diganti tanpa menggali jalan lagi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Civil infrastructure decades. Cable replace dalam duct bank tanpa road work. Long-term cost-effective. Urban upgrade priority PLN besar."
+   "explain": "BENAR. Pipa yang dibungkus beton dan manhole di titik tarik/sambung bertahan 50 tahun lebih. Saat kabel harus diganti atau ditambah, cukup ditarik melalui duct yang ada tanpa membongkar jalan.",
+   "hint": "Apa yang paling mahal saat mengganti kabel tanah: kabelnya atau menggali jalannya?"
   },
   {
    "type": "tf",
-   "q": "Urban distribusi underground investment 5-10x overhead — tetap pilih karena reliability + aesthetics + long-term maintenance.",
+   "q": "Meskipun biaya bangunnya 5–10 kali saluran udara, jaringan bawah tanah dipilih di kawasan perkotaan karena lebih andal, tidak terganggu pohon dan kendaraan, dan lebih rapi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Underground capex tinggi tapi: no tree contact, no vehicle damage, aesthetic, higher reliability (weather immune). Urban premium area justified."
+   "explain": "BENAR. Jaringan bawah tanah kebal cuaca, tidak tersentuh pohon atau tertabrak kendaraan, dan tidak merusak pemandangan. Untuk kawasan premium, keandalan dan estetika itu sepadan dengan biaya awal yang jauh lebih tinggi.",
+   "hint": "Apa saja penyebab gangguan saluran udara yang tidak dialami kabel tanah?"
   }
  ],
  "3C.12": [
   {
    "type": "tf",
-   "q": "P2TL core revenue protection PLN: losses nonteknis ditargetkan 0 persen via detection + enforcement + prevention.",
+   "q": "Menurut UU 30/2009, menggunakan tenaga listrik yang bukan haknya secara melawan hukum adalah tindak pidana dengan ancaman penjara hingga 7 tahun dan denda hingga Rp 2,5 miliar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Losses distribusi 7-10 persen, fraction non-teknis (theft/fraud). Target reduce via P2TL. Qastil key function UP3 Indramayu."
+   "explain": "BENAR. Pasal 51 ayat (3) UU 30/2009 mengatur ancaman itu. Inilah dasar hukum yang membuat P2TL bukan sekadar urusan tagihan, melainkan penegakan hukum.",
+   "hint": "Pencurian listrik dianggap pelanggaran perdata atau pidana?"
   },
   {
    "type": "tf",
-   "q": "P2TL professional: balance enforcement + customer service + legal compliance + ethical conduct — kompleks sensitif.",
+   "q": "Petugas P2TL boleh memeriksa instalasi pelanggan tanpa surat tugas dan tanpa tanda pengenal, asalkan ada kecurigaan kuat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. P2TL boundary antara law enforcement + customer service. Petugas ethical, hukum correct, document impeccable, customer respect. Training + SOP + oversight PLN rigorous. Qastil Manager oversight function."
+   "a": 1,
+   "explain": "SALAH. Pemeriksaan harus dilakukan petugas bersurat tugas dan bertanda pengenal, mengikuti prosedur, dan hasilnya dituangkan dalam berita acara yang ditandatangani. Tanpa itu, temuannya cacat hukum dan PLN bisa digugat balik.",
+   "hint": "Apa yang membuat temuan P2TL sah di mata hukum?"
   }
  ],
  "3C.13": [
   {
    "type": "tf",
-   "q": "P2TL investigasi skill + tools + legal rigor — Qastil manage tim + oversight + performance.",
+   "q": "Pemeriksaan P2TL memadukan pengamatan visual (segel, kabel, meter), pengukuran arus dan tegangan, serta alat deteksi seperti pendeteksi medan magnet dan pembanding beban.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Manager Transaksi Energi oversight P2TL: tim allocation, target, quality BA, revenue recovery, legal coordination. Core KPI unit."
+   "explain": "BENAR. Segel yang rusak, kabel tambahan, atau meter yang tidak berputar saat beban menyala adalah tanda awal. Pengukuran membandingkan arus masuk dengan yang tercatat meter, dan alat deteksi menemukan magnet atau rangkaian bypass tersembunyi.",
+   "hint": "Meter menunjukkan 0 A padahal AC menyala — apa yang harus dicurigai?"
   },
   {
    "type": "tf",
-   "q": "P2TL success metrics: deteksi rate + recovery revenue + pidana + reduce recurrence — multi-dimensi KPI.",
+   "q": "Keberhasilan P2TL cukup diukur dari jumlah pelanggan yang ditindak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. KPI P2TL: jumlah kasus, recovery Rp TA+RP, rasio pidana, feeder loss reduction. Qastil Manager drive performance. Benchmark nasional UP3."
+   "a": 1,
+   "explain": "SALAH. Ukurannya berlapis: tingkat deteksi yang tepat sasaran, energi dan rupiah yang terpulihkan, penurunan susut pada penyulang, dan tidak terulangnya pelanggaran. Menindak banyak pelanggan yang ternyata tidak bersalah justru merugikan.",
+   "hint": "Apa gunanya banyak penindakan jika susut jaringan tidak turun?"
   }
  ],
  "3C.14": [
   {
    "type": "tf",
-   "q": "Modus pencurian evolve — meter modern counter dengan event log + tamper detect + encryption firmware.",
+   "q": "Meter elektronik modern mencatat kejadian seperti pembukaan tutup, medan magnet, dan pembalikan arus, sehingga modus pencurian yang dulu tak terlihat kini terekam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Arms race fraud vs detect. Smart meter modern: 100+ event types. Encrypted firmware. Remote audit. Big data analytics detect pattern."
+   "explain": "BENAR. Smart meter menyimpan log ratusan jenis kejadian (tamper event) dengan stempel waktu, dan firmware-nya terenkripsi. Data ini menjadi bukti dan bahan analisis pola pencurian.",
+   "hint": "Apa yang tidak bisa dilakukan meter mekanis lama tetapi bisa dilakukan meter elektronik?"
   },
   {
    "type": "tf",
-   "q": "Identifikasi modus pencurian = pre-requisite effective P2TL — Qastil train tim deteksi + respond berbagai modus.",
+   "q": "Petugas P2TL perlu mengenali berbagai modus pencurian — bypass meter, magnet, sadapan langsung, dan manipulasi CT — karena modusnya terus berkembang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Tim P2TL field + investigator harus familiar modus. Training periodic update new techniques. Experience accumulate. Qastil oversight + skill development."
+   "explain": "BENAR. Pelaku selalu mencari cara baru mengakali meter. Pelatihan berkala tentang modus terbaru dan berbagi temuan antar tim membuat deteksi tetap efektif.",
+   "hint": "Jika petugas hanya tahu modus lima tahun lalu, apa yang akan terlewat?"
   }
  ],
  "3C.15": [
   {
    "type": "tf",
-   "q": "BA P2TL dokumen formal legal: substandar draft compromise case + expose PLN liability.",
+   "q": "Berita Acara P2TL adalah dokumen hukum, sehingga penyusunan yang asal-asalan dapat membuat kasus gugur di pengadilan dan PLN digugat balik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. BA dispute court: quality document essential. Poorly drafted = case lost + counter-suit. Legal review template. Training tim P2TL rigorous."
+   "explain": "BENAR. BA memuat identitas, temuan, foto, saksi, dan tanda tangan. Kekurangan detail atau prosedur yang terlewat menjadi celah bagi pelanggan untuk membatalkan tagihan susulan atau menuntut PLN.",
+   "hint": "Dokumen apa yang akan diperiksa hakim jika pelanggan menggugat?"
   },
   {
    "type": "tf",
-   "q": "P2TL BA + TA/RP compliance critical: legal + revenue + customer relation — Qastil oversight ensure quality + consistency.",
+   "q": "Tagihan susulan P2TL dihitung berdasarkan golongan pelanggaran dan daya tersambung, bukan ditentukan sesuka petugas di lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Core function UP3. Manager review BA quality, TA calc accuracy, resolution rate. Training tim ongoing. Feedback loop improvement. Qastil responsibility."
+   "explain": "BENAR. Perhitungan tagihan susulan mengikuti rumus baku per golongan pelanggaran (P1–P4) dengan variabel daya dan tarif, sehingga hasilnya dapat diperiksa ulang dan dipertanggungjawabkan.",
+   "hint": "Mengapa perhitungan harus memakai rumus baku, bukan perkiraan?"
   }
  ],
  "3C.16": [
   {
    "type": "tf",
-   "q": "P2TL sukses: PLN + polisi + pengadilan + masyarakat — multi-stakeholder ecosystem essential.",
+   "q": "Penanganan pencurian listrik memerlukan kerja sama PLN dengan kepolisian, kejaksaan, dan pengadilan, karena PLN sendiri tidak berwenang memidana.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Tidak PLN alone. Ekosistem: aparat enforcement, judicial process, community awareness + participation. Qastil UP3 navigate stakeholder landscape."
+   "explain": "BENAR. PLN berwenang memeriksa, memutus, dan menagih susulan; proses pidana adalah kewenangan aparat penegak hukum. Koordinasi yang baik membuat kasus besar bisa dilanjutkan ke ranah pidana.",
+   "hint": "Siapa yang berwenang menahan pelaku: petugas PLN atau polisi?"
   },
   {
    "type": "tf",
-   "q": "Partnership aparat critical: PLN + polisi + jaksa + pengadilan ecosystem defend asset PLN + reduce theft nasional.",
+   "q": "Semua kasus P2TL, sekecil apa pun, wajib dibawa ke proses pidana.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. No single entity handle. Multi-institution collaboration. Regulatory support UU 30/2009. Operational execution PLN Manager UP3 (Qastil). Ecosystem mature Indonesian utility."
+   "a": 1,
+   "explain": "SALAH. Sebagian besar kasus diselesaikan secara administratif melalui tagihan susulan dan perbaikan instalasi. Proses pidana ditempuh untuk kasus besar, berulang, atau yang melibatkan pihak ketiga yang mengorganisir pencurian.",
+   "hint": "Apakah setiap pelanggaran kecil layak menyita waktu pengadilan?"
   }
  ],
  "3C.17": [
   {
    "type": "tf",
-   "q": "kWh meter single-point of transaction PLN-customer: accuracy + reliability + tamper-resistance critical.",
+   "q": "kWh meter adalah satu-satunya titik transaksi energi antara PLN dan pelanggan, sehingga akurasi dan ketahanannya terhadap manipulasi sangat menentukan pendapatan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Meter basis billing revenue. Accuracy mismatch = financial loss dispute. Tamper resistance reduce theft. Investment quality meter + maintenance."
+   "explain": "BENAR. Semua tagihan berasal dari angka meter. Kesalahan akurasi berarti kerugian atau sengketa, dan meter yang mudah dimanipulasi berarti pencurian. Karena itu meter harus bermutu, diuji, dan disegel.",
+   "hint": "Dari mana angka tagihan listrik berasal?"
   },
   {
    "type": "tf",
-   "q": "Metering infrastructure backbone revenue PLN: investment + maintenance + modernization continuous — strategic asset.",
+   "q": "kWh meter 3 fasa pelanggan besar selalu mengukur arus secara langsung tanpa trafo arus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Meter asset massive PLN. Billing revenue direct. Qastil UP3 oversee metering ops. Modernization AMR/AMI → smart meter rollout national priority."
+   "a": 1,
+   "explain": "SALAH. Untuk arus di atas sekitar 100 A, meter tidak sanggup dilewati arus langsung; dipakai pengukuran tidak langsung melalui trafo arus (CT), dan untuk tegangan menengah juga trafo tegangan (PT). Rasio CT/PT harus diprogram di meter agar energinya benar.",
+   "hint": "Bisakah kawat meter kecil dilewati arus 400 A?"
   }
  ],
  "3C.18": [
   {
    "type": "tf",
-   "q": "CT/PT instrumen dasar metering + protection TM/TT — sizing + class + wiring critical.",
+   "q": "CT untuk metering harus berkelas akurasi tinggi (misalnya 0,5 atau 0,2S) dan bebannya (burden) tidak boleh melebihi rating agar kesalahan pengukuran tetap kecil.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. CT/PT error billing error atau protection fail. Qastil UP3 metering team manage + verify customer industri TM. Commissioning + periodic test."
+   "explain": "BENAR. Kelas 0,2S berarti kesalahan ≤ 0,2% bahkan pada arus rendah. Burden yang terlalu besar (kabel sekunder panjang, banyak alat) membuat CT jenuh dan membaca lebih rendah dari sebenarnya.",
+   "hint": "Apa yang terjadi pada akurasi CT jika kabel sekundernya diperpanjang jauh?"
   },
   {
    "type": "tf",
-   "q": "Metering CT/PT accuracy revenue critical: error 1 persen customer besar bisa rugikan jutaan rupiah bulanan.",
+   "q": "Kesalahan CT metering sebesar 1% pada pelanggan industri 1 MVA hanya berdampak kecil pada pendapatan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Industri 1 MVA customer: 1 persen error = 10 kW x 24 x 30 = 7200 kWh/bulan x Rp 1500 = Rp 10jt+/bulan revenue miss. Qastil oversight critical accuracy."
+   "a": 1,
+   "explain": "SALAH. Pada pelanggan 1 MVA, kesalahan 1% berarti sekitar 7.000 kWh per bulan atau lebih dari Rp 10 juta yang tidak tertagih — setiap bulan, bertahun-tahun. Pada pelanggan besar, akurasi metering adalah uang dalam jumlah besar.",
+   "hint": "1% dari 1 MW selama 720 jam sebulan sama dengan berapa kWh?"
   }
  ],
  "3C.19": [
   {
    "type": "tf",
-   "q": "AMI foundation smart grid: data granular enable analytics + demand response + theft detection + service quality.",
+   "q": "AMR hanya membaca meter dari jarak jauh, sedangkan AMI berkomunikasi dua arah sehingga bisa mengirim data interval, memutus, dan menyambung dari jauh.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. AMI tidak sekadar read. Platform data: P2TL (Qastil), demand response, billing accuracy, outage mgmt, customer engagement. Investment multi-benefit."
+   "explain": "BENAR. AMR (automatic meter reading) menggantikan pencatat meter. AMI (advanced metering infrastructure) adalah platform dua arah: data per interval, deteksi tamper, pemutusan jarak jauh, dan dasar untuk demand response.",
+   "hint": "Apa yang bisa dilakukan AMI tetapi tidak bisa dilakukan AMR?"
   },
   {
    "type": "tf",
-   "q": "AMI investment strategic PLN: revenue accuracy + theft reduce + service quality + smart grid foundation — multi-dimensional ROI.",
+   "q": "Manfaat AMI hanya menghemat biaya pencatat meter.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Total ROI AMI: direct (revenue accuracy + theft recover) + indirect (reduce truck roll, customer satisfaction, grid visibility, demand response). Qastil work align AMI strategic direction."
+   "a": 1,
+   "explain": "SALAH. Penghematan pencatat meter hanya salah satunya. AMI juga meningkatkan akurasi tagihan, mendeteksi pencurian dari pola data, mempercepat deteksi padam, dan menjadi fondasi smart grid dan demand response.",
+   "hint": "Data konsumsi per 15 menit dari seluruh pelanggan — apa saja yang bisa dianalisis darinya?"
   }
  ],
  "3C.20": [
   {
    "type": "tf",
-   "q": "Energy balance + AI detection + targeted P2TL = modern approach loss reduction PLN — leverage data + analytics.",
+   "q": "Energy balance membandingkan energi yang keluar dari trafo atau penyulang dengan total energi yang tertagih; selisih yang jauh lebih besar dari susut teknis menandakan kemungkinan pencurian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil paper + PLNlytics align. Traditional random field visit inefficient. Data-driven prioritize. Efficient resource allocation. UP3 competitive advantage."
+   "explain": "BENAR. Susut teknis (I²R, rugi trafo) bisa dihitung. Jika selisih yang terukur jauh di atas itu, ada susut non-teknis: pencurian, meter rusak, atau kesalahan data pelanggan. Ini cara menarget P2TL dengan data, bukan menebak.",
+   "hint": "Trafo mengeluarkan 100 MWh, meter pelanggan menjumlah 80 MWh — ke mana 20 MWh sisanya?"
   },
   {
    "type": "tf",
-   "q": "Fraud detection + energy balance + analytics = Qastil sweet spot: engineering domain + PhD research + operational role combine.",
+   "q": "Menarget pemeriksaan P2TL berdasarkan analisis data lebih efisien daripada kunjungan acak ke lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil unique position: Manager UP3 operational authority + PhD electrical + AI research + PLNlytics platform. Integrate domain + data science drive PLN loss reduction strategic initiative."
+   "explain": "BENAR. Kunjungan acak menghabiskan waktu pada pelanggan yang jujur. Analisis energy balance dan pola konsumsi memprioritaskan pelanggan yang datanya janggal, sehingga tingkat keberhasilan (hit rate) tim lapangan jauh lebih tinggi.",
+   "hint": "Dengan 10 regu dan 10.000 pelanggan, bagaimana memilih siapa yang dikunjungi?"
   }
  ],
  "3C.21": [
   {
    "type": "tf",
-   "q": "Data master DLPD backbone operation PLN: quality impact revenue, service, dispatch, P2TL — strategic asset.",
+   "q": "Kualitas data master pelanggan menentukan mutu penagihan, dispatching gangguan, dan penargetan P2TL, sehingga perlu dijaga terus-menerus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Master data governance IT + operation priority. Quality enable analytics + service. Degraded data cause operational issues. Continuous data quality initiative."
+   "explain": "BENAR. Alamat yang salah membuat regu gangguan tersesat, daya yang tidak sesuai membuat tagihan keliru, dan gardu yang salah tercatat mengacaukan energy balance. Data yang buruk menghasilkan analisis yang buruk.",
+   "hint": "Apa yang terjadi pada energy balance jika 50 pelanggan tercatat di gardu yang salah?"
   },
   {
    "type": "tf",
-   "q": "DLPD + AP2T + PLN Mobile + AMI integrated ecosystem: digital transformation PLN mature — Qastil operate modern stack.",
+   "q": "Sistem pelanggan PLN yang berbeda (aplikasi pelayanan, meter AMI, aplikasi seluler pelanggan) bekerja paling baik bila datanya terintegrasi, bukan terpisah-pisah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PLN IT evolved dari manual → digital. AP2T + DLPD core. PLN Mobile customer. AMI/HES meter. Analytics DataLake. Qastil navigate + leverage integrated stack."
+   "explain": "BENAR. Integrasi membuat satu perubahan (misalnya tambah daya) langsung tercermin di penagihan, meter, dan aplikasi pelanggan. Data yang terpisah menimbulkan perbedaan angka antar sistem dan keluhan pelanggan.",
+   "hint": "Pelanggan naik daya lewat aplikasi — sistem mana saja yang harus tahu?"
   }
  ],
  "3C.22": [
   {
    "type": "tf",
-   "q": "Dispatching: real-time nerve center distribusi — skill + tools + SOP determine response quality.",
+   "q": "Dispatcher distribusi adalah pusat kendali real-time yang memutuskan manuver jaringan dan penugasan regu berdasarkan data SCADA dan laporan pelanggan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Dispatcher critical link. SCADA + decision + action. Training rigorous. 24/7 manning. Cascading consequence error. Qastil oversight dispatching function UP3."
+   "explain": "BENAR. Dispatcher bekerja 24 jam memantau SCADA, menerima laporan gangguan, memutuskan manuver isolasi, dan mengirim regu. Keputusan yang salah bisa memperluas padam, sehingga pelatihan dan SOP-nya ketat.",
+   "hint": "Siapa yang memutuskan penyulang mana yang dibuka saat ada gangguan?"
   },
   {
    "type": "tf",
-   "q": "Dispatching modernisasi strategic: SCADA + ADMS + FLISR + AMI + mobile dispatch = distribution 4.0.",
+   "q": "Dalam prioritas penanganan gangguan, rumah sakit dan fasilitas umum vital didahulukan daripada pelanggan biasa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PLN strategic direction: modernize dispatching operation. Investment platform + training. Qastil context PLNlytics align distribution automation era. Future utility competitive."
+   "explain": "BENAR. Prioritas mengikuti dampak: fasilitas yang menyangkut keselamatan jiwa dan layanan publik didahulukan, lalu jumlah pelanggan yang terdampak. Karena itu daftar pelanggan prioritas harus akurat.",
+   "hint": "Dua laporan masuk bersamaan: rumah sakit dan kompleks pertokoan — mana yang dikerjakan dulu?"
   }
  ],
  "3C.23": [
   {
    "type": "tf",
-   "q": "Gangguan JTM root cause analysis + mitigation systematic — reduce recurrence dan improve reliability PLN.",
+   "q": "Setiap gangguan JTM sebaiknya dianalisis akar penyebabnya agar tindakan pencegahan tepat — misalnya pemangkasan pohon, pemasangan pelindung burung, atau penggantian isolator tua.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. RCA each outage: why? Tree contact = vegetation mgmt. Bird = guard. Insulator fail = replace aged. Systematic elimination reduce SAIDI over time."
+   "explain": "BENAR. Memperbaiki gangguan tanpa menghilangkan penyebabnya berarti gangguan yang sama akan berulang. Analisis akar penyebab yang sistematis menurunkan SAIDI dari waktu ke waktu.",
+   "hint": "Sekering diganti tetapi pohonnya tetap menempel di kawat — apa yang terjadi minggu depan?"
   },
   {
    "type": "tf",
-   "q": "Troubleshooting gangguan JTM/JTR core UP3 operation: speed + accuracy + cost — drive customer satisfaction + KPI.",
+   "q": "Kecepatan memulihkan gangguan adalah satu-satunya hal yang penting; mencari penyebabnya bisa diabaikan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Outage response direct customer experience. Speed restore + root cause fix + learn prevent future. UP3 Manager oversight Yantek + field crew + analytics. Qastil daily responsibility."
+   "a": 1,
+   "explain": "SALAH. Kecepatan pemulihan penting untuk pelanggan saat itu, tetapi tanpa mencari penyebab dan mencegahnya, gangguan berulang dan SAIDI tidak membaik. Keduanya harus berjalan: pulihkan cepat, lalu cegah terulang.",
+   "hint": "Apa bedanya memadamkan api dengan mencegah kebakaran?"
   }
  ],
  "3C.24": [
   {
    "type": "tf",
-   "q": "Pasang Baru customer journey: experience first impression PLN — quality impact long-term satisfaction + image.",
+   "q": "Pelanggan baru hanya dapat dinyalakan setelah instalasinya memiliki SLO dari lembaga inspeksi teknik dan biaya penyambungan dilunasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. First interaction customer. Smooth + cepat = positive. Slow + birokrat = negatif. PLN modernize service digital + SLA. Qastil context UP3 oversee PB operation."
+   "explain": "BENAR. SLO memastikan instalasi pelanggan laik dan aman sebelum disambung ke jaringan. Biaya penyambungan dan jaminan langganan diselesaikan sebelum petugas memasang meter dan menyalakan.",
+   "hint": "Apa yang menjamin instalasi rumah baru tidak membahayakan jaringan dan penghuninya?"
   },
   {
    "type": "tf",
-   "q": "Pelayanan pasang baru + customer service core UP3: quality drive retention + revenue + brand image PLN.",
+   "q": "Kualitas layanan pasang baru tidak memengaruhi citra PLN karena pelanggan tidak punya pilihan lain.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Customer-facing function. First impression + ongoing relationship. PLN monopoli tapi modern expect competitive service standard. Continuous improvement + digital + feedback drive excellence."
+   "a": 1,
+   "explain": "SALAH. Pasang baru adalah kesan pertama pelanggan terhadap PLN. Proses yang lambat dan berbelit menimbulkan keluhan dan citra buruk, sementara layanan digital yang cepat dengan SLA yang jelas membangun kepercayaan.",
+   "hint": "Meski tak bisa pindah penyedia, bisakah pelanggan mengeluh ke publik?"
   }
  ],
  "3C.25": [
   {
    "type": "tf",
-   "q": "Sambungan Sementara: legitimate customer service + revenue — structured program PLN dengan SOP clear.",
+   "q": "Sambungan sementara untuk acara atau konstruksi diberikan dengan jangka waktu terbatas, jaminan, dan pemantauan, karena instalasinya bersifat tidak permanen.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SS legitimate need. Revenue + service. Risk manage: deposit, monitoring, compliance. Standard UP3 offering. Qastil context UP3 Indramayu offer."
+   "explain": "BENAR. Instalasi sementara berisiko lebih tinggi (kabel di tanah, beban tidak tetap), sehingga PLN mensyaratkan prosedur khusus: jangka waktu jelas, uang jaminan, dan pemeriksaan agar tidak berubah menjadi sambungan permanen ilegal.",
+   "hint": "Apa risiko jika sambungan 'sementara' dibiarkan bertahun-tahun?"
   },
   {
    "type": "tf",
-   "q": "Sambungan Sementara niche tapi important service UP3: structured process + customer need + revenue.",
+   "q": "Sambungan sementara boleh dipasang tanpa pengaman karena hanya dipakai sebentar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. SS niche volume tapi material revenue + customer service. Compliance regulation + risk manage essential. Part comprehensive UP3 service portfolio."
+   "a": 1,
+   "explain": "SALAH. Justru instalasi sementara wajib berpengaman lengkap (MCB, RCD) karena kondisinya lebih berisiko dan dipakai banyak orang, misalnya di acara publik. Durasi singkat tidak mengurangi bahaya listrik.",
+   "hint": "Apakah sengatan listrik di panggung acara kurang berbahaya karena acaranya cuma sehari?"
   }
  ],
  "3C.26": [
   {
    "type": "tf",
-   "q": "Yantek pelayanan teknik wajah PLN lapangan: customer interact langsung — skill + attitude shape brand image.",
+   "q": "Regu Yantek adalah wajah PLN di lapangan; sikap dan keterampilan mereka saat menangani gangguan langsung membentuk citra PLN di mata pelanggan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Customer judge PLN dari Yantek encounter. Professional appearance, courteous, capable, safe = positive PLN image. Qastil UP3 Manager invest Yantek training + culture."
+   "explain": "BENAR. Pelanggan menilai PLN dari petugas yang datang ke rumahnya. Penampilan rapi, sopan, cakap, dan bekerja aman menghasilkan kesan positif; sebaliknya satu pengalaman buruk diingat bertahun-tahun.",
+   "hint": "Petugas PLN mana yang paling sering bertatap muka dengan pelanggan?"
   },
   {
    "type": "tf",
-   "q": "Regu Yantek culture + capability drive UP3 service quality + reliability + brand — Qastil invest sustainable culture.",
+   "q": "Kinerja regu Yantek diukur antara lain dari waktu respons dan waktu pemulihan gangguan, yang berkontribusi pada SAIDI dan SAIFI unit.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. People + culture + tool. Sustained investment. Not one-time. Training, safety, recognition, equipment. Qastil oversight Yantek function multi-year transformation."
+   "explain": "BENAR. Waktu dari laporan sampai petugas tiba (respons) dan sampai listrik menyala kembali (pemulihan) dicatat untuk setiap gangguan, lalu diakumulasi menjadi indeks keandalan unit.",
+   "hint": "Angka apa yang dicatat sejak pelanggan melapor sampai listriknya menyala lagi?"
   }
  ],
  "3C.27": [
   {
    "type": "tf",
-   "q": "Customer service teknis customer-facing — first + last impression PLN — investment culture + digital + training critical.",
+   "q": "Keluhan teknis pelanggan sebaiknya ditangani dengan mendengarkan, memverifikasi di lapangan, menjelaskan penyebabnya, dan menindaklanjuti sampai tuntas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Technical service direct customer contact. Negative experience remember decade. Positive build loyalty. PLN invest CSR training + digital tools + culture. Qastil UP3 priority."
+   "explain": "BENAR. Pelanggan yang keluhannya didengar dan dijelaskan dengan jujur — meski penyebabnya di instalasi pelanggan sendiri — cenderung puas. Yang membuat marah adalah dibiarkan tanpa kejelasan.",
+   "hint": "Apa yang paling diinginkan pelanggan yang tegangannya sering turun: janji atau penjelasan?"
   },
   {
    "type": "tf",
-   "q": "Customer service teknis strategic differentiator modern PLN: digital + human + data-driven excellence drive loyalty + revenue.",
+   "q": "Karena PLN adalah penyedia tunggal, mutu layanan pelanggan tidak perlu diperbaiki.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. PLN monopoli tapi service quality matter. Competitive pressure new DER + self-gen alternative. Customer experience strategic. Continuous improvement culture. Qastil UP3 align."
+   "a": 1,
+   "explain": "SALAH. Pelanggan kini punya alternatif seperti PLTS atap dan genset, dan keluhan cepat menyebar lewat media sosial. Mutu layanan memengaruhi kepercayaan publik, dukungan regulator, dan pendapatan jangka panjang.",
+   "hint": "Pelanggan kecewa memasang PLTS atap — apa dampaknya pada penjualan PLN?"
   }
  ],
  "3C.28": [
   {
    "type": "tf",
-   "q": "Patroli jaringan preventive maintenance: catch early + plan repair vs reactive emergency — cost-effective reliability.",
+   "q": "Patroli jaringan yang rutin menemukan kerusakan kecil (isolator retak, pohon mendekat, tiang miring) sebelum berkembang menjadi gangguan, sehingga lebih hemat daripada perbaikan darurat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Investment patroli > cost outage. Find early + plan scheduled. Reactive expensive + service disruption. SAIDI improvement directly. Best practice distribution."
+   "explain": "BENAR. Perbaikan terjadwal dari hasil patroli biayanya kecil dan tidak memadamkan pelanggan secara mendadak. Gangguan darurat memerlukan mobilisasi cepat, lembur, dan menaikkan SAIDI.",
+   "hint": "Lebih murah memangkas ranting hari ini atau mengganti isolator pecah tengah malam?"
   },
   {
    "type": "tf",
-   "q": "Patroli jaringan foundation asset management + reliability: data-driven modern practice drive UP3 performance — Qastil initiative.",
+   "q": "Patroli jaringan modern hanya mengandalkan mata petugas tanpa alat bantu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Patroli evolved from manual visual ke data + tech integrated. Core operation. Investment systematic PLN. Qastil UP3 Manager drive modernization + team capability. Align PLNlytics analytics."
+   "a": 1,
+   "explain": "SALAH. Patroli kini dibantu kamera termal untuk sambungan panas, drone untuk tiang tinggi dan bentang sungai, aplikasi seluler untuk mencatat temuan bergeolokasi, dan data SCADA untuk mengarahkan patroli ke seksi yang sering terganggu.",
+   "hint": "Bagaimana memeriksa sambungan di puncak tiang 12 meter tanpa memanjat?"
   }
  ],
  "3C.29": [
   {
    "type": "tf",
-   "q": "Praktikum P2TL expose mahasiswa real-world: complex legal + technical + interpersonal — prepare career PLN.",
+   "q": "Praktikum P2TL melatih keterampilan teknis, ketelitian hukum, dan komunikasi dengan pelanggan sekaligus, karena ketiganya dibutuhkan di lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Praktikum field crucial bridge classroom karir. Technical skill + legal nuance + soft skill communication + ethics. Qastil training program UP3 Indramayu."
+   "explain": "BENAR. Petugas P2TL harus bisa mengukur dan mengenali modus (teknis), menyusun berita acara yang sah (hukum), dan menghadapi pelanggan yang tegang dengan sopan (komunikasi). Kelemahan di salah satunya membuat pemeriksaan gagal.",
+   "hint": "Petugas yang mahir mengukur tetapi kasar kepada pelanggan — apa risikonya?"
   },
   {
    "type": "tf",
-   "q": "Praktikum P2TL capstone Jalur 3C Distribusi PLN: integrate semua knowledge → real operation → career PLN — Qastil model operasional.",
+   "q": "Dalam praktikum P2TL, etika dan sikap hormat kepada pelanggan boleh dikesampingkan demi menemukan pelanggaran.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. 3C pathway culminate praktikum P2TL + patroli: technical + operational + legal + customer. Qastil UP3 Indramayu model ESA Academy real-world context. Prepare next-generation PLN engineer + manager. Career alignment."
+   "a": 1,
+   "explain": "SALAH. Petugas P2TL mewakili PLN dan bekerja di ranah hukum. Sikap arogan atau melanggar prosedur merusak citra PLN dan membuat temuan cacat hukum. Pemeriksaan yang tegas tetap harus santun dan sesuai aturan.",
+   "hint": "Temuan yang benar tetapi diperoleh dengan cara melanggar prosedur — apakah sah?"
   }
  ],
  "3D.01": [
   {
    "type": "tf",
-   "q": "Transmission 150/500 kV backbone elektrifikasi Indonesia: Jawa-Bali interconnect, Sumatra, HVDC link.",
+   "q": "Sistem transmisi 150 kV dan 500 kV menghubungkan pembangkit besar ke pusat beban; di Jawa-Bali, jaringan 500 kV menjadi tulang punggung interkoneksi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Transmisi interconnect pembangkit ke load center. Jawa single grid 500 kV. Sumatra separate. Kalimantan, Sulawesi, Papua gradual build. HVDC link inter-island future."
+   "explain": "BENAR. Pembangkit besar jauh dari kota, sehingga energinya disalurkan pada tegangan tinggi agar rugi kecil. Jawa-Bali terhubung dalam satu sistem 500 kV, sedangkan Sumatra dan pulau lain membangun jaringan sendiri secara bertahap.",
+   "hint": "Mengapa energi dari PLTU di pantai harus dinaikkan tegangannya sebelum dikirim ke kota?"
   },
   {
    "type": "tf",
-   "q": "Transmission engineering specialized domain: tower design + electrical + civil — berbeda dari distribusi — specialist career.",
+   "q": "Perancangan saluran transmisi hanya urusan kelistrikan; aspek mekanis tower dan pondasi sipil tidak berpengaruh.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Transmission engineer specialist. Tower mechanical design (wind, seismic). Electrical (insulation, corona). Civil foundation. SCADA + protection. Different UP3 distribusi. PLN UPT (Unit Pelaksana Transmisi) dedicated."
+   "a": 1,
+   "explain": "SALAH. Transmisi adalah pekerjaan multidisiplin: kekuatan tower terhadap angin dan gempa, pondasi sipil, jarak bebas dan isolasi listrik, korona, serta proteksi dan SCADA. Tower yang roboh memadamkan wilayah luas.",
+   "hint": "Apa yang menahan konduktor 500 kV agar tidak jatuh saat badai?"
   }
  ],
  "3D.02": [
   {
    "type": "tf",
-   "q": "Gardu Induk jantung jaringan: kegagalan GI cascade outage feeder + customer besar.",
+   "q": "OPGW adalah kawat tanah di puncak tower yang di dalamnya terdapat serat optik, sehingga sekaligus melindungi dari petir dan menyalurkan komunikasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. GI fail impact hundreds of thousands customer. Redundancy (double busbar, N+1 trafo, backup protection) design critical. Maintenance + monitoring intensive."
+   "explain": "BENAR. Optical Ground Wire menggantikan kawat tanah biasa. Selain menangkap sambaran petir, serat optik di dalamnya membawa sinyal proteksi (teleproteksi), SCADA, dan komunikasi antar gardu induk.",
+   "hint": "Kawat paling atas di tower — apa dua fungsinya sekaligus?"
   },
   {
    "type": "tf",
-   "q": "GI capex + opex tinggi: infrastruktur foundational PLN — proper engineering + maintenance extend life 40+ year.",
+   "q": "Jumlah piringan isolator pada satu rentengan sama untuk 150 kV dan 500 kV.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. GI $10-50 juta USD capex. Asset lifespan 40+ year proper maintenance. Strategic long-term investment PLN. Modernization (AIS ke GIS, SCADA upgrade) gradual."
+   "a": 1,
+   "explain": "SALAH. Makin tinggi tegangan, makin panjang jarak isolasi yang dibutuhkan, sehingga makin banyak piringan: sekitar 9–12 piringan untuk 150 kV dan 24–30 piringan untuk 500 kV, tergantung tingkat polusi.",
+   "hint": "Mana yang butuh jarak isolasi lebih panjang: 150 kV atau 500 kV?"
   }
  ],
  "3D.03": [
   {
    "type": "tf",
-   "q": "Power trafo GI asset ultra-critical: investment juta USD, life 40+ year, fail = extended outage + replacement cost massive.",
+   "q": "Kabel tanah tegangan tinggi XLPE memerlukan uji partial discharge atau uji VLF setelah pemasangan karena cacat kecil pada sambungan tidak terlihat mata.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Trafo 60 MVA unit USD 3-5 juta. Lead time 12-18 bulan replace. Risk management critical: DGA + online monitor + spare + PM. PLN asset management mature practice."
+   "explain": "BENAR. Cacat sekecil rongga udara di sambungan menghasilkan partial discharge yang perlahan menggerus isolasi hingga gagal bertahun-tahun kemudian. Pengujian setelah pemasangan menangkapnya sebelum kabel diberi tegangan.",
+   "hint": "Bagaimana menemukan gelembung udara di dalam sambungan yang sudah tertutup?"
   },
   {
    "type": "tf",
-   "q": "Power trafo GI ultimate test asset management: technical + economic + strategic — Qastil distribution context align UPT transmission.",
+   "q": "Selubung logam kabel HV harus dibumikan dengan skema tertentu (misalnya single-point atau cross-bonding) agar arus sirkulasi di selubung tidak memanaskan kabel.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Power trafo = textbook asset management. Long life, expensive, critical. PLN sophisticated: online monitoring, DGA program, condition-based. Principles apply distribusi smaller trafo. Qastil career growth into transmission possible."
+   "explain": "BENAR. Arus di inti menginduksi tegangan pada selubung logam. Jika selubung dibumikan di kedua ujung tanpa skema, arus sirkulasi besar mengalir dan mengurangi kapasitas kabel. Skema bonding mengendalikannya.",
+   "hint": "Apa yang terjadi pada konduktor yang membentuk lingkar tertutup di sekitar arus bolak-balik besar?"
   }
  ],
  "3D.04": [
   {
    "type": "tf",
-   "q": "Protection transmission sophisticated: distance + differential + communication — coordinate system stability + reliability.",
+   "q": "Susunan busbar ganda di gardu induk memungkinkan satu busbar dirawat sementara penyulang tetap beroperasi melalui busbar lainnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Transmission interconnected: fault local → cascade wide. Fast + selective + backup layered protection. Specialist engineer design + maintain. PLN APB coordinate."
+   "explain": "BENAR. Dengan busbar ganda dan bus coupler, beban dapat dipindahkan dari satu busbar ke busbar lain tanpa memadamkan pelanggan. Busbar tunggal tidak memberi keleluasaan ini.",
+   "hint": "Bagaimana merawat busbar tanpa memadamkan seluruh gardu?"
   },
   {
    "type": "tf",
-   "q": "Protection transmission evolves: electromechanical to digital to IEC 61850 process bus — PLN gradual modernization strategic.",
+   "q": "Manuver memindahkan beban antar busbar boleh dilakukan langsung dengan membuka pemisah busbar tanpa menutup bus coupler terlebih dahulu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Legacy relay 30+ year reliable. Digital IED 15-20 year capability superior. IEC 61850 interoperable. PLN adopt modernization GI new + retrofit. Strategic multi-year program."
+   "a": 1,
+   "explain": "SALAH. Bus coupler harus ditutup dulu agar kedua busbar berpotensial sama, barulah pemisah dipindahkan. Membuka pemisah yang mengalirkan arus tanpa jalur paralel menimbulkan busur api besar.",
+   "hint": "Pemisah tidak boleh memutus arus — jadi arus harus punya jalan lain dulu lewat apa?"
   }
  ],
  "3D.05": [
   {
    "type": "tf",
-   "q": "Circuit breaker strategic asset: failure to interrupt = cascade fault — reliability + testing critical.",
+   "q": "Kode pendinginan ONAF berarti minyak bersirkulasi alami sedangkan udara dihembuskan kipas, sehingga kapasitas trafo lebih tinggi daripada ONAN.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. CB fail = backup breaker upstream trip larger area. CB Failure Protection (CBF) 50BF detect + backup trip. Testing + maintenance essential reliability."
+   "explain": "BENAR. O = oil, N = natural, A = air, F = forced. Kipas mempercepat pelepasan panas dari radiator, sehingga trafo yang sama boleh dibebani lebih tinggi. OFAF menambah pompa minyak untuk kapasitas lebih besar lagi.",
+   "hint": "Apa arti huruf terakhir: N atau F?"
   },
   {
    "type": "tf",
-   "q": "CB lifespan 30-50 year proper maintenance: investment upfront + monitoring + periodic test — PLN transmission asset core.",
+   "q": "Tap changer berbeban (OLTC) pada trafo gardu induk memungkinkan tegangan diatur tanpa memadamkan trafo.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. CB asset decades. Quality manufacturer + installation + maintenance = reliability. Testing regular + online monitor modern. Failure catastrophic but rare. PLN UPT disciplined asset management."
+   "explain": "BENAR. OLTC mengubah tap melalui mekanisme peralihan dengan resistor sehingga tidak memutus arus. Ini memungkinkan pengaturan tegangan mengikuti beban sepanjang hari, berbeda dengan tap changer trafo distribusi yang harus dipadamkan.",
+   "hint": "Tegangan jaringan berubah tiap jam — bisakah trafo dipadamkan tiap kali menyetel tap?"
   }
  ],
  "3D.06": [
   {
    "type": "tf",
-   "q": "Disconnector + earth switch + interlock safety foundation GI: prevent accident saat maintenance — strict procedure.",
+   "q": "Sisi sekunder trafo arus (CT) tidak boleh dibiarkan terbuka saat sisi primer dialiri arus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. GI work: isolate via disconnector, ground via earth switch, verify zero V. Sequence strict. Interlock enforce. Training + procedure. Life safety critical asset maintenance."
+   "explain": "BENAR. Sekunder yang terbuka membuat CT berusaha mendorong arus melalui impedansi tak hingga, menghasilkan tegangan sangat tinggi yang merusak isolasi dan membahayakan petugas. Sekunder harus dihubung singkat sebelum alat dilepas.",
+   "hint": "Ke mana arus sekunder CT akan mengalir jika rangkaiannya terputus?"
   },
   {
    "type": "tf",
-   "q": "Disconnector + arrester + bushing core HV GI — support CB + trafo — unseen heroes reliability.",
+   "q": "Pada tegangan 150 kV ke atas, CVT (trafo tegangan kapasitif) lebih umum daripada trafo tegangan elektromagnetik karena lebih ekonomis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. CB + trafo attention. Disconnector + arrester + bushing support reliability. Failure any = outage atau safety risk. PM inclusive critical asset management. PLN UPT comprehensive."
+   "explain": "BENAR. Pembagi kapasitor menurunkan tegangan lebih dulu, sehingga trafo elektromagnetiknya kecil. Pada tegangan tinggi ini jauh lebih murah dan sekaligus bisa dipakai untuk komunikasi PLC.",
+   "hint": "Belitan trafo tegangan langsung untuk 500 kV — bayangkan ukuran dan biayanya."
   }
  ],
  "3D.07": [
   {
    "type": "tf",
-   "q": "Protection fundamental transmisi: investasi relay + engineering coordination — stability + reliability + safety.",
+   "q": "SF6 adalah media pemutus yang sangat baik, tetapi merupakan gas rumah kaca yang sangat kuat sehingga kebocorannya harus dipantau dan gasnya didaur ulang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Protection prevent cascade blackout, limit damage, safety personnel. Specialist protection engineer. Coordinate study ongoing system change. Critical engineering discipline PLN transmission."
+   "explain": "BENAR. SF6 memiliki potensi pemanasan global puluhan ribu kali CO₂. Pemutus SF6 dilengkapi pemantau kerapatan gas, dan penanganan gasnya diatur ketat: tidak boleh dilepas ke udara, harus dipulihkan dan didaur ulang.",
+   "hint": "Mengapa pemutus SF6 dipasangi pemantau kerapatan gas?"
   }
  ],
  "3D.08": [
   {
    "type": "tf",
-   "q": "Switching SOP foundation GI operation: safety + reliability + asset protection — strict compliance non-negotiable.",
+   "q": "Pemisah (disconnector) hanya boleh dibuka atau ditutup saat pemutus tenaga sudah terbuka, karena pemisah tidak dirancang memutus arus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SOP not optional. Life safety + equipment multi-juta USD + grid stability. Training + discipline + culture. PLN UPT rigorous practice. Industry standard."
+   "explain": "BENAR. Pemisah memberi jarak isolasi yang terlihat untuk keamanan kerja, tetapi kontaknya tidak sanggup memadamkan busur api. Interlock mekanis dan elektris mencegah pemisah dioperasikan saat pemutus masih tertutup.",
+   "hint": "Apa yang membedakan pemutus tenaga dari pemisah dalam hal memadamkan busur api?"
   }
  ],
  "3D.09": [
   {
    "type": "tf",
-   "q": "Auto-reclose reduce SAIDI dramatis + avoid crew dispatch — high ROI feature modern.",
+   "q": "Zona 1 relai jarak biasanya disetel sekitar 80–85% panjang saluran dan bekerja seketika, sedangkan zona 2 menjangkau melewati ujung saluran dengan waktu tunda.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. 80 persen fault transient. AR restore second. SAIDI benefit major."
+   "explain": "BENAR. Zona 1 tidak disetel 100% agar tidak salah trip untuk gangguan di saluran tetangga akibat kesalahan pengukuran. Zona 2 (sekitar 120%) dengan tunda 0,3–0,5 s menutupi sisa saluran, dan zona 3 menjadi cadangan.",
+   "hint": "Mengapa zona 1 tidak disetel tepat 100% panjang saluran?"
   },
   {
    "type": "tf",
-   "q": "Protection continuous improvement: relay + coordination + test + event analysis — PLN transmission mature.",
+   "q": "Relai jarak bekerja dengan mengukur arus saja, tanpa memerlukan tegangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Protection evolve. Coordination update. Test periodic. Learning culture PLN."
+   "a": 1,
+   "explain": "SALAH. Relai jarak menghitung impedansi Z = V/I dari tegangan dan arus. Impedansi yang terukur sebanding dengan jarak ke titik gangguan, dan itulah dasar pembagian zonanya. Tanpa tegangan tidak ada 'jarak' yang bisa dihitung.",
+   "hint": "Impedansi dihitung dari besaran apa saja?"
   }
  ],
  "3D.10": [
   {
    "type": "tf",
-   "q": "Switching SOP foundational: Qastil UP3 distribusi similar discipline apply.",
+   "q": "Relai diferensial membandingkan arus yang masuk dan keluar zona yang dilindungi; selisih yang besar menandakan gangguan di dalam zona.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. GI principle apply distribusi (scaled). Discipline + procedure universal."
+   "explain": "BENAR. Pada kondisi normal atau gangguan di luar zona, arus masuk sama dengan arus keluar. Gangguan di dalam zona membuat sebagian arus 'menghilang' ke titik gangguan, dan selisih itulah yang men-trip relai.",
+   "hint": "Air yang masuk pipa sama dengan yang keluar — kecuali jika ada apa?"
   },
   {
    "type": "tf",
-   "q": "Switching + LOTO + culture + improvement = foundation — Qastil UP3 distribusi similar ethos.",
+   "q": "Relai diferensial trafo perlu penahan (restraint) harmonisa kedua agar tidak salah trip saat arus inrush ketika trafo diberi tegangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Principle universal. Distribusi scale + apply. Safety + reliability."
+   "explain": "BENAR. Arus inrush hanya mengalir di sisi primer sehingga tampak seperti gangguan internal, tetapi kaya harmonisa kedua. Relai mengenali ciri itu dan menahan diri, sedangkan gangguan sungguhan tidak memiliki harmonisa kedua yang dominan.",
+   "hint": "Saat trafo pertama diberi tegangan, arus besar masuk tetapi tidak ada yang keluar — bagaimana relai membedakannya dari gangguan?"
   }
  ],
  "3D.11": [
   {
    "type": "tf",
-   "q": "GI PM mature: time-based + condition-based + risk-based — holistic asset management.",
+   "q": "Relai arus lebih berarah diperlukan pada jaringan ring atau saluran paralel, karena gangguan dapat disuplai dari dua arah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Not single approach. Multi-layer. CMMS + AMS support."
+   "explain": "BENAR. Pada jaringan radial arus gangguan hanya mengalir satu arah. Pada ring atau saluran paralel, relai tanpa arah tidak bisa membedakan gangguan di depan dan di belakangnya, sehingga saluran yang sehat ikut trip.",
+   "hint": "Pada jalan dua arah, bagaimana relai tahu gangguan ada di kiri atau di kanan?"
   },
   {
    "type": "tf",
-   "q": "PM GI investment + culture + tech = 40+ year asset life — PLN UPT strategic capability.",
+   "q": "Relai gangguan tanah berarah menentukan arah dari arus dan tegangan urutan nol (residual), bukan dari tegangan fasa biasa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Capex huge. Life extend ROI. Modern predictive. Qastil distribusi align principle."
+   "explain": "BENAR. Pada gangguan tanah, tegangan dan arus residual (3V₀ dan 3I₀) muncul dan sudut di antara keduanya menunjukkan arah gangguan. Polarisasi ini tetap bekerja walaupun gangguannya bertahanan tinggi.",
+   "hint": "Besaran apa yang hanya muncul saat ada gangguan ke tanah?"
   }
  ],
  "3D.12": [
   {
    "type": "tf",
-   "q": "Commissioning thorough = reliability decades — shortcut = problem future.",
+   "q": "Penutupan kembali otomatis (auto-reclose) efektif karena sebagian besar gangguan saluran udara bersifat sementara dan hilang sendiri setelah pemutus terbuka sesaat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Quality upfront. Test comprehensive catch error. ROI long-term."
+   "explain": "BENAR. Sambaran petir, ranting, atau burung menimbulkan busur api yang padam begitu saluran dimatikan sesaat. Auto-reclose memulihkan pasokan dalam waktu kurang dari satu detik tanpa perlu mengirim regu.",
+   "hint": "Setelah petir menyambar, apakah salurannya benar-benar rusak?"
   },
   {
    "type": "tf",
-   "q": "Test + measure comprehensive basis asset condition + operational confidence.",
+   "q": "Fungsi synchrocheck mengizinkan pemutus ditutup walaupun tegangan kedua sisi berbeda sudut fasa jauh, asalkan besarnya sama.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Principle universal commissioning + periodic. Qastil distribusi apply."
+   "a": 1,
+   "explain": "SALAH. Synchrocheck justru memeriksa selisih tegangan, frekuensi, dan sudut fasa; jika sudut fasanya di luar batas (biasanya 10–30°), penutupan diblokir. Menutup dengan sudut yang jauh menimbulkan hentakan daya yang merusak generator dan trafo.",
+   "hint": "Apa saja tiga syarat yang diperiksa sebelum dua sistem disambungkan?"
   }
  ],
  "3D.13": [
   {
    "type": "tf",
-   "q": "Testing GI skill + equipment specialized: PLN in-house + contractor complement.",
+   "q": "Urutan pembebasan tegangan di gardu induk adalah: buka pemutus tenaga, buka pemisah, uji tegangan nol, lalu pasang pembumian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Advanced test: SFRA + PD + DGA lab. Long-term capability build."
+   "explain": "BENAR. Pemutus memutus arus, pemisah memberi jarak isolasi, uji tegangan memastikan tidak ada tegangan tersisa atau balik, dan pembumian mengamankan dari tegangan yang muncul tiba-tiba. Urutan yang terbalik dapat berakibat fatal.",
+   "hint": "Mengapa pemisah tidak boleh dibuka sebelum pemutus?"
   },
   {
    "type": "tf",
-   "q": "Testing equipment + skill + report + calibration — PLN UPT mature infrastructure.",
+   "q": "Petugas berpengalaman boleh melewati SOP switching jika yakin kondisinya aman.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Long-term capability + investment + discipline. Industry standard."
+   "a": 1,
+   "explain": "SALAH. SOP dan sistem izin manuver ada justru karena manusia bisa keliru meskipun berpengalaman. Kecelakaan fatal di gardu induk umumnya terjadi saat langkah dilewati. Kepatuhan pada SOP tidak bisa ditawar.",
+   "hint": "Apa yang melindungi petugas dari asumsi 'saya yakin sudah mati'?"
   }
  ],
  "3D.14": [
   {
    "type": "tf",
-   "q": "Digitalization GI strategic: IEC 61850 + cybersecurity + analytics + remote — PLN UPT capability build.",
+   "q": "Pemeliharaan gardu induk memadukan jadwal berbasis waktu, pemantauan kondisi (termografi, uji minyak, kerapatan SF6), dan prioritas berbasis risiko.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modernization multi-decade. Technology + cybersecurity + skills."
+   "explain": "BENAR. Beberapa pekerjaan memang berjadwal tetap (uji relai berkala), tetapi banyak keputusan mengikuti kondisi aset dan tingkat risikonya. Sistem manajemen aset membantu menjadwalkan dan mencatat semuanya.",
+   "hint": "Haruskah trafo yang sehat dan trafo yang minyaknya buruk diperlakukan sama?"
   },
   {
    "type": "tf",
-   "q": "GI digitalization transformational: multi-dekade journey + Qastil PLNlytics distribusi trend.",
+   "q": "Termografi berkala pada sambungan dan klem di gardu induk dapat menemukan titik panas sebelum berkembang menjadi kegagalan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PLN UPT strategic. Transformasi ongoing. Skills + tech + culture."
+   "explain": "BENAR. Sambungan yang longgar atau korosi memanas jauh sebelum putus. Kamera termal menemukannya dari jarak aman saat gardu beroperasi, sehingga perbaikan dapat dijadwalkan.",
+   "hint": "Bagaimana memeriksa ratusan klem di gardu bertegangan tanpa menyentuhnya?"
   }
  ],
  "3D.15": [
   {
    "type": "tf",
-   "q": "Asset management GI sophisticated: PLN UPT long-term discipline + Qastil distribusi related principle.",
+   "q": "Tahanan kontak pemutus tenaga diukur dengan micro-ohmmeter yang menyuntikkan arus DC besar, dan nilainya dibandingkan dengan acuan pabrikan serta hasil uji sebelumnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Capex long-term investment. Discipline + planning + analytics. Career."
+   "explain": "BENAR. Tahanan kontak yang baik hanya puluhan mikro-ohm. Kenaikan dari nilai acuan menandakan kontak aus, kotor, atau longgar yang akan memanas saat berbeban tinggi.",
+   "hint": "Mengapa nilai uji harus dibandingkan dengan hasil tahun lalu, bukan hanya dengan batas pabrikan?"
   },
   {
    "type": "tf",
-   "q": "GI asset management strategic capability PLN UPT: technical + economic + regulatory + people — comprehensive.",
+   "q": "Uji rasio CT hanya perlu dilakukan sekali saat pabrik membuatnya; setelah terpasang tidak perlu diuji lagi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Multi-faceted mature practice. Qastil distribusi similar principle scale. Career continuum."
+   "a": 1,
+   "explain": "SALAH. Uji rasio dan polaritas CT diulang saat komisioning untuk memastikan pengkabelan benar, dan diulang berkala karena belitan bisa rusak atau terhubung salah setelah perbaikan. Rasio yang salah membuat relai dan meter keliru.",
+   "hint": "Apa yang terjadi jika CT terpasang dengan polaritas terbalik setelah penggantian relai?"
   }
  ],
  "3D.16": [
   {
    "type": "tf",
-   "q": "Praktikum GI prepare engineer career: technical + operational + professional — Qastil model UP3 Indramayu.",
+   "q": "Simulator gardu induk memungkinkan peserta berlatih manuver dan menangani gangguan tanpa risiko terhadap peralatan nyata dan keselamatan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Praktikum bridge academic-career. Multi-dimension skill. PLN + Qastil invest next-gen."
+   "explain": "BENAR. Kesalahan manuver di gardu sungguhan bisa memadamkan wilayah luas atau melukai orang. Simulator memberi ruang untuk mencoba, salah, dan mengulang sampai urutannya tertanam.",
+   "hint": "Di mana sebaiknya seorang pemula pertama kali salah urutan manuver?"
   },
   {
    "type": "tf",
-   "q": "Praktikum GI culminate L3 transmission jalur: integrate knowledge + experience + inspire career — Qastil ideal model.",
+   "q": "Praktikum pengoperasian GI mengintegrasikan pengetahuan proteksi, manuver, pengujian, dan keselamatan yang dipelajari di modul-modul sebelumnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. 3D pathway culmination praktikum. Integrate technical + operational + career + ethics. Qastil PLN UP3 Manager embody ideal. Next-gen engineer aspire."
+   "explain": "BENAR. Di praktikum, peserta membaca indikasi relai, memutuskan manuver isolasi, memverifikasi dengan pengujian, dan bekerja sesuai SOP keselamatan — semua materi jalur transmisi dipakai sekaligus.",
+   "hint": "Modul apa saja yang harus sudah dikuasai sebelum praktikum ini?"
   }
  ],
  "3E.01": [
   {
    "type": "tf",
-   "q": "Python + SQL + Jupyter + Git foundational data analytics PLN — Qastil PLNlytics stack representative.",
+   "q": "Perangkat dasar analis data energi saat ini adalah Python atau SQL untuk mengolah data, notebook untuk eksplorasi, dan Git untuk menyimpan riwayat pekerjaan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Standard modern data engineer/scientist. Open-source. Community + library. Qastil project stack align industry."
+   "explain": "BENAR. Ketiganya gratis, terbuka, dan menjadi standar industri. SQL mengambil data dari basis data, Python mengolah dan memodelkannya, notebook memudahkan mencoba langkah demi langkah, dan Git menjaga agar pekerjaan bisa ditelusuri dan diulang.",
+   "hint": "Apa yang dipakai untuk mengambil data, mengolahnya, dan menyimpan riwayat perubahannya?"
   },
   {
    "type": "tf",
-   "q": "Modern data analytics stack open-source mature: PLN adopt + Qastil PLNlytics align trend — strategic capability.",
+   "q": "Analitik data di utilitas listrik hanya berguna untuk laporan keuangan, bukan untuk operasi jaringan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Modern utility analytics: Python ecosystem. Open-source. Cloud-native. Qastil model PLN data-driven."
+   "a": 1,
+   "explain": "SALAH. Analitik dipakai luas di operasi: memprediksi beban, menemukan pola pencurian, memprioritaskan perawatan trafo, dan mengarahkan patroli. Keputusan operasional yang didukung data lebih tepat daripada yang mengandalkan perkiraan.",
+   "hint": "Sebutkan tiga keputusan operasional di distribusi yang bisa dibantu data."
   }
  ],
  "3E.02": [
   {
    "type": "tf",
-   "q": "Visualization tools democratize data: PLN management + operation + Qastil PLNlytics platform similar.",
+   "q": "Perintah SELECT ... WHERE ... GROUP BY dalam SQL memungkinkan analis menyaring dan merangkum jutaan baris data meter tanpa membukanya satu per satu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Visualization powerful. Insight rapid. Action faster. PLN data-driven culture build."
+   "explain": "BENAR. SELECT memilih kolom, WHERE menyaring baris, dan GROUP BY merangkum per kelompok (misalnya total kWh per gardu). Basis data mengerjakan perhitungannya, sehingga analis cukup menerima hasil ringkasnya.",
+   "hint": "Bagaimana menjumlahkan kWh per gardu dari 10 juta baris tanpa spreadsheet?"
   },
   {
    "type": "tf",
-   "q": "BI + visualization strategic PLN: Qastil PLNlytics + dashboard culture data-driven decision — competitive utility.",
+   "q": "Python tidak cocok untuk data energi karena hanya bisa mengolah data berukuran kecil.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Modern utility data-driven. BI investment + culture build. Multi-year journey. Qastil model UP3 Indramayu."
+   "a": 1,
+   "explain": "SALAH. Dengan pustaka seperti pandas dan NumPy, Python mengolah jutaan baris dengan cepat; untuk data yang lebih besar ada Dask atau Spark. Python justru menjadi bahasa paling umum untuk analitik dan pemodelan data energi.",
+   "hint": "Pustaka apa yang membuat Python cepat mengolah tabel besar?"
   }
  ],
  "3E.03": [
   {
    "type": "tf",
-   "q": "Statistik foundational analytics: tanpa pemahaman, conclusion misleading — Qastil PhD background statistical rigor.",
+   "q": "Power Query di Excel memungkinkan proses pembersihan data (gabung, saring, ubah format) direkam sebagai langkah yang bisa diulang otomatis saat data baru masuk.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Statistik essential interpret data. Avoid pitfall. Qastil research background statistical foundation."
+   "explain": "BENAR. Langkah-langkah transformasi disimpan sebagai query; ketika berkas sumber diperbarui, cukup klik refresh dan seluruh langkah dijalankan ulang. Ini menghilangkan pekerjaan salin-tempel manual yang rawan salah.",
+   "hint": "Laporan bulanan dengan langkah pembersihan yang sama — bagaimana agar tidak mengulang dari nol tiap bulan?"
   },
   {
    "type": "tf",
-   "q": "Statistik powerful + dangerous: misinterpret common — rigorous practice essential — Qastil PhD discipline align.",
+   "q": "Power Pivot dan DAX memungkinkan Excel menganalisis tabel yang jauh melebihi batas satu juta baris lembar kerja biasa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Statistik tool. Misuse common (correlation→causation, p-hacking). Discipline + ethics. Qastil PhD training rigorous."
+   "explain": "BENAR. Power Pivot menyimpan data dalam model terkompresi di memori, bukan di sel lembar kerja, sehingga puluhan juta baris bisa dianalisis. DAX menulis ukuran (measure) seperti total kWh atau rata-rata beban di atas model itu.",
+   "hint": "Lembar kerja Excel dibatasi sekitar 1 juta baris — di mana Power Pivot menyimpan datanya?"
   }
  ],
  "3E.04": [
   {
    "type": "tf",
-   "q": "AP2T + DLPD + OLAP foundation analytics PLN — Qastil PLNlytics build atas data infrastructure.",
+   "q": "Untuk data beban yang mengandung beberapa nilai ekstrem, median lebih mewakili nilai tipikal daripada rata-rata.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Tanpa data infrastructure, analytics impossible. PLN invest data platform. Qastil leverage analytics insight."
+   "explain": "BENAR. Rata-rata tertarik oleh nilai ekstrem (misalnya lonjakan beban saat uji genset), sedangkan median adalah nilai tengah yang tidak terpengaruh. Untuk beban harian yang biasa terjadi, median lebih jujur.",
+   "hint": "Sepuluh hari beban 100 kW dan satu hari 1.000 kW — berapa rata-ratanya, berapa mediannya?"
   },
   {
    "type": "tf",
-   "q": "Data infrastructure mature PLN: prerequisite analytics + Qastil PLNlytics depend on quality infrastructure.",
+   "q": "Standar deviasi yang besar pada data konsumsi harian berarti konsumsi setiap hari hampir sama.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Garbage in garbage out. Investment data platform. Qastil work depend infrastructure quality. Multi-year journey."
+   "a": 1,
+   "explain": "SALAH. Standar deviasi mengukur sebaran: nilai besar berarti konsumsi sangat bervariasi dari hari ke hari, nilai kecil berarti stabil. Pelanggan dengan standar deviasi besar perlu diperiksa polanya — mungkin ada beban musiman atau kejanggalan.",
+   "hint": "Apa yang diukur standar deviasi: pusat data atau sebarannya?"
   }
  ],
  "3E.05": [
   {
    "type": "tf",
-   "q": "SAIDI/SAIFI core reliability metric: Qastil UP3 KPI + analytics drive improvement.",
+   "q": "Dasbor visual membuat data dapat dibaca cepat oleh manajemen dan operator yang tidak punya waktu membaca tabel angka.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Operational excellence metric. Continuous improvement. Investment + culture. Qastil UP3 oversight."
+   "explain": "BENAR. Grafik tren, peta panas, dan indikator warna menyampaikan kondisi dalam hitungan detik. Alat seperti Tableau, Power BI, atau Looker Studio menghubungkan langsung ke sumber data sehingga tampilannya selalu mutakhir.",
+   "hint": "Mana yang lebih cepat dipahami: tabel 500 baris atau satu grafik tren?"
   },
   {
    "type": "tf",
-   "q": "Reliability + power quality + customer engagement integrated approach — Qastil PLN distribusi modern operation.",
+   "q": "Grafik yang menarik secara visual selalu lebih baik daripada grafik yang sederhana.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Beyond traditional reliability. Power quality + customer experience. Holistic. Modern utility competitive position."
+   "a": 1,
+   "explain": "SALAH. Tujuan visualisasi adalah kejelasan, bukan keindahan. Grafik 3D, warna berlebihan, atau sumbu yang dipotong justru menyesatkan pembaca. Pilih jenis grafik yang paling jujur untuk pesannya: garis untuk tren, batang untuk perbandingan.",
+   "hint": "Grafik batang dengan sumbu Y mulai dari 90 — apa yang terjadi pada persepsi perbedaan?"
   }
  ],
  "3E.06": [
   {
    "type": "tf",
-   "q": "AMI transformasi PLN: real-time data + analytics + service + theft — strategic investment.",
+   "q": "Data pelanggan dan tagihan PLN, data gangguan, dan data SCADA berada di sistem yang berbeda, sehingga analisis lintas sistem memerlukan penggabungan berdasarkan kunci yang sama seperti ID pelanggan atau ID gardu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. AMI multi-benefit. Revenue accuracy + theft + service. Investment justify. Qastil PLNlytics align."
+   "explain": "BENAR. Setiap sistem dibangun untuk tujuannya sendiri. Untuk menjawab pertanyaan seperti 'pelanggan mana yang paling sering padam', data gangguan harus digabungkan dengan data pelanggan melalui pengenal yang sama.",
+   "hint": "Bagaimana menghubungkan catatan gangguan di satu sistem dengan daftar pelanggan di sistem lain?"
   },
   {
    "type": "tf",
-   "q": "AMI data foundation Qastil PLNlytics + MAGNETO research: theft detection + analytics + service quality drive PLN modernization.",
+   "q": "Data SCADA cukup dibaca sekali sebulan karena nilainya jarang berubah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. AMI strategic platform. Multi-application. Qastil career align AMI rollout PLN nasional. Long-term opportunity."
+   "a": 1,
+   "explain": "SALAH. SCADA merekam arus, tegangan, dan status peralatan setiap beberapa detik. Nilainya berubah terus mengikuti beban dan manuver. Justru resolusi waktu yang tinggi itulah yang membuatnya berharga untuk analisis beban dan gangguan.",
+   "hint": "Seberapa sering arus penyulang berubah dalam sehari?"
   }
  ],
  "3E.07": [
   {
    "type": "tf",
-   "q": "Tarif PLN complex regulated: customer + cost + policy + politic — Qastil context manage daily.",
+   "q": "Data smart meter biasanya tersedia per interval (misalnya tiap 15 atau 30 menit), sehingga pola konsumsi harian pelanggan dapat dilihat, bukan hanya total bulanan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Tariff impact financial PLN + customer + ekonomi. Complex regulation. Qastil UP3 implement + customer educate."
+   "explain": "BENAR. Meter konvensional hanya memberi satu angka per bulan. Data interval memperlihatkan kapan pelanggan memakai listrik: pagi, siang, atau malam. Dari situ terlihat profil beban, kejanggalan, dan peluang pengaturan beban.",
+   "hint": "Apa yang bisa dilihat dari 96 angka per hari yang tidak terlihat dari 1 angka per bulan?"
   },
   {
    "type": "tf",
-   "q": "Tarif PLN regulated complex: technical + economic + political — Qastil daily implement + customer educate.",
+   "q": "Nilai konsumsi negatif pada data AMI selalu berarti kesalahan meter.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Tarif kompleks. Customer-facing critical communication. Qastil context manage UP3 + analytics tariff impact."
+   "a": 1,
+   "explain": "SALAH. Pada pelanggan dengan PLTS atap, nilai negatif berarti ekspor energi ke jaringan — itu normal. Analis harus memeriksa apakah pelanggan punya pembangkit sendiri sebelum menandai data sebagai galat.",
+   "hint": "Pelanggan mana yang bisa mengirim energi ke jaringan?"
   }
  ],
  "3E.08": [
   {
    "type": "tf",
-   "q": "Cuaca + forecasting strategic operasional + planning PLN — Qastil PLNlytics potential application.",
+   "q": "BPP (Biaya Pokok Penyediaan) adalah biaya rata-rata PLN untuk menyediakan satu kWh, dan selisihnya terhadap tarif menentukan besarnya subsidi atau kompensasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Forecast accuracy = operational efficiency + reliability. Modern utility analytics core. Qastil platform align."
+   "explain": "BENAR. BPP mencakup bahan bakar, pembelian listrik, operasi, dan penyusutan. Jika tarif yang dibayar pelanggan lebih rendah dari BPP, pemerintah menanggung selisihnya. Karena itu BPP menjadi angka kunci dalam kebijakan tarif.",
+   "hint": "Jika membuat 1 kWh berbiaya Rp 1.400 tetapi dijual Rp 1.000, siapa yang menanggung Rp 400?"
   },
   {
    "type": "tf",
-   "q": "Forecasting + grid operation strategic PLN: complex multi-variable + Qastil PLNlytics align modern utility.",
+   "q": "Tarif listrik PLN sama untuk semua golongan pelanggan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Operational excellence. Data + analytics + skill. PLN invest. Qastil work strategic align."
+   "a": 1,
+   "explain": "SALAH. Tarif dibedakan menurut golongan (rumah tangga, bisnis, industri, sosial, pemerintah) dan daya tersambung, dengan sebagian golongan bersubsidi. Pelanggan besar juga dikenakan tarif berbeda untuk waktu beban puncak dan luar beban puncak.",
+   "hint": "Apakah rumah 900 VA dan pabrik 1 MVA membayar tarif per kWh yang sama?"
   }
  ],
  "3E.09": [
   {
    "type": "tf",
-   "q": "External data source enrich PLN analytics: combine internal + external comprehensive insight — Qastil model.",
+   "q": "Data iradiasi matahari dan suhu udara diperlukan untuk memprakirakan produksi PLTS, karena keluarannya bergantung langsung pada keduanya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Analytics powerful integrate multi-source. External context internal data. Qastil PLNlytics potential."
+   "explain": "BENAR. Daya PLTS hampir sebanding dengan iradiasi, dan efisiensi modul turun saat suhu naik. Prakiraan cuaca menjadi masukan utama prakiraan produksi harian, yang dibutuhkan operator jaringan untuk menyiapkan cadangan.",
+   "hint": "Dua variabel cuaca apa yang paling menentukan keluaran panel surya?"
   },
   {
    "type": "tf",
-   "q": "Macro-data + sector context inform PLN strategy + Qastil analytics insight — broader perspective valuable.",
+   "q": "Prakiraan beban tidak memerlukan data suhu udara.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Beyond PLN internal. Macroeconomic + sector + global. Qastil PhD + leadership orientation comprehensive. Career align."
+   "a": 1,
+   "explain": "SALAH. Di Indonesia, suhu udara sangat memengaruhi beban pendingin ruangan yang menjadi porsi besar konsumsi gedung dan rumah. Model prakiraan beban yang mengabaikan suhu akan meleset pada hari yang sangat panas.",
+   "hint": "Apa yang terjadi pada beban jaringan saat siang terik dibanding hari hujan?"
   }
  ],
  "3E.10": [
   {
    "type": "tf",
-   "q": "Load + capacity factor analytics fundamental utility planning + operation — Qastil context foundational.",
+   "q": "Data publik dari BPS, Kementerian ESDM, dan lembaga internasional dapat memperkaya analisis internal, misalnya menghubungkan pertumbuhan konsumsi listrik dengan pertumbuhan ekonomi daerah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Utility metric core. Planning + dispatch + tariff design. Foundation analytics. Qastil PLNlytics base."
+   "explain": "BENAR. Data internal PLN menjelaskan apa yang terjadi di jaringan; data eksternal menjelaskan mengapa. Statistik penduduk, PDRB, dan harga energi memberi konteks untuk perencanaan dan prakiraan jangka panjang.",
+   "hint": "Untuk memprediksi kebutuhan listrik kabupaten 10 tahun ke depan, data apa di luar PLN yang dibutuhkan?"
   },
   {
    "type": "tf",
-   "q": "Load + factor analytics drive PLN efficiency + planning + customer service — Qastil PLNlytics core capability.",
+   "q": "Data publik boleh langsung dipakai tanpa memeriksa definisi, satuan, dan tahun acuannya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Foundational utility analytics. Decision + investment. Qastil platform align modern utility data-driven operation."
+   "a": 1,
+   "explain": "SALAH. Setiap sumber punya definisi dan satuan sendiri (TOE vs kWh, harga nominal vs riil, tahun kalender vs tahun fiskal). Menggabungkan data dengan satuan atau definisi berbeda menghasilkan kesimpulan yang salah.",
+   "hint": "Apa yang terjadi jika satu sumber memakai GWh dan sumber lain memakai TOE dalam satu grafik?"
   }
  ],
  "3E.11": [
   {
    "type": "tf",
-   "q": "Diversity analytics save infrastructure capex significant: design optimal vs over-build — engineering economics.",
+   "q": "Beban dasar (base load) adalah bagian beban yang selalu ada sepanjang hari, sedangkan beban puncak hanya muncul pada jam tertentu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Diversity: utility design fundamental. Right-size invest. Avoid over-build waste. Qastil distribusi context."
+   "explain": "BENAR. Beban dasar disuplai pembangkit yang murah dan beroperasi terus-menerus, sedangkan beban puncak yang singkat memerlukan pembangkit cepat yang lebih mahal. Membaca profil beban membantu merencanakan keduanya.",
+   "hint": "Pada profil beban 24 jam, bagian mana yang tidak pernah turun?"
   },
   {
    "type": "tf",
-   "q": "Diversity analytics + customer characterization mature utility practice — Qastil PLNlytics align modernization.",
+   "q": "Di Indonesia, beban puncak sistem umumnya terjadi sekitar pukul 18.00–22.00 karena penerangan dan aktivitas rumah tangga menyatu dengan sisa beban industri.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Foundation utility planning. Modern data + analytics enhance. Qastil model aspirational PLN UP3 nasional."
+   "explain": "BENAR. Itulah sebabnya PLN menetapkan waktu beban puncak (WBP) pada jam-jam tersebut dengan tarif lebih tinggi bagi pelanggan besar, agar mereka terdorong menggeser beban ke luar WBP.",
+   "hint": "Kapan lampu rumah menyala serentak di seluruh kota?"
   }
  ],
  "3E.12": [
   {
    "type": "tf",
-   "q": "Customer segmentation + analytics mature utility: differentiate service + tariff + experience — Qastil context analytics application.",
+   "q": "Faktor beban (load factor) adalah perbandingan beban rata-rata terhadap beban puncak; nilai yang tinggi berarti aset jaringan termanfaatkan dengan baik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern utility data-driven. Customer-centric. Beyond regulated tariff. Service tier + insight + improve."
+   "explain": "BENAR. Load factor 0,9 berarti beban hampir merata sepanjang waktu; 0,4 berarti jaringan dibangun untuk puncak yang hanya sebentar terjadi. Menaikkan load factor lewat pergeseran beban membuat investasi jaringan lebih efisien.",
+   "hint": "Jaringan yang dibangun untuk 1 MW tetapi rata-rata hanya dipakai 400 kW — berapa load factor-nya?"
   },
   {
    "type": "tf",
-   "q": "Customer segmentation + analytics + experience strategic differentiator: PLN modernize beyond commodity supply — Qastil PLNlytics.",
+   "q": "Karena faktor keserempakan (diversity), trafo distribusi harus berkapasitas sebesar penjumlahan daya tersambung seluruh pelanggannya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Utility evolve. Customer experience strategic. Data-driven. Personalize. Qastil context modern utility frontier."
+   "a": 1,
+   "explain": "SALAH. Tidak semua pelanggan memakai daya maksimum pada saat yang sama. Faktor diversitas memungkinkan trafo berkapasitas jauh lebih kecil dari jumlah daya tersambung — misalnya 100 rumah 1.300 VA cukup dilayani trafo 50 kVA, bukan 130 kVA.",
+   "hint": "Apakah semua tetangga menyalakan setrika pada detik yang sama?"
   }
  ],
  "3E.13": [
   {
    "type": "tf",
-   "q": "kVARh analytics + PF correction major opportunity: industri save penalty + utility reduce loss — win-win.",
+   "q": "Mengelompokkan pelanggan berdasarkan pola konsumsi (misalnya dominan siang, dominan malam, atau merata) membantu menargetkan program efisiensi dan mendeteksi kejanggalan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PF correction Win-win. Industri reduce bill. PLN reduce loss + capacity. Envisor (Qastil) target market."
+   "explain": "BENAR. Pelanggan rumah tangga yang tiba-tiba berpola seperti industri, atau industri yang konsumsinya turun drastis tanpa perubahan produksi, menonjol dari kelompoknya. Segmentasi juga membantu merancang tarif dan layanan yang sesuai.",
+   "hint": "Apa yang mencurigakan dari rumah tangga yang beban puncaknya pukul 2 dini hari?"
   },
   {
    "type": "tf",
-   "q": "kVARh + PF + capacitor strategic intersection PLN + Envisor (Qastil): customer benefit + utility benefit + business opportunity.",
+   "q": "Pengelompokan pelanggan cukup berdasarkan golongan tarif; pola konsumsi sebenarnya tidak perlu dilihat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Triple-win. Customer reduce bill. PLN reduce loss. Envisor revenue. Qastil unique position leverage knowledge + business."
+   "a": 1,
+   "explain": "SALAH. Dua pelanggan dengan golongan tarif sama bisa berpola sangat berbeda. Data interval AMI memungkinkan pengelompokan berdasarkan perilaku nyata, yang jauh lebih berguna untuk analisis beban dan deteksi anomali.",
+   "hint": "Apakah dua toko dengan daya 5.500 VA pasti memakai listrik dengan cara yang sama?"
   }
  ],
  "3E.14": [
   {
    "type": "tf",
-   "q": "SAIDI/SAIFI core PLN reliability KPI: Qastil UP3 KPI + PLNlytics dashboard — drive operation.",
+   "q": "Pelanggan industri dengan faktor daya rata-rata di bawah 0,85 dikenakan biaya kelebihan pemakaian daya reaktif (kVARh) oleh PLN.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Core utility metric. Qastil oversight UP3 + analytics drive improvement. PLN nasional benchmark + investment."
+   "explain": "BENAR. Daya reaktif membebani jaringan tanpa menghasilkan kerja. PLN membebankan biaya kVARh jika pemakaian reaktif melebihi 62% pemakaian aktif (setara faktor daya 0,85). Memasang kapasitor bank menghapus biaya itu.",
+   "hint": "Berapa batas faktor daya agar tidak dikenakan biaya kVARh?"
   },
   {
    "type": "tf",
-   "q": "SAIDI/SAIFI analytics + improvement strategic PLN: Qastil UP3 oversight + PLNlytics drive performance — career align.",
+   "q": "Memperbaiki faktor daya pelanggan hanya menguntungkan pelanggan, tidak berpengaruh bagi PLN.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Reliability core utility. Continuous improve. Data-driven. Multi-stakeholder. Qastil career align modernization."
+   "a": 1,
+   "explain": "SALAH. Arus reaktif yang lebih kecil berarti rugi I²R lebih rendah di jaringan PLN dan kapasitas trafo serta penyulang menjadi lega. Pelanggan terbebas dari biaya kVARh, PLN mendapat jaringan yang lebih efisien — keduanya untung.",
+   "hint": "Jika arus di penyulang turun 15%, apa yang terjadi pada rugi jaringannya?"
   }
  ],
  "3E.15": [
   {
    "type": "tf",
-   "q": "Benchmarking + KPI + improvement systematic PLN: mature operational excellence + Qastil PLNlytics enable.",
+   "q": "SAIDI mengukur rata-rata lama padam per pelanggan per tahun, sedangkan SAIFI mengukur rata-rata berapa kali pelanggan mengalami padam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Operational excellence multi-faceted. Continuous + systematic. Qastil platform foundation. Modern utility."
+   "explain": "BENAR. SAIDI (durasi, jam/pelanggan/tahun) dan SAIFI (frekuensi, kali/pelanggan/tahun) adalah dua indeks keandalan yang berbeda. Jaringan bisa jarang padam tetapi lama (SAIFI rendah, SAIDI tinggi) atau sebaliknya.",
+   "hint": "Mana yang mengukur 'berapa lama' dan mana yang mengukur 'berapa kali'?"
   },
   {
    "type": "tf",
-   "q": "Benchmarking + improvement systematic + culture = mature utility: Qastil model UP3 + PLNlytics + leadership ideal.",
+   "q": "Dasbor operasional sebaiknya menampilkan sebanyak mungkin angka agar lengkap.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Operational excellence comprehensive. People + process + tech. Qastil unique combination domain + analytics + leadership. Career model."
+   "a": 1,
+   "explain": "SALAH. Dasbor yang penuh angka justru menyembunyikan yang penting. Dasbor yang baik menonjolkan beberapa KPI kunci dengan target dan tren, dan menyediakan rincian hanya saat diklik. Operator harus tahu dalam lima detik apa yang perlu ditindaklanjuti.",
+   "hint": "Dari 40 angka di layar, mana yang akan dilihat operator saat sibuk?"
   }
  ],
  "3E.16": [
   {
    "type": "tf",
-   "q": "Ad-hoc analysis core analyst capability + Qastil PLNlytics enable team: rapid insight + decision.",
+   "q": "Membandingkan konsumsi bulan ini dengan bulan yang sama tahun lalu lebih adil daripada dengan bulan sebelumnya, karena menghilangkan pengaruh musim.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern utility need rapid analysis. Beyond pre-built dashboard. Skilled analyst + good tool. Qastil platform."
+   "explain": "BENAR. Konsumsi Juli berbeda dari Juni karena cuaca dan hari libur, bukan karena efisiensi. Perbandingan tahun-ke-tahun (year-on-year) menyamakan musimnya, sehingga perubahan yang terlihat lebih mencerminkan kinerja sebenarnya.",
+   "hint": "Konsumsi naik 10% dari Mei ke Juni — apakah itu pemborosan atau sekadar cuaca lebih panas?"
   },
   {
    "type": "tf",
-   "q": "Ad-hoc + iterate + communicate insight strategic skill — Qastil PLNlytics empower team capability.",
+   "q": "Benchmarking konsumsi antar gedung cukup membandingkan total kWh tanpa menormalkan terhadap luas atau jumlah penghuni.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Modern utility need agile analytics. Skill + tool + culture. Qastil platform + leadership invest team capability."
+   "a": 1,
+   "explain": "SALAH. Gedung besar wajar memakai lebih banyak kWh. Perbandingan yang adil memakai intensitas seperti kWh per m² per tahun atau kWh per penghuni, sehingga gedung kecil yang boros tidak tampak 'hemat' hanya karena totalnya kecil.",
+   "hint": "Gedung 1.000 m² memakai 100.000 kWh dan gedung 5.000 m² memakai 300.000 kWh — mana yang lebih boros?"
   }
  ],
  "3E.17": [
   {
    "type": "tf",
-   "q": "Storytelling + visualization powerful: data + narrative + visual = persuade decision — Qastil leadership communicate strategy.",
+   "q": "Langkah pertama analisis ad-hoc adalah merumuskan pertanyaan bisnisnya dengan jelas sebelum menulis query.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern leader skill. Data tell story. Persuade stakeholder. Drive decision. Qastil pitch + presentation context daily."
+   "explain": "BENAR. Pertanyaan 'mengapa susut penyulang X naik?' harus diterjemahkan menjadi data apa yang dibutuhkan, periode mana, dan perbandingan apa. Tanpa perumusan itu, analis menghasilkan tabel yang tidak menjawab apa pun.",
+   "hint": "Apa yang harus jelas sebelum jari menyentuh keyboard?"
   },
   {
    "type": "tf",
-   "q": "Storytelling + visualization strategic Qastil context: pitch GM Direksi + Innovation Gateway + media + community — communicate vision.",
+   "q": "Hasil analisis ad-hoc tidak perlu didokumentasikan karena hanya dipakai sekali.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Qastil daily context: pitch leadership + present data + persuade. Storytelling skill multiplier. Career critical. PLN modernization."
+   "a": 1,
+   "explain": "SALAH. Pertanyaan 'sekali' sering berulang dalam bentuk lain, dan hasil yang tidak terdokumentasi tidak bisa diverifikasi orang lain. Menyimpan query, asumsi, dan sumber data membuat analisis dapat diulang dan dipertanggungjawabkan.",
+   "hint": "Tiga bulan lagi manajer bertanya 'angka itu dari mana?' — bisakah Anda menjawabnya?"
   }
  ],
  "3E.18": [
   {
    "type": "tf",
-   "q": "Dashboard deployment full-stack: frontend + backend + DB + cloud — Qastil PLNlytics + Envisor + portfolio — career stack.",
+   "q": "Presentasi data kepada manajemen paling efektif bila dimulai dari kesimpulan dan rekomendasi, lalu didukung grafik yang sederhana.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil multi-project deploy. Modern full-stack capability. Career align Indonesian utility modernization era."
+   "explain": "BENAR. Manajemen perlu tahu 'apa yang harus diputuskan' dalam menit pertama. Rincian metode dan data mentah ditaruh di lampiran. Satu grafik yang jelas dengan pesan yang tegas lebih meyakinkan daripada sepuluh tabel.",
+   "hint": "Jika Anda hanya punya dua menit dengan direktur, kalimat apa yang diucapkan pertama?"
   }
  ],
  "3F.01": [
   {
    "type": "tf",
-   "q": "UU 30/2007 + ekosistem regulasi mandate audit: Envisor business align nasional priority.",
+   "q": "Audit energi adalah proses sistematis untuk mengetahui di mana energi dipakai, seberapa efisien, dan peluang penghematan apa yang layak secara teknis dan ekonomis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Regulation drive demand. Qastil business strategic intersect."
+   "explain": "BENAR. Audit dimulai dari data konsumsi dan pengukuran, lalu mengidentifikasi peluang konservasi energi (ECO) beserta perkiraan penghematan dan biayanya, sehingga pemilik bisa memutuskan investasi dengan dasar yang jelas.",
+   "hint": "Apa tiga pertanyaan yang dijawab sebuah audit energi?"
   },
   {
    "type": "tf",
-   "q": "Regulasi konservasi mature: Envisor + Qastil business strategic align nasional priority.",
+   "q": "Audit energi selesai begitu laporan diserahkan; tindak lanjut dan verifikasi penghematan bukan bagian dari prosesnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Regulation + commitment drive. Qastil unique combine PLN + entrepreneur + research."
+   "a": 1,
+   "explain": "SALAH. Audit hanya bernilai jika rekomendasinya dijalankan dan penghematannya diverifikasi (M&V). Banyak audit berakhir sebagai laporan di laci karena tidak ada rencana implementasi dan pengukuran hasilnya.",
+   "hint": "Apa gunanya menemukan peluang hemat 20% jika tidak ada yang mengerjakannya?"
   }
  ],
  "3F.02": [
   {
    "type": "tf",
-   "q": "ISO 50001 + EnMS framework Envisor service: konsultasi implementation industri Indonesia.",
+   "q": "PP 70/2009 mewajibkan pengguna energi 6.000 TOE per tahun atau lebih untuk menerapkan manajemen energi: menunjuk manajer energi, melakukan audit berkala, dan melaporkan ke pemerintah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Envisor implement service. Compliance + savings. Qastil business align."
+   "explain": "BENAR. Ambang 6.000 TOE (setara sekitar 70 GWh) menyasar industri dan gedung besar. Kewajibannya mencakup manajer energi bersertifikat, audit energi secara berkala, pelaksanaan rekomendasi, dan laporan tahunan ke Kementerian ESDM.",
+   "hint": "Siapa saja yang terkena kewajiban manajemen energi, dan apa tiga kewajibannya?"
   },
   {
    "type": "tf",
-   "q": "ISO 50001 systematic Envisor service mature: align Indonesia konservasi mandate.",
+   "q": "UU 30/2007 tentang Energi hanya mengatur penyediaan energi, tidak menyentuh konservasi energi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Systematic + sustainable. Envisor implement. Qastil position electrical + business + research."
+   "a": 1,
+   "explain": "SALAH. UU 30/2007 menempatkan konservasi energi sebagai tanggung jawab pemerintah, pengusaha, dan masyarakat, dan menjadi payung bagi PP 70/2009 tentang Konservasi Energi serta peraturan menteri turunannya.",
+   "hint": "Bab apa dalam UU Energi yang menjadi dasar PP Konservasi Energi?"
   }
  ],
  "3F.03": [
   {
    "type": "tf",
-   "q": "LSP + sertifikasi kompetensi sistem matang: mandate audit + Qastil business strategic.",
+   "q": "ISO 50001 mengikuti siklus Plan-Do-Check-Act, sehingga kinerja energi diperbaiki terus-menerus, bukan sekali proyek.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Regulasi + sertifikasi ekosistem. Strategic vertical Indonesia."
+   "explain": "BENAR. Organisasi menetapkan kebijakan dan target (Plan), menjalankan rencana aksi (Do), memantau indikator kinerja energi (Check), dan meninjau serta memperbaiki (Act). Siklusnya berulang setiap periode.",
+   "hint": "Apa perbedaan sistem manajemen dengan proyek sekali jalan?"
   },
   {
    "type": "tf",
-   "q": "Sertifikasi kompetensi + Envisor + Qastil multi-track: Indonesia strategic energi konservasi business unique.",
+   "q": "Sertifikasi ISO 50001 menjamin konsumsi energi pasti turun setiap tahun.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Multi-track diversify + strategic. Career model modern Indonesian engineer."
+   "a": 1,
+   "explain": "SALAH. Sertifikasi menyatakan sistemnya ada dan dijalankan, bukan menjamin angka. Penurunan konsumsi bergantung pada komitmen manajemen dan pelaksanaan rencana aksi. Produksi yang naik bisa menaikkan konsumsi total meski intensitas energinya membaik.",
+   "hint": "Apa yang sebenarnya diaudit oleh lembaga sertifikasi: sistemnya atau tagihannya?"
   }
  ],
  "3F.04": [
   {
    "type": "tf",
-   "q": "Konversi unit fundamental energy audit: cross-fuel comparison + Envisor accurate analysis.",
+   "q": "Manajer energi dan auditor energi di Indonesia disertifikasi melalui LSP yang berlisensi BNSP berdasarkan standar kompetensi (SKKNI).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Audit cross-fuel. Standardize. Envisor expertise."
+   "explain": "BENAR. Uji kompetensi menilai kemampuan nyata: mengukur, menganalisis, menyusun rekomendasi, dan melaporkan. Sertifikat ini menjadi syarat bagi pengguna energi besar yang wajib memiliki manajer energi.",
+   "hint": "Lembaga apa yang menerbitkan sertifikat kompetensi profesi di Indonesia?"
   },
   {
    "type": "tf",
-   "q": "Konversi + unit Envisor: accurate audit + comparable + customer educate.",
+   "q": "Auditor energi cukup menguasai kelistrikan; sistem termal seperti boiler dan chiller di luar lingkupnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Foundation energy professional. Multi-unit fluent."
+   "a": 1,
+   "explain": "SALAH. Di industri, energi termal (uap, panas proses) sering lebih besar daripada listrik. Auditor energi harus memahami neraca energi listrik dan termal sekaligus, karena peluang penghematan terbesar bisa ada di boiler, chiller, atau kompresor.",
+   "hint": "Di pabrik tekstil, mana yang lebih besar: tagihan listrik atau biaya bahan bakar boiler?"
   }
  ],
  "3F.05": [
   {
    "type": "tf",
-   "q": "Power analyzer instrument core auditor: capture → analyze → recommend Envisor toolkit.",
+   "q": "Satu TOE (ton oil equivalent) setara dengan sekitar 11.630 kWh, sehingga konsumsi listrik dan bahan bakar dapat dijumlahkan dalam satuan yang sama.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Audit foundation. Skill operate. Envisor capability."
+   "explain": "BENAR. TOE adalah satuan energi setara satu ton minyak. Mengubah listrik (kWh), solar (liter), dan gas (MMBTU) ke TOE memungkinkan neraca energi total dan pemeriksaan ambang 6.000 TOE.",
+   "hint": "Bagaimana menjumlahkan 5 GWh listrik dengan 500 kL solar?"
   },
   {
    "type": "tf",
-   "q": "Power analyzer + skill foundation Envisor: invest tool + train + workflow quality.",
+   "q": "1 kWh sama dengan sekitar 3.412 BTU.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Tool + skill investment. Differentiate Envisor."
+   "explain": "BENAR. 1 kWh = 3.600 kJ ≈ 3.412 BTU. Konversi ini sering dipakai saat membandingkan kapasitas pendingin (BTU/jam) dengan daya listrik, atau saat membaca spesifikasi peralatan buatan Amerika.",
+   "hint": "1 kWh = 3.600 kJ; 1 BTU ≈ 1,055 kJ. Bagi keduanya."
   }
  ],
  "3F.06": [
   {
    "type": "tf",
-   "q": "Termografi powerful diagnostic: Envisor toolkit — proactive identify opportunity.",
+   "q": "Power analyzer yang dipasang beberapa hari merekam daya, faktor daya, dan harmonisa dari waktu ke waktu, sehingga profil beban nyata terlihat — bukan hanya satu pembacaan sesaat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. IR invest. Skill train. Envisor service value-add."
+   "explain": "BENAR. Pengukuran sesaat dengan tang ampere tidak menangkap variasi beban sepanjang hari. Perekaman (logging) minimal satu minggu memperlihatkan puncak, lembah, dan pola akhir pekan yang menjadi dasar analisis.",
+   "hint": "Apa yang tidak terlihat dari satu kali pembacaan pukul 10 pagi?"
   },
   {
    "type": "tf",
-   "q": "Termografi versatile Envisor: invest equipment + skill — competitive advantage.",
+   "q": "Tang ampere biasa (average-responding) memberi hasil yang akurat pada beban dengan harmonisa tinggi seperti VFD dan lampu LED.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. IR fundamental. Envisor strategic Indonesia growing market."
+   "a": 1,
+   "explain": "SALAH. Alat average-responding dikalibrasi untuk gelombang sinus murni dan membaca terlalu rendah pada arus terdistorsi. Untuk beban elektronik diperlukan alat True RMS agar arus sebenarnya terbaca.",
+   "hint": "Bentuk gelombang arus VFD bukan sinus — bagaimana alat 'rata-rata' menafsirkannya?"
   }
  ],
  "3F.07": [
   {
    "type": "tf",
-   "q": "Lighting audit + LED retrofit major Envisor opportunity: visible + quick ROI.",
+   "q": "Kamera termal dapat menemukan sambungan longgar, beban tidak seimbang, dan pemutus yang panas berlebih pada panel yang sedang beroperasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Lighting 15-30 persen building. Customer easy decision. Envisor entry."
+   "explain": "BENAR. Titik yang lebih panas dari sekitarnya menandakan tahanan tinggi atau arus berlebih. Pemeriksaan dilakukan saat panel berbeban agar panasnya muncul, dan dari jarak aman tanpa menyentuh bagian bertegangan.",
+   "hint": "Mengapa termografi panel dilakukan saat beban tinggi, bukan saat pabrik libur?"
   },
   {
    "type": "tf",
-   "q": "Lighting gateway Envisor: visible + ROI — builds trust expanding scope.",
+   "q": "Termografi pada selubung bangunan berguna untuk menemukan kebocoran udara dingin dan isolasi yang buruk yang membebani sistem pendingin.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Easy entry. Customer satisfied → expand. Envisor strategic."
+   "explain": "BENAR. Celah pintu, jendela, dan atap yang panas tampak jelas di citra termal. Kebocoran ini membuat chiller bekerja lebih keras, sehingga menutupnya termasuk peluang hemat yang murah.",
+   "hint": "Ke mana udara dingin dari AC pergi jika pintu gudang sering terbuka?"
   }
  ],
  "3F.08": [
   {
    "type": "tf",
-   "q": "Baseline + M&V essential audit credible: Envisor deliverable rigorous.",
+   "q": "Lux meter dipakai untuk membandingkan tingkat pencahayaan ruangan dengan standar SNI, sehingga ruangan yang terlalu terang (boros) atau terlalu gelap (tidak sehat) dapat dikenali.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Without baseline unreliable. M&V build credibility."
+   "explain": "BENAR. SNI 6197 menetapkan lux yang dianjurkan per jenis ruangan, misalnya sekitar 350 lux untuk ruang kerja kantor. Ruang yang jauh di atas standar bisa dikurangi lampunya; yang di bawah standar perlu diperbaiki, bukan sekadar dihemat.",
+   "hint": "Ruang arsip yang jarang dimasuki berpencahayaan 800 lux — apa peluangnya?"
   },
   {
    "type": "tf",
-   "q": "M&V foundation credible energy savings: Envisor differentiator + Qastil rigorous expertise.",
+   "q": "Anemometer dan flow meter tidak ada gunanya dalam audit energi listrik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. M&V industry standard. Envisor invest skill + tool. Strategic differentiate."
+   "a": 1,
+   "explain": "SALAH. Kecepatan udara di AHU dan laju aliran air chiller menentukan apakah kipas dan pompa bekerja sesuai desain. Aliran yang berlebih berarti motor kipas dan pompa boros — peluang VFD ditemukan justru dari pengukuran ini.",
+   "hint": "Bagaimana mengetahui pompa chiller memompa lebih banyak dari yang dibutuhkan?"
   }
  ],
  "3F.09": [
   {
    "type": "tf",
-   "q": "Walk-through audit Envisor entry service: low-cost initial + identify opportunity + customer engagement.",
+   "q": "Baseline konsumsi harus disusun dari data minimal 12 bulan agar mencakup variasi musim dan pola produksi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Walk-through: customer trial. Identify potential. Convert to detail audit + implement. Sales funnel."
+   "explain": "BENAR. Data yang lebih pendek bisa menyesatkan karena musim kemarau, libur panjang, atau puncak produksi tidak terwakili. Baseline 12 bulan menjadi pembanding yang adil untuk mengukur penghematan setelah aksi dilakukan.",
+   "hint": "Jika baseline hanya dari tiga bulan musim hujan, bagaimana hasil audit di musim kemarau?"
   },
   {
    "type": "tf",
-   "q": "Walk-through audit Envisor sales tool + customer service: build relationship + identify + convert detail.",
+   "q": "Baseline hanya perlu mencatat kWh; variabel pengaruh seperti produksi dan suhu tidak perlu dicatat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Strategic Envisor. Sales funnel. Customer trust. Long-term revenue."
+   "a": 1,
+   "explain": "SALAH. Tanpa variabel pengaruh, penurunan kWh setelah aksi bisa saja karena produksi turun, bukan karena efisiensi. Baseline yang baik mencatat kWh beserta faktor pendorongnya, sehingga penghematan dapat dinormalkan.",
+   "hint": "Konsumsi turun 15% tetapi produksi turun 20% — apakah pabrik jadi lebih efisien?"
   }
  ],
  "3F.10": [
   {
    "type": "tf",
-   "q": "ECO identification + economic analysis Envisor core: identify + justify + customer decide.",
+   "q": "Konsumsi listrik yang tetap tinggi pada malam hari dan akhir pekan saat gedung kosong menunjukkan adanya beban yang tidak perlu terus menyala.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Core audit value. ECO actionable. Economic justify. Customer decide invest."
+   "explain": "BENAR. Beban 'siluman' (AC lorong, lampu, komputer, pompa) sering dibiarkan menyala di luar jam kerja. Dari profil beban, selisih antara beban malam dan beban minimum yang wajar menunjukkan besar pemborosannya.",
+   "hint": "Gedung kantor kosong pukul 2 pagi tetapi memakai 40% beban siang — apa yang menyala?"
   },
   {
    "type": "tf",
-   "q": "ECO comprehensive Envisor service: identify + justify + implement + verify — full lifecycle.",
+   "q": "Pola konsumsi bulanan cukup dilihat dari total tagihan, tanpa perlu memisahkan pemakaian WBP dan LWBP.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Envisor end-to-end. Audit + implement + M&V. Customer single source. Strategic."
+   "a": 1,
+   "explain": "SALAH. Tarif WBP (18.00–22.00) lebih mahal. Pelanggan yang porsi WBP-nya besar bisa menghemat biaya hanya dengan menggeser jadwal produksi, tanpa mengurangi kWh. Ini hanya terlihat jika pemakaian dipisah per waktu.",
+   "hint": "Dua pabrik memakai kWh yang sama tetapi tagihannya berbeda 15% — apa penyebabnya?"
   }
  ],
  "3F.11": [
   {
    "type": "tf",
-   "q": "Quick-win Envisor entry service: build trust + momentum + convert capital project.",
+   "q": "Rapat pembuka (entry meeting) audit menyepakati lingkup, jadwal, data yang dibutuhkan, dan siapa penanggung jawab di pihak klien.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Customer experience save fast. Trust build. Convert detail + capital. Sales funnel."
+   "explain": "BENAR. Tanpa kesepakatan awal, auditor kesulitan memperoleh data tagihan, gambar instalasi, dan akses ke ruang mesin. Rapat pembuka juga menyamakan harapan tentang keluaran audit.",
+   "hint": "Data apa saja yang harus diminta sebelum auditor datang ke lokasi?"
   },
   {
    "type": "tf",
-   "q": "Quick-win Envisor strategic: customer experience + trust + sales funnel + sustain culture.",
+   "q": "Auditor sebaiknya langsung mengukur ke lapangan tanpa membaca data tagihan dan gambar instalasi lebih dulu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Quick-win multi-purpose. Customer save + Envisor build relationship. Strategic value."
+   "a": 1,
+   "explain": "SALAH. Tagihan 12 bulan dan gambar instalasi menunjukkan di mana energi terbesar dipakai, sehingga pengukuran lapangan bisa difokuskan. Mengukur tanpa peta sama dengan menghabiskan waktu di tempat yang tidak penting.",
+   "hint": "Dari tagihan diketahui 60% energi ke chiller — di mana pengukuran harus dipusatkan?"
   }
  ],
  "3F.12": [
   {
    "type": "tf",
-   "q": "LED retrofit Envisor signature service: visible + ROI + customer easy decide.",
+   "q": "Audit walk-through (tingkat 1) mengandalkan pengamatan visual dan data yang ada untuk menemukan peluang hemat yang jelas, dengan biaya dan waktu yang rendah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. LED retrofit common Envisor entry. Quick + visible. Build relationship."
+   "explain": "BENAR. Dalam satu atau dua hari, auditor berkeliling dengan daftar periksa: lampu menyala di ruang kosong, AC di ruangan terbuka, kebocoran udara tekan, motor yang bekerja tanpa beban. Hasilnya menjadi dasar memutuskan perlunya audit rinci.",
+   "hint": "Apa yang bisa ditemukan hanya dengan berjalan keliling pabrik dengan mata terbuka?"
   },
   {
    "type": "tf",
-   "q": "LED retrofit complete service Envisor: select + install + commission + verify — quality differentiate.",
+   "q": "Hasil audit walk-through sudah cukup akurat untuk mengajukan investasi besar seperti penggantian chiller.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. End-to-end LED service. Quality + ROI customer. Envisor strategic capability."
+   "a": 1,
+   "explain": "SALAH. Walk-through memberi perkiraan kasar. Investasi besar memerlukan audit rinci (tingkat 2 atau 3) dengan pengukuran, analisis, dan perhitungan kelayakan yang teliti, agar keputusan tidak didasarkan pada tebakan.",
+   "hint": "Beranikah Anda menandatangani investasi Rp 5 miliar berdasarkan kunjungan sehari?"
   }
  ],
  "3F.13": [
   {
    "type": "tf",
-   "q": "HVAC major Envisor opportunity: complex + high-impact + premium service.",
+   "q": "Setiap peluang konservasi energi (ECO) harus disertai perkiraan penghematan energi, biaya, dan waktu balik modalnya agar dapat diprioritaskan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. HVAC complex audit + retrofit. Premium service Envisor. Major savings industri + commercial."
+   "explain": "BENAR. Daftar ECO tanpa angka tidak bisa dibandingkan. Dengan penghematan (kWh dan rupiah), biaya investasi, dan payback, klien dapat mengurutkan mana yang dikerjakan lebih dulu.",
+   "hint": "Dua peluang: hemat Rp 50 juta/tahun dengan investasi Rp 100 juta, dan hemat Rp 200 juta/tahun dengan investasi Rp 2 miliar — mana yang lebih dulu?"
   },
   {
    "type": "tf",
-   "q": "HVAC comprehensive Envisor service: complex + premium + major impact — Qastil expertise align.",
+   "q": "ECO yang penghematannya paling besar selalu harus dikerjakan paling dulu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. HVAC sophistication. Envisor capability. Major customer commercial + industri. Premium service tier."
+   "a": 1,
+   "explain": "SALAH. Prioritas menimbang penghematan, biaya, kemudahan, dan risiko. Peluang tanpa biaya (mengubah setelan, mematikan yang tidak perlu) dikerjakan lebih dulu meski hematnya kecil, karena membangun kepercayaan dan mendanai langkah berikutnya.",
+   "hint": "Apa yang sebaiknya dilakukan hari ini tanpa menunggu anggaran tahun depan?"
   }
  ],
  "3F.14": [
   {
    "type": "tf",
-   "q": "Motor + VFD major Envisor industri opportunity: high-impact + ROI — Qastil engineering expertise.",
+   "q": "Peluang quick-win seperti menaikkan setpoint AC, mematikan peralatan di luar jam kerja, dan memperbaiki kebocoran udara tekan bisa menghemat 5–10% tanpa investasi berarti.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Motor industri share. VFD major save. Envisor service. Engineering depth."
+   "explain": "BENAR. Langkah tanpa biaya atau berbiaya rendah ini hanya memerlukan perubahan kebiasaan dan setelan. Penghematannya langsung terlihat di tagihan bulan berikutnya dan menjadi bukti bahwa program efisiensi berhasil.",
+   "hint": "Berapa hemat jika setpoint AC dinaikkan dari 22 °C ke 24 °C?"
   },
   {
    "type": "tf",
-   "q": "Motor + VFD comprehensive Envisor industri service: dominant share + multi-opportunity — premium engineering.",
+   "q": "Quick-win tidak perlu dipantau karena penghematannya otomatis bertahan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Industri motor major. Envisor specialty. Engineering depth. Indonesia opportunity."
+   "a": 1,
+   "explain": "SALAH. Setelan bisa diubah kembali oleh penghuni, jadwal bisa terlupakan, dan kebocoran baru bisa muncul. Tanpa pemantauan dan penanggung jawab yang jelas, penghematan quick-win biasanya menguap dalam beberapa bulan.",
+   "hint": "Siapa yang menjaga agar setpoint AC tidak diturunkan lagi minggu depan?"
   }
  ],
  "3F.15": [
   {
    "type": "tf",
-   "q": "Compressed air audit major Envisor industri: leak + pressure + heat + VFD multiple opportunity.",
+   "q": "Mengganti lampu TL dengan LED yang lumennya setara dapat mengurangi konsumsi pencahayaan sekitar 50% dan mengurangi beban pendingin karena LED lebih dingin.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Compressed air notoriously wasteful. Multiple intervention. Envisor service portfolio."
+   "explain": "BENAR. LED menghasilkan lumen per watt dua kali lipat lebih dari TL dan jauh lebih tinggi dari halogen. Panas yang lebih rendah juga meringankan AC. Dengan umur 30.000–50.000 jam, biaya penggantian pun turun.",
+   "hint": "Selain listrik lampu, beban apa lagi yang ikut turun saat ruangan tidak dipanaskan lampu?"
   },
   {
    "type": "tf",
-   "q": "Compressed air system Envisor specialty: complex + multi-opportunity + significant industri savings.",
+   "q": "Retrofit LED sebaiknya memilih lumen setinggi mungkin agar ruangan seterang mungkin.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Compressed air complex + impactful. Envisor expertise. Industri value high."
+   "a": 1,
+   "explain": "SALAH. Pencahayaan harus sesuai standar SNI untuk fungsi ruangnya. Terlalu terang memboroskan energi dan bisa menyilaukan. Desain pencahayaan menghitung jumlah dan jenis lampu agar lux-nya pas, tidak berlebihan.",
+   "hint": "Gudang tidak perlu seterang ruang gambar — apa acuannya?"
   }
  ],
  "3F.16": [
   {
    "type": "tf",
-   "q": "Building envelope long-term retrofit Envisor: durable + sustainable + comprehensive — premium service.",
+   "q": "Pada gedung komersial di iklim tropis, sistem pendingin (chiller, AHU, FCU) biasanya menjadi pengguna energi terbesar, sering mencapai 50–60% konsumsi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Envelope foundational. Durable decade. Envisor premium. Holistic approach."
+   "explain": "BENAR. Beban pendingin di Indonesia tinggi sepanjang tahun. Karena porsinya terbesar, perbaikan kecil pada efisiensi chiller, setpoint, dan jadwal operasi memberi penghematan besar dalam rupiah.",
+   "hint": "Di mana sebagian besar tagihan listrik mal habis?"
   },
   {
    "type": "tf",
-   "q": "Envelope retrofit foundational + sustainable Envisor service: premium customer green building target.",
+   "q": "Menurunkan setpoint suhu ruangan membuat chiller bekerja lebih ringan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Envelope sustainable. Envisor premium. Green building Greenship + EDGE align. Indonesia opportunity."
+   "a": 1,
+   "explain": "SALAH. Makin rendah setpoint, makin besar beban pendingin dan makin lama chiller bekerja. Setiap penurunan 1 °C menambah konsumsi sekitar 3–6%. Setpoint 24–25 °C umumnya nyaman dan jauh lebih hemat daripada 20–22 °C.",
+   "hint": "Mana yang lebih berat: mendinginkan ruangan ke 20 °C atau ke 25 °C?"
   }
  ],
  "3F.17": [
   {
    "type": "tf",
-   "q": "M&V Envisor service rigorous credibility: customer trust + ESCO basis + Qastil engineering rigor.",
+   "q": "Motor listrik sering menjadi pengguna listrik terbesar di industri, sehingga kelas efisiensi (IE) dan pemakaian VFD pada beban variabel adalah peluang hemat utama.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. M&V differentiate professional. Envisor invest skill + tool. Strategic Indonesia growing market."
+   "explain": "BENAR. Motor menyerap sebagian besar listrik industri. Motor IE3/IE4 lebih efisien beberapa persen, dan VFD pada pompa atau kipas yang bebannya berubah dapat menghemat 20–50% karena daya turun sebanding pangkat tiga kecepatan.",
+   "hint": "Di pabrik, peralatan apa yang jumlahnya paling banyak dan menyala paling lama?"
   },
   {
    "type": "tf",
-   "q": "M&V Envisor strategic differentiator + Qastil rigor: credibility + repeat business + ESCO model viable.",
+   "q": "VFD selalu menghemat energi pada semua jenis beban motor.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. M&V foundation modern energy service. Envisor invest. Customer trust drive repeat + referral. Strategic growth."
+   "a": 1,
+   "explain": "SALAH. VFD menghemat pada beban yang kebutuhannya berubah-ubah (pompa, kipas, kompresor). Pada beban tetap yang selalu berjalan penuh, VFD justru menambah rugi kecil dan tidak menghemat. Pilih VFD sesuai karakter bebannya.",
+   "hint": "Apa yang dihemat VFD pada motor yang memang harus selalu berputar penuh?"
   }
  ],
  "3F.18": [
   {
    "type": "tf",
-   "q": "Comprehensive audit Envisor flagship service: rigorous + premium + transformational customer.",
+   "q": "Kebocoran pada sistem udara tekan bisa membuang 20–30% keluaran kompresor, dan setiap penurunan tekanan 1 bar menghemat sekitar 7% energi kompresor.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Comprehensive audit Envisor flagship. Premium. Transformational customer relationship + revenue."
+   "explain": "BENAR. Kebocoran kecil di sambungan dan selang, dijumlahkan, menghabiskan sebagian besar udara. Survei kebocoran dengan detektor ultrasonik dan menurunkan tekanan ke kebutuhan minimum adalah langkah hemat yang murah.",
+   "hint": "Kompresor tetap bekerja saat pabrik libur — ke mana udaranya pergi?"
   },
   {
    "type": "tf",
-   "q": "Comprehensive audit + implement + M&V Envisor flagship: Qastil model integrated PLN expertise + business + research — strategic Indonesia.",
+   "q": "Udara tekan adalah bentuk energi yang murah, sehingga boleh dipakai untuk membersihkan meja atau mengeringkan barang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. 3F culminate Energy Audit jalur. Envisor service comprehensive. Qastil unique combine domain + business + research. Strategic Indonesia konservasi. Career model."
+   "a": 1,
+   "explain": "SALAH. Udara tekan adalah energi yang paling mahal di pabrik: hanya sekitar 10% energi listrik kompresor yang menjadi kerja berguna, sisanya panas. Memakainya untuk membersihkan atau mendinginkan adalah pemborosan besar.",
+   "hint": "Berapa persen energi listrik kompresor yang benar-benar sampai ke alat pneumatik?"
   }
  ],
  "3G.01": [
   {
    "type": "tf",
-   "q": "Pembangkit foundational PLN: mix + transition strategic.",
+   "q": "Pembangkit termal (PLTU, PLTG) membakar bahan bakar untuk menghasilkan panas, sedangkan pembangkit terbarukan seperti PLTA, PLTS, dan PLTB memanfaatkan sumber alam yang tidak habis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. UPK pembangkit PLN. Distribusi adjacent."
+   "explain": "BENAR. Pembangkit termal mengubah energi kimia bahan bakar menjadi panas, lalu menjadi gerak dan listrik. Pembangkit terbarukan memakai aliran air, cahaya matahari, angin, atau panas bumi yang terus tersedia tanpa dibeli.",
+   "hint": "Apa yang dibakar PLTU, dan apa yang 'dibakar' PLTA?"
   },
   {
    "type": "tf",
-   "q": "Pembangkit Indonesia diverse + transitioning: Qastil career UPK possible.",
+   "q": "Semua pembangkit terbarukan dapat diatur keluarannya kapan saja seperti PLTU.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. PLN multi-tier. Career rotation."
+   "a": 1,
+   "explain": "SALAH. PLTS dan PLTB bergantung pada cuaca (intermiten), sedangkan PLTA berwaduk dan PLTP dapat diatur (dispatchable). Perbedaan ini menentukan bagaimana bauran pembangkit disusun agar pasokan tetap stabil.",
+   "hint": "Bisakah PLTS menambah daya pada malam hari saat diminta dispatcher?"
   }
  ],
  "3G.02": [
   {
    "type": "tf",
-   "q": "Thermodynamic foundation pembangkit: efficiency drive economics.",
+   "q": "Siklus Rankine pada PLTU menggunakan air yang diuapkan di boiler, memutar turbin uap, lalu dikondensasikan kembali menjadi air untuk dipompa ulang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Engineering critical. Higher eff = less fuel + emission."
+   "explain": "BENAR. Empat tahapnya: pompa menaikkan tekanan air, boiler mengubahnya jadi uap panas lanjut, turbin mengembangkan uap sambil menghasilkan kerja, dan kondensor mengembalikannya ke air. Fluida kerjanya berputar dalam siklus tertutup.",
+   "hint": "Mengapa air yang sama dipakai berulang, bukan dibuang setelah melewati turbin?"
   },
   {
    "type": "tf",
-   "q": "Thermal engineering core PLN UPK: specialty career.",
+   "q": "Siklus Brayton pada PLTG memakai uap air sebagai fluida kerja seperti PLTU.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Engineering specialty. Qastil distribusi adjacent."
+   "a": 1,
+   "explain": "SALAH. Siklus Brayton memakai udara: kompresor memampatkan udara, ruang bakar memanaskannya dengan gas, dan gas panas mengembang di turbin gas. Tidak ada boiler dan kondensor, sehingga PLTG bisa start dalam hitungan menit.",
+   "hint": "Apa yang dimampatkan kompresor turbin gas: air atau udara?"
   }
  ],
  "3G.03": [
   {
    "type": "tf",
-   "q": "PLTU komponen complex: multi-discipline engineering.",
+   "q": "Kondensor PLTU mengubah uap bekas turbin menjadi air dan menciptakan vakum, sehingga uap dapat berekspansi lebih jauh dan efisiensi naik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PLN UPK specialty. Career path."
+   "explain": "BENAR. Makin rendah tekanan di kondensor, makin besar selisih tekanan yang dimanfaatkan turbin. Kondensor yang kotor atau kekurangan air pendingin menaikkan tekanan vakum dan langsung menurunkan daya serta efisiensi unit.",
+   "hint": "Apa akibatnya jika pipa kondensor tersumbat kerang dan lumpur?"
   },
   {
    "type": "tf",
-   "q": "PLTU 100s komponen: engineering specialty PLN UPK.",
+   "q": "Boiler PLTU hanya terdiri dari satu drum air tanpa komponen lain.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Complex. Career path."
+   "a": 1,
+   "explain": "SALAH. Boiler modern terdiri dari economizer (memanaskan air umpan), evaporator/wall tube (menguapkan), drum (memisahkan uap dan air), superheater (memanaskan uap lanjut), dan reheater. Setiap bagian memanfaatkan gas buang pada suhu yang berbeda.",
+   "hint": "Mengapa uap harus dipanaskan lanjut (superheat) sebelum masuk turbin?"
   }
  ],
  "3G.04": [
   {
    "type": "tf",
-   "q": "PLTGU efficient + flex Indonesia gas era: strategic bridge.",
+   "q": "PLTGU (combined cycle) memanfaatkan gas buang panas turbin gas untuk membuat uap di HRSG yang memutar turbin uap, sehingga efisiensinya jauh lebih tinggi daripada PLTG saja.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. CCGT efficient. Indonesia gas adequate."
+   "explain": "BENAR. Gas buang turbin gas masih sekitar 500–600 °C. HRSG (heat recovery steam generator) memanfaatkannya tanpa bahan bakar tambahan, menaikkan efisiensi dari sekitar 35% (PLTG) menjadi 55–60% (PLTGU).",
+   "hint": "Ke mana perginya panas gas buang turbin gas jika tidak ada HRSG?"
   },
   {
    "type": "tf",
-   "q": "PLTGU strategic Indonesia transition: efficient + flex bridge.",
+   "q": "PLTG (open cycle) lebih efisien daripada PLTGU karena lebih sederhana.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Gas Indonesia growing. PLN invest strategic."
+   "a": 1,
+   "explain": "SALAH. PLTG sederhana dan cepat start, tetapi membuang sebagian besar energi lewat gas buang, efisiensinya hanya sekitar 30–38%. PLTGU memanfaatkan panas itu sehingga efisiensinya jauh lebih tinggi. PLTG dipakai untuk beban puncak, PLTGU untuk beban menengah-dasar.",
+   "hint": "Mana yang lebih hemat bahan bakar per kWh: membuang panas atau memanfaatkannya?"
   }
  ],
  "3G.05": [
   {
    "type": "tf",
-   "q": "PLTA strategic Indonesia: renewable + dispatchable + massive potential.",
+   "q": "Turbin Pelton cocok untuk head tinggi dengan debit kecil, turbin Francis untuk head menengah, dan turbin Kaplan untuk head rendah dengan debit besar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Strategic capacity expansion."
+   "explain": "BENAR. Pelton memakai semburan air berkecepatan tinggi ke mangkuk, cocok untuk air terjun ratusan meter. Francis paling umum untuk head 40–400 m. Kaplan berbaling-baling seperti kipas untuk sungai besar berhead rendah.",
+   "hint": "Turbin apa yang dipilih untuk bendungan rendah tetapi sungainya sangat deras?"
   },
   {
    "type": "tf",
-   "q": "PLTA renewable strategic Indonesia multi-decade: RUPTL priority.",
+   "q": "Daya PLTA hanya bergantung pada debit air; tinggi jatuh (head) tidak berpengaruh.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Hydro backbone strategic."
+   "a": 1,
+   "explain": "SALAH. Daya PLTA ≈ 9,81 × debit (m³/s) × head (m) × efisiensi (kW). Head dan debit sama pentingnya: debit kecil dengan head tinggi bisa menghasilkan daya yang sama dengan debit besar berhead rendah.",
+   "hint": "Tulis rumus daya air: besaran apa saja yang dikalikan?"
   }
  ],
  "3G.06": [
   {
    "type": "tf",
-   "q": "PLTP strategic Indonesia: world 2nd + underutilize + expand opportunity.",
+   "q": "PLTP (panas bumi) dapat beroperasi terus-menerus sebagai pembangkit beban dasar karena sumber panasnya tidak bergantung cuaca.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Geothermal expand priority."
+   "explain": "BENAR. Uap dari reservoir panas bumi tersedia 24 jam sepanjang tahun, sehingga faktor kapasitas PLTP bisa di atas 90%. Ini membedakannya dari PLTS dan PLTB yang intermiten.",
+   "hint": "Apakah panas dari dalam bumi berhenti saat malam atau musim hujan?"
   },
   {
    "type": "tf",
-   "q": "PLTP strategic renewable baseload Indonesia: RUPTL priority multi-decade.",
+   "q": "Siklus biner (binary cycle) pada PLTP dipakai untuk reservoir bersuhu rendah, dengan memanaskan fluida kerja organik yang titik didihnya rendah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Geothermal underutilize opportunity."
+   "explain": "BENAR. Jika air panas bumi hanya 100–180 °C, uapnya tidak cukup untuk turbin biasa. Panasnya dipindahkan ke fluida organik (misalnya pentana) yang mendidih pada suhu rendah, lalu fluida itu memutar turbin dalam siklus tertutup.",
+   "hint": "Bagaimana memutar turbin dengan air panas yang 'hanya' 150 °C?"
   }
  ],
  "3G.07": [
   {
    "type": "tf",
-   "q": "Generator sinkron foundation pembangkit AC: engineering specialty.",
+   "q": "Generator sinkron menghasilkan frekuensi yang sebanding dengan kecepatan putar dan jumlah kutubnya: f = p × n / 120.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Complex critical asset."
+   "explain": "BENAR. Untuk 50 Hz, generator 2 kutub berputar 3.000 rpm (turbin uap), 4 kutub 1.500 rpm, dan generator PLTA berkutub banyak berputar jauh lebih lambat. 'Sinkron' berarti frekuensi listrik terkunci pada kecepatan mekanis.",
+   "hint": "Berapa rpm generator 4 kutub agar menghasilkan 50 Hz?"
   },
   {
    "type": "tf",
-   "q": "Generator critical asset PLN UPK: specialty career engineer.",
+   "q": "Menaikkan arus eksitasi generator sinkron yang sudah paralel dengan jaringan menaikkan daya aktif (MW) yang dihasilkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Complex. Maintenance rigorous."
+   "a": 1,
+   "explain": "SALAH. Daya aktif ditentukan oleh torsi penggerak mula (governor / bukaan katup uap). Arus eksitasi mengatur tegangan dan daya reaktif (MVAR). Menaikkan eksitasi saat paralel membuat generator memasok lebih banyak daya reaktif, bukan MW.",
+   "hint": "Mana yang mengatur MW dan mana yang mengatur MVAR: governor atau AVR?"
   }
  ],
  "3G.08": [
   {
    "type": "tf",
-   "q": "Start-up discipline PLTU: thermal stress + material + safety.",
+   "q": "Start-up PLTU dilakukan bertahap dengan laju kenaikan suhu yang dibatasi, karena pemanasan yang terlalu cepat menimbulkan tegangan termal pada boiler dan turbin.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Engineering + skill critical."
+   "explain": "BENAR. Komponen tebal seperti drum dan rotor turbin memuai tidak merata jika dipanaskan cepat, menimbulkan retak dan deformasi. Start dingin bisa memakan 6–12 jam mengikuti kurva pemanasan pabrikan.",
+   "hint": "Apa yang terjadi pada gelas tebal yang tiba-tiba dituangi air mendidih?"
   }
  ],
  "3G.09": [
   {
    "type": "tf",
-   "q": "DCS modern PLTU complex: engineering + sophistication.",
+   "q": "DCS mengendalikan ribuan titik pengukuran dan aktuator pembangkit dari ruang kontrol pusat, dengan pengendali yang tersebar di lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Specialty. Modern standard."
+   "explain": "BENAR. Distributed Control System membagi kendali ke banyak pengendali lokal yang terhubung jaringan, sehingga kegagalan satu pengendali tidak melumpuhkan seluruh unit. Operator memantau dan mengubah setelan lewat layar HMI.",
+   "hint": "Mengapa kendali 'tersebar' lebih andal daripada satu komputer pusat?"
   },
   {
    "type": "tf",
-   "q": "DCS + analytics PLTU modern: Qastil PLNlytics distribusi analog.",
+   "q": "Alarm di DCS sebaiknya dibuat sebanyak mungkin agar operator tidak melewatkan apa pun.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Modern utility data-driven."
+   "a": 1,
+   "explain": "SALAH. Terlalu banyak alarm (alarm flooding) justru membuat operator kebal dan melewatkan alarm yang penting saat gangguan. Manajemen alarm yang baik memprioritaskan dan mengurangi alarm yang tidak memerlukan tindakan.",
+   "hint": "Jika 500 alarm berbunyi dalam semenit, mana yang dibaca operator?"
   }
  ],
  "3G.10": [
   {
    "type": "tf",
-   "q": "Parameter KPI PLTU: monitor + improve — operational excellence.",
+   "q": "Parameter operasi seperti tekanan dan suhu uap, aliran, serta getaran dipantau terus-menerus dan dibandingkan dengan batas aman untuk menjaga keandalan unit.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Universal discipline."
+   "explain": "BENAR. Setiap parameter punya rentang normal dan batas alarm/trip. Penyimpangan bertahap — misalnya getaran bantalan yang perlahan naik — menjadi peringatan dini untuk perawatan sebelum unit trip.",
+   "hint": "Apa gunanya mencatat getaran bantalan setiap hari?"
   },
   {
    "type": "tf",
-   "q": "Parameter discipline PLTU: engineering excellence universal.",
+   "q": "Suhu uap masuk turbin boleh dinaikkan setinggi mungkin untuk menaikkan efisiensi tanpa batas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. PLN UPK + UP3 similar principle."
+   "a": 1,
+   "explain": "SALAH. Efisiensi memang naik dengan suhu, tetapi material pipa dan sudu turbin punya batas kekuatan pada suhu tinggi (creep). Suhu dibatasi desain metalurgi, biasanya sekitar 540–600 °C untuk PLTU modern.",
+   "hint": "Apa yang membatasi suhu uap: termodinamika atau material?"
   }
  ],
  "3G.11": [
   {
    "type": "tf",
-   "q": "Load dispatch sophisticated: Qastil distribusi coordinate.",
+   "q": "Dispatcher pusat pengatur beban mengatur pembangkit mana yang menaikkan atau menurunkan daya agar pasokan selalu seimbang dengan permintaan dan frekuensi tetap 50 Hz.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Dispatch complex. P2B specialty."
+   "explain": "BENAR. Jika pembangkitan kurang dari beban, frekuensi turun; jika lebih, frekuensi naik. Dispatcher menjaga keseimbangan itu setiap saat dengan mengirim perintah beban ke unit-unit, mendahulukan yang biaya marginalnya terendah.",
+   "hint": "Apa yang terjadi pada frekuensi jika pabrik besar tiba-tiba menyala sementara pembangkit belum menambah daya?"
   },
   {
    "type": "tf",
-   "q": "Dispatch + reliability foundation grid: P2B specialty PLN.",
+   "q": "Operator pembangkit boleh menaikkan beban unit sesuka hati tanpa perintah dispatcher.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Modern grid complex. Career path."
+   "a": 1,
+   "explain": "SALAH. Pembangkit yang terhubung ke sistem harus mengikuti perintah dispatcher, karena perubahan sepihak mengganggu keseimbangan dan frekuensi sistem. Aturan jaringan (grid code) mengatur kewajiban ini.",
+   "hint": "Siapa yang melihat keseluruhan sistem: operator unit atau dispatcher?"
   }
  ],
  "3G.12": [
   {
    "type": "tf",
-   "q": "PV solar Indonesia potential massive: equatorial + declining cost.",
+   "q": "Pada kurva I-V modul surya, titik daya maksimum (MPP) berada di 'lutut' kurva, antara arus hubung singkat (Isc) dan tegangan rangkaian terbuka (Voc).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Indonesia strategic renewable."
+   "explain": "BENAR. Pada Isc tegangannya nol dan pada Voc arusnya nol — keduanya tidak menghasilkan daya. Daya terbesar diperoleh pada kombinasi Vmp dan Imp di lutut kurva, dan inverter dengan MPPT terus mencari titik itu.",
+   "hint": "Daya = V × I. Di titik mana hasil kalinya paling besar?"
   },
   {
    "type": "tf",
-   "q": "PV strategic Indonesia: technology + economic + policy align.",
+   "q": "Keluaran modul surya naik saat suhu modul naik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Growing PV. Qastil context renewable."
+   "a": 1,
+   "explain": "SALAH. Tegangan modul turun sekitar 0,3–0,4% per °C kenaikan suhu, sehingga dayanya turun. Modul di siang terik (suhu sel 60 °C) menghasilkan 10–15% lebih rendah daripada di kondisi uji standar 25 °C. Ventilasi di bawah modul membantu.",
+   "hint": "Apa yang terjadi pada Voc modul saat panas terik?"
   }
  ],
  "3G.13": [
   {
    "type": "tf",
-   "q": "PLTS atap Indonesia growing: policy + tech + economic align.",
+   "q": "Sistem PLTS atap on-grid mengalirkan kelebihan energi ke jaringan PLN dan tidak memerlukan baterai untuk beroperasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Residential + commercial rollout."
+   "explain": "BENAR. Inverter on-grid menyinkronkan keluarannya dengan jaringan; beban diambil dari PLTS dulu, kekurangannya dari PLN, dan kelebihannya diekspor. Tanpa baterai, biayanya jauh lebih rendah — tetapi saat PLN padam inverter juga berhenti.",
+   "hint": "Ke mana energi PLTS pergi saat rumah kosong di siang hari?"
   },
   {
    "type": "tf",
-   "q": "PLTS atap + utility-scale Indonesia strategic: Qastil PLN context distribusi transform.",
+   "q": "Kapasitas PLTS atap boleh melebihi daya tersambung pelanggan PLN tanpa batasan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Distribusi transform era. PLN + PLN distribusi + customer."
+   "a": 1,
+   "explain": "SALAH. Peraturan PLTS atap membatasi kapasitas inverter maksimum sebesar daya tersambung pelanggan, dan pemasangannya harus didaftarkan ke PLN. Ini menjaga agar jaringan distribusi tidak kelebihan ekspor daya.",
+   "hint": "Pelanggan 2.200 VA ingin memasang inverter 5 kW — apa masalahnya?"
   }
  ],
  "3G.14": [
   {
    "type": "tf",
-   "q": "Inverter + MPPT core PV system: efficiency + safety + grid interaction.",
+   "q": "Sebelum diberi tegangan, instalasi PLTS diuji: polaritas string, tegangan rangkaian terbuka tiap string, tahanan isolasi kabel DC, dan kontinuitas pembumian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Inverter heart. Design + safety critical."
+   "explain": "BENAR. Polaritas terbalik dapat merusak inverter, string yang tegangannya jauh berbeda menandakan sambungan longgar atau modul rusak, dan isolasi DC yang buruk berisiko busur api. Hasil uji dicatat sebagai acuan komisioning.",
+   "hint": "Dua string identik tetapi tegangannya berbeda 50 V — apa yang salah?"
   },
   {
    "type": "tf",
-   "q": "Inverter PV sophisticated: safety + grid + reliability — Qastil distribusi context impact.",
+   "q": "Kabel DC dari panel ke inverter boleh memakai kabel NYA biasa karena tegangannya rendah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Inverter interface critical PLN grid."
+   "a": 1,
+   "explain": "SALAH. Kabel DC PLTS terpapar sinar UV, panas, dan tegangan DC hingga 1.000 V. Harus memakai kabel surya (PV1-F/H1Z2Z2-K) berisolasi ganda tahan UV, dengan konektor MC4 yang sesuai. Kabel biasa cepat getas dan menimbulkan busur api DC.",
+   "hint": "Apa yang terjadi pada isolasi kabel biasa setelah tiga tahun terjemur di atap?"
   }
  ],
  "3G.15": [
   {
    "type": "tf",
-   "q": "Wind Indonesia limited tapi growing: Sumba + Sukabumi site — niche.",
+   "q": "MPPT pada inverter terus mengubah titik kerja array agar selalu berada di daya maksimum meskipun iradiasi dan suhu berubah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Wind Indonesia limited. Specific site viable."
+   "explain": "BENAR. Titik daya maksimum bergeser saat awan lewat atau suhu berubah. Algoritma MPPT (misalnya perturb-and-observe) menggeser tegangan kerja sedikit demi sedikit dan mempertahankan arah yang menaikkan daya.",
+   "hint": "Mengapa titik daya maksimum tidak bisa disetel sekali lalu dibiarkan?"
   },
   {
    "type": "tf",
-   "q": "Wind Indonesia niche + growing: hybrid + microgrid complement.",
+   "q": "Inverter on-grid tetap menyalurkan listrik ke rumah saat jaringan PLN padam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Wind specific site. Hybrid future."
+   "a": 1,
+   "explain": "SALAH. Inverter on-grid wajib berhenti saat jaringan padam (anti-islanding) demi keselamatan petugas PLN yang memperbaiki jaringan. Untuk tetap menyala saat padam, diperlukan inverter hybrid dengan baterai dan sakelar pemisah.",
+   "hint": "Mengapa berbahaya jika PLTS atap terus mengirim listrik ke jaringan yang sedang diperbaiki?"
   }
  ],
  "3G.16": [
   {
    "type": "tf",
-   "q": "Mikrohidro Indonesia strategic rural: community + renewable + sustainable.",
+   "q": "Kendali pitch memutar sudut bilah turbin angin untuk mengatur daya dan melindungi turbin saat angin terlalu kencang, sedangkan kendali yaw memutar nasel menghadap arah angin.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Indonesia electrification frontier."
+   "explain": "BENAR. Pada angin kencang, bilah dimiringkan (pitch) agar tangkapan energi turun dan turbin tidak melebihi daya nominal; pada angin badai bilah diposisikan 'feather' untuk berhenti. Yaw memastikan rotor selalu tegak lurus arah angin.",
+   "hint": "Bagaimana turbin melindungi dirinya saat angin 25 m/s?"
   },
   {
    "type": "tf",
-   "q": "Mikrohidro Indonesia strategic rural electrification + renewable + sustainable.",
+   "q": "Daya turbin angin sebanding dengan kecepatan angin, sehingga angin dua kali lebih kencang memberi daya dua kali lipat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Indonesia geography + policy align."
+   "a": 1,
+   "explain": "SALAH. Daya angin sebanding dengan pangkat tiga kecepatan. Angin dua kali lebih kencang membawa delapan kali daya. Itulah sebabnya lokasi dengan kecepatan angin rata-rata sedikit lebih tinggi menghasilkan energi jauh lebih banyak.",
+   "hint": "P ∝ v³. Hitung 2³."
   }
  ],
  "3G.17": [
   {
    "type": "tf",
-   "q": "K3 pembangkit multi-hazard: rigorous program + culture + training.",
+   "q": "Mikrohidro run-of-river memanfaatkan aliran sungai tanpa waduk besar, sehingga ramah lingkungan tetapi keluarannya mengikuti debit musiman.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Complex safety. Investment rigorous."
+   "explain": "BENAR. Air dialihkan lewat saluran dan pipa pesat ke turbin, lalu dikembalikan ke sungai. Tanpa waduk, tidak ada genangan besar, tetapi saat musim kemarau debit turun dan daya ikut turun.",
+   "hint": "Apa kelebihan dan kekurangan tidak punya waduk?"
   },
   {
    "type": "tf",
-   "q": "K3 pembangkit rigorous culture + technical + regulatory: mature PLN UPK.",
+   "q": "Mikrohidro hanya bisa dibangun di lokasi dengan air terjun setinggi puluhan meter.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Safety multi-dimensional. PLN strategic."
+   "a": 1,
+   "explain": "SALAH. Mikrohidro dapat memanfaatkan head rendah beberapa meter asalkan debitnya cukup, dengan turbin jenis crossflow atau propeller. Banyak desa di Indonesia dilistriki mikrohidro dari sungai kecil bergradien sedang.",
+   "hint": "Ingat rumus daya air — head rendah bisa diimbangi oleh apa?"
   }
  ],
  "3G.18": [
   {
    "type": "tf",
-   "q": "LOTO pembangkit comprehensive multi-energy: rigorous discipline life-safety.",
+   "q": "Bahaya di pembangkit bersifat majemuk: listrik tegangan tinggi, uap dan permukaan panas, mesin berputar, bahan kimia, kebisingan, dan ruang terbatas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Complex. Safety critical."
+   "explain": "BENAR. Berbeda dari instalasi gedung, pembangkit memadukan banyak sumber energi berbahaya di satu tempat. Program K3-nya harus mencakup semuanya, dengan izin kerja khusus untuk tiap jenis pekerjaan.",
+   "hint": "Sebutkan lima jenis bahaya yang ada di ruang turbin."
   },
   {
    "type": "tf",
-   "q": "LOTO discipline pembangkit comprehensive: culture + procedure + training.",
+   "q": "Kebocoran uap bertekanan tinggi tidak berbahaya karena uap hanya air panas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Mature practice PLN UPK. Safety foundation."
+   "a": 1,
+   "explain": "SALAH. Uap panas lanjut bersuhu 500 °C bertekanan ratusan bar tidak terlihat mata dan dapat memotong tubuh atau menyebabkan luka bakar fatal dalam sekejap. Kebocoran uap dicari dengan sapu lidi atau kertas, bukan dengan tangan.",
+   "hint": "Mengapa kebocoran uap dicari dengan sapu lidi, bukan dengan tangan?"
   }
  ],
  "3G.19": [
   {
    "type": "tf",
-   "q": "Emergency response rigorous pembangkit: multi-scenario + drill + coordination.",
+   "q": "LOTO di pembangkit harus mengisolasi semua sumber energi yang terlibat — listrik, uap, hidrolik, pneumatik, dan energi tersimpan — bukan hanya listrik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Complex plant. Multi-hazard. Invest preparedness."
+   "explain": "BENAR. Motor yang sudah diputus listriknya masih bisa berputar oleh aliran fluida; katup yang tertutup masih menyimpan tekanan. Setiap sumber energi dikunci, digembok, dan diverifikasi nol sebelum bekerja.",
+   "hint": "Pompa sudah mati listriknya — apa yang bisa memutar porosnya?"
   },
   {
    "type": "tf",
-   "q": "Emergency response holistic culture + equipment + training pembangkit mature.",
+   "q": "Satu gembok LOTO dari supervisor cukup untuk melindungi seluruh regu yang bekerja pada peralatan yang sama.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Multi-faceted investment. PLN UPK strategic."
+   "a": 1,
+   "explain": "SALAH. Setiap pekerja memasang gembok pribadinya sendiri pada titik isolasi (dengan hasp multi-gembok). Peralatan baru boleh dihidupkan setelah semua gembok dilepas oleh pemiliknya masing-masing, sehingga tidak ada pekerja yang tertinggal di dalam.",
+   "hint": "Jika supervisor melepas gemboknya sementara satu teknisi masih di dalam boiler — apa yang terjadi?"
   }
  ],
  "3G.20": [
   {
    "type": "tf",
-   "q": "Praktikum pembangkit bridge academic-career: technical + operational + safety — Qastil model comprehensive.",
+   "q": "Rencana tanggap darurat pembangkit mencakup skenario trip unit, kebakaran, kebocoran uap dan bahan kimia, serta dilatih melalui drill berkala.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Praktikum multi-dimension. Career preparation."
+   "explain": "BENAR. Setiap skenario punya prosedur, peran, dan jalur evakuasi sendiri. Drill berkala memastikan semua orang tahu tugasnya dan menemukan kelemahan rencana sebelum kejadian sebenarnya.",
+   "hint": "Bagaimana mengetahui rencana darurat benar-benar berjalan tanpa menunggu kejadian nyata?"
   },
   {
    "type": "tf",
-   "q": "Praktikum pembangkit culminate 3G Pembangkit jalur: integrate technical + operational + safety + career — comprehensive L3.",
+   "q": "Saat unit trip mendadak, operator sebaiknya langsung menyalakan ulang secepat mungkin tanpa mencari penyebabnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. 3G culminate praktikum. Qastil model integrated PLN experience + academic + career. Next-gen engineer foundation."
+   "a": 1,
+   "explain": "SALAH. Trip adalah proteksi yang bekerja. Menyalakan ulang tanpa mengetahui penyebabnya bisa memperparah kerusakan atau membahayakan orang. Penyebab diidentifikasi dan dipastikan aman dulu, baru unit distart sesuai prosedur.",
+   "hint": "Relai sudah trip karena ada masalah — apa artinya menyalakan ulang tanpa memeriksa?"
   }
  ],
  "3H.01": [
   {
    "type": "tf",
-   "q": "UU 1/1970 + ekosistem K3 Indonesia: comprehensive framework — compliance mandatory.",
+   "q": "UU No. 1 Tahun 1970 tentang Keselamatan Kerja mewajibkan pengusaha menyediakan tempat kerja yang aman, termasuk pengamanan terhadap bahaya listrik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Safety regulatory mature Indonesia. Investment + culture."
+   "explain": "BENAR. UU 1/1970 adalah dasar hukum K3 di Indonesia. Pasal 3 menetapkan syarat keselamatan kerja, termasuk mencegah kejutan listrik, dan menjadi payung bagi peraturan turunan seperti Permenaker tentang K3 listrik.",
+   "hint": "Peraturan mana yang menjadi induk semua aturan K3 di Indonesia?"
   },
   {
    "type": "tf",
-   "q": "K3 regulation Indonesia comprehensive + evolving: compliance + culture + continuous improvement — Qastil context critical.",
+   "q": "Tanggung jawab keselamatan kerja sepenuhnya ada pada pekerja; pengusaha tidak dibebani kewajiban.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. K3 foundation. PLN + Envisor. Safety culture strategic invest."
+   "a": 1,
+   "explain": "SALAH. UU 1/1970 membebankan kewajiban utama pada pengusaha: menyediakan APD, memasang pengaman, membina pekerja, dan melaporkan kecelakaan. Pekerja wajib mematuhi, tetapi penyediaan sistem yang aman adalah tanggung jawab pengusaha.",
+   "hint": "Siapa yang wajib menyediakan APD secara cuma-cuma?"
   }
  ],
  "3H.02": [
   {
    "type": "tf",
-   "q": "Permenaker 12/2015 specific K3 Listrik: framework Indonesia — Qastil + Envisor context.",
+   "q": "Permenaker 12/2015 mewajibkan pemeriksaan dan pengujian instalasi listrik di tempat kerja oleh Ahli K3 Listrik atau teknisi K3 listrik yang berlisensi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. K3 listrik mature framework. Compliance + Envisor service opportunity."
+   "explain": "BENAR. Permenaker 12/2015 tentang K3 Listrik di Tempat Kerja mengatur perencanaan, pemasangan, pemeriksaan, dan pengujian instalasi. Perusahaan dengan pembangkitan listrik di atas 200 kVA wajib memiliki Ahli K3 Listrik.",
+   "hint": "Berapa ambang daya yang mewajibkan perusahaan punya Ahli K3 Listrik?"
   },
   {
    "type": "tf",
-   "q": "Permenaker 12/2015 mandate K3 listrik: Envisor + Qastil strategic service opportunity Indonesia.",
+   "q": "Instalasi listrik tempat kerja cukup diperiksa sekali saat baru dipasang; pemeriksaan berkala tidak diwajibkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Regulation drive demand. Qastil + Envisor position. Market."
+   "a": 1,
+   "explain": "SALAH. Permenaker 12/2015 mewajibkan pemeriksaan berkala (paling lambat setahun sekali) dan pengujian berkala (paling lambat lima tahun sekali), selain pemeriksaan awal. Instalasi menua dan berubah, sehingga kelaikannya harus dipastikan ulang.",
+   "hint": "Instalasi yang aman 10 tahun lalu — masihkah aman sekarang tanpa diperiksa?"
   }
  ],
  "3H.03": [
   {
    "type": "tf",
-   "q": "Kepdirjen 47/2015 detail cert + compliance: Envisor service + Qastil strategic.",
+   "q": "Sertifikasi Ahli K3 Listrik ditempuh melalui pelatihan dan uji kompetensi, lalu lisensinya diterbitkan Kementerian Ketenagakerjaan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Regulation detail. Service opportunity. Career path."
+   "explain": "BENAR. Kepdirjen 47/2015 mengatur pembinaan calon Ahli K3 Listrik: kurikulum pelatihan, ujian, dan penerbitan sertifikat serta lisensi K3 yang berlaku untuk jangka waktu tertentu dan dapat diperpanjang.",
+   "hint": "Apa bedanya sertifikat kompetensi dengan lisensi K3?"
   },
   {
    "type": "tf",
-   "q": "Kepdirjen 47/2015 + cert ecosystem: Qastil + Envisor strategic position K3 Listrik Ahli — Indonesia mature.",
+   "q": "Ahli K3 Listrik berwenang menandatangani laporan pemeriksaan instalasi hanya jika lisensinya masih berlaku.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Regulatory + market align Qastil business. Strategic Indonesia. Career model."
+   "explain": "BENAR. Lisensi K3 memiliki masa berlaku dan harus diperpanjang. Laporan yang ditandatangani ahli berlisensi kedaluwarsa tidak sah secara administrasi, dan perusahaan dianggap belum memenuhi kewajiban pemeriksaan.",
+   "hint": "Apa yang harus dicek sebelum memakai jasa Ahli K3 Listrik?"
   }
  ],
  "3H.04": [
   {
    "type": "tf",
-   "q": "PUIL 2011 K3 foundation Indonesia: engineering + compliance + safety.",
+   "q": "PUIL 2011 mensyaratkan RCD 30 mA untuk melindungi orang di stopkontak umum, kamar mandi, dan area luar ruangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PUIL foundation. Engineering + installation + maintenance."
+   "explain": "BENAR. Arus 30 mA adalah batas yang masih aman bagi jantung dalam waktu singkat. RCD 30 mA memutus dalam sepersekian detik ketika arus bocor melalui tubuh, sebelum terjadi fibrilasi.",
+   "hint": "Mengapa nilai 30 mA yang dipilih, bukan 300 mA?"
   },
   {
    "type": "tf",
-   "q": "PUIL K3 comprehensive: engineering + install + maintain + compliance — Envisor service.",
+   "q": "PUIL membolehkan penghantar PE (pembumian) dipakai sekaligus sebagai netral pada sirkuit akhir di dalam gedung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. PUIL foundation. Multi-aspect professional discipline."
+   "a": 1,
+   "explain": "SALAH. Penggabungan netral dan PE (PEN) hanya diizinkan di sisi suplai sebelum titik pemisahan. Di sirkuit akhir, PE dan N harus terpisah; jika PEN putus, semua badan peralatan menjadi bertegangan penuh.",
+   "hint": "Apa yang terjadi pada casing kulkas jika kabel PEN putus di tengah jalan?"
   }
  ],
  "3H.05": [
   {
    "type": "tf",
-   "q": "APD hierarchy last defense: engineering + admin first — comprehensive safety.",
+   "q": "Permenaker 8/2010 mewajibkan pengusaha menyediakan APD secara cuma-cuma dan pekerja wajib memakainya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PPE critical tapi last. Engineering + admin preferred."
+   "explain": "BENAR. APD dipilih sesuai bahaya yang ada, diberikan gratis, dan pemakaiannya diawasi. Pekerja yang menolak memakai APD dapat dikenai sanksi, tetapi tanggung jawab menyediakannya ada pada pengusaha.",
+   "hint": "Bolehkah perusahaan memotong gaji untuk membeli helm pekerja?"
   },
   {
    "type": "tf",
-   "q": "APD + FR + gloves comprehensive program: life-safety critical — Envisor service opportunity.",
+   "q": "Dalam hierarki pengendalian bahaya, APD adalah pilihan pertama karena paling murah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. PPE multi-faceted. Program rigorous. Envisor K3 listrik service."
+   "a": 1,
+   "explain": "SALAH. APD adalah lapisan terakhir. Urutannya: eliminasi, substitusi, pengendalian rekayasa (pengaman, isolasi), pengendalian administratif (prosedur, pelatihan), baru APD. APD tidak menghilangkan bahaya, hanya mengurangi dampaknya jika pengendalian lain gagal.",
+   "hint": "Lebih baik mematikan tegangan atau memakai sarung tangan sambil bekerja bertegangan?"
   }
  ],
  "3H.06": [
   {
    "type": "tf",
-   "q": "Shock mechanism physiological understanding: critical safety + rescue knowledge.",
+   "q": "Arus sekitar 10 mA sudah bisa membuat otot mengejang sehingga korban tidak mampu melepaskan pegangannya dari penghantar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Understand save life. Training critical."
+   "explain": "BENAR. Ambang 'let-go' sekitar 10 mA untuk pria dewasa, lebih rendah untuk wanita dan anak. Di atas itu otot tangan mengunci pada penghantar, memperpanjang durasi sengatan dan memperbesar bahaya.",
+   "hint": "Mengapa korban sengatan sering tidak bisa melepaskan kabel yang dipegangnya?"
   },
   {
    "type": "tf",
-   "q": "Shock + arc flash understand: save life + prevent incident — rigorous training.",
+   "q": "Bahaya sengatan listrik ditentukan oleh tegangan saja; besar arus dan lamanya tidak berpengaruh.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Life-safety knowledge. Training investment. Awareness critical."
+   "a": 1,
+   "explain": "SALAH. Yang melukai adalah arus yang mengalir melalui tubuh dan lamanya. Arus 50 mA selama beberapa detik dapat memicu fibrilasi jantung. Tegangan menentukan besar arus melalui hukum Ohm dengan tahanan tubuh dan kondisi kulit.",
+   "hint": "Apa yang sebenarnya menghentikan jantung: volt atau ampere?"
   }
  ],
  "3H.07": [
   {
    "type": "tf",
-   "q": "Arc flash comprehensive assessment + engineering + PPE: life-safety critical — NFPA 70E framework.",
+   "q": "Busur api (arc flash) menghasilkan suhu ribuan derajat dan energi radiasi yang dapat menyebabkan luka bakar parah dari jarak beberapa meter, tanpa korban menyentuh penghantar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Arc flash multi-faceted. Engineering preferred PPE."
+   "explain": "BENAR. Suhu busur api bisa mencapai 20.000 °C. Energi insiden diukur dalam cal/cm²; 1,2 cal/cm² sudah menyebabkan luka bakar derajat dua. Ledakan tekanannya (arc blast) melemparkan logam cair dan pecahan.",
+   "hint": "Apakah seseorang harus menyentuh busbar untuk terluka oleh busur api?"
   },
   {
    "type": "tf",
-   "q": "Arc flash engineering + administrative + PPE comprehensive NFPA 70E align Indonesia: strategic invest.",
+   "q": "Busur api hanya bisa terjadi pada tegangan menengah; panel tegangan rendah 400 V aman dari arc flash.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Arc flash critical. Multi-layer. Mature utility + industri practice."
+   "a": 1,
+   "explain": "SALAH. Panel tegangan rendah dekat trafo justru berarus hubung singkat sangat besar, sehingga energi busur apinya bisa lebih tinggi daripada di sisi tegangan menengah. Banyak kecelakaan arc flash serius terjadi di panel LVMDP.",
+   "hint": "Energi busur api bergantung pada arus gangguan dan waktu — di mana arus gangguan terbesar?"
   }
  ],
  "3H.08": [
   {
    "type": "tf",
-   "q": "Kebakaran listrik preventable: maintenance + inspection + modern protection — Envisor service.",
+   "q": "Sambungan longgar adalah penyebab umum kebakaran listrik karena tahanan kontaknya menimbulkan panas terus-menerus tanpa membuat MCB trip.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Prevent root cause. Envisor service inspection."
+   "explain": "BENAR. Arus normal melalui sambungan bertahanan tinggi menghasilkan panas lokal yang perlahan menghanguskan isolasi dan memicu api. MCB tidak trip karena arusnya tidak lebih dari nominal. Termografi berkala menemukan titik seperti ini.",
+   "hint": "Mengapa MCB tidak melindungi dari sambungan yang longgar?"
   },
   {
    "type": "tf",
-   "q": "Kebakaran listrik comprehensive prevention + detection + response: Envisor service + PLN training invest.",
+   "q": "Kebakaran pada peralatan listrik yang masih bertegangan boleh dipadamkan dengan air.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Multi-faceted. Envisor opportunity. K3 listrik central."
+   "a": 1,
+   "explain": "SALAH. Air menghantar listrik dan dapat menyengat pemadam. Gunakan APAR CO₂ atau serbuk kimia kering untuk kebakaran listrik (kelas C), dan putuskan sumber listrik lebih dulu jika memungkinkan.",
+   "hint": "APAR jenis apa yang aman untuk api di panel listrik?"
   }
  ],
  "3H.09": [
   {
    "type": "tf",
-   "q": "Hazardous area specialized K3 listrik: engineering + equipment + training — petrochemical Indonesia.",
+   "q": "Zona 0 adalah area di mana campuran gas mudah terbakar hadir terus-menerus, zona 1 hadir sewaktu-waktu pada operasi normal, dan zona 2 jarang dan hanya sebentar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Petrochemical Indonesia major. Specialty K3. Envisor opportunity."
+   "explain": "BENAR. Klasifikasi IEC 60079 ini menentukan tingkat proteksi peralatan yang boleh dipasang. Di zona 0 (misalnya di dalam tangki) hanya peralatan intrinsically safe kategori tertinggi yang diizinkan.",
+   "hint": "Di dalam tangki bensin, seberapa sering uapnya ada?"
   },
   {
    "type": "tf",
-   "q": "Hazardous area K3 specialty Indonesia petrochemical: Envisor + Qastil opportunity strategic.",
+   "q": "Peralatan listrik biasa boleh dipasang di zona 2 karena gasnya jarang muncul.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Specialty K3 listrik. Envisor service. Indonesia major industri."
+   "a": 1,
+   "explain": "SALAH. Zona 2 tetap area berbahaya. Peralatan harus bersertifikat Ex yang sesuai (misalnya Ex n atau Ex e untuk zona 2). 'Jarang' bukan berarti tidak pernah — satu percikan di waktu yang salah cukup untuk ledakan.",
+   "hint": "Apa yang terjadi jika kebocoran gas bertepatan dengan kontaktor biasa yang menyala?"
   }
  ],
  "3H.10": [
   {
    "type": "tf",
-   "q": "Glove class match voltage critical: under-rated = fatal — standard discipline.",
+   "q": "Walk-through identifikasi bahaya listrik memeriksa antara lain kabel terkelupas, panel terbuka, sambungan sementara, beban berlebih pada stopkontak, dan pembumian yang hilang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Voltage match absolute. Life-safety."
+   "explain": "BENAR. Sebagian besar kecelakaan listrik berawal dari kondisi yang terlihat mata jika dicari. Daftar periksa yang sistematis memastikan tidak ada area yang terlewat, dan temuannya diprioritaskan menurut tingkat risikonya.",
+   "hint": "Sebutkan tiga kondisi berbahaya yang bisa ditemukan hanya dengan melihat."
   },
   {
    "type": "tf",
-   "q": "APD voltage-rated comprehensive: life-safety invest — Envisor service + Qastil K3 expertise.",
+   "q": "Bahaya listrik yang belum pernah menyebabkan kecelakaan tidak perlu dicatat dalam laporan identifikasi bahaya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Multi-tool life-safety. Investment rigorous. Envisor + Qastil expertise."
+   "a": 1,
+   "explain": "SALAH. Identifikasi bahaya justru bertujuan menemukan kondisi berbahaya sebelum kecelakaan terjadi. Panel terbuka yang 'belum pernah' melukai siapa pun tetap berbahaya dan wajib dicatat serta ditindaklanjuti.",
+   "hint": "Apa tujuan mencari bahaya: mencatat sejarah atau mencegah masa depan?"
   }
  ],
  "3H.11": [
   {
    "type": "tf",
-   "q": "Sarung tangan dielektrik foundational APD listrik: discipline life-safety.",
+   "q": "Sarung tangan isolasi kelas 0 untuk pemakaian hingga 1.000 V AC, sedangkan kelas 2 untuk hingga 17.000 V AC.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Foundation PPE. Test + inspect rigorous."
+   "explain": "BENAR. Kelas 00 (500 V), 0 (1.000 V), 1 (7.500 V), 2 (17.000 V), 3 (26.500 V), dan 4 (36.000 V) menurut tegangan pemakaian maksimum. Kelas harus dipilih sesuai tegangan tertinggi yang mungkin disentuh.",
+   "hint": "Untuk bekerja pada jaringan 20 kV, kelas sarung tangan mana yang cukup?"
   },
   {
    "type": "tf",
-   "q": "Sarung tangan dielektrik life-safety: program rigorous — Envisor service opportunity.",
+   "q": "Sarung tangan isolasi kelas mana pun boleh dipakai untuk tegangan berapa pun, karena semuanya berbahan karet.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Foundation. Market Indonesia growing."
+   "a": 1,
+   "explain": "SALAH. Ketebalan dan mutu karet tiap kelas diuji hanya sampai tegangan tertentu. Memakai kelas 0 pada 20 kV berarti isolasi tembus dan sengatan fatal. Kelas sarung tangan harus sesuai tegangan kerja.",
+   "hint": "Karet setebal 1 mm menahan 1.000 V — apakah menahan 20.000 V?"
   }
  ],
  "3H.12": [
   {
    "type": "tf",
-   "q": "FR clothing + ATPV match NFPA 70E: life-safety arc flash.",
+   "q": "Sebelum tiap pemakaian, sarung tangan isolasi diperiksa dengan uji tiup (menggulung dan menekan udara di dalamnya) untuk menemukan lubang kecil.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Arc flash critical. PPE match energy."
+   "explain": "BENAR. Lubang sekecil jarum tidak terlihat mata tetapi membuat isolasi gagal. Uji tiup memperlihatkan kebocoran udara. Selain itu, sarung tangan diuji dielektrik di laboratorium secara berkala (umumnya setiap 6 bulan).",
+   "hint": "Bagaimana menemukan lubang jarum pada karet tanpa alat laboratorium?"
   },
   {
    "type": "tf",
-   "q": "FR + ATPV + NFPA 70E comprehensive: Indonesia arc flash critical — Envisor K3 service.",
+   "q": "Sarung tangan isolasi karet boleh dipakai langsung tanpa sarung tangan pelindung kulit di luarnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Modern arc flash PPE. Envisor service opportunity."
+   "a": 1,
+   "explain": "SALAH. Sarung tangan karet mudah robek dan tertusuk. Sarung tangan pelindung kulit (leather protector) dipakai di luarnya untuk melindungi dari kerusakan mekanis, sedangkan sarung tangan katun tipis di dalam menyerap keringat.",
+   "hint": "Apa yang melindungi lapisan karet dari kawat tajam dan ujung baut?"
   }
  ],
  "3H.13": [
   {
    "type": "tf",
-   "q": "Hot stick essential HV energized work: dielectric + skill + distance.",
+   "q": "Pakaian tahan api (FR) dipilih dengan nilai ATPV (cal/cm²) yang sama atau lebih besar dari energi insiden busur api di titik kerja.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. HV work tool. PLN + kontraktor."
+   "explain": "BENAR. ATPV menyatakan energi yang mampu ditahan kain sebelum pemakainya mengalami luka bakar derajat dua. Energi insiden diperoleh dari studi arc flash dan tercantum pada label panel; pakaian harus menyamai atau melampauinya.",
+   "hint": "Label panel menyebut 8 cal/cm² — pakaian dengan ATPV berapa yang boleh dipakai?"
   },
   {
    "type": "tf",
-   "q": "Hot stick professional tool HV: skill + discipline + standard — PLN + Envisor service.",
+   "q": "Pakaian berbahan sintetis biasa (poliester) aman dipakai saat bekerja di panel bertegangan asalkan lengan panjang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. HV tool foundation. Training + maintenance."
+   "a": 1,
+   "explain": "SALAH. Bahan sintetis meleleh dan menempel di kulit saat terkena busur api, memperparah luka bakar. Pakaian kerja listrik harus berbahan tahan api (FR) atau minimal katun 100% tanpa lapisan sintetis untuk energi rendah.",
+   "hint": "Apa yang terjadi pada kaus poliester saat terkena panas 1.000 °C?"
   }
  ],
  "3H.14": [
   {
    "type": "tf",
-   "q": "3-point test essential LOTO verify: confirm de-energized — life-safety.",
+   "q": "Hot stick berbahan fiberglass memungkinkan petugas mengoperasikan peralatan bertegangan tinggi dari jarak aman, dan harus dijaga tetap bersih dan kering.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Critical LOTO. Discipline 3-point."
+   "explain": "BENAR. Fiberglass adalah isolator yang baik selama permukaannya bersih dan kering. Kotoran dan lembap menjadi jalur arus bocor di permukaan. Hot stick diuji dielektrik berkala dan disimpan dalam tabung pelindung.",
+   "hint": "Apa yang membuat tongkat isolasi menjadi penghantar?"
   },
   {
    "type": "tf",
-   "q": "Voltage tester 3-point + instrument K3 listrik: life-safety discipline — Envisor + Qastil expertise.",
+   "q": "Klem pembumian sementara dipasang ke penghantar dulu, baru ke titik pembumian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Test instrument foundation. K3 service opportunity."
+   "a": 1,
+   "explain": "SALAH. Urutannya: klem ke pembumian dulu, baru ke penghantar. Dengan begitu, jika penghantar ternyata masih bertegangan, arus langsung mengalir ke tanah melalui klem, bukan melalui tubuh petugas. Melepasnya dengan urutan terbalik.",
+   "hint": "Jika penghantar masih hidup saat klem pertama dipasang, ke mana arusnya akan mengalir?"
   }
  ],
  "3H.15": [
   {
    "type": "tf",
-   "q": "LOTO 6-step discipline: life-safety — comprehensive procedure.",
+   "q": "Metode tiga titik: uji tester pada sumber yang diketahui bertegangan, uji rangkaian yang akan dikerjakan, lalu uji ulang pada sumber bertegangan untuk memastikan tester masih berfungsi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. LOTO foundation. Discipline + training critical."
+   "explain": "BENAR. Tester yang rusak menunjukkan 'nol' pada rangkaian yang sebenarnya hidup. Uji sebelum dan sesudah pada sumber yang diketahui hidup membuktikan alatnya bekerja saat pengukuran dilakukan.",
+   "hint": "Tester menunjukkan 0 V — bagaimana Anda tahu itu karena rangkaian mati, bukan karena tester rusak?"
   },
   {
    "type": "tf",
-   "q": "LOTO 6-step comprehensive discipline + training + audit: life-safety culture foundation.",
+   "q": "Voltage tester tanpa kontak (NCV) cukup dijadikan satu-satunya alat untuk memastikan rangkaian bebas tegangan sebelum bekerja.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. LOTO mature practice. PLN + industri mandatory."
+   "a": 1,
+   "explain": "SALAH. NCV berguna untuk pemeriksaan awal, tetapi bisa gagal mendeteksi tegangan pada kabel berpelindung, kabel berselubung logam, atau tegangan DC. Verifikasi bebas tegangan memerlukan tester kontak dengan metode tiga titik.",
+   "hint": "Apakah NCV bisa membaca tegangan di dalam kabel berarmor logam?"
   }
  ],
  "3H.16": [
   {
    "type": "tf",
-   "q": "5 Golden Rules international discipline: life-safety foundation.",
+   "q": "LOTO mengharuskan energi yang tersimpan — kapasitor, pegas, tekanan, beban tergantung — dilepaskan atau diamankan, tidak cukup hanya memutus sakelar utama.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Universal standard. Indonesia PLN adopt."
+   "explain": "BENAR. Memutus suplai tidak menghilangkan energi yang sudah tersimpan. Kapasitor bank harus dilepas muatannya, pegas mekanis ditahan, dan tekanan dilepas sebelum verifikasi energi nol.",
+   "hint": "Sakelar sudah off — apa yang masih bisa bergerak atau menyengat?"
   },
   {
    "type": "tf",
-   "q": "5 Golden Rules + LOTO international discipline K3 listrik: Indonesia adopt + Envisor service opportunity.",
+   "q": "Label (tag) peringatan saja tanpa gembok sudah memenuhi syarat LOTO.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Universal practice. Indonesia mature + Envisor market."
+   "a": 1,
+   "explain": "SALAH. Label hanya memberi informasi dan mudah diabaikan atau dilepas. Gembok (lock) secara fisik mencegah pengoperasian. Tag tanpa lock hanya dibenarkan jika pengunci fisik benar-benar tidak mungkin dipasang, dengan tindakan pengaman tambahan.",
+   "hint": "Apa yang menghentikan orang lain menyalakan sakelar: kertas atau gembok?"
   }
  ],
  "3H.17": [
   {
    "type": "tf",
-   "q": "PTW formalize work + authorize + control: life-safety discipline foundation.",
+   "q": "Lima aturan emas kerja listrik: putus sumber, amankan dari penyambungan kembali, verifikasi bebas tegangan, bumikan dan hubung singkat, lalu lindungi dari bagian bertegangan di sekitarnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PTW mature practice. Industri + PLN discipline."
+   "explain": "BENAR. Kelima langkah ini adalah standar internasional (EN 50110) untuk bekerja pada instalasi yang dipadamkan. Urutannya tidak boleh dibalik: verifikasi bebas tegangan harus mendahului pembumian.",
+   "hint": "Mengapa pembumian dipasang setelah, bukan sebelum, verifikasi bebas tegangan?"
   },
   {
    "type": "tf",
-   "q": "PTW + JSA foundation K3 discipline: structured + documented + continuous improve — Envisor service.",
+   "q": "Jika rangkaian sudah diverifikasi bebas tegangan, pembumian tidak diperlukan lagi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Mature K3 practice. Envisor + Qastil opportunity Indonesia."
+   "a": 1,
+   "explain": "SALAH. Tegangan bisa muncul kembali karena kesalahan penyambungan, induksi dari saluran paralel, atau genset yang hidup. Pembumian dan hubung singkat memastikan jika itu terjadi, arus langsung mengalir ke tanah dan proteksi bekerja, bukan melalui petugas.",
+   "hint": "Apa yang melindungi petugas jika seseorang keliru menutup pemutus di gardu lain?"
   }
  ],
  "3H.18": [
   {
    "type": "tf",
-   "q": "Working distance + approach boundary NFPA 70E: discipline + qualify + PPE match.",
+   "q": "Izin kerja (PTW) memastikan pekerjaan berbahaya disetujui pihak berwenang, kondisinya diperiksa, dan pihak lain mengetahui ada pekerjaan berlangsung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Life-safety discipline. Standard voltage-specific."
+   "explain": "BENAR. PTW menuliskan lingkup, lokasi, waktu, tindakan pengaman, dan tanda tangan pemberi dan penerima izin. Ia mencegah dua regu bekerja pada sistem yang sama tanpa saling tahu, dan memastikan isolasi diverifikasi sebelum mulai.",
+   "hint": "Bagaimana regu gardu tahu ada orang sedang bekerja di saluran yang mereka akan beri tegangan?"
   },
   {
    "type": "tf",
-   "q": "Working distance + approach discipline: voltage-specific + training + PPE — PLN + Envisor service.",
+   "q": "JSA (Job Safety Analysis) menguraikan pekerjaan menjadi langkah-langkah, mengidentifikasi bahaya tiap langkah, dan menetapkan pengendaliannya sebelum pekerjaan dimulai.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Mature practice. Indonesia K3 foundation."
+   "explain": "BENAR. JSA dibuat bersama pelaksana, sehingga bahaya yang hanya terlihat dari sudut pandang pekerja ikut tercatat. Hasilnya dipakai saat briefing dan menjadi lampiran izin kerja.",
+   "hint": "Siapa yang paling tahu bahaya di langkah ketiga suatu pekerjaan: manajer atau yang mengerjakannya?"
   }
  ],
  "3H.19": [
   {
    "type": "tf",
-   "q": "Barikade + signage + access K3 discipline: zone control — safety foundation.",
+   "q": "Batas busur api (arc flash boundary) adalah jarak dari sumber di mana energi insiden turun menjadi 1,2 cal/cm²; di dalam batas itu diperlukan APD tahan busur api.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Zone control mature practice."
+   "explain": "BENAR. Pada 1,2 cal/cm² kulit terbuka mengalami luka bakar derajat dua. Siapa pun yang berada di dalam batas ini saat ada kemungkinan busur api harus memakai APD sesuai tingkat energinya.",
+   "hint": "Pada jarak berapa dari panel seseorang boleh berdiri tanpa baju tahan api?"
   },
   {
    "type": "tf",
-   "q": "Barikade + signage + access zone control: K3 discipline foundation — Envisor service K3 program.",
+   "q": "Batas pendekatan (approach boundary) untuk bahaya sengatan sama besarnya untuk semua tegangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Zone control foundation. K3 comprehensive program."
+   "a": 1,
+   "explain": "SALAH. Makin tinggi tegangan, makin jauh jarak yang bisa dilompati busur listrik, sehingga batas pendekatan terbatas dan terlarang makin besar. Tabel NFPA 70E memberi jarak berbeda untuk 400 V, 20 kV, dan 150 kV.",
+   "hint": "Bisakah berdiri sedekat pada busbar 150 kV seperti pada busbar 400 V?"
   }
  ],
  "3H.20": [
   {
    "type": "tf",
-   "q": "P3K sengatan listrik life-save knowledge: every worker + K3 program.",
+   "q": "Area kerja listrik harus dibatasi dengan barikade dan rambu agar orang yang tidak berkepentingan tidak masuk ke zona berbahaya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Life-safety knowledge. Training universal."
+   "explain": "BENAR. Barikade fisik dan rambu 'Dilarang Masuk — Pekerjaan Listrik' mencegah orang lewat, terutama di area publik. Pengawas memastikan zona tetap tertutup selama pekerjaan berlangsung.",
+   "hint": "Apa yang mencegah pejalan kaki mendekati kabel yang sedang dikerjakan di trotoar?"
   },
   {
    "type": "tf",
-   "q": "P3K sengatan + CPR + AED life-save knowledge: K3 universal + Envisor training service.",
+   "q": "Untuk pekerjaan singkat kurang dari 30 menit, barikade dan rambu tidak diperlukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Life-safety. K3 foundation. Envisor training market."
+   "a": 1,
+   "explain": "SALAH. Kecelakaan terjadi dalam sekejap; durasi pekerjaan tidak mengurangi bahayanya. Barikade minimal (kerucut, pita, rambu) tetap wajib untuk pekerjaan sesingkat apa pun di area yang bisa dilalui orang.",
+   "hint": "Berapa detik yang dibutuhkan anak untuk menyentuh kabel terbuka?"
   }
  ],
  "3H.21": [
   {
    "type": "tf",
-   "q": "CPR life-save skill: universal training + practice — Envisor service opportunity.",
+   "q": "Saat menolong korban sengatan listrik, langkah pertama adalah memutus sumber listrik atau menjauhkan korban dengan benda isolator, bukan langsung menyentuhnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Universal life-save. Training critical."
+   "explain": "BENAR. Korban yang masih bersentuhan dengan penghantar hidup akan menyengat penolong. Matikan sakelar, cabut steker, atau dorong korban dengan kayu kering. Setelah aman, periksa napas dan nadi lalu mulai RJP jika perlu.",
+   "hint": "Apa yang terjadi pada penolong yang langsung memegang korban yang masih memegang kabel?"
   },
   {
    "type": "tf",
-   "q": "CPR + AED comprehensive life-save: K3 universal — Envisor + PLN training service.",
+   "q": "Korban sengatan listrik yang sudah sadar dan tampak baik tidak perlu dibawa ke fasilitas kesehatan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Life-save skill. K3 foundation."
+   "a": 1,
+   "explain": "SALAH. Sengatan listrik dapat menyebabkan gangguan irama jantung yang muncul beberapa jam kemudian, serta luka bakar dalam yang tidak terlihat. Semua korban sengatan bertegangan tinggi atau dengan arus melalui dada harus diperiksa medis.",
+   "hint": "Apa yang bisa terjadi pada jantung beberapa jam setelah sengatan?"
   }
  ],
  "3H.22": [
   {
    "type": "tf",
-   "q": "Luka bakar listrik specific first aid + hospital: complex medical — training critical.",
+   "q": "Kompresi dada pada RJP dewasa dilakukan dengan kedalaman 5–6 cm dan laju 100–120 kali per menit, dengan perbandingan 30 kompresi : 2 napas bantuan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Electrical burn complex. Training + hospital."
+   "explain": "BENAR. Ini pedoman AHA/ILCOR terkini. Kompresi yang terlalu dangkal atau lambat tidak memompa darah ke otak. Jika tidak terlatih memberi napas, kompresi terus-menerus tanpa henti tetap jauh lebih baik daripada tidak melakukan apa pun.",
+   "hint": "Seberapa dalam dan seberapa cepat dada harus ditekan?"
   },
   {
    "type": "tf",
-   "q": "Luka bakar listrik first aid + hospital rapid: life + function — K3 training universal.",
+   "q": "AED hanya boleh digunakan oleh tenaga medis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Electrical burn specific. Training + preparedness."
+   "a": 1,
+   "explain": "SALAH. AED dirancang untuk orang awam: alat memberi panduan suara, menganalisis irama jantung sendiri, dan hanya memberi kejut jika diperlukan. Makin cepat AED dipakai, makin besar peluang hidup — setiap menit tunda menurunkan peluang sekitar 10%.",
+   "hint": "Mengapa AED ditaruh di mal dan bandara, bukan hanya di rumah sakit?"
   }
  ],
  "3H.23": [
   {
    "type": "tf",
-   "q": "Evakuasi discipline + drill + plan: K3 foundation emergency — universal.",
+   "q": "Luka bakar listrik sering lebih parah dari yang terlihat karena arus merusak jaringan di dalam tubuh sepanjang jalur masuk ke keluar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Evacuation mature practice. Regular drill."
+   "explain": "BENAR. Luka di kulit hanya titik masuk dan keluar; otot, pembuluh darah, dan saraf di antaranya bisa rusak parah. Korban luka bakar listrik memerlukan pemeriksaan medis meskipun luka luarnya kecil.",
+   "hint": "Dua titik hitam kecil di tangan dan kaki — apa yang mungkin terjadi di antaranya?"
   },
   {
    "type": "tf",
-   "q": "Evakuasi comprehensive + drill + account: K3 emergency foundation — Envisor service.",
+   "q": "Luka bakar sebaiknya diolesi pasta gigi atau mentega untuk mendinginkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Emergency preparedness. Multi-faceted K3 program."
+   "a": 1,
+   "explain": "SALAH. Pasta gigi, mentega, atau minyak menahan panas dan mengundang infeksi. Pertolongan yang benar: dinginkan dengan air mengalir bersih bersuhu ruang selama 20 menit, tutup dengan kain bersih tidak berbulu, dan segera ke fasilitas kesehatan.",
+   "hint": "Apa yang benar-benar menurunkan suhu jaringan yang terbakar?"
   }
  ],
  "3H.24": [
   {
    "type": "tf",
-   "q": "Drill emergency essential K3 preparedness: practice + improve + culture.",
+   "q": "Prosedur darurat mencakup evakuasi ke titik kumpul, pemadaman awal bila aman, dan komunikasi ke pihak berwenang dengan urutan dan penanggung jawab yang jelas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Mature K3 practice. Sustained invest."
+   "explain": "BENAR. Saat darurat tidak ada waktu berunding. Setiap orang harus tahu jalur evakuasi, siapa yang memadamkan, siapa yang menghubungi damkar, dan siapa yang menghitung orang di titik kumpul.",
+   "hint": "Siapa yang memastikan semua orang sudah keluar, dan bagaimana caranya?"
   },
   {
    "type": "tf",
-   "q": "Drill comprehensive K3 emergency preparedness: practice + improve + culture — Envisor service.",
+   "q": "Saat alarm kebakaran berbunyi, lift adalah jalur evakuasi tercepat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Mature K3 preparedness. Service opportunity."
+   "a": 1,
+   "explain": "SALAH. Lift bisa berhenti saat listrik padam dan poros lift menjadi cerobong asap. Evakuasi selalu melalui tangga darurat. Lift hanya dipakai petugas pemadam dengan mode kendali khusus.",
+   "hint": "Apa yang terjadi pada lift jika listrik gedung dipadamkan saat kebakaran?"
   }
  ],
  "3H.25": [
   {
    "type": "tf",
-   "q": "Checklist harian discipline K3: systematic + documented + improve — mature practice.",
+   "q": "Drill tanggap darurat berkala mengungkap kelemahan rencana — pintu darurat terkunci, alarm tidak terdengar, orang tidak tahu titik kumpul — sebelum kejadian sebenarnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Foundation discipline. PLN + industri."
+   "explain": "BENAR. Rencana di atas kertas sering berbeda dari kenyataan. Drill yang dievaluasi jujur, lalu rencananya diperbaiki, membuat respons darurat sungguhan lebih cepat dan tertib.",
+   "hint": "Bagaimana tahu pintu darurat tidak terhalang tumpukan barang tanpa mencobanya?"
   },
   {
    "type": "tf",
-   "q": "Checklist + toolbox + pre-work K3 foundation: discipline + culture + continuous — Envisor strategic.",
+   "q": "Drill cukup dilakukan sekali saat gedung baru dihuni.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Daily K3 practice. Foundation culture. Envisor opportunity."
+   "a": 1,
+   "explain": "SALAH. Penghuni berganti, tata letak berubah, dan ingatan memudar. Drill perlu diulang berkala (umumnya minimal setahun sekali, lebih sering untuk fasilitas berisiko tinggi) agar semua orang siap.",
+   "hint": "Karyawan yang masuk tahun ini — sudahkah mereka tahu jalur evakuasi?"
   }
  ],
  "3H.26": [
   {
    "type": "tf",
-   "q": "Termografi safety proactive maintenance + K3: Envisor + PLN service.",
+   "q": "Pemeriksaan harian panel meliputi suhu, bau hangus, suara dengung tidak wajar, indikator lampu, dan kondisi pintu serta segel.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Dual-purpose. Service opportunity."
+   "explain": "BENAR. Pemeriksaan sederhana dengan panca indera menangkap banyak masalah awal: bau isolasi terbakar, dengung kontaktor yang longgar, atau lampu fasa yang padam. Temuan dicatat dan ditindaklanjuti sebelum berkembang.",
+   "hint": "Apa yang bisa dicium, didengar, dan dilihat pada panel yang mulai bermasalah?"
   },
   {
    "type": "tf",
-   "q": "Termografi comprehensive K3 + maintenance: Envisor service strategic Indonesia.",
+   "q": "Daftar periksa harian hanya formalitas; jika diisi tanpa benar-benar memeriksa, tidak ada dampaknya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Dual-purpose technology. Envisor + PLN service."
+   "a": 1,
+   "explain": "SALAH. Daftar periksa yang diisi tanpa memeriksa lebih berbahaya daripada tidak ada, karena memberi rasa aman palsu dan menyembunyikan masalah. Pengawas perlu memverifikasi secara acak bahwa pemeriksaan benar-benar dilakukan.",
+   "hint": "Apa gunanya centang 'normal' pada panel yang sebenarnya berbau hangus?"
   }
  ],
  "3H.27": [
   {
    "type": "tf",
-   "q": "Megger tahanan isolasi health indicator: essential K3 listrik periodic.",
+   "q": "Titik yang suhunya jauh lebih tinggi dari titik serupa di sebelahnya (misalnya satu terminal fasa lebih panas 30 °C dari dua lainnya) menandakan sambungan bermasalah yang perlu segera ditangani.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Insulation health. PM standard."
+   "explain": "BENAR. Perbandingan dengan komponen serupa (delta T) adalah cara paling andal menilai termografi. Selisih di atas 20–30 °C umumnya dikategorikan serius dan dijadwalkan perbaikan segera; di atas 40 °C berarti darurat.",
+   "hint": "Mengapa suhu terminal dibandingkan dengan terminal sebelahnya, bukan dengan suhu ruangan?"
   },
   {
    "type": "tf",
-   "q": "Tahanan isolasi + pentanahan periodic K3: Envisor + PLN foundational service.",
+   "q": "Termografi panel bisa dilakukan dari luar pintu panel yang tertutup, karena kamera termal menembus logam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Foundation K3 listrik. Service market."
+   "a": 1,
+   "explain": "SALAH. Kamera termal hanya membaca suhu permukaan; pintu logam menghalangi pandangan ke sambungan di dalamnya. Pintu harus dibuka oleh petugas yang berwenang dengan APD sesuai, atau panel dilengkapi jendela inspeksi inframerah.",
+   "hint": "Bisakah kamera termal melihat suhu tangan Anda di balik pelat baja?"
   }
  ],
  "3H.28": [
   {
    "type": "tf",
-   "q": "Near-miss reporting + culture K3 foundation: learning organization — Envisor culture service.",
+   "q": "Tahanan isolasi instalasi tegangan rendah diukur dengan megger 500 V, dan nilainya harus jauh di atas batas minimum agar arus bocor tetap kecil.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Leading indicator. Mature K3 practice."
+   "explain": "BENAR. PUIL menetapkan batas minimum tahanan isolasi (dalam orde megaohm) untuk instalasi tegangan rendah. Nilai yang merosot dari pengukuran sebelumnya menandakan isolasi lembap atau menua meskipun masih di atas batas.",
+   "hint": "Apa yang dicari dari pengukuran tahanan isolasi: nilai mutlak saja atau juga trennya?"
   },
   {
    "type": "tf",
-   "q": "Near-miss + investigation + culture K3 maturity: learning organization — Envisor service.",
+   "q": "Tahanan pentanahan sebesar 50 Ω sudah memenuhi syarat untuk semua jenis instalasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Leading practice. Culture foundation. Service opportunity."
+   "a": 1,
+   "explain": "SALAH. Nilai yang lazim disyaratkan adalah 5 Ω atau kurang untuk instalasi umum, dan jauh lebih rendah (sekitar 1 Ω) untuk gardu dan fasilitas kritis. Tahanan 50 Ω membuat tegangan sentuh saat gangguan menjadi berbahaya.",
+   "hint": "Dengan arus gangguan 10 A dan tahanan 50 Ω, berapa tegangan pada badan peralatan?"
   }
  ],
  "3H.29": [
   {
    "type": "tf",
-   "q": "Toolbox meeting daily K3 engagement: culture foundation — Envisor facilitate service.",
+   "q": "Melaporkan near-miss (hampir celaka) memberi peluang memperbaiki bahaya sebelum ada korban, dan tidak boleh dijadikan dasar hukuman bagi pelapor.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Daily discipline. Culture foundation. Service market."
+   "explain": "BENAR. Setiap kecelakaan serius didahului banyak near-miss. Budaya pelaporan yang terbuka — tanpa menyalahkan — memberi data untuk perbaikan. Menghukum pelapor hanya membuat near-miss disembunyikan.",
+   "hint": "Apa yang terjadi jika pekerja takut melaporkan hampir celaka?"
   },
   {
    "type": "tf",
-   "q": "Toolbox meeting foundation daily K3 engagement: culture + learning + prevention — Envisor service.",
+   "q": "Kejadian yang tidak menimbulkan cedera atau kerusakan tidak perlu didokumentasikan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Daily discipline. Culture. Envisor + PLN service."
+   "a": 1,
+   "explain": "SALAH. Near-miss adalah indikator utama (leading indicator) K3. Kabel yang hampir tersentuh atau tangga yang hampir jatuh menunjukkan bahaya yang nyata; mendokumentasikannya memungkinkan analisis pola dan pencegahan.",
+   "hint": "Sepuluh kali hampir celaka di tempat yang sama — apa yang akan terjadi kesebelas kalinya?"
   }
  ],
  "3H.30": [
   {
    "type": "tf",
-   "q": "Praktikum K3 Listrik Ahli comprehensive integrate: skill + culture + regulatory — career foundation.",
+   "q": "Toolbox meeting adalah pengarahan singkat sebelum kerja untuk membahas pekerjaan hari itu, bahayanya, pengendaliannya, dan APD yang diperlukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Praktikum culminate. Integrate. Career ready."
+   "explain": "BENAR. Pertemuan 5–15 menit ini memastikan seluruh regu paham lingkup dan bahaya spesifik hari itu, termasuk perubahan kondisi seperti cuaca atau pekerjaan lain di dekatnya. Kehadiran dicatat sebagai bukti pembinaan.",
+   "hint": "Kapan waktu terbaik mengingatkan bahaya pekerjaan: sebelum mulai atau setelah kejadian?"
   },
   {
    "type": "tf",
-   "q": "Praktikum K3 Listrik Ahli culmination L3: comprehensive integrate + sertifikasi kompetensi ready + Envisor career — Qastil model strategic Indonesia.",
+   "q": "Toolbox meeting boleh dilewati jika regu sudah berpengalaman mengerjakan pekerjaan yang sama.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. 3H culminate L3 entire. K3 Listrik Ahli comprehensive. Sertifikasi kompetensi + Envisor business + Qastil multi-track. Strategic Indonesia. Next-gen engineer foundation. ESA LMS complete L3 jalur 3A-3H."
+   "a": 1,
+   "explain": "SALAH. Pekerjaan yang 'sama' selalu punya kondisi berbeda: cuaca, peralatan, orang baru, atau pekerjaan lain di sekitarnya. Rutinitas justru menurunkan kewaspadaan, sehingga pengingat singkat setiap hari tetap diperlukan.",
+   "hint": "Apa yang berbeda hari ini dibanding kemarin meski pekerjaannya sama?"
   }
  ],
  "4A.01": [
   {
    "type": "tf",
-   "q": "Load flow + short circuit foundation engineering: ETAP/SKM + PSS/E tool.",
+   "q": "Studi aliran daya menghasilkan tegangan tiap bus, aliran daya tiap cabang, dan rugi-rugi, sedangkan studi hubung singkat menghasilkan arus gangguan untuk menentukan kapasitas pemutus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Foundation. L4 Advanced engineering analysis."
+   "explain": "BENAR. Keduanya saling melengkapi: aliran daya memastikan tegangan dan pembebanan dalam batas saat operasi normal; hubung singkat memastikan pemutus dan kabel tahan terhadap arus gangguan terburuk.",
+   "hint": "Pertanyaan apa yang dijawab tiap studi: kondisi normal atau kondisi gangguan?"
   },
   {
    "type": "tf",
-   "q": "Load flow + SC engineering foundation L4: ETAP/SKM tool + calc + design.",
+   "q": "Kapasitas pemutus (breaking capacity) MCCB cukup dipilih berdasarkan arus beban maksimum.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Foundation L4 Advanced. PLN + Envisor engineering."
+   "a": 1,
+   "explain": "SALAH. Breaking capacity harus lebih besar dari arus hubung singkat prospektif di titik pemasangan, yang bisa puluhan kA meskipun arus bebannya hanya ratusan ampere. Pemutus berkapasitas kurang bisa meledak saat memutus gangguan.",
+   "hint": "Arus mana yang harus sanggup dipadamkan pemutus: arus beban atau arus gangguan?"
   }
  ],
  "4A.02": [
   {
    "type": "tf",
-   "q": "Koordinasi proteksi relay + fuse + breaker engineering: TCC + grading + discipline.",
+   "q": "Koordinasi proteksi diatur agar pengaman terdekat dengan gangguan trip lebih dulu, dengan selang waktu (grading margin) sekitar 0,2–0,4 detik terhadap pengaman di hulunya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Protection engineering. PLN + industri critical."
+   "explain": "BENAR. Selang waktu itu menampung waktu buka pemutus, kesalahan relai, dan overshoot. Tanpa margin, pengaman hulu bisa trip bersamaan dan memadamkan area yang lebih luas dari perlu.",
+   "hint": "Mengapa kurva relai hulu harus berada di atas kurva relai hilir pada grafik waktu-arus?"
   },
   {
    "type": "tf",
-   "q": "Koordinasi protection engineering L4: ANSI + IEC + tool + PLN context advance.",
+   "q": "Studi koordinasi cukup dilakukan sekali saat instalasi baru; penambahan trafo atau pembangkit tidak mengubah hasilnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Protection engineering L4. PLN specialty + Envisor service."
+   "a": 1,
+   "explain": "SALAH. Trafo baru atau genset paralel mengubah arus hubung singkat dan arah aliran, sehingga setelan lama bisa tidak selektif atau tidak sensitif. Studi diperbarui setiap ada perubahan sistem yang berarti.",
+   "hint": "Apa yang berubah pada arus gangguan jika trafo diganti dengan yang lebih besar?"
   }
  ],
  "4A.03": [
   {
    "type": "tf",
-   "q": "ETAP/SKM engineering tool L4 foundation: multi-study + productive + professional.",
+   "q": "Hasil simulasi ETAP/SKM hanya seakurat data masukannya: panjang dan ukuran kabel, impedansi trafo, dan setelan relai harus sesuai kondisi lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Industry standard. Engineering professional."
+   "explain": "BENAR. Perangkat lunak menghitung dengan tepat apa pun yang dimasukkan. Impedansi trafo yang ditebak atau panjang kabel yang salah menghasilkan arus gangguan dan koordinasi yang keliru — dengan tampilan yang meyakinkan.",
+   "hint": "Apa arti 'garbage in, garbage out' untuk studi sistem tenaga?"
   },
   {
    "type": "tf",
-   "q": "Software ETAP/SKM L4 engineering: professional tool + skill + Envisor service enable.",
+   "q": "Dengan perangkat lunak simulasi, insinyur tidak perlu lagi memahami dasar perhitungan hubung singkat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. L4 engineering. Professional software. Career tool."
+   "a": 1,
+   "explain": "SALAH. Tanpa pemahaman dasar, insinyur tidak bisa mengenali hasil yang janggal akibat kesalahan model. Perhitungan tangan sederhana untuk memeriksa orde besaran tetap menjadi kebiasaan insinyur yang baik.",
+   "hint": "Bagaimana Anda tahu hasil 80 kA pada panel kecil itu salah, jika tidak bisa memperkirakan sendiri?"
   }
  ],
  "4A.04": [
   {
    "type": "tf",
-   "q": "Genset + ATS/AMF engineering L4: comprehensive + reliable + life-safety.",
+   "q": "Kapasitas genset harus memperhitungkan arus start motor besar dan penambahan beban bertahap, bukan hanya jumlah daya beban tunak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Emergency power critical. Engineering discipline."
+   "explain": "BENAR. Motor yang distart langsung menarik 6–8 kali arus nominal dan menjatuhkan tegangan genset. Penambahan beban bertahap (step load) dibatasi agar frekuensi dan tegangan genset tidak jatuh di luar batas.",
+   "hint": "Apa yang terjadi pada tegangan genset 100 kVA saat motor 30 kW distart langsung?"
   },
   {
    "type": "tf",
-   "q": "Genset + ATS + fuel + maintenance comprehensive L4: emergency reliable — life-safety critical.",
+   "q": "Solar dalam tangki genset darurat dapat disimpan bertahun-tahun tanpa perawatan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Emergency power. L4 engineering. Hospital + data center + life-safety."
+   "a": 1,
+   "explain": "SALAH. Solar menua, menyerap air, dan ditumbuhi mikroba yang menyumbat filter. Genset darurat yang jarang jalan justru berisiko gagal karena bahan bakarnya rusak. Diperlukan pembersihan (fuel polishing) atau rotasi bahan bakar berkala.",
+   "hint": "Mengapa genset yang jarang dipakai justru sering gagal start?"
   }
  ],
  "4A.05": [
   {
    "type": "tf",
-   "q": "UPS online + battery + sizing engineering L4: critical load zero-break.",
+   "q": "UPS online (double conversion) menyuplai beban dari inverter terus-menerus sehingga tidak ada waktu peralihan saat listrik padam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. UPS critical load. Data center + medical. L4 engineering."
+   "explain": "BENAR. Pada UPS online, AC diubah ke DC lalu kembali ke AC secara terus-menerus; baterai sudah berada di jalur itu, sehingga padam PLN tidak menimbulkan jeda. UPS offline/line-interactive memerlukan waktu peralihan beberapa milidetik.",
+   "hint": "Pada UPS jenis apa beban selalu dilayani inverter, meski PLN normal?"
   },
   {
    "type": "tf",
-   "q": "UPS engineering L4 critical load: online + battery + redundancy + discipline.",
+   "q": "Baterai VRLA pada UPS bertahan 15 tahun tanpa penggantian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Critical power. L4 engineering. Data center + medical."
+   "a": 1,
+   "explain": "SALAH. Umur baterai VRLA umumnya 3–5 tahun, lebih pendek lagi di ruangan panas (setiap kenaikan 10 °C memangkas umurnya sekitar separuh). Pemantauan tegangan dan impedansi sel serta penggantian terjadwal mencegah UPS gagal saat dibutuhkan.",
+   "hint": "Apa yang terjadi pada umur baterai di ruang UPS bersuhu 35 °C?"
   }
  ],
  "4A.06": [
   {
    "type": "tf",
-   "q": "Emergency power integration engineering L4: code + safety + reliable + test.",
+   "q": "Sistem daya darurat perlu diuji berkala dengan beban nyata — bukan hanya start tanpa beban — untuk memastikan genset, ATS, dan UPS bekerja berurutan saat PLN padam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Life-safety critical. Code discipline."
+   "explain": "BENAR. Standar seperti NFPA 110 mensyaratkan uji bulanan berbeban dan uji tahunan yang lebih lama. Uji tanpa beban tidak mengungkap ATS yang macet, genset yang tidak sanggup memikul beban, atau UPS yang baterainya lemah.",
+   "hint": "Genset start normal tanpa beban — apakah itu membuktikan ia sanggup memikul rumah sakit?"
   },
   {
    "type": "tf",
-   "q": "Emergency power integrated + tested + maintained L4: life-safety + code + Envisor consulting.",
+   "q": "Beban keselamatan jiwa (lampu darurat, pompa kebakaran, lift pemadam) boleh dicampur dalam satu sirkuit dengan beban umum agar hemat kabel.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Life-safety critical. Engineering + compliance. Envisor opportunity."
+   "a": 1,
+   "explain": "SALAH. Beban keselamatan jiwa harus disuplai melalui jalur tersendiri yang terpisah dari beban umum, dengan ATS dan kabel tahan api sendiri, agar gangguan pada beban umum tidak memadamkannya saat darurat.",
+   "hint": "Apa yang terjadi pada pompa kebakaran jika MCB sirkuit bersamanya trip karena stopkontak?"
   }
  ],
  "4A.07": [
   {
    "type": "tf",
-   "q": "BMS architecture + protocol integration L4 engineering: efficient + modern building.",
+   "q": "BACnet umum dipakai untuk sistem HVAC dan BMS, KNX untuk otomasi pencahayaan dan ruang, sedangkan Modbus adalah protokol sederhana yang banyak dipakai meter dan peralatan lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. BMS foundational modern building. L4 engineering."
+   "explain": "BENAR. Tiap protokol lahir dari kebutuhan berbeda. BMS modern biasanya memakai gateway agar perangkat berprotokol berbeda bisa saling bertukar data dalam satu tampilan.",
+   "hint": "Protokol apa yang paling sering dijumpai pada power meter dan VFD?"
   },
   {
    "type": "tf",
-   "q": "BMS engineering L4 comprehensive: protocol + architecture + integrate + optimize — Envisor service.",
+   "q": "Semua perangkat BMS dari berbagai merek pasti langsung saling berkomunikasi tanpa konfigurasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. BMS modern building. Envisor service opportunity. L4 engineering."
+   "a": 1,
+   "explain": "SALAH. Meski memakai protokol terbuka yang sama, tiap perangkat punya daftar titik data (object/register) yang harus dipetakan. Integrasi memerlukan dokumentasi titik data, konfigurasi gateway, dan pengujian.",
+   "hint": "Apa yang harus dipetakan agar BMS tahu register 40001 di meter itu berarti tegangan fasa R?"
   }
  ],
  "4A.08": [
   {
    "type": "tf",
-   "q": "Smart lighting DALI + sensor + schedule engineering L4: efficient + flexible + Envisor.",
+   "q": "Pencahayaan pintar dengan sensor kehadiran dan cahaya matahari (daylight harvesting) dapat menghemat 30–50% energi pencahayaan dibanding sakelar manual.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern lighting. Energy save. Envisor opportunity."
+   "explain": "BENAR. Lampu mati otomatis saat ruangan kosong dan meredup saat cahaya matahari cukup. Dengan DALI, tiap luminer bisa dialamati dan diredupkan sendiri-sendiri, sehingga pengaturannya sangat fleksibel.",
+   "hint": "Berapa lama lampu koridor kantor menyala tanpa ada orang jika hanya pakai sakelar?"
   },
   {
    "type": "tf",
-   "q": "Smart lighting DALI + sensor + integrate L4 engineering: Envisor + modern building comprehensive.",
+   "q": "DALI adalah protokol pencahayaan yang hanya bisa menyalakan dan mematikan lampu, tanpa kemampuan meredupkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Modern lighting foundation. Envisor service. L4 engineering capability."
+   "a": 1,
+   "explain": "SALAH. DALI (Digital Addressable Lighting Interface) justru dirancang untuk peredupan digital yang halus dan pengalamatan tiap luminer, serta umpan balik status (lampu rusak, jam operasi). Nyala-mati saja bisa dilakukan sakelar biasa.",
+   "hint": "Apa arti 'addressable' dan 'digital' pada DALI?"
   }
  ],
  "4A.09": [
   {
    "type": "tf",
-   "q": "Sub-metering + dashboard + analytic L4 foundation Envisor service data-driven.",
+   "q": "Sub-metering memisahkan konsumsi per sistem (HVAC, pencahayaan, stopkontak, lift), sehingga pemborosan bisa dilacak ke sumbernya, bukan hanya terlihat sebagai total tagihan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Data foundation. Envisor + PLNlytics analog."
+   "explain": "BENAR. Satu meter utama hanya menunjukkan total. Dengan sub-meter, kenaikan konsumsi bisa diketahui berasal dari chiller atau dari beban stopkontak, dan efek setiap tindakan hemat bisa diukur.",
+   "hint": "Tagihan naik 10% — bagaimana tahu sistem mana yang bertanggung jawab?"
   },
   {
    "type": "tf",
-   "q": "Energy monitoring sub-meter + dashboard L4 engineering: Envisor + Qastil analytics align.",
+   "q": "Dasbor energi hanya bermanfaat jika ada orang yang memantau dan menindaklanjutinya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Data-driven foundation. Envisor + PLNlytics analog. Career."
+   "explain": "BENAR. Data yang tidak dibaca tidak menghemat apa pun. Dasbor harus disertai penanggung jawab, alarm untuk penyimpangan, dan rutinitas tinjauan mingguan agar temuan berubah menjadi tindakan.",
+   "hint": "Siapa yang membaca grafik konsumsi malam hari yang tiba-tiba naik?"
   }
  ],
  "4A.10": [
   {
    "type": "tf",
-   "q": "Audit energi bangunan ASHRAE + Indonesia regulation L4: Envisor business + Qastil strategic.",
+   "q": "Pengguna energi 6.000 TOE per tahun atau lebih wajib melakukan audit energi secara berkala dan melaporkannya, sesuai PP 70/2009 tentang Konservasi Energi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Regulation + standard. Envisor flagship service."
+   "explain": "BENAR. Ambang 6.000 TOE menyasar gedung besar dan industri. Auditnya dilakukan auditor bersertifikat mengikuti standar seperti SNI ISO 50002, dan hasil beserta rencana tindak lanjutnya dilaporkan ke pemerintah.",
+   "hint": "Berapa ambang konsumsi yang memicu kewajiban audit energi?"
   },
   {
    "type": "tf",
-   "q": "Audit bangunan ASHRAE + regulation + Envisor flagship + Qastil model: strategic Indonesia.",
+   "q": "ISO 50002 adalah standar sistem manajemen energi yang bisa disertifikasi seperti ISO 50001.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Comprehensive audit. Business + career model strategic."
+   "a": 1,
+   "explain": "SALAH. ISO 50002 adalah panduan proses audit energi (perencanaan, pengumpulan data, analisis, pelaporan), bukan sistem manajemen. Sertifikasi sistem manajemen energi mengacu pada ISO 50001; audit menurut ISO 50002 sering menjadi masukan baginya.",
+   "hint": "Mana yang standar 'audit' dan mana yang standar 'sistem manajemen'?"
   }
  ],
  "4A.11": [
   {
    "type": "tf",
-   "q": "ROI + BEP + economic analysis L4: Envisor deliverable + customer decision.",
+   "q": "Simple payback dihitung dengan membagi biaya investasi dengan penghematan tahunan, dan menjadi ukuran awal yang mudah dipahami pemilik gedung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Economic analysis core. L4 engineering + business."
+   "explain": "BENAR. Investasi Rp 200 juta yang menghemat Rp 80 juta per tahun memiliki payback 2,5 tahun. Untuk keputusan besar, ukuran ini dilengkapi NPV dan IRR yang memperhitungkan nilai waktu uang dan umur peralatan.",
+   "hint": "Investasi Rp 300 juta, hemat Rp 100 juta/tahun — berapa tahun balik modal?"
   },
   {
    "type": "tf",
-   "q": "ECM + ROI + ESCO + M&V L4: business model evolve — Envisor strategic Indonesia.",
+   "q": "Dalam model ESCO, pemilik gedung menanggung seluruh risiko jika penghematan tidak tercapai.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Business sophistication. L4 engineering + business. Strategic."
+   "a": 1,
+   "explain": "SALAH. Justru inti ESCO adalah ESCO yang menanggung risiko kinerja: lewat kontrak guaranteed savings ESCO menjamin besar penghematan, dan lewat shared savings ESCO baru dibayar dari penghematan yang benar-benar terjadi.",
+   "hint": "Dari mana ESCO mendapat bayaran pada skema shared savings?"
   }
  ],
  "4A.12": [
   {
    "type": "tf",
-   "q": "HVAC + lift efficiency L4 engineering: major opportunity + Envisor service.",
+   "q": "Lift modern dengan drive regeneratif mengembalikan energi ke jaringan gedung saat kabin turun berbeban atau naik kosong.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Building dominant share. Envisor opportunity."
+   "explain": "BENAR. Motor bekerja sebagai generator saat menahan beban yang bergerak searah gravitasi. Drive regeneratif menyalurkan energi itu kembali alih-alih membuangnya sebagai panas di resistor pengereman, menghemat 20–40% energi lift.",
+   "hint": "Ke mana energi pengereman lift pergi pada drive biasa?"
   },
   {
    "type": "tf",
-   "q": "HVAC + lift efficiency comprehensive Envisor L4 engineering: major customer opportunity.",
+   "q": "Pada gedung komersial, konsumsi lift jauh lebih besar daripada konsumsi HVAC.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Major building energy. Envisor strategic service."
+   "a": 1,
+   "explain": "SALAH. Lift biasanya hanya 3–8% konsumsi gedung, sedangkan HVAC 40–60%. Prioritas efisiensi tetap pada sistem pendingin, meski lift regeneratif dan mode siaga tetap layak dilakukan.",
+   "hint": "Sistem mana yang menyala terus di seluruh lantai sepanjang jam kerja?"
   }
  ],
  "4A.13": [
   {
    "type": "tf",
-   "q": "Fire alarm addressable engineering L4: life-safety + compliance + modern.",
+   "q": "Sistem alarm kebakaran addressable dapat menunjukkan detektor mana persisnya yang aktif, sedangkan sistem konvensional hanya menunjukkan zona.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Life-safety critical. Modern addressable. Engineering."
+   "explain": "BENAR. Pada sistem addressable tiap perangkat punya alamat di loop, sehingga panel menampilkan 'detektor asap lantai 3 ruang server'. Sistem konvensional mengelompokkan banyak detektor dalam satu zona kabel, sehingga lokasinya harus dicari.",
+   "hint": "Saat alarm berbunyi di gedung 20 lantai, informasi apa yang paling dibutuhkan petugas?"
   },
   {
    "type": "tf",
-   "q": "Fire alarm addressable L4 engineering: life-safety + code + integrate + Envisor.",
+   "q": "Kabel loop alarm kebakaran addressable boleh memakai kabel data biasa karena sinyalnya digital.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Life-safety foundation. Engineering + compliance."
+   "a": 1,
+   "explain": "SALAH. Loop alarm kebakaran harus tetap berfungsi saat kebakaran, sehingga memakai kabel tahan api (fire resistant) sesuai standar, dengan rute dan penyangga tahan api. Kabel biasa meleleh dan memutus komunikasi justru saat dibutuhkan.",
+   "hint": "Kabel apa yang harus tetap utuh saat api sudah menjalar di plafon?"
   }
  ],
  "4A.14": [
   {
    "type": "tf",
-   "q": "Integrasi fire-HVAC-BMS-lift L4 engineering: life-safety + coordinate + Envisor consulting.",
+   "q": "Saat alarm kebakaran aktif, sistem terintegrasi menghentikan AHU agar asap tidak menyebar, menghidupkan kipas presurisasi tangga, dan mengarahkan lift ke lantai dasar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Multi-system coordinate. Life-safety complex. Engineering."
+   "explain": "BENAR. Integrasi fire-HVAC-BMS-lift memastikan respons otomatis yang terkoordinasi: asap tidak dihembuskan ke lantai lain, tangga darurat bebas asap, dan lift tidak terjebak di lantai yang terbakar.",
+   "hint": "Apa yang terjadi jika AHU terus menghembus udara dari lantai yang terbakar?"
   },
   {
    "type": "tf",
-   "q": "Integrasi multi-system L4 engineering: life-safety + coordinate + Envisor premium.",
+   "q": "Integrasi antar sistem cukup diuji per sistem; uji skenario kebakaran menyeluruh tidak diperlukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Complex multi-system. L4 premium engineering. Envisor strategic."
+   "a": 1,
+   "explain": "SALAH. Tiap sistem bisa lulus uji sendiri tetapi gagal bekerja bersama karena sinyal antar sistem tidak tersambung. Uji integrasi (cause-and-effect test) mensimulasikan alarm dan memverifikasi semua respons terjadi sesuai matriks.",
+   "hint": "Detektor bekerja, AHU bisa dimatikan — tetapi apakah sinyal dari detektor sampai ke AHU?"
   }
  ],
  "4A.15": [
   {
    "type": "tf",
-   "q": "Gardu distribusi bangunan 20 kV L4 engineering: customer + PLN interface + Qastil context.",
+   "q": "Gardu distribusi gedung tegangan menengah umumnya terdiri dari kubikel masuk (incoming), kubikel metering, dan kubikel keluar (outgoing) ke trafo, mengikuti standar PLN.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Customer MV. PLN interface. Qastil distribusi context."
+   "explain": "BENAR. Kubikel incoming menerima suplai 20 kV dari PLN, kubikel metering berisi CT/PT untuk pengukuran transaksi, dan kubikel outgoing melindungi trafo pelanggan. Konstruksinya diperiksa PLN sebelum diberi tegangan.",
+   "hint": "Di kubikel mana CT dan PT untuk kWh meter PLN dipasang?"
   },
   {
    "type": "tf",
-   "q": "Gardu distribusi MV 20 kV L4 engineering: Qastil PLN + customer Envisor strategic.",
+   "q": "Trafo distribusi gedung boleh ditempatkan di ruang tanpa ventilasi asalkan pintunya tertutup rapat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. MV engineering. Qastil context + Envisor service. L4."
+   "a": 1,
+   "explain": "SALAH. Trafo membuang panas rugi-rugi terus-menerus. Ruang tanpa ventilasi membuat suhu naik, umur isolasi memendek, dan kapasitas trafo turun. Ruang trafo memerlukan ventilasi alami atau paksa yang dihitung berdasarkan rugi trafo.",
+   "hint": "Trafo 1.000 kVA dengan rugi 10 kW — ke mana panas 10 kW itu pergi?"
   }
  ],
  "4A.16": [
   {
    "type": "tf",
-   "q": "Switchgear commissioning L4 rigorous: FAT + SAT + test + sign-off — professional.",
+   "q": "FAT (Factory Acceptance Test) dilakukan di pabrik sebelum switchgear dikirim, sedangkan SAT (Site Acceptance Test) dilakukan di lokasi setelah terpasang dan terhubung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Commissioning discipline. L4 engineering. Safety + function."
+   "explain": "BENAR. FAT memverifikasi rancangan dan fungsi di lingkungan terkendali sehingga cacat diperbaiki sebelum kirim. SAT memverifikasi pemasangan, pengkabelan lapangan, dan interaksi dengan sistem lain.",
+   "hint": "Cacat pengkabelan internal kubikel lebih murah diperbaiki di mana?"
   },
   {
    "type": "tf",
-   "q": "MV switchgear commissioning comprehensive L4: Envisor + contractor specialty — professional rigorous.",
+   "q": "Uji tegangan tinggi (hi-pot) pada kubikel 20 kV baru bisa dilewati jika kubikel tampak bersih dan baru.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
-   "a": 0,
-   "explain": "BENAR. Commissioning specialty. L4 engineering rigorous. Envisor + contractor market."
+   "a": 1,
+   "explain": "SALAH. Retak isolator, kelembapan, atau benda asing yang tertinggal saat pemasangan tidak terlihat mata. Uji tahan tegangan frekuensi daya memastikan isolasi sanggup sebelum diberi tegangan; melewatinya berisiko ledakan saat energize.",
+   "hint": "Apa yang bisa tertinggal di dalam kubikel setelah pemasangan dan tak terlihat dari luar?"
   }
  ],
  "4B.01": [
   {
    "type": "tf",
-   "q": "Relay numerik foundation proteksi L4: multi-function + IED + IEC 61850.",
+   "q": "Relai numerik menggabungkan banyak fungsi proteksi dalam satu perangkat, merekam kejadian gangguan, dan dapat berkomunikasi lewat IEC 61850.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern protection. L4 engineering."
+   "explain": "BENAR. Satu relai numerik bisa berisi arus lebih, gangguan tanah, diferensial, dan fungsi lain sekaligus, dengan rekaman osilografi yang memudahkan analisis pasca-gangguan. Relai elektromekanis lama hanya satu fungsi per perangkat.",
+   "hint": "Berapa relai elektromekanis dibutuhkan untuk menggantikan satu relai numerik proteksi trafo?"
   }
  ],
  "4B.02": [
   {
    "type": "tf",
-   "q": "Koordinasi TCC engineering L4: selective + sensitive — standard practice.",
+   "q": "Kurva waktu-arus (TCC) relai, sekering, dan pemutus diplot pada satu grafik log-log untuk memastikan kurva hilir selalu berada di bawah kurva hulu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Protection coordination L4."
+   "explain": "BENAR. Jika kurva saling memotong, ada rentang arus di mana pengaman hulu trip lebih dulu dan memadamkan area yang lebih luas. Grafik TCC membuat selektivitas terlihat di seluruh rentang arus gangguan.",
+   "hint": "Apa arti dua kurva yang saling memotong pada grafik TCC?"
   }
  ],
  "4B.03": [
   {
    "type": "tf",
-   "q": "Kubikel 20 kV MV engineering L4: SF6 + vacuum + IEC 62271 — standard.",
+   "q": "Pemutus vakum kini paling umum untuk kubikel 20 kV karena hampir bebas perawatan dan tidak memakai gas rumah kaca, sedangkan SF6 lebih banyak untuk tegangan tinggi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. MV switchgear. L4 engineering. Qastil distribusi."
+   "explain": "BENAR. Pada tegangan menengah, ruang vakum kecil sudah cukup memadamkan busur, tahan puluhan ribu operasi, dan tidak perlu pemantauan gas. SF6 tetap dominan di 150 kV ke atas karena kemampuan isolasinya.",
+   "hint": "Media pemutus apa yang tidak perlu dipantau kerapatannya?"
   }
  ],
  "4B.04": [
   {
    "type": "tf",
-   "q": "MV cable jointing + termination L4: skill + quality + test — critical reliability.",
+   "q": "Setelah kabel tegangan menengah disambung dan diterminasi, dilakukan uji tegangan tinggi (misalnya VLF) untuk memastikan tidak ada cacat pemasangan sebelum diberi tegangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. MV cable specialty. Quality critical."
+   "explain": "BENAR. Sebagian besar kegagalan kabel MV berasal dari sambungan dan terminasi yang dikerjakan di lapangan. Uji VLF pada tegangan di atas nominal selama waktu tertentu mengungkap cacat isolasi yang tidak terlihat.",
+   "hint": "Bagian kabel mana yang paling sering gagal, dan mengapa harus diuji sebelum energize?"
   }
  ],
  "4B.05": [
   {
    "type": "tf",
-   "q": "ISO 50001 implementation L4 engineering + business: Envisor service + Qastil.",
+   "q": "Penerapan ISO 50001 memerlukan komitmen manajemen puncak, tim energi, tinjauan energi, indikator kinerja (EnPI), dan siklus perbaikan berkelanjutan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern EnMS. Envisor service. L4."
+   "explain": "BENAR. Tanpa komitmen manajemen, tim energi tidak punya wewenang dan anggaran. Tinjauan energi menemukan pengguna signifikan, EnPI mengukur kemajuan, dan tinjauan manajemen menutup siklus Plan-Do-Check-Act.",
+   "hint": "Siapa yang harus menandatangani kebijakan energi agar sistemnya berjalan?"
   }
  ],
  "4B.06": [
   {
    "type": "tf",
-   "q": "Audit industri Indonesia pengguna besar: Envisor service + Qastil business.",
+   "q": "Baseline energi industri sebaiknya dinormalkan terhadap produksi, misalnya kWh per ton produk, agar perbandingan antar periode adil.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Indonesia regulation + market. Strategic."
+   "explain": "BENAR. Konsumsi total naik saat produksi naik. Konsumsi energi spesifik (SEC) memisahkan pengaruh volume produksi dari efisiensi, sehingga perbaikan atau kemunduran efisiensi terlihat jelas.",
+   "hint": "Pabrik memakai 10% lebih banyak listrik tetapi memproduksi 20% lebih banyak — lebih efisien atau tidak?"
   }
  ],
  "4B.07": [
   {
    "type": "tf",
-   "q": "Sub-metering + analytics L4: Envisor service + Qastil PLNlytics analog.",
+   "q": "Analitik dari sub-meter industri dapat menemukan mesin yang tetap menarik daya besar saat tidak berproduksi (idle), yang sering menjadi peluang hemat terbesar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Data-driven. Envisor + Qastil align."
+   "explain": "BENAR. Kompresor, pompa hidrolik, dan tungku pemanas sering dibiarkan menyala saat pergantian shift atau menunggu bahan. Data per menit dari sub-meter memperlihatkan beban idle ini dengan jelas.",
+   "hint": "Berapa daya yang ditarik lini produksi saat istirahat makan siang?"
   }
  ],
  "4B.08": [
   {
    "type": "tf",
-   "q": "ESCO model emerging Indonesia: Envisor future + Qastil strategic.",
+   "q": "Dalam kontrak kinerja energi (EPC), pembayaran ESCO dikaitkan dengan penghematan yang terverifikasi, sehingga pengukuran dan verifikasi (M&V) menjadi bagian inti kontrak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. ESCO emerging. Indonesia opportunity."
+   "explain": "BENAR. Tanpa M&V yang disepakati (baseline, metode pengukuran, penyesuaian), penghematan menjadi bahan sengketa. Protokol seperti IPMVP menetapkan cara menghitungnya secara adil bagi kedua pihak.",
+   "hint": "Bagaimana kedua pihak sepakat berapa yang 'dihemat' jika produksi tahun ini berbeda?"
   }
  ],
  "4B.09": [
   {
    "type": "tf",
-   "q": "Load flow industri ETAP L4: operation + design + optimize — professional.",
+   "q": "Studi aliran daya industri mengungkap bus yang tegangannya di luar batas dan kabel atau trafo yang kelebihan beban sebelum peralatan baru dipasang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Industri engineering. L4."
+   "explain": "BENAR. Menambah motor besar tanpa studi bisa menjatuhkan tegangan bus dan membebani trafo melebihi kapasitas. Simulasi memperlihatkan dampaknya lebih dulu, sehingga penguatan jaringan atau kompensasi bisa direncanakan.",
+   "hint": "Apa yang terjadi pada tegangan bus jika beban 2 MW ditambahkan ke trafo 3 MVA yang sudah 70% terbebani?"
   }
  ],
  "4B.10": [
   {
    "type": "tf",
-   "q": "SC industri engineering L4: rating + protection + safety.",
+   "q": "Studi start motor memastikan jatuh tegangan saat motor besar distart tidak membuat tegangan di terminal motor turun di bawah sekitar 80% nominal.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Foundation L4 engineering."
+   "explain": "BENAR. Di bawah batas itu torsi start (yang sebanding V²) mungkin tidak cukup memutar beban, kontaktor bisa lepas, dan peralatan lain di bus yang sama terganggu. Solusinya: starter tereduksi, VFD, atau penguatan sumber.",
+   "hint": "Torsi start turun ke berapa persen jika tegangan hanya 70%?"
   }
  ],
  "4B.11": [
   {
    "type": "tf",
-   "q": "Harmonic analysis + filter L4 engineering: industri power quality.",
+   "q": "Simulasi harmonisa membantu memilih antara reaktor detuned, filter pasif tertala, atau filter aktif berdasarkan spektrum harmonisa dan impedansi jaringan yang sebenarnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PQ engineering. L4."
+   "explain": "BENAR. Pilihan filter yang salah bisa beresonansi dengan jaringan dan memperburuk THD. Simulasi memodelkan sumber harmonisa, kapasitor, dan impedansi sumber agar solusi yang dipasang benar-benar menurunkan distorsi.",
+   "hint": "Mengapa filter pasif yang bekerja di satu pabrik bisa gagal di pabrik lain?"
   }
  ],
  "4B.12": [
   {
    "type": "tf",
-   "q": "Stability + transient analysis L4 engineering: grid integrity — utility critical.",
+   "q": "Studi stabilitas transien menentukan waktu pemutusan kritis (critical clearing time): batas waktu gangguan harus dibersihkan agar generator tidak lepas sinkron.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Grid stability. L4 advanced."
+   "explain": "BENAR. Selama gangguan, generator berakselerasi karena dayanya tidak tersalur. Jika gangguan berlangsung lebih lama dari waktu kritis, sudut rotor terlalu jauh dan generator lepas sinkron. Setelan proteksi harus lebih cepat dari waktu ini.",
+   "hint": "Apa hubungan kecepatan relai dengan kemampuan generator tetap sinkron?"
   }
  ],
  "4B.13": [
   {
    "type": "tf",
-   "q": "Arc flash study IEEE 1584 L4: safety + compliance + engineering rigor.",
+   "q": "Hasil studi arc flash IEEE 1584 dituangkan sebagai label pada tiap panel yang menyebut energi insiden, batas busur api, dan kategori APD yang diperlukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Arc flash engineering. L4 critical."
+   "explain": "BENAR. Label memberi tahu petugas sebelum membuka panel: seberapa besar bahayanya dan APD apa yang harus dipakai. Studi diperbarui setiap ada perubahan sumber atau proteksi, karena energi insiden bergantung pada arus gangguan dan waktu trip.",
+   "hint": "Apa yang harus dibaca teknisi sebelum membuka pintu panel bertegangan?"
   }
  ],
  "4B.14": [
   {
    "type": "tf",
-   "q": "Electrical safety program L4 comprehensive: culture + Envisor service K3 listrik.",
+   "q": "Program keselamatan listrik mencakup izin kerja bertegangan (EEWP) yang hanya diberikan bila pemadaman terbukti tidak mungkin atau menambah bahaya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Safety program. L4 advanced. Envisor service."
+   "explain": "BENAR. Pekerjaan pada peralatan hidup adalah pengecualian, bukan kebiasaan. EEWP memaksa penanggung jawab menuliskan alasan, analisis bahaya, APD, dan persetujuan manajemen sebelum pekerjaan dimulai.",
+   "hint": "Alasan apa yang sah untuk tidak mematikan panel sebelum dikerjakan?"
   }
  ],
  "4B.15": [
   {
    "type": "tf",
-   "q": "Explosion-proof equipment IEC 60079 L4: petrochemical industri Indonesia specialty.",
+   "q": "Marka peralatan Ex (misalnya Ex d IIC T4) harus dicocokkan dengan zona, kelompok gas, dan kelas suhu di lokasi pemasangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Hazardous area specialty. Indonesia Migas."
+   "explain": "BENAR. 'd' menyatakan jenis proteksi (flameproof), IIC kelompok gas paling mudah terbakar (hidrogen, asetilena), dan T4 suhu permukaan maksimum 135 °C. Peralatan untuk gas IIA tidak boleh dipasang di area gas IIC.",
+   "hint": "Apa arti tiap bagian pada marka 'Ex d IIC T4'?"
   }
  ],
  "4C.01": [
   {
    "type": "tf",
-   "q": "Relay O/C + EF 20 kV penyulang Qastil UP3 daily: PLN distribusi protection foundation.",
+   "q": "Setelan relai arus lebih penyulang 20 kV harus di atas arus beban maksimum tetapi di bawah arus gangguan minimum di ujung penyulang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil daily. Protection distribusi PLN."
+   "explain": "BENAR. Setelan terlalu rendah membuat relai trip saat beban puncak; terlalu tinggi membuat gangguan di ujung penyulang (arus kecil karena impedansi saluran panjang) tidak terdeteksi. Relai gangguan tanah disetel jauh lebih sensitif karena tidak melihat arus beban.",
+   "hint": "Mengapa relai gangguan tanah bisa disetel jauh di bawah arus beban?"
   }
  ],
  "4C.02": [
   {
    "type": "tf",
-   "q": "Directional 67 + auto-reclose 79 + sectionalizer L4: distribusi PLN advanced.",
+   "q": "Relai berarah (67) diperlukan pada penyulang yang mendapat suplai dari dua sisi, misalnya jaringan loop atau penyulang dengan pembangkit tersebar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Distribusi advanced. Qastil PLN context."
+   "explain": "BENAR. Dengan pembangkit di sisi beban (PLTS besar, genset ekspor), gangguan di penyulang tetangga bisa mengalirkan arus balik melalui penyulang sehat. Relai tanpa arah akan trip keliru; relai berarah hanya bekerja untuk gangguan di depannya.",
+   "hint": "Dari mana arus gangguan bisa datang jika ada PLTS 5 MW di tengah penyulang?"
   }
  ],
  "4C.03": [
   {
    "type": "tf",
-   "q": "Koordinasi penyulang multi-tier engineering L4: Qastil distribusi advanced.",
+   "q": "Koordinasi penyulang biasanya berjenjang: sekering cabang paling cepat, lalu recloser, lalu relai di gardu induk sebagai cadangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PLN protection advanced. Qastil."
+   "explain": "BENAR. Gangguan di cabang hanya memutus sekering cabang itu. Recloser melindungi seksi utama dan mencoba menutup kembali untuk gangguan sementara. Relai GI bekerja hanya jika keduanya gagal, dengan waktu paling lama.",
+   "hint": "Siapa yang harus bekerja lebih dulu saat gangguan di cabang kecil: sekering cabang atau relai GI?"
   }
  ],
  "4C.04": [
   {
    "type": "tf",
-   "q": "Fault indicator + location modern L4: Qastil distribusi efficient — reduce outage.",
+   "q": "Fault indicator (FI) menandai bahwa arus gangguan telah melewatinya, sehingga regu dapat menelusuri seksi yang terganggu dengan mengikuti FI yang menyala.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern practice. Qastil PLN. Reduce SAIDI."
+   "explain": "BENAR. FI dipasang di beberapa titik sepanjang penyulang. Regu mencari FI terakhir yang menyala; gangguan berada setelahnya. Ini memangkas waktu patroli dari berjam-jam menjadi puluhan menit, terutama dengan FI yang berkomunikasi ke SCADA.",
+   "hint": "Jika FI ke-3 menyala tetapi FI ke-4 tidak, di mana gangguannya?"
   }
  ],
  "4C.05": [
   {
    "type": "tf",
-   "q": "SCADA distribusi architecture L4: Qastil daily operation — PLN modernize.",
+   "q": "Dalam SCADA distribusi, RTU di gardu induk dan FTU pada recloser atau LBS mengirim status dan pengukuran ke master station, dan menerima perintah buka/tutup dari dispatcher.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SCADA foundation. PLN modern distribusi."
+   "explain": "BENAR. RTU (remote terminal unit) melayani banyak titik di gardu induk; FTU (feeder terminal unit) melayani satu peralatan di jaringan. Keduanya membuat dispatcher bisa melihat dan mengendalikan jaringan tanpa mengirim orang.",
+   "hint": "Apa yang memungkinkan dispatcher membuka LBS 30 km jauhnya dari ruang kontrol?"
   }
  ],
  "4C.06": [
   {
    "type": "tf",
-   "q": "Protokol DNP3 + IEC 61850 + 60870 L4: modern distribusi interoperable + Qastil.",
+   "q": "IEC 60870-5-104 dan DNP3 umum dipakai untuk komunikasi SCADA ke peralatan lapangan melalui TCP/IP, sedangkan IEC 61850 dirancang untuk komunikasi di dalam gardu induk.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern protocol. L4 engineering. Qastil PLN."
+   "explain": "BENAR. 104 dan DNP3 adalah protokol telekontrol klasik antara master dan RTU/FTU. IEC 61850 menstandarkan model data dan pesan cepat antar IED di dalam gardu, dan makin meluas ke jaringan distribusi.",
+   "hint": "Protokol mana yang paling umum menghubungkan master station dengan RTU di Indonesia?"
   }
  ],
  "4C.07": [
   {
    "type": "tf",
-   "q": "DMS + OMS advanced L4: Qastil PLN analytics + Envisor opportunity.",
+   "q": "OMS (Outage Management System) menggabungkan laporan pelanggan, data AMI, dan model jaringan untuk memperkirakan lokasi gangguan dan jumlah pelanggan terdampak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern PLN. Qastil + analytics."
+   "explain": "BENAR. Lima laporan dari pelanggan yang tersambung ke satu trafo mengarah pada gangguan di trafo itu; ratusan laporan di satu penyulang mengarah ke pemutus penyulang. OMS mengotomatiskan penalaran ini dan mengelola regu.",
+   "hint": "Bagaimana sistem menebak lokasi gangguan hanya dari alamat pelanggan yang menelepon?"
   }
  ],
  "4C.08": [
   {
    "type": "tf",
-   "q": "FLISR automation Qastil + PLN modernize: major SAIDI reduce + Envisor service.",
+   "q": "FLISR mengisolasi seksi yang terganggu dan memulihkan seksi sehat secara otomatis dalam waktu kurang dari satu menit, tanpa menunggu regu ke lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern practice. PLN distribusi strategic."
+   "explain": "BENAR. Dengan recloser/LBS bermotor dan komunikasi ke SCADA, sistem mendeteksi seksi yang terganggu, membuka sakelar di kedua sisinya, dan menutup tie switch untuk menyuplai seksi hilir dari penyulang tetangga. Pelanggan di seksi sehat hanya padam sebentar.",
+   "hint": "Berapa lama pelanggan di seksi sehat padam jika pemulihan harus menunggu regu patroli?"
   }
  ],
  "4C.09": [
   {
    "type": "tf",
-   "q": "VVO + CVR + IVVC L4 advanced distribusi: energy save + loss reduce — Qastil modernize.",
+   "q": "CVR (Conservation Voltage Reduction) menurunkan tegangan penyulang ke batas bawah yang masih diizinkan, sehingga konsumsi beban tertentu turun 1–3% tanpa mengganggu pelanggan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern distribusi optimization. Strategic."
+   "explain": "BENAR. Beban resistif dan sebagian beban lain memakai daya lebih kecil pada tegangan lebih rendah. CVR mengandalkan pengaturan tap dan kapasitor secara terkoordinasi (VVO), dengan pemantauan agar tegangan ujung tetap di atas batas.",
+   "hint": "Apa yang terjadi pada daya pemanas air jika tegangannya turun 3%?"
   }
  ],
  "4C.10": [
   {
    "type": "tf",
-   "q": "GIS distribusi PLN L4: Qastil PLNlytics foundation + modern utility.",
+   "q": "GIS jaringan distribusi menyimpan lokasi tiang, gardu, dan kabel beserta atributnya, dan menjadi dasar model jaringan untuk DMS, OMS, dan analisis susut.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. GIS foundation. Qastil expertise area."
+   "explain": "BENAR. Tanpa peta jaringan yang akurat, sistem lain tidak tahu pelanggan mana tersambung ke trafo mana. GIS harus diperbarui setiap ada perubahan konstruksi agar tetap mencerminkan kondisi lapangan.",
+   "hint": "Bagaimana OMS tahu pelanggan X disuplai gardu Y?"
   }
  ],
  "4C.11": [
   {
    "type": "tf",
-   "q": "SAIDI/SAIFI reliability metric Qastil PLN daily: PLNlytics analytic foundation.",
+   "q": "Untuk perbandingan yang adil antar unit, SAIDI dan SAIFI dihitung dengan definisi yang sama, misalnya menyangkut cara memperlakukan padam terencana dan kejadian luar biasa seperti bencana.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil metric daily. PLNlytics analytics."
+   "explain": "BENAR. Unit yang memasukkan padam terencana ke SAIDI akan tampak lebih buruk dari yang tidak. Standar seperti IEEE 1366 memberi definisi baku dan cara menandai hari kejadian besar agar benchmarking bermakna.",
+   "hint": "Apakah padam akibat banjir bandang layak dibandingkan dengan padam akibat sambungan longgar?"
   }
  ],
  "4C.12": [
   {
    "type": "tf",
-   "q": "OLAP + spatial-temporal analytics Qastil PLNlytics: 89+ variable platform advanced.",
+   "q": "Analisis OLAP memungkinkan data gangguan atau susut diiris menurut waktu, wilayah, dan jenis aset sekaligus, sehingga pola seperti 'penyulang X sering terganggu tiap musim hujan' cepat ditemukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil direct expertise. PLNlytics platform."
+   "explain": "BENAR. OLAP menyusun data dalam dimensi (waktu, lokasi, aset) dan ukuran (durasi, jumlah pelanggan). Pengguna bisa 'drill down' dari provinsi ke penyulang ke gardu tanpa menulis query baru tiap kali.",
+   "hint": "Bagaimana cepat menemukan gardu dengan gangguan terbanyak di bulan Januari selama tiga tahun terakhir?"
   }
  ],
  "4C.13": [
   {
    "type": "tf",
-   "q": "Technical loss I²R + iron Qastil domain MAGNETO research: PLN loss reduction priority.",
+   "q": "Rugi teknis I²R di penghantar sebanding dengan kuadrat arus, sehingga menurunkan arus 20% mengurangi rugi sekitar 36%.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil research area. PLN priority."
+   "explain": "BENAR. (0,8)² = 0,64, artinya rugi tinggal 64% atau turun 36%. Karena itu perbaikan faktor daya, penyeimbangan fasa, dan penguatan penghantar sangat efektif menurunkan susut teknis. Rugi besi trafo, sebaliknya, hampir tetap tak bergantung beban.",
+   "hint": "Rugi ∝ I². Hitung 0,8 × 0,8."
   }
  ],
  "4C.14": [
   {
    "type": "tf",
-   "q": "Non-technical loss AI/ML L4: Qastil MAGNETO research — ETASR paper published.",
+   "q": "Model machine learning untuk deteksi pencurian menghadapi ketidakseimbangan kelas — pelanggan curang jauh lebih sedikit dari yang jujur — sehingga akurasi saja bukan ukuran yang tepat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil research direct. PLN + academic."
+   "explain": "BENAR. Model yang menebak 'semua jujur' bisa berakurasi 98% tetapi tidak menemukan satu pun pencuri. Ukuran seperti precision, recall, dan hit rate di lapangan lebih bermakna, dan biaya salah tuduh harus diperhitungkan.",
+   "hint": "Jika 2% pelanggan curang, berapa akurasi model yang selalu menjawab 'jujur'?"
   }
  ],
  "4C.15": [
   {
    "type": "tf",
-   "q": "P2TL analytics Qastil PLN specialty: hit rate AI — MAGNETO deploy strategic.",
+   "q": "Hit rate P2TL adalah perbandingan pemeriksaan yang menemukan pelanggaran terhadap total pemeriksaan, dan naik bila target dipilih berdasarkan analitik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil PLN specialty. Research + deploy + value."
+   "explain": "BENAR. Kunjungan acak menghasilkan hit rate rendah dan memboroskan regu. Dengan penargetan dari energy balance dan pola konsumsi, tiap kunjungan lebih mungkin membuahkan temuan, sehingga susut turun lebih cepat dengan sumber daya yang sama.",
+   "hint": "Dari 100 kunjungan hanya 5 menemukan pelanggaran — apa yang harus diperbaiki?"
   }
  ],
  "4C.16": [
   {
    "type": "tf",
-   "q": "Loss reduction Qastil PLN program: MAGNETO + technical + comprehensive Indonesia strategic.",
+   "q": "Program penurunan susut berjalan sebagai siklus: ukur susut per penyulang, tetapkan target, lakukan tindakan teknis dan non-teknis, lalu pantau hasilnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Comprehensive program. Qastil expertise + PLN priority."
+   "explain": "BENAR. Susut teknis diturunkan lewat penyeimbangan, kapasitor, dan penguatan jaringan; susut non-teknis lewat P2TL dan perbaikan metering. Tanpa pengukuran per penyulang, tidak diketahui tindakan mana yang berhasil.",
+   "hint": "Bagaimana tahu susut turun karena kapasitor atau karena P2TL jika tidak diukur per penyulang?"
   }
  ],
  "4C.17": [
   {
    "type": "tf",
-   "q": "Smart meter AMI + MDM + DLMS L4: Qastil PLN context + Envisor service.",
+   "q": "Dalam ekosistem smart meter, HES mengumpulkan data dari meter, MDM menyimpan dan memvalidasinya, dan DLMS/COSEM adalah protokol standar komunikasi meter.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Smart meter. Indonesia rollout. Modern."
+   "explain": "BENAR. Head-End System berbicara langsung dengan meter melalui berbagai media komunikasi. Meter Data Management membersihkan, memvalidasi, dan menyajikan data ke penagihan dan analitik. DLMS/COSEM memungkinkan meter berbagai merek dibaca dengan cara yang sama.",
+   "hint": "Sistem mana yang memastikan data meter yang hilang atau janggal tidak langsung masuk tagihan?"
   }
  ],
  "4C.18": [
   {
    "type": "tf",
-   "q": "Revenue protection Qastil MAGNETO domain: PLN strategic + Indonesia scale.",
+   "q": "Revenue assurance memadukan kejadian tamper dari meter, analisis pola konsumsi, dan pemeriksaan data penagihan untuk menemukan pendapatan yang hilang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil research + PLN deploy."
+   "explain": "BENAR. Pendapatan bisa hilang karena pencurian, meter rusak, rasio CT yang salah diprogram, atau golongan tarif yang keliru. Pendekatan menyeluruh memeriksa seluruh rantai dari meter sampai tagihan.",
+   "hint": "Sebutkan penyebab pendapatan hilang yang bukan pencurian."
   }
  ],
  "4D.01": [
   {
    "type": "tf",
-   "q": "Numerical relay transmission L4 advanced: ABB + Siemens + SEL — modern utility.",
+   "q": "Relai saluran transmisi numerik modern menggabungkan proteksi jarak dan diferensial saluran, dan bertukar data dengan relai di ujung lain melalui serat optik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Transmission relay. L4 advanced. Utility specialty."
+   "explain": "BENAR. Diferensial saluran membandingkan arus kedua ujung secara real-time lewat kanal komunikasi, memberi proteksi cepat dan selektif untuk seluruh panjang saluran. Proteksi jarak tetap ada sebagai cadangan jika komunikasi terputus.",
+   "hint": "Apa yang dibutuhkan relai diferensial saluran yang tidak dibutuhkan relai jarak?"
   }
  ],
  "4D.02": [
   {
    "type": "tf",
-   "q": "WAMPAC modern transmission L4: wide-area situation + control Indonesia PLN.",
+   "q": "WAMPAC memakai PMU yang disinkronkan GPS di banyak gardu untuk melihat dinamika seluruh sistem secara serentak, sehingga osilasi dan ketidakstabilan terdeteksi lebih dini.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern grid. L4 advanced."
+   "explain": "BENAR. SCADA konvensional membaca tiap gardu beberapa detik sekali tanpa stempel waktu presisi. PMU mengukur fasor 50 kali per detik dengan waktu GPS, sehingga sudut fasa antar wilayah bisa dibandingkan langsung.",
+   "hint": "Mengapa pengukuran di dua gardu berjarak 500 km harus punya stempel waktu yang sama persis?"
   }
  ],
  "4D.03": [
   {
    "type": "tf",
-   "q": "SPS + remedial L4 transmission advanced: blackout prevent + stability Indonesia.",
+   "q": "Special Protection Scheme melakukan tindakan terencana seperti pelepasan beban atau pemutusan generator saat kontingensi tertentu terjadi, untuk mencegah pemadaman meluas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Grid stability. L4 advanced. Critical."
+   "explain": "BENAR. Jika saluran utama trip dan sisa jaringan tak sanggup memikul aliran daya, SPS langsung melepas sejumlah beban atau generator sesuai skenario yang telah dihitung, jauh lebih cepat daripada tindakan dispatcher.",
+   "hint": "Apa yang harus terjadi dalam beberapa ratus milidetik setelah saluran 500 kV utama trip?"
   }
  ],
  "4D.04": [
   {
    "type": "tf",
-   "q": "IEC 61850 modern substation L4: GOOSE + SV + MMS — interoperable digital.",
+   "q": "Pesan GOOSE pada IEC 61850 dikirim langsung antar IED melalui jaringan Ethernet dalam beberapa milidetik, menggantikan kabel tembaga untuk sinyal trip dan interlock.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern standard. L4 advanced."
+   "explain": "BENAR. GOOSE adalah pesan multicast berprioritas tinggi yang diulang cepat saat ada perubahan status. Sampled Values (SV) mengirim nilai arus dan tegangan terdigitasi dari merging unit, sehingga pengkabelan CT/PT ke tiap relai bisa dihilangkan.",
+   "hint": "Bagaimana relai busbar tahu pemutus penyulang sudah trip tanpa kabel tembaga?"
   }
  ],
  "4D.05": [
   {
    "type": "tf",
-   "q": "SAS modern substation architecture L4: comprehensive engineering transmission.",
+   "q": "Arsitektur SAS dibagi tiga tingkat: tingkat proses (CT/PT, merging unit), tingkat bay (IED proteksi dan kontrol), dan tingkat stasiun (HMI, gateway ke SCADA).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SAS foundation. L4 modern."
+   "explain": "BENAR. Pembagian ini menstandarkan fungsi dan jaringan komunikasinya: process bus antara tingkat proses dan bay, station bus antara bay dan stasiun. Kegagalan di satu bay tidak melumpuhkan bay lain.",
+   "hint": "Di tingkat mana relai proteksi penyulang berada?"
   }
  ],
  "4D.06": [
   {
    "type": "tf",
-   "q": "SCADA/EMS transmission PLN P2B: advanced L4 — grid operation.",
+   "q": "EMS di pusat pengatur beban menjalankan fungsi seperti estimasi keadaan, pengaturan frekuensi otomatis (AGC), dan pembebanan ekonomis (economic dispatch).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PLN P2B. Modern EMS. L4 advanced."
+   "explain": "BENAR. Estimasi keadaan membersihkan data SCADA menjadi gambaran sistem yang konsisten; AGC menjaga frekuensi dan pertukaran daya antar area; economic dispatch membagi beban ke pembangkit dengan biaya terendah.",
+   "hint": "Fungsi apa yang menjaga frekuensi 50 Hz secara otomatis tanpa operator?"
   }
  ],
  "4D.07": [
   {
    "type": "tf",
-   "q": "Synchrophasor PMU modern grid L4: advanced transmission + utility career specialty.",
+   "q": "PMU mengukur fasor tegangan dan arus dengan stempel waktu GPS, umumnya 50 kali per detik, sehingga sudut fasa antar gardu dapat dibandingkan secara langsung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern grid. L4 advanced."
+   "explain": "BENAR. Perbedaan sudut fasa antar gardu mencerminkan aliran daya dan tegangan sistem. Data PMU dipakai untuk mendeteksi osilasi, memvalidasi model, dan menganalisis kejadian besar dengan resolusi yang tidak dimiliki SCADA.",
+   "hint": "Apa yang diberikan GPS kepada PMU selain posisi?"
   }
  ],
  "4D.08": [
   {
    "type": "tf",
-   "q": "DGA transformer diagnosis L4: Duval + Rogers + IEC — engineering transmission.",
+   "q": "Dalam analisis gas terlarut (DGA), kemunculan asetilena dalam jumlah berarti menandakan busur listrik di dalam trafo, sedangkan etilena tinggi menandakan pemanasan lebih suhu tinggi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Transmission asset. L4 engineering."
+   "explain": "BENAR. Tiap jenis kegagalan menghasilkan gas yang khas: asetilena dari busur api, etilena dan etana dari panas lebih, hidrogen dari partial discharge, CO/CO₂ dari kertas isolasi yang terurai. Metode Duval dan Rogers menafsirkan rasionya.",
+   "hint": "Gas apa yang paling mengkhawatirkan bila muncul tiba-tiba di minyak trafo?"
   }
  ],
  "4D.09": [
   {
    "type": "tf",
-   "q": "GIS modern transmission + distribusi L4: compact + reliable + environmental consideration.",
+   "q": "GIS (Gas Insulated Switchgear) jauh lebih ringkas daripada switchgear terbuka (AIS), sehingga cocok untuk gardu di kota padat, tetapi memerlukan pemantauan kerapatan gas SF6 dan partial discharge.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern switchgear. L4 advanced."
+   "explain": "BENAR. Semua bagian bertegangan terbungkus SF6 dalam selongsong logam, sehingga jarak isolasi jauh lebih kecil. Kebocoran gas atau partikel di dalam selongsong menurunkan isolasi tanpa terlihat, maka pemantauan online penting.",
+   "hint": "Mengapa gardu induk di tengah kota jarang berupa lapangan terbuka dengan isolator besar?"
   }
  ],
  "4D.10": [
   {
    "type": "tf",
-   "q": "HVDC modern L4 transmission: long-distance + interconnect — emerging Indonesia.",
+   "q": "HVDC lebih ekonomis daripada AC untuk saluran udara yang sangat panjang atau kabel bawah laut, karena tidak ada arus pengisian kapasitif dan hanya perlu dua konduktor.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. HVDC advanced. L4 transmission."
+   "explain": "BENAR. Pada kabel AC bawah laut, arus kapasitif menghabiskan kapasitas kabel setelah beberapa puluh kilometer. HVDC tidak mengalami itu, dan biaya konverter yang mahal terbayar oleh saluran yang lebih murah pada jarak ratusan kilometer.",
+   "hint": "Mengapa interkoneksi antar pulau lewat kabel laut cenderung memakai DC?"
   }
  ],
  "4D.11": [
   {
    "type": "tf",
-   "q": "FACTS SVC + STATCOM + TCSC L4 advanced: transmission flexible — modern grid.",
+   "q": "SVC dan STATCOM menyuntikkan atau menyerap daya reaktif dengan cepat untuk menstabilkan tegangan, sedangkan TCSC mengubah reaktansi seri saluran untuk mengatur aliran daya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern grid. L4 advanced."
+   "explain": "BENAR. Perangkat FACTS berbasis elektronika daya bereaksi dalam milidetik. Kompensasi shunt (SVC/STATCOM) menjaga tegangan bus; kompensasi seri (TCSC) menaikkan kapasitas transfer saluran panjang dan meredam osilasi.",
+   "hint": "Mana yang dipasang paralel ke bus dan mana yang seri dengan saluran?"
   }
  ],
  "4D.12": [
   {
    "type": "tf",
-   "q": "Stability transmission L4 advanced: transient + V + frequency — comprehensive.",
+   "q": "Stabilitas sistem tenaga dibedakan menjadi stabilitas sudut rotor, stabilitas tegangan, dan stabilitas frekuensi, yang masing-masing punya penyebab dan penanganan berbeda.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Stability foundation. L4 advanced."
+   "explain": "BENAR. Stabilitas sudut rotor menyangkut generator tetap sinkron setelah gangguan; stabilitas tegangan menyangkut kecukupan daya reaktif; stabilitas frekuensi menyangkut keseimbangan pembangkitan dan beban. Ketiganya dianalisis dengan alat yang berbeda.",
+   "hint": "Pemadaman meluas karena tegangan merosot perlahan termasuk jenis ketidakstabilan yang mana?"
   }
  ],
  "4D.13": [
   {
    "type": "tf",
-   "q": "Insulation coordination L4 transmission: BIL + SIL + arrester — engineering design.",
+   "q": "Koordinasi isolasi memilih BIL peralatan dan arester sedemikian sehingga tegangan sisa arester berada cukup jauh di bawah BIL peralatan yang dilindungi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Design foundation. L4 transmission."
+   "explain": "BENAR. Margin proteksi (umumnya minimal 20%) memastikan surja petir dipotong arester sebelum mencapai tingkat yang merusak isolasi trafo. Jarak arester ke peralatan juga dibatasi karena tegangan naik sepanjang sambungan.",
+   "hint": "Apa yang dibandingkan: tegangan sisa arester dengan apa?"
   }
  ],
  "4D.14": [
   {
    "type": "tf",
-   "q": "EMF + EMC + corona L4 transmission advanced: environment + public engagement.",
+   "q": "Korona pada saluran tegangan ekstra tinggi menimbulkan rugi daya, derau, dan gangguan radio, dan dikurangi dengan konduktor berkas (bundle) yang memperkecil kuat medan di permukaan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Transmission modern consideration. L4."
+   "explain": "BENAR. Korona terjadi bila kuat medan listrik di permukaan konduktor melampaui tegangan tembus udara. Beberapa sub-konduktor dalam satu fasa memperbesar radius efektif, sehingga medan permukaan turun. Cuaca basah memperparah korona.",
+   "hint": "Mengapa saluran 500 kV memakai empat kawat per fasa, bukan satu kawat besar?"
   }
  ],
  "4E.01": [
   {
    "type": "tf",
-   "q": "Python + pandas + scipy foundation L4 Qastil PLNlytics: analytics modern.",
+   "q": "DataFrame pandas memungkinkan data beban per jam dari ribuan meter diringkas per hari atau per bulan dengan satu perintah resample.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern analytics. Qastil stack."
+   "explain": "BENAR. pandas menangani indeks waktu secara khusus: resample('D').sum() menjumlahkan per hari, rolling() menghitung rata-rata bergerak, dan groupby mengelompokkan menurut kolom. Operasi yang di Excel butuh banyak langkah menjadi satu baris.",
+   "hint": "Perintah apa yang mengubah data 15-menitan menjadi total harian?"
   }
  ],
  "4E.02": [
   {
    "type": "tf",
-   "q": "Time-series decomposition + stationarity L4 Qastil forecasting foundation.",
+   "q": "Dekomposisi deret waktu memisahkan data beban menjadi tren, komponen musiman, dan sisa (residual), sehingga pola harian dan mingguan terlihat terpisah dari pertumbuhan jangka panjang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Time-series. L4 foundation."
+   "explain": "BENAR. Tren menunjukkan pertumbuhan beban, komponen musiman menunjukkan pola berulang (puncak malam, akhir pekan), dan residual menunjukkan apa yang tidak dijelaskan keduanya. Fungsi ACF membantu mengenali periode musiman yang dominan.",
+   "hint": "Pola 'beban rendah tiap Minggu' termasuk komponen yang mana?"
   }
  ],
  "4E.03": [
   {
    "type": "tf",
-   "q": "ARIMA/SARIMA forecasting L4 Qastil classical: baseline modern.",
+   "q": "SARIMA memperluas ARIMA dengan komponen musiman, sehingga cocok untuk beban listrik yang berpola harian dan mingguan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Classical baseline."
+   "explain": "BENAR. ARIMA biasa hanya menangkap ketergantungan jangka pendek. SARIMA menambahkan suku musiman berperiode (misalnya 24 jam atau 7 hari) sehingga pola berulang ikut dimodelkan. Data biasanya perlu didiferensiasi agar stasioner.",
+   "hint": "Apa yang ditambahkan huruf 'S' pada SARIMA?"
   }
  ],
  "4E.04": [
   {
    "type": "tf",
-   "q": "Regression konsumsi L4 analytics Qastil: foundation causal predict.",
+   "q": "Regresi yang menunjukkan konsumsi naik seiring suhu tidak otomatis membuktikan suhu adalah satu-satunya penyebab; korelasi bukan bukti sebab-akibat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Regression foundation. Qastil."
+   "explain": "BENAR. Variabel lain yang tidak dimasukkan (jumlah penghuni, jam operasi) bisa ikut berubah bersamaan. Regresi berganda dengan variabel yang relevan dan pemahaman fisik sistem diperlukan sebelum menyimpulkan penyebab.",
+   "hint": "Apa yang bisa membuat dua variabel bergerak bersama tanpa saling menyebabkan?"
   }
  ],
  "4E.06": [
   {
    "type": "tf",
-   "q": "ML sup/unsup + bias-variance L4: Qastil analytics + MAGNETO foundation.",
+   "q": "Pembelajaran terawasi (supervised) memerlukan data berlabel — misalnya pelanggan yang sudah terbukti curang — sedangkan tak terawasi (unsupervised) mencari pola tanpa label.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. ML foundation. Qastil."
+   "explain": "BENAR. Klasifikasi pencurian butuh contoh kasus terbukti untuk dilatih. Clustering profil beban tidak butuh label; ia mengelompokkan pelanggan yang mirip. Model yang terlalu rumit menghafal data latih (overfitting) dan buruk pada data baru.",
+   "hint": "Data apa yang dibutuhkan untuk melatih model klasifikasi pencurian?"
   }
  ],
  "4E.07": [
   {
    "type": "tf",
-   "q": "Feature engineering energy L4 Qastil: 89+ variable PLNlytics — strategic.",
+   "q": "Menambahkan fitur kalender (hari libur, akhir pekan) dan fitur lag (beban jam yang sama kemarin) biasanya memperbaiki prakiraan beban lebih besar daripada mengganti algoritma.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil PLNlytics rich feature."
+   "explain": "BENAR. Model hanya bisa belajar dari informasi yang diberikan. Beban hari Lebaran tidak bisa diprediksi dari suhu saja; fitur libur memberi tahu model. Rekayasa fitur yang memahami domain sering menjadi pembeda utama kinerja.",
+   "hint": "Informasi apa yang harus diberikan ke model agar tahu besok hari libur nasional?"
   }
  ],
  "4E.09": [
   {
    "type": "tf",
-   "q": "Ensemble RF + XGBoost + LightGBM L4 Qastil MAGNETO: hybrid stacking paper.",
+   "q": "Random Forest merata-ratakan banyak pohon keputusan yang dilatih pada sampel acak, sedangkan gradient boosting (XGBoost, LightGBM) membangun pohon berurutan yang tiap kali memperbaiki kesalahan pohon sebelumnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil direct. MAGNETO paper."
+   "explain": "BENAR. Keduanya ensemble pohon tetapi dengan strategi berbeda: bagging (paralel, mengurangi varians) versus boosting (sekuensial, mengurangi bias). Boosting sering lebih akurat pada data tabular tetapi lebih rentan overfitting jika tidak diatur.",
+   "hint": "Mana yang melatih pohon-pohonnya secara bersamaan, dan mana yang berurutan?"
   }
  ],
  "4E.10": [
   {
    "type": "tf",
-   "q": "Energy economics L4 Qastil: LCOE + NPV + IRR — investment decision.",
+   "q": "LCOE adalah total biaya pembangkit sepanjang umurnya (dibagi dengan diskonto) per kWh yang dihasilkan, sehingga teknologi dengan biaya modal dan bahan bakar berbeda bisa dibandingkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Economics foundation. L4."
+   "explain": "BENAR. PLTS berbiaya modal tinggi tanpa bahan bakar; PLTG berbiaya modal rendah tetapi bahan bakar mahal. LCOE menyatukan semuanya dalam satu angka Rp/kWh. NPV positif dan IRR di atas biaya modal menjadi kriteria kelayakan investasi.",
+   "hint": "Bagaimana membandingkan PLTS yang mahal dibangun dengan PLTG yang mahal dijalankan?"
   }
  ],
  "4E.11": [
   {
    "type": "tf",
-   "q": "Pasar listrik Indonesia + tarif PLN L4: regulatory + economic — Qastil context.",
+   "q": "Di Indonesia, PLN berperan sebagai pembeli tunggal dari pembangkit swasta (IPP) melalui kontrak jual beli tenaga listrik (PPA), dan tarif ke pelanggan ditetapkan pemerintah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Foundation Indonesia. Qastil PLN."
+   "explain": "BENAR. Berbeda dari pasar listrik terbuka, IPP menjual listriknya ke PLN dengan harga kontrak jangka panjang. Tarif pelanggan diatur pemerintah per golongan, dengan mekanisme penyesuaian dan subsidi untuk golongan tertentu.",
+   "hint": "Kepada siapa IPP menjual listriknya di Indonesia?"
   }
  ],
  "4E.12": [
   {
    "type": "tf",
-   "q": "BPP + cost-of-service L4: Qastil PLN — financial + operational.",
+   "q": "BPP dihitung per wilayah dan sangat dipengaruhi biaya bahan bakar, sehingga wilayah yang mengandalkan PLTD berbiaya pokok jauh lebih tinggi daripada Jawa-Bali.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil context. PLN economics."
+   "explain": "BENAR. Di pulau kecil yang disuplai diesel, BPP bisa dua sampai tiga kali lipat Jawa-Bali. Perbedaan ini menentukan prioritas pembangunan pembangkit terbarukan dan besarnya subsidi per wilayah.",
+   "hint": "Mengapa PLTS lebih cepat layak secara ekonomi di pulau terpencil daripada di Jawa?"
   }
  ],
  "4E.13": [
   {
    "type": "tf",
-   "q": "Demand response + peak shaving L4: Indonesia emerging + Qastil PLN modern.",
+   "q": "Demand response menggeser atau mengurangi beban pelanggan pada jam puncak melalui insentif tarif, sehingga kebutuhan pembangkit puncak yang mahal berkurang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern DR. Indonesia emerging."
+   "explain": "BENAR. Pembangkit puncak hanya beroperasi beberapa ratus jam setahun tetapi biayanya tinggi. Membayar pelanggan untuk menggeser beban sering lebih murah daripada membangun pembangkit puncak baru. Tarif WBP/LWBP adalah bentuk sederhananya.",
+   "hint": "Lebih murah membangun PLTG untuk 300 jam setahun, atau membayar pabrik untuk menggeser jam produksi?"
   }
  ],
  "4E.14": [
   {
    "type": "tf",
-   "q": "SQL advanced L4 Qastil Supabase: analytics query — PLNlytics foundation.",
+   "q": "Window function dalam SQL memungkinkan perhitungan seperti rata-rata bergerak atau peringkat per kelompok tanpa menggabungkan baris, dan CTE membuat query panjang lebih mudah dibaca.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SQL analytics. Qastil."
+   "explain": "BENAR. Window function (OVER, PARTITION BY) menghitung nilai per baris berdasarkan baris di sekitarnya. CTE (WITH ...) memecah query rumit menjadi langkah bernama. Keduanya membuat analisis deret waktu di SQL lebih ringkas dan cepat.",
+   "hint": "Bagaimana menghitung rata-rata beban 7 hari terakhir untuk tiap baris tanpa subquery bersarang?"
   }
  ],
  "4E.15": [
   {
    "type": "tf",
-   "q": "Data pipeline ETL/ELT L4 Qastil: PLNlytics foundation — reliable data.",
+   "q": "Pada pipeline ELT, data mentah dimuat dulu ke gudang data lalu ditransformasi di sana, memanfaatkan daya komputasi gudang data modern.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Pipeline foundation. Qastil."
+   "explain": "BENAR. ETL klasik mentransformasi sebelum memuat, cocok saat gudang data lemah. Gudang data cloud yang kuat membuat ELT lebih praktis: data mentah tersimpan utuh, dan transformasi bisa diulang jika logikanya berubah.",
+   "hint": "Di mana transformasi dilakukan pada ELT?"
   }
  ],
  "4E.16": [
   {
    "type": "tf",
-   "q": "Cloud warehouse BigQuery + Snowflake + Redshift L4: Qastil modern analytics.",
+   "q": "Gudang data cloud seperti BigQuery menyimpan data secara kolumnar dan menagih berdasarkan data yang dipindai, sehingga memilih hanya kolom yang perlu menghemat biaya dan waktu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Cloud modern. L4 analytics."
+   "explain": "BENAR. Penyimpanan kolumnar membaca hanya kolom yang diminta, bukan seluruh baris. SELECT * pada tabel miliaran baris memindai semua kolom dan mahal; menyebut kolom yang dibutuhkan bisa memangkas biaya puluhan kali.",
+   "hint": "Mengapa SELECT * dihindari pada gudang data cloud?"
   }
  ],
  "4E.17": [
   {
    "type": "tf",
-   "q": "Geospatial PostGIS + Leaflet L4 Qastil: PLNlytics utility GIS modern — 788 PJU point analog.",
+   "q": "PostGIS menambahkan tipe data dan fungsi spasial ke PostgreSQL, sehingga query seperti 'gardu dalam radius 500 m dari lokasi gangguan' bisa dijalankan langsung di basis data.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Qastil PLNlytics. GIS modern."
+   "explain": "BENAR. Fungsi seperti ST_DWithin dan ST_Intersects menghitung hubungan geometri. Dipadukan dengan peta interaktif (Leaflet, kepler.gl), analis dapat memvisualisasikan sebaran gangguan, susut, atau aset di peta.",
+   "hint": "Bagaimana menemukan semua tiang dalam 100 m dari jalur yang akan digali?"
   }
  ],
  "4F.01": [
   {
    "type": "tf",
-   "q": "ASHRAE Level 2 audit methodology L4 Envisor flagship: standard + premium.",
+   "q": "Audit tingkat 2 ASHRAE mencakup pengukuran lapangan, analisis per sistem, dan daftar peluang penghematan lengkap dengan perkiraan biaya dan penghematannya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Envisor service core. ASHRAE standard."
+   "explain": "BENAR. Tingkat 1 hanya walk-through dan data tagihan. Tingkat 2 menambahkan pengukuran (logging daya, lux, suhu), wawancara operator, dan analisis ekonomi tiap peluang, sehingga hasilnya cukup untuk keputusan investasi menengah.",
+   "hint": "Apa yang membedakan audit tingkat 2 dari sekadar berjalan keliling gedung?"
   }
  ],
  "4F.02": [
   {
    "type": "tf",
-   "q": "Level 3 investment-grade Envisor premium L4: ESCO + financing — comprehensive.",
+   "q": "Audit tingkat 3 (investment grade) memakai pemodelan rinci dan pengukuran lebih lama, karena hasilnya menjadi dasar pembiayaan proyek besar oleh bank atau ESCO.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Premium audit. Envisor flagship. L4."
+   "explain": "BENAR. Pemberi dana memerlukan keyakinan tinggi bahwa penghematan akan terjadi. Audit tingkat 3 memodelkan jam-per-jam, menganalisis ketidakpastian, dan menyusun rencana M&V, sehingga risiko finansialnya terukur.",
+   "hint": "Mengapa bank tidak cukup dengan hasil audit walk-through?"
   }
  ],
  "4F.03": [
   {
    "type": "tf",
-   "q": "Energy balance + Sankey visualization L4 Envisor: audit deliverable powerful.",
+   "q": "Diagram Sankey menggambarkan aliran energi dari sumber ke pengguna akhir dengan lebar panah sebanding besarnya, sehingga rugi dan pengguna terbesar langsung terlihat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Audit tool. Envisor deliverable."
+   "explain": "BENAR. Neraca energi menuntut energi masuk sama dengan energi berguna ditambah rugi. Sankey memvisualkan neraca itu; panah tebal ke 'rugi kompresor' atau 'chiller' menunjukkan ke mana perhatian audit harus diarahkan.",
+   "hint": "Dari diagram Sankey, bagaimana cepat tahu sistem mana yang paling boros?"
   }
  ],
  "4F.04": [
   {
    "type": "tf",
-   "q": "EUI + SEC normalize Envisor L4: benchmark fair — peer compare.",
+   "q": "EUI (kWh per m² per tahun) memungkinkan gedung berukuran berbeda dibandingkan secara adil, dan SEC (kWh per ton produk) melakukan hal serupa untuk pabrik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Normalize foundation. Envisor."
+   "explain": "BENAR. Total kWh tidak bermakna tanpa penyebut. EUI kantor di Indonesia yang efisien berada di kisaran 150–200 kWh/m²/tahun; angka jauh di atasnya menandakan peluang besar. SEC dibandingkan dengan benchmark industri sejenis.",
+   "hint": "Apa penyebut yang tepat untuk membandingkan konsumsi dua hotel berbeda ukuran?"
   }
  ],
  "4F.05": [
   {
    "type": "tf",
-   "q": "Kantor audit ASHRAE Level 2 Envisor L4: standard major market.",
+   "q": "Pada gedung perkantoran, sistem pendingin biasanya menjadi pengguna energi terbesar, diikuti pencahayaan dan beban stopkontak (komputer, peralatan kantor).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Kantor dominant audit. Envisor market."
+   "explain": "BENAR. Di iklim tropis, AC menyerap 50–60% energi kantor. Karena itu setpoint, jadwal operasi, dan efisiensi chiller menjadi fokus audit, sementara pencahayaan LED dan manajemen beban stopkontak melengkapinya.",
+   "hint": "Tiga pengguna energi terbesar di kantor — urutkan."
   }
  ],
  "4F.06": [
   {
    "type": "tf",
-   "q": "Hotel + retail audit Envisor L4: 24/7 + occupancy — specialized market.",
+   "q": "Audit hotel memperhatikan tingkat hunian karena konsumsi per kamar terisi lebih bermakna daripada total, dan beban hotel berjalan 24 jam dengan puncak pagi dan malam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Hotel specialty. Envisor market."
+   "explain": "BENAR. Hotel dengan hunian 40% dan 90% tidak bisa dibandingkan totalnya. Peluang khas hotel: pengendalian AC kamar kosong (key card, sensor), air panas efisien, dan penjadwalan area publik.",
+   "hint": "Apa penyebut yang adil untuk membandingkan konsumsi hotel bulan sepi dan bulan ramai?"
   }
  ],
  "4F.07": [
   {
    "type": "tf",
-   "q": "Hospital audit specialty Envisor L4: life-safety + 24/7 — premium.",
+   "q": "Di rumah sakit, beban kritis (ruang operasi, ICU, peralatan penunjang hidup) tidak boleh dimatikan untuk penghematan; peluang efisiensi dicari pada beban non-kritis dan sistem penunjang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Hospital specialty. Premium Envisor."
+   "explain": "BENAR. Keselamatan pasien mendahului efisiensi. Penghematan diarahkan pada chiller dan AHU area non-kritis, pencahayaan koridor, laundry, dan sistem uap, tanpa mengganggu suplai daya dan tekanan udara ruang kritis.",
+   "hint": "Bagian mana dari rumah sakit yang boleh dijadwalkan mati saat malam?"
   }
  ],
  "4F.08": [
   {
    "type": "tf",
-   "q": "Data center audit PUE + cooling L4 Envisor specialty: Indonesia growing market.",
+   "q": "PUE adalah perbandingan total energi fasilitas pusat data terhadap energi peralatan IT; nilai mendekati 1,0 berarti hampir semua energi dipakai peralatan IT.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. DC specialty. Indonesia growing."
+   "explain": "BENAR. PUE 2,0 berarti setiap 1 kWh untuk server memerlukan 1 kWh lagi untuk pendingin, UPS, dan pencahayaan. Pusat data efisien mencapai 1,2–1,4, terutama lewat pengelolaan aliran udara dan suhu pendinginan yang lebih tinggi.",
+   "hint": "Pusat data dengan server 500 kW dan total 900 kW — berapa PUE-nya?"
   }
  ],
  "4F.09": [
   {
    "type": "tf",
-   "q": "Industri audit Envisor L4 flagship: multi-sector Indonesia — strategic market.",
+   "q": "Audit pabrik memerlukan pemahaman proses produksi, karena peluang terbesar sering ada di proses itu sendiri, bukan hanya di utilitas seperti penerangan dan AC.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Envisor industri. Qastil flagship."
+   "explain": "BENAR. Di pabrik semen, kiln dan penggilingan mendominasi; di tekstil, boiler dan pengeringan; di baja, tungku. Auditor harus memahami mana energi yang benar-benar dibutuhkan proses dan mana yang terbuang.",
+   "hint": "Di pabrik semen, seberapa besar arti penghematan lampu dibanding penggilingan?"
   }
  ],
  "4F.10": [
   {
    "type": "tf",
-   "q": "Manufacturing thermal + electrical audit L4 Envisor: comprehensive scope.",
+   "q": "Di banyak industri manufaktur, energi termal (uap, gas, pemanasan) lebih besar daripada energi listrik, sehingga audit harus mencakup keduanya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Manufacturing audit. Envisor flagship."
+   "explain": "BENAR. Boiler, oven, dan pengering sering memakai lebih banyak energi (dalam TOE) daripada seluruh motor dan pencahayaan. Isolasi pipa uap, steam trap yang bocor, dan pemulihan panas buang adalah peluang termal yang lazim.",
+   "hint": "Di pabrik makanan, mana yang lebih besar: tagihan listrik atau tagihan gas boiler?"
   }
  ],
  "4F.11": [
   {
    "type": "tf",
-   "q": "Payback + NPV + IRR Envisor L4: financial decision + ESCO basis.",
+   "q": "NPV menghitung nilai kini dari seluruh arus kas proyek dengan tingkat diskonto; proyek layak jika NPV positif, dan IRR adalah tingkat diskonto yang membuat NPV nol.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Financial foundation. L4 audit."
+   "explain": "BENAR. Payback sederhana mengabaikan nilai waktu uang dan arus kas setelah balik modal. NPV dan IRR memperhitungkan umur proyek dan biaya modal, sehingga lebih tepat untuk investasi besar berjangka panjang.",
+   "hint": "Dua proyek dengan payback sama tetapi umur berbeda — mana yang lebih menguntungkan?"
   }
  ],
  "4F.12": [
   {
    "type": "tf",
-   "q": "LCCA Envisor L4: true cost + long-term — credible decision.",
+   "q": "LCCA membandingkan alternatif berdasarkan total biaya sepanjang umur: investasi awal, energi, perawatan, penggantian, dan nilai sisa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. LCCA rigorous. Envisor."
+   "explain": "BENAR. Chiller yang lebih mahal 30% tetapi 20% lebih efisien hampir selalu lebih murah dalam 15 tahun. LCCA membuat perbandingan itu eksplisit, sehingga keputusan tidak dikuasai harga beli semata.",
+   "hint": "Biaya apa saja yang diabaikan jika hanya membandingkan harga beli?"
   }
  ],
  "4F.13": [
   {
    "type": "tf",
-   "q": "CO2 emission calc L4 ESG: customer + regulatory — Envisor service.",
+   "q": "Emisi CO₂ dari konsumsi listrik dihitung dengan mengalikan kWh dengan faktor emisi jaringan, yang untuk Indonesia berkisar sekitar 0,8 kg CO₂ per kWh.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. ESG emerging. Envisor service."
+   "explain": "BENAR. Faktor emisi mencerminkan bauran pembangkit (dominan batu bara di Indonesia). Setiap kWh yang dihemat mengurangi sekitar 0,8 kg CO₂, sehingga laporan audit dapat menyatakan manfaat lingkungan selain rupiah.",
+   "hint": "Menghemat 100.000 kWh setahun setara berapa ton CO₂?"
   }
  ],
  "4F.14": [
   {
    "type": "tf",
-   "q": "Laporan audit SNI ISO 50002 L4 Envisor: standard — credible + Indonesia.",
+   "q": "Laporan audit menurut SNI ISO 50002 memuat ringkasan eksekutif, lingkup dan batasan, data dan metode, temuan, daftar peluang dengan analisis ekonomi, serta rencana verifikasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Standard audit Indonesia. Envisor."
+   "explain": "BENAR. Struktur baku membuat laporan mudah dibandingkan dan ditindaklanjuti. Ringkasan eksekutif untuk pengambil keputusan; rincian teknis untuk tim pelaksana; rencana M&V agar hasilnya bisa dibuktikan.",
+   "hint": "Bagian mana yang dibaca direktur, dan bagian mana yang dibaca manajer teknik?"
   }
  ],
  "4F.15": [
   {
    "type": "tf",
-   "q": "Executive summary + prioritize L4 Envisor: decision + action — premium deliverable.",
+   "q": "Ringkasan eksekutif sebaiknya menyajikan tiga sampai lima rekomendasi utama yang diurutkan berdasarkan dampak dan kemudahan, bukan daftar panjang semua temuan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Communicate. Envisor premium."
+   "explain": "BENAR. Pengambil keputusan punya waktu terbatas. Menonjolkan peluang terbesar dengan angka penghematan, biaya, dan payback membuat keputusan mudah diambil; daftar lengkap tersedia di badan laporan.",
+   "hint": "Jika direktur hanya membaca satu halaman, apa yang harus ada di sana?"
   }
  ],
  "4F.16": [
   {
    "type": "tf",
-   "q": "Presentasi management Envisor L4 culmination: Qastil + strategic business — Indonesia premium.",
+   "q": "Presentasi hasil audit kepada pemilik sebaiknya berfokus pada keputusan yang diminta — investasi apa, berapa hematnya, kapan balik modal — dengan data teknis sebagai pendukung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Presentasi culmination. Envisor + Qastil strategic."
+   "explain": "BENAR. Pemilik ingin tahu apa yang harus dilakukan dan mengapa layak. Grafik sederhana dan perbandingan dengan benchmark lebih meyakinkan daripada tabel pengukuran mentah, yang cukup disediakan sebagai lampiran.",
+   "hint": "Pertanyaan pertama pemilik gedung setelah presentasi biasanya apa?"
   }
  ],
  "4G.01": [
   {
    "type": "tf",
-   "q": "Performance test PLN UPK L4: contract + compliance — specialty.",
+   "q": "Heat rate menyatakan energi bahan bakar yang dibutuhkan per kWh listrik; makin rendah heat rate, makin efisien pembangkit.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PLN UPK specialty."
+   "explain": "BENAR. Efisiensi = 3.600 kJ/kWh dibagi heat rate. PLTU dengan heat rate 10.000 kJ/kWh berefisiensi 36%. Uji kinerja berkala membandingkan heat rate aktual dengan desain untuk menemukan penurunan kinerja.",
+   "hint": "Heat rate 9.000 kJ/kWh — berapa efisiensinya?"
   }
  ],
  "4G.02": [
   {
    "type": "tf",
-   "q": "Boiler eff direct + indirect L4 PLTU: Qastil career alternative.",
+   "q": "Metode langsung menghitung efisiensi boiler dari energi uap dibagi energi bahan bakar, sedangkan metode tidak langsung menghitung 100% dikurangi seluruh rugi (gas buang, radiasi, pembakaran tak sempurna).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Boiler engineering."
+   "explain": "BENAR. Metode langsung sederhana tetapi tidak menunjukkan di mana rugi terjadi. Metode tidak langsung memerlukan lebih banyak pengukuran (suhu dan komposisi gas buang, suhu permukaan) tetapi menunjukkan rugi mana yang bisa dikurangi.",
+   "hint": "Metode mana yang memberi tahu bahwa rugi gas buang terlalu besar?"
   }
  ],
  "4G.05": [
   {
    "type": "tf",
-   "q": "Strategy pembangkit L4: CBM + PdM + RCM — Envisor advisory.",
+   "q": "RCM menentukan strategi perawatan tiap peralatan berdasarkan konsekuensi kegagalannya: yang berdampak besar dipantau kondisinya, yang berdampak kecil boleh dijalankan sampai rusak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern maintenance."
+   "explain": "BENAR. Tidak semua peralatan layak dipantau mahal-mahal. RCM menganalisis fungsi, mode kegagalan, dan dampaknya, lalu memilih perawatan prediktif, pencegahan terjadwal, atau run-to-failure secara rasional.",
+   "hint": "Apakah pompa cadangan yang murah perlu sensor getaran online?"
   }
  ],
  "4G.09": [
   {
    "type": "tf",
-   "q": "Inverter sizing L4 PLTS engineering: Envisor + Qastil.",
+   "q": "Jumlah modul per string dibatasi oleh tegangan rangkaian terbuka pada suhu terdingin yang tidak boleh melampaui tegangan maksimum inverter.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Design engineering."
+   "explain": "BENAR. Voc naik saat modul dingin. Jika Voc string pada pagi terdingin melebihi batas inverter (misalnya 1.000 atau 1.100 V), inverter rusak. Batas bawah ditentukan oleh Vmp pada suhu terpanas yang harus tetap di dalam jendela MPPT.",
+   "hint": "Kapan tegangan string paling tinggi: siang terik atau pagi dingin?"
   }
  ],
  "4G.11": [
   {
    "type": "tf",
-   "q": "LFP vs NMC chemistry L4: stationary LFP — grid storage preferred.",
+   "q": "Baterai LFP (LiFePO4) lebih aman terhadap thermal runaway dan berumur siklus lebih panjang daripada NMC, tetapi kerapatan energinya lebih rendah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Grid LFP dominant."
+   "explain": "BENAR. Untuk penyimpanan stasioner, berat dan volume tidak terlalu penting, sehingga LFP menjadi pilihan dominan BESS. NMC dengan kerapatan energi tinggi lebih cocok untuk kendaraan listrik yang mementingkan jarak tempuh.",
+   "hint": "Mengapa BESS stasioner cenderung memilih LFP meski lebih berat?"
   }
  ],
  "4G.12": [
   {
    "type": "tf",
-   "q": "Hybrid remote Indonesia L4: archipelago strategic — electrification.",
+   "q": "Sistem hibrida PLTS + diesel + BESS di daerah terpencil mengurangi jam operasi genset dan konsumsi solar, karena PLTS melayani siang dan baterai melayani malam.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Indonesia remote. Strategic."
+   "explain": "BENAR. Genset yang sebelumnya beroperasi 24 jam bisa dikurangi menjadi beberapa jam sebagai cadangan. Penghematan solar yang mahal diangkut ke pulau terpencil membuat sistem hibrida cepat balik modal.",
+   "hint": "Berapa biaya satu liter solar setelah diangkut ke pulau kecil?"
   }
  ],
  "4G.13": [
   {
    "type": "tf",
-   "q": "BESS dispatch multi-service L4: peak + arbitrage + frequency — grid advance.",
+   "q": "BESS dapat memberi beberapa layanan sekaligus — pemangkasan puncak, arbitrase tarif, respons frekuensi, dan black start — dan pendapatannya bertumpuk (value stacking).",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Multi-service. L4."
+   "explain": "BENAR. Satu unit BESS bisa memangkas puncak pada jam tertentu dan menyediakan respons frekuensi di jam lain. Strategi dispatch yang menggabungkan layanan-layanan ini menentukan kelayakan ekonominya.",
+   "hint": "Mengapa BESS yang hanya dipakai untuk satu layanan sering tidak layak secara ekonomi?"
   }
  ],
  "4G.14": [
   {
    "type": "tf",
-   "q": "Grid code Indonesia L4 pembangkit: compliance — PLN interconnect mandatory.",
+   "q": "Grid code menetapkan persyaratan teknis — rentang frekuensi dan tegangan, proteksi, kemampuan bertahan saat gangguan — yang wajib dipenuhi pembangkit sebelum tersambung ke jaringan PLN.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Compliance mandatory."
+   "explain": "BENAR. Pembangkit yang tidak memenuhi grid code bisa mengganggu stabilitas sistem, misalnya lepas serentak saat gangguan kecil. Kepatuhan diuji saat komisioning dan menjadi syarat dalam PPA.",
+   "hint": "Apa yang terjadi jika ratusan PLTS lepas bersamaan saat tegangan turun sesaat?"
   }
  ],
  "4G.17": [
   {
    "type": "tf",
-   "q": "LVRT + FRT + Q capability L4 modern grid: renewable integrate Indonesia.",
+   "q": "Kemampuan LVRT mengharuskan pembangkit tetap tersambung selama tegangan jaringan turun sesaat akibat gangguan, bukan langsung lepas, agar sistem tidak kehilangan banyak pembangkit sekaligus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern grid integrate."
+   "explain": "BENAR. Jika semua pembangkit lepas saat gangguan singkat, pemulihan sistem justru gagal karena kekurangan daya. Kurva LVRT menetapkan berapa lama pembangkit harus bertahan pada tegangan tertentu, dan menyuntik daya reaktif membantu pemulihan tegangan.",
+   "hint": "Mengapa pembangkit dilarang 'menyelamatkan diri' dengan lepas saat tegangan turun?"
   }
  ],
  "4H.01": [
   {
    "type": "tf",
-   "q": "Risk Assessment matrix L4 K3: foundation — Envisor service + Qastil LSP opportunity.",
+   "q": "Matriks penilaian risiko menggabungkan kemungkinan terjadinya dan tingkat keparahan, sehingga bahaya listrik bisa diurutkan prioritasnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. K3 foundation. L4 advanced."
+   "explain": "BENAR. Risiko = kemungkinan × keparahan. Bahaya yang sering terjadi dan berakibat fatal berada di sudut merah matriks dan ditangani lebih dulu; bahaya yang jarang dan ringan bisa diterima dengan pengendalian sederhana.",
+   "hint": "Dua bahaya sama-sama fatal, tetapi satu terjadi tiap bulan dan satu sekali dalam 20 tahun — mana yang lebih berisiko?"
   }
  ],
  "4H.02": [
   {
    "type": "tf",
-   "q": "HAZOP + HAZID systematic K3 L4: engineering rigorous + Envisor premium.",
+   "q": "HAZOP memeriksa penyimpangan sistem secara sistematis dengan kata panduan (tidak ada, lebih, kurang, terbalik) pada tiap bagian, dan dilakukan oleh tim multidisiplin.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. HAZOP systematic. L4 advanced."
+   "explain": "BENAR. Untuk sistem kelistrikan, 'tidak ada tegangan', 'tegangan lebih', 'arus terbalik' pada tiap node diperiksa penyebab dan akibatnya. Tim yang beragam memastikan sudut pandang operasi, perawatan, dan desain terwakili.",
+   "hint": "Apa akibat 'arus terbalik' pada penyulang dengan pembangkit tersebar?"
   }
  ],
  "4H.03": [
   {
    "type": "tf",
-   "q": "AFHA IEEE 1584 L4 K3: engineering + compliance — Envisor premium service.",
+   "q": "IEEE 1584 menghitung energi insiden busur api dari arus gangguan, waktu pemutusan, jarak antar konduktor, jarak kerja, dan konfigurasi peralatan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Arc flash engineering. L4."
+   "explain": "BENAR. Energi insiden meningkat dengan arus dan terutama dengan waktu — relai yang lambat bisa melipatgandakan bahaya. Hasilnya dinyatakan dalam cal/cm² pada jarak kerja tertentu dan menjadi dasar label serta pemilihan APD.",
+   "hint": "Variabel mana yang paling mudah diubah untuk menurunkan energi insiden: arus atau waktu?"
   }
  ],
  "4H.04": [
   {
    "type": "tf",
-   "q": "PPE category match incident energy NFPA 70E L4: life-safety — Envisor.",
+   "q": "Kategori APD NFPA 70E menetapkan tingkat perlindungan minimum: kategori 1 untuk 4 cal/cm², kategori 2 untuk 8 cal/cm², kategori 3 untuk 25 cal/cm², dan kategori 4 untuk 40 cal/cm².",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PPE select. L4 K3."
+   "explain": "BENAR. Energi insiden dari studi dibandingkan dengan tabel ini untuk menentukan pakaian, pelindung wajah, dan sarung tangan. Di atas 40 cal/cm², pekerjaan bertegangan dilarang dan peralatan harus dipadamkan.",
+   "hint": "Energi insiden 10 cal/cm² memerlukan APD kategori berapa?"
   }
  ],
  "4H.06": [
   {
    "type": "tf",
-   "q": "Studi kasus + RCA L4 K3: learning — Envisor training service.",
+   "q": "Analisis akar penyebab kecelakaan listrik mencari kelemahan sistem — prosedur, pelatihan, desain, pengawasan — bukan berhenti pada 'kesalahan pekerja'.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. RCA foundation. L4."
+   "explain": "BENAR. Menyalahkan individu tidak mencegah kejadian berulang dengan orang lain. Metode seperti 5-Why dan Ishikawa menelusuri mengapa kondisi yang memungkinkan kesalahan itu ada, sehingga perbaikannya bersifat sistemik.",
+   "hint": "Jika pekerja menyentuh busbar hidup, apa pertanyaan 'mengapa' berikutnya?"
   }
  ],
  "4H.07": [
   {
    "type": "tf",
-   "q": "Tahanan isolasi test L4 K3 periodic: essential Envisor service.",
+   "q": "Tahanan isolasi instalasi diukur dengan megger pada tegangan uji sesuai kelas instalasi, dan hasilnya dibandingkan dengan batas minimum serta hasil pengukuran sebelumnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Essential test. K3 listrik."
+   "explain": "BENAR. Nilai mutlak menunjukkan kelaikan saat ini; tren menunjukkan laju penuaan. Isolasi yang masih di atas batas tetapi turun 50% dari tahun lalu perlu diselidiki — mungkin lembap atau rusak mekanis.",
+   "hint": "Nilai 5 MΩ tahun ini, 50 MΩ tahun lalu — masih 'lulus', tetapi apa yang harus dilakukan?"
   }
  ],
  "4H.08": [
   {
    "type": "tf",
-   "q": "Tahanan pentanahan L4 K3 essential: periodic — Envisor service + compliance.",
+   "q": "Metode 3 titik (fall of potential) memerlukan elektrode yang diukur dilepas dari sistem, sedangkan metode clamp-on mengukur tanpa melepas tetapi hanya sah bila ada jalur pembumian paralel.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Earth test. K3 foundation."
+   "explain": "BENAR. Metode 3 titik adalah acuan tetapi memerlukan pelepasan dan dua pasak bantu. Clamp-on praktis untuk pemeriksaan rutin, tetapi pada elektrode tunggal tanpa jalur paralel ia tidak bisa membentuk lingkar arus dan hasilnya tidak berarti.",
+   "hint": "Mengapa clamp-on tidak bisa mengukur satu batang pembumian yang berdiri sendiri?"
   }
  ],
  "4H.09": [
   {
    "type": "tf",
-   "q": "Uji polaritas + kontinuitas + RCD L4 K3: new install commissioning — essential.",
+   "q": "Uji polaritas memastikan sakelar dan pengaman memutus penghantar fasa, bukan netral, dan uji kontinuitas memastikan penghantar pembumian tersambung utuh sampai setiap titik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Commissioning essential. L4."
+   "explain": "BENAR. Polaritas terbalik membuat peralatan tetap bertegangan meski sakelar off. PE yang putus membuat proteksi gangguan tanah tidak bekerja. Keduanya wajib pada komisioning instalasi baru sebelum diberi tegangan.",
+   "hint": "Apa akibatnya jika MCB memutus netral, bukan fasa?"
   }
  ],
  "4H.10": [
   {
    "type": "tf",
-   "q": "Termografi advanced L4 Envisor: beyond basic — pattern + signature.",
+   "q": "Pola termal membantu diagnosis: satu terminal panas di antara tiga fasa menunjukkan sambungan longgar, sedangkan ketiga fasa sama-sama panas menunjukkan beban lebih.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Termografi advanced. L4 K3."
+   "explain": "BENAR. Sambungan longgar bersifat lokal, sehingga hanya satu titik yang panas. Beban lebih memanaskan seluruh jalur arus secara merata. Membaca pola, bukan hanya angka suhu, mengarahkan tindakan perbaikan yang tepat.",
+   "hint": "Tiga fasa 60 °C merata versus satu fasa 90 °C — apa penyebab masing-masing?"
   }
  ],
  "4H.11": [
   {
    "type": "tf",
-   "q": "Audit panel distribusi L4 K3 comprehensive: Envisor service — periodic maintenance.",
+   "q": "Audit panel distribusi mencakup pemeriksaan visual, pengukuran kelistrikan, dan pemeriksaan mekanis seperti kekencangan baut terminal sesuai torsi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Comprehensive audit. L4."
+   "explain": "BENAR. Visual menemukan korosi dan tanda panas, pengukuran menemukan ketidakseimbangan dan arus bocor, dan pemeriksaan torsi menemukan baut yang mengendur akibat siklus panas-dingin. Baut longgar adalah awal dari banyak kebakaran panel.",
+   "hint": "Mengapa baut terminal bisa mengendur sendiri setelah beberapa tahun?"
   }
  ],
  "4H.12": [
   {
    "type": "tf",
-   "q": "SLO Indonesia mandatory L4 legal operation: Envisor service + Qastil business.",
+   "q": "SLO diterbitkan lembaga inspeksi teknik terakreditasi setelah instalasi diperiksa dan diuji sesuai PUIL, dan berlaku untuk jangka waktu tertentu sehingga perlu diperbarui.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SLO Indonesia. L4 market."
+   "explain": "BENAR. LIT memeriksa gambar, pemasangan, pengaman, pembumian, dan hasil uji, lalu menerbitkan SLO jika laik. Setelah masa berlakunya habis atau ada perubahan besar, instalasi diperiksa ulang.",
+   "hint": "Siapa yang berwenang menyatakan instalasi laik operasi?"
   }
  ],
  "4H.13": [
   {
    "type": "tf",
-   "q": "Sistem pentanahan TN + TT + IT L4: application + design — PUIL foundation.",
+   "q": "Sistem IT dipakai di ruang operasi rumah sakit karena gangguan tanah pertama tidak memutus suplai, hanya memicu alarm, sehingga peralatan penunjang hidup tetap menyala.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Grounding system. L4."
+   "explain": "BENAR. Pada sistem IT, tidak ada titik netral yang dibumikan langsung, sehingga gangguan tanah pertama hanya mengalirkan arus sangat kecil. Insulation monitoring device memberi peringatan agar gangguan diperbaiki sebelum gangguan kedua terjadi.",
+   "hint": "Mengapa memutus suplai ruang operasi saat gangguan kecil justru berbahaya?"
   }
  ],
  "4H.14": [
   {
    "type": "tf",
-   "q": "Proteksi petir eksternal L4 K3 Indonesia tropis: high lightning — essential.",
+   "q": "Metode bola bergulir (rolling sphere) menentukan area yang terlindungi terminal petir: titik yang tidak tersentuh bola berjari-jari tertentu dianggap terlindung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Indonesia tropis. Petir frekuen. Essential."
+   "explain": "BENAR. Jari-jari bola bergantung pada tingkat proteksi (misalnya 20 m untuk tingkat I, 60 m untuk tingkat IV). Metode ini menggantikan 'sudut proteksi' sederhana dan lebih akurat untuk gedung bertingkat dengan bentuk rumit.",
+   "hint": "Bagian atap mana yang 'tersembunyi' dari bola bergulir?"
   }
  ],
  "4H.15": [
   {
    "type": "tf",
-   "q": "SPD cascade proteksi L4 K3: modern instalasi — Indonesia tropis petir.",
+   "q": "SPD dipasang berjenjang: tipe 1 di titik masuk untuk arus petir langsung, tipe 2 di panel distribusi, dan tipe 3 di dekat peralatan sensitif.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SPD modern. Indonesia petir tinggi."
+   "explain": "BENAR. Tiap tipe menangani energi yang berbeda. Tipe 1 tahan arus petir besar tetapi tegangan sisanya masih tinggi; tipe 2 dan 3 menurunkannya lebih jauh. Jarak antar jenjang dan koordinasinya diatur agar bekerja berurutan.",
+   "hint": "Mengapa satu SPD di panel utama tidak cukup melindungi server di lantai 10?"
   }
  ],
  "4H.16": [
   {
    "type": "tf",
-   "q": "Bonding + equipotential L4 K3: safety + surge — PUIL requirement.",
+   "q": "Bonding ekipotensial menghubungkan semua bagian logam yang bisa tersentuh — pipa, rangka, tray — sehingga saat gangguan tidak ada beda potensial berbahaya di antara mereka.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Bonding essential. L4 PUIL."
+   "explain": "BENAR. Jika hanya badan peralatan yang dibumikan sementara pipa air tidak, saat gangguan seseorang yang menyentuh keduanya dilewati arus. Bonding membuat semuanya naik ke potensial yang sama sehingga tegangan sentuh mendekati nol.",
+   "hint": "Apa yang terjadi jika kran air dan mesin cuci berada pada potensial berbeda saat gangguan?"
   }
  ],
  "4H.17": [
   {
    "type": "tf",
-   "q": "RCD ELCB personnel life-safety L4 K3: PUIL requirement — wet area.",
+   "q": "Untuk selektivitas, RCD hulu memakai jenis tunda waktu (tipe S) dengan sensitivitas lebih besar, sedangkan RCD hilir 30 mA tanpa tunda melindungi orang langsung di sirkuit akhir.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. RCD essential. L4 PUIL."
+   "explain": "BENAR. Jika keduanya 30 mA tanpa tunda, gangguan di satu sirkuit akhir bisa men-trip RCD utama dan memadamkan seluruh gedung. RCD tipe S 100–300 mA di hulu memberi kesempatan RCD hilir bekerja lebih dulu.",
+   "hint": "Mengapa RCD utama tidak boleh sama sensitif dan sama cepatnya dengan RCD sirkuit akhir?"
   }
  ],
  "4H.18": [
   {
    "type": "tf",
-   "q": "Hazardous area zone L4 K3: petrochemical Indonesia — Envisor specialty.",
+   "q": "Zona 1 adalah area di mana atmosfer gas mudah terbakar kemungkinan hadir pada operasi normal, sedangkan zona 2 hanya pada kondisi tidak normal dan singkat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Hazardous specialty. L4."
+   "explain": "BENAR. Klasifikasi zona ditentukan dari sumber pelepasan, ventilasi, dan sifat gas. Peralatan untuk zona 1 harus lebih ketat (misalnya Ex d atau Ex e) daripada zona 2 (Ex n dapat diterima).",
+   "hint": "Area sekitar flensa pompa bensin yang kadang bocor termasuk zona berapa?"
   }
  ],
  "4H.19": [
   {
    "type": "tf",
-   "q": "Ex equipment type + zone L4 K3: selection match — Envisor specialty.",
+   "q": "Ex d (flameproof) membiarkan ledakan terjadi di dalam selungkup kuat tanpa merambat keluar, sedangkan Ex i (intrinsically safe) membatasi energi rangkaian sehingga percikan tidak mampu menyulut gas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Equipment selection. L4 hazardous."
+   "explain": "BENAR. Ex e (increased safety) mencegah percikan dan panas pada peralatan tanpa busur normal; Ex n untuk zona 2. Pemilihan jenis proteksi disesuaikan dengan zona, peralatan, dan kemudahan perawatan.",
+   "hint": "Jenis proteksi mana yang cocok untuk sensor berdaya kecil di zona 0?"
   }
  ],
  "4H.20": [
   {
    "type": "tf",
-   "q": "ATEX + IECEx certification L4 K3 Ex: global standard — Indonesia adopt.",
+   "q": "ATEX adalah sertifikasi yang berlaku di Uni Eropa, sedangkan IECEx adalah skema sertifikasi internasional; keduanya memakai sistem marka Ex yang serupa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Global certification. L4."
+   "explain": "BENAR. Marka seperti 'Ex db IIC T4 Gb' memuat jenis proteksi, kelompok gas, kelas suhu, dan tingkat proteksi peralatan. Sertifikat harus diverifikasi asli dan sesuai marka sebelum peralatan dipasang.",
+   "hint": "Apa yang harus dicocokkan antara sertifikat, marka pada peralatan, dan zona pemasangan?"
   }
  ],
  "4H.21": [
   {
    "type": "tf",
-   "q": "Installation Ex IEC 60079-14 + 17 L4 K3: specialty — Envisor premium service.",
+   "q": "IEC 60079-14 mengatur pemasangan peralatan Ex, dan IEC 60079-17 mengatur inspeksi berkala dengan tingkat rinci (visual, dekat, detail) yang berbeda.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Installation specialty. L4 K3."
+   "explain": "BENAR. Pemasangan yang salah (gland tidak sesuai, seal tidak terpasang) membatalkan proteksi. Inspeksi berkala memastikan integritasnya tetap terjaga setelah bertahun-tahun terpapar getaran dan korosi.",
+   "hint": "Apa yang bisa merusak proteksi Ex d tanpa mengubah peralatannya sendiri?"
   }
  ],
  "4H.22": [
   {
    "type": "tf",
-   "q": "Persiapan Ahli K3 Listrik L4 culmination: Qastil + Envisor business LSP strategic.",
+   "q": "Persiapan sertifikasi Ahli K3 Listrik mencakup penguasaan peraturan, praktik pemeriksaan dan pengujian instalasi, serta penyusunan laporan sesuai format yang ditetapkan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Cert strategic. Qastil + Envisor."
+   "explain": "BENAR. Ujian menilai kemampuan nyata: membaca gambar, menemukan ketidaksesuaian, mengukur, dan menuliskan temuan dengan dasar hukumnya. Latihan pemeriksaan lapangan lebih menentukan daripada sekadar menghafal pasal.",
+   "hint": "Apa yang diuji: hafalan pasal atau kemampuan memeriksa instalasi?"
   }
  ],
  "4H.23": [
   {
    "type": "tf",
-   "q": "Pembinaan K3 effective method L4 Envisor: ESA Academy + training business — Qastil.",
+   "q": "Pelatihan K3 yang efektif menggabungkan praktik langsung, contoh kejadian nyata, dan penyegaran berkala, bukan hanya ceramah sekali.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Training business. ESA Academy + Envisor."
+   "explain": "BENAR. Orang mengingat apa yang dilakukan, bukan yang didengar. Simulasi LOTO, praktik uji tegangan, dan pembahasan kecelakaan nyata membuat pelajaran melekat. Penyegaran berkala melawan kebiasaan yang mengendur.",
+   "hint": "Mana yang lebih diingat: mendengar tentang LOTO atau memasang gembok sendiri?"
   }
  ],
  "4H.24": [
   {
    "type": "tf",
-   "q": "SOP K3 Listrik L4 foundation: discipline + safety — Envisor service.",
+   "q": "SOP K3 listrik menuliskan langkah kerja, persyaratan kompetensi, APD, dan tindakan darurat secara spesifik untuk tiap jenis pekerjaan di tempat kerja itu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SOP essential. L4 K3."
+   "explain": "BENAR. SOP yang umum dan disalin dari tempat lain tidak menjawab bahaya khas lokasi. SOP yang baik disusun bersama pelaksana, diuji di lapangan, dan diperbarui setelah setiap kejadian atau perubahan peralatan.",
+   "hint": "Apa yang membedakan SOP yang dipakai dari SOP yang hanya disimpan?"
   }
  ],
  "4H.25": [
   {
    "type": "tf",
-   "q": "Pelaporan K3 Disnaker culmination L4 4H Indonesia: compliance + Envisor + Qastil multi-track strategic.",
+   "q": "Kecelakaan kerja wajib dilaporkan pengusaha kepada Dinas Ketenagakerjaan dalam waktu tidak lebih dari 2 × 24 jam sejak kejadian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. 4H culmination. L4 K3 advanced. Strategic."
+   "explain": "BENAR. Permenaker 3/1998 menetapkan batas waktu itu. Laporan menjadi dasar penyelidikan, klaim jaminan kecelakaan kerja, dan statistik nasional. Menyembunyikan kecelakaan adalah pelanggaran yang dapat dikenai sanksi.",
+   "hint": "Berapa lama batas waktu melaporkan kecelakaan kerja?"
   }
  ],
  "5A.01": [
   {
    "type": "tf",
-   "q": "BIM MEP L5 Senior: integrated design — premium Envisor consulting + Qastil strategic.",
+   "q": "Desain MEP terintegrasi mengoordinasikan sistem mekanikal, elektrikal, dan plumbing sejak awal agar jalur ducting, tray kabel, dan pipa tidak saling bertabrakan di lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. BIM Senior. Premium market."
+   "explain": "BENAR. Konflik jalur yang baru ketahuan saat konstruksi menyebabkan pembongkaran, keterlambatan, dan biaya tambahan. Koordinasi lewat rapat berkala dan model 3D bersama menyelesaikannya di atas kertas.",
+   "hint": "Lebih murah memindahkan ducting di gambar atau di plafon yang sudah terpasang?"
   }
  ],
  "5A.02": [
   {
    "type": "tf",
-   "q": "MEP electrical BIM L5 Senior: premium design — Envisor consulting opportunity.",
+   "q": "BIM 4D menambahkan dimensi waktu (jadwal) ke model 3D, dan 5D menambahkan biaya, sehingga urutan pemasangan dan arus kas proyek bisa disimulasikan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Premium BIM. Envisor."
+   "explain": "BENAR. Dengan 4D, tim melihat kapan tiap elemen dipasang dan menemukan tabrakan jadwal antar disiplin. Dengan 5D, perubahan desain langsung terlihat dampaknya pada anggaran.",
+   "hint": "Dimensi apa yang ditambahkan 4D dan 5D pada model 3D?"
   }
  ],
  "5A.03": [
   {
    "type": "tf",
-   "q": "MEP mechanical BIM L5 Senior: integrated — premium Envisor consulting.",
+   "q": "Value engineering mencari cara memenuhi fungsi yang sama dengan biaya lebih rendah, bukan sekadar memangkas spesifikasi hingga mutunya turun.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Mechanical BIM. L5 Senior."
+   "explain": "BENAR. VE bertanya 'apa fungsinya, adakah cara lain yang lebih murah untuk fungsi itu?'. Mengganti busduct dengan kabel pada jalur tertentu bisa VE; mengganti kabel tahan api dengan kabel biasa adalah pemangkasan mutu, bukan VE.",
+   "hint": "Apa beda 'lebih murah dengan fungsi sama' dan 'lebih murah dengan fungsi hilang'?"
   }
  ],
  "5A.04": [
   {
    "type": "tf",
-   "q": "Clash detection + coordination BIM L5 Senior: multi-discipline — critical quality.",
+   "q": "IEC 60364 menjadi dasar PUIL, sedangkan NEC/NFPA 70 adalah standar Amerika dengan sistem tegangan, warna kabel, dan cara sizing yang berbeda, sehingga keduanya tidak boleh dicampur tanpa penyesuaian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Clash coordinate. Critical."
+   "explain": "BENAR. NEC memakai 120/208 V dan 277/480 V, ukuran AWG, dan pendekatan proteksi yang berbeda. Proyek multinasional harus menetapkan satu standar acuan; IEEE Color Books melengkapi sebagai panduan praktik industri.",
+   "hint": "Mengapa tabel KHA NEC tidak bisa langsung dipakai untuk kabel ukuran mm²?"
   }
  ],
  "5A.05": [
   {
    "type": "tf",
-   "q": "Energy modeling ECM L5 Senior: design optimize + LEED — Envisor consulting.",
+   "q": "BS 7671 (IET Wiring Regulations) adalah standar instalasi Inggris yang juga mengacu IEC 60364, sehingga prinsipnya mirip PUIL meski detail dan istilahnya berbeda.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Energy modeling. Senior."
+   "explain": "BENAR. Banyak standar nasional berakar pada IEC 60364: PUIL, BS 7671, DIN VDE 0100. Perbedaannya pada detail seperti jenis RCD wajib, warna kabel, dan persyaratan inspeksi. Insinyur yang paham IEC dapat cepat membaca standar-standar itu.",
+   "hint": "Standar internasional apa yang menjadi induk PUIL dan BS 7671?"
   }
  ],
  "5A.06": [
   {
    "type": "tf",
-   "q": "Green Building certification L5 Senior: Indonesia market growing — Envisor consulting.",
+   "q": "Earned value membandingkan nilai pekerjaan yang benar-benar selesai dengan rencana dan biaya aktual, sehingga keterlambatan dan pembengkakan biaya terdeteksi dini lewat indeks SPI dan CPI.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Green Building. Senior consulting."
+   "explain": "BENAR. SPI < 1 berarti tertinggal dari jadwal, CPI < 1 berarti biaya melebihi rencana. Tanpa earned value, proyek yang sudah menghabiskan 60% anggaran bisa dikira 60% selesai padahal baru 40%.",
+   "hint": "Anggaran terpakai 60%, pekerjaan selesai 40% — berapa CPI-nya dan apa artinya?"
   }
  ],
  "5A.07": [
   {
    "type": "tf",
-   "q": "Net Zero + passive design L5 Senior: Indonesia future — Envisor + Qastil strategic.",
+   "q": "Dalam FIDIC, Red Book dipakai bila desain disiapkan pemberi kerja, sedangkan Yellow Book untuk kontrak rancang-bangun di mana kontraktor yang mendesain.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. NZ future. Senior design."
+   "explain": "BENAR. Pembagian tanggung jawab desain menentukan siapa menanggung risiko kesalahan desain. Memilih bentuk kontrak yang salah menimbulkan sengketa tentang siapa yang harus membayar perubahan.",
+   "hint": "Siapa yang menanggung risiko desain pada kontrak rancang-bangun?"
   }
  ],
  "5A.08": [
   {
    "type": "tf",
-   "q": "Smart building IoT + BMS L5 Senior: modern — Envisor consulting + Qastil strategic.",
+   "q": "Penyelesaian sengketa proyek sebaiknya bertahap: negosiasi, mediasi atau dewan sengketa, baru arbitrase atau pengadilan sebagai jalan terakhir.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Smart building. Senior."
+   "explain": "BENAR. Arbitrase dan pengadilan mahal, lama, dan merusak hubungan. Klausul kontrak yang baik menetapkan tangga penyelesaian, dan dokumentasi proyek yang rapi (surat, notulen, foto) menjadi bukti di setiap tahap.",
+   "hint": "Mengapa kontrak menyebut mediasi sebelum arbitrase?"
   }
  ],
  "5A.09": [
   {
    "type": "tf",
-   "q": "Lighting design advance L5 Senior: quality + efficient — Envisor + consulting.",
+   "q": "Sertifikasi bangunan hijau seperti Greenship, EDGE, dan LEED memberi kredit untuk efisiensi energi, misalnya lewat sub-metering, pencahayaan efisien, dan pembangkit terbarukan di lokasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Lighting advance. Senior."
+   "explain": "BENAR. Kategori energi biasanya berbobot terbesar dalam sertifikasi seperti ini. Insinyur elektrikal berkontribusi lewat desain pencahayaan, meter per sistem, PLTS atap, dan komisioning yang membuktikan kinerja.",
+   "hint": "Kategori mana yang bobotnya paling besar dalam sertifikasi bangunan hijau?"
   }
  ],
  "5A.10": [
   {
    "type": "tf",
-   "q": "HVAC sizing accurate L5 Senior: engineering rigor — Envisor consulting.",
+   "q": "Strategi bangunan net zero energy dimulai dari mengurangi kebutuhan energi (selubung, pencahayaan alami, sistem efisien), baru sisanya dipenuhi pembangkit terbarukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Sizing accurate. Senior."
+   "explain": "BENAR. Memasang PLTS besar pada bangunan boros adalah cara mahal mencapai net zero. Mengurangi kebutuhan lebih dulu membuat PLTS yang diperlukan lebih kecil dan luas atap yang terbatas mencukupi.",
+   "hint": "Apa yang harus dilakukan sebelum menghitung berapa kWp PLTS yang dibutuhkan?"
   }
  ],
  "5A.11": [
   {
    "type": "tf",
-   "q": "Chiller selection L5 Senior: engineering + efficiency — Envisor + Qastil consulting.",
+   "q": "BIPV mengintegrasikan modul surya sebagai bagian selubung bangunan (fasad, atap, kanopi), sehingga menggantikan material bangunan sekaligus menghasilkan listrik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Chiller senior. Envisor."
+   "explain": "BENAR. Berbeda dari PLTS atap biasa yang dipasang di atas atap yang sudah ada, BIPV menjadi kulit bangunan itu sendiri. Biaya modulnya sebagian diimbangi oleh material fasad yang tidak perlu dibeli.",
+   "hint": "Apa yang dihemat jika kaca fasad diganti modul surya?"
   }
  ],
  "5A.12": [
   {
    "type": "tf",
-   "q": "Distribusi air advance VAV + chilled beam + radiant L5: modern — Envisor premium.",
+   "q": "Simulasi energi jam-per-jam (EnergyPlus, eQUEST) memperkirakan EUI bangunan sejak tahap desain, sehingga alternatif desain bisa dibandingkan sebelum dibangun.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Modern distribution. Senior."
+   "explain": "BENAR. Model memperhitungkan cuaca, selubung, jadwal hunian, dan sistem HVAC. Mengubah orientasi, kaca, atau jenis chiller di model memperlihatkan dampaknya pada konsumsi tahunan tanpa biaya percobaan nyata.",
+   "hint": "Bagaimana mengetahui dampak kaca low-e terhadap konsumsi sebelum gedung berdiri?"
   }
  ],
  "5A.13": [
   {
    "type": "tf",
-   "q": "Commissioning comprehensive L5 Senior: quality delivery — Envisor service.",
+   "q": "Digital twin bangunan adalah model yang terus disinkronkan dengan data sensor nyata, sehingga bisa dipakai memantau kinerja dan menguji skenario operasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Cx essential. Senior."
+   "explain": "BENAR. Berbeda dari model BIM statis, digital twin hidup bersama bangunannya: menerima data BMS, membandingkan dengan yang seharusnya, dan menyimulasikan 'bagaimana jika' sebelum perubahan diterapkan.",
+   "hint": "Apa yang membedakan digital twin dari model 3D biasa?"
   }
  ],
  "5A.14": [
   {
    "type": "tf",
-   "q": "L5 5A culmination BIM MEP integrasi: Qastil + Envisor senior consulting — Indonesia premium market.",
+   "q": "Pemeliharaan prediktif berbasis AI di fasilitas gedung memakai data sensor untuk memperkirakan kapan peralatan akan gagal, sehingga perbaikan dijadwalkan sebelum kerusakan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Culmination L5 5A. Qastil + Envisor strategic."
+   "explain": "BENAR. Model belajar dari pola getaran, suhu, dan arus yang mendahului kegagalan sebelumnya. Hasilnya mengurangi kerusakan mendadak dan perawatan yang tidak perlu, tetapi memerlukan data historis yang cukup dan berlabel.",
+   "hint": "Apa yang dibutuhkan model untuk belajar mengenali tanda-tanda pompa akan rusak?"
   }
  ],
  "5B.01": [
   {
    "type": "tf",
-   "q": "ISO 55001 asset management L5 Senior: PLN infra + Qastil strategic consulting.",
+   "q": "Dalam FMEA, angka prioritas risiko (RPN) adalah hasil kali keparahan, kemungkinan terjadi, dan kemampuan deteksi, dan mode kegagalan dengan RPN tertinggi ditangani lebih dulu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. ISO 55001. Senior asset."
+   "explain": "BENAR. Mode kegagalan yang parah, sering, dan sulit dideteksi mendapat RPN tertinggi. Tindakan yang menurunkan salah satu faktor — misalnya sensor untuk menaikkan deteksi — menurunkan RPN.",
+   "hint": "Mengapa kegagalan yang jarang tetapi tak terdeteksi bisa berprioritas tinggi?"
   }
  ],
  "5B.02": [
   {
    "type": "tf",
-   "q": "RCM systematic L5 Senior: reliability engineering — Envisor advisory + Qastil PLN.",
+   "q": "Parameter bentuk Weibull (β) menunjukkan pola kegagalan: β < 1 kegagalan dini, β ≈ 1 acak, dan β > 1 keausan, yang menentukan strategi perawatan yang tepat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. RCM rigorous. Senior."
+   "explain": "BENAR. Kegagalan acak (β ≈ 1) tidak bisa dicegah dengan penggantian terjadwal; perawatan berbasis kondisi lebih tepat. Keausan (β > 1) justru cocok untuk penggantian terjadwal menjelang umur pakainya.",
+   "hint": "Jika kegagalan bersifat acak, apakah mengganti komponen tiap tahun mengurangi kegagalan?"
   }
  ],
  "5B.03": [
   {
    "type": "tf",
-   "q": "FMEA advance AIAG VDA L5 Senior: automotive + industrial — Envisor service.",
+   "q": "ISO 55001 menuntut keputusan aset didasarkan pada keseimbangan biaya, risiko, dan kinerja sepanjang siklus hidup, bukan hanya biaya pembelian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. FMEA advance. Senior."
+   "explain": "BENAR. Sistem manajemen aset menghubungkan tujuan organisasi dengan rencana investasi, operasi, dan perawatan tiap aset. Analisis biaya siklus hidup dan penilaian risiko menjadi dasar setiap keputusan ganti-atau-rawat.",
+   "hint": "Apa tiga hal yang harus diseimbangkan dalam keputusan aset menurut ISO 55001?"
   }
  ],
  "5B.04": [
   {
    "type": "tf",
-   "q": "RCA method advance TapRoot + Apollo L5 Senior: rigorous — Envisor investigation.",
+   "q": "Pemantauan online (getaran, suhu, partial discharge) memberi data terus-menerus sehingga perubahan kondisi terdeteksi jauh lebih cepat daripada inspeksi berkala.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. RCA rigorous. Senior."
+   "explain": "BENAR. Inspeksi tiga bulanan bisa melewatkan degradasi yang berkembang dalam hitungan minggu. Sensor online dengan ambang alarm menangkap tren sejak dini, terutama pada aset kritis yang kegagalannya mahal.",
+   "hint": "Aset mana yang layak dipasangi sensor online: trafo utama atau pompa cadangan?"
   }
  ],
  "5B.05": [
   {
    "type": "tf",
-   "q": "Weibull reliability analysis L5: engineering rigorous — Envisor + Qastil.",
+   "q": "Diagram satu garis seluruh pabrik, jadwal beban, dan perhitungan ukuran kabel harus konsisten satu sama lain dan diperbarui setiap ada perubahan beban.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Weibull reliability. Senior."
+   "explain": "BENAR. Kabel dihitung dari beban di jadwal; jadwal harus cocok dengan SLD. Menambah beban tanpa memperbarui ketiganya membuat kabel atau trafo kelebihan beban tanpa ada yang menyadari sampai terjadi gangguan.",
+   "hint": "Motor 200 kW baru dipasang — dokumen apa saja yang harus diperbarui?"
   }
  ],
  "5B.06": [
   {
    "type": "tf",
-   "q": "Asset criticality assessment L5: prioritize — resource effective + Envisor advisory.",
+   "q": "Desain grid pembumian pabrik mengikuti IEEE 80 untuk menjaga tegangan langkah dan sentuh saat gangguan tetap di bawah batas aman tubuh manusia.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Criticality prioritize. Senior."
+   "explain": "BENAR. Arus gangguan besar yang masuk tanah menimbulkan gradien potensial di permukaan. Rapat konduktor grid, kedalaman, dan lapisan kerikil dihitung agar seseorang yang berdiri atau menyentuh peralatan saat gangguan tidak terluka.",
+   "hint": "Apa yang menentukan tegangan yang dirasakan orang yang melangkah di dekat titik gangguan?"
   }
  ],
  "5B.07": [
   {
    "type": "tf",
-   "q": "Spare parts management L5 Senior: ABC + criticality — Envisor optimization service.",
+   "q": "Kogenerasi (CHP) menghasilkan listrik dan panas berguna dari satu sumber bahan bakar, sehingga efisiensi totalnya bisa mencapai 80% atau lebih.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Spare parts. Senior."
+   "explain": "BENAR. Pembangkit listrik biasa membuang 60% energi sebagai panas. Jika panas buang itu dipakai untuk proses atau pendingin absorpsi, efisiensi total melonjak. CHP cocok untuk pabrik yang butuh listrik dan uap sekaligus.",
+   "hint": "Ke mana panas buang genset pergi pada pembangkit biasa?"
   }
  ],
  "5B.08": [
   {
    "type": "tf",
-   "q": "CMMS comprehensive L5 Senior: enterprise — Envisor implementation + advisory.",
+   "q": "Pengujian relai sebelum komisioning memakai injeksi sekunder untuk memverifikasi setelan dan waktu trip, dan injeksi primer untuk memverifikasi seluruh rantai dari CT sampai pemutus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. CMMS senior. Enterprise."
+   "explain": "BENAR. Injeksi sekunder menguji relainya; injeksi primer mengalirkan arus nyata melalui CT sehingga rasio, polaritas, dan pengkabelan ikut teruji. Relai yang benar setelannya tetap tidak berguna jika CT-nya terbalik.",
+   "hint": "Kesalahan apa yang hanya tertangkap oleh injeksi primer?"
   }
  ],
  "5B.09": [
   {
    "type": "tf",
-   "q": "TPM + WCM world-class L5 Senior: culture + systematic — Envisor advisory.",
+   "q": "Komisioning trafo mencakup DGA awal sebagai acuan, uji tan delta untuk kondisi isolasi, dan pengukuran tahanan belitan untuk memastikan sambungan dan tap changer baik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. TPM WCM culture. Senior."
+   "explain": "BENAR. Nilai awal ini menjadi 'sidik jari' trafo. Perubahan pada pengujian berikutnya — gas naik, tan delta naik, tahanan belitan tidak seimbang — menunjukkan masalah yang berkembang jauh sebelum gagal.",
+   "hint": "Mengapa DGA saat komisioning penting meski trafonya masih baru?"
   }
  ],
  "5B.10": [
   {
    "type": "tf",
-   "q": "PdM + digital twin + ML L5 Senior: modern advanced — Qastil PLNlytics opportunity.",
+   "q": "Komisioning dingin memverifikasi pemasangan dan fungsi tanpa energi proses, sedangkan komisioning panas menguji sistem dengan energi dan beban sebenarnya secara bertahap.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PdM modern. Qastil."
+   "explain": "BENAR. Pada komisioning dingin diperiksa pengkabelan, interlock, dan gerak peralatan; kesalahan ditemukan tanpa risiko. Komisioning panas baru memberi tegangan dan beban, mulai dari yang kecil, sambil memantau parameter.",
+   "hint": "Kapan interlock keselamatan diuji: sebelum atau sesudah sistem diberi tegangan?"
   }
  ],
  "5B.11": [
   {
    "type": "tf",
-   "q": "Maintenance KPI balanced L5 Senior: comprehensive — Envisor advisory + improve.",
+   "q": "Pipeline pemeliharaan prediktif berbasis ML memerlukan data sensor yang bersih, label kejadian kegagalan dari riwayat perawatan, dan validasi model sebelum dipercaya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. KPI balanced. Senior."
+   "explain": "BENAR. Model tanpa label kegagalan tidak tahu apa yang harus diprediksi. Riwayat CMMS yang lengkap (kapan rusak, mengapa) sama pentingnya dengan sensornya. Model diuji pada data yang belum pernah dilihat sebelum dipakai memutuskan perawatan.",
+   "hint": "Data apa yang memberi tahu model bahwa pola sensor tertentu berujung kerusakan?"
   }
  ],
  "5B.12": [
   {
    "type": "tf",
-   "q": "Lifecycle cost LCC L5 Senior: comprehensive — Envisor decision support premium.",
+   "q": "Digital twin peralatan industri memadukan model fisika dan data operasi real-time untuk memperkirakan kondisi internal yang tidak bisa diukur langsung, misalnya suhu titik terpanas belitan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. LCC senior. Decision support."
+   "explain": "BENAR. Sensor hanya mengukur permukaan; model termal menghitung suhu di dalam belitan dari arus dan suhu lingkungan. Digital twin memberi 'sensor virtual' dan memungkinkan uji skenario tanpa mengganggu operasi.",
+   "hint": "Bagaimana mengetahui suhu belitan dalam trafo tanpa membongkarnya?"
   }
  ],
  "5B.13": [
   {
    "type": "tf",
-   "q": "L5 5B culmination: ISO 55001 + RCM + PdM + maturity — Envisor senior + Qastil strategic.",
+   "q": "Computer vision dapat memeriksa citra termal atau foto inspeksi secara otomatis untuk menandai isolator retak, korosi, atau titik panas, mempercepat inspeksi ribuan aset.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. 5B culmination. Senior strategic."
+   "explain": "BENAR. Model dilatih dari ribuan citra berlabel. Ia menyaring citra normal dan menyerahkan yang mencurigakan kepada inspektur, sehingga inspektur fokus pada temuan, bukan menelaah semua foto satu per satu.",
+   "hint": "Berapa foto drone yang harus dilihat manusia untuk 10.000 tiang tanpa bantuan AI?"
   }
  ],
  "5C.01": [
   {
    "type": "tf",
-   "q": "Distribution planning L5 Qastil core PLN: strategic — PLNlytics + RUPTL.",
+   "q": "Prakiraan beban jangka panjang memadukan metode statistik, ekonometrik (pertumbuhan ekonomi, penduduk), dan AI, karena tiap metode kuat pada horizon waktu yang berbeda.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Planning core. Qastil."
+   "explain": "BENAR. Untuk jam ke depan, model deret waktu dan ML unggul; untuk sepuluh tahun ke depan, pendorong ekonomi dan kebijakan lebih menentukan. Perencana membandingkan beberapa metode dan skenario, bukan mengandalkan satu angka.",
+   "hint": "Apakah model prakiraan beban per jam cocok untuk merencanakan gardu induk 2035?"
   }
  ],
  "5C.02": [
   {
    "type": "tf",
-   "q": "Forecast methods L5 Qastil PLNlytics: ML ensemble — strategic research.",
+   "q": "Master plan distribusi menerjemahkan prakiraan beban menjadi rencana penguatan jaringan — trafo, penyulang, gardu baru — dengan urutan dan anggaran per tahun.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Forecast modern. Qastil."
+   "explain": "BENAR. Tanpa master plan, investasi dilakukan reaktif saat trafo sudah kelebihan beban. Perencanaan yang baik menempatkan kapasitas sebelum dibutuhkan dengan biaya yang terkendali.",
+   "hint": "Apa akibatnya jika gardu baru dibangun setelah, bukan sebelum, kawasan industri beroperasi?"
   }
  ],
  "5C.03": [
   {
    "type": "tf",
-   "q": "Substation planning L5 Qastil PLN: strategic — distribution backbone.",
+   "q": "Hosting capacity adalah batas pembangkit tersebar (misalnya PLTS atap) yang bisa ditampung sebuah penyulang tanpa melanggar batas tegangan, arus, atau proteksi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Substation Qastil."
+   "explain": "BENAR. Terlalu banyak PLTS di satu penyulang menaikkan tegangan siang hari dan membalik arah aliran. Studi hosting capacity menentukan di mana PLTS bisa disambung langsung dan di mana perlu penguatan.",
+   "hint": "Apa yang terjadi pada tegangan ujung penyulang saat ekspor PLTS melebihi beban lokal?"
   }
  ],
  "5C.04": [
   {
    "type": "tf",
-   "q": "Feeder configuration L5 Qastil PLN: design — reliability + cost strategic.",
+   "q": "Perangkat lunak seperti CYME, Synergi, atau DIgSILENT memodelkan jaringan distribusi untuk studi aliran daya, hubung singkat, keandalan, dan integrasi DER pada skala ribuan bus.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Configuration strategic."
+   "explain": "BENAR. Model jaringan distribusi jauh lebih besar dan tidak seimbang dibanding transmisi, sehingga memerlukan alat yang menangani analisis per fasa. Data model biasanya diambil dari GIS dan diperbarui rutin.",
+   "hint": "Mengapa analisis distribusi harus per fasa, bukan model seimbang seperti transmisi?"
   }
  ],
  "5C.05": [
   {
    "type": "tf",
-   "q": "DER integration L5 Qastil PLN: modern challenge — PLNlytics strategic planning.",
+   "q": "Analitik di tepi (edge) memproses data smart meter di dekat sumbernya, sehingga deteksi anomali bisa cepat tanpa mengirim semua data mentah ke pusat.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. DER modern. Qastil."
+   "explain": "BENAR. Jutaan meter mengirim data tiap 15 menit; mengirim semuanya ke pusat mahal dan lambat. Pemrosesan di konsentrator atau meter sendiri menyaring dan mengirim hanya ringkasan atau kejadian penting.",
+   "hint": "Apa untungnya mendeteksi tamper di meter itu sendiri daripada di server pusat?"
   }
  ],
  "5C.06": [
   {
    "type": "tf",
-   "q": "Hosting capacity L5 Qastil: modern PLN — PLNlytics spatial-temporal strategic.",
+   "q": "Tarif dinamis memberi harga berbeda per jam sesuai kondisi sistem, sehingga pelanggan terdorong menggeser konsumsi dari jam puncak ke jam murah.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. HC strategic. Qastil."
+   "explain": "BENAR. Tarif WBP/LWBP adalah bentuk sederhana; tarif dinamis bisa berubah harian mengikuti prakiraan beban dan produksi terbarukan. Keberhasilannya bergantung pada smart meter, informasi ke pelanggan, dan otomasi beban.",
+   "hint": "Apa yang dibutuhkan pelanggan untuk merespons harga yang berubah tiap jam?"
   }
  ],
  "5C.07": [
   {
    "type": "tf",
-   "q": "Loss reduction L5 Qastil PLN strategic: technical + NTL — MAGNETO research core.",
+   "q": "Virtual Power Plant mengagregasi banyak sumber kecil — PLTS atap, baterai, beban fleksibel — dan mengendalikannya bersama seolah satu pembangkit besar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Loss Qastil core strategic."
+   "explain": "BENAR. Satu rumah dengan baterai 10 kWh tidak berarti bagi sistem, tetapi 10.000 rumah yang dikoordinasikan setara pembangkit 50 MW yang bisa merespons perintah dispatcher. Platform VPP mengelola komunikasi dan kompensasinya.",
+   "hint": "Bagaimana 10.000 baterai rumah bisa dianggap satu pembangkit oleh dispatcher?"
   }
  ],
  "5C.08": [
   {
    "type": "tf",
-   "q": "Power quality L5 Qastil PLN: modern — Envisor + Qastil strategic service.",
+   "q": "Microgrid harus mampu berpindah ke mode pulau (islanding) saat jaringan utama terganggu, lalu menyinkronkan kembali sebelum tersambung lagi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. PQ modern service."
+   "explain": "BENAR. Saat terpisah, satu sumber di dalam microgrid harus mengambil alih pengaturan frekuensi dan tegangan (grid-forming). Saat jaringan pulih, microgrid disinkronkan dulu — tegangan, frekuensi, sudut — sebelum sakelar penghubung ditutup.",
+   "hint": "Siapa yang menjaga frekuensi 50 Hz di dalam microgrid saat terputus dari PLN?"
   }
  ],
  "5C.10": [
   {
    "type": "tf",
-   "q": "Reliability SAIDI SAIFI L5 Qastil PLN strategic: planning + invest — improve.",
+   "q": "Estimasi keadaan real-time menggabungkan pengukuran SCADA dan AMI yang tidak lengkap dan bising menjadi gambaran tegangan dan aliran di seluruh jaringan distribusi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Reliability strategic."
+   "explain": "BENAR. Tidak setiap titik jaringan punya sensor. Estimasi keadaan memakai model jaringan dan pengukuran yang ada untuk menghitung nilai di titik tanpa sensor, menjadi dasar digital twin dan pengendalian otomatis.",
+   "hint": "Bagaimana mengetahui tegangan di gardu yang tidak punya sensor?"
   }
  ],
  "5C.11": [
   {
    "type": "tf",
-   "q": "Smart grid L5 Qastil strategic: PLN modernization — PLNlytics foundation.",
+   "q": "Pemeliharaan prediktif jaringan memprioritaskan tiang, kabel, dan trafo yang paling mungkin gagal berdasarkan umur, riwayat gangguan, pembebanan, dan hasil inspeksi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Smart grid strategic."
+   "explain": "BENAR. Anggaran tidak cukup mengganti semua aset tua. Model risiko mengurutkan aset menurut kemungkinan gagal dan dampaknya, sehingga penggantian diarahkan ke yang benar-benar kritis.",
+   "hint": "Dua trafo berumur sama — data apa yang membedakan mana yang lebih dulu diganti?"
   }
  ],
  "5C.14": [
   {
    "type": "tf",
-   "q": "Roadmap modernization L5 Qastil strategic PLN: long-term — research + career.",
+   "q": "RUPTL adalah rencana usaha penyediaan tenaga listrik sepuluh tahunan yang memuat proyeksi kebutuhan, rencana pembangkit, transmisi, dan distribusi, serta target bauran energi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Roadmap strategic."
+   "explain": "BENAR. RUPTL disusun PLN dan disahkan pemerintah, menjadi acuan investasi dan pengadaan pembangkit termasuk porsi energi terbarukan. Perencana distribusi menyelaraskan master plannya dengan RUPTL.",
+   "hint": "Dokumen apa yang menentukan pembangkit apa saja yang boleh dibangun dalam sepuluh tahun ke depan?"
   }
  ],
  "5C.16": [
   {
    "type": "tf",
-   "q": "L5 5C culmination: Qastil core PLN + PLNlytics + research — strategic multi-vertical career.",
+   "q": "Subsidi listrik tepat sasaran berarti tarif bersubsidi hanya untuk golongan yang berhak (misalnya rumah tangga daya kecil yang terdata), bukan untuk semua pelanggan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. 5C culmination. Qastil core."
+   "explain": "BENAR. Subsidi yang merata membebani APBN dan sebagian dinikmati yang mampu. Pendataan berbasis data kesejahteraan memungkinkan subsidi diarahkan ke yang membutuhkan, sementara pelanggan lain membayar tarif keekonomian.",
+   "hint": "Mengapa subsidi untuk semua pelanggan 900 VA dianggap tidak tepat sasaran?"
   }
  ],
  "5D.01": [
   {
    "type": "tf",
-   "q": "Transmission planning L5 Senior: N-1 + security — PLN + international consulting.",
+   "q": "Kriteria N-1 menuntut sistem transmisi tetap beroperasi dalam batas aman saat satu elemen (saluran, trafo, generator) lepas, tanpa pemadaman pelanggan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Transmission planning. L5."
+   "explain": "BENAR. Studi kontingensi mensimulasikan lepasnya tiap elemen satu per satu dan memeriksa apakah ada saluran kelebihan beban atau tegangan di luar batas. N-2 diterapkan untuk koridor yang sangat kritis.",
+   "hint": "Apa yang diperiksa saat satu saluran 500 kV disimulasikan lepas?"
   }
  ],
  "5D.03": [
   {
    "type": "tf",
-   "q": "HVDC LCC + VSC L5 Senior: Indonesia Java-Sumatra + intl — strategic.",
+   "q": "Proyek HVDC memerlukan studi sistem khusus — interaksi konverter dengan jaringan AC, kebutuhan daya reaktif, dan harmonisa — selain studi aliran daya biasa.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. HVDC strategic Indonesia."
+   "explain": "BENAR. Konverter LCC menyerap daya reaktif besar dan menghasilkan harmonisa yang perlu filter; VSC lebih fleksibel tetapi mahal. Kekuatan jaringan AC di titik sambung menentukan teknologi konverter yang cocok.",
+   "hint": "Mengapa HVDC LCC memerlukan kapasitor dan filter besar di stasiun konverternya?"
   }
  ],
  "5D.09": [
   {
    "type": "tf",
-   "q": "Digital Twin grid L5 Qastil: Living Grid paper — research strategic publication.",
+   "q": "Digital twin gardu induk dan saluran transmisi menggabungkan model aset, data sensor, dan riwayat perawatan untuk memantau kondisi dan menyimulasikan skenario operasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Digital Twin Qastil research."
+   "explain": "BENAR. Suhu konduktor, pembebanan dinamis saluran (dynamic line rating), dan kondisi trafo dapat diperkirakan real-time, sehingga kapasitas transmisi dimanfaatkan lebih optimal tanpa melampaui batas aman.",
+   "hint": "Bagaimana mengetahui saluran bisa dibebani lebih tinggi saat angin kencang mendinginkan konduktor?"
   }
  ],
  "5D.10": [
   {
    "type": "tf",
-   "q": "Renewable integration L5 Senior: Indonesia net zero 2060 — PLN strategic.",
+   "q": "IEC 62351 mengatur keamanan siber komunikasi sistem tenaga, termasuk autentikasi dan enkripsi protokol seperti IEC 61850 dan 60870-5-104 yang awalnya dirancang tanpa keamanan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Renewable critical."
+   "explain": "BENAR. Protokol SCADA lama berasumsi jaringan tertutup. Dengan konektivitas modern, perintah buka pemutus bisa dipalsukan jika tidak diautentikasi. Pengendalian akses, segmentasi jaringan, dan audit log melengkapi standar ini.",
+   "hint": "Apa yang bisa terjadi jika perintah 'buka pemutus' di jaringan gardu tidak diautentikasi?"
   }
  ],
  "5D.11": [
   {
    "type": "tf",
-   "q": "Grid code mandatory L5 Senior: PLN + Indonesia — modern renewable.",
+   "q": "Arsitektur SCADA berbasis cloud dan edge menempatkan pemrosesan cepat di gardu (edge) sementara analitik besar dan penyimpanan jangka panjang di cloud atau data lake.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Grid code critical."
+   "explain": "BENAR. Fungsi proteksi dan kendali real-time tetap lokal karena tidak boleh bergantung pada koneksi internet. Data historis dari ribuan gardu dikumpulkan di data lake untuk analitik armada aset dan pembelajaran mesin.",
+   "hint": "Fungsi mana yang tidak boleh dipindahkan ke cloud?"
   }
  ],
  "5D.12": [
   {
    "type": "tf",
-   "q": "Protection transmission L5 Senior: distance + pilot — PLN transmission strategic.",
+   "q": "Dalam pasar listrik, selain energi (kWh) diperdagangkan pula layanan penunjang (cadangan, pengaturan frekuensi) dan kapasitas, karena keandalan sistem memerlukan lebih dari sekadar energi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Protection senior."
+   "explain": "BENAR. Pembangkit yang siaga tetapi jarang beroperasi tetap perlu dibayar agar tersedia saat dibutuhkan. Pasar kapasitas dan layanan penunjang memberi kompensasi untuk kesiapan itu.",
+   "hint": "Bagaimana pembangkit cadangan yang hanya beroperasi 100 jam setahun tetap layak secara ekonomi?"
   }
  ],
  "5D.14": [
   {
    "type": "tf",
-   "q": "L5 5D culmination: Qastil international transmission — strategic premium consulting outlook.",
+   "q": "Regulasi berbasis kinerja memberi insentif atau penalti kepada utilitas berdasarkan pencapaian standar seperti SAIDI, SAIFI, dan waktu penyambungan, bukan hanya mengganti biaya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. 5D culmination strategic."
+   "explain": "BENAR. Pengaturan biaya-plus tidak mendorong efisiensi. Dengan target kinerja yang terukur, utilitas terdorong berinvestasi pada keandalan dan layanan yang benar-benar dirasakan pelanggan.",
+   "hint": "Apa yang mendorong utilitas menurunkan SAIDI jika semua biayanya dijamin diganti?"
   }
  ],
  "5E.03": [
   {
    "type": "tf",
-   "q": "LSTM + GRU recurrent L5 Qastil: time-series — PLNlytics load forecast research.",
+   "q": "Prakiraan produksi PLTS dan PLTB sebaiknya probabilistik — memberi rentang, bukan satu angka — karena ketidakpastian cuaca harus diperhitungkan dalam penyediaan cadangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. LSTM Qastil research."
+   "explain": "BENAR. Prakiraan titik 100 MW tidak memberi tahu dispatcher seberapa mungkin produksi hanya 60 MW. Kuantil (misalnya P10–P90) memungkinkan cadangan disiapkan sesuai risiko, bukan berlebihan atau kekurangan.",
+   "hint": "Apa yang dibutuhkan dispatcher selain angka prakiraan: seberapa yakin prakiraan itu?"
   }
  ],
  "5E.04": [
   {
    "type": "tf",
-   "q": "Transformer SOTA L5 Qastil: modern — PLNlytics research potential strategic.",
+   "q": "Deteksi anomali untuk susut non-teknis mencari pola konsumsi yang menyimpang dari kelompok sejenis atau dari riwayat pelanggan itu sendiri, lalu memprioritaskan pemeriksaan lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Transformer modern."
+   "explain": "BENAR. Penurunan konsumsi mendadak tanpa perubahan aktivitas, konsumsi malam yang tidak wajar, atau perbedaan dengan tetangga sejenis adalah sinyal. Model menghasilkan skor risiko; keputusan akhir tetap dari pemeriksaan.",
+   "hint": "Toko yang konsumsinya turun 60% padahal tetap buka setiap hari — apa yang patut dicurigai?"
   }
  ],
  "5E.05": [
   {
    "type": "tf",
-   "q": "Time-series forecasting L5 Qastil PLNlytics: load — strategic modern.",
+   "q": "Inspeksi aset dengan computer vision memerlukan kumpulan citra berlabel yang cukup beragam — berbagai cuaca, sudut, dan jenis kerusakan — agar model tidak keliru di lapangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Time-series Qastil."
+   "explain": "BENAR. Model yang hanya dilatih pada foto cerah bisa gagal saat mendung. Kualitas dan keragaman data latih lebih menentukan daripada kecanggihan arsitektur model.",
+   "hint": "Mengapa model yang akurat di laboratorium bisa gagal pada foto drone musim hujan?"
   }
  ],
  "5E.07": [
   {
    "type": "tf",
-   "q": "Hierarchical load forecast L5 Qastil PLNlytics: multi-level — strategic.",
+   "q": "Analisis survival memodelkan waktu sampai kegagalan dan mampu memanfaatkan data aset yang belum gagal (tersensor), sehingga cocok untuk memperkirakan umur trafo atau kabel.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Hierarchical strategic."
+   "explain": "BENAR. Sebagian besar aset masih beroperasi saat analisis dilakukan; membuang datanya membuat perkiraan bias. Metode seperti Kaplan-Meier dan regresi Cox memperhitungkan aset yang 'masih hidup' dengan benar.",
+   "hint": "Apa yang hilang jika hanya trafo yang sudah rusak yang dianalisis?"
   }
  ],
  "5E.08": [
   {
    "type": "tf",
-   "q": "Probabilistic forecast L5: uncertainty — Qastil research rigor.",
+   "q": "Estimasi sisa umur pakai (RUL) memperkirakan berapa lama lagi sebuah aset dapat beroperasi sebelum gagal, sehingga penggantian dijadwalkan tepat waktu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Probabilistic modern."
+   "explain": "BENAR. RUL diturunkan dari model degradasi (fisika atau data) yang diperbarui dengan pengukuran terbaru. Terlalu dini mengganti memboroskan aset yang masih baik; terlalu lambat berarti gangguan.",
+   "hint": "Apa gunanya tahu trafo masih punya sisa umur 18 bulan?"
   }
  ],
  "5E.09": [
   {
    "type": "tf",
-   "q": "Anomaly detection L5 Qastil MAGNETO: theft + fault — strategic PLN research.",
+   "q": "Pemrograman linier dan bilangan bulat campuran (MIP) dipakai untuk masalah seperti penjadwalan pembangkit (unit commitment) yang melibatkan keputusan nyala/mati dan batasan operasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Anomaly Qastil MAGNETO."
+   "explain": "BENAR. Keputusan biner (unit menyala atau tidak) memerlukan variabel integer, sedangkan pembagian daya adalah kontinu. Solver MIP menemukan jadwal berbiaya terendah yang memenuhi kebutuhan beban dan batasan ramp, cadangan, dan waktu minimum.",
+   "hint": "Mengapa masalah 'unit mana yang dinyalakan' tidak bisa diselesaikan pemrograman linier biasa?"
   }
  ],
  "5F.01": [
   {
    "type": "tf",
-   "q": "ISO 50001:2018 L5 Envisor flagship: energy management — Qastil strategic vertical.",
+   "q": "Penerapan ISO 50001 dimulai dengan analisis kesenjangan (gap analysis) antara praktik saat ini dan persyaratan standar, lalu peta jalan untuk menutup kesenjangan itu.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. ISO 50001 flagship."
+   "explain": "BENAR. Organisasi jarang mulai dari nol; sering sudah ada meter, laporan, dan tim. Gap analysis menunjukkan apa yang sudah memenuhi dan apa yang kurang, sehingga upaya diarahkan ke yang benar-benar perlu.",
+   "hint": "Mengapa tidak langsung menulis semua prosedur dari awal?"
   }
  ],
  "5F.02": [
   {
    "type": "tf",
-   "q": "Certification 50001 L5 Envisor: flagship — Qastil Indonesia market premium.",
+   "q": "EnPI adalah indikator kinerja energi (misalnya kWh per ton produk), dan EnB adalah acuan dasar (baseline) yang menjadi pembanding untuk menilai perbaikan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Certification premium."
+   "explain": "BENAR. Tanpa EnB, tidak ada tolok ukur; tanpa EnPI yang dinormalkan, perubahan produksi disalahartikan sebagai perubahan efisiensi. Keduanya ditetapkan dan didokumentasikan sebelum program dimulai.",
+   "hint": "Bagaimana tahu program hemat energi berhasil jika tidak ada titik awal pembanding?"
   }
  ],
  "5G.05": [
   {
    "type": "tf",
-   "q": "Condenser vacuum L5 Senior: HR critical — operational focus major.",
+   "q": "Pemilihan lokasi PLTS skala utilitas mempertimbangkan iradiasi, ketersediaan dan status lahan, jarak ke gardu induk dengan kapasitas tersisa, serta risiko banjir dan bayangan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Condenser critical."
+   "explain": "BENAR. Lahan murah dengan iradiasi tinggi tidak berguna jika gardu terdekat 50 km jauhnya atau sudah penuh. Analisis hasil energi (yield) memakai data iradiasi lokal multi-tahun dan memperhitungkan rugi sistem.",
+   "hint": "Selain matahari, apa yang menentukan biaya penyambungan PLTS besar?"
   }
  ],
  "5G.08": [
   {
    "type": "tf",
-   "q": "Emissions compliance L5 Senior: mandatory Indonesia — strategic + ESG.",
+   "q": "PLTS terapung di waduk mengurangi penguapan air dan modulnya lebih dingin, tetapi memerlukan sistem pengapung, tambatan, dan kabel yang tahan gerakan air.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Emissions mandate."
+   "explain": "BENAR. Suhu modul yang lebih rendah menaikkan efisiensi beberapa persen, dan lahan waduk tidak bersaing dengan pertanian. Tantangannya pada korosi, gelombang, perubahan muka air, dan perawatan di atas air.",
+   "hint": "Apa keuntungan modul yang terletak di atas air dibanding di atas tanah panas?"
   }
  ],
  "5G.09": [
   {
    "type": "tf",
-   "q": "Overhaul + inspection L5 Senior: generation critical — specialty + premium.",
+   "q": "Retrofit fleksibilitas PLTU menurunkan beban minimum stabil dan mempercepat laju perubahan beban, agar PLTU bisa memberi ruang bagi energi terbarukan yang berfluktuasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Overhaul specialty."
+   "explain": "BENAR. PLTU yang hanya bisa beroperasi di atas 60% beban memaksa PLTS dipangkas saat siang. Modifikasi pembakaran, kontrol, dan mill memungkinkan beban minimum 30–40% dan ramp lebih cepat.",
+   "hint": "Mengapa PLTU yang tidak bisa turun beban menjadi penghalang PLTS?"
   }
  ],
  "5G.10": [
   {
    "type": "tf",
-   "q": "Vibration + condition monitor L5 Senior: generation PdM — critical modern.",
+   "q": "VPP menggabungkan dan mengendalikan banyak sumber kecil sebagai satu unit dispatch, sehingga sumber-sumber itu bisa ikut menyediakan layanan ke sistem seperti pembangkit besar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Condition monitor."
+   "explain": "BENAR. Platform VPP menerima perintah dari dispatcher, membaginya ke ribuan perangkat, dan mengumpulkan responsnya. Pemilik perangkat mendapat kompensasi, dan sistem mendapat fleksibilitas tanpa membangun pembangkit baru.",
+   "hint": "Apa yang dilakukan platform VPP saat dispatcher meminta tambahan 20 MW?"
   }
  ],
  "5G.12": [
   {
    "type": "tf",
-   "q": "Renewable generation L5 Senior: Indonesia potential — strategic net zero 2060.",
+   "q": "Saat microgrid berpindah ke mode pulau, pembangkit atau baterai di dalamnya harus mampu membentuk tegangan dan frekuensi sendiri (grid-forming), bukan hanya mengikuti jaringan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Renewable strategic."
+   "explain": "BENAR. Inverter grid-following biasa membutuhkan tegangan jaringan sebagai acuan dan mati saat jaringan hilang. Microgrid memerlukan minimal satu sumber grid-forming yang menjadi acuan bagi sumber lain.",
+   "hint": "Mengapa inverter PLTS biasa tidak bisa menyalakan microgrid yang terputus?"
   }
  ],
  "5H.01": [
   {
    "type": "tf",
-   "q": "ISO 45001 L5 Senior Envisor: Qastil LSP strategic K3 vertical — premium multi-track.",
+   "q": "Menurut PP 50/2012, hasil audit SMK3 dikategorikan berdasarkan tingkat pencapaian: 85–100% memuaskan (emas), 60–84% baik (perak), dan di bawah 60% kurang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. ISO 45001 strategic."
+   "explain": "BENAR. Audit SMK3 memeriksa kriteria dari 12 elemen. Perusahaan dengan pencapaian emas menunjukkan sistem K3 yang matang; yang di bawah 60% wajib melakukan perbaikan. Perusahaan berisiko tinggi atau berpekerja 100 orang lebih wajib menerapkan SMK3.",
+   "hint": "Berapa persen pencapaian minimal untuk kategori emas?"
   }
  ],
  "5H.02": [
   {
    "type": "tf",
-   "q": "SMK3 Gold L5 Envisor + Qastil LSP strategic: Indonesia K3 premium market.",
+   "q": "ISO 45001 menekankan partisipasi pekerja dan kepemimpinan manajemen dalam sistem manajemen K3, serta pendekatan berbasis risiko dan peluang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SMK3 Gold strategic."
+   "explain": "BENAR. ISO 45001 menggantikan OHSAS 18001 dengan struktur yang sama seperti ISO 9001 dan 14001, sehingga mudah diintegrasikan. Konsultasi pekerja dan komitmen pimpinan menjadi persyaratan eksplisit, bukan sekadar anjuran.",
+   "hint": "Apa yang harus terlihat dari manajemen puncak agar sistem K3 dianggap berjalan?"
   }
  ],
  "5H.03": [
   {
    "type": "tf",
-   "q": "Permenaker 12/2015 K3 listrik L5 Envisor + Qastil: strategic specialty — LSP vertical.",
+   "q": "K3 listrik diintegrasikan ke SMK3 perusahaan lewat identifikasi bahaya listrik dalam HIRARC, prosedur LOTO dan izin kerja, kompetensi personel, serta inspeksi instalasi berkala.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. K3 listrik specialty."
+   "explain": "BENAR. Bahaya listrik bukan sistem terpisah; ia masuk ke penilaian risiko, program pelatihan, dan audit internal SMK3 yang sama. Ahli K3 Listrik memastikan persyaratan Permenaker 12/2015 terpenuhi di dalam kerangka itu.",
+   "hint": "Di dokumen SMK3 mana bahaya listrik pertama kali harus muncul?"
   }
  ],
  "5H.09": [
   {
    "type": "tf",
-   "q": "Hot work permit L5 Envisor: fire prevention — K3 critical.",
+   "q": "Kecelakaan kerja dilaporkan secara internal segera, kepada Dinas Ketenagakerjaan dalam 2 × 24 jam, dan kepada kepolisian bila ada korban jiwa atau dugaan tindak pidana.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Hot work critical."
+   "explain": "BENAR. Tiap jalur pelaporan punya tujuan berbeda: internal untuk penanganan dan investigasi, Disnaker untuk kepatuhan dan jaminan sosial, kepolisian untuk proses hukum. Melewatkan salah satunya berakibat sanksi.",
+   "hint": "Kepada siapa saja kecelakaan fatal harus dilaporkan?"
   }
  ],
  "5H.11": [
   {
    "type": "tf",
-   "q": "Incident investigation L5 Envisor: root cause — K3 maturity critical.",
+   "q": "Audit eksternal SMK3 dilakukan oleh lembaga audit yang ditunjuk pemerintah, dan sertifikatnya berlaku tiga tahun sebelum audit ulang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Investigation critical."
+   "explain": "BENAR. Audit eksternal memverifikasi penerapan SMK3 secara independen dari perusahaan. Persiapan audit meliputi tinjauan dokumen, bukti pelaksanaan, dan wawancara pekerja; temuan harus ditindaklanjuti sebelum sertifikat terbit.",
+   "hint": "Mengapa audit internal saja tidak cukup untuk sertifikat SMK3?"
   }
  ],
  "5H.23": [
   {
    "type": "tf",
-   "q": "Digital K3 + AI L5 Envisor + Qastil: SafetyAI + modern — research opportunity.",
+   "q": "Sebelum masuk ruang terbatas berisi peralatan listrik, udara diuji: oksigen 19,5–23,5%, gas mudah terbakar di bawah 10% LEL, dan gas beracun di bawah ambang batas, dengan petugas siaga penyelamat di luar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Digital K3 Qastil."
+   "explain": "BENAR. Ruang terbatas (tangki, manhole, ruang kabel) bisa kekurangan oksigen atau berisi gas tanpa terlihat. Uji gas sebelum dan selama pekerjaan, ventilasi, dan penyelamat siaga adalah syarat mutlak — banyak korban ruang terbatas adalah penolong yang masuk tanpa persiapan.",
+   "hint": "Mengapa penolong yang langsung masuk untuk menyelamatkan sering ikut menjadi korban?"
   }
  ],
  "6A.01": [
   {
    "type": "tf",
-   "q": "Engineering review L6 Consultant: independent verify — Qastil premium strategic.",
+   "q": "Tinjauan desain oleh konsultan independen memeriksa kepatuhan pada standar, kelengkapan perhitungan, dan kelayakan konstruksi sebelum gambar disetujui untuk dibangun.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Review L6 premium."
+   "explain": "BENAR. Perancang bisa terjebak pada asumsinya sendiri. Peninjau independen menemukan kesalahan sizing, koordinasi yang terlewat, dan ketidaksesuaian PUIL sebelum menjadi mahal di lapangan. Komentar tinjauan dan tanggapannya didokumentasikan.",
+   "hint": "Mengapa gambar yang dibuat konsultan A sebaiknya diperiksa konsultan B?"
   }
  ],
  "6A.03": [
   {
    "type": "tf",
-   "q": "Expert witness L6 Consultant: premium — Qastil PhD + PE credential strategic.",
+   "q": "Analisis kegagalan peralatan listrik menelusuri urutan kejadian dari bukti fisik, rekaman relai, dan riwayat operasi untuk menemukan akar penyebab, bukan hanya komponen yang rusak.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Expert witness premium."
+   "explain": "BENAR. Trafo yang meledak mungkin hanya korban dari proteksi yang gagal atau pembebanan berlebih bertahun-tahun. Tanpa akar penyebab, penggantian dengan unit baru akan mengulang kegagalan yang sama.",
+   "hint": "Komponen yang rusak dan penyebab kerusakan — apakah selalu sama?"
   }
  ],
  "6A.05": [
   {
    "type": "tf",
-   "q": "Electrical forensic L6 Consultant: specialty — Qastil PLN + expert premium.",
+   "q": "Alat bantu AI dapat memeriksa gambar dan perhitungan desain terhadap daftar persyaratan standar secara cepat, tetapi hasilnya tetap harus diverifikasi insinyur yang bertanggung jawab.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Electrical forensic."
+   "explain": "BENAR. AI mempercepat pemeriksaan rutin seperti kelengkapan label, konsistensi ukuran kabel, dan referensi pasal. Tanggung jawab profesional dan hukum tetap pada insinyur yang menandatangani, sehingga verifikasi manusia tidak bisa dilewati.",
+   "hint": "Siapa yang bertanggung jawab jika desain yang 'lolos' AI ternyata salah?"
   }
  ],
  "6A.06": [
   {
    "type": "tf",
-   "q": "Third-party inspection L6 Consultant: credibility — premium service.",
+   "q": "Generator proposal berbasis AI mempercepat penyusunan dokumen dari templat dan data proyek, tetapi isi teknis, harga, dan komitmen tetap harus diperiksa manusia sebelum dikirim.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. 3rd-party premium."
+   "explain": "BENAR. Proposal adalah dokumen yang mengikat. Otomasi mengurangi pekerjaan berulang, tetapi kesalahan angka atau janji yang tidak realistis dalam proposal yang dikirim bisa berakibat kerugian kontrak.",
+   "hint": "Bagian mana dari proposal yang tidak boleh dipercayakan sepenuhnya kepada mesin?"
   }
  ],
  "6A.08": [
   {
    "type": "tf",
-   "q": "Insurance engineering L6 Consultant: expertise — Qastil expert premium.",
+   "q": "Rencana bisnis konsultansi MEP menetapkan segmen klien, model penetapan harga (per jam, lump sum, persentase nilai proyek), dan proyeksi arus kas yang realistis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Insurance premium."
+   "explain": "BENAR. Konsultansi sering kesulitan arus kas karena pembayaran termin menunggu kemajuan proyek. Rencana yang jelas tentang siapa klien, bagaimana menagih, dan berapa cadangan kas menentukan keberlangsungan firma.",
+   "hint": "Mengapa firma konsultan dengan banyak proyek bisa kehabisan kas?"
   }
  ],
  "6A.09": [
   {
    "type": "tf",
-   "q": "Standards compliance L6 Consultant: rigorous — multi-jurisdiction premium.",
+   "q": "Bagi konsultan teknik, reputasi dan rujukan dari klien sebelumnya adalah alat pemasaran paling kuat, dilengkapi kehadiran digital yang menampilkan portofolio dan keahlian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Standards rigorous."
+   "explain": "BENAR. Klien memilih konsultan berdasarkan kepercayaan. Studi kasus proyek yang berhasil, artikel teknis, dan testimoni membangun kredibilitas lebih dari iklan. Jaringan profesional dan asosiasi juga menjadi sumber proyek.",
+   "hint": "Dari mana kebanyakan proyek konsultan teknik yang mapan berasal?"
   }
  ],
  "6A.14": [
   {
    "type": "tf",
-   "q": "Expert report L6 Consultant: professional deliverable — Qastil strategic premium.",
+   "q": "Makalah teknis yang baik menyajikan masalah, metode, data, hasil, dan pembahasan secara jujur, termasuk keterbatasannya, agar dapat diverifikasi pembaca.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Report professional."
+   "explain": "BENAR. Nilai makalah ada pada kemampuan orang lain mengulang dan membangun di atasnya. Menyembunyikan keterbatasan atau data yang tidak mendukung merusak kredibilitas penulis saat ketahuan.",
+   "hint": "Apa yang membuat pembaca percaya pada hasil sebuah makalah?"
   }
  ],
  "6B.05": [
   {
    "type": "tf",
-   "q": "Substation audit L6 Consultant: specialty — Qastil PLN premium.",
+   "q": "Dalam kontrak guaranteed savings, ESCO menjamin besar penghematan dan klien yang membiayai proyek; dalam kontrak shared savings, ESCO membiayai dan dibayar dari bagian penghematan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Substation specialty."
+   "explain": "BENAR. Guaranteed savings cocok untuk klien yang punya akses pembiayaan tetapi ingin kepastian hasil. Shared savings cocok untuk klien tanpa modal, dengan ESCO menanggung risiko lebih besar dan mengambil bagian lebih besar.",
+   "hint": "Pada skema mana ESCO menanggung risiko pembiayaan sekaligus kinerja?"
   }
  ],
  "6B.06": [
   {
    "type": "tf",
-   "q": "Transmission line audit L6 Consultant: specialty — Qastil premium + PLN.",
+   "q": "Dalam akuntansi karbon, Scope 1 adalah emisi langsung (bahan bakar sendiri), Scope 2 emisi dari listrik yang dibeli, dan Scope 3 emisi tidak langsung di rantai nilai.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Line audit specialty."
+   "explain": "BENAR. Pembagian menurut GHG Protocol ini mencegah penghitungan ganda dan memperjelas tanggung jawab. Bagi kebanyakan gedung, Scope 2 dari listrik PLN adalah yang terbesar dan paling mudah ditekan lewat efisiensi.",
+   "hint": "Emisi dari genset milik sendiri dan dari listrik PLN masuk scope mana?"
   }
  ],
  "6B.08": [
   {
    "type": "tf",
-   "q": "Distribution audit L6 Consultant: Qastil PLN core — premium specialty.",
+   "q": "Layanan optimasi energi berbasis AI menawarkan penghematan berkelanjutan dengan menyetel operasi peralatan secara terus-menerus, dan nilainya dibuktikan lewat M&V, bukan klaim.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Distribution Qastil core."
+   "explain": "BENAR. Algoritma mengatur setpoint chiller atau jadwal peralatan mengikuti cuaca dan hunian. Klien membayar untuk hasil yang terukur; penawaran yang tidak menyertakan metode verifikasi sulit dipercaya.",
+   "hint": "Bagaimana klien tahu penghematan berasal dari AI, bukan dari cuaca yang lebih sejuk?"
   }
  ],
  "6B.09": [
   {
    "type": "tf",
-   "q": "Forensic investigation L6 Consultant: premium specialty — Qastil expert.",
+   "q": "Rencana bisnis konsultansi energi menetapkan layanan inti, pasar sasaran, sumber daya yang dibutuhkan, dan titik impas, dengan asumsi yang dapat diuji.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Forensic specialty."
+   "explain": "BENAR. Rencana yang terlalu optimistis tentang jumlah klien atau harga membuat firma kehabisan modal sebelum mapan. Asumsi yang jelas memungkinkan rencana dikoreksi cepat saat kenyataan berbeda.",
+   "hint": "Apa yang harus diketahui sebelum menentukan berapa proyek per tahun yang dibutuhkan agar impas?"
   }
  ],
  "6B.13": [
   {
    "type": "tf",
-   "q": "Failure mode advanced L6 Consultant: specialty — Qastil expert premium.",
+   "q": "Kemitraan atau usaha patungan memungkinkan firma konsultan mengakses keahlian, sertifikasi, atau pasar yang tidak dimilikinya, dengan pembagian peran dan risiko yang dituangkan dalam perjanjian tertulis.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Failure specialty."
+   "explain": "BENAR. Tender besar sering mensyaratkan pengalaman atau sertifikasi yang belum dimiliki firma kecil. Bermitra membuka peluang itu, tetapi tanpa perjanjian yang jelas tentang tanggung jawab dan pembagian hasil, kemitraan berujung sengketa.",
+   "hint": "Apa yang harus disepakati tertulis sebelum dua firma mengikuti tender bersama?"
   }
  ],
  "6B.14": [
   {
    "type": "tf",
-   "q": "Expert report comprehensive L6 Consultant: professional deliverable — Qastil strategic.",
+   "q": "Asesor kompetensi menilai peserta berdasarkan bukti kinerja terhadap standar kompetensi, bukan kesan pribadi, dan harus sendiri bersertifikat asesor dari BNSP.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Report comprehensive."
+   "explain": "BENAR. Asesmen kompetensi memakai bukti: observasi praktik, portofolio, dan uji tertulis, dibandingkan dengan unit kompetensi SKKNI. Pelatihan untuk pelatih (ToT) menyiapkan ahli teknis menjadi pengajar dan asesor yang efektif.",
+   "hint": "Apa yang dinilai asesor: pengetahuan peserta atau bukti kemampuannya?"
   }
  ],
  "6C.01": [
   {
    "type": "tf",
-   "q": "Master plan L6 Consultant: strategic — Qastil premium + international consulting.",
+   "q": "Master plan modernisasi jaringan menetapkan tahapan teknologi — SCADA, AMI, otomasi, analitik — selama 10–20 tahun dengan prioritas berdasarkan manfaat dan kesiapan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Master plan premium."
+   "explain": "BENAR. Memasang analitik sebelum data meter tersedia sia-sia; memasang otomasi tanpa komunikasi tidak berjalan. Peta jalan menyusun urutan yang logis dan anggaran per tahap.",
+   "hint": "Mengapa AMI biasanya didahulukan sebelum analitik pelanggan?"
   }
  ],
  "6C.02": [
   {
    "type": "tf",
-   "q": "Smart grid strategy L6 Consultant: Qastil PLN + PLNlytics strategic — international.",
+   "q": "Analisis biaya-manfaat investasi smart grid menghitung manfaat yang tersebar — pengurangan susut, SAIDI, biaya pembacaan meter, penundaan investasi — dibandingkan biaya sepanjang umur proyek.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Smart grid strategic."
+   "explain": "BENAR. Manfaat smart grid jarang berasal dari satu sumber. Analisis yang jujur menyertakan manfaat yang terukur maupun yang sulit diukur (kepuasan pelanggan), dengan asumsi yang dinyatakan terbuka.",
+   "hint": "Sebutkan tiga manfaat AMI yang bisa diberi nilai rupiah."
   }
  ],
  "6C.03": [
   {
    "type": "tf",
-   "q": "Regulatory advisory L6 Consultant: Indonesia expertise — premium strategic.",
+   "q": "Penasihat regulasi membantu regulator atau utilitas merancang aturan yang memberi insentif tepat, misalnya skema tarif yang mendorong investasi terbarukan tanpa membebani pelanggan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Regulatory premium."
+   "explain": "BENAR. Aturan yang keliru bisa menghambat investasi atau memindahkan beban ke pelanggan kecil. Penasihat menganalisis dampak alternatif kebijakan dengan data dan pengalaman negara lain.",
+   "hint": "Apa akibatnya jika tarif ekspor PLTS atap ditetapkan terlalu tinggi atau terlalu rendah?"
   }
  ],
  "6C.04": [
   {
    "type": "tf",
-   "q": "Rate design L6 Consultant: premium regulatory — expert strategic.",
+   "q": "Kerangka KPI utilitas menyeimbangkan keandalan, efisiensi, keuangan, pelanggan, dan keselamatan, karena mengejar satu ukuran saja bisa merusak yang lain.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Rate design premium."
+   "explain": "BENAR. Memangkas biaya perawatan menaikkan laba jangka pendek tetapi menaikkan SAIDI kemudian. KPI yang berimbang dan dibandingkan dengan utilitas sejenis mencegah keputusan yang mengorbankan jangka panjang.",
+   "hint": "Apa yang terjadi jika manajemen hanya diukur dari biaya operasi?"
   }
  ],
  "6C.07": [
   {
    "type": "tf",
-   "q": "Renewable policy L6 Consultant: international — Indonesia transition premium.",
+   "q": "Menawarkan deteksi susut non-teknis berbasis AI sebagai produk konsultansi memerlukan bukti kinerja di lapangan (hit rate, rupiah terpulihkan), bukan hanya akurasi model di laboratorium.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Renewable premium."
+   "explain": "BENAR. Utilitas membeli hasil: berapa kasus terbukti per 100 kunjungan dan berapa pendapatan kembali. Proyek percontohan dengan pengukuran yang disepakati adalah cara membuktikannya sebelum kontrak besar.",
+   "hint": "Angka apa yang paling meyakinkan manajer distribusi: F1-score atau rupiah yang kembali?"
   }
  ],
  "6C.08": [
   {
    "type": "tf",
-   "q": "DER policy L6 Consultant: modern — Qastil PLN + international premium.",
+   "q": "Platform analitik utilitas yang baik mengintegrasikan data dari banyak sistem (AMI, SCADA, GIS, pelanggan) menjadi satu model data yang bisa dipakai berbagai aplikasi analitik.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. DER policy premium."
+   "explain": "BENAR. Tanpa integrasi, tiap analisis harus menggabungkan data dari awal. Model data bersama dengan kualitas terjaga membuat aplikasi baru — susut, keandalan, perencanaan — dibangun jauh lebih cepat.",
+   "hint": "Mengapa menggabungkan data lebih sulit daripada membuat model analitiknya?"
   }
  ],
  "6C.09": [
   {
    "type": "tf",
-   "q": "Grid code development L6 Consultant: senior policy — Indonesia + international premium.",
+   "q": "Perencanaan jaringan berbantuan AI dapat mengevaluasi ribuan alternatif penguatan jaringan terhadap prakiraan beban dan biaya, tetapi keputusan akhir mempertimbangkan faktor yang tidak ada di model.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Grid code premium."
+   "explain": "BENAR. Optimasi menemukan konfigurasi berbiaya terendah di dalam model. Ketersediaan lahan, izin, dan penerimaan masyarakat sering tidak termodelkan dan diputuskan perencana manusia.",
+   "hint": "Apa yang tidak diketahui model optimasi tentang lokasi gardu baru?"
   }
  ],
  "6C.10": [
   {
    "type": "tf",
-   "q": "Data governance L6 Consultant: modern — Qastil PLNlytics integrate strategic.",
+   "q": "Model bisnis konsultansi utilitas bisa berupa proyek studi, retainer penasihat berkelanjutan, atau berbasis hasil, masing-masing dengan risiko dan arus kas yang berbeda.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Data governance modern."
+   "explain": "BENAR. Proyek studi memberi pendapatan sekali; retainer memberi arus kas stabil; berbasis hasil berpotensi besar tetapi berisiko. Firma yang sehat memadukan ketiganya agar tidak bergantung pada satu tender.",
+   "hint": "Model mana yang memberi pendapatan paling stabil bagi firma konsultan?"
   }
  ],
  "6C.11": [
   {
    "type": "tf",
-   "q": "Cybersecurity regulation L6 Consultant: modern advisory — Indonesia + international premium.",
+   "q": "Pemasaran ke lembaga pemerintah (B2G) mengikuti proses pengadaan formal, sehingga kualifikasi administrasi, pengalaman terdokumentasi, dan penawaran yang menjawab kerangka acuan menentukan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Cyber regulatory premium."
+   "explain": "BENAR. Tender pemerintah menilai dokumen sebelum keahlian. Penawaran yang tidak lengkap gugur sebelum dibaca isinya. Memahami peraturan pengadaan dan menyiapkan dokumen kualifikasi jauh hari adalah bagian dari strategi.",
+   "hint": "Apa yang terjadi pada penawaran terbaik secara teknis jika satu dokumen administrasi hilang?"
   }
  ],
  "6C.13": [
   {
    "type": "tf",
-   "q": "Smart city L6 Consultant: integrated — Indonesia IKN Nusantara strategic.",
+   "q": "Kemitraan dengan PLN, vendor teknologi, dan lembaga riset memberi konsultan akses ke data, teknologi, dan kredibilitas ilmiah yang memperkuat penawarannya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Smart city strategic."
+   "explain": "BENAR. Proyek percontohan bersama PLN membuktikan solusi di jaringan nyata, vendor menyediakan perangkat, dan kampus memberi validasi metode. Kemitraan yang jelas peran dan hak kekayaan intelektualnya menguntungkan semua pihak.",
+   "hint": "Apa yang bisa diberikan universitas kepada firma konsultan yang tidak bisa dibeli?"
   }
  ],
  "6C.15": [
   {
    "type": "tf",
-   "q": "International consulting L6 Consultant: Qastil outlook — premium strategic career.",
+   "q": "Kerja sama internasional dan alih teknologi mempercepat adopsi praktik terbaik, tetapi solusi dari luar harus disesuaikan dengan regulasi, iklim, dan struktur jaringan Indonesia.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. International premium."
+   "explain": "BENAR. Skema demand response yang berhasil di Eropa mungkin tidak cocok dengan struktur tarif dan pola beban tropis. Alih teknologi yang efektif menyertakan pelatihan lokal dan penyesuaian, bukan sekadar membeli perangkat.",
+   "hint": "Mengapa sistem yang berhasil di negara empat musim perlu diuji ulang di Indonesia?"
   }
  ],
  "6D.09": [
   {
    "type": "tf",
-   "q": "Grid connection L6 senior — integration renewable + IPP premium.",
+   "q": "Firma konsultan teknik memerlukan badan usaha yang sah, sertifikat badan usaha (SBU) sesuai klasifikasi jasa, dan tenaga ahli bersertifikat untuk mengikuti pengadaan jasa konstruksi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Grid connect premium."
+   "explain": "BENAR. UU Jasa Konstruksi mensyaratkan SBU dan SKK tenaga ahli untuk layanan perencanaan dan pengawasan. Tanpa itu, firma tidak lolos kualifikasi meski keahliannya tinggi. Perizinan disiapkan sebelum berburu proyek.",
+   "hint": "Dokumen apa yang harus dimiliki firma sebelum boleh menawarkan jasa perencanaan?"
   }
  ],
  "6D.10": [
   {
    "type": "tf",
-   "q": "Renewable IPP DD L6 bankable — international premium specialty.",
+   "q": "Berkembang dari praktisi tunggal menjadi firma memerlukan sistem — templat, prosedur mutu, pendelegasian — agar mutu tidak bergantung pada satu orang.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Renewable DD premium."
+   "explain": "BENAR. Selama semua proyek melewati tangan pendiri, firma tidak bisa tumbuh. Standar kerja terdokumentasi, tinjauan berjenjang, dan pengembangan staf memungkinkan pekerjaan didelegasikan tanpa mutu turun.",
+   "hint": "Apa yang membatasi pertumbuhan firma yang semua keputusannya harus lewat pendiri?"
   }
  ],
  "6D.12": [
   {
    "type": "tf",
-   "q": "Construction supervision L6 IE premium — international infrastructure.",
+   "q": "Program alih teknologi yang berhasil mencakup pelatihan tenaga lokal, dokumentasi yang lengkap, dan pendampingan sampai penerima mampu mengoperasikan dan mengembangkan sendiri.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Supervision premium."
+   "explain": "BENAR. Menyerahkan perangkat tanpa membangun kemampuan membuat penerima bergantung selamanya pada pemasok. Kerja sama bilateral yang baik mengukur keberhasilan dari kemandirian penerima, bukan dari jumlah perangkat yang dikirim.",
+   "hint": "Bagaimana mengukur apakah alih teknologi berhasil lima tahun kemudian?"
   }
  ],
  "6E.04": [
   {
    "type": "tf",
-   "q": "Literature review L6 systematic — Qastil PhD rigorous premium.",
+   "q": "Riset kolaboratif antara utilitas dan kampus menggabungkan data dan masalah nyata dari utilitas dengan metode dan waktu riset dari akademisi, dengan kesepakatan awal tentang kerahasiaan data dan publikasi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Lit review rigorous."
+   "explain": "BENAR. Utilitas punya data tetapi sedikit waktu riset; kampus sebaliknya. Tanpa perjanjian tentang siapa boleh mempublikasikan apa, kolaborasi tersendat oleh kekhawatiran kebocoran data.",
+   "hint": "Apa yang harus disepakati sebelum data meter pelanggan dibagikan ke peneliti?"
   }
  ],
  "6E.05": [
   {
    "type": "tf",
-   "q": "Experimental validation L6 — Qastil MAGNETO + 72 persen field premium.",
+   "q": "Data mesh menempatkan kepemilikan data pada tim domain (misalnya distribusi, pelanggan) yang menyajikannya sebagai produk data, berbeda dari gudang data terpusat yang dikelola satu tim IT.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Validation Qastil."
+   "explain": "BENAR. Tim IT pusat sering menjadi hambatan karena tidak memahami semua domain. Dengan data mesh, tim yang paling paham datanya bertanggung jawab atas kualitas dan dokumentasinya, dengan standar bersama agar tetap terintegrasi.",
+   "hint": "Siapa yang paling tahu apakah data gangguan penyulang itu benar: tim IT atau tim distribusi?"
   }
  ],
  "6E.07": [
   {
    "type": "tf",
-   "q": "Conference publication L6 — Qastil paper pipeline + network.",
+   "q": "Budaya berbasis data tumbuh bila pimpinan meminta bukti data dalam keputusan, staf dilatih membaca data, dan data mudah diakses — bukan sekadar membeli perangkat lunak dasbor.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Conference Qastil."
+   "explain": "BENAR. Dasbor yang tidak dipakai dalam rapat tidak mengubah apa pun. Transformasi terjadi ketika pertanyaan 'apa datanya?' menjadi kebiasaan dari atas ke bawah dan orang tidak takut menunjukkan angka yang buruk.",
+   "hint": "Apa tanda organisasi yang benar-benar berbasis data dalam rapat mingguannya?"
   }
  ],
  "6E.13": [
   {
    "type": "tf",
-   "q": "AI research safety L6 — Qastil responsible AI premium.",
+   "q": "Harga SaaS untuk utilitas biasanya didasarkan pada skala (jumlah meter atau pelanggan) atau nilai yang dihasilkan, dan proses penjualannya panjang karena melibatkan pengadaan dan keamanan data.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. AI safety responsible."
+   "explain": "BENAR. Utilitas adalah pembeli yang berhati-hati: uji coba, audit keamanan, dan persetujuan berjenjang memakan waktu berbulan-bulan. Model harga yang mudah dipahami dan selaras dengan manfaat mempercepat keputusan.",
+   "hint": "Mengapa siklus penjualan perangkat lunak ke utilitas jauh lebih lama daripada ke startup?"
   }
  ],
  "6F.02": [
   {
    "type": "tf",
-   "q": "Perpres 98 carbon L6 — Qastil Indonesia climate premium advisory.",
+   "q": "Advokasi kebijakan efisiensi energi menyajikan bukti — potensi penghematan, biaya, dampak ekonomi — kepada pembuat kebijakan, dan membangun koalisi pemangku kepentingan yang mendukung.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Perpres 98 premium."
+   "explain": "BENAR. Kebijakan berubah karena bukti dan dukungan, bukan hanya karena benar secara teknis. Konsultan berpengalaman menerjemahkan analisis teknis menjadi argumen ekonomi dan sosial yang dipahami pembuat kebijakan.",
+   "hint": "Apa yang dibutuhkan pembuat kebijakan selain bukti teknis?"
   }
  ],
  "6F.03": [
   {
    "type": "tf",
-   "q": "Energy law L6 Indonesia — Qastil regulatory advisory premium.",
+   "q": "Perpres 98/2021 mengatur nilai ekonomi karbon di Indonesia — perdagangan karbon, pungutan, dan pembayaran berbasis kinerja — sebagai instrumen mencapai target NDC.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Energy law premium."
+   "explain": "BENAR. NDC adalah komitmen penurunan emisi Indonesia kepada dunia. Perpres 98/2021 menjadi payung bagi pasar karbon, termasuk perdagangan emisi antar pembangkit yang mulai diterapkan di sektor ketenagalistrikan.",
+   "hint": "Instrumen apa yang membuat penurunan emisi punya nilai rupiah?"
   }
  ],
  "6F.04": [
   {
    "type": "tf",
-   "q": "Renewable policy L6 Indonesia — Qastil premium transition advisory.",
+   "q": "Firma audit energi memerlukan auditor bersertifikat, peralatan ukur terkalibrasi, dan metode kerja baku agar hasilnya kredibel dan diterima klien maupun regulator.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Renewable policy premium."
+   "explain": "BENAR. Laporan audit menjadi dasar investasi klien dan pelaporan ke pemerintah. Auditor tanpa sertifikat atau alat tanpa kalibrasi membuat laporan mudah dipertanyakan, dan firma kehilangan kepercayaan.",
+   "hint": "Apa yang membuat angka penghematan dalam laporan audit dipercaya?"
   }
  ],
  "6F.08": [
   {
    "type": "tf",
-   "q": "Social license L6 — Qastil ESG premium international.",
+   "q": "Pelatihan untuk pelatih (ToT) mempersiapkan manajer dan auditor energi berpengalaman menjadi pengajar yang mampu menyusun materi, memfasilitasi praktik, dan menilai peserta.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Social ESG premium."
+   "explain": "BENAR. Ahli yang mahir belum tentu mampu mengajar. ToT membekali metode andragogi, perancangan sesi, dan teknik penilaian, sehingga keahlian tersebar ke lebih banyak praktisi dengan mutu terjaga.",
+   "hint": "Apa yang perlu dipelajari seorang ahli agar bisa mengajar dengan efektif?"
   }
  ],
  "6F.10": [
   {
    "type": "tf",
-   "q": "Grid code Indonesia L6 — Qastil premium regulatory.",
+   "q": "Mempublikasikan studi kasus audit di jurnal atau konferensi memerlukan izin klien, penyamaran data sensitif, dan penyajian metode yang bisa diulang orang lain.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Grid code premium."
+   "explain": "BENAR. Data konsumsi dan proses klien adalah rahasia bisnis. Dengan izin dan anonimisasi, studi kasus menjadi kontribusi ilmiah sekaligus bukti keahlian firma yang meningkatkan kredibilitasnya.",
+   "hint": "Apa yang harus diminta dari klien sebelum hasil auditnya dipresentasikan di konferensi?"
   }
  ],
  "6F.11": [
   {
    "type": "tf",
-   "q": "Climate finance L6 — Qastil international premium advisory.",
+   "q": "Komisioning berkelanjutan memakai sensor IoT dan analitik untuk terus membandingkan kinerja sistem gedung dengan yang seharusnya, dan menandai penyimpangan begitu terjadi.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Climate finance premium."
+   "explain": "BENAR. Setelan yang bergeser, sensor yang rusak, dan katup yang macet perlahan menaikkan konsumsi tanpa disadari. Pemantauan terus-menerus menangkapnya dalam hari, bukan saat audit berikutnya bertahun-tahun kemudian.",
+   "hint": "Berapa lama pemborosan berlangsung jika hanya ketahuan saat audit lima tahunan?"
   }
  ],
  "6F.12": [
   {
    "type": "tf",
-   "q": "Policy modeling L6 — Qastil premium quantitative advisory.",
+   "q": "Digital twin energi gedung atau pabrik memungkinkan skenario efisiensi disimulasikan dengan data operasi nyata sebelum diterapkan, sehingga risiko dan manfaatnya terukur.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Policy model premium."
+   "explain": "BENAR. Menaikkan suhu air chiller 2 °C bisa diuji dampaknya pada konsumsi dan kenyamanan di model yang terkalibrasi dengan data nyata, sebelum menyentuh sistem sungguhan.",
+   "hint": "Bagaimana menguji perubahan setelan tanpa mengganggu operasi pabrik?"
   }
  ],
  "6G.04": [
   {
    "type": "tf",
-   "q": "Renewable expansion L6 — Qastil net zero 2060 premium.",
+   "q": "JETP adalah kemitraan pendanaan internasional yang diumumkan pada 2022 untuk mendukung transisi energi Indonesia, termasuk percepatan energi terbarukan dan pensiun dini PLTU.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Renewable premium."
+   "explain": "BENAR. Komitmen awalnya sekitar US$20 miliar dari negara mitra dan lembaga keuangan. Implementasinya memerlukan rencana investasi yang rinci, reformasi kebijakan, dan mekanisme transisi yang adil bagi pekerja dan daerah terdampak.",
+   "hint": "Apa dua sasaran utama pendanaan JETP untuk sektor listrik?"
   }
  ],
  "6H.01": [
   {
    "type": "tf",
-   "q": "Consulting practice L6 — Qastil Envisor foundation scale strategic.",
+   "q": "Menanggapi permintaan proposal (RFP) konsultansi K3 dimulai dengan memahami masalah klien dan menyusun lingkup yang jelas, agar penawaran menjawab kebutuhan, bukan menjual paket standar.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Practice foundation."
+   "explain": "BENAR. Klien yang meminta 'pelatihan K3' mungkin sebenarnya bermasalah dengan kepatuhan audit. Pertanyaan klarifikasi dan lingkup yang tepat membuat proposal relevan dan menghindari sengketa lingkup di kemudian hari.",
+   "hint": "Apa yang harus dilakukan sebelum menulis harga dalam proposal?"
   }
  ],
  "6H.03": [
   {
    "type": "tf",
-   "q": "Proposal L6 — Qastil Envisor winning strategic.",
+   "q": "Peta jalan menuju SMK3 emas menetapkan tahapan: penilaian awal, penutupan kesenjangan per elemen, pembudayaan, audit internal, lalu audit eksternal.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Proposal strategic."
+   "explain": "BENAR. Pencapaian 85% tidak diraih dalam sebulan. Perusahaan biasanya butuh 1–2 tahun untuk membangun dokumen, praktik, dan bukti pelaksanaan yang konsisten di seluruh elemen.",
+   "hint": "Mengapa audit eksternal sebaiknya didahului audit internal?"
   }
  ],
  "6H.06": [
   {
    "type": "tf",
-   "q": "Negotiation L6 — Qastil premium strategic consulting.",
+   "q": "Laporan saksi ahli untuk pengadilan harus objektif, berdasarkan bukti dan standar yang dapat dirujuk, dan menyatakan batas keyakinan pendapatnya.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Negotiation strategic."
+   "explain": "BENAR. Saksi ahli melayani pengadilan, bukan pihak yang membayarnya. Pendapat yang melampaui bukti atau keahliannya akan runtuh saat pemeriksaan silang dan merusak reputasi ahli itu sendiri.",
+   "hint": "Kepada siapa saksi ahli bertanggung jawab: pengadilan atau kliennya?"
   }
  ],
  "6H.11": [
   {
    "type": "tf",
-   "q": "Deliverable L6 — Qastil premium excellence.",
+   "q": "Mentoring Ahli K3 Listrik yang efektif memadukan pendampingan di lapangan, tinjauan laporan, dan umpan balik yang spesifik, bukan hanya ceramah di kelas.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Deliverable premium."
+   "explain": "BENAR. Kompetensi pemeriksaan instalasi terbentuk lewat praktik yang dikoreksi. Mentor yang mendampingi inspeksi nyata dan mengulas laporan peserta mempercepat kematangan jauh lebih dari kuliah tambahan.",
+   "hint": "Di mana seorang calon ahli belajar menemukan ketidaksesuaian: di kelas atau di panel sungguhan?"
   }
  ],
  "6H.12": [
   {
    "type": "tf",
-   "q": "Ethics L6 — Qastil reputation non-negotiable premium.",
+   "q": "Sensor wearable dapat memantau paparan panas, detak jantung, dan lokasi pekerja secara real-time, sehingga kondisi berbahaya terdeteksi sebelum menjadi kecelakaan.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Ethics non-negotiable."
+   "explain": "BENAR. Pekerja di ruang panas atau ketinggian bisa mengalami kelelahan tanpa disadari. Peringatan otomatis dan pelacakan lokasi mempercepat respons darurat. Penerapannya harus memperhatikan privasi dan persetujuan pekerja.",
+   "hint": "Apa yang harus disepakati dengan pekerja sebelum memasang pelacak lokasi?"
   }
  ],
  "6H.14": [
   {
    "type": "tf",
-   "q": "Thought leadership L6 — Qastil premium multi-vertical expertise elite.",
+   "q": "Analitik keselamatan prediktif mencari indikator awal — near-miss, temuan inspeksi, jam lembur, cuaca — yang berkorelasi dengan kecelakaan, agar intervensi dilakukan sebelum kejadian.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. Thought leader elite."
+   "explain": "BENAR. Statistik kecelakaan (lagging) datang terlambat. Indikator awal (leading) seperti lonjakan near-miss di satu unit memberi peringatan dini untuk menambah pengawasan atau pelatihan di sana.",
+   "hint": "Apa beda mengukur jumlah kecelakaan dengan mengukur jumlah near-miss?"
   }
  ],
  "6H.17": [
   {
    "type": "tf",
-   "q": "SMK3 Gold + K3 L6 — Qastil Envisor strategic tie vertical.",
+   "q": "Model harga konsultansi K3 bisa berupa retainer bulanan untuk pendampingan berkelanjutan, harga per proyek untuk lingkup terbatas, atau per sesi untuk pelatihan, disesuaikan dengan kebutuhan klien.",
    "opts": [
     "BENAR",
     "SALAH"
    ],
    "a": 0,
-   "explain": "BENAR. SMK3 tie strategic."
+   "explain": "BENAR. Retainer memberi kepastian bagi kedua pihak untuk kebutuhan yang rutin; harga proyek cocok untuk audit atau penyusunan sistem; pelatihan dihargai per sesi atau per peserta. Kejelasan lingkup di tiap model mencegah pekerjaan tak berbayar.",
+   "hint": "Model harga mana yang cocok untuk klien yang butuh konsultasi K3 setiap minggu?"
   }
  ]
 };

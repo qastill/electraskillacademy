@@ -33,9 +33,21 @@ const GUMAM = /\b(wait[:,\s]|hmm+\b|actually,? let me|let me (re)?(compute|check
 // huruf besar — supaya "pilihan a" di tengah kalimat biasa tidak ikut kena.
 const HURUF = /\b(?:[Jj]awaban|[Oo]psi|[Pp]ilihan)\s+[A-D]\b/;
 const NILAI_DI_OPSI = /\((sangat\s+)?(aman|benar|salah|tepat|keliru|berbahaya|ideal)\)/i;
+// Nama perusahaan dan nama orang milik penyusun sempat bocor ke ratusan soal
+// ("— Envisor service opportunity", "Qastil UP3 KPI"). Peserta tidak sedang
+// membaca profil perusahaan; itu membuat soal terasa seperti iklan sekaligus
+// menutupi isi teknisnya.
+const MEREK = /\b(Envisor|Qastill?|PLNlytics|MAGNETO|OctoAgent)\b/i;
+// Kode level internal kurikulum ("L4 K3 essential", "L6 Consultant") tidak
+// berarti apa pun bagi peserta dan menandai soal yang disalin dari catatan
+// perencanaan, bukan ditulis untuk dijawab.
+const KODE_LEVEL = /\bL[1-6]\b/;
+// Batas dominasi kunci benar/salah. Kalau hampir semua jawabannya BENAR,
+// peserta bisa lulus dengan menekan BENAR terus tanpa membaca soalnya.
+const BATAS_DOMINASI = 0.85;
 
 const masalah = [];
-let total = 0;
+let total = 0, tf = 0, tfBenar = 0;
 for (const [berkas, bank] of Object.entries(banks)) {
   for (const [kode, arr] of Object.entries(bank)) {
     (arr || []).forEach((q, i) => {
@@ -45,6 +57,12 @@ for (const [berkas, bank] of Object.entries(banks)) {
       if (/:$/.test(teks)) {
         masalah.push(`${di}: batang soal berakhir titik dua — "${teks.slice(-56)}"`);
       }
+      const semua = [teks, q.explain || '', q.hint || ''].concat(q.opts || []).join(' ');
+      const mk = MEREK.exec(semua);
+      if (mk) masalah.push(`${di}: menyebut nama perusahaan/orang penyusun — "${mk[0]}"`);
+      const kl = KODE_LEVEL.exec(teks);
+      if (kl) masalah.push(`${di}: batang soal memuat kode level internal — "${kl[0]}"`);
+      if (q.type === 'tf') { tf++; if (q.a === 0) tfBenar++; }
       const ex = String(q.explain || '');
       const g = GUMAM.exec(ex);
       if (g) masalah.push(`${di}: pembahasan memuat gumaman model — "${g[0].trim()}"`);
@@ -60,6 +78,13 @@ for (const [berkas, bank] of Object.entries(banks)) {
   }
 }
 
+// Keseimbangan kunci soal benar/salah, diperiksa setelah semua bank dibaca.
+const dominasi = tf ? Math.max(tfBenar, tf - tfBenar) / tf : 0;
+if (dominasi > BATAS_DOMINASI) {
+  masalah.push(`kunci benar/salah terlalu berat sebelah: ${(dominasi * 100).toFixed(1)}% `
+    + `jawabannya sama (${tfBenar} BENAR dari ${tf}) — peserta bisa lulus tanpa membaca soal`);
+}
+
 if (masalah.length) {
   console.error(`\nSoal yang tidak jelas: ${masalah.length}`);
   masalah.slice(0, 25).forEach(m => console.error('  - ' + m));
@@ -71,3 +96,5 @@ if (masalah.length) {
 console.log(`PASS kejelasan: ${total} soal — semuanya kalimat tanya utuh`);
 console.log('PASS pembahasan: tanpa gumaman model dan tanpa rujukan huruf opsi');
 console.log('PASS opsi      : tidak ada yang menyelipkan penilaian dalam kurung');
+console.log('PASS netral    : tanpa nama perusahaan/orang penyusun dan tanpa kode level internal');
+console.log(`PASS kunci     : ${tf} soal benar/salah, dominasi kunci ${(dominasi * 100).toFixed(1)}% (batas ${BATAS_DOMINASI * 100}%)`);
