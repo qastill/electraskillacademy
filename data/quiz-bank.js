@@ -116,7 +116,7 @@ window.QUIZ_BANK = {
     "1 Watt per Ampere"
    ],
    "a": 0,
-   "explain": "Definisi: 1 V = 1 J/C. Artinya, untuk memindahkan muatan 1 Coulomb melalui beda potensial 1 Volt, dibutuhkan energi 1 Joule. Pilihan D (1 W/A) juga benar secara matematis (W = V·A → V = W/A), tapi definisi paling fundamental adalah J/C."
+   "explain": "Definisi: 1 V = 1 J/C. Artinya, untuk memindahkan muatan 1 Coulomb melalui beda potensial 1 Volt, dibutuhkan energi 1 Joule. Bentuk 1 W/A juga benar secara matematis (W = V·A → V = W/A), tetapi definisi yang paling mendasar adalah Joule per Coulomb."
   },
   {
    "type": "theory",
@@ -140,7 +140,7 @@ window.QUIZ_BANK = {
     "≈ 9,1 × 10³¹"
    ],
    "a": 2,
-   "explain": "Jumlah elektron = 1 C ÷ 1,6 × 10⁻¹⁹ C/elektron ≈ 6,25 × 10¹⁸ elektron. Pilihan B adalah bilangan Avogadro (jumlah partikel per mol), bukan untuk muatan. Pilihan A adalah muatan satu elektron itu sendiri."
+   "explain": "Jumlah elektron = 1 C ÷ 1,6 × 10⁻¹⁹ C per elektron ≈ 6,25 × 10¹⁸ elektron. Angka 6,02 × 10²³ adalah bilangan Avogadro, yaitu jumlah partikel per mol — bukan untuk muatan. Sedangkan 1,6 × 10⁻¹⁹ C adalah muatan satu elektron itu sendiri."
   },
   {
    "type": "theory",
@@ -248,7 +248,7 @@ window.QUIZ_BANK = {
     "F = k·Q₁·Q₂/r²"
    ],
    "a": 1,
-   "explain": "Gaya pada kawat berarus L dalam medan magnet B: F = B·I·L·sin θ, dengan θ sudut antara arus dan B. Maksimum saat θ = 90°. Inilah prinsip kerja motor listrik. Pilihan A adalah gaya pada muatan dalam medan E, D adalah Hukum Coulomb, C adalah Hukum II Newton."
+   "explain": "Gaya pada kawat sepanjang L yang dialiri arus I di dalam medan magnet B: F = B·I·L·sin θ, dengan θ sudut antara arah arus dan medan. Gayanya maksimum saat θ = 90°. Inilah prinsip kerja motor listrik. Rumus F = q·E berlaku untuk muatan dalam medan listrik, F = k·q₁·q₂/r² adalah Hukum Coulomb, dan F = m·a adalah Hukum II Newton."
   },
   {
    "type": "theory",
@@ -2468,7 +2468,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Bahan-bahan magnetik dibagi menjadi 3 kategori utama:",
+   "q": "Bahan magnetik dikelompokkan menjadi tiga kategori utama. Kelompok apa saja itu?",
    "opts": [
     "Ferromagnetik, paramagnetik, diamagnetik",
     "Konduktor, isolator, semikonduktor",
@@ -4456,15 +4456,15 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Kapasitor PFC 50 kVAR pada 380 V. Energi tersimpan saat charged peak?",
+   "q": "Kapasitor bank perbaikan faktor daya berkapasitas 50 kVAR dipasang pada jaringan 380 V / 50 Hz. Berapa energi yang tersimpan di kapasitor saat tegangan berada di puncaknya?",
    "opts": [
-    "5 J",
-    "50 J",
-    "95 J",
+    "80 J",
+    "159 J",
+    "318 J",
     "1.000 J"
    ],
-   "a": 2,
-   "explain": "Q = 50 kVAR pada V_RMS = 380 V → C = Q / (2πf × V²) = 50.000 / (314 × 380²) ≈ 1,1 mF."
+   "a": 1,
+   "explain": "Daya reaktif menyatakan energi yang bolak-balik tersimpan dan dilepas tiap siklus: E_puncak = Q / (2πf) = 50.000 ÷ (2π × 50) = 50.000 ÷ 314 = 159 J. Lewat jalur kapasitansi hasilnya sama: C = Q/(2πf·V²) = 1,1 mF, lalu E = ½·C·V_puncak² = ½ × 1,1×10⁻³ × (380√2)² ≈ 159 J. Memakai 380 V tanpa mengubahnya ke nilai puncak memberi 80 J — kesalahan yang paling sering terjadi."
   },
   {
    "type": "theory",
@@ -5782,7 +5782,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "theory",
-   "q": "Multimeter rated CAT III 600V. Boleh dipakai untuk:",
+   "q": "Sebuah multimeter berkategori keselamatan CAT III 600 V. Pengukuran pada rangkaian mana saja yang boleh dilakukan dengan alat itu?",
    "opts": [
     "Stop kontak rumah 220V (CAT II)",
     "Panel distribusi 380V (CAT III)",
@@ -5952,7 +5952,7 @@ window.QUIZ_BANK = {
  "1.13": [
   {
    "type": "pg",
-   "q": "Megger (insulation tester) mengukur:",
+   "q": "Besaran apa yang diukur oleh megger (insulation tester)?",
    "opts": [
     "Tahanan konduktor",
     "Tahanan isolasi antara konduktor dan ground atau antar konduktor",
@@ -5964,7 +5964,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Test voltage megger standar untuk instalasi 230V LV:",
+   "q": "Berapa tegangan uji megger yang standar dipakai untuk instalasi tegangan rendah 230 V?",
    "opts": [
     "100V",
     "500V",
@@ -5976,7 +5976,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Minimum acceptable insulation resistance instalasi 230V (PUIL):",
+   "q": "Menurut PUIL, berapa resistansi isolasi minimum yang masih bisa diterima untuk instalasi 230 V?",
    "opts": [
     "100 Ω",
     "1000 Ω",
@@ -5989,7 +5989,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "R = V/I",
-   "q": "Megger 500V, reading arus 2 μA. Resistansi isolasi:",
+   "q": "Megger diuji pada 500 V dan arus bocor yang terbaca 2 μA. Berapa resistansi isolasinya?",
    "opts": [
     "250 kΩ",
     "250 MΩ",
@@ -6001,7 +6001,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "'Polarization Index' (PI) dihitung dengan megger:",
+   "q": "Dari perbandingan dua pembacaan megger yang mana Polarization Index (PI) dihitung?",
    "opts": [
     "Arus peak / average",
     "R isolasi at 10 menit / R at 1 menit",
@@ -6013,7 +6013,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Dielectric Absorption Ratio (DAR):",
+   "q": "Dielectric Absorption Ratio (DAR) dihitung dari perbandingan dua pembacaan megger yang mana?",
    "opts": [
     "R at 60 detik / R at 30 detik",
     "Luas area",
@@ -6036,7 +6036,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Megger 1000V di motor 3-fasa 380V: R isolasi winding-to-ground: 0.3 MΩ (< 1 MΩ PUIL). Motor masih bisa start tapi trip thermal overload.",
-   "q": "Diagnosis & action:",
+   "q": "Uji megger pada belitan sebuah motor menunjukkan resistansi isolasi di bawah 1 MΩ. Apa diagnosis dan tindakan yang tepat?",
    "opts": [
     "Normal, lanjut pakai",
     "Insulasi degraded (kelembapan, aging, kontaminasi) → dry-out atau rewind",
@@ -6048,7 +6048,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Efek suhu pada insulation resistance:",
+   "q": "Bagaimana pengaruh kenaikan suhu terhadap nilai resistansi isolasi?",
    "opts": [
     "Tidak ada",
     "R turun saat T naik (10°C naik → R bisa turun 50%)",
@@ -6085,7 +6085,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Guard terminal pada megger high-accuracy berfungsi:",
+   "q": "Apa fungsi terminal guard pada megger berakurasi tinggi?",
    "opts": [
     "Dekorasi",
     "Guard against surface leakage current (di luar bulk resistance) untuk pengukuran R tinggi akurat",
@@ -6098,7 +6098,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 160' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='40' width='120' height='80' fill='#1a1d2e' stroke='#c9a96e' stroke-width='2' rx='8'/><text x='90' y='65' text-anchor='middle' font-family='Georgia' font-size='13' fill='#c9a96e' font-weight='700'>MEGGER</text><text x='90' y='85' text-anchor='middle' font-family='Courier' font-size='18' fill='#c9a96e'>250 MΩ</text><text x='90' y='105' text-anchor='middle' font-family='Georgia' font-size='10' fill='white'>500V DC</text><line x1='150' y1='60' x2='200' y2='60' stroke='#c9a96e' stroke-width='2'/><line x1='150' y1='100' x2='200' y2='100' stroke='#1a1d2e' stroke-width='2'/><text x='175' y='55' text-anchor='middle' font-family='Georgia' font-size='10' fill='#c9a96e'>+</text><text x='175' y='115' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>−(Earth)</text><rect x='200' y='50' width='120' height='60' fill='#c9a96e' opacity='0.15' stroke='#1a1d2e' stroke-width='2'/><text x='260' y='75' text-anchor='middle' font-family='Georgia' font-size='12' fill='#1a1d2e'>Instalasi</text><text x='260' y='90' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-style='italic'>(de-energized)</text></svg>",
-   "q": "Dari diagram megger test 500V reading 250 MΩ pada instalasi 230V, hasil:",
+   "q": "Uji megger 500 V pada instalasi 230 V menghasilkan pembacaan 250 MΩ. Bagaimana menilai hasil itu?",
    "opts": [
     "Gagal (< 1 MΩ min)",
     "Excellent (>> minimum PUIL 0.5 MΩ)",
@@ -6110,7 +6110,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Untuk test isolasi kabel MV 20kV, test voltage megger:",
+   "q": "Berapa tegangan uji megger yang dipakai untuk menguji isolasi kabel tegangan menengah 20 kV?",
    "opts": [
     "500V",
     "1000V",
@@ -6132,7 +6132,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Hipot test (High Potential) vs Insulation Resistance test — perbedaan utama:",
+   "q": "Apa perbedaan utama antara uji Hipot (High Potential) dan uji resistansi isolasi?",
    "opts": [
     "Hipot AC/DC tegangan sangat tinggi untuk proof test breakdown. Megger DC lower untuk measure R.",
     "Sama",
@@ -6145,7 +6145,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Generator 1 MVA, 6.6 kV. Megger test 2500V: R isolasi = 50 MΩ saat 30°C. Evaluasi:",
-   "q": "R_min standar + kondisi trafo:",
+   "q": "Mesin putar 6,6 kV diuji megger pada suhu 30 °C dan terbaca 50 MΩ. Menurut IEEE 43, bagaimana menilai hasil itu?",
    "opts": [
     "OK, well above threshold",
     "Gagal karena terlalu tinggi",
@@ -6157,7 +6157,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Spike overvoltage test pakai megger:",
+   "q": "Bolehkah megger dipakai untuk melakukan uji spike overvoltage?",
    "opts": [
     "Bahaya",
     "Tidak direkomendasi — megger bukan untuk over-voltage stress",
@@ -6169,7 +6169,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Leakage current pada megger test berapa level:",
+   "q": "Pada uji megger yang normal, arus bocor yang terbaca berada di kisaran berapa?",
    "opts": [
     "Ampere",
     "Milliampere",
@@ -6181,7 +6181,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Environmental effect dominan pada isolasi kelistrikan:",
+   "q": "Faktor lingkungan apa yang paling besar pengaruhnya terhadap kualitas isolasi listrik?",
    "opts": [
     "Cahaya matahari",
     "Kelembapan (moisture) & kontaminasi",
@@ -6194,7 +6194,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "R spesifik (MΩ·km)",
-   "q": "Kabel XLPE 20kV, panjang 500m. Reading megger 2500V: 10 GΩ. Reduce per unit length:",
+   "q": "Kabel XLPE 20 kV sepanjang 500 m diuji megger 2.500 V dan terbaca 10 GΩ. Berapa resistansi isolasi per satuan panjangnya?",
    "opts": [
     "5 MΩ·km",
     "5 GΩ·km",
@@ -6216,7 +6216,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Discharge time kabel MV setelah megger 5000V DC:",
+   "q": "Setelah diuji megger 5.000 V DC, berapa lama kabel tegangan menengah harus dibumikan untuk membuang muatan sisanya?",
    "opts": [
     "Segera",
     "≥ 4-5× durasi test, minimum 5 menit dengan grounding stick",
@@ -6230,7 +6230,7 @@ window.QUIZ_BANK = {
  "1.14": [
   {
    "type": "pg",
-   "q": "Earth tester mengukur:",
+   "q": "Besaran apa yang diukur oleh earth tester?",
    "opts": [
     "Tahanan tanah terhadap listrik (ground resistance)",
     "Tegangan tanah",
@@ -6242,7 +6242,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "PUIL 2011 batas MAXIMUM tahanan pentanahan umum:",
+   "q": "Menurut PUIL 2011, berapa batas maksimum tahanan pentanahan untuk instalasi umum?",
    "opts": [
     "0.5 Ω",
     "5 Ω",
@@ -6255,7 +6255,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "R = V/I",
-   "q": "Earth test: inject 1A, drop voltage di P-E = 3.5V. Resistansi ground:",
+   "q": "Pada uji pentanahan, arus 1 A diinjeksikan dan beda tegangan antara probe P dan E terbaca 3,5 V. Berapa resistansi pentanahannya?",
    "opts": [
     "0.35 Ω",
     "3.5 Ω",
@@ -6267,7 +6267,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Jarak minimum antara probe C (current) dan E (ground under test) dalam 62% method:",
+   "q": "Pada metode 62%, berapa jarak minimum antara probe arus (C) dan elektrode yang sedang diuji (E)?",
    "opts": [
     "1 meter",
     "10-30 meter (tergantung size grounding)",
@@ -6280,7 +6280,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 380 160' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='120' x2='350' y2='120' stroke='#8a6d3d' stroke-width='3'/><rect x='40' y='80' width='6' height='40' fill='#1a1d2e'/><text x='43' y='75' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>E</text><text x='43' y='140' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>Test</text><rect x='180' y='90' width='4' height='30' fill='#c9a96e'/><text x='182' y='85' text-anchor='middle' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>P</text><text x='182' y='145' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>62%</text><rect x='310' y='90' width='4' height='30' fill='#1a1d2e'/><text x='312' y='85' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>C</text><text x='312' y='145' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>100%</text><line x1='43' y1='55' x2='312' y2='55' stroke='#c9a96e' stroke-width='1.5' stroke-dasharray='3,2'/><text x='175' y='45' text-anchor='middle' font-family='Georgia' font-size='11' fill='#c9a96e'>D (misal: 20 m)</text><line x1='43' y1='40' x2='182' y2='40' stroke='#1a1d2e' stroke-width='1.5'/><text x='110' y='30' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>0.62 × D</text></svg>",
-   "q": "Dari diagram Fall-of-Potential, posisi probe P yang benar adalah:",
+   "q": "Pada metode Fall-of-Potential, di posisi mana probe potensial (P) harus ditempatkan?",
    "opts": [
     "Dekat E (10% jarak)",
     "Pada 62% jarak EC dari E",
@@ -6292,7 +6292,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Clamp-on earth tester (tidak butuh probe tambahan) prinsip:",
+   "q": "Bagaimana prinsip kerja clamp-on earth tester yang tidak memerlukan probe tambahan?",
    "opts": [
     "Sama dengan 3-pin",
     "Inject + sensing via clamp pada konduktor grounding (butuh return path via lingkungan grounding)",
@@ -6314,7 +6314,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Cara menurunkan tahanan ground tinggi:",
+   "q": "Apa saja cara yang bisa dipakai untuk menurunkan tahanan pentanahan yang terlalu tinggi?",
    "opts": [
     "Tambah elektroda paralel (multiple rods)",
     "Ground enhancement chemical (bentonit, GEM)",
@@ -6326,7 +6326,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Soil resistivity (ρ) rock/dry = ~5000 Ω·m, clay basah = ~30 Ω·m. Ini mempengaruhi:",
+   "q": "Resistivitas tanah sekitar 5.000 Ω·m pada batuan kering dan sekitar 30 Ω·m pada lempung basah. Apa pengaruh perbedaan itu?",
    "opts": [
     "Tidak ada",
     "Desain grounding: area dengan ρ tinggi butuh deep rod / enhancement",
@@ -6339,7 +6339,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Teknisi install ground rod 1.5m (single) di lokasi berbatuan Indramayu. Hasil earth test: 12 Ω (> PUIL 5 Ω).",
-   "q": "Solusi perbaikan yang efektif:",
+   "q": "Tahanan pentanahan sebuah instalasi terukur 12 Ω, sedangkan syaratnya di bawah 5 Ω. Perbaikan apa yang paling efektif?",
    "opts": [
     "Pasrah saja",
     "Ground enhancement: (a) tambah 2-3 rod paralel 3m apart, (b) rod lebih panjang/dalam, (c) bentonite/GEM backfill",
@@ -6351,7 +6351,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Touch voltage dan step voltage adalah konsekuensi dari:",
+   "q": "Tegangan sentuh dan tegangan langkah timbul sebagai akibat dari apa?",
    "opts": [
     "Grounding sempurna",
     "Ground rise potential (GPR) saat fault — tegangan tanah di sekitar ground electrode",
@@ -6364,7 +6364,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "GPR = I × R",
-   "q": "Substation arus fault 5000A, R_ground 1 Ω. Ground Rise Potential (GPR):",
+   "q": "Gardu induk mengalami arus gangguan 5.000 A dengan resistansi pentanahan 1 Ω. Berapa Ground Rise Potential (GPR) yang timbul?",
    "opts": [
     "500 V",
     "5000 V",
@@ -6386,7 +6386,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Grounding substation 150kV biasanya pakai:",
+   "q": "Sistem pentanahan gardu induk 150 kV umumnya berbentuk apa?",
    "opts": [
     "1 ground rod",
     "Ground grid (mesh konduktor tembaga besar + banyak rod) untuk menurunkan R + smooth potential distribution",
@@ -6398,7 +6398,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "SPD (Surge Protection Device) tidak bekerja tanpa:",
+   "q": "SPD (Surge Protection Device) tidak akan bekerja tanpa adanya apa?",
    "opts": [
     "Grounding yang baik",
     "Fuse",
@@ -6410,7 +6410,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Measurement frequency earth tester umumnya:",
+   "q": "Pada frekuensi berapa earth tester umumnya melakukan pengukuran?",
    "opts": [
     "DC",
     "50 Hz (sama dengan PLN)",
@@ -6423,7 +6423,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Di area pabrik kimia, engineer lihat sparking di chassis motor saat hujan. Earth test motor: 25 Ω (> 5 Ω).",
-   "q": "Analisis & fix:",
+   "q": "Bodi sebuah motor memercikkan bunga api saat disentuh alat ukur. Apa analisis dan perbaikannya?",
    "opts": [
     "Normal",
     "Bonding/grounding motor rusak/korosi — cek kabel ground motor, check continuity, improve rod",
@@ -6435,7 +6435,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Equipotential bonding di gedung fungsi:",
+   "q": "Apa fungsi equipotential bonding pada instalasi gedung?",
    "opts": [
     "Estetika",
     "Semua metal (rebar, pipa, casing, dll) saling connect + ke earth → minimalkan beda potensial saat fault",
@@ -6447,7 +6447,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Counterpoise (ground wire horizontal) digunakan saat:",
+   "q": "Dalam kondisi apa counterpoise (penghantar pentanahan horizontal) dipakai?",
    "opts": [
     "Rod vertikal tidak bisa (batuan)",
     "Large area grid (SUTT, tower)",
@@ -6469,7 +6469,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Testing periode ulang earth resistance sistem kritikal:",
+   "q": "Seberapa sering pengujian ulang tahanan pentanahan dilakukan pada sistem kritikal?",
    "opts": [
     "Seumur hidup",
     "Annually (environments korosif lebih sering)",
@@ -6495,7 +6495,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Sebelum pengukuran, langkah verifikasi alat:",
+   "q": "Sebelum mulai mengukur, langkah verifikasi alat apa yang harus dilakukan?",
    "opts": [
     "Langsung pakai",
     "Visual inspect probe/alat → test di sumber known live → ukur target → re-test known live (three-point test)",
@@ -6508,7 +6508,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "E = (% × reading) + (digits × LSD)",
-   "q": "Akurasi DMM ±1% reading + 2 digit (display 4½, LSD 0.001V untuk range 2V). Reading 1.500V. Error absolut:",
+   "q": "Sebuah DMM berakurasi ±1% pembacaan + 2 digit (tampilan 4½ digit, LSD 0,001 V pada rentang 2 V) menunjukkan 1,500 V. Berapa kesalahan absolutnya?",
    "opts": [
     "±0.015V",
     "±0.017V",
@@ -6543,7 +6543,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Interpretasi data: pengukuran arus 3 fasa 10A, 9.5A, 13A. Indikasi utama:",
+   "q": "Pengukuran arus pada tiga fasa menghasilkan 10 A, 9,5 A, dan 13 A. Apa indikasi utama dari data itu?",
    "opts": [
     "Normal",
     "Unbalance >10% — investigate penyebab (supply, winding, loose connection)",
@@ -6555,7 +6555,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pengukuran daya (Watt meter) membutuhkan:",
+   "q": "Besaran apa saja yang dibutuhkan untuk mengukur daya aktif?",
    "opts": [
     "Hanya V",
     "Hanya I",
@@ -6580,7 +6580,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "Is = Ip × (5/400)",
-   "q": "CT 400/5A, ukur primer 240A. Arus sekunder:",
+   "q": "Sebuah CT berrasio 400/5 A mengukur arus primer 240 A. Berapa arus yang mengalir di sisi sekundernya?",
    "opts": [
     "3.0 A",
     "5.0 A",
@@ -6602,7 +6602,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pengukuran tegangan sentuh (touch voltage) dilakukan dengan:",
+   "q": "Dengan alat seperti apa pengukuran tegangan sentuh (touch voltage) dilakukan?",
    "opts": [
     "Voltmeter biasa",
     "Voltmeter dengan resistansi 1 kΩ (simulate resistansi tubuh) — sesuai IEC 61557",
@@ -6614,7 +6614,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Data logging pengukuran penting untuk:",
+   "q": "Untuk apa data hasil pengukuran perlu dicatat dan disimpan secara berkala?",
    "opts": [
     "Kompliance audit",
     "Trending & predictive maintenance",
@@ -6626,7 +6626,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Probe jenis 'test lead' standar warna:",
+   "q": "Pada test lead multimeter standar, warna apa yang menandai kutub positif dan kutub negatif?",
    "opts": [
     "Merah = + / hitam = −",
     "Hitam = + / merah = −",
@@ -6639,7 +6639,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 180' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='40' width='60' height='100' fill='#1a1d2e' stroke='#c9a96e' stroke-width='2' rx='5'/><text x='60' y='90' text-anchor='middle' font-family='Georgia' font-size='10' fill='#c9a96e'>CAT II</text><text x='60' y='105' text-anchor='middle' font-family='Courier' font-size='11' fill='#c9a96e'>1000V</text><rect x='120' y='40' width='60' height='100' fill='#1a1d2e' stroke='#c9a96e' stroke-width='2' rx='5'/><text x='150' y='90' text-anchor='middle' font-family='Georgia' font-size='10' fill='#c9a96e'>CAT III</text><text x='150' y='105' text-anchor='middle' font-family='Courier' font-size='11' fill='#c9a96e'>600V</text><rect x='210' y='40' width='60' height='100' fill='#1a1d2e' stroke='#c9a96e' stroke-width='2' rx='5'/><text x='240' y='90' text-anchor='middle' font-family='Georgia' font-size='10' fill='#c9a96e'>CAT IV</text><text x='240' y='105' text-anchor='middle' font-family='Courier' font-size='11' fill='#c9a96e'>600V</text><text x='150' y='160' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e' font-style='italic'>Untuk panel LV dist 400V trafo sekunder</text></svg>",
-   "q": "Dari 3 DMM di gambar, yang COCOK untuk panel LV sekunder trafo:",
+   "q": "Dari tiga DMM pada gambar, mana yang cocok dipakai untuk mengukur panel LV di sisi sekunder trafo?",
    "opts": [
     "Kiri (CAT II 1000V)",
     "Tengah (CAT III 600V)",
@@ -6651,7 +6651,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pengukuran harmonisa (THD) membutuhkan:",
+   "q": "Alat apa yang dibutuhkan untuk mengukur distorsi harmonisa (THD)?",
    "opts": [
     "DMM biasa",
     "Power quality analyzer (FFT analysis)",
@@ -6663,7 +6663,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Thermography / infrared (IR) imaging untuk:",
+   "q": "Untuk keperluan apa pencitraan inframerah (thermography) dipakai pada instalasi listrik?",
    "opts": [
     "Audit energi",
     "Deteksi hot spot di panel, terminasi, motor — predictive maintenance",
@@ -6676,7 +6676,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Pengukuran bulanan panel distribusi Indramayu: R isolasi N-G: 0.3 MΩ (normal 2.5 MΩ). Trend 6 bulan terakhir: 2.5 → 1.8 → 1.1 → 0.3.",
-   "q": "Analisis data & tindakan:",
+   "q": "Pemantauan berkala menunjukkan resistansi isolasi sebuah instalasi turun makin cepat dari waktu ke waktu. Apa analisis dan tindakannya?",
    "opts": [
     "Nilai cukup, abaikan",
     "Trend turun cepat → degradasi isolasi (moisture/kontaminasi) → investigate asap sebelum failure",
@@ -6688,7 +6688,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Faktor koreksi pengukuran power factor di tempat kerja:",
+   "q": "Faktor apa saja yang perlu dikoreksi saat mengukur faktor daya di lapangan?",
    "opts": [
     "Tidak ada",
     "Suhu, kalibrasi alat, harmonic distortion, stabilitas supply",
@@ -6700,7 +6700,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Ukur arus bocor (leakage current) instalasi dengan:",
+   "q": "Dengan alat apa arus bocor (leakage current) sebuah instalasi diukur?",
    "opts": [
     "DMM biasa",
     "Clamp meter sensitif (μA-mA) kurung fasa+netral sekaligus — reading = arus bocor",
@@ -6722,7 +6722,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Format laporan pengukuran teknikal:",
+   "q": "Apa saja yang harus ada dalam sebuah laporan hasil pengukuran teknis?",
    "opts": [
     "Bebas",
     "Header (tanggal, alat, teknisi) + data + interpretasi + recommendation + signature",
@@ -6734,7 +6734,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Uncertainty (ketidakpastian) pengukuran dihitung dari:",
+   "q": "Bagaimana ketidakpastian (uncertainty) sebuah pengukuran dihitung?",
    "opts": [
     "Jumlah error",
     "Root Sum Square (RSS) dari komponen: instrument + kalibrasi + resolusi + metode",
@@ -6746,7 +6746,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Alat ukur modern dengan Bluetooth/WiFi memungkinkan:",
+   "q": "Apa manfaat alat ukur modern yang dilengkapi Bluetooth atau WiFi?",
    "opts": [
     "Lebih berat",
     "Remote reading (tidak perlu dekat live circuit) + data logging",
@@ -6760,7 +6760,7 @@ window.QUIZ_BANK = {
  "1.16": [
   {
    "type": "pg",
-   "q": "MCB (Miniature Circuit Breaker) kepanjangan dari:",
+   "q": "MCB adalah singkatan dari apa?",
    "opts": [
     "Main Circuit Breaker",
     "Miniature Circuit Breaker",
@@ -6772,7 +6772,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "MCB kode 'C16' artinya:",
+   "q": "Apa arti kode 'C16' pada sebuah MCB?",
    "opts": [
     "16A, kurva C",
     "16V, tipe C",
@@ -6784,7 +6784,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Breaking capacity MCB standar rumah:",
+   "q": "Berapa breaking capacity MCB yang standar dipakai di instalasi rumah?",
    "opts": [
     "1 kA",
     "3 kA",
@@ -6797,7 +6797,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "Isc = I_rated/Z_pu",
-   "q": "Trafo 630 kVA 400V Zsc 4%. Prospective Isc di sekunder (approx):",
+   "q": "Trafo 630 kVA 400 V memiliki impedansi hubung singkat 4%. Berapa perkiraan arus hubung singkat di sisi sekundernya?",
    "opts": [
     "910 A",
     "9.1 kA",
@@ -6809,7 +6809,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "MCCB (Molded Case Circuit Breaker) dibanding MCB:",
+   "q": "Apa keunggulan MCCB dibandingkan MCB?",
    "opts": [
     "Lebih kecil",
     "Rating arus lebih besar (≤1600A typical) + breaking capacity lebih tinggi (25-100 kA) + adjustable trip",
@@ -6821,7 +6821,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Fuse HRC singkatan dari:",
+   "q": "Fuse HRC adalah singkatan dari apa?",
    "opts": [
     "High Response Class",
     "High Rupture Capacity / High Breaking Capacity",
@@ -6833,7 +6833,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Fuse NH singkatan dari:",
+   "q": "Fuse NH adalah singkatan dari apa?",
    "opts": [
     "Normal Heat",
     "Niederspannungs Hochleistung (LV High Performance, German) — tipe HRC industri",
@@ -6846,7 +6846,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='180' x2='320' y2='180' stroke='#1a1d2e' stroke-width='2'/><line x1='30' y1='30' x2='30' y2='180' stroke='#1a1d2e' stroke-width='2'/><text x='10' y='30' font-family='Georgia' font-size='10' fill='#1a1d2e'>t(s)</text><text x='325' y='195' font-family='Georgia' font-size='10' fill='#1a1d2e'>I/In</text><path d='M 60 50 Q 110 100 160 140 Q 210 165 280 172' stroke='#2d7d46' stroke-width='2.5' fill='none'/><text x='160' y='75' font-family='Georgia' font-size='10' fill='#2d7d46' font-weight='700'>Thermal (bimetal)</text><line x1='180' y1='172' x2='180' y2='180' stroke='#c9a96e' stroke-width='3'/><line x1='180' y1='172' x2='280' y2='172' stroke='#c9a96e' stroke-width='3'/><text x='200' y='165' font-family='Georgia' font-size='10' fill='#c9a96e' font-weight='700'>Magnetic (instant)</text><text x='50' y='195' font-family='Georgia' font-size='9' fill='#1a1d2e'>1</text><text x='120' y='195' font-family='Georgia' font-size='9' fill='#1a1d2e'>3</text><text x='180' y='195' font-family='Georgia' font-size='9' fill='#1a1d2e'>5</text><text x='260' y='195' font-family='Georgia' font-size='9' fill='#1a1d2e'>10</text></svg>",
-   "q": "Dari kurva MCB di gambar (kurva C), trip magnetik terjadi pada arus:",
+   "q": "Dari kurva MCB kurva C pada gambar, pada kelipatan arus berapa trip magnetiknya bekerja?",
    "opts": [
     "1-3× In",
     "3-5× In",
@@ -6859,7 +6859,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "I_load = 0.8 × I_CB",
-   "q": "MCB 25A, beban continuous (>3 jam). Max load yang aman (80% rule):",
+   "q": "Sebuah MCB 25 A memikul beban kontinyu lebih dari 3 jam. Menurut aturan 80%, berapa beban maksimum yang aman?",
    "opts": [
     "25A",
     "20A",
@@ -6882,7 +6882,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Panel restoran Indramayu: MCB 32A feeder trip berkali-kali saat jam sibuk walau beban < 30A. Inspection: kontak MCB oxidize, panel panas 55°C ambient.",
-   "q": "Diagnosis + fix:",
+   "q": "Sebuah MCB 25 A di panel bersuhu 55 °C berulang kali trip padahal bebannya di bawah rating. Apa diagnosis dan perbaikannya?",
    "opts": [
     "MCB rusak, ganti",
     "Kombinasi: (a) derating MCB di 40°C+, (b) kontak oxidize increase R → heat, (c) perlu clean + ganti + ventilation panel",
@@ -6894,7 +6894,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "'I²t' dalam fuse characteristic berarti:",
+   "q": "Apa arti besaran 'I²t' pada karakteristik sebuah fuse?",
    "opts": [
     "Integral arus² × waktu — energi thermal yang melewati fuse",
     "Arus saja",
@@ -6906,7 +6906,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "RCD/RCCB fungsinya BERBEDA dari MCB karena:",
+   "q": "Mengapa fungsi RCD/RCCB berbeda dari MCB?",
    "opts": [
     "Sama fungsi",
     "RCD deteksi arus BOCOR (residual) ke tanah, MCB deteksi OVERCURRENT",
@@ -6918,7 +6918,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Size NH00 fuse rating maksimum:",
+   "q": "Berapa rating arus maksimum untuk fuse NH ukuran NH00?",
    "opts": [
     "6A",
     "160A",
@@ -6930,7 +6930,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Striker pin pada NH fuse — fungsi:",
+   "q": "Apa fungsi striker pin pada fuse NH?",
    "opts": [
     "Menarik fuse",
     "Mechanical indicator + interlock: saat fuse blow, pin menonjol → trigger alarm atau auxiliary contact",
@@ -6952,7 +6952,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Koordinasi proteksi MCB-fuse upstream → biasanya:",
+   "q": "Pada koordinasi proteksi antara MCB dan fuse, mana yang biasanya dipasang di sisi hulu?",
    "opts": [
     "MCB upstream",
     "Fuse upstream (breaking capacity lebih besar) + MCB downstream (reset-able)",
@@ -6964,7 +6964,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "GFCI (Ground Fault Circuit Interrupter) = istilah US untuk:",
+   "q": "GFCI adalah istilah Amerika untuk perangkat apa?",
    "opts": [
     "MCB",
     "RCD/ELCB",
@@ -6976,7 +6976,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "MCB 'DP' (Double Pole) vs 'SP' (Single Pole):",
+   "q": "Apa perbedaan MCB tipe DP (Double Pole) dan SP (Single Pole)?",
    "opts": [
     "Warna",
     "DP putus fasa DAN netral sekaligus; SP hanya fasa",
@@ -6990,7 +6990,7 @@ window.QUIZ_BANK = {
  "1.17": [
   {
    "type": "pg",
-   "q": "ELCB / RCCB / RCD fungsi utama:",
+   "q": "Apa fungsi utama ELCB, RCCB, atau RCD?",
    "opts": [
     "Proteksi overcurrent",
     "Proteksi arus bocor ke tanah (ground fault)",
@@ -7002,7 +7002,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Prinsip kerja RCD berbasis:",
+   "q": "Prinsip kerja RCD berbasis pada apa?",
    "opts": [
     "Thermal bimetal",
     "Core balance transformer (CT): sum arus fasa + netral harus = 0; jika tidak, trip",
@@ -7014,7 +7014,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Sensitivitas standar RCD untuk personal protection:",
+   "q": "Berapa sensitivitas RCD yang standar dipakai untuk melindungi manusia?",
    "opts": [
     "300 mA",
     "100 mA",
@@ -7026,7 +7026,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Sensitivitas RCD 300 mA dipakai untuk:",
+   "q": "Untuk keperluan apa RCD dengan sensitivitas 300 mA dipakai?",
    "opts": [
     "Personal safety",
     "Fire protection / equipment protection (bukan personal)",
@@ -7052,7 +7052,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 160' xmlns='http://www.w3.org/2000/svg'><circle cx='170' cy='90' r='45' fill='none' stroke='#1a1d2e' stroke-width='3'/><line x1='110' y1='70' x2='230' y2='70' stroke='#c9a96e' stroke-width='3'/><line x1='110' y1='90' x2='230' y2='90' stroke='#c9a96e' stroke-width='3'/><line x1='110' y1='110' x2='230' y2='110' stroke='#1a1d2e' stroke-width='3'/><text x='90' y='75' text-anchor='end' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>R</text><text x='90' y='95' text-anchor='end' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>S</text><text x='90' y='115' text-anchor='end' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>N</text><text x='170' y='150' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-style='italic'>Core balance CT (torroid)</text><rect x='250' y='80' width='50' height='25' fill='#c9a96e' opacity='0.3' stroke='#1a1d2e' stroke-width='2'/><text x='275' y='97' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>TRIP</text></svg>",
-   "q": "Dari diagram, RCD trip saat:",
+   "q": "Dari diagram, dalam keadaan apa RCD akan trip?",
    "opts": [
     "Arus total melebihi rating",
     "Sum arus (R+S+N) ≠ 0 (ada arus lari ke tanah)",
@@ -7074,7 +7074,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Saat tombol test RCD ditekan tapi TIDAK trip:",
+   "q": "Tombol test pada RCD ditekan tetapi RCD tidak trip. Apa artinya?",
    "opts": [
     "Normal",
     "RCD rusak — GANTI segera",
@@ -7086,7 +7086,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pengujian RCD field dengan RCD tester:",
+   "q": "Apa saja yang diuji saat menguji RCD di lapangan dengan RCD tester?",
    "opts": [
     "Tidak perlu",
     "Uji: (a) No-trip at 0.5In, (b) trip ≤300ms at In, (c) trip ≤40ms at 5In, (d) ramp test actual trip current",
@@ -7098,7 +7098,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "RCD nuisance tripping (trip tanpa alasan jelas) penyebab umum:",
+   "q": "Apa penyebab paling umum RCD trip berulang tanpa gangguan yang jelas?",
    "opts": [
     "Benar-benar fault",
     "Leakage akumulasi dari beberapa beban (elektronik filter), transient surge, kapasitansi kabel panjang",
@@ -7111,7 +7111,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "Σ leakage",
-   "q": "Rumah dengan 15 peralatan elektronik (leakage 2mA each). Total leakage:",
+   "q": "Sebuah rumah memiliki 15 peralatan elektronik dengan arus bocor 2 mA masing-masing. Berapa total arus bocornya?",
    "opts": [
     "15 mA",
     "30 mA",
@@ -7123,7 +7123,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "RCBO vs RCD + MCB terpisah:",
+   "q": "Apa perbedaan RCBO dengan pemasangan RCD dan MCB secara terpisah?",
    "opts": [
     "Sama",
     "RCBO = combined overcurrent + residual current in 1 unit; RCD + MCB = separate units",
@@ -7135,7 +7135,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Kondisi yang TIDAK BOLEH ada di sistem RCD:",
+   "q": "Kondisi apa yang TIDAK BOLEH ada pada sistem yang diproteksi RCD?",
    "opts": [
     "Netral terhubung ke ground DI SISI BEBAN (setelah RCD)",
     "Netral sebelum RCD",
@@ -7157,7 +7157,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Loop impedance (Zs) mempengaruhi:",
+   "q": "Impedansi loop gangguan (Zs) memengaruhi apa?",
    "opts": [
     "Tidak ada",
     "Arus fault ground loop. R rendah = arus besar = breaker trip cepat. R tinggi = arus kecil = breaker mungkin tidak trip",
@@ -7169,7 +7169,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "TT system (earth via local rod, bukan PE dari supply) — RCD wajib karena:",
+   "q": "Pada sistem TT yang dibumikan lewat elektrode lokal, mengapa RCD menjadi wajib?",
    "opts": [
     "Tidak wajib",
     "Earth rod R tinggi → Zs besar → OCPD tidak trip untuk ground fault → RCD satu-satunya proteksi",
@@ -7182,7 +7182,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Klinik gigi pakai peralatan X-ray, suction, laser. Ingin pakai RCD untuk safety pasien. RCD standar 30mA sering trip saat X-ray fire.",
-   "q": "Rekomendasi:",
+   "q": "Sebuah ruang radiologi memakai pesawat X-ray dan peralatan medis yang dapat menghasilkan arus bocor DC. RCD jenis apa yang direkomendasikan?",
    "opts": [
     "Tidak pakai RCD",
     "Type B RCD (tolerant DC residual from rectifier X-ray) + koordinasi 300mA upstream + 30mA per circuit (multi-level)",
@@ -7194,7 +7194,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Standar waktu trip RCD 30mA pada fault 30mA:",
+   "q": "Berapa waktu trip maksimum yang disyaratkan untuk RCD 30 mA pada arus gangguan 30 mA?",
    "opts": [
     "≤ 40 ms",
     "≤ 200 ms",
@@ -7206,7 +7206,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "'Test' RCD bisa dilakukan tanpa alat khusus dengan:",
+   "q": "Bagaimana cara menguji RCD tanpa alat khusus?",
    "opts": [
     "Ada cara: pijit tombol T tiap bulan",
     "Menggunakan tangan",
@@ -7228,7 +7228,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Installation RCD per PUIL 2011:",
+   "q": "Menurut PUIL 2011, pada sirkuit mana pemasangan RCD diwajibkan?",
    "opts": [
     "Opsional",
     "Wajib untuk sirkuit stopkontak (< 20A) di area domestic & similar",
@@ -7242,7 +7242,7 @@ window.QUIZ_BANK = {
  "1.18": [
   {
    "type": "pg",
-   "q": "Kabel NYA kepanjangan:",
+   "q": "Kode kabel NYA merupakan singkatan dari apa?",
    "opts": [
     "Normal Yellow A",
     "N (tembaga)-Y (PVC)-A (tunggal) → kabel tembaga isolasi PVC 1 konduktor",
@@ -7254,7 +7254,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Kabel NYM beda dari NYA:",
+   "q": "Apa yang membedakan kabel NYM dari kabel NYA?",
    "opts": [
     "Sama",
     "NYM = multi-core (biasanya 3 atau 4) dengan sheath PVC luar, siap pakai tanpa conduit",
@@ -7266,7 +7266,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "NYFGbY artinya:",
+   "q": "Apa arti kode kabel NYFGbY?",
    "opts": [
     "Kode nonsense",
     "N-Y-F (anyaman baja)-Gb (lapisan aspal)-Y (PVC) → kabel tanam dengan steel wire armour",
@@ -7279,7 +7279,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "I_safe = 0.8 × KHA",
-   "q": "NYA 2.5 mm² KHA dalam conduit (isolasi PVC, suhu 30°C): 18A PUIL. Untuk beban kontinyu 80% aman:",
+   "q": "Kabel NYA 2,5 mm² dalam konduit memiliki KHA 18 A menurut PUIL. Berapa beban kontinyu maksimum yang aman menurut aturan 80%?",
    "opts": [
     "18A",
     "14.4A",
@@ -7292,7 +7292,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "KHA × f_temp × f_group",
-   "q": "Kabel NYM 4 mm² KHA 22A (di udara 30°C). Di conduit ruang 45°C dengan 3 kabel grup. KHA koreksi:",
+   "q": "Kabel NYM 4 mm² berKHA 22 A di udara 30 °C. Berapa KHA terkoreksinya bila dipasang dalam konduit pada ruang 45 °C bersama 3 kabel lain?",
    "opts": [
     "22A",
     "22 × 0.82 × 0.7 = 12.6A",
@@ -7304,7 +7304,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Warna kabel fasa sesuai PUIL 2011:",
+   "q": "Menurut PUIL 2011, warna apa yang dipakai untuk penghantar fasa?",
    "opts": [
     "Bebas",
     "R (merah)-S (kuning)-T (hitam) atau L1-L2-L3 (coklat-hitam-abu untuk EU style)",
@@ -7316,7 +7316,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Minimum penampang kabel fasa untuk instalasi rumah stopkontak per PUIL 2011:",
+   "q": "Menurut PUIL 2011, berapa penampang minimum penghantar fasa untuk sirkuit stopkontak rumah?",
    "opts": [
     "1.0 mm²",
     "1.5 mm² (untuk penerangan), 2.5 mm² (untuk stopkontak)",
@@ -7329,15 +7329,15 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "V_drop = 2×ρ×L×I/A",
-   "q": "Voltage drop kabel 50m, 2.5 mm², arus 16A, AC single phase. ρ_Cu 1.72×10⁻⁸:",
+   "q": "Kabel tembaga 2,5 mm² sepanjang 50 m mengalirkan arus 16 A pada instalasi 1 fasa 220 V (ρ_Cu = 1,72×10⁻⁸ Ω·m). Berapa rugi tegangan di sepanjang kabel itu, dan apakah masih memenuhi batas PUIL?",
    "opts": [
     "1.1 V (0.5%)",
     "2.2 V (1%)",
     "11 V (5%)",
     "22 V"
    ],
-   "a": 1,
-   "explain": "V = 2 × 1.72×10⁻⁸ × 50 × 16 / (2.5×10⁻⁶) = 11 V. Wait: 2 × 1.72e-8 × 50 × 16 = 2.75e-5, / 2.5e-6 = 11.0V ≈ 5% of 220V. Melebihi max 3% PUIL untuk lighting → perbesar penampang."
+   "a": 2,
+   "explain": "Arus pergi dan pulang lewat dua penghantar, jadi panjang yang dihitung 2 × 50 m. V_drop = 2 × ρ × L × I / A = 2 × 1,72×10⁻⁸ × 50 × 16 ÷ (2,5×10⁻⁶) = 11,0 V. Terhadap 220 V itu 5%, melewati batas PUIL 3% untuk penerangan — penampang kabel harus diperbesar."
   },
   {
    "type": "tf",
@@ -7351,7 +7351,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "XLPE (Cross-Linked Polyethylene) insulation advantage vs PVC:",
+   "q": "Apa keunggulan isolasi XLPE dibandingkan PVC?",
    "opts": [
     "Lebih murah",
     "Suhu operasi 90°C continuous (PVC 70°C) → KHA lebih tinggi + tahan short circuit 250°C",
@@ -7364,7 +7364,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Instalasi industri Indramayu: motor 50kW, 3-fasa 400V, cos φ 0.85, efisiensi 93%. Kabel panjang 80m dari MCC ke motor.",
-   "q": "Hitung penampang kabel minimum:",
+   "q": "Motor 50 kW dengan efisiensi 93% disuplai dari panel 400 V 3 fasa (cos φ 0,85) melalui kabel NYY sepanjang 80 m. Berapa penampang kabel minimum yang dipakai?",
    "opts": [
     "2.5 mm²",
     "16 mm²",
@@ -7372,11 +7372,11 @@ window.QUIZ_BANK = {
     "50 mm²"
    ],
    "a": 2,
-   "explain": "P_input = 50/0.93 = 53.8 kW. I = 53800/(√3×400×0.85) = 91 A. Starting current 6×91=546A → kabel harus tahan. Voltage drop 80m pada 91A → pakai 25mm². Cek PUIL tabel: 25mm² NYY outdoor ≈ 90-100A KHA. Match. Verifikasi dengan software/tabel lengkap."
+   "explain": "Daya yang ditarik dari jaringan: P = 50 ÷ 0,93 = 53,8 kW. Arus kerja: I = 53.800 ÷ (√3 × 400 × 0,85) = 91 A. Kabel harus punya KHA di atas 91 A dan rugi tegangan sepanjang 80 m masih wajar: NYY 25 mm² berkemampuan ±90–100 A memenuhi keduanya. Arus asut motor mencapai 6 × 91 = 546 A, tetapi hanya sesaat sehingga yang menentukan tetap arus kerjanya."
   },
   {
    "type": "pg",
-   "q": "Armoured cable (NYFGbY) dipakai untuk:",
+   "q": "Untuk pemasangan seperti apa kabel berarmor (NYFGbY) dipakai?",
    "opts": [
     "Indoor only",
     "Direct burial underground tanpa ducting + tempat dengan risiko mekanis",
@@ -7388,7 +7388,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Standard warna di SNI/PUIL untuk kabel PE (grounding):",
+   "q": "Menurut SNI/PUIL, warna apa yang dipakai untuk penghantar pembumian (PE)?",
    "opts": [
     "Merah",
     "Biru",
@@ -7410,7 +7410,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Fire-resistant cable (FRC) / FRLS digunakan di:",
+   "q": "Di area seperti apa kabel tahan api (FRC/FRLS) dipakai?",
    "opts": [
     "Semua rumah",
     "Area high-fire risk: tangga emergency, fire alarm, elevator, public building",
@@ -7435,19 +7435,19 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "P = I²R = I² × ρ × L/A",
-   "q": "Kabel 10 mm² Cu, arus 50A. Daya disipasi (rugi) per meter (ρ = 1.72×10⁻⁸):",
+   "q": "Kabel tembaga 10 mm² mengalirkan arus 50 A (ρ_Cu = 1,72×10⁻⁸ Ω·m). Berapa daya yang terbuang menjadi panas pada setiap meter kabel?",
    "opts": [
     "0.43 W/m",
     "4.3 W/m",
     "43 W/m",
     "430 W/m"
    ],
-   "a": 0,
-   "explain": "R/m = 1.72×10⁻⁸ / (10×10⁻⁶) = 0.00172 Ω/m. P/m = 50² × 0.00172 = 4.3 W/m. Hmm wait 50² × 0.00172 = 2500 × 0.00172 = 4.3 W/m. Jawaban B. Actually let me recompute: R = ρL/A = 1.72e-8 × 1 / 10e-6 = 0.00172 Ω. P = I²R = 2500 × 0.00172 = 4.3 W. Answer B is correct."
+   "a": 1,
+   "explain": "Resistansi per meter: R = ρ / A = 1,72×10⁻⁸ ÷ (10×10⁻⁶) = 0,00172 Ω/m. Rugi daya: P = I² × R = 50² × 0,00172 = 2.500 × 0,00172 = 4,3 W/m. Pada kabel 100 m berarti 430 W terbuang jadi panas — alasan penampang kabel tidak boleh dipilih pas-pasan."
   },
   {
    "type": "pg",
-   "q": "Minimum bending radius kabel MV XLPE:",
+   "q": "Berapa radius tekukan minimum untuk kabel XLPE tegangan menengah?",
    "opts": [
     "Lebih kecil lebih baik",
     "Biasanya 12-15× OD (outer diameter) — melebihi bisa damage insulation",
@@ -7460,7 +7460,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Inspeksi kabel NYM 3×2.5 mm² 5 tahun pakai di Indramayu (tropis, lembap). Insulasi getas, crack, warna fade.",
-   "q": "Root cause & action:",
+   "q": "Kabel NYM yang dipasang di luar ruangan menjadi getas dan isolasinya retak setelah beberapa tahun. Apa akar masalah dan tindakannya?",
    "opts": [
     "Normal aging",
     "UV degradation (tidak cocok outdoor) + panas tropis + lembap → replace dengan NYY/XLPE yang UV + weather resistant",
@@ -7474,7 +7474,7 @@ window.QUIZ_BANK = {
  "1.19": [
   {
    "type": "pg",
-   "q": "IP rating kepanjangan:",
+   "q": "IP rating merupakan singkatan dari apa?",
    "opts": [
     "Internal Protection",
     "Ingress Protection (IEC 60529) — proteksi ingress solid + water",
@@ -7486,7 +7486,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "IP rating digit kedua '5' artinya:",
+   "q": "Pada IP rating, apa arti digit kedua bernilai '5'?",
    "opts": [
     "Submerged",
     "Water jet from any direction (low pressure)",
@@ -7498,7 +7498,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Stop kontak IP44 cocok untuk:",
+   "q": "Untuk lokasi seperti apa stop kontak ber-IP44 cocok dipakai?",
    "opts": [
     "Indoor dry",
     "Indoor dengan occasional splash (dapur, toilet dinding)",
@@ -7511,7 +7511,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 180' xmlns='http://www.w3.org/2000/svg'><circle cx='80' cy='90' r='8' fill='#1a1d2e'/><line x1='80' y1='98' x2='80' y2='130' stroke='#1a1d2e' stroke-width='2'/><text x='80' y='145' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>Common</text><text x='80' y='80' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>SW1</text><line x1='80' y1='90' x2='130' y2='60' stroke='#c9a96e' stroke-width='2'/><circle cx='130' cy='60' r='6' fill='none' stroke='#1a1d2e' stroke-width='2'/><circle cx='200' cy='60' r='6' fill='none' stroke='#1a1d2e' stroke-width='2'/><circle cx='200' cy='120' r='6' fill='none' stroke='#1a1d2e' stroke-width='2'/><line x1='130' y1='60' x2='200' y2='60' stroke='#1a1d2e' stroke-width='2'/><line x1='130' y1='60' x2='130' y2='130' stroke='#1a1d2e' stroke-width='2' stroke-dasharray='4,2'/><line x1='200' y1='90' x2='250' y2='90' stroke='#c9a96e' stroke-width='2'/><circle cx='260' cy='90' r='10' fill='#fc0' stroke='#1a1d2e' stroke-width='2'/><text x='260' y='95' text-anchor='middle' font-family='Arial' font-size='12' fill='#1a1d2e'>⊙</text><text x='200' y='50' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>SW2</text><text x='260' y='120' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>LAMP</text></svg>",
-   "q": "Diagram menunjukkan konfigurasi saklar untuk kontrol lampu dari 2 lokasi. Nama rangkaian ini:",
+   "q": "Diagram menunjukkan konfigurasi saklar untuk mengendalikan satu lampu dari dua lokasi. Rangkaian ini disebut apa?",
    "opts": [
     "One-way",
     "Two-way (hotel / staircase)",
@@ -7523,7 +7523,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Stop kontak Indonesia standar pin:",
+   "q": "Stop kontak standar Indonesia memakai tipe pin yang mana?",
    "opts": [
     "Standar US 2-flat",
     "Type F / Schuko (2-round + grounding pin)",
@@ -7545,7 +7545,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Terminal kabel 'wago' / 'push-in' connector vs terminal blok screw:",
+   "q": "Apa keunggulan konektor push-in (wago) dibandingkan terminal blok berulir?",
    "opts": [
     "Screw lebih baik",
     "Push-in (wago): lebih cepat, konsisten torque, lebih aman (no over/under tighten)",
@@ -7557,7 +7557,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Torque terminal screw kabel — penting karena:",
+   "q": "Mengapa torsi pengencangan sekrup terminal kabel itu penting?",
    "opts": [
     "Estetika",
     "Loose connection = arcing + heating + fire risk; over-tight = damage konduktor",
@@ -7570,7 +7570,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Kamar mandi dengan shower butuh stop kontak (untuk mesin cuci) dan saklar lampu. Area kerja: lembap, dekat shower.",
-   "q": "Spesifikasi yang TEPAT:",
+   "q": "Sebuah stop kontak akan dipasang di kamar mandi. Spesifikasi seperti apa yang tepat?",
    "opts": [
     "Stop kontak normal",
     "IP44 minimum (zone 2) atau IP55 (zone 1) + RCD 30mA dedicated + kabel NYM dengan grounding",
@@ -7582,7 +7582,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Stop kontak standar rumah Indonesia ampere rating:",
+   "q": "Berapa rating arus stop kontak standar untuk rumah di Indonesia?",
    "opts": [
     "6A",
     "10A",
@@ -7594,7 +7594,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Junction box IP20 (indoor dry):",
+   "q": "Untuk lokasi seperti apa junction box ber-IP20 dipakai?",
    "opts": [
     "Outdoor use",
     "Indoor dry: dust protection terhadap jari, no water protection",
@@ -7616,7 +7616,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Lampu fitting outdoor (post lantern) minimum IP rating:",
+   "q": "Berapa IP rating minimum untuk fitting lampu taman di luar ruangan?",
    "opts": [
     "IP20",
     "IP44",
@@ -7628,7 +7628,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Terminal block Din-rail pakai untuk:",
+   "q": "Untuk apa terminal block DIN-rail dipakai?",
    "opts": [
     "Dekorasi",
     "Cable distribution & connection point di panel industri, standar mounting 35mm rail",
@@ -7640,7 +7640,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Socket dengan shutter safety feature:",
+   "q": "Apa fungsi fitur shutter pada stop kontak?",
    "opts": [
     "Hanya estetika",
     "Shutter otomatis tutup lubang saat plug dilepas — cegah anak masukkan jari/benda",
@@ -7652,7 +7652,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Weather-resistant housing enclosure spec:",
+   "q": "Bahan seperti apa yang dipakai untuk enclosure tahan cuaca?",
    "opts": [
     "Sembarang",
     "Polycarbonate UV-stabilized atau aluminum die-cast + gasket + IP65+ dengan drain",
@@ -7664,7 +7664,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Cable gland fungsi:",
+   "q": "Apa fungsi cable gland pada sebuah enclosure?",
    "opts": [
     "Dekorasi",
     "Seal dimana kabel masuk enclosure: weatherproof + strain relief",
@@ -7676,7 +7676,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Stop kontak Indonesia standar Type C/F (IEC 60083 Type-F a.k.a. 'Schuko') memiliki:",
+   "q": "Stop kontak standar Indonesia tipe F (Schuko) memiliki bentuk seperti apa?",
    "opts": [
     "1 lubang",
     "2 round pins (4.8mm Ø) jarak 19mm + 2 metal grounding clips di samping (untuk plug Type F)",
@@ -7690,7 +7690,7 @@ window.QUIZ_BANK = {
  "1.20": [
   {
    "type": "pg",
-   "q": "Standar simbol kelistrikan internasional:",
+   "q": "Standar mana yang mengatur simbol kelistrikan yang dipakai di Indonesia?",
    "opts": [
     "IEC 60617",
     "ANSI Y32",
@@ -7702,7 +7702,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Simbol resistor dalam standar IEC:",
+   "q": "Bagaimana bentuk simbol resistor menurut standar IEC?",
    "opts": [
     "Zig-zag",
     "Persegi panjang / rectangle",
@@ -7714,7 +7714,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Simbol kapasitor:",
+   "q": "Bagaimana bentuk simbol kapasitor?",
    "opts": [
     "2 garis paralel",
     "Kotak",
@@ -7726,7 +7726,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Simbol ground (tanah) yang paling umum:",
+   "q": "Bagaimana bentuk simbol pembumian (ground) yang paling umum?",
    "opts": [
     "3 garis horizontal bertumpuk",
     "Segitiga",
@@ -7739,7 +7739,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 180' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='90' x2='60' y2='90' stroke='#1a1d2e' stroke-width='2'/><rect x='60' y='80' width='40' height='20' fill='white' stroke='#1a1d2e' stroke-width='2'/><line x1='100' y1='90' x2='130' y2='90' stroke='#1a1d2e' stroke-width='2'/><text x='80' y='75' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e'>A</text><line x1='170' y1='90' x2='200' y2='90' stroke='#1a1d2e' stroke-width='2'/><line x1='200' y1='80' x2='200' y2='100' stroke='#1a1d2e' stroke-width='2'/><line x1='210' y1='80' x2='210' y2='100' stroke='#1a1d2e' stroke-width='2'/><line x1='210' y1='90' x2='240' y2='90' stroke='#1a1d2e' stroke-width='2'/><text x='205' y='75' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e'>B</text><line x1='270' y1='90' x2='300' y2='90' stroke='#1a1d2e' stroke-width='2'/><line x1='300' y1='80' x2='330' y2='100' stroke='#1a1d2e' stroke-width='2'/><line x1='330' y1='80' x2='300' y2='100' stroke='#1a1d2e' stroke-width='2'/><text x='310' y='75' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e'>C</text></svg>",
-   "q": "Dari 3 simbol di gambar, yang merupakan KAPASITOR adalah:",
+   "q": "Dari tiga simbol pada gambar, mana yang merupakan kapasitor?",
    "opts": [
     "A",
     "B",
@@ -7751,7 +7751,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Simbol motor listrik dalam circuit diagram:",
+   "q": "Bagaimana bentuk simbol motor listrik menurut standar IEC?",
    "opts": [
     "Kotak dengan huruf M",
     "Lingkaran dengan M",
@@ -7773,7 +7773,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Simbol relay coil:",
+   "q": "Bagaimana bentuk simbol kumparan (coil) relay?",
    "opts": [
     "Lingkaran",
     "Kotak/rectangle dengan representasi coil",
@@ -7785,7 +7785,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Crossover kabel di diagram (kabel silang tidak terhubung):",
+   "q": "Dua kabel yang bersilangan tetapi tidak saling terhubung ditandai dengan simbol apa?",
    "opts": [
     "X silang",
     "Hop/jumper (setengah lingkaran) pada salah satu kabel, atau simply cross (no dot)",
@@ -7797,7 +7797,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Nomor line/terminal di panel disebut:",
+   "q": "Penomoran kabel dan terminal di panel disebut apa?",
    "opts": [
     "Tag number",
     "Wire marking / ferrule number (1,2,3 atau L1,L2,L3 standar)",
@@ -7809,7 +7809,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Symbol library di AutoCAD Electrical / EPLAN:",
+   "q": "Apa yang disediakan pustaka simbol (symbol library) di AutoCAD Electrical atau EPLAN?",
    "opts": [
     "Manual drawing",
     "Pre-made block library sesuai IEC/NFPA standard, auto-numbering, BOM generation",
@@ -7821,7 +7821,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Drawing format: block title (kotak informasi di pojok):",
+   "q": "Apa saja yang harus dimuat kotak informasi (block title) di pojok gambar teknik?",
    "opts": [
     "Tidak perlu",
     "Wajib: nama project, drawing title, drawing number, revision, date, designer, approver, scale",
@@ -7833,7 +7833,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Revision cloud di drawing:",
+   "q": "Apa fungsi revision cloud pada sebuah gambar teknik?",
    "opts": [
     "Ornamen",
     "Highlight area yang di-revisi + revision number segitiga, dengan entry di revision table",
@@ -7845,7 +7845,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Simbol fuse (sekring) paling umum:",
+   "q": "Bagaimana bentuk simbol fuse yang paling umum?",
    "opts": [
     "Kotak dengan tulisan FUSE",
     "Rectangle panjang dengan garis di dalam (kedua ujung terminal)",
@@ -7857,7 +7857,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Bahasa wajib untuk labelling di drawing Indonesia:",
+   "q": "Bahasa apa yang wajib dipakai untuk pelabelan gambar teknik di Indonesia?",
    "opts": [
     "Hanya Inggris",
     "Bahasa Indonesia (atau bilingual) sesuai standar BSN",
@@ -7869,7 +7869,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "As-built drawing:",
+   "q": "Apa yang dimaksud dengan as-built drawing?",
    "opts": [
     "Drawing original",
     "Drawing FINAL yang merefleksikan kondisi aktual instalasi setelah selesai (termasuk semua perubahan field)",
@@ -7881,7 +7881,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Skala drawing panel diagram biasanya:",
+   "q": "Skala berapa yang biasa dipakai untuk gambar tata letak panel?",
    "opts": [
     "1:1",
     "1:10 untuk panel layout, schematic tidak berskala",
@@ -7903,7 +7903,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "'IDC' (Insulation Displacement Connector) simbol:",
+   "q": "Bagaimana konektor IDC (Insulation Displacement Connector) digambarkan?",
    "opts": [
     "Sama terminal biasa",
     "Biasanya rectangle dengan internal teeth/blade — pierce isolation",
@@ -7915,7 +7915,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tag identifier peralatan di plant (contoh: 'CB-01' / 'M101'):",
+   "q": "Penandaan peralatan di plant seperti 'CB-01' atau 'M101' mengikuti aturan apa?",
    "opts": [
     "Bebas",
     "Sesuai KKS (Kraftwerk Kennzeichensystem) atau plant tagging standard: function code + number",
@@ -7929,7 +7929,7 @@ window.QUIZ_BANK = {
  "1.21": [
   {
    "type": "pg",
-   "q": "SLD (Single Line Diagram) adalah:",
+   "q": "Apa yang dimaksud dengan Single Line Diagram (SLD)?",
    "opts": [
     "Detail wiring per fasa",
     "Representasi simplified 1 line untuk multi-phase, fokus pada arsitektur sistem",
@@ -7941,7 +7941,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Komponen WAJIB di SLD sistem industri:",
+   "q": "Komponen apa saja yang wajib ada dalam SLD sebuah sistem industri?",
    "opts": [
     "Hanya CB",
     "Incoming source, trafo (jika ada), main CB, busbar, sub-feeder CB, kapasitor bank, protection devices, load summary",
@@ -7954,7 +7954,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><rect x='140' y='20' width='60' height='30' fill='#c9a96e' opacity='0.3' stroke='#1a1d2e' stroke-width='2'/><text x='170' y='40' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e'>Utility 20kV</text><line x1='170' y1='50' x2='170' y2='70' stroke='#1a1d2e' stroke-width='2'/><circle cx='170' cy='80' r='10' fill='none' stroke='#1a1d2e' stroke-width='2'/><circle cx='170' cy='90' r='10' fill='none' stroke='#1a1d2e' stroke-width='2'/><text x='190' y='90' font-family='Georgia' font-size='10' fill='#1a1d2e'>Trafo</text><line x1='170' y1='100' x2='170' y2='120' stroke='#1a1d2e' stroke-width='2'/><line x1='40' y1='120' x2='310' y2='120' stroke='#1a1d2e' stroke-width='3'/><text x='310' y='115' font-family='Georgia' font-size='10' fill='#1a1d2e'>Busbar 400V</text><line x1='80' y1='120' x2='80' y2='150' stroke='#1a1d2e' stroke-width='2'/><rect x='72' y='150' width='16' height='16' fill='white' stroke='#1a1d2e' stroke-width='2'/><text x='80' y='162' text-anchor='middle' font-family='Arial' font-size='10' fill='#1a1d2e'>CB</text><line x1='80' y1='166' x2='80' y2='185' stroke='#1a1d2e' stroke-width='2'/><text x='80' y='198' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>Feeder 1</text><line x1='170' y1='120' x2='170' y2='150' stroke='#1a1d2e' stroke-width='2'/><rect x='162' y='150' width='16' height='16' fill='white' stroke='#1a1d2e' stroke-width='2'/><line x1='170' y1='166' x2='170' y2='185' stroke='#1a1d2e' stroke-width='2'/><text x='170' y='198' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>Motor M1</text><line x1='260' y1='120' x2='260' y2='150' stroke='#1a1d2e' stroke-width='2'/><rect x='252' y='150' width='16' height='16' fill='white' stroke='#1a1d2e' stroke-width='2'/><line x1='260' y1='166' x2='260' y2='185' stroke='#1a1d2e' stroke-width='2'/><text x='260' y='198' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>Lamp</text></svg>",
-   "q": "Dari SLD di atas, trafo 20kV/400V fungsi:",
+   "q": "Dari SLD pada gambar, apa fungsi trafo 20 kV/400 V?",
    "opts": [
     "Menaikkan tegangan",
     "Step-down dari MV utility ke LV panel distribusi",
@@ -7966,7 +7966,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Wiring diagram panel motor kontrol biasanya terdiri dari:",
+   "q": "Sebuah wiring diagram panel kontrol motor umumnya terdiri dari bagian apa saja?",
    "opts": [
     "Hanya main circuit",
     "Main (power) circuit + control (auxiliary) circuit — biasanya di halaman terpisah",
@@ -7978,7 +7978,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "DOL (Direct On-Line) starter motor wiring elements:",
+   "q": "Komponen apa saja yang menyusun rangkaian starter motor DOL (Direct On-Line)?",
    "opts": [
     "CB+contactor only",
     "CB main + overload relay + contactor + start/stop push button + aux contact",
@@ -7990,7 +7990,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Seal-in contact (holding contact) fungsi di motor starter:",
+   "q": "Apa fungsi seal-in contact (kontak pengunci) pada rangkaian starter motor?",
    "opts": [
     "Tidak ada",
     "Self-hold coil kontaktor setelah tombol start dilepas, lewat aux contact sendiri",
@@ -8003,7 +8003,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='30' x2='320' y2='30' stroke='#1a1d2e' stroke-width='2'/><line x1='30' y1='200' x2='320' y2='200' stroke='#1a1d2e' stroke-width='2'/><text x='15' y='35' font-family='Georgia' font-size='10' fill='#c9a96e'>L</text><text x='15' y='205' font-family='Georgia' font-size='10' fill='#1a1d2e'>N</text><line x1='80' y1='30' x2='80' y2='70' stroke='#1a1d2e' stroke-width='2'/><circle cx='80' cy='75' r='5' fill='none' stroke='#1a1d2e' stroke-width='2'/><line x1='80' y1='80' x2='80' y2='110' stroke='#1a1d2e' stroke-width='2'/><text x='60' y='75' text-anchor='end' font-family='Arial' font-size='9' fill='#1a1d2e'>PB_STOP</text><line x1='80' y1='110' x2='130' y2='110' stroke='#1a1d2e' stroke-width='2'/><line x1='130' y1='100' x2='130' y2='120' stroke='#1a1d2e' stroke-width='2'/><line x1='140' y1='100' x2='140' y2='120' stroke='#1a1d2e' stroke-width='2'/><line x1='140' y1='110' x2='180' y2='110' stroke='#1a1d2e' stroke-width='2'/><text x='140' y='95' text-anchor='middle' font-family='Arial' font-size='9' fill='#1a1d2e'>PB_START</text><line x1='80' y1='110' x2='80' y2='140' stroke='#1a1d2e' stroke-width='2' stroke-dasharray='3,2'/><line x1='80' y1='140' x2='130' y2='140' stroke='#1a1d2e' stroke-width='2' stroke-dasharray='3,2'/><text x='105' y='155' font-family='Arial' font-size='9' fill='#c9a96e'>K1/1 seal-in</text><rect x='175' y='100' width='40' height='20' fill='white' stroke='#1a1d2e' stroke-width='2'/><text x='195' y='115' text-anchor='middle' font-family='Arial' font-size='10' fill='#1a1d2e'>K1</text><line x1='215' y1='110' x2='250' y2='110' stroke='#1a1d2e' stroke-width='2'/><line x1='250' y1='110' x2='250' y2='200' stroke='#1a1d2e' stroke-width='2'/></svg>",
-   "q": "Dari control circuit starter motor di atas, jika PB_START dilepas, kontaktor K1:",
+   "q": "Dari rangkaian kontrol starter motor pada gambar, apa yang terjadi pada kontaktor K1 saat tombol START dilepas?",
    "opts": [
     "OFF langsung",
     "Tetap ON karena seal-in contact K1/1 (paralel dengan PB_START) maintain circuit",
@@ -8015,7 +8015,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Naming convention kontak relay/kontaktor K1:",
+   "q": "Bagaimana aturan penamaan kumparan dan kontak sebuah kontaktor K1?",
    "opts": [
     "Bebas",
     "K1 = coil. Kontak: K1/1, K1/2 (utama), K1/13-14 (aux NO), K1/21-22 (aux NC) per IEC",
@@ -8037,7 +8037,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Interlock di control circuit untuk mencegah:",
+   "q": "Apa yang dicegah oleh interlock pada rangkaian kontrol?",
    "opts": [
     "Motor run",
     "Kombinasi state berbahaya: contoh forward-reverse motor kontaktor boleh tidak on bersamaan (short 2 fasa)",
@@ -8049,7 +8049,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Rated voltage di drawing harus sesuai:",
+   "q": "Tegangan nominal yang dicantumkan untuk sebuah peralatan harus mengikuti apa?",
    "opts": [
     "Voltage rating equipment rated (not just supply)",
     "Sama dengan supply",
@@ -8085,7 +8085,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 320 220' xmlns='http://www.w3.org/2000/svg'><rect x='130' y='10' width='60' height='25' fill='#fef3c7' stroke='#1a1d2e' stroke-width='2'/><text x='160' y='27' text-anchor='middle' font-family='Georgia' font-size='12' font-weight='700'>20 kV</text><line x1='160' y1='35' x2='160' y2='60' stroke='#1a1d2e' stroke-width='2'/><circle cx='160' cy='75' r='15' fill='none' stroke='#1a1d2e' stroke-width='2'/><circle cx='160' cy='100' r='15' fill='none' stroke='#1a1d2e' stroke-width='2'/><text x='200' y='90' font-family='Georgia' font-size='11'>T1: 100 kVA</text><line x1='160' y1='115' x2='160' y2='130' stroke='#1a1d2e' stroke-width='2'/><rect x='130' y='130' width='60' height='15' fill='#dcfce7' stroke='#1a1d2e' stroke-width='2'/><text x='160' y='142' text-anchor='middle' font-family='Georgia' font-size='11' font-weight='700'>BUS 400V</text><line x1='160' y1='145' x2='160' y2='160' stroke='#1a1d2e' stroke-width='2'/><rect x='150' y='160' width='20' height='30' fill='#fed7aa' stroke='#1a1d2e' stroke-width='2'/><text x='160' y='180' text-anchor='middle' font-family='Georgia' font-size='10' font-weight='700'>Q1</text><text x='200' y='180' font-family='Georgia' font-size='11'>MCCB 160A</text><line x1='160' y1='190' x2='160' y2='210' stroke='#1a1d2e' stroke-width='2'/><text x='160' y='220' text-anchor='middle' font-family='Georgia' font-size='10'>ke load</text></svg>",
-   "q": "Berdasarkan SLD di atas (sumber 20 kV → trafo T1 100 kVA → bus 400 V → Q1 MCCB 160A → load), arus nominal sisi sekunder trafo & alasan rating Q1 = 160A:",
+   "q": "Dari SLD pada gambar (sumber 20 kV → trafo T1 100 kVA → bus 400 V → MCCB Q1 160 A → beban), berapa arus nominal di sisi sekunder trafo dan mengapa Q1 dipilih 160 A?",
    "opts": [
     "I = 100A; rating breaker over-spec",
     "I = 100kVA / (√3 × 0.4kV) ≈ 144 A; Q1 dipilih 160A (>1× In, margin 10-15%) sesuai praktik standar (KHA kabel & MCCB)",
@@ -8109,7 +8109,7 @@ window.QUIZ_BANK = {
  "1.22": [
   {
    "type": "pg",
-   "q": "Denah instalasi (floor plan electrical) menunjukkan:",
+   "q": "Apa yang ditunjukkan oleh denah instalasi listrik (floor plan electrical)?",
    "opts": [
     "Schematic circuit",
     "Tata letak fisik: titik lampu, saklar, stop kontak, panel, jalur kabel — di atas arsitek plan",
@@ -8121,7 +8121,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tinggi standar saklar lampu:",
+   "q": "Berapa tinggi pemasangan saklar lampu yang standar?",
    "opts": [
     "50 cm",
     "110-130 cm dari lantai (reachable by adult + child)",
@@ -8133,7 +8133,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Penerangan kamar tidur rumah minimum (lux):",
+   "q": "Berapa tingkat penerangan minimum untuk kamar tidur rumah?",
    "opts": [
     "50 lux",
     "100-150 lux (umum), 300 lux (membaca)",
@@ -8146,7 +8146,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "N = (E × A)/(Φ × UF × MF)",
-   "q": "Ruang 4×5m, kebutuhan 200 lux. Lampu LED 10W = 1200 lumen. Jumlah lampu minimum (UF=0.6, MF=0.8):",
+   "q": "Sebuah ruang 4×5 m membutuhkan 200 lux dan memakai lampu LED 10 W berfluks 1.200 lumen. Berapa jumlah lampu minimum bila UF 0,6 dan MF 0,8?",
    "opts": [
     "2",
     "4",
@@ -8181,7 +8181,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Wilayah dapur di denah — kebutuhan khusus:",
+   "q": "Apa kebutuhan khusus instalasi listrik untuk area dapur?",
    "opts": [
     "Stop kontak tinggi saja",
     "Stop kontak di atas counter (height 1.1m) + dedicated circuit untuk kulkas/appliance besar + cooker point 16A",
@@ -8193,7 +8193,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Panel hubung bagi (PHB) lokasi umum di rumah:",
+   "q": "Di mana panel hubung bagi (PHB) rumah sebaiknya ditempatkan?",
    "opts": [
     "Pojok jauh",
     "Dekat pintu masuk (accessible, ventilated) atau ruang utility (selemari meter)",
@@ -8215,7 +8215,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Dokumentasi lengkap denah instalasi listrik:",
+   "q": "Apa saja yang harus ada agar dokumentasi denah instalasi listrik dianggap lengkap?",
    "opts": [
     "Denah saja",
     "Denah + legenda simbol + circuit schedule + panel directory + as-built notes",
@@ -8227,7 +8227,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Area outdoor (teras) + denah kebutuhan:",
+   "q": "Apa kebutuhan instalasi listrik untuk area teras di luar ruangan?",
    "opts": [
     "Tidak perlu",
     "IP44+ outlet, weatherproof switch, lighting controlled by motion sensor atau photocell",
@@ -8239,7 +8239,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Circuit schedule / panel directory info:",
+   "q": "Informasi apa saja yang harus dimuat dalam circuit schedule atau panel directory?",
    "opts": [
     "Hanya nomor",
     "Nomor circuit + rating CB + area served + cable size + load (W/A) + notes",
@@ -8261,7 +8261,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Light fitting di denah — kebutuhan load data:",
+   "q": "Data apa yang perlu dicatat untuk setiap titik lampu pada denah?",
    "opts": [
     "Tidak perlu",
     "Jumlah + wattage per fitting → total per circuit ≤ 80% CB rating",
@@ -8275,7 +8275,7 @@ window.QUIZ_BANK = {
  "1.23": [
   {
    "type": "pg",
-   "q": "PUIL kepanjangan:",
+   "q": "PUIL merupakan singkatan dari apa?",
    "opts": [
     "Pedoman Umum Instalasi Listrik",
     "Persyaratan Umum Instalasi Listrik",
@@ -8287,7 +8287,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "PUIL 2020 update dari PUIL 2011 di bagian:",
+   "q": "Bagian apa yang diperbarui PUIL 2020 dari PUIL 2011?",
    "opts": [
     "Tidak ada change",
     "Proteksi petir & surge, pentanahan TN-C-S detail, EV charger, PV instalation, energy management",
@@ -8309,7 +8309,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "SLO berlaku untuk:",
+   "q": "Berapa lama Sertifikat Laik Operasi (SLO) berlaku?",
    "opts": [
     "1 tahun",
     "Instalasi TM/TT: 15 tahun; Instalasi TR: 15 tahun (dulu 10 tahun, updated)",
@@ -8321,7 +8321,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Standar SNI wajib untuk kelistrikan:",
+   "q": "Standar SNI mana yang wajib dipenuhi di bidang kelistrikan?",
    "opts": [
     "SNI 0225 (PUIL)",
     "SNI ISO 50001",
@@ -8333,7 +8333,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "SNI 04-2005:2016 tentang:",
+   "q": "SNI 04-2005:2016 mengatur tentang apa?",
    "opts": [
     "Kabel",
     "Kapasitor",
@@ -8345,7 +8345,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Dewan Energi Nasional (DEN) fungsi:",
+   "q": "Apa fungsi Dewan Energi Nasional (DEN)?",
    "opts": [
     "Operator",
     "Policy-making: kebijakan energi, RUEN, RUKN",
@@ -8358,7 +8358,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Pengusaha kontraktor listrik ingin ikut tender instalasi panel industri. PLN meminta SBU + IUJPTL + teknisi SKTTK.",
-   "q": "Apa yang dibutuhkan kontraktor:",
+   "q": "Apa saja yang harus dimiliki sebuah badan usaha agar sah menjadi kontraktor listrik?",
    "opts": [
     "Cukup KTP",
     "SBU (Sertifikat Badan Usaha) + IUJPTL kualifikasi sesuai scope + min X teknisi dengan SKTTK sesuai level + kompliance K3",
@@ -8370,7 +8370,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Ahli K3 Listrik sertifikat dari:",
+   "q": "Sertifikat Ahli K3 Listrik diterbitkan oleh lembaga mana?",
    "opts": [
     "PLN",
     "Kemnaker (SKP) & LSP terakreditasi",
@@ -8404,7 +8404,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "PP 14/2012 (Peraturan Pemerintah tentang Kegiatan Usaha Penyediaan Tenaga Listrik) berisi:",
+   "q": "PP 14/2012 mengatur tentang apa?",
    "opts": [
     "Tarif PLN saja",
     "Implementasi UU 30/2009: izin usaha (IUPTL/IUJPTL), wilayah usaha, hak konsumen, ketentuan teknik, sanksi administratif",
@@ -8460,7 +8460,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Biaya sertifikasi SKTTK umumnya:",
+   "q": "Berapa kisaran biaya sertifikasi SKTTK?",
    "opts": [
     "Gratis",
     "Ratusan ribu - jutaan rupiah per sertifikat tergantung level & skema",
@@ -8472,7 +8472,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Masa berlaku sertifikat kompetensi / SKTTK biasanya:",
+   "q": "Berapa lama sertifikat kompetensi SKTTK berlaku?",
    "opts": [
     "1 tahun",
     "3 tahun (re-sertifikasi setelah)",
@@ -8494,7 +8494,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Renewal / perpanjangan SKTTK:",
+   "q": "Bagaimana prosedur perpanjangan SKTTK?",
    "opts": [
     "Otomatis",
     "3-6 bulan sebelum expiry: apply LSK, submit portofolio 3 tahun, mungkin re-asesmen (atau CPE credit)",
@@ -8558,7 +8558,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Kode etik profesi insinyur di Indonesia yang dikenal sebagai 'Catur Karsa & Sapta Dharma' diterbitkan oleh:",
+   "q": "Kode etik profesi insinyur Indonesia 'Catur Karsa & Sapta Dharma' diterbitkan oleh lembaga mana?",
    "opts": [
     "Kementerian PUPR",
     "Persatuan Insinyur Indonesia (PII) — wajib dipatuhi semua insinyur ber-IPI/SKA",
@@ -8570,7 +8570,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tanggung jawab PERDATA tenaga teknik atas kerugian akibat instalasi tidak sesuai standar dasar hukumnya:",
+   "q": "Apa dasar hukum tanggung jawab perdata tenaga teknik atas kerugian yang timbul akibat instalasi yang tidak sesuai standar?",
    "opts": [
     "Tidak ada di hukum perdata Indonesia",
     "KUHPerdata Pasal 1365 (perbuatan melawan hukum) — wajib ganti rugi penuh atas kerugian materiil + immateriil korban",
@@ -8582,7 +8582,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tindakan yang BENAR menurut etika ketika tenaga teknik menemukan pelanggaran K3 serius di proyek (mis. tidak ada LOTO, kabel sambung darurat tanpa standar):",
+   "q": "Seorang tenaga teknik menemukan pelanggaran K3 serius di proyek, misalnya tidak ada LOTO dan sambungan kabel darurat tanpa standar. Tindakan apa yang benar menurut etika profesi?",
    "opts": [
     "Diam karena bukan urusan kita",
     "Lapor langsung ke media sosial",
@@ -8606,7 +8606,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tenaga teknik melaksanakan pekerjaan kelistrikan kelas tegangan menengah (20 kV) TANPA Sertifikat Kompetensi Tenaga Teknik Ketenagalistrikan (SKTTK) yang sesuai. Sanksinya:",
+   "q": "Seorang tenaga teknik mengerjakan instalasi tegangan menengah 20 kV tanpa SKTTK yang sesuai. Apa sanksi yang berlaku?",
    "opts": [
     "Tidak ada karena pekerja sudah berpengalaman",
     "UU 30/2009 Pasal 49: pidana penjara maksimal 1 tahun + denda Rp 100 juta + pencabutan izin usaha kontraktor",
@@ -8619,7 +8619,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Anda dipanggil owner pabrik tekstil dengan tenggat ketat 2 hari sebelum audit asuransi. Owner minta Anda tanda tangan SLO untuk panel TM 20 kV padahal Anda BELUM melakukan inspeksi tahanan isolasi & tahanan pentanahan. Owner janji bayar fee 3× lipat dari normal.",
-   "q": "Tindakan paling etis sebagai tenaga teknik bersertifikat:",
+   "q": "Seorang tenaga teknik bersertifikat diminta menandatangani SLO padahal instalasinya belum diinspeksi. Tindakan apa yang paling etis?",
    "opts": [
     "Tanda tangan saja, owner sudah janji bertanggung jawab kalau ada apa-apa",
     "Tolak sign-off; jelaskan pengukuran wajib (Megger ≥1 MΩ + earth tester ≤5 Ω); tawarkan inspeksi cepat dengan biaya wajar; kalau owner menolak, dokumentasikan & laporkan ke LIT",
@@ -8654,7 +8654,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 320 220' xmlns='http://www.w3.org/2000/svg'><polygon points='160,20 60,200 260,200' fill='none' stroke='#1a1d2e' stroke-width='2'/><line x1='118' y1='100' x2='202' y2='100' stroke='#1a1d2e' stroke-width='1.5'/><line x1='95' y1='150' x2='225' y2='150' stroke='#1a1d2e' stroke-width='1.5'/><text x='160' y='75' text-anchor='middle' font-family='Georgia' font-size='13' font-weight='700' fill='#c9a96e'>PIDANA</text><text x='160' y='90' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>(penjara)</text><text x='160' y='130' text-anchor='middle' font-family='Georgia' font-size='13' font-weight='700' fill='#1a1d2e'>PERDATA</text><text x='160' y='145' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>(ganti rugi)</text><text x='160' y='180' text-anchor='middle' font-family='Georgia' font-size='13' font-weight='700' fill='#1a1d2e'>ADMINISTRATIF</text><text x='160' y='195' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>(cabut sertifikat, denda)</text></svg>",
-   "q": "Berdasarkan piramida sanksi di atas untuk pelanggaran tenaga teknik kelistrikan, urutan dari yang paling berat ke paling ringan adalah:",
+   "q": "Berdasarkan piramida sanksi pada gambar, bagaimana urutan sanksi pelanggaran tenaga teknik kelistrikan dari yang paling berat ke paling ringan?",
    "opts": [
     "Administratif → Perdata → Pidana",
     "Pidana → Perdata → Administratif (paling berat = penjara, paling ringan = sanksi profesi)",
@@ -8667,7 +8667,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Anda sebagai tenaga teknik bekerja di pabrik 5 tahun, mengetahui detail proses produksi, kapasitas listrik kritis, dan kelemahan instalasi. Kompetitor menawarkan posisi senior dengan gaji 2× lipat dan minta info teknis pabrik lama Anda untuk 'analisis pasar'.",
-   "q": "Tindakan paling etis:",
+   "q": "Seorang tenaga teknik yang sudah pindah kerja diminta membagikan data teknis rahasia milik perusahaan lamanya. Tindakan apa yang paling etis?",
    "opts": [
     "Terima dan share semua info — itu bagian negosiasi",
     "TOLAK share info konfidensial walau Anda pindah; hormati NDA & loyalitas profesional; tawarkan keahlian Anda tanpa mengorbankan rahasia mantan klien",
@@ -8701,7 +8701,7 @@ window.QUIZ_BANK = {
  "2.01": [
   {
    "type": "pg",
-   "q": "Daya terpasang PLN tarif R1/TR 1300 VA menggunakan MCB utama:",
+   "q": "Berapa rating MCB utama untuk sambungan PLN tarif R1 daya 1300 VA?",
    "opts": [
     "4A",
     "6A",
@@ -8713,7 +8713,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Warna kabel standar PUIL 2011 untuk konduktor fasa 1-fasa:",
+   "q": "Menurut PUIL 2011, warna apa yang dipakai untuk penghantar fasa pada instalasi 1 fasa?",
    "opts": [
     "Hitam atau coklat",
     "Biru",
@@ -8725,7 +8725,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Panjang cabang circuit maksimum (PUIL) untuk instalasi rumah 1-fasa 230V:",
+   "q": "Apa yang menentukan panjang maksimum sirkuit cabang pada instalasi rumah 1 fasa 230 V?",
    "opts": [
     "Tidak ada batas",
     "Ditentukan drop voltage ≤ 5% dari tegangan nominal",
@@ -8738,7 +8738,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "I = VA × cos φ / V",
-   "q": "Rumah 1300 VA, PF 0.85, Full Load Ampere (FLA):",
+   "q": "Rumah berdaya 1300 VA dengan faktor daya 0,85. Berapa arus beban penuhnya?",
    "opts": [
     "4.8 A",
     "5.65 A",
@@ -8750,7 +8750,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Kabel NYM 3×2.5 mm² dipakai untuk:",
+   "q": "Untuk sirkuit apa kabel NYM 3×2,5 mm² dipakai?",
    "opts": [
     "Penerangan (stop kontak small)",
     "Stop kontak umum 16A",
@@ -8762,7 +8762,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Instalasi saklar hotel (2 saklar untuk 1 lampu, tangga dll):",
+   "q": "Komponen apa yang dipakai agar satu lampu bisa dinyalakan dari dua saklar di lokasi berbeda?",
    "opts": [
     "Tidak mungkin",
     "Saklar tukar (SPDT) dengan 3 konduktor antara dua saklar",
@@ -8785,7 +8785,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Rumah tinggal Indramayu daya 2200 VA. Pelanggan keluhkan MCB utama sering trip saat pompa air + AC + microwave bersamaan, padahal total kWh bulanan masih normal.",
-   "q": "Penyebab paling mungkin:",
+   "q": "MCB utama rumah 1300 VA sering trip tepat saat pompa air dan AC menyala bersamaan, padahal beban tetapnya hanya sekitar 8 A. Apa penyebab yang paling mungkin?",
    "opts": [
     "Trip thermal karena overload momentary (inrush + load kombinasi melampaui 10A MCB)",
     "MCB rusak",
@@ -8797,7 +8797,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "PUIL 2011 minimum KHA kabel fasa rumah 1-fasa:",
+   "q": "Menurut PUIL 2011, berapa penampang minimum penghantar fasa untuk instalasi rumah 1 fasa?",
    "opts": [
     "0.75 mm²",
     "1.5 mm² untuk penerangan, 2.5 mm² stop kontak",
@@ -8809,7 +8809,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Junction box wajib dipakai saat:",
+   "q": "Kapan pemakaian junction box menjadi wajib?",
    "opts": [
     "Tidak pernah",
     "Ada sambungan/percabangan kabel — harus accessible untuk inspeksi",
@@ -8821,7 +8821,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tes megger instalasi rumah baru sebelum energize:",
+   "q": "Pengujian apa yang harus dilakukan pada instalasi rumah baru sebelum dialiri listrik?",
    "opts": [
     "Tidak perlu",
     "Ukur insulation resistance > 0.5 MΩ (PUIL min), ideal > 1 MΩ",
@@ -8833,7 +8833,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Zone kamar mandi IEC 60364-7-701 Zone 1 (di dalam bathtub):",
+   "q": "Menurut IEC 60364-7-701, apa persyaratan untuk Zona 1 kamar mandi?",
    "opts": [
     "Outlet boleh",
     "IPX4 minimum, tidak boleh socket, hanya fixed equipment SELV",
@@ -8846,7 +8846,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 180' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='280' height='120' fill='none' stroke='#1a1d2e' stroke-width='2'/><rect x='50' y='50' width='80' height='40' fill='#c9a96e' opacity='0.2' stroke='#1a1d2e'/><text x='90' y='75' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>MCB Utama</text><text x='90' y='87' text-anchor='middle' font-family='Georgia' font-size='9' fill='#1a1d2e'>10A C</text><rect x='150' y='50' width='60' height='40' fill='#fff' stroke='#1a1d2e'/><text x='180' y='72' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>RCD</text><text x='180' y='82' text-anchor='middle' font-family='Georgia' font-size='9' fill='#1a1d2e'>30mA</text><rect x='230' y='50' width='65' height='40' fill='#fff' stroke='#1a1d2e'/><text x='262' y='75' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>MCB Cabang</text><text x='262' y='85' text-anchor='middle' font-family='Georgia' font-size='8' fill='#1a1d2e'>6A/10A/16A</text><text x='170' y='130' text-anchor='middle' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>Panel MCB rumah tipikal 2200 VA</text></svg>",
-   "q": "Urutan peralatan di panel rumah yang benar (dari sumber PLN):",
+   "q": "Bagaimana urutan pemasangan peralatan yang benar pada panel rumah, dihitung dari sisi sumber PLN?",
    "opts": [
     "MCB cabang → RCD → MCB utama",
     "MCB utama (service entrance) → RCD → MCB cabang (per circuit)",
@@ -8858,7 +8858,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Kabel ke panel baru harus dari jenis:",
+   "q": "Jenis kabel apa yang dipakai untuk menyuplai panel baru di dalam rumah?",
    "opts": [
     "NYY (armored)",
     "NYM atau NYA dengan conduit",
@@ -8870,7 +8870,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Sirkit rumah ideal dibagi menjadi:",
+   "q": "Sebuah instalasi rumah sebaiknya dibagi menjadi berapa sirkuit dan atas dasar apa?",
    "opts": [
     "1 circuit",
     "Minimum 3-4: penerangan, stop kontak umum, AC/pompa (daya besar), kamar mandi/wet area (RCD dedicated)",
@@ -8892,7 +8892,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "PUIL minimum jarak kabel listrik dari pipa gas:",
+   "q": "Menurut PUIL, berapa jarak minimum antara kabel listrik dan pipa gas?",
    "opts": [
     "Boleh satu jalur",
     "Minimum 10 cm, atau dipisah dengan partisi metal",
@@ -8905,7 +8905,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "V_drop = 2 × I × R × L",
-   "q": "Drop voltage kabel 2.5 mm² Cu (R=8.87 mΩ/m), 20 m, beban 16A, 1-fasa:",
+   "q": "Kabel tembaga 2,5 mm² (R = 8,87 mΩ/m) sepanjang 20 m memikul beban 16 A pada instalasi 1 fasa. Berapa rugi tegangannya?",
    "opts": [
     "1.4 V",
     "2.8 V",
@@ -8917,7 +8917,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pengujian polarity pakai tester 3-lamp socket:",
+   "q": "Bagaimana cara kerja socket tester 3 lampu untuk memeriksa polaritas?",
    "opts": [
     "Tidak valid",
     "3 lampu indikator posisi berbeda → tampilan pattern tell correct/fault wiring",
@@ -8929,7 +8929,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "SLO (Sertifikat Laik Operasi) instalasi rumah baru diterbitkan oleh:",
+   "q": "Siapa yang berwenang menerbitkan Sertifikat Laik Operasi (SLO) untuk instalasi rumah baru?",
    "opts": [
     "PLN langsung",
     "Lembaga Inspeksi Teknik (LIT) terakreditasi — wajib sebelum PLN energize",
@@ -8943,7 +8943,7 @@ window.QUIZ_BANK = {
  "2.02": [
   {
    "type": "pg",
-   "q": "Sistem 3-fasa 400/230V Wye: tegangan L-L dan L-N:",
+   "q": "Pada sistem 3 fasa 400/230 V hubungan bintang, berapa tegangan antar fasa dan tegangan fasa-netralnya?",
    "opts": [
     "230V / 400V",
     "400V / 230V",
@@ -8956,7 +8956,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "I = P / (√3 × V × cos φ)",
-   "q": "Beban 3-fasa seimbang: 50 kW, PF 0.85, 400V. FLA per fasa:",
+   "q": "Beban 3 fasa seimbang 50 kW dengan faktor daya 0,85 pada 400 V. Berapa arus beban penuh per fasa?",
    "opts": [
     "72 A",
     "85 A",
@@ -8968,7 +8968,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Panel 3-fasa komersial minimum terdiri dari:",
+   "q": "Komponen apa saja yang minimal harus ada pada panel 3 fasa komersial?",
    "opts": [
     "Hanya MCB",
     "MCCB utama 3P + RCD/RCCB + MCB cabang 1P/3P + busbar distribution",
@@ -8980,7 +8980,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Beban 3-fasa yang TIDAK butuh konduktor netral (hanya L1 L2 L3 + PE):",
+   "q": "Beban 3 fasa jenis apa yang tidak memerlukan penghantar netral?",
    "opts": [
     "Penerangan",
     "Motor 3-fasa (Delta atau Wye tanpa N)",
@@ -8992,7 +8992,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Unbalance beban antar fasa menyebabkan:",
+   "q": "Apa akibat beban yang tidak seimbang antar fasa?",
    "opts": [
     "Tidak ada efek",
     "Arus netral tidak nol → losses + voltage drop + motor heating",
@@ -9014,7 +9014,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Warna kabel 3-fasa PUIL 2011:",
+   "q": "Menurut PUIL 2011, warna apa yang dipakai untuk ketiga penghantar fasa, netral, dan pembumian?",
    "opts": [
     "Merah-kuning-biru",
     "Hitam-coklat-abu (L1-L2-L3), biru (N), hijau-kuning (PE)",
@@ -9027,7 +9027,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Kantor 3-fasa 100 kVA baru di Indramayu. Engineer install MCCB 3P utama 160A, RCD 300mA time-delay, dan MCB 1P 16A tiap cabang lighting (10 cabang, total 160A terdistribusi).",
-   "q": "Evaluasi desain:",
+   "q": "Sebuah panel komersial dirancang memakai RCD 300 mA tipe selektif di sisi utama dan RCD 30 mA di sirkuit stop kontak. Bagaimana menilai rancangan itu?",
    "opts": [
     "Sempurna",
     "OK, tapi 30mA RCD wajib untuk socket outlet + wet area (selain 300mA fire-RCD upstream) — selektif",
@@ -9039,7 +9039,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Earthing system TN-S (terpisah N dan PE) vs TN-C-S:",
+   "q": "Apa perbedaan sistem pembumian TN-S dan TN-C-S?",
    "opts": [
     "Sama",
     "TN-S: N & PE terpisah dari sumber. TN-C-S: gabung PEN dari sumber, split di MET bangunan",
@@ -9052,7 +9052,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 180' xmlns='http://www.w3.org/2000/svg'><circle cx='80' cy='100' r='30' fill='none' stroke='#1a1d2e' stroke-width='2'/><text x='80' y='100' text-anchor='middle' font-family='Georgia' font-size='13' fill='#1a1d2e' font-weight='700'>Y</text><line x1='80' y1='70' x2='80' y2='30' stroke='#c9a96e' stroke-width='2'/><text x='85' y='25' font-family='Georgia' font-size='11' fill='#c9a96e'>L1</text><line x1='106' y1='115' x2='150' y2='140' stroke='#1a1d2e' stroke-width='2'/><text x='155' y='150' font-family='Georgia' font-size='11' fill='#1a1d2e'>L2</text><line x1='54' y1='115' x2='10' y2='140' stroke='#c9a96e' stroke-width='2'/><text x='3' y='150' font-family='Georgia' font-size='11' fill='#c9a96e'>L3</text><line x1='80' y1='100' x2='180' y2='100' stroke='#1a1d2e' stroke-width='1.5' stroke-dasharray='4,3'/><text x='190' y='105' font-family='Georgia' font-size='11' fill='#1a1d2e'>N (230V)</text><text x='200' y='80' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>V_LL = 400V</text><text x='200' y='130' font-family='Georgia' font-size='11' fill='#c9a96e'>V_LN = 230V</text></svg>",
-   "q": "Pada sistem Y (bintang) 3-fasa pada gambar, relasi V_LL dan V_LN:",
+   "q": "Pada sistem bintang 3 fasa di gambar, bagaimana hubungan antara tegangan antar fasa dan tegangan fasa-netral?",
    "opts": [
     "V_LL = V_LN",
     "V_LL = √3 × V_LN",
@@ -9064,7 +9064,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Power distribution building: transformator dedicated + metering → switchboard → subpanels:",
+   "q": "Bagaimana pola distribusi daya yang lazim untuk gedung komersial 3 fasa?",
    "opts": [
     "Tidak efisien",
     "Normal for commercial 3-phase (trafo privat atau tap dari PLN via CT metering)",
@@ -9076,7 +9076,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Demand factor vs installed load:",
+   "q": "Apa perbedaan demand factor dengan installed load?",
    "opts": [
     "Sama",
     "Demand = maksimum beban aktual / installed. Tipikal office 0.5-0.7, industrial 0.6-0.85",
@@ -9088,7 +9088,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Lightning protection bangunan komersial tinggi:",
+   "q": "Apa saja komponen sistem proteksi petir untuk bangunan komersial bertingkat?",
    "opts": [
     "Tidak perlu",
     "Air terminal + down conductor + ground termination system + SPD di panel",
@@ -9100,7 +9100,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Busbar di MDP rating harus:",
+   "q": "Berapa rating busbar di MDP seharusnya dibandingkan MCCB utamanya?",
    "opts": [
     "Sama dengan MCCB utama",
     "Di atas rating MCCB utama + temperature rise margin",
@@ -9112,7 +9112,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Emergency lighting di bangunan komersial wajib:",
+   "q": "Apa persyaratan lampu darurat (emergency lighting) di bangunan komersial?",
    "opts": [
     "Tidak ada",
     "Battery backup 1-3 jam setelah power failure, lokasi evacuation route",
@@ -9124,7 +9124,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Arc fault protection di panel comercial:",
+   "q": "Perangkat apa yang dipakai untuk proteksi arc fault di panel komersial?",
    "opts": [
     "Tidak ada",
     "AFDD (Arc Fault Detection Device) deteksi arc signature + trip — mencegah kebakaran listrik",
@@ -9136,7 +9136,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Metering untuk tenant di ruko 3-fasa:",
+   "q": "Bagaimana cara melakukan metering listrik per tenant di ruko 3 fasa?",
    "opts": [
     "Shared kWh meter",
     "CT-operated kWh meter per tenant (submetering) untuk alokasi biaya",
@@ -9148,7 +9148,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "3-phase fault (L-L-L) vs 1-phase fault (L-N):",
+   "q": "Apa perbedaan besar arus gangguan 3 fasa dibandingkan gangguan 1 fasa ke netral?",
    "opts": [
     "Sama",
     "3-phase: arus fault tinggi (Isc max). 1-phase L-N: arus lebih rendah tergantung Z_loop",
@@ -9170,7 +9170,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Harmonic content dari beban non-linear (VFD, LED, PC) pada netral:",
+   "q": "Apa dampak harmonisa dari beban non-linear seperti VFD, LED, dan komputer terhadap penghantar netral?",
    "opts": [
     "Tidak ada",
     "Triplen harmonics (3rd, 9th, 15th) additive di N → N current > phase current possible",
@@ -9182,7 +9182,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Short-circuit study untuk commercial building tujuan:",
+   "q": "Apa tujuan melakukan short-circuit study pada gedung komersial?",
    "opts": [
     "Decorative",
     "Hitung Isc di setiap titik → spec protective device Icu ≥ Isc + koordinasi selektif",
@@ -9196,7 +9196,7 @@ window.QUIZ_BANK = {
  "2.03": [
   {
    "type": "pg",
-   "q": "Sambungan kabel yang paling andal untuk konduktor tembaga ukuran besar (≥16 mm²):",
+   "q": "Metode penyambungan apa yang paling andal untuk penghantar tembaga berukuran besar (≥16 mm²)?",
    "opts": [
     "Lilit isolasi",
     "Solder",
@@ -9208,7 +9208,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Untuk terminasi kabel fleksibel/stranded ke terminal sekrup, penggunaan yang benar:",
+   "q": "Bagaimana cara yang benar menerminasi kabel serabut (stranded) ke terminal sekrup?",
    "opts": [
     "Langsung pluck",
     "Bootlace ferrule: crimp di ujung fleksibel untuk cegah 'fan-out' dan jaga kontak rata",
@@ -9220,7 +9220,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tightening torque terminal kabel 10-16 mm² tipikal:",
+   "q": "Berapa torsi pengencangan yang tepat untuk terminal kabel 10–16 mm²?",
    "opts": [
     "Tangan saja",
     "Torque wrench sesuai spec manufacturer (mis. 2.5-3.5 Nm untuk 10 mm²)",
@@ -9232,7 +9232,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Soldering untuk sambungan listrik kecil (< 2.5 mm²):",
+   "q": "Bagaimana cara menyolder sambungan listrik kecil di bawah 2,5 mm² dengan benar?",
    "opts": [
     "Tidak boleh",
     "Rosin-core solder, heat joint (bukan solder), flow solder in — cold joint no-go",
@@ -9244,7 +9244,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Wago connector (lever-nut) advantage:",
+   "q": "Apa keunggulan konektor Wago tipe lever-nut?",
    "opts": [
     "Tidak tahan",
     "Toolless, tested pull strength, reusable, equal for solid & stranded",
@@ -9266,7 +9266,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pada split-bolt connector digunakan untuk:",
+   "q": "Untuk keperluan apa split-bolt connector dipakai?",
    "opts": [
     "Crimp",
     "Tap connection besar (mis. main feeder ke sub-feeder di overhead)",
@@ -9278,7 +9278,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Heat-shrink tubing fungsi:",
+   "q": "Apa fungsi heat-shrink tubing pada sambungan kabel?",
    "opts": [
     "Decorative",
     "Insulation restoration setelah sambungan, mechanical protection, cable identification",
@@ -9290,7 +9290,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Torque check kembali setelah operasi 24 jam (re-torque):",
+   "q": "Mengapa terminal perlu dikencangkan ulang (re-torque) setelah beroperasi 24 jam?",
    "opts": [
     "Paranoid",
     "Standard practice: heat cycle bisa loose connection, recheck critical joints",
@@ -9302,7 +9302,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Aluminum conductor connection requirement:",
+   "q": "Apa persyaratan khusus saat menyambung penghantar aluminium?",
    "opts": [
     "Sama dengan Cu",
     "Anti-oxidant paste + AL-rated lug (CO/ALR marking) + torque sesuai spec Al",
@@ -9316,7 +9316,7 @@ window.QUIZ_BANK = {
  "2.04": [
   {
    "type": "pg",
-   "q": "PHB (Panel Hubung Bagi) fungsi utama:",
+   "q": "Apa fungsi utama Panel Hubung Bagi (PHB)?",
    "opts": [
     "Decorative",
     "Distribusi daya dari sumber ke cabang dengan proteksi per circuit",
@@ -9328,7 +9328,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "IP rating minimum PHB indoor commercial:",
+   "q": "Berapa IP rating minimum untuk PHB komersial di dalam ruangan?",
    "opts": [
     "IP20 (finger safe)",
     "IP2X ≥ IP20 atau lebih tinggi (IP4X/IP54 bila dust/moisture)",
@@ -9340,7 +9340,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Internal separation IEC 61439 Form 4:",
+   "q": "Apa yang dimaksud internal separation Form 4 menurut IEC 61439?",
    "opts": [
     "Tidak ada",
     "Semua part terpisah: busbar, device, terminal — maksimum safety selama maintenance live section",
@@ -9352,7 +9352,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Cable management dalam PHB:",
+   "q": "Bagaimana kabel di dalam PHB seharusnya ditata?",
    "opts": [
     "Bebas",
     "Wire duct (D-line), routed segregated per voltage level, labelled",
@@ -9365,7 +9365,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='30' width='260' height='170' fill='none' stroke='#1a1d2e' stroke-width='2'/><rect x='60' y='50' width='70' height='40' fill='#c9a96e' opacity='0.3' stroke='#1a1d2e'/><text x='95' y='75' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>MCCB 3P</text><line x1='140' y1='70' x2='280' y2='70' stroke='#c9a96e' stroke-width='3'/><text x='285' y='72' font-family='Georgia' font-size='9' fill='#c9a96e'>L1</text><line x1='140' y1='85' x2='280' y2='85' stroke='#1a1d2e' stroke-width='3'/><text x='285' y='87' font-family='Georgia' font-size='9' fill='#1a1d2e'>L2</text><line x1='140' y1='100' x2='280' y2='100' stroke='#888' stroke-width='3'/><text x='285' y='102' font-family='Georgia' font-size='9' fill='#888'>L3</text><line x1='140' y1='115' x2='280' y2='115' stroke='#2b78cd' stroke-width='3'/><text x='285' y='117' font-family='Georgia' font-size='9' fill='#2b78cd'>N</text><rect x='60' y='130' width='30' height='50' fill='#fff' stroke='#1a1d2e'/><text x='75' y='160' text-anchor='middle' font-family='Georgia' font-size='9' fill='#1a1d2e'>MCB1</text><rect x='100' y='130' width='30' height='50' fill='#fff' stroke='#1a1d2e'/><text x='115' y='160' text-anchor='middle' font-family='Georgia' font-size='9' fill='#1a1d2e'>MCB2</text><rect x='140' y='130' width='30' height='50' fill='#fff' stroke='#1a1d2e'/><text x='155' y='160' text-anchor='middle' font-family='Georgia' font-size='9' fill='#1a1d2e'>MCB3</text><text x='170' y='210' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>PHB 3-fasa Tipikal</text></svg>",
-   "q": "Pada layout PHB 3-fasa di gambar, sistem distribusi:",
+   "q": "Dari tata letak PHB 3 fasa pada gambar, bagaimana sistem distribusinya bekerja?",
    "opts": [
     "Semua 1-fasa",
     "MCCB 3P utama → busbar 4-konduktor (L1-L2-L3-N) → MCB 1P cabang",
@@ -9377,7 +9377,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Arc fault within PHB danger:",
+   "q": "Apa bahaya yang timbul bila terjadi arc fault di dalam PHB?",
    "opts": [
     "Normal",
     "Arc Flash: destructive energy, can cause injury/fire → IEC 62271 arc testing for internal fault",
@@ -9389,7 +9389,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Labeling PHB per IEC 61439:",
+   "q": "Informasi apa saja yang wajib tercantum pada label PHB menurut IEC 61439?",
    "opts": [
     "Tidak perlu",
     "Manufacturer, rating plate, SCCR (Isc), type designation, hazard label sesuai arc flash",
@@ -9411,7 +9411,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Thermal imaging PHB recommended frequency:",
+   "q": "Seberapa sering pemeriksaan thermal imaging pada PHB dianjurkan?",
    "opts": [
     "Sekali",
     "Annual under full load (identify hot spot before failure)",
@@ -9423,7 +9423,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "PHB Form 1 vs Form 4 cost & use:",
+   "q": "Apa perbedaan PHB Form 1 dan Form 4 dari sisi biaya dan pemakaiannya?",
    "opts": [
     "Sama",
     "Form 1: ekonomis, home/simple. Form 4: mahal, mission-critical (hospital, data center, industri)",
@@ -9436,7 +9436,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Inspeksi PHB industri 5 tahun: ditemukan busbar connection MCCB-utama hangus (melting), phase rotation confused, cable ducts penuh coke powder.",
-   "q": "Kesimpulan kondisi & action:",
+   "q": "Pemeriksaan sebuah PHB menemukan jejak leleh pada sambungan, urutan fasa yang tertukar, dan tumpukan debu tebal. Apa kesimpulan kondisinya dan tindakan yang harus diambil?",
    "opts": [
     "Normal aging",
     "Kritikal: poor maintenance → terms loose + arc damage. Shutdown + rebuilt busbar joints + clean + re-commission",
@@ -9448,7 +9448,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Single Line Diagram (SLD) in PHB documentation:",
+   "q": "Apakah Single Line Diagram wajib disertakan dalam dokumentasi PHB, dan di mana ditempatkan?",
    "opts": [
     "Optional",
     "Mandatory: inside panel door (laminated), as-built record maintained, version controlled",
@@ -9460,7 +9460,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Testing commissioning PHB baru:",
+   "q": "Pengujian apa saja yang harus dilakukan saat commissioning sebuah PHB baru?",
    "opts": [
     "Hanya energize",
     "Dielectric (HiPot), insulation, continuity, phase sequence, functional protection, FAT + SAT",
@@ -9474,7 +9474,7 @@ window.QUIZ_BANK = {
  "2.05": [
   {
    "type": "pg",
-   "q": "Cable tray types:",
+   "q": "Apa saja jenis cable tray yang umum dipakai?",
    "opts": [
     "1 saja",
     "Ladder (open rung), perforated (drainage holes), solid bottom, channel (small)",
@@ -9487,7 +9487,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "Area fill ≤ 50%",
-   "q": "Cable tray ladder 300mm wide, fill 10 kabel NYY 4×16 mm² (diameter 25mm each). Tray yang tepat:",
+   "q": "Cable tray ladder selebar 300 mm akan diisi 10 kabel NYY 4×16 mm² berdiameter 25 mm. Apakah lebar itu memadai?",
    "opts": [
     "Sempit, butuh 400mm",
     "OK (10 kabel × 25mm = 250mm + spacing 10% = 275mm, fit di 300mm)",
@@ -9509,7 +9509,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Fire rating cable dalam gedung tinggi:",
+   "q": "Jenis kabel apa yang disyaratkan untuk gedung bertingkat dari sisi ketahanan api?",
    "opts": [
     "Tidak ada",
     "FRNC (Fire Retardant Non-Corrosive), LSZH (Low Smoke Zero Halogen), fire rated barrier penetrations",
@@ -9521,7 +9521,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Outdoor cable tray material:",
+   "q": "Bahan apa yang dipakai untuk cable tray di luar ruangan?",
    "opts": [
     "Steel biasa",
     "Hot-dip galvanized, SS316, fiberglass (chemical) — weather & corrosion resistant",
@@ -9533,7 +9533,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Cable pulling lubricant purpose:",
+   "q": "Apa fungsi pelumas saat menarik kabel (cable pulling lubricant)?",
    "opts": [
     "Decorative",
     "Reduce friction (≤ cable max pulling tension) untuk prevent damage sheath",
@@ -9545,7 +9545,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Conduit EMT (Electrical Metallic Tubing):",
+   "q": "Apa itu konduit EMT (Electrical Metallic Tubing) dan di mana dipakai?",
    "opts": [
     "Rigid PVC",
     "Steel tube thin-wall, indoor/commercial, EMI shielding bila grounded",
@@ -9557,7 +9557,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Underground cable direct bury vs in conduit:",
+   "q": "Apa perbedaan pemasangan kabel bawah tanah secara langsung (direct bury) dengan yang memakai konduit?",
    "opts": [
     "Sama",
     "Direct bury: NYFGBY armored, warning tape 300mm above. Conduit: easier replacement",
@@ -9569,7 +9569,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Cable segregation AS-NZS 3000 / PUIL klasifikasi voltage:",
+   "q": "Bagaimana kabel dikelompokkan menurut kelas tegangan untuk keperluan pemisahan jalur?",
    "opts": [
     "Tidak ada",
     "ELV (0-50V), LV (50-1000V), HV (>1000V) — physical separation antar kelas",
@@ -9581,7 +9581,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Corrosion protection cable tray outdoor area pantai (Indramayu coast):",
+   "q": "Bahan apa yang dipakai untuk cable tray di area pantai yang korosif?",
    "opts": [
     "Steel biasa",
     "Hot-dip galvanized atau SS316 / FRP (chloride environment butuh higher grade)",
@@ -9593,7 +9593,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Modular trunking (floor / cable carrier) aplikasi:",
+   "q": "Untuk aplikasi apa modular trunking atau cable carrier lantai dipakai?",
    "opts": [
     "Tidak ada",
     "Office raised floor, datacenter hot aisle/cold aisle, retrofit building — flexible cable distribution",
@@ -9617,7 +9617,7 @@ window.QUIZ_BANK = {
  "2.06": [
   {
    "type": "pg",
-   "q": "Step pertama instalasi rumah baru:",
+   "q": "Apa langkah pertama dalam mengerjakan instalasi listrik rumah baru?",
    "opts": [
     "Install MCB",
     "Survey + design: load calc, SLD, denah, bill of material",
@@ -9629,7 +9629,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Rough-in phase artinya:",
+   "q": "Apa yang dikerjakan pada tahap rough-in sebuah instalasi?",
    "opts": [
     "Final install",
     "Install conduit + junction box + main panel kosong sebelum dinding finishing",
@@ -9641,7 +9641,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Penempatan MCB panel di rumah optimal:",
+   "q": "Di mana posisi paling tepat untuk memasang panel MCB di rumah?",
    "opts": [
     "Luar rumah",
     "Ground floor, dekat meter PLN, height 1.5-1.7m, accessible, dry, kering",
@@ -9653,7 +9653,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Outlet tiap kamar minimal:",
+   "q": "Berapa jumlah minimum stop kontak yang dianjurkan untuk setiap kamar?",
    "opts": [
     "1",
     "2 (NEC) atau wall-spacing 3.6m max (outlet dalam 1.8m dari door/corner)",
@@ -9665,7 +9665,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Grounding electrode system rumah baru:",
+   "q": "Bagaimana sistem elektrode pembumian untuk rumah baru seharusnya dibuat?",
    "opts": [
     "Tidak perlu",
     "Ground rod 3m Cu-clad + ground clamp ke MET + ring electrode opsional. R < 5Ω (PUIL)",
@@ -9678,7 +9678,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 360 200' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='30' width='320' height='150' fill='none' stroke='#1a1d2e' stroke-width='2'/><text x='180' y='25' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>Denah rumah tipikal 36m²</text><rect x='40' y='50' width='130' height='60' fill='none' stroke='#1a1d2e'/><text x='105' y='75' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>Ruang Tamu</text><circle cx='105' cy='90' r='4' fill='#c9a96e'/><text x='70' y='60' font-family='Georgia' font-size='8' fill='#1a1d2e'>SK1 (switch)</text><rect x='40' y='120' width='80' height='50' fill='none' stroke='#1a1d2e'/><text x='80' y='145' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>K.Tidur</text><rect x='130' y='120' width='80' height='50' fill='none' stroke='#1a1d2e'/><text x='170' y='145' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>K.Mandi</text><rect x='220' y='50' width='100' height='60' fill='none' stroke='#1a1d2e'/><text x='270' y='75' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>Dapur</text><circle cx='40' cy='45' r='6' fill='#1a1d2e'/><text x='45' y='48' font-family='Georgia' font-size='8' fill='#1a1d2e'>PHB</text></svg>",
-   "q": "Denah rumah 36m²: lokasi PHB/panel yang OPTIMAL:",
+   "q": "Pada rumah seluas 36 m², di mana lokasi PHB yang paling optimal?",
    "opts": [
     "Tengah rumah",
     "Pojok dekat pintu masuk (accessible emergency, dekat meter PLN luar)",
@@ -9690,7 +9690,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Kitchen outlet protection:",
+   "q": "Proteksi apa yang wajib dipasang untuk stop kontak di dapur?",
    "opts": [
     "MCB biasa",
     "RCD 30mA wajib untuk socket kitchen (wet/splash area)",
@@ -9703,7 +9703,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Rumah baru komisioning: semua MCB trip saat RCD 30mA diaktivasi. Tanpa RCD, semua OK.",
-   "q": "Penyebab paling mungkin:",
+   "q": "Sebuah RCD di panel rumah terus trip meski seluruh beban sudah dilepas. Apa penyebab yang paling mungkin?",
    "opts": [
     "RCD rusak",
     "Wiring error: N-G bonding di downstream panel (harus di MET saja) atau N dari beda circuit bersilangan",
@@ -9715,7 +9715,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Metal conduit grounding:",
+   "q": "Bagaimana konduit logam harus diperlakukan terhadap sistem pembumian?",
    "opts": [
     "Tidak perlu",
     "Metal conduit bonded ke PE bar + ground lugs — equipotential",
@@ -9727,7 +9727,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Appliance dedicated circuit contoh:",
+   "q": "Peralatan apa saja yang sebaiknya diberi sirkuit khusus (dedicated circuit)?",
    "opts": [
     "Tidak pernah",
     "AC, pompa air, water heater, kulkas besar — high current continuous",
@@ -9749,7 +9749,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Smart home integration options:",
+   "q": "Pilihan apa saja yang tersedia untuk mengintegrasikan instalasi rumah dengan sistem smart home?",
    "opts": [
     "Tidak kompatibel",
     "Smart switch (Tuya/Philips Hue/Sonoff), neutral wire required at switch, hub atau WiFi direct",
@@ -9761,7 +9761,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "DC bus untuk solar PV residential:",
+   "q": "Bagaimana alur bus DC pada instalasi PV surya rumah tangga?",
    "opts": [
     "Tidak ada",
     "DC side (PV array) → inverter → AC grid tied. Separate protection & disconnect per SNI 8151",
@@ -9775,7 +9775,7 @@ window.QUIZ_BANK = {
  "2.07": [
   {
    "type": "pg",
-   "q": "Sistem grounding TN-S:",
+   "q": "Apa ciri sistem pembumian TN-S?",
    "opts": [
     "N & PE gabung",
     "N (Neutral) & PE (Protective Earth) terpisah dari sumber — paling aman",
@@ -9787,7 +9787,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Sistem TN-C-S:",
+   "q": "Apa ciri sistem pembumian TN-C-S?",
    "opts": [
     "N terpisah selalu",
     "Combined (PEN) dari sumber, dipisah (split) di MET bangunan jadi N + PE downstream",
@@ -9800,19 +9800,19 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "V_touch = I × R_ground",
-   "q": "RCD 30mA, TT system, R_ground = 10 Ω (marginal). Touch voltage saat fault:",
+   "q": "Sistem pembumian TT memakai RCD 30 mA dan resistansi pembumian 10 Ω. Berapa tegangan sentuh yang muncul saat terjadi kebocoran arus ke bodi, tepat pada ambang kerja RCD?",
    "opts": [
-    "3V (sangat aman)",
-    "0.3V",
-    "30V",
-    "300V"
+    "0,03 V",
+    "0,3 V",
+    "3 V",
+    "30 V"
    ],
-   "a": 0,
-   "explain": "Touch voltage = I_trip × R = 0.030 × 10 = 0.3V. Tapi RCD trip harus konfirmasi: I_trip (30mA) × Zs (R+rod rumah) ≤ U_limit (50V). R 10Ω OK untuk 30mA RCD. Tanpa RCD, MCB tidak trigger (arus fault kecil)."
+   "a": 1,
+   "explain": "Tegangan sentuh = arus kerja RCD × resistansi pembumian = 0,030 A × 10 Ω = 0,3 V. Angka itu jauh di bawah batas aman 50 V, jadi kombinasi RCD 30 mA dengan pembumian 10 Ω memenuhi syarat. Tanpa RCD, arus bocor sekecil itu tidak akan menjatuhkan MCB sama sekali."
   },
   {
    "type": "pg",
-   "q": "Main Earth Terminal (MET) function:",
+   "q": "Apa fungsi Main Earth Terminal (MET)?",
    "opts": [
     "Decorative",
     "Single-point grounding reference: busbar tempat N & PE bonded, electrode connection, equipotential bonding",
@@ -9834,7 +9834,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Elektroda ground rod Cu-clad steel vs solid Cu:",
+   "q": "Apa perbedaan elektrode pembumian Cu-clad steel dengan tembaga pejal?",
    "opts": [
     "Sama",
     "Cu-clad ekonomis (core steel, layer Cu 0.25mm), 15-20thn. Solid Cu mahal, 30+thn",
@@ -9846,7 +9846,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Ground enhancement chemical:",
+   "q": "Bahan kimia apa yang dipakai untuk memperbaiki tahanan pentanahan (ground enhancement)?",
    "opts": [
     "Tidak efektif",
     "Bentonite, GEM (ground enhancement material) — attract & hold moisture, reduce ρ lokal",
@@ -9858,8 +9858,8 @@ window.QUIZ_BANK = {
   },
   {
    "type": "svg",
-   "svg": "<svg viewBox='0 0 360 180' xmlns='http://www.w3.org/2000/svg'><line x1='20' y1='130' x2='340' y2='130' stroke='#8a6d3d' stroke-width='3'/><text x='15' y='125' font-family='Georgia' font-size='9' fill='#8a6d3d'>tanah</text><rect x='80' y='60' width='80' height='65' fill='#c9a96e' opacity='0.3' stroke='#1a1d2e'/><text x='120' y='95' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>Bangunan</text><rect x='115' y='70' width='10' height='50' fill='#1a1d2e'/><text x='120' y='66' text-anchor='middle' font-family='Georgia' font-size='8' fill='#1a1d2e'>MET</text><rect x='113' y='130' width='14' height='40' fill='#c9a96e'/><text x='145' y='160' font-family='Georgia' font-size='9' fill='#c9a96e'>Rod 3m</text><line x1='120' y1='70' x2='200' y2='70' stroke='#2b78cd' stroke-width='1.5' stroke-dasharray='3,2'/><text x='205' y='68' font-family='Georgia' font-size='10' fill='#2b78cd'>N (dari PLN)</text><line x1='120' y1='82' x2='200' y2='82' stroke='#2d7d46' stroke-width='1.5' stroke-dasharray='3,2'/><text x='205' y='85' font-family='Georgia' font-size='10' fill='#2d7d46'>PE (dari PLN)</text><text x='20' y='50' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>Sistem TN-C-S</text></svg>",
-   "q": "Pada diagram TN-C-S, bonding di MET:",
+   "svg": "<svg viewBox='0 0 360 180' xmlns='http://www.w3.org/2000/svg'><line x1='20' y1='130' x2='340' y2='130' stroke='#8a6d3d' stroke-width='3'/><text x='15' y='125' font-family='Georgia' font-size='9' fill='#8a6d3d'>tanah</text><rect x='80' y='60' width='80' height='65' fill='#c9a96e' opacity='0.3' stroke='#1a1d2e'/><rect x='115' y='70' width='10' height='42' fill='#1a1d2e'/><text x='120' y='122' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>Bangunan</text><text x='120' y='66' text-anchor='middle' font-family='Georgia' font-size='8' fill='#1a1d2e'>MET</text><rect x='113' y='130' width='14' height='40' fill='#c9a96e'/><text x='145' y='160' font-family='Georgia' font-size='9' fill='#c9a96e'>Rod 3m</text><line x1='120' y1='70' x2='200' y2='70' stroke='#2b78cd' stroke-width='1.5' stroke-dasharray='3,2'/><text x='205' y='68' font-family='Georgia' font-size='10' fill='#2b78cd'>N (dari PLN)</text><line x1='120' y1='82' x2='200' y2='82' stroke='#2d7d46' stroke-width='1.5' stroke-dasharray='3,2'/><text x='205' y='85' font-family='Georgia' font-size='10' fill='#2d7d46'>PE (dari PLN)</text><text x='20' y='50' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>Sistem TN-C-S</text></svg>",
+   "q": "Pada diagram sistem TN-C-S, bagaimana penyambungan netral dan PE di MET dilakukan?",
    "opts": [
     "Tidak ada",
     "N (dari PLN PEN) dan PE bus di-bond di MET, kemudian downstream terpisah (TN-S)",
@@ -9871,7 +9871,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Earth resistance test frequency untuk fasilitas kritikal:",
+   "q": "Seberapa sering uji tahanan pentanahan dilakukan pada fasilitas kritikal?",
    "opts": [
     "Sekali",
     "Annually (seasonal effect) + post-modification. Trending baseline",
@@ -9883,7 +9883,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Grounding di substation PLN 20kV:",
+   "q": "Bagaimana bentuk sistem pembumian di gardu induk PLN 20 kV?",
    "opts": [
     "Single rod",
     "Ground grid (mesh Cu 70-120 mm² + multiple rod intersection) + crusher rock surface",
@@ -9896,7 +9896,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Gardu PLN 20/0.4kV fault bus 400V terhadap body trafo. R_ground gardu 2 Ω. Arus fault 1000A selama 0.3 detik.",
-   "q": "GPR & touch voltage concern:",
+   "q": "Arus gangguan ke tanah sebesar 1.000 A mengalir melalui pentanahan 2 Ω. Apa yang perlu dikhawatirkan dari GPR dan tegangan sentuh yang timbul?",
    "opts": [
     "Aman",
     "GPR = 1000×2 = 2000V — tinggi. Body trafo rise 2000V, touch voltage tangan-kaki bisa 600V (30% GPR) dalam 0.3s = fatal",
@@ -9908,7 +9908,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Grounding untuk solar PV rooftop:",
+   "q": "Bagaimana pembumian untuk instalasi PV surya di atap dilakukan?",
    "opts": [
     "Tidak perlu",
     "Structure bonded, module frame bonded, DC bus equipment ground, AC side per building",
@@ -9932,7 +9932,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Sistem grounding untuk operating theater rumah sakit:",
+   "q": "Sistem pembumian jenis apa yang dipakai untuk ruang operasi rumah sakit?",
    "opts": [
     "TN-S biasa",
     "IT dengan IMD (Insulation Monitoring Device), line isolation transformer — first fault alert tapi tidak shutdown",
@@ -9944,7 +9944,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Ground rod corrosion mitigation:",
+   "q": "Bagaimana cara mencegah korosi pada elektrode pembumian?",
    "opts": [
     "Tidak pernah",
     "Material selection (Cu-clad/solid Cu), cathodic protection, bentonite, monitoring",
@@ -9966,7 +9966,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Grounding gas station / hazardous area:",
+   "q": "Apa persyaratan khusus pembumian di SPBU atau area berbahaya (hazardous area)?",
    "opts": [
     "Tidak perlu special",
     "Equipotential bonding semua metal (dispenser, pipe, tank) + static dissipation + conductive concrete",
@@ -9980,7 +9980,7 @@ window.QUIZ_BANK = {
  "2.08": [
   {
    "type": "pg",
-   "q": "Air terminal konvensional (Franklin rod):",
+   "q": "Bagaimana cara kerja air terminal konvensional (Franklin rod)?",
    "opts": [
     "Tidak efektif",
     "Passive rod di atap, intercept strike via point-effect, Area proteksi cone angle 45-60°",
@@ -9992,7 +9992,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "ESE (Early Streamer Emission) lightning protection:",
+   "q": "Apa yang membedakan proteksi petir ESE (Early Streamer Emission) dari yang konvensional?",
    "opts": [
     "Standard",
     "Active: generate early upward streamer to attract strike — marketed coverage lebih luas. Controversial effectiveness",
@@ -10004,7 +10004,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Earth termination R_max untuk LPS:",
+   "q": "Berapa tahanan pentanahan maksimum yang disyaratkan untuk sistem proteksi petir?",
    "opts": [
     "100 Ω",
     "≤ 10 Ω ideal. IEC 62305 guidance",
@@ -10016,7 +10016,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "SPD (Surge Protection Device) type:",
+   "q": "Ada berapa tipe SPD dan apa perbedaannya?",
    "opts": [
     "1 saja",
     "Type 1 (direct strike class at service entrance), Type 2 (transient at DB), Type 3 (point of use)",
@@ -10028,7 +10028,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "SPD pakai komponen:",
+   "q": "Komponen apa yang dipakai di dalam sebuah SPD?",
    "opts": [
     "Resistor",
     "MOV (metal oxide varistor), GDT (gas discharge tube), TVS diode — clamp voltage",
@@ -10040,7 +10040,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Rolling sphere method untuk protection zone:",
+   "q": "Bagaimana metode rolling sphere menentukan zona perlindungan petir?",
    "opts": [
     "Decorative",
     "Geometric: roll sphere radius R over building. Any point touching sphere = at risk",
@@ -10052,7 +10052,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Mesh method air termination:",
+   "q": "Bagaimana metode mesh diterapkan pada terminasi udara proteksi petir?",
    "opts": [
     "Tidak ada",
     "Grid of conductor on roof (10×10m to 20×20m). Alternatif Franklin rod untuk flat roof",
@@ -10074,7 +10074,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Lightning protection di pabrik chemical / oil:",
+   "q": "Apa tambahan persyaratan proteksi petir untuk pabrik kimia atau minyak?",
    "opts": [
     "Sama rumah",
     "Tambah level bonding ekstra, Ex-rated, no-spark design untuk hazardous area, conductive floor",
@@ -10086,7 +10086,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pencatatan strike event:",
+   "q": "Bagaimana kejadian sambaran petir dicatat pada sebuah sistem proteksi?",
    "opts": [
     "Tidak penting",
     "Lightning counter di down conductor, log date + estimated current → maintenance trigger",
@@ -10098,7 +10098,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Grounding separate LPS vs electrical – mitos:",
+   "q": "Benarkah pembumian sistem proteksi petir harus dipisah dari pembumian instalasi listrik?",
    "opts": [
     "Wajib separate",
     "Mitos. Single bonded ground system (IEC 62305 Annex E) — equipotential prevent side-flash",
@@ -10110,7 +10110,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Risk assessment IEC 62305-2:",
+   "q": "Bagaimana penilaian risiko menurut IEC 62305-2 dilakukan?",
    "opts": [
     "Tidak relevan",
     "Quantitative: flash density × exposure × consequence → R tolerable, protection class determination",
@@ -10122,7 +10122,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Lightning strike to power line consequence:",
+   "q": "Apa akibat sambaran petir yang mengenai saluran listrik?",
    "opts": [
     "Tidak ada",
     "Surge propagate several km, damage appliance jauh. Mitigasi utility SPD + customer-side SPD cascade",
@@ -10134,7 +10134,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Fiber optic cable sebagai alternative signal selama storm:",
+   "q": "Mengapa kabel serat optik lebih aman sebagai jalur sinyal saat badai petir?",
    "opts": [
     "Tidak membantu",
     "Dielectric → immune lightning induced EMI, jalur komunikasi tetap jalan",
@@ -10148,7 +10148,7 @@ window.QUIZ_BANK = {
  "2.09": [
   {
    "type": "pg",
-   "q": "Selektivitas proteksi bertujuan:",
+   "q": "Apa tujuan selektivitas dalam koordinasi proteksi?",
    "opts": [
     "Proteksi kabel",
     "Memastikan hanya MCB terdekat dengan fault yang trip, sisanya tetap ON",
@@ -10173,7 +10173,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Studi koordinasi dilakukan pada fasa arus:",
+   "q": "Pada kondisi arus seperti apa studi koordinasi proteksi dilakukan?",
    "opts": [
     "Steady state",
     "Fault short-circuit (Isc 3-fasa, L-G, L-L-G, L-L) tiap titik network",
@@ -10186,7 +10186,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='190' x2='310' y2='190' stroke='#1a1d2e' stroke-width='1'/><line x1='30' y1='20' x2='30' y2='190' stroke='#1a1d2e' stroke-width='1'/><text x='15' y='20' font-family='Georgia' font-size='10' fill='#1a1d2e'>t</text><text x='315' y='195' font-family='Georgia' font-size='10' fill='#1a1d2e'>I</text><path d='M 50 50 Q 80 80 110 130 L 140 170 L 180 170 L 180 90 L 230 90' stroke='#c9a96e' stroke-width='2' fill='none'/><text x='80' y='45' font-family='Georgia' font-size='10' fill='#c9a96e' font-weight='700'>Upstream</text><path d='M 50 110 Q 70 130 90 160 L 110 180 L 130 180 L 130 50 L 200 50' stroke='#1a1d2e' stroke-width='2' fill='none'/><text x='130' y='45' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>Downstream</text></svg>",
-   "q": "Dari kurva TCC, kondisi selektif adalah bila:",
+   "q": "Pada kurva TCC, kondisi seperti apa yang menandakan proteksi sudah selektif?",
    "opts": [
     "Kurva bersilangan",
     "Upstream curve berada di ATAS downstream curve (lebih lambat pada arus sama)",
@@ -10199,7 +10199,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Rumah 3-fasa 20kVA: MCCB utama 32A + MCB cabang 16A (sub-panel). Fault short di beban cabang, keduanya trip bersama.",
-   "q": "Masalah & perbaikan:",
+   "q": "MCCB 32 A di hulu dan MCB 16 A di hilir sama-sama trip saat terjadi gangguan 200 A. Apa masalahnya dan bagaimana memperbaikinya?",
    "opts": [
     "Normal",
     "Tidak selektif. Upgrade MCCB utama ke versi adjustable magnetic, set > 5×16 = 80A+, atau cascade Icu bila fault tinggi",
@@ -10211,7 +10211,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Proteksi differential (87) selektivitas:",
+   "q": "Mengapa proteksi differential (kode 87) bersifat selektif dengan sendirinya?",
    "opts": [
     "Tidak ada",
     "Inherent selective: zone protected secara fisik, hanya fault dalam zone trip relay",
@@ -10223,7 +10223,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "MCB kurva D (10-20× In) dipakai bersama MCCB rating kecil → selektivitas:",
+   "q": "Apa risiko selektivitas bila MCB kurva D dipasang bersama MCCB berating kecil?",
    "opts": [
     "Selalu bagus",
     "Bisa problem: D curve threshold tinggi, MCCB utama bisa trip dulu saat inrush motor",
@@ -10245,7 +10245,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor starting inrush proteksi — setting magnetic MCB:",
+   "q": "Pada berapa kelipatan FLA setelan magnetik MCB untuk motor sebaiknya diatur?",
    "opts": [
     "Sama FLA",
     "10-13× FLA (diatas inrush peak ~7×) agar tidak nuisance trip",
@@ -10257,7 +10257,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Ground Fault setting relay 51N vs phase 51P:",
+   "q": "Apa perbedaan setelan relay gangguan tanah (51N) dengan relay fasa (51P)?",
    "opts": [
     "Sama",
     "51N lebih sensitif (10-30% In) dan time coordination terpisah dari phase",
@@ -10269,7 +10269,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Bila fault terjadi dan breaker tidak trip (fail-to-trip):",
+   "q": "Apa yang harus terjadi bila sebuah breaker gagal trip saat terjadi gangguan?",
    "opts": [
     "Acceptable",
     "Backup protection upstream harus clear (backup zone + delay). Ini alasan koordinasi hulu-hilir WAJIB",
@@ -10291,7 +10291,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "LSIG (Long-Short-Instantaneous-Ground) adjustable MCCB:",
+   "q": "Apa yang bisa diatur pada MCCB dengan fitur LSIG?",
    "opts": [
     "Fitur kecil",
     "Full adjustable: L (overload), S (short-time delay), I (instantaneous), G (ground) — memungkinkan fine-tune koordinasi",
@@ -10305,7 +10305,7 @@ window.QUIZ_BANK = {
  "2.10": [
   {
    "type": "pg",
-   "q": "Motor AC induksi 3-fasa rotor bar prinsip:",
+   "q": "Bagaimana prinsip kerja motor induksi 3 fasa dengan rotor sangkar?",
    "opts": [
     "DC field",
     "Rotating magnetic field (stator) induce current di rotor → torque (Lenz + Lorentz)",
@@ -10317,7 +10317,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Slip motor induksi 3-fasa full load:",
+   "q": "Berapa slip motor induksi 3 fasa pada beban penuh?",
    "opts": [
     "0%",
     "2-5% typical",
@@ -10329,7 +10329,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor 3-fasa 4-pole 50Hz synchronous speed:",
+   "q": "Berapa kecepatan sinkron motor 3 fasa 4 kutub pada frekuensi 50 Hz?",
    "opts": [
     "750 rpm",
     "1500 rpm",
@@ -10341,7 +10341,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Nameplate motor 'IP55' artinya:",
+   "q": "Apa arti kode IP55 pada nameplate motor?",
    "opts": [
     "Klasifikasi isolasi",
     "Ingress Protection: 5=dust protected, 5=water jet resistant",
@@ -10353,7 +10353,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Nameplate 'S1' duty artinya:",
+   "q": "Apa arti kode duty 'S1' pada nameplate motor?",
    "opts": [
     "Intermittent",
     "Continuous duty (steady load duration sufficient for thermal equilibrium)",
@@ -10366,7 +10366,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "I = P/(√3×V×PF×η)",
-   "q": "Motor 7.5 kW, 400V 3-fasa, PF 0.85, η 0.88. FLA (Full Load Ampere):",
+   "q": "Motor 7,5 kW 400 V 3 fasa dengan faktor daya 0,85 dan efisiensi 0,88. Berapa arus beban penuhnya?",
    "opts": [
     "10 A",
     "14.5 A",
@@ -10378,7 +10378,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor 1-fasa butuh starter mechanism karena:",
+   "q": "Mengapa motor 1 fasa memerlukan mekanisme starter?",
    "opts": [
     "Lebih hemat",
     "Single phase tidak hasilkan rotating field sendiri — butuh start winding + capacitor untuk produce phase shift",
@@ -10390,7 +10390,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor 400V 50Hz + 60Hz supply → efek:",
+   "q": "Apa yang terjadi bila motor 400 V 50 Hz disuplai dari jaringan 60 Hz?",
    "opts": [
     "OK",
     "Frequency salah: flux naik (V/f rasio salah) → saturate core, overcurrent, overheat",
@@ -10402,7 +10402,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Insulation class motor 'F' rating:",
+   "q": "Berapa batas suhu belitan untuk motor dengan kelas isolasi F?",
    "opts": [
     "80°C",
     "105°C",
@@ -10425,7 +10425,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Motor 11kW 3-fasa running 45°C frame temp (ambient 30°C). Nameplate rise 80K class B.",
-   "q": "Evaluasi thermal:",
+   "q": "Pengukuran sebuah motor menunjukkan kenaikan suhu rangka 15 K, sedangkan isolasinya kelas B dengan batas 80 K. Bagaimana evaluasi termalnya?",
    "opts": [
     "Overheat",
     "OK. Frame rise 15K << class B 80K. Operating well within thermal limit",
@@ -10437,7 +10437,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "NEMA Design B motor characteristics:",
+   "q": "Apa karakteristik motor NEMA Design B?",
    "opts": [
     "High start torque + high slip",
     "Normal starting torque (150% FLT) + low slip (3-5%), standar industrial 80% aplikasi",
@@ -10449,7 +10449,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor bearing jenis umum:",
+   "q": "Jenis bearing apa yang umum dipakai pada motor listrik?",
    "opts": [
     "Bushing",
     "Ball bearing (deep groove) atau roller bearing, sealed / open lubricated",
@@ -10461,7 +10461,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Efisiensi motor IE3 (Premium) vs IE2 vs IE1:",
+   "q": "Bagaimana perbandingan efisiensi motor kelas IE1, IE2, dan IE3?",
    "opts": [
     "Sama",
     "IE3 > IE2 > IE1. IE3 88-95% untuk 7.5-75 kW, mandatory EU baru (2011+)",
@@ -10473,7 +10473,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Single-phasing (salah satu fasa putus dari 3-fasa supply):",
+   "q": "Apa yang terjadi pada motor 3 fasa bila salah satu fasa suplainya putus (single-phasing)?",
    "opts": [
     "Tidak apa",
     "Motor continue running tapi overheat (2 fasa saja), tidak bisa restart. Proteksi: single phase preventer / overload",
@@ -10485,7 +10485,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "VFD (Variable Frequency Drive) ke motor induksi:",
+   "q": "Apa manfaat memasang VFD pada motor induksi?",
    "opts": [
     "Fix speed",
     "Variable speed + soft start + regenerative braking. V/f rasio tetap (scalar) atau vector control",
@@ -10507,7 +10507,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor 3-fasa konsumsi no-load current:",
+   "q": "Berapa besar arus tanpa beban sebuah motor 3 fasa dibandingkan arus beban penuhnya?",
    "opts": [
     "Zero",
     "20-40% FLA (magnetizing current untuk flux)",
@@ -10520,7 +10520,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Motor 30kW 3-fasa baru dipasang, vibrasi tinggi saat running. Amp: R=55, S=54, T=56 (balanced). Current nominal 57A.",
-   "q": "Investigate:",
+   "q": "Sebuah motor bergetar berlebihan padahal tegangan dan arus ketiga fasanya normal. Apa yang perlu diselidiki?",
    "opts": [
     "Listrik OK. Vibrasi mekanis: misalignment, imbalance rotor, looseness foundation",
     "Kabel salah",
@@ -10534,7 +10534,7 @@ window.QUIZ_BANK = {
  "2.11": [
   {
    "type": "pg",
-   "q": "DOL (Direct On Line) starter:",
+   "q": "Bagaimana cara kerja starter DOL (Direct On Line)?",
    "opts": [
     "Soft start",
     "Full voltage applied langsung → inrush 5-7× FLA",
@@ -10547,7 +10547,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "Inrush ≈ 6× FLA",
-   "q": "Motor 11kW DOL FLA 22A. Inrush starting:",
+   "q": "Motor 11 kW dengan arus beban penuh 22 A distart secara DOL. Berapa besar arus asutnya?",
    "opts": [
     "22 A",
     "66 A",
@@ -10559,7 +10559,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Soft starter (thyristor controlled) vs VFD:",
+   "q": "Apa perbedaan soft starter berbasis thyristor dengan VFD?",
    "opts": [
     "Sama",
     "Soft starter: control voltage ramp saat start saja (fixed freq), setelah nominal by-pass. VFD: continuous freq control",
@@ -10572,7 +10572,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 360 200' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='160' x2='340' y2='160' stroke='#1a1d2e' stroke-width='1'/><line x1='30' y1='30' x2='30' y2='160' stroke='#1a1d2e' stroke-width='1'/><text x='15' y='30' font-family='Georgia' font-size='10' fill='#1a1d2e'>I</text><text x='345' y='165' font-family='Georgia' font-size='10' fill='#1a1d2e'>t</text><path d='M 40 50 L 60 50 L 60 90 L 120 90 L 120 130 L 340 130' stroke='#c9a96e' stroke-width='2' fill='none'/><text x='80' y='45' font-family='Georgia' font-size='10' fill='#c9a96e' font-weight='700'>DOL (6× FLA)</text><path d='M 40 80 L 60 80 L 60 110 L 120 110 L 120 130 L 340 130' stroke='#1a1d2e' stroke-width='2' fill='none' stroke-dasharray='4,2'/><text x='80' y='105' font-family='Georgia' font-size='10' fill='#1a1d2e' font-weight='700'>Y-Δ (2× FLA)</text><path d='M 40 125 L 120 135 L 340 130' stroke='#2d7d46' stroke-width='2' fill='none'/><text x='180' y='155' font-family='Georgia' font-size='10' fill='#2d7d46' font-weight='700'>VFD (1-1.5× FLA)</text></svg>",
-   "q": "Dari grafik inrush, starter mana memberikan reduksi inrush paling banyak:",
+   "q": "Dari grafik arus asut pada gambar, metode starter mana yang paling besar menurunkan arus asut?",
    "opts": [
     "DOL",
     "Y-Δ",
@@ -10584,7 +10584,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Auto-transformer starter:",
+   "q": "Bagaimana cara kerja auto-transformer starter?",
    "opts": [
     "Tidak pakai",
     "Tap 50/65/80% V selama start → reduce inrush rasio kuadrat. Switching tap ke full",
@@ -10596,7 +10596,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pembalikan motor 3-fasa direction:",
+   "q": "Bagaimana cara membalik arah putaran motor 3 fasa?",
    "opts": [
     "Software",
     "Tukar 2 dari 3 kabel fasa → arah putar reverse",
@@ -10618,7 +10618,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Kelebihan DOL:",
+   "q": "Apa kelebihan starter DOL dibandingkan metode lain?",
    "opts": [
     "Selalu kurang",
     "Simpel (1 contactor), murah, full torque saat start — cocok motor kecil atau high-starting-torque load",
@@ -10630,7 +10630,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Star-Delta limitation:",
+   "q": "Apa keterbatasan utama metode starter bintang-segitiga?",
    "opts": [
     "Sempurna",
     "Torque start reduce 3× = tidak bisa start load yang butuh torque tinggi (conveyor berbeban)",
@@ -10643,7 +10643,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Pabrik packaging ingin replace 2 motor DOL 15kW (jarang trip) dengan soft starter atau VFD. Aplikasi: conveyor dengan beban varying.",
-   "q": "Rekomendasi:",
+   "q": "Sebuah konveyor berbeban berubah-ubah masih memakai starter DOL. Metode starter apa yang sebaiknya dipakai dan mengapa?",
    "opts": [
     "Soft starter",
     "VFD — karena beban varying, VFD saving energy (slow conveyor saat sedikit produk)",
@@ -10655,7 +10655,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Control circuit Star-Delta klasik pakai:",
+   "q": "Komponen apa yang mengatur perpindahan dari bintang ke segitiga pada rangkaian kontrol klasik?",
    "opts": [
     "1 timer",
     "1 Timer ON-delay (Y-Δ transition time), 3 kontaktor (Main, Star, Delta) + interlocks",
@@ -10667,7 +10667,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor dengan VFD: bearing current issue:",
+   "q": "Masalah arus bearing apa yang timbul pada motor yang dikendalikan VFD?",
    "opts": [
     "Tidak ada",
     "VFD PWM generate common-mode voltage → induksi shaft current → bearing pitting (fluting)",
@@ -10689,7 +10689,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Testing starter sebelum komisioning:",
+   "q": "Pengujian apa saja yang dilakukan pada sebuah starter sebelum komisioning?",
    "opts": [
     "Langsung run",
     "Contactor coil test, interlock test, overload test, current test saat start (verify ramp)",
@@ -10703,7 +10703,7 @@ window.QUIZ_BANK = {
  "2.12": [
   {
    "type": "pg",
-   "q": "Motor 3-fasa tidak start, humming noise. Cause paling mungkin:",
+   "q": "Sebuah motor 3 fasa tidak mau berputar dan hanya mengeluarkan dengung. Apa penyebab yang paling mungkin?",
    "opts": [
     "Tegangan terlalu tinggi",
     "Single phasing (1 fasa putus) — motor dapat field pulsating, no torque",
@@ -10715,7 +10715,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Langkah pertama diagnosis motor tidak jalan:",
+   "q": "Apa langkah pertama yang dilakukan saat mendiagnosis motor yang tidak jalan?",
    "opts": [
     "Bongkar motor",
     "Check power supply di terminal motor dulu — 3-fasa balanced?",
@@ -10727,7 +10727,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Megger test motor winding-to-ground acceptable:",
+   "q": "Berapa nilai resistansi isolasi belitan motor terhadap bodi yang masih bisa diterima?",
    "opts": [
     "< 1 MΩ",
     "≥ 1 MΩ minimum (IEEE 43 rule: 1 MΩ per kV rating + 1)",
@@ -10739,7 +10739,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Winding resistance antar fasa harus:",
+   "q": "Bagaimana seharusnya perbandingan resistansi belitan antar fasa sebuah motor?",
    "opts": [
     "Bebas",
     "Balanced (deviasi < 5%). Imbalance = shorted turns/bad joint",
@@ -10752,7 +10752,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Motor 22kW running normal tapi vibrasi tinggi + noise grinding bearing. Thermal OK.",
-   "q": "Diagnosis & action:",
+   "q": "Sebuah motor mengeluarkan suara kasar menggerus disertai getaran yang meningkat. Apa diagnosis dan tindakannya?",
    "opts": [
     "Electrical",
     "Bearing failure imminent — plan shutdown + replace bearing, jangan tunggu catastrophic",
@@ -10764,7 +10764,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "No-load current motor naik signifikan dari baseline:",
+   "q": "Apa arti kenaikan arus tanpa beban sebuah motor dibanding nilai awalnya?",
    "opts": [
     "Normal",
     "Indicates: shorted laminations, rewind issue, voltage tidak balance, atau supply fasa issue",
@@ -10776,7 +10776,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Locked rotor current motor = inrush. Measure dengan:",
+   "q": "Dengan alat apa arus asut (locked rotor current) sebuah motor diukur?",
    "opts": [
     "DMM",
     "Clamp meter + peak hold + oscilloscope atau power quality analyzer recording",
@@ -10798,7 +10798,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Rotor bar broken motor induksi detect:",
+   "q": "Bagaimana cara mendeteksi batang rotor motor induksi yang patah?",
    "opts": [
     "Suara",
     "Motor Current Signature Analysis (MCSA): sideband frekuensi ±2sf di fundamental (f±2sf)",
@@ -10810,7 +10810,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor overheat saat running load normal:",
+   "q": "Apa saja penyebab motor menjadi terlalu panas padahal bebannya normal?",
    "opts": [
     "Sensor error",
     "Causes: over-load actual, voltage drop, phase unbalance, ventilation blocked, bearing drag",
@@ -10822,7 +10822,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Insulation breakdown rewound motor life expectancy:",
+   "q": "Bagaimana umur pakai motor yang sudah digulung ulang dibandingkan kondisi aslinya?",
    "opts": [
     "Sama original",
     "Shortened (60-80% original kalau rewind bagus, < 50% kalau rewind murah)",
@@ -10834,7 +10834,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Motor tidak bisa mencapai full speed, stuck di 80%:",
+   "q": "Sebuah motor tidak mampu mencapai putaran penuh dan tertahan di sekitar 80%. Apa penyebabnya?",
    "opts": [
     "Normal",
     "Over-loaded (slip naik), rotor bar broken, voltage drop supply, V/f VFD setting salah",
@@ -10847,7 +10847,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 180' xmlns='http://www.w3.org/2000/svg'><circle cx='170' cy='90' r='60' fill='none' stroke='#1a1d2e' stroke-width='2'/><circle cx='170' cy='90' r='30' fill='none' stroke='#c9a96e' stroke-width='2'/><text x='170' y='95' text-anchor='middle' font-family='Georgia' font-size='12' fill='#1a1d2e'>M</text><line x1='50' y1='90' x2='110' y2='90' stroke='#c9a96e' stroke-width='2'/><line x1='230' y1='90' x2='290' y2='90' stroke='#c9a96e' stroke-width='2'/><line x1='170' y1='30' x2='170' y2='60' stroke='#1a1d2e' stroke-width='2'/><text x='15' y='95' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>U (R)</text><text x='295' y='95' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>V (S)</text><text x='180' y='25' font-family='Georgia' font-size='11' fill='#1a1d2e' font-weight='700'>W (T)</text></svg>",
-   "q": "Diagnosis motor 3-fasa: ukur R winding U-V = 1.5Ω, V-W = 1.6Ω, U-W = 4.2Ω:",
+   "q": "Pengukuran resistansi belitan sebuah motor 3 fasa menghasilkan U-V 1,5 Ω, V-W 1,6 Ω, dan U-W 4,2 Ω. Apa diagnosisnya?",
    "opts": [
     "Normal",
     "Winding W open-circuit / broken: U-W dan V-W tidak seharusnya berbeda jauh",
@@ -10859,7 +10859,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Capacitor 1-fasa motor rusak (run cap): symptom:",
+   "q": "Apa gejala yang muncul bila kapasitor run pada motor 1 fasa rusak?",
    "opts": [
     "Motor mati",
     "Motor start tetap ok (start cap), tapi noise + low torque + overheat saat run (no phase-shift steady)",
@@ -10872,7 +10872,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Pompa motor 5kW trip sering dengan thermal overload. Hasil ukur: arus 12A vs FLA 10A. Vibrasi normal. Megger 5 MΩ.",
-   "q": "Root cause paling mungkin:",
+   "q": "Arus sebuah motor pompa terukur 20% di atas beban penuh, padahal hasil uji kelistrikannya baik. Apa akar masalah yang paling mungkin?",
    "opts": [
     "Motor OK",
     "Mechanical overload: pompa impeller scale/clog, atau cavitation → motor overcurrent. Mechanical check pompa",
@@ -10884,7 +10884,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Bila motor terbakar (winding melt):",
+   "q": "Apa yang harus dilakukan lebih dulu bila belitan sebuah motor terbakar?",
    "opts": [
     "Auto replace",
     "Investigate root cause SEBELUM ganti/rewind: overload continuous? ventilation? single-phasing? insulation aged?",
@@ -10908,7 +10908,7 @@ window.QUIZ_BANK = {
  "2.13": [
   {
    "type": "pg",
-   "q": "Transmisi HV 150/500 kV alasan:",
+   "q": "Mengapa penyaluran daya jarak jauh memakai tegangan tinggi 150 kV atau 500 kV?",
    "opts": [
     "Estetika",
     "Reduce loss I²R jarak jauh: P = V×I × cosφ, V tinggi → I rendah → loss kecil",
@@ -10920,7 +10920,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Gardu Induk (GI) 150/20 kV fungsi:",
+   "q": "Apa fungsi Gardu Induk 150/20 kV?",
    "opts": [
     "Pembangkit",
     "Step-down transmisi ke distribusi + switching + proteksi",
@@ -10932,7 +10932,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Distribusi TM 20 kV, jarak normal:",
+   "q": "Berapa panjang penyulang distribusi 20 kV yang lazim di perkotaan dan pedesaan?",
    "opts": [
     "100 m",
     "Urban: 2-10 km feeder. Rural: bisa 30-50 km",
@@ -10945,7 +10945,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "I = S/(√3×V_L)",
-   "q": "Trafo 100 kVA 20000/400V. Arus sekunder rated:",
+   "q": "Trafo 100 kVA 20.000/400 V. Berapa arus nominal di sisi sekundernya?",
    "opts": [
     "50 A",
     "144 A",
@@ -10957,7 +10957,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Jaringan radial vs loop:",
+   "q": "Apa perbedaan jaringan distribusi radial dan loop?",
    "opts": [
     "Sama",
     "Radial: feeder tunggal, simpel tapi fault = outage full. Loop: normally open ring, bisa restore via alternate path",
@@ -10969,7 +10969,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Power quality issue utama di sistem:",
+   "q": "Masalah kualitas daya apa saja yang utama pada sistem distribusi?",
    "opts": [
     "Voltage sag/swell, harmonic, unbalance, flicker, interruptions",
     "Hanya voltage",
@@ -10981,7 +10981,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "SCADA di distribusi PLN fungsi:",
+   "q": "Apa fungsi SCADA pada sistem distribusi PLN?",
    "opts": [
     "Tidak ada",
     "Remote monitor + control: breaker status, load, voltage, fault location, switching — real-time",
@@ -11003,7 +11003,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Spinning reserve grid:",
+   "q": "Apa yang dimaksud spinning reserve pada sistem tenaga?",
    "opts": [
     "Tidak ada",
     "Generator sinkron online dengan kapasitas cadangan — respon detik bila load naik atau gen trip",
@@ -11015,7 +11015,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Pembangkit energi baru terbarukan menonjol Indonesia:",
+   "q": "Pembangkit energi terbarukan apa saja yang menonjol di Indonesia?",
    "opts": [
     "Geothermal (Kamojang, Darajat)",
     "Solar PV utility-scale (Cirata 145MW floating)",
@@ -11027,7 +11027,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Distribusi asimetris (single-wire earth return / SWER):",
+   "q": "Untuk kondisi seperti apa sistem SWER (single-wire earth return) dipakai?",
    "opts": [
     "Tidak ada di PLN",
     "Rural jarak jauh: 1 konduktor 20kV + tanah sebagai return. Murah tapi rugi-rugi tanah",
@@ -11039,7 +11039,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Interconnection sistem Jawa-Bali:",
+   "q": "Bagaimana bentuk interkoneksi sistem tenaga Jawa-Bali?",
    "opts": [
     "Terpisah",
     "Interkoneksi 500 kV SUTET (Sumatera-Jawa kabel bawah laut 275kV, Jawa-Bali 150kV)",
@@ -11061,7 +11061,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Proteksi utama di sistem transmisi:",
+   "q": "Proteksi apa yang menjadi andalan utama pada sistem transmisi?",
    "opts": [
     "Distance relay (21), differential (87), overcurrent (51), earth fault (51N), auto-reclosing",
     "Fuse",
@@ -11073,7 +11073,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Black-start capability pembangkit:",
+   "q": "Pembangkit jenis apa yang memiliki kemampuan black-start?",
    "opts": [
     "Semua bisa",
     "Specific gen (hydro, diesel small) bisa start tanpa grid — restore sistem setelah blackout total",
@@ -11087,7 +11087,7 @@ window.QUIZ_BANK = {
  "2.14": [
   {
    "type": "pg",
-   "q": "Trafo beroperasi berdasarkan prinsip:",
+   "q": "Trafo bekerja berdasarkan prinsip apa?",
    "opts": [
     "Gerakan mekanis",
     "Induksi elektromagnetik Faraday (changing flux induces EMF)",
@@ -11099,7 +11099,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Trafo step-down ratio 20000V/400V:",
+   "q": "Berapa rasio belitan trafo step-down 20.000 V ke 400 V?",
    "opts": [
     "N1/N2 = 50",
     "N1/N2 = 0.02",
@@ -11112,7 +11112,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "η = P_out/(P_out + P_loss)",
-   "q": "Trafo 100 kVA tidak ideal, loss Cu 1.5 kW, loss Fe 800W. Efisiensi @ full load PF 0.9:",
+   "q": "Trafo 100 kVA memiliki rugi tembaga 1,5 kW dan rugi besi 800 W. Berapa efisiensinya pada beban penuh dengan faktor daya 0,9?",
    "opts": [
     "92%",
     "95%",
@@ -11124,7 +11124,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Trafo dry-type (cast-resin) vs oil:",
+   "q": "Apa perbedaan trafo kering (cast-resin) dengan trafo berpendingin minyak?",
    "opts": [
     "Sama",
     "Dry: tidak ada oil (fire safe indoor, building basement). Oil: cooling better, kapasitas besar, outdoor",
@@ -11137,7 +11137,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><rect x='80' y='40' width='180' height='120' fill='none' stroke='#1a1d2e' stroke-width='2'/><rect x='140' y='50' width='15' height='100' fill='#1a1d2e'/><rect x='185' y='50' width='15' height='100' fill='#1a1d2e'/><g stroke='#c9a96e' stroke-width='1.5' fill='none'><path d='M 100 70 Q 115 70 115 85 Q 115 100 100 100 Q 115 100 115 115 Q 115 130 100 130'/></g><text x='80' y='170' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>N1=500</text><g stroke='#c9a96e' stroke-width='1.5' fill='none'><path d='M 240 70 Q 225 70 225 85 Q 225 100 240 100'/></g><text x='220' y='170' font-family='Georgia' font-size='11' fill='#c9a96e' font-weight='700'>N2=50</text><text x='170' y='30' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e'>Core lamination</text></svg>",
-   "q": "Trafo dengan N1=500, N2=50. Primary 2000V. Secondary voltage:",
+   "q": "Sebuah trafo memiliki 500 lilitan primer dan 50 lilitan sekunder, disuplai 2.000 V. Berapa tegangan sekundernya?",
    "opts": [
     "20V",
     "200V",
@@ -11149,7 +11149,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Dissolved Gas Analysis (DGA) oil trafo:",
+   "q": "Apa yang bisa dideteksi dari Dissolved Gas Analysis (DGA) minyak trafo?",
    "opts": [
     "Kualitas rasa",
     "Detect gas hasil thermal fault atau arcing di oil: H2, CH4, C2H2, CO, CO2 — diagnose fault type",
@@ -11162,7 +11162,7 @@ window.QUIZ_BANK = {
   {
    "type": "case",
    "caseText": "Tes Megger trafo distribusi 250 kVA: HV-LV 1000 MΩ, HV-ground 800 MΩ, LV-ground 50 MΩ. Age 12 years.",
-   "q": "Interpretasi:",
+   "q": "Uji megger sebuah trafo menghasilkan nilai sangat baik di sisi HV, tetapi sisi LV terhadap bodi hanya 50 MΩ. Bagaimana menafsirkan hasil itu?",
    "opts": [
     "OK semua",
     "HV sisi very good. LV-ground 50 MΩ marginal untuk LV side — investigate possible moisture/contamination di bushing LV",
@@ -11174,7 +11174,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Buchholz relay (trafo oil-filled):",
+   "q": "Apa fungsi relay Buchholz pada trafo berpendingin minyak?",
    "opts": [
     "Tidak ada",
     "Oil surge detector di pipa conservator: slow gas accumulate (alarm) + fast oil surge (trip). Magnet + float",
@@ -11186,7 +11186,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Impedance Z% trafo 5%:",
+   "q": "Apa arti impedansi hubung singkat sebuah trafo yang bernilai 5%?",
    "opts": [
     "Meaningless",
     "Short circuit arus sekunder = I_rated × 100/Z% = 20× I_rated pada LV terminal (stress mechanical & thermal)",
@@ -11210,7 +11210,7 @@ window.QUIZ_BANK = {
  "2.15": [
   {
    "type": "pg",
-   "q": "kWh meter elektronik / smart meter keunggulan:",
+   "q": "Apa keunggulan kWh meter elektronik atau smart meter?",
    "opts": [
     "Lebih murah",
     "Digital, AMI 2-way (auto-read, tamper detect, consumption profile, TOU tariff)",
@@ -11223,7 +11223,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "Rasio CT × PT",
-   "q": "CT 200/5, PT 20000/100. Pelanggan TM 20 kV. Meter baca 2 kW (500W true secondary), multiplier meter:",
+   "q": "Pelanggan TM 20 kV memakai CT 200/5 dan PT 20.000/100. Berapa faktor pengali meternya?",
    "opts": [
     "10",
     "200",
@@ -11245,7 +11245,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Meter tampering detection di smart meter:",
+   "q": "Bagaimana smart meter mendeteksi upaya pencurian listrik (tampering)?",
    "opts": [
     "Tidak ada",
     "Sensor: magnet (tamper), cover open, reverse current, tilt, lost voltage. Alarm ke SCADA + log",
@@ -11257,7 +11257,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Nilai daya kontrak rumah tangga umum Indonesia:",
+   "q": "Berapa saja pilihan daya kontrak listrik rumah tangga di Indonesia?",
    "opts": [
     "110 VA",
     "450, 900, 1300, 2200, 3500, 4400, 5500 VA (tangga PLN)",
@@ -11269,7 +11269,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Solar PV rooftop export (net metering) PLN:",
+   "q": "Bagaimana ketentuan ekspor listrik PV atap ke jaringan PLN?",
    "opts": [
     "Tidak boleh",
     "Diperbolehkan dengan kWh meter ekspor-impor + registrasi PLN. Tarif export = 65% tarif normal (2025 rule)",
@@ -11291,7 +11291,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Tarif listrik mencakup:",
+   "q": "Komponen biaya apa saja yang membentuk tagihan listrik?",
    "opts": [
     "Cuma kWh",
     "Biaya energy (kWh) + biaya beban (Rp/kVA bulanan) + PPJ + PPN",
@@ -11303,7 +11303,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "CT burden VA:",
+   "q": "Apa yang dimaksud burden (VA) sebuah CT?",
    "opts": [
     "Tidak relevan",
     "Beban impedance sekunder (meter + kabel + relay). CT rated burden: bila actual burden > rated → error naik",
@@ -11317,7 +11317,7 @@ window.QUIZ_BANK = {
  "2.16": [
   {
    "type": "pg",
-   "q": "Motor induksi PF raw full-load:",
+   "q": "Berapa faktor daya motor induksi pada beban penuh sebelum dikoreksi?",
    "opts": [
     "1",
     "0.85 lagging (magnetizing reactive)",
@@ -11330,7 +11330,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "S = P/PF",
-   "q": "Beban 100kW PF 0.7 lagging. Apparent S:",
+   "q": "Beban 100 kW dengan faktor daya 0,7 lagging. Berapa daya semunya?",
    "opts": [
     "70 kVA",
     "100 kVA",
@@ -11342,7 +11342,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "PF rendah dampak:",
+   "q": "Apa dampak faktor daya yang rendah pada sebuah instalasi?",
    "opts": [
     "Irrelevant",
     "I lebih tinggi untuk P sama → loss I²R naik, V drop naik, kapasitas kabel/trafo terpakai",
@@ -11354,7 +11354,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Cap bank untuk PF correction:",
+   "q": "Bagaimana kapasitor bank memperbaiki faktor daya?",
    "opts": [
     "Memanas",
     "Supply VAR leading kompensasi inductive lagging → grid hanya suplai W",
@@ -11367,7 +11367,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "Q_cap = P(tan φ1 - tan φ2)",
-   "q": "Koreksi PF 0.75 → 0.95 pada 50 kW:",
+   "q": "Berapa kapasitor yang dibutuhkan untuk memperbaiki faktor daya dari 0,75 menjadi 0,95 pada beban 50 kW?",
    "opts": [
     "18",
     "27 kVAR",
@@ -11379,7 +11379,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "APFC (Auto PF Controller):",
+   "q": "Apa yang dikerjakan APFC (Automatic Power Factor Controller)?",
    "opts": [
     "Manual",
     "Monitor PF real-time, switch cap step sesuai load",
@@ -11401,7 +11401,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Discharge time cap bank besar:",
+   "q": "Berapa lama kapasitor bank besar menyimpan tegangan sisa setelah dilepas, dan apa konsekuensinya?",
    "opts": [
     "Instant",
     "Residual V persist menit-jam. Built-in discharge resistor + grounding stick sebelum touch",
@@ -11423,7 +11423,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Automatic switching cap bank — response time:",
+   "q": "Berapa waktu respons penyakelaran otomatis sebuah kapasitor bank?",
    "opts": [
     "Langsung",
     "Contactor: ms-detik (switch noise, wear). Thyristor: ms (silent, smooth, untuk cepat-berubah load)",
@@ -11437,7 +11437,7 @@ window.QUIZ_BANK = {
  "2.17": [
   {
    "type": "pg",
-   "q": "Kategori AC-3 kontaktor:",
+   "q": "Untuk beban seperti apa kontaktor kategori AC-3 dipakai?",
    "opts": [
     "Resistive",
     "Squirrel-cage motor start-stop",
@@ -11462,7 +11462,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "V_DC ≈ V_peak",
-   "q": "AC 220V RMS → bridge + cap filter besar. V_DC:",
+   "q": "Tegangan AC 220 V RMS disearahkan dengan penyearah jembatan dan kapasitor filter besar. Berapa tegangan DC yang dihasilkan?",
    "opts": [
     "141",
     "220",
@@ -11475,7 +11475,7 @@ window.QUIZ_BANK = {
   {
    "type": "svg",
    "svg": "<svg viewBox='0 0 340 180' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='90' x2='80' y2='90' stroke='#c9a96e' stroke-width='2'/><polygon points='80,80 100,90 80,100' fill='#1a1d2e'/><line x1='100' y1='80' x2='100' y2='100' stroke='#1a1d2e' stroke-width='2'/><line x1='100' y1='90' x2='150' y2='90' stroke='#c9a96e' stroke-width='2'/><polygon points='150,80 170,90 150,100' fill='#1a1d2e'/><line x1='170' y1='80' x2='170' y2='100' stroke='#1a1d2e' stroke-width='2'/><line x1='170' y1='90' x2='220' y2='90' stroke='#c9a96e' stroke-width='2'/><line x1='220' y1='60' x2='220' y2='120' stroke='#1a1d2e' stroke-width='2'/><rect x='216' y='60' width='8' height='8' fill='#1a1d2e'/><text x='220' y='50' text-anchor='middle' font-family='Georgia' font-size='11' fill='#1a1d2e'>C</text><line x1='220' y1='90' x2='280' y2='90' stroke='#c9a96e' stroke-width='2'/><rect x='280' y='75' width='40' height='30' fill='none' stroke='#1a1d2e' stroke-width='2'/><text x='300' y='95' text-anchor='middle' font-family='Georgia' font-size='10' fill='#1a1d2e'>Load</text></svg>",
-   "q": "2 dioda seri + 2 cap + load (V doubler topology). V_out approx:",
+   "q": "Rangkaian dengan dua dioda seri dan dua kapasitor (topologi voltage doubler) menghasilkan tegangan keluaran sebesar apa?",
    "opts": [
     "V_peak",
     "2 × V_peak (voltage doubler)",
@@ -11499,7 +11499,7 @@ window.QUIZ_BANK = {
  "2.19": [
   {
    "type": "pg",
-   "q": "Proximity kapasitif:",
+   "q": "Material apa saja yang bisa dideteksi oleh sensor proximity kapasitif?",
    "opts": [
     "Metal only",
     "Detect any material (metal, plastik, liquid, kayu) via change in capacitance antara sensor dan target",
@@ -11524,7 +11524,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "n × (M + T)",
-   "q": "Instalasi 20 titik lampu. AHSP 1 titik: material Rp 150rb + upah Rp 50rb. Total:",
+   "q": "Instalasi 20 titik lampu dengan AHSP per titik Rp150.000 material dan Rp50.000 upah. Berapa total biayanya?",
    "opts": [
     "2 jt",
     "4 jt",
@@ -11594,7 +11594,7 @@ window.QUIZ_BANK = {
  "3A.01": [
   {
    "type": "pg",
-   "q": "Demand factor hotel kamar tidur:",
+   "q": "Berapa demand factor yang dipakai untuk kamar tidur hotel?",
    "opts": [
     "1.0",
     "0.6-0.75",
@@ -11607,7 +11607,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "S = L × A × VA × DF",
-   "q": "Gedung 10 lantai × 500 m² kantor @ 50 VA/m², DF 0.8:",
+   "q": "Gedung 10 lantai dengan luas 500 m² per lantai berbeban 50 VA/m² dan demand factor 0,8. Berapa daya yang dibutuhkan?",
    "opts": [
     "100",
     "200 kVA",
@@ -11619,7 +11619,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Load balancing antar fasa target:",
+   "q": "Berapa batas ketidakseimbangan beban antar fasa yang masih dapat diterima?",
    "opts": [
     "100% imbang",
     "Unbalance max 10% antar fasa",
@@ -11631,7 +11631,7 @@ window.QUIZ_BANK = {
   },
   {
    "type": "pg",
-   "q": "Trafo distribusi gedung sizing:",
+   "q": "Bagaimana cara menentukan ukuran trafo distribusi untuk sebuah gedung?",
    "opts": [
     "Pas demand",
     "Load max × 1.2 margin → trafo standard (100/160/250/400/630/1000 kVA)",
@@ -11666,7 +11666,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "I_total ÷ ampacity",
-   "q": "LVMDP 1000A incoming + 8 feeder 125A. Busbar size minimum:",
+   "q": "LVMDP dengan incoming 1000 A dan 8 penyulang 125 A. Berapa penampang busbar minimumnya?",
    "opts": [
     "100",
     "400-500 mm²",
@@ -11701,7 +11701,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "W = (E×A)/(η×UF×LLF)",
-   "q": "Ruang 100 m² target 300 lux, LED 130 lm/W, UF 0.7, LLF 0.85. Total watt:",
+   "q": "Ruang 100 m² menargetkan 300 lux memakai LED berefikasi 130 lm/W dengan UF 0,7 dan LLF 0,85. Berapa total daya lampu yang dibutuhkan?",
    "opts": [
     "200",
     "390 W",
@@ -11780,7 +11780,7 @@ window.QUIZ_BANK = {
   {
    "type": "calc",
    "calc": "s = k × h",
-   "q": "Down conductor distance untuk avoid side-flash:",
+   "q": "Berapa jarak pemisah minimum yang diperlukan agar down conductor tidak menimbulkan side-flash?",
    "opts": [
     "Any",
     "Min s: ~1m per 10m down conductor height",

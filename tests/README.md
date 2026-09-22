@@ -7,9 +7,12 @@ Semuanya lahir dari keluhan peserta yang nyata.
 ```bash
 node tests/quiz-integrity.test.mjs   # tanpa browser
 node tests/quiz-coverage.test.mjs    # tanpa browser
+node tests/quiz-kejelasan.test.mjs   # tanpa browser
 node tests/quiz-coverage.test.mjs --backlog   # + daftar modul yang banknya masih tipis
 node tests/academy-labs.test.mjs     # tanpa browser
 node tests/youtube-map.test.mjs      # tanpa browser
+node tests/module-thumbs.test.mjs    # tanpa browser
+node tests/sertifikat-profil.test.mjs # tanpa browser
 node tests/youtube-map.test.mjs --drive       # + daftar modul yang masih dari Google Drive
 
 # butuh server statis + Chromium
@@ -26,6 +29,25 @@ gambar/diagram/grafik tanpa menyertakan `svg`. Rujukan yang sudah ditinjau
 manual dicocokkan lewat potongan teksnya, bukan nomor urut, agar tidak bergeser
 saat bank soal berubah.
 
+### `quiz-kejelasan.test.mjs` — batang soal berdiri sendiri sebagai pertanyaan
+Keluhan aslinya: peserta membaca *"Testing commissioning PHB baru:"* atau
+*"RCD 30mA, TT system, R_ground = 10 Ω (marginal). Touch voltage saat fault:"* —
+potongan catatan, bukan pertanyaan. Soal begitu hanya bisa dijawab dengan menebak
+dari opsinya. Tes ini gagal kalau ada batang soal yang berakhir titik dua,
+pembahasan yang memuat sisa "berpikir keras" model (*"Wait"*, *"Hmm"*,
+*"Actually let me recompute"*), pembahasan yang merujuk huruf opsi (*"Jawaban B"* —
+rapuh karena urutan opsi bisa berubah), atau opsi yang menyelipkan penilaian
+dalam kurung (*"(sangat aman)"*) sehingga membocorkan jawaban.
+
+### `sertifikat-profil.test.mjs` — profil menampilkan sertifikat apa saja, bukan cuma jumlahnya
+Profil dulu hanya menyebut *"3 sertifikat"* tanpa memberi tahu sertifikat mana
+dan dari Academy mana. Tes ini menjaga `esaDaftarSertifikat()` dari tiga cara
+gagal yang tidak memunculkan galat apa pun: ikut menampilkan level yang
+sertifikatnya belum terbit, gagal menerjemahkan kode jalur jadi nama Academy
+(peserta cuma melihat "S1"), dan urutan yang tidak menaruh sertifikat terbaru di
+atas. Ia juga memastikan daftarnya benar-benar dipasang di modal profil berikut
+tombol unduh dan tautan verifikasinya — bukan sekadar fungsinya ada.
+
 ### `academy-labs.test.mjs` — tiap Academy punya teori DAN praktik
 Sejak lab dilepas dari menu atas dan ditempelkan ke bawah daftar modul tiap
 Academy, janjinya berubah jadi: setiap bidang bisa langsung dicoba, bukan cuma
@@ -34,6 +56,14 @@ sedangkan virtual lab dan kalkulator dipetakan tangan di `academy-labs.js`.
 Tes ini gagal kalau ada Academy yang bagian praktiknya kosong, ada id lab yang
 tidak dikenal, atau ada tombol yang memanggil fungsi pembuka yang tidak ada —
 tiga cara paling gampang bagian ini membusuk tanpa ketahuan.
+
+### `module-thumbs.test.mjs` — sampul modul tidak menunjuk berkas yang tidak ada
+`data/module-thumbs.js` mengisi thumbnail modul yang videonya belum di YouTube.
+Tes ini menolak kode modul yang tidak ada di kurikulum, berkas gambar yang
+hilang, dan entri untuk modul yang ternyata sudah punya video YouTube. Ia juga
+memeriksa urutan cabang di `esaMediaThumb()` — YouTube → MODULE_THUMBS → Drive —
+karena urutan yang tertukar tidak memunculkan galat apa pun, hanya gambar yang
+diam-diam salah.
 
 ### `youtube-map.test.mjs` — peta video tidak salah tunjuk
 `data/youtube-map.js` menang atas `videoUrl` Google Drive, jadi satu baris yang
