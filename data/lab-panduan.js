@@ -1208,6 +1208,108 @@ window.LAB_PANDUAN = {
   ]
 },
 
+/* ───────────── WORLD ELECTRICITY (peta-dunia.html) ───────────── */
+
+'world-electricity-s7': {
+  tujuan: 'Membaca peta pembangkit listrik dunia untuk melihat di mana listrik sebuah negara benar-benar dihasilkan, dari bahan bakar apa, dan seberapa besar kapasitasnya.',
+  langkah: [
+    'Perhatikan legenda: warna titik menunjukkan bahan bakar, ukurannya menunjukkan kapasitas dalam MW.',
+    'Ketik "Indonesia" di kotak cari negara. Baca ringkasan jumlah pembangkit dan total kapasitasnya.',
+    'Nyalakan saklar "Hanya EBT" dan bandingkan: berapa banyak titik yang tersisa dibanding tampilan penuh.',
+    'Ganti negara ke Norwegia, lalu ke Australia. Amati bagaimana pola warnanya berbeda sama sekali.',
+    'Nyalakan "Interkoneksi grid" untuk melihat jaringan penghubung antarnegara, lalu coba mode 3D agar tinggi kolom mewakili kapasitas.'
+  ],
+  hasil: [
+    'Bauran pembangkitan sebuah negara ditentukan sumber daya yang dimilikinya: air di pegunungan, batu bara di cekungan tambang, angin di pesisir.',
+    'Kapasitas terpasang (MW) berbeda dari energi yang dihasilkan (MWh): banyak titik kecil EBT bisa kalah produksi dari satu pembangkit termal besar yang beroperasi terus-menerus.',
+    'Interkoneksi antarnegara memungkinkan kelebihan energi terbarukan di satu wilayah dipakai wilayah lain, sehingga bauran bersih lebih mudah dinaikkan.'
+  ],
+  uji: [
+    { q: 'Ukuran titik pada peta ini mewakili…', o: ['Kapasitas pembangkit dalam MW', 'Umur pembangkit', 'Harga listrik'], j: 0 },
+    { q: 'Dua negara punya kapasitas EBT sama, tetapi energi tahunannya berbeda. Penyebab paling mungkin?', o: ['Jumlah pembangkitnya berbeda', 'Faktor kapasitas sumber dayanya berbeda', 'Tegangannya berbeda'], j: 1 }
+  ]
+},
+
+'world-electricity-s4': {
+  tujuan: 'Melihat letak pembangkit besar dunia dan jaringan interkoneksi yang menghubungkannya, dasar memahami mengapa saluran transmisi dibangun di jalur tertentu.',
+  langkah: [
+    'Nyalakan saklar "Interkoneksi grid" untuk memunculkan jaringan penghubung antarwilayah.',
+    'Cari Eropa: amati kerapatan interkoneksi antarnegara yang saling berdekatan.',
+    'Bandingkan dengan Indonesia: perhatikan pembangkit tersebar di pulau-pulau tanpa satu jaringan tunggal.',
+    'Nyalakan "Termasuk rencana" untuk melihat rencana interkoneksi yang belum terbangun.',
+    'Cari satu pembangkit berkapasitas besar dan perkirakan ke arah mana dayanya harus dievakuasi.'
+  ],
+  hasil: [
+    'Transmisi dibangun mengikuti jarak antara pusat pembangkit dan pusat beban; makin jauh, makin tinggi tegangan yang dipilih.',
+    'Jaringan yang saling terhubung membuat cadangan daya bisa dibagi, sehingga tiap negara tidak perlu menyiapkan cadangan sendiri sebesar beban puncaknya.',
+    'Sistem kepulauan seperti Indonesia menghadapi tantangan berbeda: interkoneksi laut mahal, sehingga tiap sistem pulau harus punya cadangan sendiri.'
+  ],
+  uji: [
+    { q: 'Manfaat utama interkoneksi antarwilayah?', o: ['Cadangan daya bisa dibagi bersama', 'Tegangan otomatis naik', 'Pembangkit jadi lebih murah dibangun'], j: 0 },
+    { q: 'Pembangkit besar jauh dari pusat beban membutuhkan…', o: ['Transformator distribusi', 'Saluran transmisi tegangan tinggi', 'Kapasitor bank'], j: 1 }
+  ]
+},
+
+'world-electricity-s5': {
+  tujuan: 'Berlatih membaca kumpulan data besar lewat peta: 34.900+ pembangkit di 167 negara, dan menarik kesimpulan yang tidak terlihat dari tabel.',
+  langkah: [
+    'Pilih beberapa negara berurutan dan catat jumlah pembangkit serta total kapasitasnya.',
+    'Hitung rata-rata kapasitas per pembangkit tiap negara; bandingkan negara bertumpu pembangkit besar dengan yang bertumpu banyak unit kecil.',
+    'Nyalakan "Hanya EBT" dan lihat bagaimana pola sebarannya berubah — EBT cenderung banyak titik berkapasitas kecil.',
+    'Cari pencilan: satu titik sangat besar di tengah negara yang kapasitasnya kecil.',
+    'Rumuskan satu pertanyaan analisis yang bisa dijawab dengan data ini, misalnya hubungan kapasitas per kapita dengan tingkat pendapatan.'
+  ],
+  hasil: [
+    'Rata-rata kapasitas per pembangkit menunjukkan struktur sistem: terpusat pada sedikit unit besar, atau tersebar pada banyak unit kecil.',
+    'Sebaran geografis adalah dimensi data yang hilang kalau hanya melihat angka total per negara.',
+    'Pencilan pada data energi biasanya punya cerita: satu bendungan raksasa, satu PLTU mulut tambang, atau satu proyek ekspor.'
+  ],
+  uji: [
+    { q: 'Negara dengan banyak pembangkit kecil dibanding sedikit pembangkit besar menandakan…', o: ['Struktur sistem yang lebih tersebar', 'Konsumsi listrik lebih rendah', 'Tarif listrik lebih mahal'], j: 0 },
+    { q: 'Hal yang tidak bisa dibaca dari total kapasitas per negara saja?', o: ['Jumlah penduduk', 'Sebaran geografis pembangkit', 'Nama negara'], j: 1 }
+  ]
+},
+
+'world-electricity-s10': {
+  tujuan: 'Melihat di mana PLTS dunia terpasang dan seberapa besar kapasitasnya, sebagai pembanding saat merancang PLTS di Indonesia.',
+  langkah: [
+    'Nyalakan saklar "Hanya EBT" lalu perhatikan titik berwarna surya pada peta.',
+    'Cari Tiongkok dan India: amati kelompok PLTS skala utilitas berkapasitas ratusan MW.',
+    'Bandingkan dengan Jerman yang kapasitas suryanya besar tetapi tersebar dalam banyak titik kecil.',
+    'Cari Indonesia dan lihat berapa banyak titik surya yang muncul dibanding pembangkit termalnya.',
+    'Catat satu PLTS besar beserta kapasitasnya sebagai acuan skala saat menyusun proposal proyek.'
+  ],
+  hasil: [
+    'PLTS utilitas terpusat dan PLTS atap tersebar menghasilkan pola peta yang sangat berbeda meski kapasitas totalnya bisa sama.',
+    'Indonesia berada di garis khatulistiwa dengan penyinaran stabil sepanjang tahun, namun kapasitas terpasangnya masih jauh di bawah negara dengan penyinaran lebih rendah — hambatannya bukan matahari.',
+    'Skala proyek surya dibaca dalam MWp; membandingkannya dengan proyek nyata di peta membuat angka proposal lebih masuk akal.'
+  ],
+  uji: [
+    { q: 'Jerman punya kapasitas surya besar meski penyinarannya lebih rendah dari Indonesia. Ini menunjukkan…', o: ['Penyinaran tidak berpengaruh', 'Kebijakan dan pembiayaan sama menentukannya', 'Datanya keliru'], j: 1 },
+    { q: 'PLTS atap yang tersebar dibanding PLTS utilitas akan tampak di peta sebagai…', o: ['Banyak titik kecil', 'Satu titik besar', 'Tidak tampak sama sekali'], j: 0 }
+  ]
+},
+
+'world-electricity-s11': {
+  tujuan: 'Menghubungkan bauran pembangkitan sebuah negara dengan emisi listriknya, dasar perhitungan jejak karbon Scope 2 sebuah perusahaan.',
+  langkah: [
+    'Cari Indonesia dan perhatikan dominasi pembangkit berbahan bakar batu bara pada petanya.',
+    'Bandingkan dengan Prancis (nuklir) dan Norwegia (air): amati warna yang mendominasi.',
+    'Nyalakan "Hanya EBT" pada tiap negara tadi dan bandingkan berapa banyak yang tersisa.',
+    'Simpulkan urutan negara dari yang listriknya paling bersih ke paling berat emisi.',
+    'Kaitkan dengan pekerjaanmu: kWh yang dibeli perusahaan di Indonesia membawa emisi jauh lebih besar daripada kWh yang sama di Norwegia.'
+  ],
+  hasil: [
+    'Emisi Scope 2 sebuah perusahaan ditentukan bauran listrik jaringan tempatnya beroperasi, bukan oleh peralatannya saja.',
+    'Menurunkan emisi Scope 2 hanya bisa lewat dua jalan: memakai lebih sedikit kWh, atau mengubah sumber kWh itu.',
+    'Negara dengan bauran air atau nuklir besar memiliki faktor emisi listrik rendah tanpa perusahaan di sana melakukan apa pun.'
+  ],
+  uji: [
+    { q: 'Pabrik yang sama dipindah dari Indonesia ke Norwegia. Emisi Scope 2-nya…', o: ['Turun karena bauran listriknya lebih bersih', 'Tetap sama', 'Naik karena jaraknya jauh'], j: 0 },
+    { q: 'Faktor emisi listrik sebuah negara paling ditentukan oleh…', o: ['Jumlah pelanggan', 'Bauran sumber pembangkitnya', 'Tegangan jaringan'], j: 1 }
+  ]
+},
+
 /* ───────────── 3 CAPACITOR BANK (capbank.html) ───────────── */
 
 'capbank-s1': {
@@ -1291,6 +1393,7 @@ window.LAB_PANDUAN = {
     if (P[id]) return P[id];
     if (/^wiring-/.test(id)) return P['wiring-s1'];
     if (/^capbank-/.test(id)) return P['capbank-s1'];
+    if (/^world-electricity-/.test(id)) return P['world-electricity-s7'];
     return null;
   }
   window.esaLabPanduan = cari;
