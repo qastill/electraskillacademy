@@ -543,6 +543,7 @@ if ('serviceWorker' in navigator) {
 <link rel="stylesheet" href="/academy-lobby.css?v=10">
 <link rel="stylesheet" href="/membership.css?v=1">
 <link rel="stylesheet" href="/academy-journey.css?v=2">
+<link rel="stylesheet" href="/academy-labs.css?v=1">
 <script src="/membership.js?v=1" defer></script>
 </head>
 <body>
@@ -591,7 +592,6 @@ if ('serviceWorker' in navigator) {
           <span>Cari</span>
         </button>
         <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
-        <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
       <button class="nav-daftar-btn" onclick="esaShowAuthModal()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:10px 24px;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Daftar / Masuk</button>
       </div>
@@ -3534,6 +3534,7 @@ if ('serviceWorker' in navigator) {
 <script src="/data/app-data.js"></script>
 <script src="/academy-names.js"></script>
 <script src="/academy-journey.js?v=2"></script>
+<script src="/academy-labs.js?v=1"></script>
 <script src="/academy-lobby.js?v=12" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
@@ -5224,6 +5225,17 @@ const VIRTUAL_LABS = [
     'Perancangan filter IIR',
     'Analisis transformasi-Z' ] }
 ];
+
+// Indeks lab yang BENAR-BENAR bisa dibuka, dipakai halaman Academy untuk
+// menampilkan bagian "Praktik" di bawah daftar modulnya. SIMULATORS di sini
+// sudah disaring (simulator tanpa embed dibuang di atas), jadi apa pun yang
+// dirujuk dari sini pasti bisa dijalankan — tidak ada tombol yang menuju
+// halaman kosong.
+window.ESA_LABS_INDEX = {
+  sim: SIMULATORS,
+  vlab: VIRTUAL_LABS,
+  calc: CALCULATORS
+};
 
 function renderVirtualLabs() {
   const grid = document.getElementById('vlab-grid');
@@ -8133,6 +8145,7 @@ function renderLevels(trackId) {
     <div class="lvlpanel" id="esa-level-panel">
       <div class="journey-episodes"><div><span class="journey-eyebrow">TAHAP ${a.num} DARI ${data.length}</span><h3>${escapeHtml(a.lvl.name)} · Episode belajar</h3></div><span>${a.passed}/${a.total} modul lulus</span></div>
       ${grid}
+      ${window.esaAcademyPracticeHtml ? esaAcademyPracticeHtml(trackId) : ''}
       <div class="lvlpanel-foot">
         ${prev ? `<button type="button" class="lvlflow-btn" onclick="esaSetLevel('${prev.lvl.id}','${trackId}')">‹ ${escapeHtml(LEVELS[prev.idx].name)}</button>` : '<span></span>'}
         ${next ? `<button type="button" class="lvlflow-btn primary" onclick="esaSetLevel('${next.lvl.id}','${trackId}')">${escapeHtml(LEVELS[next.idx].name)} ›</button>` : '<span></span>'}
@@ -14331,13 +14344,10 @@ else{setTimeout(init,200);}
     if(!navGroup)return;
     var links=[].slice.call(navGroup.querySelectorAll('a.nav-right'));
     var jobOpp=links.find(function(a){return a.textContent.trim()==='Job Opportunity';});
-    var labs=links.find(function(a){return a.textContent.trim()==='Labs';});
     var talentPool=links.find(function(a){return a.textContent.trim()==='Talent Pool';});
     var sert=links.find(function(a){return a.textContent.trim()==='Ambil Sertifikasi';});
     var daftar=navGroup.querySelector('button.nav-daftar-btn');
     if(!talentPool)return;
-    if(labs)labs.textContent='Labs';
-    if(labs)labs.onclick=function(e){e.preventDefault();showView('labs');};
     if(sert)sert.textContent='Certification';
     if(sert)sert.onclick=function(e){e.preventDefault();showView('sertifikasi');};
 
@@ -14354,7 +14364,12 @@ else{setTimeout(init,200);}
     if(jobOpp)jobOpp.remove();
     if(talentPool)talentPool.remove();
 
-    var simLabs=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.includes('Simulator')||a.textContent.includes('Labs');});
+    // Labs TIDAK lagi berdiri sendiri di menu. Tiap lab, simulator, dan
+    // kalkulator sekarang muncul di bagian "Praktik" tepat di bawah daftar
+    // modul Academy yang relevan (lihat academy-labs.js), supaya urutan
+    // belajarnya jelas: tonton teorinya, lalu langsung coba sendiri.
+    // Halaman /labs sendiri tetap ada dan tetap bisa dibuka lewat showView('labs'),
+    // jadi tautan lama tidak mati.
     var cert=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.trim()==='Certification'||a.textContent.includes('Sertifikasi');});
 
     // === CAREER LINK — opens dedicated hub page (no dropdown) ===
@@ -14402,7 +14417,6 @@ else{setTimeout(init,200);}
     // tautan lama dan hasil pencarian tidak mati — hanya pintunya yang ditutup,
     // agar menu berisi hal yang dipakai orang untuk belajar.
     navGroup.appendChild(careerLink);
-    if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
     navGroup.appendChild(libraryLink);
     navGroup.appendChild(galleryLink);

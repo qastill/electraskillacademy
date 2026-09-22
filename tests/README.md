@@ -1,6 +1,6 @@
-# Pemeriksaan mutu kuis dan alur sertifikat
+# Pemeriksaan mutu kuis, praktik, dan alur sertifikat
 
-Tiga pemeriksaan, semuanya lahir dari keluhan peserta yang nyata.
+Semuanya lahir dari keluhan peserta yang nyata.
 
 ## Menjalankan
 
@@ -8,6 +8,9 @@ Tiga pemeriksaan, semuanya lahir dari keluhan peserta yang nyata.
 node tests/quiz-integrity.test.mjs   # tanpa browser
 node tests/quiz-coverage.test.mjs    # tanpa browser
 node tests/quiz-coverage.test.mjs --backlog   # + daftar modul yang banknya masih tipis
+node tests/academy-labs.test.mjs     # tanpa browser
+node tests/youtube-map.test.mjs      # tanpa browser
+node tests/youtube-map.test.mjs --drive       # + daftar modul yang masih dari Google Drive
 
 # butuh server statis + Chromium
 npx http-server . -p 8080 --cors -s &
@@ -22,6 +25,22 @@ padahal soal itu tidak punya gambar. Tes ini gagal kalau ada soal yang merujuk
 gambar/diagram/grafik tanpa menyertakan `svg`. Rujukan yang sudah ditinjau
 manual dicocokkan lewat potongan teksnya, bukan nomor urut, agar tidak bergeser
 saat bank soal berubah.
+
+### `academy-labs.test.mjs` — tiap Academy punya teori DAN praktik
+Sejak lab dilepas dari menu atas dan ditempelkan ke bawah daftar modul tiap
+Academy, janjinya berubah jadi: setiap bidang bisa langsung dicoba, bukan cuma
+ditonton. Simulator diambil otomatis dari field `jalur` tiap entri `SIMULATORS`,
+sedangkan virtual lab dan kalkulator dipetakan tangan di `academy-labs.js`.
+Tes ini gagal kalau ada Academy yang bagian praktiknya kosong, ada id lab yang
+tidak dikenal, atau ada tombol yang memanggil fungsi pembuka yang tidak ada —
+tiga cara paling gampang bagian ini membusuk tanpa ketahuan.
+
+### `youtube-map.test.mjs` — peta video tidak salah tunjuk
+`data/youtube-map.js` menang atas `videoUrl` Google Drive, jadi satu baris yang
+salah membuat sebuah modul memutar video yang keliru. Tes ini menolak kode modul
+yang tidak ada di kurikulum, ID YouTube yang bentuknya tidak sah, dan satu video
+yang dipakai dua modul. Ia juga mencetak perbandingan sumber video (YouTube vs
+Google Drive vs belum ada) supaya perpindahannya kelihatan kemajuannya.
 
 ### `quiz-coverage.test.mjs` — kuis tidak keluar bidang, dan bentuk soalnya layak
 Menjaga satu janji yang tegas: **tidak ada modul yang menyajikan soal di luar

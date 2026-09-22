@@ -484,6 +484,12 @@ window.YOUTUBE_MAP = {
   '6I.08': 'HtFA-RGNtK0',
   '6I.14': 'KS3IgxYdbKk',
   '6I.15': '9SpGo6CDn6I',
+
+  // Seri Carbon & Sustainability (6K) — dua modul pertama yang videonya sudah
+  // dipublikkan di channel. Sisa seri 5K/6K masih berstatus private di YouTube,
+  // dan video private tidak bisa disematkan, jadi belum dimasukkan ke sini.
+  '6K.14': 'V6op4cvaE_U',
+  '6K.15': 'cPix2Il-4gw',
 };
 
 // Playlist channel (opsional) — dipakai untuk tombol "Buka playlist di YouTube"
