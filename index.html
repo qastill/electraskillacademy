@@ -6664,7 +6664,9 @@ function openJalur(trackId) {
   }
   // Coming-soon tracks tanpa kurikulum: tampilkan notice, jangan buka view kosong.
   if (meta && meta.comingSoon && (!CURRICULUM[trackId] || CURRICULUM[trackId].length === 0)) {
-    if (typeof window.esaToast === 'function') window.esaToast('Segera Hadir', (meta.name || 'Jalur ini') + ' sedang disiapkan — coming soon!', '🚧');
+    const pesan = (meta.name || 'Jalur ini') + ' sedang disiapkan. Kurikulumnya menyusul — pantau halaman Academy.';
+    if (typeof window.esaToast === 'function') window.esaToast('Segera hadir', pesan, '🚧');
+    else if (typeof showToast === 'function') showToast('Segera hadir', pesan, true);
     return;
   }
   // Grid modul memakai thumbnail, jadi data media + peta YouTube + judul hook

@@ -8190,9 +8190,13 @@ body {
 }
 
 /* -------- ACHIEVEMENT TOAST -------- */
+/* Dua aturan .esa-toast hidup berdampingan: yang lama menambatkan toast ke
+   bawah (bottom: 30px), yang ini ke atas. Tanpa bottom: auto keduanya berlaku
+   sekaligus dan kotak notifikasi meregang setinggi layar. */
 .esa-toast {
   position: fixed;
   top: 24px;
+  bottom: auto;
   right: 24px;
   background: var(--navy-deep);
   color: var(--cream);
