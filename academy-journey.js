@@ -64,15 +64,12 @@
       <h1>${esc(name.replace(' Academy',''))}<em>${esc(t[2])}</em></h1>
       <p class="journey-learn"><strong>Di sini kamu akan belajar</strong> ${esc(t[3])} Mulai dari fondasi listrik, lalu masuk ke spesialisasimu.</p>
       <div class="journey-switch" role="group" aria-label="Pilih bagian">
-        <button type="button" class="jswitch-btn is-active" data-bagian="teori" onclick="esaJourneyGo('teori', this)"><b>Teori</b><small>Modul &amp; video</small></button>
-        <button type="button" class="jswitch-btn" data-bagian="praktik" onclick="esaJourneyGo('praktik', this)"><b>Praktik</b><small>Lab &amp; simulator</small></button>
+        <button type="button" class="jswitch-btn is-active" data-bagian="praktik" onclick="esaJourneyGo('praktik', this)"><b>Praktik</b><small>Lab &amp; simulator</small></button>
+        <button type="button" class="jswitch-btn" data-bagian="teori" onclick="esaJourneyGo('teori', this)"><b>Teori</b><small>Modul &amp; video</small></button>
       </div>
       <div class="journey-actions"><button type="button" class="journey-play" onclick="startLevel('${next.lvl.id}','${trackId}')">▶ ${passed ? (passed===total ? 'Ulangi perjalanan' : 'Lanjutkan belajar') : 'Mulai perjalanan'} <span>→</span></button></div>
       <div class="journey-progress"><span>${passed} dari ${total} modul lulus</span><span>${Math.round(passed/Math.max(total,1)*100)}%</span><progress aria-label="Progres modul Academy" value="${passed}" max="${total||1}"></progress></div>
       </div><div class="journey-art"><img src="/track-art/${trackId.toLowerCase()}.webp" alt="Ilustrasi ${esc(name)}" fetchpriority="high"><div class="journey-art-label"><span>YOUR NEXT CHAPTER</span><strong>${esc(t[5])}</strong></div></div>
-    </section>
-    <section class="journey-brief" aria-label="Cara belajar dan hasilnya"><div class="journey-outcome"><span class="journey-eyebrow">TUJUAN BELAJARMU</span><h2>Selesai belajar, <br>kamu memahami apa?</h2><p>${esc(t[4])}</p></div>
-      <ol class="journey-missions"><li><span>01</span><div><strong>Pelajari materinya</strong><p>Pilih modul. Baca materi dan tonton video yang tersedia.</p></div></li><li><span>02</span><div><strong>Tuntaskan misi kuis</strong><p>Uji pemahamanmu. Raih nilai minimal 70%; ulangi jika belum lulus.</p></div></li><li><span>03</span><div><strong>Kumpulkan sertifikat</strong><p>Lulus semua modul dalam satu tingkat untuk memperoleh sertifikat tingkat tersebut.</p></div></li></ol>
     </section>`;
   };
 })();

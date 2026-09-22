@@ -41,14 +41,7 @@
 .journey-art-label{position:absolute;z-index:1;bottom:35px;left:40px;right:25px;display:grid;gap:9px;color:#fff}
 .journey-art-label span{font:500 9px var(--sans);letter-spacing:.22em;color:var(--journey-accent)}
 .journey-art-label strong{font:500 16px var(--sans);letter-spacing:.12em}
-.journey-brief{display:grid;grid-template-columns:1fr 1.5fr;gap:40px;padding:24px 12px 30px;margin-bottom:12px}
 .journey-eyebrow{font:700 10px/1.6 var(--sans);letter-spacing:.14em;color:var(--journey-dark)}
-.journey-outcome h2{font:500 27px/1.1 var(--serif,Georgia);margin:10px 0;color:#21352d}
-.journey-outcome p{font:400 13px/1.75 var(--sans);color:#515d57;margin:0;max-width:420px}
-.journey-missions{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:0;padding:0;align-self:center}
-.journey-missions li>span{display:grid;place-items:center;background:var(--journey-dark);color:var(--journey-accent);width:34px;height:34px;border-radius:50%;font:600 12px var(--sans);margin-bottom:15px}
-.journey-missions strong{font:600 13px/1.5 var(--sans);color:#21352d}
-.journey-missions p{font:400 12px/1.75 var(--sans);color:#515d57;margin:7px 0 0}
 .has-journey .lvlflow{border-radius:18px;padding:24px;box-shadow:none;scroll-margin-top:90px}
 .has-journey .lvlflow-title b{font:600 22px var(--serif,Georgia);letter-spacing:0;text-transform:none;color:#21352d}
 .has-journey .lvlflow-title span{font-size:12px}
@@ -80,8 +73,8 @@
 .has-journey button:focus-visible{outline:3px solid #188a88;outline-offset:4px}
 .has-journey .journey-hero button:focus-visible{outline-color:white}
 @media(min-width:1150px){.has-journey .lvlflow-arrow{display:none}}
-@media(max-width:800px){.journey-hero{grid-template-columns:1.4fr 1fr}.journey-copy{padding:28px 0 28px 25px}.journey-kicker{font-size:8px;gap:6px}.journey-brief{grid-template-columns:1fr;gap:24px}.journey-outcome h2 br{display:none}.journey-outcome p{max-width:none}.journey-art-label{left:18px}.journey-art-label strong{font-size:12px}.has-journey .lvlflow{padding:18px}.journey-missions{gap:18px}}
-@media(max-width:560px){.journey-hero{display:flex;flex-direction:column-reverse;border-radius:16px;min-height:0}.journey-art{height:205px;min-height:205px}.journey-art img{object-position:50% 28%}.journey-art:after{background:linear-gradient(0deg,var(--journey-dark),transparent 75%)}.journey-art-label{bottom:22px;left:24px}.journey-copy{padding:6px 24px 26px}.journey-copy h1{margin:16px 0;font-size:38px}.journey-copy h1 em{font-size:23px}.journey-learn{font-size:13px}.journey-tags{gap:6px;margin-bottom:20px}.journey-tags span{font-size:10px}.journey-actions{gap:10px}.journey-actions button{padding:12px 14px;font-size:12px}.journey-play{gap:12px}.journey-missions{grid-template-columns:1fr;gap:20px}.journey-missions li{display:flex;gap:14px}.journey-missions li>span{flex-shrink:0;margin:0}.journey-missions p{margin-top:3px}.journey-brief{padding:10px 6px 22px}.has-journey .lvlflow-nav{display:none}.has-journey .lvlflow-node{min-width:156px}.has-journey .lvlpanel{padding:18px}.has-journey .lvlpanel-hero{grid-template-columns:1fr}.has-journey .lvlpanel-cover{display:none}.journey-level-mission{grid-template-columns:1fr;gap:16px;padding:16px}.journey-episodes{align-items:start;flex-direction:column}.journey-progress{max-width:none}.has-journey .lvlpanel-note{font-size:11px}}
+@media(max-width:800px){.journey-hero{grid-template-columns:1.4fr 1fr}.journey-copy{padding:28px 0 28px 25px}.journey-kicker{font-size:8px;gap:6px}.journey-art-label{left:18px}.journey-art-label strong{font-size:12px}.has-journey .lvlflow{padding:18px}}
+@media(max-width:560px){.journey-hero{display:flex;flex-direction:column-reverse;border-radius:16px;min-height:0}.journey-art{height:205px;min-height:205px}.journey-art img{object-position:50% 28%}.journey-art:after{background:linear-gradient(0deg,var(--journey-dark),transparent 75%)}.journey-art-label{bottom:22px;left:24px}.journey-copy{padding:6px 24px 26px}.journey-copy h1{margin:16px 0;font-size:38px}.journey-copy h1 em{font-size:23px}.journey-learn{font-size:13px}.journey-tags{gap:6px;margin-bottom:20px}.journey-tags span{font-size:10px}.journey-actions{gap:10px}.journey-actions button{padding:12px 14px;font-size:12px}.journey-play{gap:12px}.has-journey .lvlflow-nav{display:none}.has-journey .lvlflow-node{min-width:156px}.has-journey .lvlpanel{padding:18px}.has-journey .lvlpanel-hero{grid-template-columns:1fr}.has-journey .lvlpanel-cover{display:none}.journey-level-mission{grid-template-columns:1fr;gap:16px;padding:16px}.journey-episodes{align-items:start;flex-direction:column}.journey-progress{max-width:none}.has-journey .lvlpanel-note{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.has-journey *{scroll-behavior:auto!important;transition:none!important}}
 /* Keep the episode rail horizontal even where the legacy mobile stylesheet uses a grid. */
 .has-journey .lvlflow-track{display:flex;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap}

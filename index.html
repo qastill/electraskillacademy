@@ -7025,14 +7025,17 @@ function renderLevels(trackId) {
     <div class="lvlpanel" id="esa-level-panel">
       <div class="journey-episodes"><div><span class="journey-eyebrow">TAHAP ${a.num} DARI ${data.length}</span><h3>${escapeHtml(a.lvl.name)} · Episode belajar</h3></div><span>${a.passed}/${a.total} modul lulus</span></div>
       ${grid}
-      ${window.esaAcademyPracticeHtml ? esaAcademyPracticeHtml(trackId) : ''}
       <div class="lvlpanel-foot">
         ${prev ? `<button type="button" class="lvlflow-btn" onclick="esaSetLevel('${prev.lvl.id}','${trackId}')">‹ ${escapeHtml(LEVELS[prev.idx].name)}</button>` : '<span></span>'}
         ${next ? `<button type="button" class="lvlflow-btn primary" onclick="esaSetLevel('${next.lvl.id}','${trackId}')">${escapeHtml(LEVELS[next.idx].name)} ›</button>` : '<span></span>'}
       </div>
     </div>`;
 
-  list.innerHTML = (window.esaJourneyHero ? esaJourneyHero(trackId, data) : '') + flow + panel;
+  // Urutan halaman Academy: sambutan → PRAKTIK (lab & simulator) → TEORI
+  // (peta tingkat + daftar modul). Praktik didahulukan karena itu yang membuat
+  // orang mencoba; materi bacaannya menyusul di bawah.
+  const praktik = window.esaAcademyPracticeHtml ? esaAcademyPracticeHtml(trackId) : '';
+  list.innerHTML = (window.esaJourneyHero ? esaJourneyHero(trackId, data) : '') + praktik + flow + panel;
 }
 
 function toggleLevel(levelId) {
