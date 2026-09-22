@@ -8190,9 +8190,13 @@ body {
 }
 
 /* -------- ACHIEVEMENT TOAST -------- */
+/* Dua aturan .esa-toast hidup berdampingan: yang lama menambatkan toast ke
+   bawah (bottom: 30px), yang ini ke atas. Tanpa bottom: auto keduanya berlaku
+   sekaligus dan kotak notifikasi meregang setinggi layar. */
 .esa-toast {
   position: fixed;
   top: 24px;
+  bottom: auto;
   right: 24px;
   background: var(--navy-deep);
   color: var(--cream);
@@ -12225,3 +12229,52 @@ button:active:not(:disabled),
   color: var(--ink-mute, #9aa0a6);
 }
 .esa-cert-path-actions { margin-top: 12px; }
+
+/* ── Panduan langkah demi langkah di modal lab (/data/lab-panduan.js) ── */
+.sim-panduan { background: #fff; border: 1px solid rgba(26,29,46,0.12); border-left: 4px solid #2f7d5b; border-radius: 12px; margin-bottom: 20px; overflow: hidden; }
+.sim-panduan > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 17px; font-weight: 800; font-size: 0.78rem; letter-spacing: 0.07em; text-transform: uppercase; color: #1f5a42; background: rgba(47,125,91,0.07); }
+.sim-panduan > summary::-webkit-details-marker { display: none; }
+.sim-panduan > summary::after { content: '▾'; font-size: 0.9rem; opacity: 0.6; }
+.sim-panduan:not([open]) > summary::after { content: '▸'; }
+.sim-panduan-prog { margin-left: auto; font-size: 0.66rem; letter-spacing: 0.04em; color: #1f5a42; background: #d9f3e5; border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+.sim-panduan-body { padding: 14px 17px 16px; color: #33364a; font-size: 0.9rem; line-height: 1.6; }
+.sim-panduan-body b { color: #1a1d2e; }
+.lp-tujuan { margin: 0 0 14px; padding: 10px 12px; background: rgba(201,169,110,0.12); border-radius: 8px; }
+.lp-sec { margin-top: 14px; }
+.lp-sec > b { display: block; margin-bottom: 8px; font-size: 0.82rem; }
+.lp-steps, .lp-hasil ul { margin: 0; padding: 0; list-style: none; }
+.lp-steps > li { margin: 0 0 6px; }
+.lp-steps label { display: flex; align-items: flex-start; gap: 10px; padding: 9px 11px; border: 1px solid rgba(26,29,46,0.1); border-radius: 9px; cursor: pointer; min-height: 44px; transition: background .15s; }
+.lp-steps label:hover { background: rgba(47,125,91,0.05); }
+.lp-steps input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: #2f7d5b; }
+.lp-no { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #1a1d2e; color: #fff; font-size: 0.7rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+.lp-steps li.lp-ok label { background: #eefaf3; border-color: #9fdcbb; }
+.lp-steps li.lp-ok .lp-txt { text-decoration: line-through; color: #5b6b62; }
+.lp-steps li.lp-ok .lp-no { background: #2f7d5b; }
+.lp-hasil ul li { position: relative; padding-left: 22px; margin-bottom: 6px; }
+.lp-hasil ul li::before { content: '✓'; position: absolute; left: 2px; color: #2f7d5b; font-weight: 800; }
+.lp-q { border: 1px solid rgba(26,29,46,0.1); border-radius: 9px; padding: 10px 12px; margin-bottom: 8px; }
+.lp-q p { margin: 0 0 8px; display: flex; gap: 8px; align-items: flex-start; font-weight: 600; color: #1a1d2e; }
+.lp-q.lp-q-ok { background: #eefaf3; border-color: #9fdcbb; }
+.lp-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.lp-opts button { font: inherit; font-size: 0.84rem; padding: 8px 12px; min-height: 40px; border-radius: 8px; border: 1px solid rgba(26,29,46,0.18); background: #fff; color: #1a1d2e; cursor: pointer; text-align: left; }
+.lp-opts button:hover:not(:disabled) { border-color: #2f7d5b; background: rgba(47,125,91,0.06); }
+.lp-opts button.lp-benar { background: #2f7d5b; color: #fff; border-color: #2f7d5b; }
+.lp-opts button.lp-salah { background: #fdeaea; color: #8a2c2c; border-color: #e6a3a3; text-decoration: line-through; }
+.lp-opts button:disabled { cursor: default; opacity: 0.85; }
+.lp-fb { font-size: 0.8rem; margin-top: 6px; color: #1f5a42; min-height: 1em; }
+.lp-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+.lp-done { font: inherit; font-weight: 800; font-size: 0.86rem; padding: 11px 16px; min-height: 44px; border-radius: 10px; border: 0; background: #1a1d2e; color: #f5f0e6; cursor: pointer; }
+.lp-done.lp-done-ok { background: #2f7d5b; }
+.lp-msg { font-size: 0.8rem; color: #5b5e70; }
+@media (max-width: 640px) {
+  #sim-modal-content > .sim-panduan { order: 1; margin: 12px 0 8px; }
+  .sim-panduan-body { padding: 12px 13px 14px; font-size: 0.88rem; }
+}
+/* Di ponsel panel panduan mulai tertutup agar papan lab tidak terdorong jauh
+   ke bawah; petunjuk ketuk memastikan peserta tahu isinya ada di situ. */
+.sim-panduan-ketuk { display: none; }
+@media (max-width: 640px) {
+  .sim-panduan:not([open]) .sim-panduan-ketuk { display: inline; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.03em; text-transform: none; color: #2f7d5b; }
+  .sim-panduan > summary { padding: 14px 15px; min-height: 48px; }
+}

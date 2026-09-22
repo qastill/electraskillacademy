@@ -24,7 +24,10 @@
     S13: ['WASTE TO ENERGY ENGINEER', 'Biogas · PLTSa · Konversi energi', '#c3d19a', 'plant', 'recycle', 'helmet'],
     S14: ['HYDROGEN ENGINEER', 'Elektrolisis · Green hydrogen · Fuel cell', '#a5dee0', 'hydrogen', 'tank', 'helmet'],
     S15: ['BATTERY & BESS ENGINEER', 'Penyimpanan energi · BMS · Integrasi grid', '#c2d4a0', 'battery', 'data', 'helmet'],
-    S16: ['AUTOMATION ENGINEER', 'PLC · Robotika · Kontrol industri', '#b3c3e7', 'robot', 'panel', 'helmet']
+    S16: ['AUTOMATION ENGINEER', 'PLC · Robotika · Kontrol industri', '#b3c3e7', 'robot', 'panel', 'helmet'],
+    // Jalur ke-17 masih disiapkan: tidak punya kurikulum, jadi tombol masuknya
+    // diganti penanda "Segera hadir" dan nomor panggungnya bukan 1–16.
+    S17: ['ENERGY MODELLER', 'LEAP · OSeMOSYS · HOMER · PyPSA · PLEXOS', '#d6c2a8', 'model', 'chart', 'hair']
   };
   // Small line icons and larger dimensional props share one drawing vocabulary.
   const art = {
@@ -49,6 +52,7 @@
     hydrogen: '<path d="M20 79l57-49M20 79l5-57M25 22l52 8"/><circle class="energy-glow" cx="25" cy="22" r="13" fill="#2a4843"/><circle cx="77" cy="30" r="17" fill="#2a4843"/><circle cx="20" cy="79" r="11" fill="#2a4843"/><text x="77" y="35" fill="currentColor" stroke="none" text-anchor="middle" font-size="15" font-family="sans-serif">H₂</text>',
     tank: '<rect x="17" y="16" width="28" height="72" rx="12" fill="#2c4841"/><rect x="52" y="16" width="28" height="72" rx="12" fill="#2c4841"/><path d="M31 16V7h35v9M17 57h28m7 0h28"/>',
     battery: '<rect x="14" y="16" width="68" height="71" rx="5" fill="#2a4036"/><path d="M32 16V8h31v8M24 30h48M24 75h48"/><path class="energy-glow" d="M51 35L34 55h14l-4 17 18-26H49z" fill="currentColor"/>',
+    model: '<rect x="9" y="15" width="78" height="58" rx="5" fill="#2b3c46"/><path d="M9 73h78M48 73v14M30 87h36M18 62V38m0 24h60"/><path class="energy-flow" d="M18 58l16-13 13 8 15-19 15 9"/><path d="M18 66l16-4 13 3 15-7 15 4" opacity=".55"/><circle class="energy-glow" cx="62" cy="34" r="4"/>',
     robot: '<path d="M14 90h69l-8-14H23z" fill="#2b403c"/><g class="machine-arm"><path d="M40 76L18 48l11-12 33 23 17-31 11 6-20 43z" fill="#34504a"/><circle cx="27" cy="45" r="9"/><circle cx="59" cy="68" r="9"/><path d="M78 27l-3-12 8-7m7 25 9-7-1-12"/></g>'
   };
   const ids = Object.keys(careers);
@@ -103,17 +107,24 @@
     world.innerHTML = scene(c);
     world.setAttribute('aria-label', c[0] + ' — ' + c[1]);
     document.getElementById('career-role').textContent = c[0];
-    document.getElementById('academy-number').textContent = id.slice(1).padStart(2, '0') + ' / 16';
+    const soon = !!(window.TRACKS_META && TRACKS_META[id] && TRACKS_META[id].comingSoon
+      && !(window.CURRICULUM && CURRICULUM[id] && CURRICULUM[id].length));
+    document.getElementById('academy-number').textContent = soon ? 'SEGERA HADIR' : id.slice(1).padStart(2, '0') + ' / 16';
     document.getElementById('academy-selected-name').textContent = ACADEMY_NAMES[id];
     document.getElementById('academy-selected-description').textContent = c[1];
-    document.getElementById('academy-status').textContent = Number(id.slice(1)) > 8 ? 'Kurikulum siap · Video bertahap' : 'Perjalanan Level 1–6';
-    document.getElementById('academy-enter').setAttribute('aria-label', 'Masuk ' + ACADEMY_NAMES[id]);
-    fillPanel(id, c);
+    document.getElementById('academy-status').textContent = soon
+      ? 'Kurikulum sedang disusun'
+      : (Number(id.slice(1)) > 8 ? 'Kurikulum siap · Video bertahap' : 'Perjalanan Level 1–6');
+    const enter = document.getElementById('academy-enter');
+    enter.innerHTML = soon ? 'Segera hadir <span aria-hidden="true">🚧</span>' : 'Masuk Academy <span aria-hidden="true">↗</span>';
+    enter.classList.toggle('is-soon', soon);
+    enter.setAttribute('aria-label', soon ? ACADEMY_NAMES[id] + ' — segera hadir' : 'Masuk ' + ACADEMY_NAMES[id]);
+    fillPanel(id, c, soon);
     save('esa-lobby-academy', id);
   }
   // Panel di sebelah panggung: foto jalur, jumlah modul, dan tombol yang
   // langsung membuka kurikulum Academy yang sedang tampil.
-  function fillPanel(id, c) {
+  function fillPanel(id, c, soon) {
     const card = (window.PRACTICE_CARDS || []).find(item => item.id === id);
     document.getElementById('academy-jalur').textContent = id.slice(1).padStart(2, '0');
     document.getElementById('academy-panel-name').textContent = ACADEMY_NAMES[id];
@@ -122,7 +133,7 @@
       panelPhoto.alt = 'Suasana kerja ' + (c ? c[0].toLowerCase() : ACADEMY_NAMES[id]);
     }
     const modules = window.esaTrackModuleCount?.(id) || 0;
-    document.getElementById('academy-modules').textContent = modules ? modules + ' modul' : 'Kurikulum disiapkan';
+    document.getElementById('academy-modules').textContent = soon ? 'Segera hadir' : (modules ? modules + ' modul' : 'Kurikulum disiapkan');
     // Program fast track PLN adalah bagian dari Distribution Academy.
     document.getElementById('academy-fasttrack').hidden = id !== 'S3';
   }

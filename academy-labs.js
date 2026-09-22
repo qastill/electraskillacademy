@@ -108,15 +108,25 @@
     return hasil;
   }
 
+  /* Lab yang sudah dikerjakan sampai tuntas (panduan dicentang + 2 soal
+     bukti paham benar) ditandai di kartunya. Sumber: localStorage yang
+     ditulis /data/lab-panduan.js — dibaca langsung agar tidak bergantung
+     urutan muat skrip. */
+  function labSelesai(id) {
+    try { const s = JSON.parse(localStorage.getItem('esa_labs_panduan') || '{}'); return !!(s[id] && s[id].selesai); }
+    catch (e) { return false; }
+  }
+
   function kartu(lab) {
     const j = JENIS[lab.jenis];
     return `
-      <button type="button" class="prak-card" onclick="${j.buka(lab.id)}">
+      <button type="button" class="prak-card" data-lab="${esc(lab.id)}" onclick="${j.buka(lab.id)}">
         ${window.esaCatalogArt ? window.esaCatalogArt(lab) : ''}
         <span class="prak-kind prak-kind-${lab.jenis}">${esc(j.label)}</span>
         <span class="prak-name">${esc(lab.nama)}</span>
         <span class="prak-desc">${esc(lab.desc)}</span>
-        <span class="prak-go">Buka lab →</span>
+        <span class="prak-go">${labSelesai(lab.id) ? 'Buka lagi →' : 'Buka lab →'}</span>
+        ${labSelesai(lab.id) ? '<span class="prak-done">✓ Selesai</span>' : ''}
       </button>`;
   }
 

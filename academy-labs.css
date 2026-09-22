@@ -134,3 +134,13 @@
 @media (prefers-reduced-motion: reduce) {
   .prak-card, .prak-card:hover { transition: none; transform: none; }
 }
+
+/* Lencana lab yang sudah tuntas (panduan + bukti paham) — ditulis oleh
+   /data/lab-panduan.js ke localStorage, dibaca kartu() saat Academy dibuka. */
+.prak-card { position: relative; }
+.prak-done {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 0.66rem; font-weight: 800; letter-spacing: 0.04em;
+  color: #0f3d2e; background: #bff2d4; border: 1px solid #63d69a;
+  border-radius: 999px; padding: 3px 9px; pointer-events: none;
+}
