@@ -545,6 +545,7 @@ if ('serviceWorker' in navigator) {
 <link rel="stylesheet" href="/academy-journey.css?v=2">
 <link rel="stylesheet" href="/library-covers.css?v=1">
 <link rel="stylesheet" href="/academy-labs.css?v=1">
+<link rel="stylesheet" href="/catalog-art.css?v=1">
 <script src="/membership.js?v=1" defer></script>
 </head>
 <body>
@@ -3536,7 +3537,8 @@ if ('serviceWorker' in navigator) {
 <script src="/data/module-thumbs.js?v=1"></script>
 <script src="/academy-names.js"></script>
 <script src="/academy-journey.js?v=2"></script>
-<script src="/academy-labs.js?v=1"></script>
+<script src="/catalog-art.js?v=1"></script>
+<script src="/academy-labs.js?v=2"></script>
 <script src="/academy-lobby.js?v=12" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
@@ -4645,8 +4647,7 @@ function renderCalculators() {
   const cardHTML = (c) => `
     <div class="calc-card">
       <div class="calc-card-thumb">
-        ${c.thumb}
-        ${c.photo ? `<img class="calc-card-thumb-photo" src="${c.photo}" alt="${c.name}" loading="lazy" onerror="this.remove();const s=this.nextElementSibling;if(s&&s.classList.contains('calc-card-thumb-shade'))s.remove();"><span class="calc-card-thumb-shade"></span>` : ''}
+        ${window.esaCatalogArt(c)}
         ${c.badge ? `<div class="calc-card-thumb-badge">${c.badge}</div>` : ''}
       </div>
       <h4>${c.name}</h4>
@@ -5094,9 +5095,7 @@ function _labTile(s, g) {
   const _locked = !esaIsFreeLab(s) && !esaContentUnlocked();
   return `
     <button type="button" class="lab-tile${_locked ? ' locked' : ''}" onclick="openSimulator('${s.id}')" aria-label="Buka simulator ${s.name}">
-      <span class="lab-tile-grad" style="background:${g.grad}"></span>
-      <span class="lab-tile-pattern"></span>
-      <span class="lab-tile-icon">${s.icon || ''}</span>
+      ${window.esaCatalogArt(s)}
       <span class="lab-tile-shade"></span>
       <span class="lab-tile-badge">${g.num}</span>
       <span class="lab-tile-content">
@@ -5248,6 +5247,7 @@ function renderVirtualLabs() {
   if (!grid) return;
   grid.innerHTML = VIRTUAL_LABS.map(l => `
     <div class="vlab-card">
+      ${window.esaCatalogArt(l)}
       <div class="vlab-card-head">
         <span class="vlab-card-icon">${l.icon}</span>
         <span class="vlab-card-badge">${l.badge}</span>
@@ -8999,6 +8999,7 @@ function renderReferensi() {
         <div class="esa-book-cover-spine"></div>
         <div class="esa-book-cover-band">${escapeHtml(b.categoryLabel)}</div>
         <div class="esa-book-cover-title">${escapeHtml(b.title)}</div>
+        ${window.esaCatalogArt(b, 'book')}
         <div class="esa-book-cover-author">${escapeHtml(b.author)}</div>
         <div class="esa-book-cover-edition">${escapeHtml(b.edition)}</div>
         <div class="esa-book-cover-foil">ESA · LIBRARY</div>
