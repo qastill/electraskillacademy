@@ -12,6 +12,7 @@ node tests/quiz-coverage.test.mjs --backlog   # + daftar modul yang banknya masi
 node tests/academy-labs.test.mjs     # tanpa browser
 node tests/youtube-map.test.mjs      # tanpa browser
 node tests/module-thumbs.test.mjs    # tanpa browser
+node tests/sertifikat-profil.test.mjs # tanpa browser
 node tests/youtube-map.test.mjs --drive       # + daftar modul yang masih dari Google Drive
 
 # butuh server statis + Chromium
@@ -37,6 +38,15 @@ pembahasan yang memuat sisa "berpikir keras" model (*"Wait"*, *"Hmm"*,
 *"Actually let me recompute"*), pembahasan yang merujuk huruf opsi (*"Jawaban B"* —
 rapuh karena urutan opsi bisa berubah), atau opsi yang menyelipkan penilaian
 dalam kurung (*"(sangat aman)"*) sehingga membocorkan jawaban.
+
+### `sertifikat-profil.test.mjs` — profil menampilkan sertifikat apa saja, bukan cuma jumlahnya
+Profil dulu hanya menyebut *"3 sertifikat"* tanpa memberi tahu sertifikat mana
+dan dari Academy mana. Tes ini menjaga `esaDaftarSertifikat()` dari tiga cara
+gagal yang tidak memunculkan galat apa pun: ikut menampilkan level yang
+sertifikatnya belum terbit, gagal menerjemahkan kode jalur jadi nama Academy
+(peserta cuma melihat "S1"), dan urutan yang tidak menaruh sertifikat terbaru di
+atas. Ia juga memastikan daftarnya benar-benar dipasang di modal profil berikut
+tombol unduh dan tautan verifikasinya — bukan sekadar fungsinya ada.
 
 ### `academy-labs.test.mjs` — tiap Academy punya teori DAN praktik
 Sejak lab dilepas dari menu atas dan ditempelkan ke bawah daftar modul tiap

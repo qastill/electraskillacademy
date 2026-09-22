@@ -13798,6 +13798,45 @@ function computeUserAchievements(){
   return {stars:stars,highest:highest,highestLabel:highest==='—'?'Belum ada':TIER_LABELS[highest],levelsDone:levelsDone,passedCount:passedCount,certs:certs,xp:d.xp||0};
 }
 
+// Daftar sertifikat yang sudah terbit, siap ditampilkan di profil.
+//
+// Sebelumnya profil hanya menyebut JUMLAHNYA ("3 sertifikat"), sehingga peserta
+// tidak bisa melihat sertifikat apa saja yang sudah dimiliki dan dari Academy
+// mana. Padahal datanya sudah lengkap di state.levels — tinggal dibaca.
+//
+// Kuncinya dua bentuk: "L1"/"L2" untuk fondasi yang berlaku lintas jalur, dan
+// "L3_S1" dst. untuk level spesialisasi yang terikat satu Academy.
+function esaDaftarSertifikat() {
+  var d = readESAData();
+  var levels = d.levels || {};
+  var TIER_LABELS = { L1:'Esensial', L2:'Fundamental', L3:'Profesional', L4:'Advance', L5:'Expertise', L6:'Consultant' };
+  var out = [];
+  Object.keys(levels).forEach(function (kunci) {
+    var rec = levels[kunci];
+    if (!rec || !rec.certIssued) return;
+    var namaJalur = '';
+    if (rec.trackId) {
+      if (window.ACADEMY_NAMES && window.ACADEMY_NAMES[rec.trackId]) namaJalur = window.ACADEMY_NAMES[rec.trackId];
+      else if (typeof TRACKS_META !== 'undefined' && TRACKS_META[rec.trackId]) namaJalur = TRACKS_META[rec.trackId].name || rec.trackId;
+      else namaJalur = rec.trackId;
+    }
+    out.push({
+      kunci: kunci,
+      levelId: rec.levelId,
+      levelLabel: TIER_LABELS[rec.levelId] || rec.levelId,
+      jalur: namaJalur || 'Fondasi · semua jalur',
+      certId: rec.certId || '-',
+      tanggal: rec.completedDate,
+      skor: rec.avgScore,
+      jumlahModul: rec.moduleCount
+    });
+  });
+  // Terbaru di atas: yang baru diraih itu yang paling ingin dilihat.
+  out.sort(function (a, b) { return new Date(b.tanggal) - new Date(a.tanggal); });
+  return out;
+}
+window.esaDaftarSertifikat = esaDaftarSertifikat;
+
 function showProfileModal(){
   var u=getUser()||{};
   var d=readESAData();
@@ -13831,6 +13870,43 @@ function showProfileModal(){
            :'background:rgba(255,255,255,0.05);color:rgba(245,240,230,0.4);border:1px solid rgba(255,255,255,0.08);')+
       '">'+(done?'✓ ':'')+lv+'</span>';
   }).join('');
+
+  // Daftar sertifikat yang sudah dimiliki — level apa saja dan dari Academy mana.
+  // Ditampilkan sebagai kartu supaya nomor sertifikat, tanggal, dan skornya
+  // terbaca sekaligus, dan tiap kartu langsung bisa diunduh atau diverifikasi.
+  var daftarSertifikat = (typeof esaDaftarSertifikat==='function') ? esaDaftarSertifikat() : [];
+  var sertifikatHTML =
+    '<div style="padding:20px 28px;border-bottom:1px solid rgba(255,255,255,0.06);">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;">'+
+        '<div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#c9a96e;font-weight:700;">Sertifikat saya</div>'+
+        '<div style="font-size:0.72rem;color:rgba(245,240,230,0.45);">'+daftarSertifikat.length+' terbit</div>'+
+      '</div>'+
+      (daftarSertifikat.length
+        ? daftarSertifikat.map(function(c){
+            var tgl = c.tanggal ? new Date(c.tanggal).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '-';
+            return '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.22);border-radius:10px;padding:13px 15px;margin-bottom:9px;">'+
+              '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">'+
+                '<div style="min-width:0;">'+
+                  '<div style="font-size:0.9rem;font-weight:700;color:#f0d080;line-height:1.3;">'+escapeHtmlEsa(c.levelId+' · '+c.levelLabel)+'</div>'+
+                  '<div style="font-size:0.78rem;color:rgba(245,240,230,0.72);margin-top:2px;">'+escapeHtmlEsa(c.jalur)+'</div>'+
+                  '<div style="font-size:0.7rem;color:rgba(245,240,230,0.45);margin-top:6px;font-family:ui-monospace,monospace;word-break:break-all;">'+escapeHtmlEsa(c.certId)+'</div>'+
+                '</div>'+
+                '<div style="text-align:right;flex-shrink:0;">'+
+                  '<div style="font-size:1.05rem;font-weight:700;color:#86efac;line-height:1;">'+(c.skor||0)+'%</div>'+
+                  '<div style="font-size:0.68rem;color:rgba(245,240,230,0.45);margin-top:3px;">'+escapeHtmlEsa(tgl)+'</div>'+
+                  (c.jumlahModul?'<div style="font-size:0.68rem;color:rgba(245,240,230,0.4);">'+c.jumlahModul+' modul</div>':'')+
+                '</div>'+
+              '</div>'+
+              '<div style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;">'+
+                '<button type="button" onclick="esaDownloadCertificate(\''+c.kunci+'\')" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:6px;padding:7px 13px;font-size:0.73rem;font-weight:700;cursor:pointer;">Unduh PDF</button>'+
+                '<a href="/verify.html?id='+encodeURIComponent(c.certId)+'" target="_blank" rel="noopener" style="background:transparent;color:rgba(245,240,230,0.7);border:1px solid rgba(255,255,255,0.16);border-radius:6px;padding:7px 13px;font-size:0.73rem;font-weight:600;text-decoration:none;">Verifikasi</a>'+
+              '</div>'+
+            '</div>';
+          }).join('')
+        : '<div style="background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.12);border-radius:10px;padding:16px;font-size:0.8rem;color:rgba(245,240,230,0.55);line-height:1.6;">'+
+            'Belum ada sertifikat. Sertifikat sebuah level terbit otomatis begitu <strong style="color:rgba(245,240,230,0.8);">semua modul di level itu lulus</strong> dan rata-rata skormu minimal 70% — tidak perlu mengajukan.'+
+          '</div>')+
+    '</div>';
 
   function makeSelect(id,options,selected){
     return '<select id="'+id+'" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;outline:none;">'+
@@ -13917,6 +13993,7 @@ function showProfileModal(){
         '<div><strong style="color:#f5f0e6;">'+ach.xp+'</strong> XP</div>'+
       '</div>'+
     '</div>'+
+    sertifikatHTML+
     // Form
     '<div style="padding:24px 28px;">'+
       '<div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#c9a96e;font-weight:700;margin-bottom:14px;">Akun</div>'+
