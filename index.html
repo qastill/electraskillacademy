@@ -4450,6 +4450,24 @@ const SIMULATORS = [
   });
 });
 
+// World Electricity — peta pembangkit listrik dunia (34.900+ pembangkit di
+// 167 negara) yang sudah ada sebagai halaman peta-dunia.html, kini juga bisa
+// dibuka langsung di dalam Academy yang bidangnya memakai data ini.
+[
+  { jalur: 'S4', category: 'Transmisi · Peta Global' },
+  { jalur: 'S5', category: 'Data · Peta Global' },
+  { jalur: 'S7', category: 'Pembangkitan · Peta Global' },
+  { jalur: 'S10', category: 'PV & Solar · Peta Global' },
+  { jalur: 'S11', category: 'Sustainability · Peta Global' }
+].forEach(o => {
+  SIMULATORS.push({
+    id: 'world-electricity-' + o.jalur.toLowerCase(), jalur: o.jalur, category: o.category,
+    name: 'World Electricity',
+    desc: 'Peta pembangkit listrik dunia: 34.900+ pembangkit di 167 negara dengan kapasitas, bahan bakar, dan bauran energi. Saring per negara atau hanya EBT, tampilkan jaringan interkoneksi, dan bandingkan bauran Indonesia dengan negara lain.',
+    level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.grid, working: true, embed: 'peta-dunia.html?embed=1'
+  });
+});
+
 // CapBankSim — desain & wiring panel kapasitor bank (PFC). Relevan untuk
 // jalur Instalasi (S1), Industri & Manufaktur (S2), dan Distribusi (S3).
 [

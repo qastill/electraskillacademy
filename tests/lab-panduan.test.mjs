@@ -57,6 +57,14 @@ for (const j of html.match(/\['S1','S2'[^\]]*\]/)?.[0].match(/'(S\d+)'/g) || [])
 for (const m of html.matchAll(/\{ jalur: '(S\d+)', category: '[^']*Power Factor' \}/g)) {
   runtime.add('capbank-' + m[1].toLowerCase());
 }
+// Lab yang dipasang lewat perulangan jalur (mis. World Electricity) memakai
+// pola id yang sama: <id dasar>-<jalur kecil>.
+for (const blok of html.matchAll(/id: '([a-z-]+?)-' \+ o\.jalur\.toLowerCase\(\)[\s\S]{0,900}?\}\);/g)) {
+  const dasar = blok[1];
+  if (dasar === 'capbank') continue;
+  const daftar = html.slice(Math.max(0, blok.index - 700), blok.index);
+  for (const j of daftar.matchAll(/jalur: '(S\d+)'/g)) runtime.add(dasar + '-' + j[1].toLowerCase());
+}
 assert(runtime.size >= 60, `daftar lab runtime tidak terbaca utuh (${runtime.size})`);
 assert(runtime.has('wiring-s16') && runtime.has('capbank-s3') && runtime.has('wlab-ats'),
   'daftar lab runtime kehilangan kelompok wiring/capbank/wlab');
