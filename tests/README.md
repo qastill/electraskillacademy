@@ -10,6 +10,7 @@ node tests/quiz-coverage.test.mjs    # tanpa browser
 node tests/quiz-coverage.test.mjs --backlog   # + daftar modul yang banknya masih tipis
 node tests/academy-labs.test.mjs     # tanpa browser
 node tests/youtube-map.test.mjs      # tanpa browser
+node tests/module-thumbs.test.mjs    # tanpa browser
 node tests/youtube-map.test.mjs --drive       # + daftar modul yang masih dari Google Drive
 
 # butuh server statis + Chromium
@@ -34,6 +35,14 @@ sedangkan virtual lab dan kalkulator dipetakan tangan di `academy-labs.js`.
 Tes ini gagal kalau ada Academy yang bagian praktiknya kosong, ada id lab yang
 tidak dikenal, atau ada tombol yang memanggil fungsi pembuka yang tidak ada —
 tiga cara paling gampang bagian ini membusuk tanpa ketahuan.
+
+### `module-thumbs.test.mjs` — sampul modul tidak menunjuk berkas yang tidak ada
+`data/module-thumbs.js` mengisi thumbnail modul yang videonya belum di YouTube.
+Tes ini menolak kode modul yang tidak ada di kurikulum, berkas gambar yang
+hilang, dan entri untuk modul yang ternyata sudah punya video YouTube. Ia juga
+memeriksa urutan cabang di `esaMediaThumb()` — YouTube → MODULE_THUMBS → Drive —
+karena urutan yang tertukar tidak memunculkan galat apa pun, hanya gambar yang
+diam-diam salah.
 
 ### `youtube-map.test.mjs` — peta video tidak salah tunjuk
 `data/youtube-map.js` menang atas `videoUrl` Google Drive, jadi satu baris yang

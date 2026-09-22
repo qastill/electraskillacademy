@@ -3532,6 +3532,7 @@ if ('serviceWorker' in navigator) {
 
 
 <script src="/data/app-data.js"></script>
+<script src="/data/module-thumbs.js?v=1"></script>
 <script src="/academy-names.js"></script>
 <script src="/academy-journey.js?v=2"></script>
 <script src="/academy-labs.js?v=1"></script>
@@ -7141,6 +7142,9 @@ function esaResolveModuleMedia(code) {
   var base = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[code]) ? MODULE_MEDIA[code] : {};
   var out = {};
   for (var k in base) if (Object.prototype.hasOwnProperty.call(base, k)) out[k] = base[k];
+  // Kode modul ikut dibawa supaya pemakai hasilnya (mis. esaMediaThumb) bisa
+  // mencari sampul di MODULE_THUMBS tanpa perlu dioper kode lagi terpisah.
+  out.code = code;
   var entry = (typeof window.YOUTUBE_MAP !== 'undefined') ? window.YOUTUBE_MAP[code] : null;
   var id = esaYtId(entry);
   if (id) {
@@ -7223,6 +7227,13 @@ function esaMediaThumb(media, ukuran) {
       : { src: 'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg',
           alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg'] };
   }
+  // Sampul buatan sendiri untuk modul yang videonya belum di YouTube.
+  // Ditaruh SETELAH cabang YouTube supaya tidak pernah menimpa thumbnail
+  // YouTube, dan SEBELUM cabang Drive karena frame pertama video rekaman
+  // slide hampir selalu berupa satu halaman Google Slides — bukan sampul.
+  var sendiri = (window.MODULE_THUMBS || {})[media.code];
+  if (sendiri) return { src: sendiri, alt: [] };
+
   if (media.videoUrl) {
     var gd = media.videoUrl.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
     if (gd) {
