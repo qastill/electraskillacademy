@@ -1,5 +1,9 @@
-// Menerapkan penulisan ulang batang soal dari sebuah berkas JSON peta
-// { "KODE#indeks": "kalimat tanya yang baru", ... }
+// Menerapkan penulisan ulang soal dari sebuah berkas JSON peta. Nilainya
+// boleh string (hanya batang soalnya yang diganti) atau objek:
+//   { "KODE#indeks": "kalimat tanya yang baru", ... }
+//   { "KODE#indeks": { "q": "...", "a": 1, "explain": "...", "hint": "..." }, ... }
+// Pada bentuk objek hanya field yang disebut yang ditimpa — kunci jawaban
+// dan pembahasan lama tetap tinggal kalau tidak disebut.
 //
 // Dipisah dari perbaikannya sendiri supaya tiap batch bisa diperiksa sebagai
 // data: apa yang berubah kelihatan dari petanya, bukan tersembunyi di skrip.
@@ -18,7 +22,9 @@ for (const [kunci, baru] of Object.entries(peta)) {
   for (const B of berkas) {
     const arr = B.bank[kode];
     if (!arr || !arr[+idx]) continue;
-    arr[+idx].q = baru; ok = true; kena++; break;
+    if (typeof baru === 'string') arr[+idx].q = baru;
+    else for (const k of ['q', 'a', 'explain', 'hint']) if (baru[k] !== undefined) arr[+idx][k] = baru[k];
+    ok = true; kena++; break;
   }
   if (!ok) hilang.push(kunci);
 }
