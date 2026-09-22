@@ -540,6 +540,11 @@ if ('serviceWorker' in navigator) {
 #view-modul .ai-tutor-messages::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
 
 </style>
+<link rel="stylesheet" href="/academy-lobby.css?v=10">
+<link rel="stylesheet" href="/membership.css?v=1">
+<link rel="stylesheet" href="/academy-journey.css?v=2">
+<link rel="stylesheet" href="/academy-labs.css?v=1">
+<script src="/membership.js?v=1" defer></script>
 </head>
 <body>
 
@@ -586,41 +591,42 @@ if ('serviceWorker' in navigator) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           <span>Cari</span>
         </button>
-        <a class="nav-right" onclick="openCourses()" style="cursor:pointer;">Kursus</a>
         <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
-        <a class="nav-right" onclick="showView('labs')" style="cursor:pointer;">Labs</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
-        <a class="nav-right" href="peta-dunia.html" style="cursor:pointer;color:#d4af6a;" title="World Electricity Maps — peta pembangkit listrik dunia">🌐 World Electricity Maps</a>
       <button class="nav-daftar-btn" onclick="esaShowAuthModal()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:10px 24px;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Daftar / Masuk</button>
       </div>
       <button class="nav-burger" id="navBurger" type="button" aria-label="Buka menu" aria-expanded="false" onclick="esaToggleNav()"><span></span><span></span><span></span></button>
     </nav>
 
-    <div class="hero-content">
-      <div class="hero-inner">
-        <div class="hero-eyebrow">Akademi Kelistrikan Indonesia</div>
-        <h1 class="hero-headline">
-          Siap Memulai Karir sebagai<br>
-          <em>Profesional Electrician &amp; Energy Expert</em>
-        </h1>
-        <div class="hero-cta-row">
-          <a href="#practices" class="hero-cta">Mulai Belajar
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <button class="hero-cta--ghost hero-daftar-btn" onclick="esaShowAuthModal()">Daftar / Masuk</button>
-          <a href="peta-dunia.html" class="hero-cta--ghost" title="World Electricity Maps — peta pembangkit listrik dunia">
-            <span style="margin-right:9px;" aria-hidden="true">🌐</span>World Electricity Maps
-          </a>
+    <div class="academy-lobby">
+      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Dunia bertransisi energi. <em>Kamu jadi ahli apa?</em></h1><p class="lobby-sub">Pilih. Pelajari. Kuasai. 16 jalur spesialis energi menunggumu.</p></header>
+      <div class="career-layout">
+      <section class="career-stage" aria-label="Karakter dan dunia Academy pilihan">
+        <div class="stage-wordmark" aria-hidden="true">ELECTRA</div>
+        <div id="career-world" class="career-world" role="img" aria-label="Engineer EV dengan charging unit dan kendaraan listrik"></div>
+        <div class="stage-corner"><span class="stage-signal" aria-hidden="true"></span> CAREER SELECT <span id="academy-number">12 / 16</span></div>
+        <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Jeda animasi">Ⅱ</button>
+        <button class="career-arrow career-prev" id="academy-prev" type="button" aria-label="Academy sebelumnya">←</button>
+        <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Academy berikutnya">→</button>
+        <div class="career-caption" aria-live="polite"><span id="career-role">EV CHARGING ENGINEER</span><h2 id="academy-selected-name">EV Academy</h2><p id="academy-selected-description">SPKLU · Kendaraan listrik · Charging system</p></div>
+      </section>
+      <aside class="career-panel" aria-label="Academy terpilih">
+        <div class="career-panel-photo"><img id="academy-photo" src="" alt="" decoding="async"><span class="career-panel-badge">Jalur <strong id="academy-jalur">04</strong></span></div>
+        <div class="career-panel-body">
+          <span class="career-panel-eyebrow">Masuk langsung ke</span>
+          <h3 id="academy-panel-name">Transmission Academy</h3>
+          <span class="career-panel-count" id="academy-modules">57 modul</span>
+          <a class="career-panel-fasttrack" id="academy-fasttrack" href="https://plnakademi.vercel.app/" target="_blank" rel="noopener" hidden><span class="fasttrack-tag">S · Special</span> Fast Track PLN Akademi <span aria-hidden="true">↗</span></a>
+          <button type="button" id="academy-enter" class="academy-enter">Masuk Academy <span aria-hidden="true">↗</span></button>
+          <span id="academy-status">Kurikulum siap · Video bertahap</span>
         </div>
-        <div class="hero-stats" aria-label="Electra Skill Academy dalam angka">
-          <div class="hero-stat"><div class="hero-stat-num">16</div><div class="hero-stat-label">Jalur Karir</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">1.117</div><div class="hero-stat-label">Modul &amp; Video</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">SKKNI</div><div class="hero-stat-label">Selaras Standar</div></div>
-          <div class="hero-stat"><div class="hero-stat-num">24/7</div><div class="hero-stat-label">AI Tutor</div></div>
-        </div>
+      </aside>
       </div>
+      <noscript><p>Aktifkan JavaScript untuk memilih Academy dan membuka kurikulumnya.</p></noscript>
+      <div id="academy-choices" class="academy-choices" role="group" aria-label="Pilih jalur karir Academy"></div>
     </div>
   </section>
+
 
 <!-- USER PROGRESS PANEL — dihapus dari home (bar gelap di bawah hero membingungkan);
      updateHomeProgress() aman karena sudah guard if(!panel) return. -->
@@ -628,531 +634,300 @@ if ('serviceWorker' in navigator) {
 <!-- REFERRAL DASHBOARD WIDGET — dihilangkan dari main page -->
 
 
-  <section class="practices-section" id="practices">
-    <div class="practices-inner">
-      <div class="practices-header">
-        <div class="practices-eyebrow reveal">Jalur Karir</div>
-        <h2 class="practices-title reveal">
-          Pilih <span class="italic">Jalur Karirmu</span>
-        </h2>
-        <p class="practices-sub reveal">
-          Enam belas jalur karir, dirancang dari pemula sampai ahli. Delapan jalur sudah lengkap sampai Level 6; delapan lainnya kurikulumnya siap dan videonya sedang diproduksi.
-        </p>
-      </div>
 
-      <div class="practices-grid" id="practicesGrid">
-        <!-- Filled by JS -->
-      </div>
-
-      <!-- Jalan pintas ke katalog: buat yang sudah tahu topik yang dicari -->
-      <div class="reveal" style="text-align:center;margin-top:52px;padding-top:40px;border-top:1px solid var(--line-gold);">
-        <p style="color:var(--ink-mute);font-size:0.95rem;margin-bottom:18px;">
-          Sudah tahu topik yang kamu cari? Lewati pemilihan jalur —
-          telusuri seluruh materi video langsung dari katalog.
-        </p>
-        <button type="button" onclick="openCourses()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:15px 38px;font-family:var(--sans);font-size:0.82rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-          Buka Katalog Kursus →
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================
-       PLN DISTRIBUTION ACADEMY · FAST TRACK PROGRAM (S13 / S Special)
-       Dipisahkan dari 12 jalur reguler. Click → external PLN Akademi.
-  ================================================ -->
-  <section class="pln-fasttrack-section" id="plnFastTrack">
-    <div class="pln-fasttrack-inner">
-      <div class="pln-fasttrack-card reveal">
-        <div class="pln-fasttrack-photo" aria-hidden="true">
-          <div class="pln-fasttrack-photo-overlay"></div>
-        </div>
-        <div class="pln-fasttrack-content">
-          <div class="pln-fasttrack-badge-row">
-            <span class="pln-fasttrack-badge-special">S · SPECIAL</span>
-            <span class="pln-fasttrack-badge-partner">Powered by PLN Akademi</span>
-          </div>
-          <div class="pln-fasttrack-eyebrow">S13 · Fast Track Program</div>
-          <h2 class="pln-fasttrack-title">
-            PLN Distribution Academy<br>
-            <span class="italic">Package · Fast Track</span>
-          </h2>
-          <p class="pln-fasttrack-desc">
-            Jalur khusus untuk kandidat yang ingin <strong>langsung jadi pekerja PLN</strong>. Kurikulum terintegrasi distribusi 20 kV, gardu, SCADA, K3, dan culture PLN — disusun bersama PLN Akademi untuk mempercepat onboarding ke lapangan.
-          </p>
-          <ul class="pln-fasttrack-list">
-            <li><span class="pln-ft-dot"></span> Materi inti distribusi PLN 20 kV, gardu, SCADA &amp; smart grid</li>
-            <li><span class="pln-ft-dot"></span> Modul K3 ketenagalistrikan + sertifikasi kompetensi</li>
-            <li><span class="pln-ft-dot"></span> Praktikum lapangan &amp; simulasi gardu distribusi</li>
-            <li><span class="pln-ft-dot"></span> Channel direct ke recruitment PLN Group &amp; Anak Usaha</li>
-          </ul>
-          <div class="pln-fasttrack-cta-row">
-            <a href="https://plnakademi.vercel.app/" target="_blank" rel="noopener" class="pln-fasttrack-cta">
-              <span>Buka PLN Akademi</span>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-              </svg>
-            </a>
-            <span class="pln-fasttrack-cta-note">External · plnakademi.vercel.app</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ================================================
        PETA KELISTRIKAN INDONESIA · FEATURE BANNER
   ================================================ -->
-  <section class="petakel-section" style="padding:80px 80px;background:var(--cream-soft);">
-    <a href="peta-dunia.html" class="petakel-banner reveal" style="display:block;max-width:1200px;margin:0 auto;text-decoration:none;border-radius:20px;overflow:hidden;background:linear-gradient(135deg,#0d0f1c 0%,#1a1d2e 55%,#243049 100%);box-shadow:0 18px 48px rgba(13,15,28,0.28);border:1px solid rgba(201,169,110,0.25);">
-      <div class="petakel-inner" style="display:flex;align-items:center;gap:40px;padding:48px 52px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:280px;">
-          <div style="display:inline-flex;align-items:center;gap:10px;color:var(--gold);font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;margin-bottom:18px;">
-            <span style="width:28px;height:1px;background:currentColor;"></span>Peta Interaktif
-          </div>
-          <h2 style="font-family:var(--serif);font-size:clamp(34px,4vw,52px);font-weight:500;line-height:1.08;color:var(--cream);margin:0 0 16px;">
-            <span style="font-style:italic;color:var(--gold);">World Electricity</span> Maps
-          </h2>
-          <p style="font-family:var(--sans);font-size:15px;line-height:1.65;color:rgba(245,240,230,0.72);font-weight:300;max-width:560px;margin:0 0 26px;">
-            Peta pembangkit listrik dunia — kapasitas, bahan bakar, dan bauran energi (EBT/fosil/nuklir) di 167 negara. Bisa difilter per negara, termasuk <span style="color:var(--cream);">detail Indonesia</span> dengan jaringan transmisi &amp; gardu induk.
-          </p>
-          <div style="display:flex;gap:28px;flex-wrap:wrap;margin-bottom:30px;">
-            <div><div style="font-family:var(--serif);font-size:28px;font-weight:600;color:var(--gold);line-height:1;">34.900+</div><div style="font-family:var(--sans);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,230,0.55);margin-top:6px;">Pembangkit</div></div>
-            <div><div style="font-family:var(--serif);font-size:28px;font-weight:600;color:var(--gold);line-height:1;">167</div><div style="font-family:var(--sans);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,230,0.55);margin-top:6px;">Negara</div></div>
-            <div><div style="font-family:var(--serif);font-size:28px;font-weight:600;color:var(--gold);line-height:1;">~5.700 GW</div><div style="font-family:var(--sans);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,230,0.55);margin-top:6px;">Kapasitas Global</div></div>
-          </div>
-          <span class="petakel-cta" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;font-family:var(--sans);font-size:12px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;padding:14px 30px;border-radius:100px;transition:gap 0.3s,box-shadow 0.3s;">
-            Buka World Electricity Maps
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
+
+<!-- ================================================
+     ALUR BELAJAR — daftar sampai sertifikat terbit.
+     Ditambahkan karena pertanyaan "cara dapat sertifikatnya gimana?"
+     paling sering masuk ke admin, sementara aturannya hanya tersimpan
+     di dalam kode (checkLevelCompletion: semua modul lulus + rata-rata 70%).
+================================================ -->
+<section class="esa-flow" id="alur-belajar" aria-labelledby="esa-flow-title">
+  <div class="esa-flow-inner">
+    <div class="esa-flow-head">
+      <span class="esa-flow-eyebrow">Alur Belajar</span>
+      <h2 id="esa-flow-title">Dari daftar sampai sertifikat <span class="italic">terbit</span></h2>
+      <p>Lima langkah, tidak ada syarat tersembunyi. Sertifikat terbit otomatis begitu satu level tuntas.</p>
+    </div>
+    <ol class="esa-flow-steps">
+      <li>
+        <span class="esa-flow-num">01</span>
+        <h3>Daftar akun</h3>
+        <p>Gratis, pakai email atau Google. Begitu masuk kamu sudah bisa memakai katalog, materi PPT, kuis tiap modul, lab simulator, dan AI tutor.</p>
+        <span class="esa-flow-tag">Gratis</span>
+      </li>
+      <li>
+        <span class="esa-flow-num">02</span>
+        <h3>Pilih Academy</h3>
+        <p>Pilih satu dari 16 jalur di lobby beranda. Kurikulumnya sudah tersusun berurutan dari Level 1 (fondasi) sampai Level 6 (konsultan).</p>
+        <span class="esa-flow-tag">Gratis</span>
+      </li>
+      <li>
+        <span class="esa-flow-num">03</span>
+        <h3>Pelajari tiap modul</h3>
+        <p>Tonton video modul, baca materinya, tanya AI tutor kalau ada yang belum jelas. Hanya pemutaran video yang butuh akses penuh.</p>
+        <span class="esa-flow-tag esa-flow-tag-paid">Video: akses penuh</span>
+      </li>
+      <li>
+        <span class="esa-flow-num">04</span>
+        <h3>Kerjakan kuis modul</h3>
+        <p>Tiap modul punya kuisnya sendiri. Skor minimal <strong>70%</strong> untuk dinyatakan lulus modul, dan boleh diulang sebanyak yang kamu mau tanpa penalti.</p>
+        <span class="esa-flow-tag">Gratis</span>
+      </li>
+      <li>
+        <span class="esa-flow-num">05</span>
+        <h3>Tuntaskan satu level → sertifikat</h3>
+        <p>Begitu <strong>seluruh modul di satu level lulus</strong> dan rata-rata skormu <strong>minimal 70%</strong>, sertifikat level itu terbit otomatis: ada nomor unik dan QR, bisa diunduh, dibagikan ke LinkedIn, dan dicek siapa pun lewat halaman verifikasi.</p>
+        <span class="esa-flow-tag esa-flow-tag-cert">Sertifikat ber-QR</span>
+      </li>
+    </ol>
+    <p class="esa-flow-note">Sertifikat Electra adalah sertifikat penyelesaian (knowledge competency), bukan sertifikat uji kompetensi negara. Untuk sertifikasi profesi resmi, lanjutkan ke lembaga sertifikasi lewat menu Certification. Cek keaslian sertifikat kapan saja di <a href="/verify.html">halaman verifikasi</a>.</p>
+  </div>
+</section>
+
+<section class="esa-membership" id="membership" aria-labelledby="esa-membership-title">
+    <div class="esa-pack-shell">
+
+    <header class="esa-pack-intro"><div><span class="esa-pack-eyebrow">BEKAL UNTUK LANGKAH BERIKUTNYA</span><h2 id="esa-membership-title">Skill bertumbuh.<br class="esa-pack-mobile-break"> <em>Peluang terbuka.</em></h2></div><p>Dari memahami konsep sampai menyiapkan karir.<br>Semua dimulai dari satu akses Electra.</p></header>
+
+      <div class="esa-pack-card">
+        <div class="esa-pack-value">
+          <div class="esa-pack-value-heading"><h3>Investasi terbaik bukan di emas. Di kepalamu.</h3>
+    <button type="button" class="esa-pack-detail-trigger" data-pack-open aria-haspopup="dialog">Detail fasilitas <span aria-hidden="true">↗</span></button>
+</div>
+
+    <ol class="esa-pack-journey" aria-label="Alur belajar">
+    <li><span>01</span>Pahami</li>
+
+    <li><span>02</span>Latih</li>
+
+    <li><span>03</span>Tunjukkan</li>
+</ol>
+
+
+    <ul class="esa-pack-benefits">
+    <li><span class="esa-pack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5C6 4 9 4 12 6c3-2 6-2 9-.5v14c-3-1.5-6-1.5-9 .5-3-2-6-2-9-.5z"/><path d="M12 6v14"/></svg></span><div><h3>Belajar dengan arah</h3><p>16 Academy, dari fondasi hingga spesialisasi.</p></div></li>
+
+    <li><span class="esa-pack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.3 6.7L21 12l-6.7 2.3L12 21l-2.3-6.7L3 12l6.7-2.3z"/></svg></span><div><h3>Ada teman berpikir</h3><p>AI Tutor untuk membantu memahami materi.</p></div></li>
+
+    <li><span class="esa-pack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v7l-6 9a1.3 1.3 0 0 0 1 2h14a1.3 1.3 0 0 0 1-2l-6-9V3M7 15h10"/><path d="M10 18h.01M14 17h.01"/></svg></span><div><h3>Ubah teori jadi latihan</h3><p>Virtual lab, simulator, dan kalkulator teknik.</p></div></li>
+
+    <li><span class="esa-pack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="m8 12-2 9 6-3 6 3-2-9M10 8l1.4 1.4L14 7"/></svg></span><div><h3>Tunjukkan progresmu</h3><p>Sertifikat penyelesaian dengan QR verifikasi.</p></div></li>
+
+    <li><span class="esa-pack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h4v16H3zM10 4h4v16h-4zM17 5l3-1 4 15-3 1zM3 8h4M10 8h4"/></svg></span><div><h3>Referensi dalam jangkauan</h3><p>Library kelistrikan dan bonus e-book karir.</p></div></li>
+
+    <li><span class="esa-pack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3M3 12c6 4 12 4 18 0M10 13h4v3h-4z"/></svg></span><div><h3>Siapkan langkah karir</h3><p>CV, portofolio, career advisory, dan talent pool.</p></div></li>
+</ul>
+
+          <div class="esa-pack-bonus"><img src="/kang-listrik-cover.jpeg" width="38" height="54" loading="lazy" alt="Sampul e-book Kang Listrik 5.0"><div><span>BONUS MEMBER</span><strong>Kang Listrik 5.0</strong><p>Panduan memulai karir ketenagalistrikan.</p></div><a href="/api/ebook" onclick="return esaDownloadEbook(event)" aria-label="Unduh e-book Kang Listrik 5.0">Unduh <span aria-hidden="true">↗</span></a></div>
         </div>
-        <div class="petakel-art" aria-hidden="true" style="flex:0 0 280px;max-width:100%;display:flex;align-items:center;justify-content:center;">
-          <div style="font-size:128px;line-height:1;filter:drop-shadow(0 10px 30px rgba(201,169,110,0.35));">🌐</div>
-        </div>
+
+    <aside class="esa-pack-price" aria-label="Investasi akses seumur hidup">
+          <div class="esa-pack-pass-top"><span>INVESTASI KEAHLIAN</span><svg viewBox="0 0 44 44" fill="none" aria-hidden="true"><circle cx="22" cy="22" r="20"/><path d="m22 8 7 14-7 14-7-14zM8 22h28M22 8v28"/><circle cx="22" cy="22" r="3"/></svg></div>
+          <span class="esa-pack-lifetime">SEKALI TANAM · SEUMUR HIDUP</span>
+          <p class="esa-pack-price-label">Investasi sekali, untuk dirimu sendiri</p><div class="esa-pack-amount"><span>Rp</span><strong>299.000</strong></div><p class="esa-pack-once">Sekali bayar. Akses selamanya.</p>
+          <p class="esa-pack-invest">Ini bukan biaya langganan — ini <strong>investasi ke kepalamu</strong>. Angka 299 ribu habis dalam sekali jalan-jalan akhir pekan, tapi keahlian yang kamu bangun di sini terpakai sepanjang karir.</p>
+          <p class="esa-pack-invest">Mesin bisa rusak, emas bisa hilang, tabungan bisa terpakai. Yang kamu tanam di kepala tidak bisa diambil siapa pun, dan nilainya justru naik tiap kali dipakai — di proyek, di wawancara kerja, di kenaikan jabatan.</p>
+          <p class="esa-pack-invest">Sekali bayar hari ini, kamu meng-upgrade dirimu sendiri: 16 Academy, 1.117 modul, lab simulator, dan sertifikat ber-QR. <strong>Investasi paling aman adalah investasi pada kemampuanmu sendiri.</strong></p>
+
+    <ul class="esa-pack-included">
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>16 Academy · 6 level belajar</li>
+
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Termasuk pembaruan materi</li>
+
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Tanpa langganan bulanan</li>
+</ul>
+
+
+    <button type="button" class="esa-pack-cta" onclick="openPurchaseModal()">Buka Akses Sekarang <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+<p class="esa-pack-payment">Bayar via QRIS · Aktivasi setelah verifikasi.</p>
+        </aside>
+
       </div>
-    </a>
-  </section>
-
-  <section class="academy-pricing">
-    <div class="academy-pricing-inner">
-      <div class="academy-pricing-card reveal">
-        <div class="academy-pricing-eyebrow">Paket Lifetime · Full Access</div>
-        <h2 class="academy-pricing-title">
-          Electra <span class="italic">Academy</span>
-        </h2>
-        <p style="color:rgba(245,240,230,0.7);font-family:var(--sans);font-size:0.92rem;line-height:1.6;margin:0 0 20px;max-width:560px;">Investasi sekali — akses seumur hidup ke seluruh ekosistem akademi: 1.117 modul, AI Tutor, sertifikat, talent pool ke 100+ perusahaan partner, plus event eksklusif.</p>
-
-        <div class="esa-promo-chip">
-          <span aria-hidden="true" class="chip-ic">⚡</span>
-          <span>Promo Spesial · Berlaku sampai 31 Juli 2026</span>
-        </div>
-
-        <div class="academy-pricing-price-row">
-          <div style="display:flex;flex-direction:column;gap:6px;">
-            <span style="display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(245,240,230,0.55);font-weight:600;">Harga Normal
-              <span style="text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:rgba(255,107,107,0.75);color:rgba(245,240,230,0.5);font-family:var(--serif);font-size:1.4rem;font-weight:500;letter-spacing:0;text-transform:none;">Rp 1.000.000</span>
-            </span>
-            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">
-              <span class="academy-pricing-price">Rp 299.000</span>
-              <span class="academy-pricing-period">/ Lifetime · Sekali Bayar</span>
-            </div>
-            <span class="esa-save-note">✦ Hemat Rp 701.000 — diskon 70% selama promo</span>
-          </div>
-        </div>
-
-        <div class="academy-pricing-section-title">Yang Kamu Dapatkan</div>
-
-        <ul class="academy-pricing-list esa-pricing-grid esa-benefits-collapsed" id="esaBenefitsGrid">
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="📚"><img loading="lazy" alt="Modul kelistrikan" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">1.117 Modul &amp; Video Edukasi HD</div>
-              <div class="esa-benefit-desc">Kurikulum 16 jalur karir lengkap (L1–L6), video pembelajaran HD, animasi rangkaian, dan modul PDF. Akses offline tanpa kuota — cocok untuk lapangan.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🤖"><img loading="lazy" alt="AI Tutor" src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">AI Tutor Personal 24/7</div>
-              <div class="esa-benefit-desc">Asisten AI kelistrikan yang paham PUIL, SKKNI, dan regulasi PLN. Tanya kapan saja — jawaban spesifik ke konteks Indonesia, ribuan case study real industri.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🎓"><img loading="lazy" alt="Sertifikat digital" src="https://images.unsplash.com/photo-1606159068539-43f36b99d1b2?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Sertifikat Digital + QR Verifikasi</div>
-              <div class="esa-benefit-desc">Sertifikat per modul dan per level dengan QR code publik (siap di-share LinkedIn &amp; CV). Selaras SKKNI — siap lanjut uji kompetensi.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🔧"><img loading="lazy" alt="Praktikum bootcamp" src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Praktikum Bootcamp &amp; Portofolio</div>
-              <div class="esa-benefit-desc">Proyek-proyek nyata berbasis studi kasus PLN, kontraktor, dan industri manufaktur. Output: portofolio profesional siap pajang untuk melamar kerja.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🖥️"><img loading="lazy" alt="Simulator listrik" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Simulator Wiring &amp; Virtual Lab</div>
-              <div class="esa-benefit-desc">Latihan wiring panel, troubleshooting motor, simulasi PLC, dan pengukuran multimeter — semua secara virtual tanpa biaya alat fisik.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="📝"><img loading="lazy" alt="Bank soal" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">15.000+ Bank Soal &amp; Simulasi UKK</div>
-              <div class="esa-benefit-desc">Database soal masif: latihan modul, ujian level, simulasi UKK Kemnaker, dan tryout uji kompetensi. Sistem cooldown disable — ulang sebanyak yang dibutuhkan.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="📖"><img loading="lazy" alt="Katalog buku referensi" src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Katalog Buku &amp; Referensi Eksklusif</div>
-              <div class="esa-benefit-desc">Akses 60+ e-book SMK/STM, PUIL 2011, modul kemnaker, IEEE/IEC standard reference, dan handbook industri. Update rutin tiap bulan.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🛠️"><img loading="lazy" alt="Workshop offline" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Kesempatan Workshop Offline</div>
-              <div class="esa-benefit-desc">Undangan prioritas ke workshop offline di Jabodetabek, Bandung, Surabaya, dan kota-kota besar lainnya. Praktek langsung dengan instruktur PLN &amp; industri.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="💼"><img loading="lazy" alt="Job posting eksklusif" src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Job Board Eksklusif Member</div>
-              <div class="esa-benefit-desc">Akses lowongan eksklusif yang tidak di-publish ke umum: PLN Group, Pertamina, IPP swasta, EPC kontraktor. Plus referral langsung dari alumni senior.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🤝"><img loading="lazy" alt="Talent pool" src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Talent Pool &amp; Job Matchmaking</div>
-              <div class="esa-benefit-desc">Profil alumni terhubung ke 100+ recruiter (PLN Group, Pertamina, IPP, kontraktor MEP, vendor industri). Job matchmaking proaktif untuk alumni level Profesional ke atas.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="👥"><img loading="lazy" alt="Komunitas dan mentor" src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Komunitas, Mentor &amp; Live Q&amp;A</div>
-              <div class="esa-benefit-desc">Channel komunitas aktif (WhatsApp + Discord) dengan praktisi PLN, kontraktor, MEP. Live Q&amp;A bulanan dengan engineer senior &amp; alumni berpengalaman.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🌿"><img loading="lazy" alt="Green job energy terbarukan" src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Materi Green Job &amp; Energi Terbarukan</div>
-              <div class="esa-benefit-desc">Kurikulum terbaru: Solar PV system, BESS, EV charging, smart grid, ESG &amp; carbon accounting. Sektor green job paling cepat tumbuh di Indonesia 2026+.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🎯"><img loading="lazy" alt="CV Builder dan mock interview" src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">CV Builder, Mock Interview &amp; Update Gratis</div>
-              <div class="esa-benefit-desc">Template CV ATS-friendly, simulasi wawancara teknis dengan AI, plus update modul &amp; kurikulum gratis seumur hidup — sekali bayar, akses selamanya.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🧭"><img loading="lazy" alt="Career advisory 1-on-1" src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Career Advisory 1-on-1</div>
-              <div class="esa-benefit-desc">Sesi konsultasi karir personal dengan advisor industri: pemetaan jalur (PLN/IPP/Kontraktor/MEP/Renewable), review CV &amp; portofolio, simulasi interview teknis, plus mentoring 30 menit/bulan untuk member aktif.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="🧪"><img loading="lazy" alt="Lab simulator room hands-on" src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Lab &amp; Simulator Room</div>
-              <div class="esa-benefit-desc">Akses penuh ke Simulator Lab per spesialisasi (5 lab di Instalasi) (pencahayaan, drop tegangan, MCB, motor starting, trafo, sag transmisi, arc flash, pembumian, dll) + 9 Design Calculator (cable sizing, arc flash, maximum demand) — plus undangan ke Physical Lab Room mitra ESA di Jabodetabek &amp; Bandung.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="📚"><img loading="lazy" alt="Library digital kumpulan buku elektro" src="https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&w=300&q=70" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">Library Premium · 115+ Buku Elektro</div>
-              <div class="esa-benefit-desc">Perpustakaan digital terklasifikasi: koleksi SMK/STM Kemendikbud + <strong>58 e-book S1 Teknik Elektro UI</strong> (Halliday, Kreyszig, Hayt, Boylestad, Haykin, Nise, Ogata, Chapman, Proakis, Balanis, dll) dipetakan per semester, plus standar PUIL/IEC/IEEE. Buka <a onclick="event.preventDefault();showView('referensi');" href="#" style="color:#d4af6a;text-decoration:underline;">Electra Library →</a>.</div>
-            </div>
-          </li>
-
-          <li class="esa-benefit-card">
-            <div class="esa-benefit-photo" data-fallback-icon="📖"><img loading="lazy" alt="E-book Kang Listrik" src="kang-listrik-cover.jpeg" onerror="this.parentElement.classList.add('esa-img-err');this.remove();"></div>
-            <div class="esa-benefit-body">
-              <div class="esa-benefit-title">E-book Eksklusif · "Kang Listrik 5.0"</div>
-              <div class="esa-benefit-desc">Panduan memulai karir ketenagalistrikan di era AI untuk siapa pun yang ingin berkarir di sektor ketenagalistrikan — karya <strong>Dr. Qashtalani Haramaini, S.T., M.T.</strong> Bahas mega tren energi global, sektor &amp; jenjang karir, panduan karir praktis, plus data &amp; analisis industri. Harga normal Rp 325.000 — <strong>GRATIS untuk member Electra Academy</strong>.</div>
-            </div>
-          </li>
-        </ul>
-        <button type="button" class="esa-benefits-toggle" id="esaBenefitsToggle"
-          onclick="(function(b){var g=document.getElementById('esaBenefitsGrid');var c=g.classList.toggle('esa-benefits-collapsed');b.querySelector('.tg-text').textContent=c?'Lihat 11 Benefit Lainnya':'Tampilkan Ringkas';if(!c)return;g.scrollIntoView({behavior:'smooth',block:'start'});})(this)">
-          <span class="tg-text">Lihat 11 Benefit Lainnya</span>
-          <svg class="tg-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-
-        <!-- E-book Bonus Poster -->
-        <div class="esa-ebook-bonus" style="margin-top:40px;padding:32px;background:linear-gradient(135deg,rgba(212,175,106,0.1),rgba(160,120,64,0.04));border:1px solid rgba(212,175,106,0.32);border-radius:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:32px;align-items:center;">
-          <div style="position:relative;border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,0.45);aspect-ratio:5/8;background:linear-gradient(150deg,#1a2740,#0d1626 55%,#08101c);display:flex;flex-direction:column;justify-content:space-between;padding:26px 24px;">
-            <img src="kang-listrik-cover.jpeg" alt="E-book Kang Listrik 5.0 — Dr. Qashtalani Haramaini" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;" onerror="this.remove();">
-            <div style="font-family:var(--sans);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#f0d080;font-weight:700;">E-book Eksklusif</div>
-            <div style="text-align:center;">
-              <div style="font-size:46px;line-height:1;margin-bottom:14px;">⚡</div>
-              <div style="font-family:var(--serif);font-size:clamp(30px,4vw,44px);font-weight:600;color:#f5f0e6;line-height:1.05;letter-spacing:0.01em;">Kang<br>Listrik <span style="color:#f0d080;">5.0</span></div>
-              <div style="margin:16px auto 0;width:48px;height:2px;background:linear-gradient(90deg,transparent,#d4af6a,transparent);"></div>
-              <div style="font-family:var(--sans);font-size:0.72rem;color:rgba(245,240,230,0.7);margin-top:14px;line-height:1.5;">Panduan Memulai Karir<br>Ketenagalistrikan di era AI</div>
-            </div>
-            <div style="font-family:var(--sans);font-size:0.7rem;letter-spacing:0.08em;color:rgba(245,240,230,0.6);text-align:center;">Dr. Qashtalani Haramaini, S.T., M.T.</div>
-          </div>
-          <div>
-            <div style="font-family:var(--sans);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#f0d080;font-weight:700;margin-bottom:10px;">🎁 Bonus Eksklusif Member</div>
-            <h3 style="font-family:var(--serif);font-size:clamp(22px,2.6vw,30px);font-weight:500;color:#f5f0e6;line-height:1.25;margin:0 0 14px;">E-book <span style="font-style:italic;color:#f0d080;">"Kang Listrik 5.0"</span></h3>
-            <p style="font-family:var(--sans);font-size:0.92rem;color:rgba(245,240,230,0.78);line-height:1.65;margin:0 0 18px;">Panduan wajib untuk generasi energi — karya <strong>Dr. Qashtalani Haramaini, S.T., M.T.</strong> Bahas masa depan karir di sektor ketenagalistrikan: mega tren dunia, peluang nyata, dan karir tanpa batas, untuk siapa pun yang ingin berkarir di sektor ketenagalistrikan di era transisi.</p>
-            <ul style="list-style:none;padding:0;margin:0 0 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-family:var(--sans);font-size:0.82rem;color:rgba(245,240,230,0.82);">
-              <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Mega tren energi global</li>
-              <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Sektor &amp; jenjang karir</li>
-              <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Panduan karir praktis</li>
-              <li style="display:flex;gap:8px;align-items:flex-start;"><span style="color:#f0d080;">✓</span> Data &amp; analisis industri</li>
-            </ul>
-            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px;">
-              <span style="font-family:var(--sans);font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,230,0.55);">Harga Normal
-                <span style="text-decoration:line-through;text-decoration-color:rgba(255,107,107,0.75);color:rgba(245,240,230,0.5);font-family:var(--serif);font-size:1.15rem;margin-left:6px;">Rp 325.000</span>
-              </span>
-              <span style="background:linear-gradient(135deg,#d4af6a,#c9a96e);color:#1a1208;font-family:var(--sans);font-size:0.78rem;font-weight:800;letter-spacing:0.1em;padding:6px 12px;border-radius:6px;">GRATIS untuk Member</span>
-            </div>
-            <a href="/api/ebook" onclick="return esaDownloadEbook(event)" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#d4af6a,#c9a96e);color:#1a1208;font-family:var(--sans);font-size:0.92rem;font-weight:800;letter-spacing:0.04em;text-decoration:none;padding:14px 28px;border-radius:10px;box-shadow:0 8px 24px rgba(212,175,106,0.4);transition:transform .15s ease,box-shadow .15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 30px rgba(212,175,106,0.55)';" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 24px rgba(212,175,106,0.4)';">📥 Unduh E-book (PDF)</a>
-            <div style="font-family:var(--sans);font-size:0.8rem;color:rgba(245,240,230,0.7);line-height:1.6;margin-top:14px;">Gratis untuk member — klik tombol di atas untuk langsung mengunduh file PDF-nya.</div>
-          </div>
-        </div>
-
-        <!-- Strong CTA -->
-        <div style="margin-top:36px;padding:28px 28px;background:linear-gradient(135deg,rgba(212,175,106,0.16),rgba(160,120,64,0.08));border:1px solid rgba(212,175,106,0.4);border-radius:14px;text-align:center;">
-          <div style="font-family:var(--sans);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#f0d080;font-weight:700;margin-bottom:8px;">⏰ Promo Akan Berakhir</div>
-          <div style="font-family:var(--serif);font-size:clamp(20px,2.4vw,26px);font-weight:500;color:#f5f0e6;line-height:1.3;margin-bottom:8px;">Daftar sekarang, kunci harga <span style="color:#f0d080;font-style:italic;">Rp 299.000</span> seumur hidup.</div>
-          <div style="font-family:var(--sans);font-size:0.85rem;color:rgba(245,240,230,0.75);line-height:1.6;margin-bottom:22px;">Sekali bayar, akses selamanya — termasuk update modul &amp; fitur baru di masa depan.</div>
-          <button class="academy-pricing-cta" onclick="openPurchaseModal()" style="background:linear-gradient(135deg,#d4af6a,#c9a96e);box-shadow:0 8px 24px rgba(212,175,106,0.4);font-size:13px;letter-spacing:0.18em;padding:18px 38px;">⚡ Daftar Sekarang — Akses Penuh</button>
-          <div style="margin-top:14px;font-size:0.75rem;color:rgba(245,240,230,0.6);letter-spacing:0.04em;">💳 Pembayaran aman · 🔒 Sertifikat terverifikasi · ✅ Garansi akses lifetime</div>
-        </div>
-      </div>
+      <p class="esa-pack-availability">Materi tersedia sesuai tahap rilis setiap Academy. Workshop dan bootcamp mengikuti jadwal serta biaya program tersendiri.</p>
     </div>
   </section>
 
-  <!-- ===== FAQ HOME SECTION ===== -->
-  <section class="home-faq">
-    <div class="home-faq-inner">
-      <div class="home-faq-header reveal">
-        <div class="section-eyebrow">Pertanyaan Umum</div>
-        <h2 class="home-faq-title">Yang Sering <span class="home-faq-accent">Ditanyakan</span></h2>
-        <p class="home-faq-subtitle">Jawaban cepat untuk pertanyaan paling umum tentang program Electra Skill Academy. Tidak ketemu? <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20program%20Electra%20Academy" target="_blank" rel="noopener" class="home-faq-wa">Chat Admin via WA</a>.</p>
-      </div>
 
-      <div class="home-faq-grid reveal">
-        <details class="home-faq-item">
-          <summary>
-            <span>Saya pemula tanpa background teknik listrik. Bisa ikut?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Sangat bisa.</strong> Program kami dimulai dari <em>Level 1 — Esensial</em>: konsep dasar arus, tegangan, hambatan, daya. Tidak butuh background teknik sebelumnya. Banyak alumni kami fresh graduate SMA/SMK non-listrik yang sekarang kerja di PLN, vendor industri, dan kontraktor. Kuncinya: konsisten kerjakan modul + quiz, manfaatkan asisten modul untuk tanya hal yang belum jelas.</p>
-          </div>
-        </details>
+    <section class="esa-pack-faq" id="membership-faq" aria-labelledby="esa-pack-faq-title"><div class="esa-pack-shell esa-pack-faq-layout">
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Berapa lama waktu yang dibutuhkan untuk menyelesaikan program?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p>Tergantung kecepatan belajar dan target Anda. <strong>Estimasi rata-rata:</strong></p>
-            <ul>
-              <li>Level 1 Esensial (25 modul) — 4-6 minggu (1-2 jam/hari)</li>
-              <li>Level 2 Fundamental (23 modul) — 4-5 minggu</li>
-              <li>Per jalur spesialisasi L3-L6 (60-80 modul) — 3-5 bulan</li>
-              <li>Sampai sertifikat tertinggi (Level 6 Consultant) — 8-12 bulan</li>
-            </ul>
-            <p>Belajar self-paced — Anda bisa percepat atau perlambat sesuai jadwal kerja.</p>
-          </div>
-        </details>
+    <header class="esa-pack-faq-intro"><span class="esa-pack-eyebrow">SEBELUM KAMU MULAI</span><h2 id="esa-pack-faq-title">Biar makin<br><em>mantap melangkah.</em></h2><p>Jawaban singkat untuk pertanyaanmu.</p><a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20program%20Electra%20Academy" target="_blank" rel="noopener" class="esa-pack-help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a8 8 0 0 1-8 8H8l-5 3v-7a8 8 0 1 1 18-4Z"/><path d="M8 10h8M8 14h5"/></svg>Tanya admin <span aria-hidden="true">↗</span></a></header>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apa bedanya sertifikat Electra Academy dengan sertifikat kompetensi resmi?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Sertifikat ESA</strong> adalah sertifikat penyelesaian (knowledge competency) — bukti Anda menguasai materi dengan minimum skor 70%. Bisa di-share ke LinkedIn, di-attach di CV, dan diverifikasi via QR code di <a href="/verify.html" target="_blank">/verify.html</a>.</p>
-            <p><strong>Sertifikat kompetensi resmi</strong> adalah sertifikat resmi pemerintah untuk profesi teknik. ESA <strong>bukan lembaga sertifikasi</strong> — materi belajar kami dirancang menyelaraskan dengan SKKNI sehingga Anda <strong>lebih siap mengikuti uji kompetensi</strong> di LSP resmi.</p>
-          </div>
-        </details>
+    <div class="esa-pack-faq-content"><div class="esa-pack-tabs" data-pack-faq-tabs aria-label="Topik pertanyaan" hidden>
+    <button type="button" id="esa-faq-tab-akses" data-pack-faq="akses" aria-controls="esa-faq-akses">Akses & biaya</button>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Berapa biaya program Electra Skill Academy?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p>Detail paket berlangganan dapat dilihat di section <strong>Pricing</strong> di halaman utama. Skema saat ini: <strong>sekali bayar untuk akses penuh</strong> ke semua 16 jalur karir, semua level (L1-L6), dan semua 1.117 modul.</p>
-            <p>Untuk info promo aktif, paket korporat (perusahaan untuk karyawan), atau cicilan, hubungi admin via WhatsApp <strong>0851-2153-2407</strong>.</p>
-          </div>
-        </details>
+    <button type="button" id="esa-faq-tab-materi" data-pack-faq="materi" aria-controls="esa-faq-materi">Materi & praktik</button>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apakah ada Live Class atau hanya video rekaman?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Keduanya.</strong> Setiap modul punya video rekaman + materi PPT + quiz 25 soal. Plus <strong>Live Class virtual via Zoom</strong> mulai <strong>1 Juli 2026</strong>, setiap 3 hari sekali, dipandu langsung oleh Founder Dr Qashtalani Haramaini atau Co-Founder Farda Najih (untuk jalur K3, Auditor, Renewable).</p>
-            <p>Live Class GRATIS untuk member aktif — link Zoom dikirim H-1 ke email & WhatsApp. Kalau tidak bisa hadir, rekaman akan ditambahkan ke modul terkait dalam 1-3 hari.</p>
-          </div>
-        </details>
+    <button type="button" id="esa-faq-tab-karir" data-pack-faq="karir" aria-controls="esa-faq-karir">Sertifikat & karir</button>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Saya bekerja shift, bisa belajar fleksibel?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p>Materi <strong>100% self-paced</strong> — semua video, slide, dan quiz bisa diakses 24/7 dari device manapun (laptop, tablet, HP). Progress disimpan di akun Anda — login di device lain langsung lanjut dari modul terakhir.</p>
-            <p>Asisten modul AI siap menjawab pertanyaan kapan pun (kuota 50 pertanyaan per akun). Live Class direkam jadi tidak masalah kalau jadwal bentrok dengan shift kerja.</p>
-          </div>
-        </details>
+    <button type="button" id="esa-faq-tab-bonus" data-pack-faq="bonus" aria-controls="esa-faq-bonus">Library & bonus</button>
+</div>
+    <section id="esa-faq-akses" class="esa-pack-faq-panel" aria-labelledby="esa-faq-tab-akses"><h3 class="esa-pack-faq-group-title">Akses & biaya</h3>
+    <details class="esa-pack-question">
+    <summary>Rp299.000 sudah dapat apa?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Sekali bayar untuk akses lifetime ke seluruh Academy, materi yang tersedia, AI Tutor, virtual lab, library, serta fasilitas keanggotaan. Tidak ada biaya langganan bulanan. Workshop dan bootcamp praktik memiliki ketentuan biaya tersendiri.</p></div></details>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Bagaimana cara verifikasi sertifikat oleh perusahaan/recruiter?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p>Setiap sertifikat punya <strong>ID unik + QR code</strong>. Recruiter cukup scan QR code di PDF sertifikat — otomatis arahkan ke <a href="/verify.html" target="_blank">electraacademy.com/verify.html</a> dan menampilkan nama pemegang, level, jalur, skor rata-rata, dan tanggal terbit langsung dari database resmi kami.</p>
-            <p>Sertifikat tidak bisa dipalsukan — verifikasi real-time ke server. Recruiter tidak perlu bertanya ke admin.</p>
-          </div>
-        </details>
+    <details class="esa-pack-question">
+    <summary>Masih pemula, bisa mulai dari mana?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Mulai dari Level 1 — Esensial untuk mengenal arus, tegangan, hambatan, dan daya. Lanjutkan ke fondasi, lalu pilih Academy sesuai tujuanmu. Tidak perlu latar belakang teknik listrik untuk mulai.</p></div></details>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apakah ada materi praktik?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Ada</strong> — namun terpisah dari kelas teori online. Sesi praktik hands-on diselenggarakan dalam format <strong>Workshop</strong> (1-2 hari, topik tematik) dan <strong>Bootcamp</strong> (3-5 hari, intensif end-to-end) di lokasi mitra training Electra.</p>
-            <p>Untuk jadwal terdekat, kuota, biaya, dan kurikulum praktik per jalur, silakan hubungi admin via WhatsApp di <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20Workshop%20%2F%20Bootcamp%20praktik" target="_blank" rel="noopener">+62 851-2153-2407</a>.</p>
-          </div>
-        </details>
+    <details class="esa-pack-question">
+    <summary>Bisa belajar sambil bekerja?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Bisa. Materi rekaman dapat dipelajari sesuai waktu luang melalui laptop, tablet, atau ponsel. Progres tersimpan di akun agar kamu bisa melanjutkan belajar.</p></div></details>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apa beda Electra Academy dengan kursus lain?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p>Kami bukan sekadar tempat belajar — kami adalah <strong>karir partner</strong>. Lima hal yang membedakan:</p>
-            <ul>
-              <li><strong>Bantu bangun portofolio.</strong> Setiap level Anda dipandu menyusun studi kasus & dokumen kerja yang siap dipakai untuk interview dan tender.</li>
-              <li><strong>Talent Pool eksklusif.</strong> Lulusan bersertifikasi otomatis masuk database talent yang kami sodorkan langsung ke mitra industri (utility, kontraktor, IPP, konsultan).</li>
-              <li><strong>Job posting eksklusif member.</strong> Lowongan dari mitra rekrutmen yang tidak dipublikasi ke umum, hanya bisa diakses oleh member aktif.</li>
-              <li><strong>AI Tutor 24/7.</strong> Asisten belajar berbasis AI siap menjawab pertanyaan teknis kapan pun — seperti punya senior engineer pribadi.</li>
-              <li><strong>Materi sesuai zaman.</strong> Topik AI di kelistrikan, smart grid, EV charging, dan teknologi terbaru terus ditambahkan — bukan kurikulum lama yang di-recycle.</li>
-            </ul>
-          </div>
-        </details>
+    <details class="esa-pack-question">
+    <summary>Berapa lama sampai selesai?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Kecepatan belajar mengikuti waktu dan targetmu. Mulai dari fondasi, selesaikan latihan, lalu lanjutkan per level. Akses lifetime memberi ruang untuk mengulang materi kapan diperlukan.</p></div></details>
+</section>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apakah materi up-to-date dengan standar terkini?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Ya.</strong> Kurikulum disusun berdasarkan: <strong>PUIL 2011 (SNI 0225), SKKNI ketenagalistrikan terbaru, regulasi ESDM/Kemnaker terkini, Permen ESDM 26/2021 (renewable), IEEE 1584 (arc flash), NFPA 70E (electrical safety)</strong>.</p>
-            <p>Pemateri adalah praktisi aktif dengan pengalaman 10+ tahun di sektor distribusi/utility — bukan dosen yang lama tidak turun lapangan. Materi di-update minimal 6 bulan sekali untuk reflect perubahan regulasi & teknologi (mis. smart grid, AI inspeksi, EV charging).</p>
-          </div>
-        </details>
+    <section id="esa-faq-materi" class="esa-pack-faq-panel" aria-labelledby="esa-faq-tab-materi"><h3 class="esa-pack-faq-group-title">Materi & praktik</h3>
+    <details class="esa-pack-question">
+    <summary>Apakah semua video sudah tersedia?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Materi dirilis bertahap. Katalog menampilkan materi sesuai kesiapan masing-masing Academy. Akses keanggotaan mencakup pembaruan materi yang ditambahkan.</p></div></details>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apakah ada Career Advisory atau bimbingan karir 1-on-1?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Ya — sudah termasuk di paket Lifetime Rp 299.000.</strong> Member aktif mendapat akses ke layanan <em>Career Advisory</em>:</p>
-            <ul>
-              <li><strong>Pemetaan jalur karir personal</strong> — match skill, pengalaman, &amp; preferensi Anda ke 16 jalur (instalasi, industri, distribusi, transmisi, data science, auditor, renewable, K3, sales engineer, solar, carbon, EV charging, waste-to-energy, hidrogen, BESS, otomasi).</li>
-              <li><strong>Review CV &amp; portofolio</strong> — feedback langsung dari advisor industri sebelum kirim lamaran.</li>
-              <li><strong>Mock interview teknis</strong> — simulasi wawancara dengan AI + 1 sesi live bulanan dengan engineer senior.</li>
-              <li><strong>Career mentoring 30 menit/bulan</strong> — book via dashboard untuk diskusi target karir, gaji, atau transisi industri.</li>
-            </ul>
-            <p>Layanan aktif sejak member menyelesaikan Level 2 Fundamental.</p>
-          </div>
-        </details>
+    <details class="esa-pack-question">
+    <summary>Bagaimana akses lab dan simulator?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Buka menu Labs melalui akun member untuk menggunakan simulator dan kalkulator teknik yang tersedia. Latihan virtual membantu memahami konsep sebelum praktik langsung.</p></div></details>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apa itu Lab / Simulator Room dan bagaimana cara aksesnya?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Lab &amp; Simulator Room</strong> adalah ruang praktik virtual + fisik untuk mengasah skill tanpa risiko sengatan listrik atau biaya alat ratusan juta:</p>
-            <ul>
-              <li><strong>Simulator Lab (ElectraSim 3D)</strong> — simulator kelistrikan interaktif per jalur karir (wiring instalasi, motor &amp; starter, distribusi 20 kV, PLTS, BESS, K3, dan lainnya). Buka di menu <em>Labs</em>, khusus member.</li>
-              <li><strong>9 Design Calculator</strong> — cable sizing AS/NZS-BS-IEC-NFPA, maximum demand, arc flash IEEE 1584, voltage drop, cable pulling tension, protection coordination.</li>
-              <li><strong>Physical Lab Room</strong> — undangan prioritas ke partner training facility ESA di Jabodetabek, Bandung, Surabaya untuk hands-on praktik dengan instruktur PLN/industri.</li>
-            </ul>
-            <p>Akses Lab di menu navigasi atas → <em>Labs</em>, atau langsung dari dashboard member.</p>
-          </div>
-        </details>
+    <details class="esa-pack-question">
+    <summary>Apakah workshop dan bootcamp termasuk?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Akses belajar online dan praktik langsung adalah program berbeda. Jadwal, lokasi, kuota, serta biaya workshop atau bootcamp mengikuti program. Hubungi admin untuk informasi sebelum mendaftar.</p></div></details>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apakah dapat e-book yang bisa bantu karir electrician saya?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Dapat — gratis untuk member.</strong> Setiap member Electra Academy mendapat <strong>e-book eksklusif "Kang Listrik 5.0"</strong> karya Founder kami, Dr. Qashtalani Haramaini, S.T., M.T. — panduan praktis memulai karir di industri ketenagalistrikan untuk siapa pun yang ingin berkarir di sektor ketenagalistrikan di era transisi energi.</p>
-            <p>Isinya: mega tren energi global, sektor &amp; jenjang karir yang terbentang, panduan karir praktis (dari interview sampai negosiasi gaji), plus data &amp; analisis industri yang dibutuhkan untuk mengambil keputusan karir yang tepat. Harga retail Rp 325.000 — <strong>bisa langsung diunduh sebagai file PDF</strong> lewat tombol unduh di section bonus member.</p>
-          </div>
-        </details>
+    <details class="esa-pack-question">
+    <summary>Ada live class dan pembaruan materi?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Member dapat mengikuti live class yang tersedia sesuai jadwal. Cek menu Live Class atau pengumuman akun untuk sesi dan rekamannya. Materi belajar juga diperbarui mengikuti pengembangan kurikulum.</p></div></details>
+</section>
 
-        <details class="home-faq-item">
-          <summary>
-            <span>Apa saja koleksi buku di Library? Termasuk buku universitas?</span>
-            <span class="home-faq-chevron">+</span>
-          </summary>
-          <div class="home-faq-answer">
-            <p><strong>Electra Library</strong> adalah perpustakaan digital terklasifikasi dengan <strong>80+ judul</strong> yang dikelompokkan per spesialisasi:</p>
-            <ul>
-              <li><strong>Fondasi &amp; Dasar</strong> — Dasar Listrik &amp; Elektronika, Gambar Teknik, Pengukuran (Kemendikbud SMK).</li>
-              <li><strong>Instalasi &amp; Pemanfaatan</strong> — PUIL 2011, Instalasi Tenaga &amp; Penerangan, Brian Scaddan (Electrical Installation Work).</li>
-              <li><strong>Industri &amp; Motor</strong> — Teknik Listrik Industri Jilid 1-3, Instalasi Motor, Pengendalian Motor.</li>
-              <li><strong>Otomasi &amp; Sensor</strong> — Sensor &amp; Aktuator, Pneumatik &amp; Hidrolik, Teknik Otomasi Industri, Teknik Kontrol.</li>
-              <li><strong>Pembangkit &amp; Transmisi</strong> — Pembangkit Tenaga Listrik, Generator, Transmisi Jilid 1-2.</li>
-              <li><strong>Akademik · S1 (UI)</strong> — 58 e-book Teknik Elektro FT UI dari <a href="https://ime.eng.ui.ac.id/ebook%20-elektro/" target="_blank" rel="noopener">ime.eng.ui.ac.id</a>, dikelompokkan per semester: Sem 1-2 (Halliday, Purcell, Anton, Giancoli, Alexander-Sadiku), Sem 3 (Kreyszig, Mano, Pierret, Walpole), Sem 4 (Hayt, Boylestad, Haykin), Sem 5 (Chapra, Nise, Ogata, Proakis, Chapman), Sem 6 (Sullivan, Ljung, Klee), Sem 7 (Balanis, Craig, Kuffel, Weste).</li>
-              <li><strong>Standar &amp; Regulasi</strong> — PUIL, IEC 60364, IEEE 1584, NFPA 70E, SKKNI ketenagalistrikan.</li>
-            </ul>
-            <p>Buka via menu <em>Library</em> atau langsung di <a onclick="event.preventDefault();showView('referensi');" href="#" style="color:#d4af6a;text-decoration:underline;">halaman Electra Library</a>. Filter chip per kategori — klik judul buka langsung ke file PDF.</p>
-          </div>
-        </details>
-      </div>
+    <section id="esa-faq-karir" class="esa-pack-faq-panel" aria-labelledby="esa-faq-tab-karir"><h3 class="esa-pack-faq-group-title">Sertifikat & karir</h3>
+    <details class="esa-pack-question">
+    <summary>Apakah sertifikatnya sertifikasi resmi?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Sertifikat Electra adalah bukti penyelesaian belajar, dengan syarat kelulusan yang berlaku. Sertifikat kompetensi resmi memerlukan uji kompetensi melalui LSP; Electra bukan lembaga sertifikasi.</p></div></details>
 
-      <div class="home-faq-cta reveal">
-        <a href="#faq" onclick="event.preventDefault();showView('faq');" class="home-faq-cta-btn">Lihat Semua FAQ</a>
-        <a href="https://wa.me/6285121532407?text=Halo%20Admin%2C%20saya%20mau%20tanya%20soal%20program%20Electra%20Academy" target="_blank" rel="noopener" class="home-faq-cta-btn home-faq-cta-secondary">Chat Admin Langsung</a>
-      </div>
-    </div>
-  </section>
+    <details class="esa-pack-question">
+    <summary>Bagaimana memverifikasi sertifikat?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Pindai QR code pada sertifikat, atau buka <a href="/verify.html" target="_blank" rel="noopener">halaman verifikasi</a>. Informasi sertifikat dapat diperiksa menggunakan identitas sertifikatnya.</p></div></details>
+
+    <details class="esa-pack-question">
+    <summary>Apakah tersedia bimbingan karir?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Career advisory mencakup pemetaan jalur, review CV atau portofolio, dan persiapan wawancara. Layanan aktif setelah Level 2 Fundamental dan mengikuti jadwal layanan.</p></div></details>
+
+    <details class="esa-pack-question">
+    <summary>Apakah ada bantuan mencari pekerjaan?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Job board dan talent pool membantu menemukan peluang serta menampilkan profil profesional. Keputusan rekrutmen tetap berada pada perusahaan; keanggotaan tidak menjamin pekerjaan.</p></div></details>
+</section>
+
+    <section id="esa-faq-bonus" class="esa-pack-faq-panel" aria-labelledby="esa-faq-tab-bonus"><h3 class="esa-pack-faq-group-title">Library & bonus</h3>
+    <details class="esa-pack-question">
+    <summary>Bagaimana mendapat e-book Kang Listrik 5.0?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>E-book termasuk untuk member. Masuk ke akun dengan akses aktif, lalu pilih Unduh e-book. Panduan ini membahas peluang dan persiapan karir ketenagalistrikan.</p></div></details>
+
+    <details class="esa-pack-question">
+    <summary>Apa yang tersedia di Library?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Referensi kelistrikan, buku teknik, dan materi pendukung dikelompokkan menurut bidang. Buka menu Library untuk melihat koleksi yang tersedia serta ketentuan akses tiap referensi.</p></div></details>
+
+    <details class="esa-pack-question">
+    <summary>Apa kelebihan belajar di Electra?<span aria-hidden="true">+</span></summary>
+<div class="esa-pack-answer"><p>Kamu dapat menyambungkan belajar teori, latihan virtual, referensi, dan persiapan karir dalam satu platform. Pilih bidang yang relevan lalu bangun pemahaman secara bertahap.</p></div></details>
+</section>
+<a href="#faq" onclick="event.preventDefault();showView('faq');" class="esa-pack-all-faq">Lihat pusat bantuan <span aria-hidden="true">↗</span></a></div>
+  </div></section>
+
+
+    <dialog id="esa-pack-dialog" class="esa-pack-dialog" aria-labelledby="esa-pack-dialog-title">
+    <header><div><span class="esa-pack-eyebrow">TERMASUK DALAM KEANGGOTAAN</span><h2 id="esa-pack-dialog-title">Ruang untuk berkembang.</h2></div>
+    <button type="button" data-pack-close aria-label="Tutup detail fasilitas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+</header>
+<div class="esa-pack-tabs" data-pack-benefit-tabs aria-label="Kategori fasilitas">
+    <button type="button" id="esa-benefit-tab-belajar" data-pack-benefit="belajar" aria-controls="esa-benefit-belajar">Belajar</button>
+
+    <button type="button" id="esa-benefit-tab-praktik" data-pack-benefit="praktik" aria-controls="esa-benefit-praktik">Praktik</button>
+
+    <button type="button" id="esa-benefit-tab-karir" data-pack-benefit="karir" aria-controls="esa-benefit-karir">Karir</button>
+</div>
+    <section id="esa-benefit-belajar" class="esa-pack-detail-panel" aria-labelledby="esa-benefit-tab-belajar"><h3 class="esa-pack-detail-heading">Belajar</h3>
+    <dl><div>
+    <dt>Kurikulum 16 Academy</dt>
+
+    <dd>Enam level belajar: fondasi, lalu spesialisasi. Materi dan video tersedia sesuai tahap rilis masing-masing Academy.</dd>
+</div><div>
+    <dt>Video, materi & kuis</dt>
+
+    <dd>Pelajari materi yang tersedia, ulangi video, dan periksa pemahaman melalui kuis modul.</dd>
+</div><div>
+    <dt>AI Tutor</dt>
+
+    <dd>Tanyakan konsep yang belum dipahami. Penggunaan mengikuti kuota pada akun.</dd>
+</div><div>
+    <dt>Library kelistrikan</dt>
+
+    <dd>Telusuri referensi teknik, buku, dan materi pendukung menurut bidang.</dd>
+</div><div>
+    <dt>Energi masa depan</dt>
+
+    <dd>Jelajahi solar PV, EV charging, BESS, smart grid, dan sustainability.</dd>
+</div><div>
+    <dt>Pembaruan materi</dt>
+
+    <dd>Pembaruan materi termasuk dalam akses keanggotaan lifetime.</dd>
+</div></dl>
+</section>
+
+    <section id="esa-benefit-praktik" class="esa-pack-detail-panel" aria-labelledby="esa-benefit-tab-praktik"><h3 class="esa-pack-detail-heading">Praktik</h3>
+    <dl><div>
+    <dt>Virtual lab & simulator</dt>
+
+    <dd>Latihan konsep wiring, motor, distribusi, dan bidang lain melalui menu Labs.</dd>
+</div><div>
+    <dt>Design calculator</dt>
+
+    <dd>Alat bantu perhitungan teknik, termasuk ukuran kabel, jatuh tegangan, dan kebutuhan daya.</dd>
+</div><div>
+    <dt>Studi kasus & portofolio</dt>
+
+    <dd>Latih penerapan materi melalui studi kasus dan hasil kerja yang dapat dikembangkan menjadi portofolio.</dd>
+</div><div>
+    <dt>Workshop & bootcamp</dt>
+
+    <dd>Praktik langsung mengikuti jadwal, lokasi, kuota, dan biaya program tersendiri. Hubungi admin untuk detailnya.</dd>
+</div></dl>
+</section>
+
+    <section id="esa-benefit-karir" class="esa-pack-detail-panel" aria-labelledby="esa-benefit-tab-karir"><h3 class="esa-pack-detail-heading">Karir</h3>
+    <dl><div>
+    <dt>Sertifikat penyelesaian</dt>
+
+    <dd>Dokumentasikan capaian belajar dengan sertifikat dan QR verifikasi. Sertifikat kompetensi resmi diperoleh melalui LSP.</dd>
+</div><div>
+    <dt>Career advisory</dt>
+
+    <dd>Pemetaan jalur dan review CV atau portofolio; layanan aktif setelah Level 2, sesuai jadwal layanan.</dd>
+</div><div>
+    <dt>CV & mock interview</dt>
+
+    <dd>Siapkan CV dan latihan wawancara teknis untuk kebutuhan melamar kerja.</dd>
+</div><div>
+    <dt>Job board & talent pool</dt>
+
+    <dd>Akses informasi peluang dan bangun profil profesional. Tidak menjamin penempatan kerja.</dd>
+</div><div>
+    <dt>Komunitas & live class</dt>
+
+    <dd>Terhubung dengan sesama pembelajar serta ikuti sesi yang tersedia sesuai jadwal.</dd>
+</div><div>
+    <dt>Bonus Kang Listrik 5.0</dt>
+
+    <dd>E-book panduan karir ketenagalistrikan termasuk untuk member; unduh melalui akses akun.</dd>
+</div></dl>
+</section>
+
+    <footer><p><strong>Rp299.000</strong> · Sekali bayar, akses lifetime.</p>
+    <button type="button" class="esa-pack-cta" data-pack-purchase>Buka Akses <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+</footer>
+</dialog>
 
   <section class="partners">
     <div class="partners-inner">
@@ -1219,6 +994,7 @@ if ('serviceWorker' in navigator) {
           <a onclick="showView('referensi')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Library</a>
           <a onclick="showView('gallery')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Gallery</a>
           <a onclick="showView('faq')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">FAQ</a>
+          <a onclick="openCourses()" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Katalog Kursus</a>
           <a href="peta-dunia.html" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">🌐 World Electricity Maps</a>
           <a onclick="showView('liveclass-schedule')" style="color:rgba(245,240,230,0.7);cursor:pointer;text-decoration:none;">Live Class</a>
           <a href="manual-book.html" style="color:rgba(245,240,230,0.7);text-decoration:none;">Cara Belajar</a>
@@ -1637,6 +1413,50 @@ if ('serviceWorker' in navigator) {
     </div>
   </section>
 
+  <!-- ================================================
+       PLN DISTRIBUTION ACADEMY · FAST TRACK PROGRAM (S13 / S Special)
+       Menyatu dengan Distribution Academy: hanya tampil di halaman jalur S3.
+       Click → external PLN Akademi.
+  ================================================ -->
+  <section class="pln-fasttrack-section" id="plnFastTrack" hidden>
+    <div class="pln-fasttrack-inner">
+      <div class="pln-fasttrack-card reveal">
+        <div class="pln-fasttrack-photo" aria-hidden="true">
+          <div class="pln-fasttrack-photo-overlay"></div>
+        </div>
+        <div class="pln-fasttrack-content">
+          <div class="pln-fasttrack-badge-row">
+            <span class="pln-fasttrack-badge-special">S · SPECIAL</span>
+            <span class="pln-fasttrack-badge-partner">Powered by PLN Akademi</span>
+          </div>
+          <div class="pln-fasttrack-eyebrow">Distribution Academy · Fast Track Program</div>
+          <h2 class="pln-fasttrack-title">
+            PLN Distribution Academy<br>
+            <span class="italic">Package · Fast Track</span>
+          </h2>
+          <p class="pln-fasttrack-desc">
+            Jalur khusus untuk kandidat yang ingin <strong>langsung jadi pekerja PLN</strong>. Kurikulum terintegrasi distribusi 20 kV, gardu, SCADA, K3, dan culture PLN — disusun bersama PLN Akademi untuk mempercepat onboarding ke lapangan.
+          </p>
+          <ul class="pln-fasttrack-list">
+            <li><span class="pln-ft-dot"></span> Materi inti distribusi PLN 20 kV, gardu, SCADA &amp; smart grid</li>
+            <li><span class="pln-ft-dot"></span> Modul K3 ketenagalistrikan + sertifikasi kompetensi</li>
+            <li><span class="pln-ft-dot"></span> Praktikum lapangan &amp; simulasi gardu distribusi</li>
+            <li><span class="pln-ft-dot"></span> Channel direct ke recruitment PLN Group &amp; Anak Usaha</li>
+          </ul>
+          <div class="pln-fasttrack-cta-row">
+            <a href="https://plnakademi.vercel.app/" target="_blank" rel="noopener" class="pln-fasttrack-cta">
+              <span>Buka PLN Akademi</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </a>
+            <span class="pln-fasttrack-cta-note">External · plnakademi.vercel.app</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -1811,10 +1631,11 @@ if ('serviceWorker' in navigator) {
           <div class="quiz-header">
             <div class="quiz-header-info">
               <h3>Quiz Pemahaman</h3>
-              <p>25 soal pilihan ganda · batas waktu <strong>15 menit</strong> · skor minimum 70% untuk lulus</p>
+              <p><strong id="quiz-total-label">25</strong> soal · skor minimum 70% untuk lulus</p>
+              <p class="quiz-source-note" id="quiz-source-note" hidden></p>
             </div>
             <div class="quiz-progress">
-              Terjawab: <strong id="quiz-answered">0</strong>/25
+              Terjawab: <strong id="quiz-answered">0</strong>/<span id="quiz-total">25</span>
               <span id="quiz-timer" style="margin-left:16px;padding:4px 10px;border-radius:6px;background:rgba(212,175,106,0.15);color:var(--gold-dark);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:0.05em;">⏱ 15:00</span>
             </div>
           </div>
@@ -2079,6 +1900,7 @@ if ('serviceWorker' in navigator) {
         <button class="labs-tab-btn" data-panel="design-calc" onclick="labsShowSection('design-calc')">Design Calculators</button>
         <button class="labs-tab-btn" data-panel="vlab" onclick="labsShowSection('vlab')">Virtual Labs</button>
         <button class="labs-tab-btn" data-panel="praktikum" onclick="labsShowSection('praktikum')">Kelas Praktikum</button>
+        <button class="labs-tab-btn" data-panel="worldmap" onclick="labsShowSection('worldmap')">World Electricity Maps</button>
       </div>
     </div>
   </section>
@@ -2169,6 +1991,31 @@ if ('serviceWorker' in navigator) {
         <p class="lab-section-sub">Delapan kelas praktikum di fasilitas partner ESA — dari wiring instalasi sampai commissioning gardu 20kV. Bawa pulang skill yang siap kerja.</p>
       </div>
       <div class="praktikum-grid" id="praktikum-grid"></div>
+    </div>
+  </section>
+
+  <!-- World Electricity Maps — dulu berdiri sendiri di menu header. Dipindahkan
+       ke dalam Labs karena sifatnya sama: alat eksplorasi, bukan halaman utama. -->
+  <section class="worldmap-section labs-panel" id="lab-worldmap">
+    <div class="lab-section-inner">
+      <div class="lab-section-header">
+        <div class="lab-section-eyebrow">Peta Interaktif</div>
+        <h2 class="lab-section-title">World <span class="italic">Electricity</span> Maps</h2>
+        <p class="lab-section-sub">Peta pembangkit listrik dunia — kapasitas, bahan bakar, dan bauran energi (EBT/fosil/nuklir) di 167 negara. Bisa difilter per negara, termasuk detail Indonesia dengan jaringan transmisi &amp; gardu induk.</p>
+      </div>
+      <a href="peta-dunia.html" class="worldmap-card">
+        <div class="worldmap-card-body">
+          <div class="worldmap-stats">
+            <div><b>34.900+</b><span>Pembangkit</span></div>
+            <div><b>167</b><span>Negara</span></div>
+            <div><b>~5.700 GW</b><span>Kapasitas global</span></div>
+          </div>
+          <span class="worldmap-cta">Buka World Electricity Maps
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+        <div class="worldmap-card-globe" aria-hidden="true">🌐</div>
+      </a>
     </div>
   </section>
 
@@ -3685,6 +3532,11 @@ if ('serviceWorker' in navigator) {
 
 
 <script src="/data/app-data.js"></script>
+<script src="/data/module-thumbs.js?v=1"></script>
+<script src="/academy-names.js"></script>
+<script src="/academy-journey.js?v=2"></script>
+<script src="/academy-labs.js?v=1"></script>
+<script src="/academy-lobby.js?v=12" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.
@@ -3873,7 +3725,7 @@ function startPayment(plan) {
     // Show home view with pricing section
     showView('home');
     setTimeout(function() {
-      var pricingSection = document.querySelector('.academy-pricing');
+      var pricingSection = document.getElementById('membership');
       if (pricingSection) {
         pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -4218,13 +4070,16 @@ function esaTrackModuleCount(trackId) {
 window.esaTrackModuleCount = esaTrackModuleCount;
 
 function renderPractices() {
+  // Grid kartu jalur sudah tidak ada di beranda — pemilihan Academy ditangani
+  // lobby karakter. Fungsi dibiarkan agar pemanggil lama tetap aman.
   const grid = document.getElementById('practicesGrid');
+  if (!grid) return;
   // S13 (PLN Distribution Academy fast track) is rendered in its own dedicated
   // banner section below, so it's excluded from the regular 12-track grid.
   grid.innerHTML = PRACTICE_CARDS.filter(p => !p.isFastTrack).map(p => {
     const n = esaTrackModuleCount(p.id);
     return `
-    <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}" onclick="openJalur('${p.id}')">
+    <button class="practice-card reveal${p.comingSoon ? ' practice-card-soon' : ''}${window.esaLobbyCurrent?.() === p.id ? ' is-active' : ''}" data-track="${p.id}" onclick="esaOpenAcademy('${p.id}')">
       <div class="practice-card-photo">
         <img class="practice-card-photo-img" src="${p.photo}" alt="" loading="lazy" decoding="async">
         <span class="practice-card-badge">Jalur <strong>${p.num}</strong></span>
@@ -4235,7 +4090,7 @@ function renderPractices() {
         <p class="practice-desc">${p.desc}</p>
         ${n ? `<span class="practice-count">${n} modul</span>` : ''}
         <span class="practice-cta">
-          Lihat Jalur
+          Masuk Academy
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
             <path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -5376,6 +5231,17 @@ const VIRTUAL_LABS = [
     'Analisis transformasi-Z' ] }
 ];
 
+// Indeks lab yang BENAR-BENAR bisa dibuka, dipakai halaman Academy untuk
+// menampilkan bagian "Praktik" di bawah daftar modulnya. SIMULATORS di sini
+// sudah disaring (simulator tanpa embed dibuang di atas), jadi apa pun yang
+// dirujuk dari sini pasti bisa dijalankan — tidak ada tombol yang menuju
+// halaman kosong.
+window.ESA_LABS_INDEX = {
+  sim: SIMULATORS,
+  vlab: VIRTUAL_LABS,
+  calc: CALCULATORS
+};
+
 function renderVirtualLabs() {
   const grid = document.getElementById('vlab-grid');
   if (!grid) return;
@@ -5483,13 +5349,13 @@ function esaRequireAccess() {
   return false;
 }
 window.esaRequireAccess = esaRequireAccess;
-// esaIsFreeLab(sim) → true untuk lab WIRING (wiring trainer + wiring lab) yang
-// GRATIS dibuka siapa saja (pemikat). Lab lain (simulator hitung, capbank,
-// hub ElectraSim) tetap terkunci → butuh daftar + bayar.
+// esaIsFreeLab(sim) → SELURUH lab & simulator terbuka untuk siapa saja.
+// Sebelumnya hanya lab wiring yang gratis, sehingga simulator listrik ikut
+// terkunci — padahal model akses situs ini hanya mengunci VIDEO modul
+// (lihat esaModuleLocked). Ketidakcocokan itu membuat peserta yang sudah
+// membayar pun melihat gembok di simulator. Satu aturan, satu perilaku.
 function esaIsFreeLab(sim) {
-  if (!sim) return false;
-  var e = String(sim.embed || '');
-  return /^(wiring|wlab)\.html/.test(e);
+  return true;
 }
 window.esaIsFreeLab = esaIsFreeLab;
 // Unduh e-book premium "Kang Listrik 5.0" lewat endpoint ber-otorisasi.
@@ -5531,21 +5397,24 @@ window.esaLoadModuleMedia = esaLoadModuleMedia;
 // Memuat bank soal DAN soal generic cadangan. Keduanya hanya dipakai saat
 // quiz dibuka, jadi tidak ada gunanya ikut di index.html.
 function esaLoadQuizBank(cb) {
-  if (typeof window.QUIZ_BANK !== 'undefined') { if (cb) cb(); return; }
+  if (typeof window.QUIZ_BANK !== 'undefined' && typeof window.QUIZ_BANK_EXT !== 'undefined') { if (cb) cb(); return; }
   window.__esaQBcbs = window.__esaQBcbs || [];
   if (cb) window.__esaQBcbs.push(cb);
   if (window.__esaQBloading) return;
   window.__esaQBloading = true;
-  var sisa = 2;
+  var berkas = ['/data/quiz-bank.js', '/data/quiz-template.js', '/data/quiz-bank-ext.js', '/data/quiz-hints.js'];
+  var sisa = berkas.length;
   var selesai = function () {
     if (--sisa > 0) return;
     if (typeof window.QUIZ_BANK === 'undefined') window.QUIZ_BANK = {};       // fail-soft
     if (typeof window.QUIZ_TEMPLATE === 'undefined') window.QUIZ_TEMPLATE = []; // fail-soft
+    if (typeof window.QUIZ_BANK_EXT === 'undefined') window.QUIZ_BANK_EXT = {}; // fail-soft
+    if (typeof window.QUIZ_HINTS === 'undefined') window.QUIZ_HINTS = {};       // fail-soft
     window.__esaQBloading = false;
     var cbs = window.__esaQBcbs || []; window.__esaQBcbs = [];
     cbs.forEach(function (f) { try { f(); } catch (e) {} });
   };
-  ['/data/quiz-bank.js', '/data/quiz-template.js'].forEach(function (src) {
+  berkas.forEach(function (src) {
     var s = document.createElement('script');
     s.src = src;
     s.onload = s.onerror = selesai;
@@ -5712,9 +5581,8 @@ function openSimulator(simId) {
   const sim = SIMULATORS.find(s => s.id === simId);
   if (!sim || !sim.working) return;
 
-  // Paywall: menelusuri daftar lab gratis. Lab WIRING bebas dibuka siapa saja
-  // (gratis); lab lainnya memerlukan akses penuh (daftar + bayar).
-  if (!esaIsFreeLab(sim) && !esaRequireAccess()) return;
+  // Lab & simulator terbuka untuk semua — tidak ada paywall di sini.
+  // Yang berbayar hanya pemutaran video modul (esaModuleLocked).
 
   // Kode lab (245 KB) baru diunduh saat lab benar-benar dibuka. Modal dibuka
   // duluan supaya klik terasa langsung merespons, lalu fungsi ini dipanggil
@@ -7278,6 +7146,9 @@ function esaResolveModuleMedia(code) {
   var base = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[code]) ? MODULE_MEDIA[code] : {};
   var out = {};
   for (var k in base) if (Object.prototype.hasOwnProperty.call(base, k)) out[k] = base[k];
+  // Kode modul ikut dibawa supaya pemakai hasilnya (mis. esaMediaThumb) bisa
+  // mencari sampul di MODULE_THUMBS tanpa perlu dioper kode lagi terpisah.
+  out.code = code;
   var entry = (typeof window.YOUTUBE_MAP !== 'undefined') ? window.YOUTUBE_MAP[code] : null;
   var id = esaYtId(entry);
   if (id) {
@@ -7360,6 +7231,13 @@ function esaMediaThumb(media, ukuran) {
       : { src: 'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg',
           alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg'] };
   }
+  // Sampul buatan sendiri untuk modul yang videonya belum di YouTube.
+  // Ditaruh SETELAH cabang YouTube supaya tidak pernah menimpa thumbnail
+  // YouTube, dan SEBELUM cabang Drive karena frame pertama video rekaman
+  // slide hampir selalu berupa satu halaman Google Slides — bukan sampul.
+  var sendiri = (window.MODULE_THUMBS || {})[media.code];
+  if (sendiri) return { src: sendiri, alt: [] };
+
   if (media.videoUrl) {
     var gd = media.videoUrl.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
     if (gd) {
@@ -7957,6 +7835,7 @@ function openJalur(trackId) {
     return;
   }
 
+  if (currentTrackId !== trackId) _esaActiveLevel = 'L1';
   currentTrackId = trackId;
   const trackModules = CURRICULUM[trackId] || [];
   const foundationL1 = CURRICULUM['L1'] || [];
@@ -7977,6 +7856,11 @@ function openJalur(trackId) {
 
   // Render user-friendly progress profile per level (L1..L6)
   renderJalurProgress(trackId);
+
+  // Program fast track PLN menyatu dengan Distribution Academy — hanya jalur
+  // itu yang menampilkannya.
+  const plnCard = document.getElementById('plnFastTrack');
+  if (plnCard) plnCard.hidden = trackId !== 'S3';
 
   // Render levels accordion (modules per level)
   renderLevels(trackId);
@@ -8160,7 +8044,9 @@ window.esaSetLevel = function (levelId, trackId) {
   const el = document.getElementById('esa-level-panel');
   if (el) {
     const y = el.getBoundingClientRect().top + window.scrollY - 92;
-    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    window.scrollTo({ top: Math.max(0, y), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    el.setAttribute('tabindex', '-1');
+    el.focus({preventScroll:true});
   }
 };
 
@@ -8231,7 +8117,7 @@ function renderLevels(trackId) {
       <li class="${cls.join(' ')}">
         <button type="button" onclick="esaSetLevel('${d.lvl.id}','${trackId}')"
                 aria-current="${d.lvl.id === _esaActiveLevel ? 'step' : 'false'}">
-          <span class="lvlflow-thumb" style="background:${esaLevelCoverBg(d.lvl.id)}">${esaLevelCover(d.lvl.id)}<span class="n">${tick}</span></span>
+          <span class="lvlflow-thumb" style="background:${esaLevelCoverBg(d.lvl.id)}">${window.esaJourneyCover ? esaJourneyCover(trackId, d.lvl.id) : esaLevelCover(d.lvl.id)}<span class="n">${tick}</span></span>
           <span class="lvlflow-name">${escapeHtml(LEVELS[i].name)}</span>
           <span class="lvlflow-tag">${escapeHtml(LEVEL_TAGLINES[d.lvl.id] || d.lvl.subtitle || '')}</span>
           <span class="lvlflow-meta">${d.total} modul${d.passed ? ` · ${d.passed} lulus` : ''}</span>
@@ -8240,11 +8126,11 @@ function renderLevels(trackId) {
   }).join('');
 
   const flow = `
-    <div class="lvlflow">
+    <div class="lvlflow" id="academy-roadmap">
       <div class="lvlflow-head">
         <div class="lvlflow-title">
-          <b>Alur belajar</b>
-          <span>Dari nol sampai konsultan — klik tingkat mana pun untuk langsung lompat</span>
+          <b>Enam tahap. Satu perjalanan.</b>
+          <span>Fondasi → spesialisasi → pendalaman. Pilih tahap untuk melihat modul dan misinya.</span>
         </div>
         <div class="lvlflow-nav">
           <button type="button" class="lvlflow-btn" ${prev ? `onclick="esaSetLevel('${prev.lvl.id}','${trackId}')"` : 'disabled'}>‹ Sebelumnya</button>
@@ -8256,11 +8142,6 @@ function renderLevels(trackId) {
 
   // --- Panel tingkat aktif ---
   const a = active;
-  const doneBadge = a.complete
-    ? `<span class="lvlpanel-chip done">✓ Tuntas · ${a.avg}% · ${fmtDate(a.lastDate)}</span>`
-    : (a.passed > 0 ? `<span class="lvlpanel-chip prog">${a.passed}/${a.total} modul lulus</span>` : '');
-  const pct = a.total ? Math.round((a.passed / a.total) * 100) : 0;
-
   const grid = a.total
     ? `<div class="crs-grid esa-modgrid">${a.modules.map(m => {
         try { return esaModuleCardHtml(m, trackId, a.lvl.id); }
@@ -8277,31 +8158,16 @@ function renderLevels(trackId) {
 
   const panel = `
     <div class="lvlpanel" id="esa-level-panel">
-      <div class="lvlpanel-hero">
-        <div class="lvlpanel-cover" style="background:${esaLevelCoverBg(a.lvl.id)}">${esaLevelCover(a.lvl.id)}</div>
-        <div class="lvlpanel-info">
-          <div class="lvlpanel-eyebrow">Tingkat ${a.num} dari ${data.length} · ${a.total} modul ${doneBadge}</div>
-          <h3>${escapeHtml(a.lvl.name)}</h3>
-          <p>${escapeHtml(a.lvl.desc || '')}</p>
-          <div class="lvlpanel-bar"><i style="width:${pct}%"></i></div>
-          <div class="lvlpanel-actions">
-            ${a.total ? `<button type="button" class="level-start-btn" onclick="startLevel('${a.lvl.id}','${trackId}')">
-              <span>Mulai ${escapeHtml(LEVELS[a.idx].name)}</span>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 8h14m-5-5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>` : ''}
-            ${a.locked ? `<button type="button" class="lvlpanel-unlock" onclick="esaRequireAccess()">Buka akses penuh</button>` : ''}
-          </div>
-          ${a.locked ? `<div class="lvlpanel-note">Materi PPT, quiz 25 soal, dan asisten modul terbuka untuk semua. Hanya pemutaran video yang memerlukan akses penuh.</div>` : ''}
-        </div>
-      </div>
+      <div class="journey-episodes"><div><span class="journey-eyebrow">TAHAP ${a.num} DARI ${data.length}</span><h3>${escapeHtml(a.lvl.name)} · Episode belajar</h3></div><span>${a.passed}/${a.total} modul lulus</span></div>
       ${grid}
+      ${window.esaAcademyPracticeHtml ? esaAcademyPracticeHtml(trackId) : ''}
       <div class="lvlpanel-foot">
         ${prev ? `<button type="button" class="lvlflow-btn" onclick="esaSetLevel('${prev.lvl.id}','${trackId}')">‹ ${escapeHtml(LEVELS[prev.idx].name)}</button>` : '<span></span>'}
         ${next ? `<button type="button" class="lvlflow-btn primary" onclick="esaSetLevel('${next.lvl.id}','${trackId}')">${escapeHtml(LEVELS[next.idx].name)} ›</button>` : '<span></span>'}
       </div>
     </div>`;
 
-  list.innerHTML = flow + panel;
+  list.innerHTML = (window.esaJourneyHero ? esaJourneyHero(trackId, data) : '') + flow + panel;
 }
 
 function toggleLevel(levelId) {
@@ -8323,8 +8189,8 @@ function startLevel(levelId, trackId) {
     return;
   }
 
-  // Open first module
-  const firstMod = modules[0];
+  // Resume at the first unpassed module; completed levels can be replayed.
+  const firstMod = modules.find(m => !(typeof window.esaIsModulePassed === 'function' && window.esaIsModulePassed(m.code))) || modules[0];
   openModul(firstMod.code, trackId, levelId);
 }
 
@@ -9506,14 +9372,86 @@ function renderQuiz(module) {
   //    keluar tema (mis. modul "Hukum Coulomb" dapat soal "Frekuensi 50 Hz").
   //  - handcrafted kosong total → barulah fallback ke QUIZ_TEMPLATE generic
   //    sebagai safety net (lebih baik daripada modul tanpa quiz sama sekali).
-  const handcrafted = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : null;
+  // Bank soal modul kini datang dari dua berkas: quiz-bank.js (bank lama) dan
+  // quiz-bank-ext.js (bank susulan untuk modul yang dulu tidak punya soal sama
+  // sekali, atau cuma punya 1-2 soal). Keduanya digabung supaya modul yang dulu
+  // "kuisnya satu soal" sekarang punya bank yang layak.
+  const bankUtama = (typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[module.code]) ? QUIZ_BANK[module.code] : [];
+  const bankTambahan = (window.QUIZ_BANK_EXT && window.QUIZ_BANK_EXT[module.code]) ? window.QUIZ_BANK_EXT[module.code] : [];
+  const gabungan = [].concat(bankUtama, bankTambahan);
+  const handcrafted = gabungan.length > 0 ? gabungan : null;
   const generic = Array.isArray(window.QUIZ_TEMPLATE) ? window.QUIZ_TEMPLATE.map(q => ({ ...q, type: q.type || 'pg' })) : [];
 
+  // Hint tingkat modul dipakai kalau sebuah soal belum punya hint sendiri.
+  const hintModul = (window.QUIZ_HINTS && window.QUIZ_HINTS[module.code]) || '';
+
+  // Kalau bank modul ini masih tipis, kekurangannya diambil dari modul LAIN di
+  // Academy yang sama (utamakan level yang sama, lalu kategori yang sama).
+  // Ini jauh lebih nyambung daripada soal kelistrikan umum: peserta EV Academy
+  // tetap mendapat soal EV, bukan soal PUIL instalasi rumah. Jumlah soal modul
+  // sendiri dan soal pendalaman dilaporkan apa adanya di bawah judul kuis.
+  const MIN_SOAL_KUIS = 6;
+  const ambilSoalSeAcademy = (kode, butuh) => {
+    if (butuh <= 0 || typeof CURRICULUM === 'undefined') return [];
+    let trackModul = null, levelModul = null, kategoriModul = null;
+    for (const t of Object.keys(CURRICULUM)) {
+      const found = (CURRICULUM[t] || []).find(x => x.code === kode);
+      if (found) { trackModul = t; levelModul = found.level; kategoriModul = found.category; break; }
+    }
+    if (!trackModul) return [];
+    const saudara = (CURRICULUM[trackModul] || []).filter(x => x.code !== kode);
+    const soalDari = (daftar) => daftar.reduce((acc, x) => {
+      const hintAsal = (window.QUIZ_HINTS && window.QUIZ_HINTS[x.code]) || '';
+      const milik = [].concat(
+        ((typeof QUIZ_BANK !== 'undefined' && QUIZ_BANK[x.code]) || []),
+        ((window.QUIZ_BANK_EXT && window.QUIZ_BANK_EXT[x.code]) || [])
+      ).map(q => ({ ...q, __hintModul: hintAsal }));
+      return acc.concat(milik);
+    }, []);
+    // Prioritas: kategori sama → level sama → satu Academy.
+    const berjenjang = [
+      soalDari(saudara.filter(x => x.category === kategoriModul)),
+      soalDari(saudara.filter(x => x.level === levelModul)),
+      soalDari(saudara)
+    ];
+    const hasil = [];
+    const sudah = new Set();
+    for (const kelompok of berjenjang) {
+      for (const q of shuffleArr(kelompok)) {
+        const kunci = String(q.q || '').slice(0, 80);
+        if (sudah.has(kunci)) continue;
+        sudah.add(kunci);
+        // Soal pendalaman membawa hint milik MODUL ASALNYA. Kalau dibiarkan
+        // memakai hint modul yang sedang dibuka, petunjuknya akan membahas
+        // topik lain dan justru menyesatkan.
+        hasil.push({ ...q, __pendalaman: true, hint: q.hint || q.__hintModul || '' });
+        if (hasil.length >= butuh) return hasil;
+      }
+    }
+    return hasil;
+  };
+
   let pool;
+  let jumlahSoalModul = 0;
+  let jumlahPendalaman = 0;
   if (handcrafted && handcrafted.length > 0) {
     pool = handcrafted.slice();
+    jumlahSoalModul = pool.length;
+    if (pool.length < MIN_SOAL_KUIS) {
+      const tambahan = ambilSoalSeAcademy(module.code, MIN_SOAL_KUIS - pool.length);
+      jumlahPendalaman = tambahan.length;
+      pool = pool.concat(tambahan);
+    }
   } else {
-    pool = generic.slice();
+    // Belum ada satu pun soal khusus modul ini — coba dulu soal se-Academy,
+    // baru jatuh ke soal kelistrikan umum sebagai jaring pengaman terakhir.
+    const seAcademy = ambilSoalSeAcademy(module.code, MIN_SOAL_KUIS * 2);
+    if (seAcademy.length >= MIN_SOAL_KUIS) {
+      pool = seAcademy;
+      jumlahPendalaman = seAcademy.length;
+    } else {
+      pool = generic.slice();
+    }
   }
 
   // Filter "no-info" soal: bertahap, jaga supaya pool tidak jadi terlalu kecil.
@@ -9535,15 +9473,39 @@ function renderQuiz(module) {
   }
   if (cleaned.length >= 5) pool = cleaned;
 
-  // Quiz selalu set 25 soal. Kalau pool < 25, pad dengan re-shuffle pool
-  // berulang — soal mungkin terulang tapi posisinya acak. Modul tipis (handcraft
-  // < 25) tetap dapat 25 soal sesuai requirement.
+  // Maksimal 25 soal, tetapi TIDAK pernah mengulang soal yang sama demi
+  // menggenapkan jumlah. Modul dengan bank soal tipis lebih baik memberi 10 soal
+  // berbeda daripada 25 soal yang itu-itu juga; jumlah sebenarnya ditampilkan di
+  // header dan dipakai sebagai penyebut skor.
   const TARGET_QUIZ_SIZE = 25;
-  let shuffledPool = shuffleArr(pool);
-  while (shuffledPool.length < TARGET_QUIZ_SIZE && pool.length > 0) {
-    shuffledPool = shuffledPool.concat(shuffleArr(pool));
+  let quiz = shuffleArr(pool).slice(0, TARGET_QUIZ_SIZE);
+  window.esaQuizTotal = quiz.length;
+  const totalEl = document.getElementById('quiz-total');
+  if (totalEl) totalEl.textContent = String(quiz.length);
+  const totalLabel = document.getElementById('quiz-total-label');
+  if (totalLabel) totalLabel.textContent = String(quiz.length);
+
+  // Katakan apa adanya kalau soal yang tampil bukan soal khusus modul ini.
+  // Sebelumnya soal umum disajikan seolah-olah soal dari video modul, sehingga
+  // peserta bingung karena isinya tidak nyambung dengan yang baru ditonton.
+  const noteEl = document.getElementById('quiz-source-note');
+  if (noteEl) {
+    // Katakan apa adanya dari mana soal yang tampil berasal. Sebelumnya soal
+    // umum disajikan seolah-olah soal dari video modul, sehingga peserta
+    // bingung karena isinya tidak nyambung dengan yang baru ditonton.
+    const tampilModul = quiz.filter(q => !q.__pendalaman).length;
+    const tampilPendalaman = quiz.length - tampilModul;
+    let catatan = '';
+    if (jumlahSoalModul === 0 && jumlahPendalaman === 0) {
+      catatan = '⚠️ Bank soal khusus modul ini sedang disusun. Yang tampil sekarang adalah <strong>latihan dasar kelistrikan umum</strong> — bukan soal dari materi modul ini.';
+    } else if (jumlahSoalModul === 0) {
+      catatan = '📘 Soal khusus modul ini sedang disusun. Sementara itu kuis diisi <strong>soal pendalaman dari Academy yang sama</strong>, jadi tetap satu bidang dengan materimu.';
+    } else if (tampilPendalaman > 0) {
+      catatan = `📘 ${tampilModul} soal dari materi modul ini, ditambah ${tampilPendalaman} soal pendalaman dari Academy yang sama.`;
+    }
+    noteEl.hidden = !catatan;
+    noteEl.innerHTML = catatan;
   }
-  let quiz = shuffledPool.slice(0, TARGET_QUIZ_SIZE);
   // Now shuffle option positions within each question.
   quiz = quiz.map(shuffleOptions);
 
@@ -9573,11 +9535,25 @@ function renderQuiz(module) {
     // Options: TF uses 2-column layout
     const optsClass = type === 'tf' ? 'quiz-options quiz-tf-options' : 'quiz-options';
 
+    // Hint: bantuan yang mengarahkan cara berpikir tanpa memberi jawaban.
+    // Dipakai hint milik soal kalau ada; kalau tidak, hint tingkat modul.
+    // Untuk soal hitungan, rumusnya sudah tampil di kotak rumus, jadi hint
+    // diarahkan ke langkah pengerjaannya.
+    const hintTeks = (q.hint && String(q.hint).trim()) || hintModul || '';
+    const hintHTML = hintTeks ? `
+        <div class="quiz-hint-wrap">
+          <button type="button" class="quiz-hint-btn" onclick="esaToggleHint(${i})" id="quiz-hint-btn-${i}" aria-expanded="false" aria-controls="quiz-hint-${i}">
+            <span aria-hidden="true">💡</span> Butuh petunjuk?
+          </button>
+          <div class="quiz-hint-box" id="quiz-hint-${i}" hidden><strong>Petunjuk:</strong> ${hintTeks}</div>
+        </div>` : '';
+
     return `
       <div class="quiz-item" id="quiz-${i}">
         <div class="quiz-q-num">SOAL ${String(i+1).padStart(2, '0')}<span class="quiz-tag ${tag.cls}">${tag.label}</span></div>
         ${contextHTML}
         <div class="quiz-q-text">${q.q}</div>
+        ${hintHTML}
         <div class="${optsClass}">
           ${q.opts.map((opt, oi) => `
             <button class="quiz-option" onclick="answerQuiz(${i}, ${oi}, ${q.a})">
@@ -9590,6 +9566,9 @@ function renderQuiz(module) {
       </div>
     `;
   }).join('');
+
+  // Reset catatan hint tiap kali kuis dirender ulang.
+  window.esaHintDibuka = new Set();
 
   // Reset progress
   const answeredEl = document.getElementById('quiz-answered');
@@ -9616,6 +9595,29 @@ function renderQuiz(module) {
 
 let answeredCount = 0;
 let answeredQuestions = new Set();
+
+// Petunjuk soal: dibuka manual oleh peserta. Dicatat ke statistik supaya
+// nanti bisa dilihat soal mana yang paling sering butuh bantuan — sinyal bahwa
+// materinya belum jelas di video.
+function esaToggleHint(idx) {
+  const box = document.getElementById('quiz-hint-' + idx);
+  const btn = document.getElementById('quiz-hint-btn-' + idx);
+  if (!box) return;
+  const akanTampil = box.hidden;
+  box.hidden = !akanTampil;
+  if (btn) {
+    btn.setAttribute('aria-expanded', akanTampil ? 'true' : 'false');
+    btn.classList.toggle('is-open', akanTampil);
+    btn.innerHTML = akanTampil
+      ? '<span aria-hidden="true">💡</span> Sembunyikan petunjuk'
+      : '<span aria-hidden="true">💡</span> Butuh petunjuk?';
+  }
+  if (akanTampil) {
+    window.esaHintDibuka = window.esaHintDibuka || new Set();
+    window.esaHintDibuka.add(idx);
+  }
+}
+window.esaToggleHint = esaToggleHint;
 
 function answerQuiz(qIdx, selected, correct) {
   const item = document.getElementById(`quiz-${qIdx}`);
@@ -9845,7 +9847,7 @@ function generateAIResponse(q) {
     return `Untuk rumus${moduleCtx}, buka tab <strong>Materi (PPT)</strong> lalu navigasi ke slide 5 "Rumus & Perhitungan". Di situ ada formula lengkap dengan contoh soal. Kalau ada yang belum clear, tanya lagi ke saya ya!`;
   }
   if (lower.includes('quiz') || lower.includes('soal') || lower.includes('latihan')) {
-    return `Quiz 25 soal tersedia di tab <strong>Quiz</strong>. Klik salah satu opsi jawaban, langsung muncul jawaban benar + pembahasan. Target: minimal 18/25 benar (72%) untuk yakin paham. Mau saya jelaskan topik soal tertentu sebelum kamu coba?`;
+    return `Quiz tersedia di tab <strong>Quiz</strong>. Klik salah satu opsi jawaban, langsung muncul jawaban benar + pembahasan. Target: minimal 70% benar untuk lulus modul. Mau saya jelaskan topik soal tertentu sebelum kamu coba?`;
   }
   if (lower.includes('video') || lower.includes('durasi')) {
     return `Video pembelajaran${moduleCtx} berdurasi sekitar 25-40 menit. Bisa dipause, rewind, dan ditonton berulang. Kalau ada bagian yang belum paham, kasih timestamp-nya, saya bantu jelaskan ulang dengan kata-kata sendiri.`;
@@ -9942,8 +9944,9 @@ function setupModulNavigation(trackId, levelId, currentCode) {
     nextBtn.onclick = () => {
       if (typeof window.esaIsModulePassed === 'function' && !window.esaIsModulePassed(currentCode)) {
         const stats = (typeof window.esaGetQuizProgress === 'function') ? window.esaGetQuizProgress() : null;
-        const detail = stats && stats.answered < 25
-          ? `Baru ${stats.answered}/25 soal terjawab. Selesaikan semua soal dulu.`
+        const quizTotal = window.esaQuizTotal || 25;
+        const detail = stats && stats.answered < quizTotal
+          ? `Baru ${stats.answered}/${quizTotal} soal terjawab. Selesaikan semua soal dulu.`
           : `Skor terbaik kamu di modul ${currentCode} belum 70%. Coba lagi quiz-nya.`;
         if (typeof window.esaToast === 'function') {
           window.esaToast('🔒 Tuntaskan Quiz Dulu', detail, '🔒');
@@ -11841,8 +11844,10 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     if (isCorrect) currentQuizStats.correct++;
     else currentQuizStats.wrong++;
 
-    // Check if all 25 answered
-    if (currentQuizStats.answered.size >= 25 && currentQuizModule) {
+    // Selesai bila semua soal yang ditampilkan sudah dijawab (jumlahnya bisa
+    // < 25 untuk modul dengan bank soal tipis).
+    const quizTotal = window.esaQuizTotal || 25;
+    if (currentQuizStats.answered.size >= quizTotal && currentQuizModule) {
       setTimeout(() => showModuleCompletion(), 800);
     }
   }
@@ -11851,7 +11856,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
   function showModuleCompletion() {
     if (!currentQuizModule) return;
     stopQuizTimer();
-    const total = 25;
+    const total = window.esaQuizTotal || 25;
     // Hitung skor otoritatif dari peta jawaban per-soal (sumber kebenaran),
     // bukan dari counter berjalan yang bisa desync kalau jawaban diubah-ubah.
     const answerMap = currentQuizStats.answers || {};
@@ -11890,11 +11895,11 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const statusTitle = passed ? 'Lulus!' : 'Belum Lulus';
     const cdInfo = getModuleCooldownInfo(currentQuizModule.code);
     const inCooldown = !passed && cdInfo.active;
+    // Kuis tidak pernah dikunci (recordModuleResult selalu menyetel cooldownUntil
+    // = null), jadi jangan menakut-nakuti dengan sisa percobaan atau kunci 1 jam.
     const statusSub = passed
       ? (isFirstPass ? `Skor memuaskan — modul ${currentQuizModule.code} tuntas.` : `Skor meningkat — skor terbaikmu ${result.bestScore}%`)
-      : (inCooldown
-          ? `Sudah ${MAX_FAILED_ATTEMPTS}× gagal berturut-turut. Quiz dikunci 1 jam — pelajari ulang materinya, lalu coba lagi.`
-          : `Butuh minimal 70% untuk lulus. Sisa ${cdInfo.attemptsLeft} percobaan sebelum quiz dikunci 1 jam.`);
+      : `Batas lulus 70%. Kuis ini boleh diulang sebanyak yang kamu mau — skor terbaikmu yang dipakai.`;
 
     // Check if this completes a level
     const levelProgress = getLevelProgress(currentQuizModule.levelId, currentQuizModule.trackId);
@@ -11904,6 +11909,47 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const levelJustCompleted = passed && levelProgress.complete &&
       state.levels[levelKey] && state.levels[levelKey].certIssued &&
       new Date(state.levels[levelKey].completedDate).getTime() > Date.now() - 5000;
+
+    // Jalur ke sertifikat, ditampilkan tiap kali kuis selesai supaya peserta
+    // tahu persis posisinya. Syarat sertifikat level: SEMUA modul level ini
+    // lulus (≥70%) DAN rata-rata skornya ≥70. Sebelumnya syarat ini cuma hidup
+    // di dalam kode, jadi peserta bertanya-tanya "sertifikatnya bagaimana?".
+    const sertifikatTerbit = !!(state.levels[levelKey] && state.levels[levelKey].certIssued);
+    const sisaModul = Math.max(0, levelProgress.total - levelProgress.passed);
+    const rataKurang = levelProgress.passed > 0 && levelProgress.avgScore < 70;
+    const levelLabel = (typeof TIER !== 'undefined' && TIER[currentQuizModule.levelId])
+      ? `${currentQuizModule.levelId} ${TIER[currentQuizModule.levelId].label}`
+      : currentQuizModule.levelId;
+
+    let jalurSertifikatHTML = '';
+    if (sertifikatTerbit && !levelJustCompleted) {
+      // Sudah pernah terbit — tawarkan unduhannya lagi, jangan disembunyikan.
+      jalurSertifikatHTML = `
+        <div class="esa-cert-path esa-cert-path-done">
+          <div class="esa-cert-path-head"><span aria-hidden="true">🎓</span> Sertifikat ${levelLabel} sudah terbit</div>
+          <p class="esa-cert-path-note">Sertifikatmu bisa diunduh kapan saja, juga dari halaman Sertifikasi.</p>
+          <div class="esa-cert-path-actions">
+            <button class="esa-cert-download-btn" onclick="esaDownloadCertificate('${levelKey}')">⬇ Unduh Sertifikat PDF</button>
+          </div>
+        </div>`;
+    } else if (!levelJustCompleted && levelProgress.total > 0) {
+      // Hanya tampilkan kalau level modulnya benar-benar dikenali. Kalau
+      // levelProgress.total = 0 (mis. data modul tidak lengkap), blok ini akan
+      // berbunyi "Menuju sertifikat null — 0 dari 0 modul lulus" yang justru
+      // membingungkan; lebih baik tidak ditampilkan sama sekali.
+      const kurang = [];
+      if (sisaModul > 0) kurang.push(`${sisaModul} modul lagi harus lulus`);
+      if (rataKurang) kurang.push(`rata-rata skor naik ke 70 (sekarang ${levelProgress.avgScore}%)`);
+      jalurSertifikatHTML = `
+        <div class="esa-cert-path">
+          <div class="esa-cert-path-head"><span aria-hidden="true">🎓</span> Menuju sertifikat ${levelLabel}</div>
+          <div class="esa-cert-path-bar"><span style="width:${levelProgress.pct}%"></span></div>
+          <div class="esa-cert-path-meta">${levelProgress.passed} dari ${levelProgress.total} modul lulus${levelProgress.passed > 0 ? ` · rata-rata ${levelProgress.avgScore}%` : ''}</div>
+          <p class="esa-cert-path-note">${kurang.length
+            ? `Kurang ${kurang.join(' dan ')}. Sertifikat terbit otomatis begitu syaratnya terpenuhi — tidak perlu mengajukan.`
+            : 'Syaratnya sudah terpenuhi. Sertifikat sedang diterbitkan.'}</p>
+        </div>`;
+    }
 
     const html = `
       <div class="esa-modal-overlay active" id="esa-completion-modal" onclick="if(event.target===this) esaCloseCompletion()">
@@ -11957,15 +12003,14 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
             </div>
           ` : ''}
 
+          ${jalurSertifikatHTML}
+
           <div class="esa-completion-actions">
             ${passed
               ? `<button class="esa-btn-primary" onclick="esaNextModule()">Modul Selanjutnya →</button>
                  <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
-              : (inCooldown
-                  ? `<button class="esa-btn-primary" disabled style="opacity:0.55;cursor:not-allowed;">⏳ Cooldown <span id="esa-cd-timer">${formatCooldown(cdInfo.remainingMs)}</span></button>
-                     <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
-                  : `<button class="esa-btn-primary" onclick="esaRetryModule()">Coba Lagi (${cdInfo.attemptsLeft} tersisa)</button>
-                     <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`)
+              : `<button class="esa-btn-primary" onclick="esaRetryModule()">Ulangi Kuis</button>
+                 <button class="esa-btn-secondary" onclick="esaCloseCompletion()">Tutup</button>`
             }
           </div>
         </div>
@@ -13253,8 +13298,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
         if (!state.profile || !state.profile.name) {
           e.preventDefault();
           pendingAction = () => {
-            // After login, scroll to practices section
-            const target = document.getElementById('practices');
+            // After login, scroll to the Academy lobby (the career cards
+            // section it used to target is no longer on the home page).
+            const target = document.getElementById('practices') || document.querySelector('.academy-lobby');
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           };
           showOnboardingModal();
@@ -13756,6 +13802,45 @@ function computeUserAchievements(){
   return {stars:stars,highest:highest,highestLabel:highest==='—'?'Belum ada':TIER_LABELS[highest],levelsDone:levelsDone,passedCount:passedCount,certs:certs,xp:d.xp||0};
 }
 
+// Daftar sertifikat yang sudah terbit, siap ditampilkan di profil.
+//
+// Sebelumnya profil hanya menyebut JUMLAHNYA ("3 sertifikat"), sehingga peserta
+// tidak bisa melihat sertifikat apa saja yang sudah dimiliki dan dari Academy
+// mana. Padahal datanya sudah lengkap di state.levels — tinggal dibaca.
+//
+// Kuncinya dua bentuk: "L1"/"L2" untuk fondasi yang berlaku lintas jalur, dan
+// "L3_S1" dst. untuk level spesialisasi yang terikat satu Academy.
+function esaDaftarSertifikat() {
+  var d = readESAData();
+  var levels = d.levels || {};
+  var TIER_LABELS = { L1:'Esensial', L2:'Fundamental', L3:'Profesional', L4:'Advance', L5:'Expertise', L6:'Consultant' };
+  var out = [];
+  Object.keys(levels).forEach(function (kunci) {
+    var rec = levels[kunci];
+    if (!rec || !rec.certIssued) return;
+    var namaJalur = '';
+    if (rec.trackId) {
+      if (window.ACADEMY_NAMES && window.ACADEMY_NAMES[rec.trackId]) namaJalur = window.ACADEMY_NAMES[rec.trackId];
+      else if (typeof TRACKS_META !== 'undefined' && TRACKS_META[rec.trackId]) namaJalur = TRACKS_META[rec.trackId].name || rec.trackId;
+      else namaJalur = rec.trackId;
+    }
+    out.push({
+      kunci: kunci,
+      levelId: rec.levelId,
+      levelLabel: TIER_LABELS[rec.levelId] || rec.levelId,
+      jalur: namaJalur || 'Fondasi · semua jalur',
+      certId: rec.certId || '-',
+      tanggal: rec.completedDate,
+      skor: rec.avgScore,
+      jumlahModul: rec.moduleCount
+    });
+  });
+  // Terbaru di atas: yang baru diraih itu yang paling ingin dilihat.
+  out.sort(function (a, b) { return new Date(b.tanggal) - new Date(a.tanggal); });
+  return out;
+}
+window.esaDaftarSertifikat = esaDaftarSertifikat;
+
 function showProfileModal(){
   var u=getUser()||{};
   var d=readESAData();
@@ -13789,6 +13874,43 @@ function showProfileModal(){
            :'background:rgba(255,255,255,0.05);color:rgba(245,240,230,0.4);border:1px solid rgba(255,255,255,0.08);')+
       '">'+(done?'✓ ':'')+lv+'</span>';
   }).join('');
+
+  // Daftar sertifikat yang sudah dimiliki — level apa saja dan dari Academy mana.
+  // Ditampilkan sebagai kartu supaya nomor sertifikat, tanggal, dan skornya
+  // terbaca sekaligus, dan tiap kartu langsung bisa diunduh atau diverifikasi.
+  var daftarSertifikat = (typeof esaDaftarSertifikat==='function') ? esaDaftarSertifikat() : [];
+  var sertifikatHTML =
+    '<div style="padding:20px 28px;border-bottom:1px solid rgba(255,255,255,0.06);">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;">'+
+        '<div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#c9a96e;font-weight:700;">Sertifikat saya</div>'+
+        '<div style="font-size:0.72rem;color:rgba(245,240,230,0.45);">'+daftarSertifikat.length+' terbit</div>'+
+      '</div>'+
+      (daftarSertifikat.length
+        ? daftarSertifikat.map(function(c){
+            var tgl = c.tanggal ? new Date(c.tanggal).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '-';
+            return '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.22);border-radius:10px;padding:13px 15px;margin-bottom:9px;">'+
+              '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">'+
+                '<div style="min-width:0;">'+
+                  '<div style="font-size:0.9rem;font-weight:700;color:#f0d080;line-height:1.3;">'+escapeHtmlEsa(c.levelId+' · '+c.levelLabel)+'</div>'+
+                  '<div style="font-size:0.78rem;color:rgba(245,240,230,0.72);margin-top:2px;">'+escapeHtmlEsa(c.jalur)+'</div>'+
+                  '<div style="font-size:0.7rem;color:rgba(245,240,230,0.45);margin-top:6px;font-family:ui-monospace,monospace;word-break:break-all;">'+escapeHtmlEsa(c.certId)+'</div>'+
+                '</div>'+
+                '<div style="text-align:right;flex-shrink:0;">'+
+                  '<div style="font-size:1.05rem;font-weight:700;color:#86efac;line-height:1;">'+(c.skor||0)+'%</div>'+
+                  '<div style="font-size:0.68rem;color:rgba(245,240,230,0.45);margin-top:3px;">'+escapeHtmlEsa(tgl)+'</div>'+
+                  (c.jumlahModul?'<div style="font-size:0.68rem;color:rgba(245,240,230,0.4);">'+c.jumlahModul+' modul</div>':'')+
+                '</div>'+
+              '</div>'+
+              '<div style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;">'+
+                '<button type="button" onclick="esaDownloadCertificate(\''+c.kunci+'\')" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:6px;padding:7px 13px;font-size:0.73rem;font-weight:700;cursor:pointer;">Unduh PDF</button>'+
+                '<a href="/verify.html?id='+encodeURIComponent(c.certId)+'" target="_blank" rel="noopener" style="background:transparent;color:rgba(245,240,230,0.7);border:1px solid rgba(255,255,255,0.16);border-radius:6px;padding:7px 13px;font-size:0.73rem;font-weight:600;text-decoration:none;">Verifikasi</a>'+
+              '</div>'+
+            '</div>';
+          }).join('')
+        : '<div style="background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.12);border-radius:10px;padding:16px;font-size:0.8rem;color:rgba(245,240,230,0.55);line-height:1.6;">'+
+            'Belum ada sertifikat. Sertifikat sebuah level terbit otomatis begitu <strong style="color:rgba(245,240,230,0.8);">semua modul di level itu lulus</strong> dan rata-rata skormu minimal 70% — tidak perlu mengajukan.'+
+          '</div>')+
+    '</div>';
 
   function makeSelect(id,options,selected){
     return '<select id="'+id+'" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f5f0e6;font-size:0.88rem;font-family:inherit;outline:none;">'+
@@ -13875,6 +13997,7 @@ function showProfileModal(){
         '<div><strong style="color:#f5f0e6;">'+ach.xp+'</strong> XP</div>'+
       '</div>'+
     '</div>'+
+    sertifikatHTML+
     // Form
     '<div style="padding:24px 28px;">'+
       '<div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#c9a96e;font-weight:700;margin-bottom:14px;">Akun</div>'+
@@ -14040,7 +14163,7 @@ function buildMemberOnlyModal(viewName){
       '</ul>'+
     '</div>'+
     '<button onclick="esaCloseMemberOnlyModal();esaShowActivationModal&&esaShowActivationModal();" style="width:100%;padding:14px 18px;background:linear-gradient(135deg,#d4af6a,#a07840);color:#1a1d2e;font-weight:700;border:none;border-radius:10px;font-size:0.94rem;cursor:pointer;letter-spacing:0.06em;margin-bottom:10px;box-shadow:0 8px 24px rgba(212,175,106,0.35);">⚡ Aktivasi / Daftar Sekarang</button>'+
-    '<button onclick="esaCloseMemberOnlyModal();showView&&showView(\'home\');var p=document.querySelector(\'.academy-pricing\');if(p)p.scrollIntoView({behavior:\'smooth\',block:\'start\'});" style="width:100%;padding:12px 18px;background:transparent;color:rgba(245,240,230,0.85);border:1px solid rgba(255,255,255,0.18);border-radius:10px;font-size:0.86rem;cursor:pointer;font-weight:600;letter-spacing:0.04em;">Lihat Detail Paket Lifetime</button>'+
+    '<button onclick="esaCloseMemberOnlyModal();showView&&showView(\'home\');var p=document.getElementById(\'membership\');if(p)p.scrollIntoView({behavior:\'smooth\',block:\'start\'});" style="width:100%;padding:12px 18px;background:transparent;color:rgba(245,240,230,0.85);border:1px solid rgba(255,255,255,0.18);border-radius:10px;font-size:0.86rem;cursor:pointer;font-weight:600;letter-spacing:0.04em;">Lihat Detail Paket Lifetime</button>'+
     '<div style="margin-top:14px;font-size:0.74rem;color:rgba(245,240,230,0.55);">Sudah punya kode? Klik Aktivasi di atas, lalu masukkan kodenya.</div>';
 
   overlay.appendChild(box);
@@ -14313,23 +14436,15 @@ else{setTimeout(init,200);}
     if(!navGroup)return;
     var links=[].slice.call(navGroup.querySelectorAll('a.nav-right'));
     var jobOpp=links.find(function(a){return a.textContent.trim()==='Job Opportunity';});
-    var labs=links.find(function(a){return a.textContent.trim()==='Labs';});
     var talentPool=links.find(function(a){return a.textContent.trim()==='Talent Pool';});
     var sert=links.find(function(a){return a.textContent.trim()==='Ambil Sertifikasi';});
     var daftar=navGroup.querySelector('button.nav-daftar-btn');
     if(!talentPool)return;
-    if(labs)labs.textContent='Labs';
-    if(labs)labs.onclick=function(e){e.preventDefault();showView('labs');};
     if(sert)sert.textContent='Certification';
     if(sert)sert.onclick=function(e){e.preventDefault();showView('sertifikasi');};
 
-    // Kursus — katalog seluruh modul video, public access.
-    var coursesLink=document.createElement('a');
-    coursesLink.className='nav-right';
-    coursesLink.href='#';
-    coursesLink.textContent='Kursus';
-    coursesLink.style.cursor='pointer';
-    coursesLink.onclick=function(e){e.preventDefault(); if(typeof window.openCourses==='function') window.openCourses(); else publicShow('courses');};
+    // World Electricity Maps tidak lagi berdiri sendiri di menu — sekarang
+    // menjadi salah satu tab di halaman Labs (#lab-worldmap).
 
     // About Us link — public, bypass auth gate
     var aboutUs=document.createElement('a');
@@ -14341,7 +14456,12 @@ else{setTimeout(init,200);}
     if(jobOpp)jobOpp.remove();
     if(talentPool)talentPool.remove();
 
-    var simLabs=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.includes('Simulator')||a.textContent.includes('Labs');});
+    // Labs TIDAK lagi berdiri sendiri di menu. Tiap lab, simulator, dan
+    // kalkulator sekarang muncul di bagian "Praktik" tepat di bawah daftar
+    // modul Academy yang relevan (lihat academy-labs.js), supaya urutan
+    // belajarnya jelas: tonton teorinya, lalu langsung coba sendiri.
+    // Halaman /labs sendiri tetap ada dan tetap bisa dibuka lewat showView('labs'),
+    // jadi tautan lama tidak mati.
     var cert=[].slice.call(navGroup.querySelectorAll('a.nav-right')).find(function(a){return a.textContent.trim()==='Certification'||a.textContent.includes('Sertifikasi');});
 
     // === CAREER LINK — opens dedicated hub page (no dropdown) ===
@@ -14374,7 +14494,9 @@ else{setTimeout(init,200);}
     galleryLink.style.cursor='pointer';
     galleryLink.onclick=function(e){e.preventDefault(); publicShow('gallery');};
 
-    // Expert Workshop — live class rutin tiap Jumat, public access
+    // Expert Workshop — live class rutin tiap Jumat, public access.
+    // Tautannya tetap dibangun di sini meski sedang disembunyikan dari menu,
+    // supaya pengembaliannya cukup membuka satu baris appendChild di bawah.
     var workshopLink=document.createElement('a');
     workshopLink.className='nav-right';
     workshopLink.href='#';
@@ -14383,16 +14505,18 @@ else{setTimeout(init,200);}
     workshopLink.onclick=function(e){e.preventDefault(); publicShow('expert-workshop'); if(typeof window.renderExpertWorkshop==='function') window.renderExpertWorkshop();};
 
     navGroup.innerHTML='';
-    navGroup.appendChild(coursesLink);
     // "About Us" sengaja TIDAK dipasang di menu. Halamannya tetap ada supaya
     // tautan lama dan hasil pencarian tidak mati — hanya pintunya yang ditutup,
     // agar menu berisi hal yang dipakai orang untuk belajar.
     navGroup.appendChild(careerLink);
-    if(simLabs)navGroup.appendChild(simLabs);
     if(cert)navGroup.appendChild(cert);
     navGroup.appendChild(libraryLink);
     navGroup.appendChild(galleryLink);
-    navGroup.appendChild(workshopLink);
+    // Expert Workshop DISEMBUNYIKAN SEMENTARA dari menu atas permintaan.
+    // Halaman, pendaftaran peserta, dan pendaftaran pematerinya tetap utuh —
+    // hanya tautan di header yang dilepas. Untuk mengembalikannya, aktifkan
+    // kembali satu baris di bawah ini.
+    // navGroup.appendChild(workshopLink);
     if(daftar)navGroup.appendChild(daftar);
   }
   

@@ -1,0 +1,136 @@
+/* Bagian "Praktik" di dalam panel tingkat tiap Academy.
+ *
+ * Warnanya sengaja meminjam token halaman journey (--journey-dark /
+ * --journey-accent) supaya bagian ini terbaca sebagai lanjutan dari daftar
+ * modul, bukan tempelan dari menu lain. Satu garis pemisah di atas, judul
+ * pendek, lalu kartu-kartu lab: cukup untuk menandai pergantian dari teori
+ * ke praktik tanpa menambah hiasan baru.
+ */
+.journey-practice {
+  margin: 28px 0 4px;
+  padding-top: 24px;
+  border-top: 1px solid #21352d1f;
+}
+
+.prak-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.prak-eyebrow {
+  font: 700 10px/1.6 var(--sans);
+  letter-spacing: .14em;
+  color: var(--journey-dark, #164447);
+}
+.prak-head h3 {
+  font: 500 24px/1.2 var(--serif, Georgia);
+  margin: 5px 0 0;
+  color: #21352d;
+}
+.prak-head p {
+  font: 400 13px/1.7 var(--sans);
+  color: #515d57;
+  margin: 8px 0 0;
+  max-width: 560px;
+}
+.prak-count {
+  flex-shrink: 0;
+  font: 500 11px/1.5 var(--sans);
+  letter-spacing: .04em;
+  color: #57645d;
+  border: 1px solid #21352d24;
+  border-radius: 30px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.prak-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 14px;
+}
+
+.prak-card {
+  /* Kolom fleksibel supaya "Buka lab" selalu rata di dasar kartu, berapa pun
+     panjang deskripsinya — barisnya jadi terbaca sebagai satu deretan rapi. */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  text-align: left;
+  width: 100%;
+  min-height: 100%;
+  background: #fff;
+  border: 1px solid #21352d1f;
+  border-radius: 14px;
+  padding: 16px 16px 14px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: border-color .18s, box-shadow .18s, transform .18s;
+}
+.prak-card:hover {
+  border-color: var(--journey-dark, #164447);
+  box-shadow: 0 10px 24px #16444714;
+  transform: translateY(-2px);
+}
+
+.prak-kind {
+  justify-self: start;
+  font: 600 9px/1.5 var(--sans);
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  border-radius: 5px;
+  padding: 4px 8px;
+  background: #16444712;
+  color: var(--journey-dark, #164447);
+}
+.prak-kind-sim  { background: #1644471a; color: #164447; }
+.prak-kind-vlab { background: #8a5a1416; color: #8a5a14; }
+.prak-kind-calc { background: #2d4d7a16; color: #2d4d7a; }
+
+.prak-name {
+  font: 600 14px/1.4 var(--sans);
+  color: #21352d;
+}
+.prak-desc {
+  font: 400 12px/1.65 var(--sans);
+  color: #515d57;
+}
+.prak-go {
+  margin-top: auto;
+  padding-top: 10px;
+  font: 600 11px/1.5 var(--sans);
+  letter-spacing: .04em;
+  color: var(--journey-dark, #164447);
+}
+.prak-card:hover .prak-go { text-decoration: underline; }
+
+/* Tombol ke halaman Labs, muncul hanya kalau labnya lebih banyak dari yang
+   ditampilkan. Sengaja dibuat setenang tautan supaya tidak bersaing dengan
+   kartu-kartu di atasnya. */
+.prak-more {
+  margin-top: 14px;
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  cursor: pointer;
+  font: 600 12px/1.5 var(--sans);
+  color: var(--journey-dark, #164447);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prak-more:hover { opacity: .75; }
+
+@media (max-width: 560px) {
+  .journey-practice { margin-top: 22px; padding-top: 20px; }
+  .prak-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .prak-head h3 { font-size: 21px; }
+  .prak-grid { grid-template-columns: 1fr; gap: 12px; }
+  .prak-card { padding: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prak-card, .prak-card:hover { transition: none; transform: none; }
+}
