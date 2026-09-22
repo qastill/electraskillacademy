@@ -3539,6 +3539,7 @@ if ('serviceWorker' in navigator) {
 <script src="/academy-journey.js?v=2"></script>
 <script src="/catalog-art.js?v=2"></script>
 <script src="/academy-labs.js?v=2"></script>
+<script src="/sertifikat-share.js?v=1" defer></script>
 <script src="/academy-lobby.js?v=12" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
@@ -10768,6 +10769,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
           <div class="esa-cert-path-actions">
             <button class="esa-cert-download-btn" onclick="esaDownloadCertificate('${levelKey}')">⬇ Unduh Sertifikat PDF</button>
           </div>
+          ${typeof window.esaShareCertButtonsHTML === 'function' ? window.esaShareCertButtonsHTML(levelKey) : ''}
         </div>`;
     } else if (!levelJustCompleted && levelProgress.total > 0) {
       // Hanya tampilkan kalau level modulnya benar-benar dikenali. Kalau
@@ -10837,6 +10839,7 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
                   in  Tambahkan ke LinkedIn
                 </button>
               </div>
+              ${typeof window.esaShareCertButtonsHTML === 'function' ? window.esaShareCertButtonsHTML(levelKey) : ''}
             </div>
           ` : ''}
 
@@ -10969,7 +10972,9 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     const issued = new Date(rec.completedDate);
     const issueYear = issued.getFullYear();
     const issueMonth = issued.getMonth() + 1;
-    const certUrl = `${location.origin}${location.pathname}#cert=${encodeURIComponent(rec.certId)}`;
+    // Halaman verifikasi publik: perekrut yang mengklik dari LinkedIn langsung
+    // melihat sertifikat terverifikasi tanpa perlu masuk ke aplikasi.
+    const certUrl = `${location.origin}/verify.html?id=${encodeURIComponent(rec.certId)}`;
     const params = new URLSearchParams({
       startTask: 'CERTIFICATION_NAME',
       name: certName,
@@ -11246,6 +11251,36 @@ document.querySelectorAll('.testimonial-dot').forEach((dot) => {
     }, 400);
   }
   window.esaDownloadCertificate = downloadCertificate;
+
+  // Halaman 1 sertifikat sebagai PNG (Blob) — dipakai tombol Instagram di
+  // sertifikat-share.js lewat Web Share API. Memakai markup dan pipeline yang
+  // sama dengan PDF supaya gambar yang dibagikan identik dengan yang diunduh.
+  async function renderCertPNG(levelKey) {
+    const rec = getCertRecord(levelKey);
+    if (!rec || !state.profile) return null;
+    try { await loadPDFLibraries(); } catch (e) { return null; }
+    const container = document.getElementById('esa-cert-container') || (() => {
+      const div = document.createElement('div');
+      div.id = 'esa-cert-container';
+      div.className = 'esa-cert-container';
+      document.body.appendChild(div);
+      return div;
+    })();
+    container.innerHTML = buildCertHTML(levelKey);
+    renderCertQRCodes(container);
+    await new Promise(r => setTimeout(r, 400)); // beri waktu QR tergambar
+    try {
+      const page1 = document.getElementById('esa-cert-page-1');
+      const canvas = await html2canvas(page1, { scale: 2, backgroundColor: '#faf7f0', logging: false });
+      return await new Promise(res => canvas.toBlob(res, 'image/png'));
+    } catch (err) {
+      console.error('Cert PNG error:', err);
+      return null;
+    } finally {
+      container.innerHTML = '';
+    }
+  }
+  window.esaRenderCertPNG = renderCertPNG;
 
   // Muat library PDF satu kali, on-demand. Mengembalikan Promise yang resolve
   // setelah kedua library siap (atau langsung jika sudah ada). Dedupe: panggilan
@@ -12742,6 +12777,7 @@ function showProfileModal(){
                 '<button type="button" onclick="esaDownloadCertificate(\''+c.kunci+'\')" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:6px;padding:7px 13px;font-size:0.73rem;font-weight:700;cursor:pointer;">Unduh PDF</button>'+
                 '<a href="/verify.html?id='+encodeURIComponent(c.certId)+'" target="_blank" rel="noopener" style="background:transparent;color:rgba(245,240,230,0.7);border:1px solid rgba(255,255,255,0.16);border-radius:6px;padding:7px 13px;font-size:0.73rem;font-weight:600;text-decoration:none;">Verifikasi</a>'+
               '</div>'+
+              ((typeof window.esaShareCertButtonsHTML==='function') ? window.esaShareCertButtonsHTML(c.kunci,{gelap:true}) : '')+
             '</div>';
           }).join('')
         : '<div style="background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.12);border-radius:10px;padding:16px;font-size:0.8rem;color:rgba(245,240,230,0.55);line-height:1.6;">'+

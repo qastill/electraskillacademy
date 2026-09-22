@@ -12,6 +12,7 @@ node tests/quiz-coverage.test.mjs --backlog   # + daftar modul yang banknya masi
 node tests/academy-labs.test.mjs     # tanpa browser
 node tests/lab-handson.test.mjs      # tanpa browser
 node tests/aset-ringan.test.mjs      # tanpa browser
+node tests/sertifikat-share.test.mjs # tanpa browser
 node tests/youtube-map.test.mjs      # tanpa browser
 node tests/module-thumbs.test.mjs    # tanpa browser
 node tests/sertifikat-profil.test.mjs # tanpa browser
@@ -88,6 +89,16 @@ view lain. Menjaga: tidak ada overflow horizontal di view mana pun, 16
 tombol Academy ≥ 44 px, jalur tidak mengunduh PNG potret, beranda tidak
 merakit grid Labs/Talent (< 10.000 node; dulu 11.921), dan kuis serta lab
 tetap bekerja setelah skrip labnya dipindah ke berkas yang dimuat lazy.
+
+### `sertifikat-share.test.mjs` — sertifikat bisa dibagikan, dan tautannya publik
+Setelah sertifikat terbit, peserta bisa membagikannya ke LinkedIn, X,
+WhatsApp, Instagram, atau menyalin teksnya. Tes ini memuat
+`sertifikat-share.js` di sandbox dan memastikan setiap tautan membawa
+`/verify.html?id=<ID>` (halaman verifikasi publik — bukan halaman login),
+caption menyebut level, Academy, dan skor, Instagram memakai Web Share API
+dengan PNG dan jatuh ke unduh + salin caption bila tidak tersedia, tombolnya
+terpasang di modal selesai kuis dan modal profil, serta "Tambahkan ke
+LinkedIn" tidak lagi menunjuk `#cert=` yang hanya berarti bagi pemiliknya.
 
 ### `module-thumbs.test.mjs` — sampul modul tidak menunjuk berkas yang tidak ada
 `data/module-thumbs.js` mengisi thumbnail modul yang videonya belum di YouTube.
