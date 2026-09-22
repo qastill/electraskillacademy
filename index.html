@@ -9000,7 +9000,7 @@ function renderReferensi() {
         ${cover ? `<img class="esa-book-cover-art" width="640" height="960" src="${escapeHtml(cover)}" alt="" loading="lazy" decoding="async" onerror="this.parentElement.classList.remove('has-cover-art');this.remove()"><span class="esa-book-cover-shade" aria-hidden="true"></span>` : ''}
         <div class="esa-book-cover-spine"></div>
         <div class="esa-book-cover-band">${escapeHtml(b.categoryLabel)}</div>
-        <div class="esa-book-cover-title">${escapeHtml(b.title)}</div>
+        <div class="esa-book-cover-title" lang="${b.category === 'akademik-ui' ? 'en' : 'id'}">${escapeHtml(b.title)}</div>
         ${window.esaCatalogArt(b, 'book')}
         <div class="esa-book-cover-author">${escapeHtml(b.author)}</div>
         <div class="esa-book-cover-edition">${escapeHtml(b.edition)}</div>
