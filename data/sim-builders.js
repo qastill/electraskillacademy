@@ -2785,7 +2785,277 @@ window.SIM_BUILDERS = {
         o+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="#9a7f4f" stroke-width="1.5"/>'; }
       g.innerHTML=o;
     })
-  }
+  },
+  // ============ S4: Manuver Pembebasan Tegangan Saluran 150 kV (interaktif) ============
+  'manuver-sutet': {
+    html: () => _labShell({
+      eyebrow: 'Transmisi · Manuver', title: 'Pembebasan Tegangan', italic: 'Saluran 150 kV',
+      desc: 'Bebaskan saluran transmisi untuk pemeliharaan dengan urutan manuver yang benar. Setiap langkah yang diambil di luar urutan langsung memperlihatkan akibat nyatanya di gardu induk.',
+      svg: `<text x="200" y="22" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">Gardu Induk A &nbsp;—&nbsp; Saluran 150 kV &nbsp;—&nbsp; Gardu Induk B</text>
+        <g id="mv-sld"></g>
+        <g id="mv-steps"></g>
+        <text x="200" y="286" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="mv-status">—</text>`,
+      controls: `<div class="sim-control"><label>Pilih langkah manuver berikutnya</label><div id="mv-btns" style="display:flex;flex-direction:column;gap:6px"></div></div>`
+        + `<div class="sim-control"><div style="display:flex;gap:8px"><button type="button" onclick="_mvReset()" style="${_BTN}">⟲ Mulai ulang</button></div></div>`
+        + `<div class="sim-control"><div id="mv-msg" style="font-size:12.5px;line-height:1.55;font-weight:600;color:#9a7f4f">Saluran masih bertegangan. Mulai dari koordinasi dengan dispatcher.</div></div>`,
+      outputs: _labOut('mv-prog','Langkah Benar','/7') + _labOut('mv-state','Status Saluran','') + _labOut('mv-err','Kesalahan Fatal',''),
+      formula: `PMS (pemisah) bukan pemutus beban — urutannya selalu buka PMT dulu, baru PMS; saat memberi tegangan kembali urutannya dibalik.<br>Pentanahan hanya boleh dipasang setelah tegangan diuji nol. Izin kerja terbit paling akhir.`
+    }),
+    init: () => { _mvReset(); }
+  },
+
+  // ============ S9: Susun BoQ Panel & Harga Penawaran (interaktif) ============
+  'boq-panel': {
+    html: () => _labShell({
+      eyebrow: 'Technical Sales · Penawaran', title: 'Susun BoQ Panel', italic: '& Harga Penawaran',
+      desc: 'Pelanggan minta panel MDP 3 fasa 250 A dengan 8 grup keluaran, metering, proteksi surja, dan enklosur IP54. Susun daftar materialnya dari katalog — penawaran yang kurang satu komponen berarti panel tidak memenuhi spesifikasi.',
+      svg: `<text x="200" y="20" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">Ceklis pemenuhan spesifikasi pelanggan</text>
+        <g id="bq-check"></g>
+        <line x1="50" y1="196" x2="350" y2="196" stroke="#cfd3da" stroke-width="1"/>
+        <g id="bq-bar"></g>
+        <text x="200" y="258" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="bq-verdict">—</text>
+        <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="bq-detail">—</text>`,
+      controls: `<div class="sim-control"><label>Katalog material (klik untuk menambah)</label><div id="bq-btns" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>`
+        + `<div class="sim-control"><div id="bq-list" style="font-size:12px;color:#6b6d7a;line-height:1.7">Keranjang masih kosong.</div></div>`
+        + `<div class="sim-control"><div style="display:flex;gap:8px"><button type="button" onclick="_bqUndo()" style="${_BTN}">↶ Hapus terakhir</button><button type="button" onclick="_bqReset()" style="${_BTN}">⟲ Kosongkan</button></div></div>`
+        + _labSld('bq-margin','Margin (%)',5,40,20,1)
+        + _labSld('bq-budget','Anggaran pelanggan (juta Rp)',50,250,120,5),
+      outputs: _labOut('bq-lengkap','Pemenuhan Spesifikasi','/6') + _labOut('bq-pokok','Biaya Pokok','jt') + _labOut('bq-jual','Harga Penawaran','jt') + _labOut('bq-laba','Laba Kotor','jt'),
+      formula: `Harga penawaran = (biaya material + ongkos rakit) × (1 + overhead 12%) × (1 + margin)<br>Penawaran hanya sah bila keenam butir spesifikasi terpenuhi — memangkas SPD atau metering demi harga murah membuat panel gugur saat inspeksi.`
+    }),
+    init: () => { _bqReset(); }
+  },
+
+  // ============ S15: Jadwal BESS Pangkas Beban Puncak (interaktif) ============
+  'bess-puncak': {
+    html: () => _labShell({
+      eyebrow: 'Battery & BESS · Operasi', title: 'Jadwal BESS', italic: 'Pangkas Beban Puncak',
+      desc: 'Klik batang jam untuk menjadwalkan baterai: sekali klik = melepas daya (discharge), dua kali = mengisi (charge), tiga kali = netral. Isi dulu saat murah, lepas saat puncak — dan jaga jangan sampai SoC habis.',
+      svg: `<text x="200" y="16" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Profil beban 24 jam (kW) — klik batang untuk menjadwalkan</text>
+        <line id="bp-peak" x1="38" y1="40" x2="384" y2="40" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="5 3"/>
+        <text x="384" y="35" text-anchor="end" font-family="Georgia" font-size="9" fill="#c0392b" id="bp-peak-lbl">puncak awal</text>
+        <g id="bp-bars"></g>
+        <polyline id="bp-soc" points="" fill="none" stroke="#1a3a5c" stroke-width="1.6" stroke-dasharray="3 2"/>
+        <text x="38" y="216" font-family="Georgia" font-size="8.5" fill="#6b6d7a">00</text>
+        <text x="200" y="216" text-anchor="middle" font-family="Georgia" font-size="8.5" fill="#6b6d7a">12</text>
+        <text x="384" y="216" text-anchor="end" font-family="Georgia" font-size="8.5" fill="#6b6d7a">23</text>
+        <text x="200" y="232" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6b6d7a">▪ netral &nbsp; ▪ lepas daya &nbsp; ▪ mengisi &nbsp; ┄ SoC baterai &nbsp;· WBP 18–22 berlatar emas</text>
+        <text x="200" y="258" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="bp-verdict">—</text>
+        <text x="200" y="278" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="bp-detail">—</text>`,
+      controls: _labSld('bp-kwh','Kapasitas BESS (kWh)',200,2000,800,50)
+        + _labSld('bp-kw','Daya BESS (kW)',100,1000,300,25)
+        + _labSld('bp-soc0','SoC awal (%)',20,90,50,5)
+        + `<div class="sim-control"><div style="display:flex;flex-wrap:wrap;gap:6px">`
+          + `<button type="button" onclick="_bpAuto()" style="${_BTN}">◈ Jadwal otomatis</button>`
+          + `<button type="button" onclick="_bpReset()" style="${_BTN}">⟲ Kosongkan jadwal</button></div></div>`
+        + `<div class="sim-control"><div style="font-size:12px;color:#6b6d7a;line-height:1.5">Tarif industri: LWBP Rp 1.114,74/kWh · WBP (18.00–22.00) 1,4 × LWBP. Efisiensi satu arah 95%, SoC dijaga 10–95%.</div></div>`,
+      outputs: _labOut('bp-new','Puncak Baru','kW') + _labOut('bp-cut','Puncak Turun','kW') + _labOut('bp-socmin','SoC Terendah','%') + _labOut('bp-save','Hemat Energi','Rp/bln'),
+      formula: `Profil baru = beban − daya lepas + daya isi · SoC dibatasi 10–95%, tiap arah rugi 5%<br>Hemat = Σ(beban×tarif jam) sebelum − sesudah, dikali 30 hari. Memangkas puncak juga menurunkan daya tersambung yang perlu dikontrak.`
+    }),
+    init: () => { _bpReset(); }
+  },
+  // ============ S7: Sinkronisasi Generator ke Jaringan (interaktif) ============
+  'gen-sinkron': {
+    html: () => _labShell({
+      eyebrow: 'Pembangkitan · Paralel', title: 'Sinkronisasi Generator', italic: 'ke Jaringan',
+      desc: 'Setel governor (frekuensi) dan AVR (tegangan) generator, amati synchroscope berputar, lalu tekan TUTUP PMT tepat saat jarum masuk zona hijau. Menutup di luar syarat = hentakan torsi yang merusak poros & kopling.',
+      svg: `<circle cx="135" cy="140" r="92" fill="#faf7f0" stroke="#1a1d2e" stroke-width="2"/>
+        <path d="M121.5 63.2 A78 78 0 0 1 148.5 63.2" stroke="#15803d" stroke-width="13" fill="none" opacity="0.35"/>
+        <g stroke="#1a1d2e" stroke-width="1.3" opacity="0.45">
+          <line x1="135" y1="62" x2="135" y2="52"/><line x1="174" y1="72.5" x2="179" y2="63.8"/>
+          <line x1="202.5" y1="101" x2="211.2" y2="96"/><line x1="213" y1="140" x2="223" y2="140"/>
+          <line x1="202.5" y1="179" x2="211.2" y2="184"/><line x1="174" y1="207.5" x2="179" y2="216.2"/>
+          <line x1="135" y1="218" x2="135" y2="228"/><line x1="96" y1="207.5" x2="91" y2="216.2"/>
+          <line x1="67.5" y1="179" x2="58.8" y2="184"/><line x1="57" y1="140" x2="47" y2="140"/>
+          <line x1="67.5" y1="101" x2="58.8" y2="96"/><line x1="96" y1="72.5" x2="91" y2="63.8"/>
+        </g>
+        <text x="135" y="44" text-anchor="middle" font-family="Georgia" font-size="9.5" font-weight="700" fill="#15803d">SINKRON 0°</text>
+        <text x="33" y="128" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6b6d7a">◄ LAMBAT</text>
+        <text x="238" y="128" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6b6d7a">CEPAT ►</text>
+        <line id="gs-needle" x1="135" y1="140" x2="135" y2="66" stroke="#c0392b" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="135" cy="140" r="7" fill="#1a1d2e"/>
+        <text x="135" y="256" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#6b6d7a" id="gs-dir">—</text>
+        <text x="135" y="276" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="gs-ang">Δθ —</text>
+        <line x1="258" y1="235" x2="392" y2="235" stroke="#1a1d2e" stroke-width="1.5"/>
+        <rect id="gs-bar-grid" x="278" y="112" width="34" height="123" fill="#9a7f4f"/>
+        <rect id="gs-bar-gen" x="338" y="115" width="34" height="120" fill="#15803d"/>
+        <text x="295" y="250" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#6b6d7a">JARINGAN</text>
+        <text x="355" y="250" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#6b6d7a">GENERATOR</text>
+        <text x="295" y="105" text-anchor="middle" font-family="Georgia" font-size="10.5" font-weight="700" fill="#1a1d2e">400 V</text>
+        <text x="355" y="105" text-anchor="middle" font-family="Georgia" font-size="10.5" font-weight="700" fill="#1a1d2e" id="gs-vtop">—</text>
+        <text x="325" y="42" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Tegangan terminal</text>
+        <text x="325" y="62" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Batas ΔV ±20 V (5%)</text>`,
+      controls: `<div class="sim-control"><label>Governor — frekuensi generator <span class="sim-value" id="gs-f">—</span></label>`
+          + `<div style="display:flex;flex-wrap:wrap;gap:6px">`
+          + `<button type="button" onclick="_gsAdj('f',-0.20)" style="${_BTN}">−0,20 Hz</button>`
+          + `<button type="button" onclick="_gsAdj('f',-0.05)" style="${_BTN}">−0,05 Hz</button>`
+          + `<button type="button" onclick="_gsAdj('f',0.05)" style="${_BTN}">+0,05 Hz</button>`
+          + `<button type="button" onclick="_gsAdj('f',0.20)" style="${_BTN}">+0,20 Hz</button></div></div>`
+        + `<div class="sim-control"><label>AVR — tegangan generator <span class="sim-value" id="gs-v">—</span></label>`
+          + `<div style="display:flex;flex-wrap:wrap;gap:6px">`
+          + `<button type="button" onclick="_gsAdj('v',-10)" style="${_BTN}">−10 V</button>`
+          + `<button type="button" onclick="_gsAdj('v',-2)" style="${_BTN}">−2 V</button>`
+          + `<button type="button" onclick="_gsAdj('v',2)" style="${_BTN}">+2 V</button>`
+          + `<button type="button" onclick="_gsAdj('v',10)" style="${_BTN}">+10 V</button></div></div>`
+        + `<div class="sim-control"><div style="display:flex;gap:8px">`
+          + `<button type="button" onclick="_gsClose()" style="${_BTN};background:rgba(21,128,61,0.16);border-color:#15803d">⚡ TUTUP PMT</button>`
+          + `<button type="button" onclick="_gsReset()" style="${_BTN}">⟲ Buka & ulangi</button></div></div>`
+        + `<div class="sim-control"><div id="gs-msg" style="font-size:12.5px;line-height:1.55;font-weight:600;color:#9a7f4f">Setel dulu, lalu tutup PMT saat jarum di zona hijau.</div></div>`,
+      outputs: _labOut('gs-o-dv','Beda Tegangan ΔV','V') + _labOut('gs-o-df','Beda Frekuensi Δf','Hz') + _labOut('gs-o-th','Sudut Fasa Δθ','°') + _labOut('gs-o-try','Berhasil / Gagal',''),
+      formula: `Syarat paralel (ANSI 25): |ΔV| ≤ 5% · 0 &lt; Δf ≤ 0,2 Hz (generator sedikit lebih cepat) · |Δθ| ≤ 10°<br>Kecepatan putar jarum = 360° × Δf per detik. Δf negatif = generator jadi motor (daya balik, relai 32 trip).`
+    }),
+    init: () => { _gsReset(); }
+  },
+
+  // ============ S10: Perancang String PV (interaktif) ============
+  'pv-string': {
+    html: () => _labShell({
+      eyebrow: 'Solar · Desain DC', title: 'Perancang String PV', italic: '& Jendela MPPT',
+      desc: 'Susun jumlah modul per string dan jumlah string per MPPT dengan tombol. Sistem mengecek Voc saat dingin terhadap batas isolasi inverter, Vmp saat panas terhadap jendela MPPT, arus masuk, dan rasio DC/AC.',
+      svg: `<text x="200" y="20" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">Satu string — tiap kotak = 1 modul</text>
+        <g id="pvs-mods"></g>
+        <line x1="40" y1="150" x2="360" y2="150" stroke="#cfd3da" stroke-width="1"/>
+        <text x="40" y="168" font-family="Georgia" font-size="9.5" fill="#6b6d7a">0 V</text>
+        <text x="360" y="168" text-anchor="end" font-family="Georgia" font-size="9.5" fill="#6b6d7a" id="pvs-vmax-lbl">1100 V</text>
+        <rect x="40" y="175" width="320" height="22" rx="4" fill="#eef0f3"/>
+        <rect id="pvs-win" x="40" y="175" width="100" height="22" rx="4" fill="#15803d" opacity="0.2"/>
+        <rect id="pvs-voc" x="40" y="178" width="6" height="16" rx="2" fill="#c0392b"/>
+        <rect id="pvs-vmp" x="40" y="178" width="6" height="16" rx="2" fill="#1a1d2e"/>
+        <text x="200" y="212" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#6b6d7a">■ jendela MPPT &nbsp; ▮ Voc dingin (merah) &nbsp; ▮ Vmp panas (hitam)</text>
+        <text x="200" y="240" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="pvs-verdict">—</text>
+        <text x="200" y="262" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="pvs-d1">—</text>
+        <text x="200" y="280" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="pvs-d2">—</text>`,
+      controls: _labSel('pvs-mod','Modul surya','<option value="450">450 Wp mono — Voc 41,5 V · Vmp 34,6 V · Isc 13,85 A</option><option value="550" selected>550 Wp mono — Voc 49,9 V · Vmp 41,8 V · Isc 13,95 A</option><option value="615">615 Wp n-type — Voc 55,6 V · Vmp 46,3 V · Isc 14,1 A</option>')
+        + _labSel('pvs-inv','Inverter (per MPPT)','<option value="besar" selected>String 100 kW — Vmax 1100 V · MPPT 200–1000 V · Isc maks 40 A · 20 kW/MPPT</option><option value="kecil">Residensial 5 kW — Vmax 600 V · MPPT 80–520 V · Isc maks 15 A · 5 kW/MPPT</option>')
+        + `<div class="sim-control"><label>Modul per string <span class="sim-value" id="pvs-n">—</span></label><div style="display:flex;gap:8px">`
+          + `<button type="button" onclick="_pvsAdd('n',-1)" style="${_BTN}">− kurangi</button><button type="button" onclick="_pvsAdd('n',1)" style="${_BTN}">+ tambah</button></div></div>`
+        + `<div class="sim-control"><label>String paralel per MPPT <span class="sim-value" id="pvs-s">—</span></label><div style="display:flex;gap:8px">`
+          + `<button type="button" onclick="_pvsAdd('s',-1)" style="${_BTN}">− kurangi</button><button type="button" onclick="_pvsAdd('s',1)" style="${_BTN}">+ tambah</button></div></div>`
+        + _labSld('pvs-tmin','Suhu modul terdingin (°C)',5,25,18,1)
+        + _labSld('pvs-tamb','Suhu udara terpanas (°C)',28,40,34,1),
+      outputs: _labOut('pvs-voc-o','Voc String (dingin)','V') + _labOut('pvs-vmp-o','Vmp String (panas)','V') + _labOut('pvs-i','Isc Masuk MPPT','A') + _labOut('pvs-ratio','Rasio DC/AC',''),
+      formula: `Voc(T) = Voc_stc × [1 + β<sub>Voc</sub>(T − 25)] dengan β<sub>Voc</sub> ≈ −0,27 %/°C · Vmp pakai β<sub>Vmp</sub> ≈ −0,40 %/°C<br>Suhu sel siang = suhu udara + 25 °C. Batas masukan inverter diadu dengan Isc × jumlah string; faktor 1,25 dipakai untuk ukuran kabel &amp; fuse string, bukan untuk inverter. Rasio DC/AC sehat 1,0–1,35.`
+    }),
+    init: () => { _pvsInit(); }
+  },
+
+  // ============ S11: Jejak Karbon & Aksi Mitigasi (interaktif) ============
+  'karbon-aksi': {
+    html: () => _labShell({
+      eyebrow: 'Keberlanjutan · GRK', title: 'Jejak Karbon', italic: '& Aksi Mitigasi',
+      desc: 'Hitung emisi Scope 1 & 2 sebuah gedung, lalu klik untuk memasang aksi efisiensi sampai target penurunan 30% tercapai. Perhatikan bedanya: efisiensi & PLTS memotong emisi nyata, REC hanya memotong emisi berbasis pasar.',
+      svg: `<text x="200" y="20" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">Emisi tahunan (ton CO₂e)</text>
+        <line x1="60" y1="215" x2="370" y2="215" stroke="#1a1d2e" stroke-width="1.5"/>
+        <g id="ka-bars"></g>
+        <line id="ka-target" x1="60" y1="120" x2="370" y2="120" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="370" y="114" text-anchor="end" font-family="Georgia" font-size="9.5" fill="#c0392b" id="ka-target-lbl">target −30%</text>
+        <text x="200" y="248" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="ka-verdict">—</text>
+        <text x="200" y="270" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="ka-detail">—</text>`,
+      controls: _labSld('ka-kwh','Konsumsi listrik (ribu kWh/th)',200,4000,1200,50)
+        + _labSld('ka-solar','Solar genset & kendaraan (ribu liter/th)',0,200,40,5)
+        + `<div class="sim-control"><label>Pasang aksi mitigasi (klik untuk menambah)</label><div id="ka-btns" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>`
+        + `<div class="sim-control"><div id="ka-list" style="font-size:12px;color:#6b6d7a;line-height:1.7">Belum ada aksi terpasang.</div></div>`
+        + `<div class="sim-control"><div style="display:flex;gap:8px"><button type="button" onclick="_kaUndo()" style="${_BTN}">↶ Hapus terakhir</button><button type="button" onclick="_kaReset()" style="${_BTN}">⟲ Reset</button></div></div>`,
+      outputs: _labOut('ka-base','Emisi Awal','t') + _labOut('ka-now','Emisi Setelah Aksi','t') + _labOut('ka-cut','Penurunan','%') + _labOut('ka-pb','Payback','th'),
+      formula: `Scope 2 = kWh × FE jaringan (0,87 kgCO₂e/kWh, rerata Jawa-Bali) · Scope 1 = liter solar × 2,68 kgCO₂/L<br>Penurunan = (emisi awal − emisi akhir) / emisi awal × 100%. Payback = investasi / penghematan biaya energi per tahun.`
+    }),
+    init: () => { _kaReset(); }
+  },
+
+  // ============ S12: Sesi Pengisian Kendaraan Listrik (interaktif) ============
+  'ev-sesi': {
+    html: () => _labShell({
+      eyebrow: 'EV · SPKLU', title: 'Sesi Pengisian', italic: 'Kendaraan Listrik',
+      desc: 'Pilih kendaraan dan charger, tentukan SoC awal & target, lalu jalankan sesi. Perhatikan daya menurun (taper) di atas 80% — itulah sebabnya mengisi 80→100% jauh lebih lama daripada 20→80%.',
+      svg: `<text x="200" y="18" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">Daya pengisian vs State of Charge</text>
+        <line x1="52" y1="180" x2="372" y2="180" stroke="#1a1d2e" stroke-width="1.4"/>
+        <line x1="52" y1="34" x2="52" y2="180" stroke="#1a1d2e" stroke-width="1.4"/>
+        <text x="46" y="40" text-anchor="end" font-family="Georgia" font-size="9" fill="#6b6d7a" id="ev-pmax">kW</text>
+        <text x="52" y="194" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6b6d7a">0%</text>
+        <text x="308" y="194" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6b6d7a">80%</text>
+        <text x="372" y="194" text-anchor="middle" font-family="Georgia" font-size="9" fill="#6b6d7a">100%</text>
+        <line x1="308" y1="34" x2="308" y2="180" stroke="#9a7f4f" stroke-width="1" stroke-dasharray="4 3"/>
+        <path id="ev-curve" d="" fill="rgba(21,128,61,0.14)" stroke="#15803d" stroke-width="2.2"/>
+        <rect id="ev-band" x="52" y="34" width="0" height="146" fill="rgba(154,127,79,0.13)"/>
+        <circle id="ev-dot" cx="52" cy="180" r="5" fill="#c0392b"/>
+        <text x="200" y="224" text-anchor="middle" font-family="Georgia" font-size="19" font-weight="700" fill="#1a1d2e" id="ev-soc">—</text>
+        <text x="200" y="246" text-anchor="middle" font-family="Georgia" font-size="11" fill="#6b6d7a" id="ev-live">—</text>
+        <text x="200" y="272" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" id="ev-verdict">—</text>`,
+      controls: _labSel('ev-car','Kendaraan','<option value="motor">Motor listrik — 3,6 kWh · AC 1 kW · tanpa DC</option><option value="kota" selected>Mobil kota — 37,9 kWh · AC 6,6 kW · DC 40 kW</option><option value="suv">SUV listrik — 64 kWh · AC 10,5 kW · DC 77 kW</option><option value="bus">Bus listrik — 324 kWh · AC 22 kW · DC 150 kW</option>')
+        + _labSel('ev-chg','Charger','<option value="ac74">AC 7,4 kW — 1 fasa 32 A (rumah)</option><option value="ac22">AC 22 kW — 3 fasa 32 A (wallbox)</option><option value="dc50" selected>DC 50 kW — SPKLU medium</option><option value="dc100">DC 100 kW — SPKLU fast</option><option value="dc200">DC 200 kW — SPKLU ultra fast</option>')
+        + _labSld('ev-s0','SoC awal (%)',0,95,20,1)
+        + _labSld('ev-s1','SoC target (%)',10,100,80,1)
+        + _labSld('ev-tar','Tarif (Rp/kWh)',1000,4000,2467,1)
+        + `<div class="sim-control"><div style="display:flex;gap:8px"><button type="button" onclick="_evRun()" style="${_BTN};background:rgba(21,128,61,0.16);border-color:#15803d">▶ Jalankan sesi</button><button type="button" onclick="_evStop()" style="${_BTN}">■ Hentikan</button></div></div>`,
+      outputs: _labOut('ev-kwh','Energi Terisi','kWh') + _labOut('ev-time','Durasi','menit') + _labOut('ev-cost','Biaya','Rp') + _labOut('ev-pav','Daya Rata-rata','kW'),
+      formula: `Energi ke baterai = kapasitas × ΔSoC/100 · energi ditagih = energi ke baterai ÷ efisiensi (DC 92%, AC 88%)<br>Di bawah 80% daya konstan (batas terkecil charger vs kendaraan); di atas 80% daya turun linier hingga 15% agar sel tidak rusak.`
+    }),
+    init: () => { _evInit(); }
+  },
+
+  // ============ S13: Komposisi Sampah & Nilai Kalor PLTSa (interaktif) ============
+  'wte-komposisi': {
+    html: () => _labShell({
+      eyebrow: 'Waste to Energy · Bahan Bakar', title: 'Komposisi Sampah', italic: '& Nilai Kalor PLTSa',
+      desc: 'Atur komposisi sampah kota dengan tombol, lalu lihat nilai kalor sampah basah, daya listrik yang bisa dihasilkan, dan apakah pembakaran bisa mandiri tanpa bahan bakar bantu (ambang 7 MJ/kg).',
+      svg: `<text x="200" y="18" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">Komposisi massa sampah masuk</text>
+        <g id="wk-bar"></g>
+        <g id="wk-leg"></g>
+        <text x="200" y="152" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">Nilai kalor sampah basah (MJ/kg)</text>
+        <rect x="50" y="162" width="300" height="20" rx="4" fill="#eef0f3"/>
+        <rect id="wk-lhv-bar" x="50" y="162" width="0" height="20" rx="4" fill="#15803d"/>
+        <line x1="190" y1="157" x2="190" y2="187" stroke="#c0392b" stroke-width="1.6"/>
+        <text x="190" y="199" text-anchor="middle" font-family="Georgia" font-size="9" fill="#c0392b">7 MJ/kg — ambang mandiri</text>
+        <text x="50" y="199" font-family="Georgia" font-size="9" fill="#6b6d7a">0</text>
+        <text x="350" y="199" text-anchor="end" font-family="Georgia" font-size="9" fill="#6b6d7a">15</text>
+        <text x="200" y="228" text-anchor="middle" font-family="Georgia" font-size="19" font-weight="700" fill="#1a1d2e" id="wk-lhv-txt">—</text>
+        <text x="200" y="252" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="wk-verdict">—</text>
+        <text x="200" y="274" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="wk-detail">—</text>`,
+      controls: `<div class="sim-control"><label>Komposisi (klik ± ubah 2%) — total <span class="sim-value" id="wk-tot">100%</span></label><div id="wk-btns" style="display:flex;flex-direction:column;gap:6px"></div></div>`
+        + `<div class="sim-control"><label>Komposisi acuan</label><div style="display:flex;flex-wrap:wrap;gap:6px">`
+          + `<button type="button" onclick="_wkPreset('id')" style="${_BTN}">Kota Indonesia</button>`
+          + `<button type="button" onclick="_wkPreset('pilah')" style="${_BTN}">Setelah pemilahan organik</button>`
+          + `<button type="button" onclick="_wkPreset('daur')" style="${_BTN}">Plastik didaur ulang</button>`
+          + `<button type="button" onclick="_wkPreset('eropa')" style="${_BTN}">Kota Eropa</button></div></div>`
+        + _labSld('wk-ton','Sampah masuk (ton/hari)',300,3000,1000,50)
+        + _labSld('wk-eff','Efisiensi netto pembangkit (%)',18,30,24,1),
+      outputs: _labOut('wk-lhv','Nilai Kalor Basah','MJ/kg') + _labOut('wk-th','Daya Termal','MW') + _labOut('wk-mw','Daya Listrik Netto','MW') + _labOut('wk-spec','Hasil Spesifik','kWh/ton'),
+      formula: `LHV basah = Σ[wᵢ × (1 − airᵢ) × LHV keringᵢ] − 2,44 × kadar air campuran &nbsp;(MJ/kg)<br>Daya termal = ton/hari × 1000 × LHV ÷ 86.400 (MW) · Daya listrik = termal × efisiensi netto.`
+    }),
+    init: () => { _wkPreset('id'); }
+  },
+
+  // ============ S14: Rancang Pabrik Hidrogen Hijau (interaktif) ============
+  'h2-pabrik': {
+    html: () => _labShell({
+      eyebrow: 'Hidrogen · Perancangan Pabrik', title: 'Pabrik Hidrogen', italic: 'Hijau (PLTS + Elektroliser)',
+      desc: 'Susun kapasitas PLTS dan elektroliser dengan tombol hingga seimbang. Terlalu banyak elektroliser = stack menganggur di bawah beban minimum; terlalu banyak PLTS = energi terbuang (curtailment).',
+      svg: `<text x="200" y="18" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">PLTS → Elektroliser → Hidrogen</text>
+        <g id="h2-pv"></g>
+        <g id="h2-elz"></g>
+        <path d="M172 78 h24 m-6 -5 l6 5 -6 5" stroke="#9a7f4f" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <text x="90" y="34" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#6b6d7a" id="h2-pv-lbl">PLTS</text>
+        <text x="290" y="34" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#6b6d7a" id="h2-elz-lbl">Elektroliser</text>
+        <text x="200" y="152" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a">Energi PLTS per tahun — terpakai vs terbuang</text>
+        <rect x="50" y="162" width="300" height="20" rx="4" fill="#eef0f3"/>
+        <rect id="h2-use" x="50" y="162" width="0" height="20" rx="4" fill="#15803d"/>
+        <rect id="h2-curt" x="50" y="162" width="0" height="20" fill="#c0392b" opacity="0.75"/>
+        <text x="200" y="199" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#6b6d7a" id="h2-split">—</text>
+        <text x="200" y="228" text-anchor="middle" font-family="Georgia" font-size="19" font-weight="700" fill="#1a1d2e" id="h2-out">—</text>
+        <text x="200" y="252" text-anchor="middle" font-family="Georgia" font-size="12.5" font-weight="700" id="h2-verdict">—</text>
+        <text x="200" y="274" text-anchor="middle" font-family="Georgia" font-size="10.5" fill="#6b6d7a" id="h2-detail">—</text>`,
+      controls: _labSel('h2-tek','Teknologi elektroliser','<option value="alk" selected>Alkaline — 51 kWh/kg · beban minimum 20% · US$800/kW</option><option value="pem">PEM — 55 kWh/kg · beban minimum 5% · US$1.200/kW</option>')
+        + `<div class="sim-control"><label>Kapasitas PLTS <span class="sim-value" id="h2-pvn">—</span></label><div style="display:flex;gap:8px">`
+          + `<button type="button" onclick="_h2Add('pv',-1)" style="${_BTN}">− 0,5 MWp</button><button type="button" onclick="_h2Add('pv',1)" style="${_BTN}">+ 0,5 MWp</button></div></div>`
+        + `<div class="sim-control"><label>Kapasitas elektroliser <span class="sim-value" id="h2-en">—</span></label><div style="display:flex;gap:8px">`
+          + `<button type="button" onclick="_h2Add('elz',-1)" style="${_BTN}">− 0,5 MW</button><button type="button" onclick="_h2Add('elz',1)" style="${_BTN}">+ 0,5 MW</button></div></div>`
+        + _labSld('h2-yield','Hasil spesifik PLTS (kWh/kWp/th)',1100,1650,1400,10)
+        + `<div class="sim-control"><div style="display:flex;gap:8px"><button type="button" onclick="_h2Reset()" style="${_BTN}">⟲ Reset</button></div></div>`,
+      outputs: _labOut('h2-kg','Produksi H₂','ton/th') + _labOut('h2-eff','Efisiensi Sistem','%') + _labOut('h2-air','Kebutuhan Air','ton/th') + _labOut('h2-lcoh','Biaya H₂ (LCOH)','US$/kg'),
+      formula: `H₂ = energi terpakai (kWh) ÷ konsumsi spesifik (kWh/kg) · efisiensi = 39,4 ÷ konsumsi spesifik (basis HHV)<br>Air ≥ 9 kg per kg H₂ (stoikiometri). LCOH = (CAPEX × faktor anuitas 0,102 + O&amp;M 3%) ÷ produksi tahunan.`
+    }),
+    init: () => { _h2Reset(); }
+  },
 };
 
 // ----------------------------------------------------------------
@@ -2924,4 +3194,943 @@ window.SIM_INFO = {
   'plc-scan': { w: 'Menghitung waktu scan PLC (baca I/O + eksekusi + tulis) dan worst-case response terhadap dinamika proses.', g: 'Memahami kecepatan respon sistem kontrol.', r: 'Desain sistem kontrol real-time yang andal.' },
   'valve-cv': { w: 'Menghitung Cv yang dibutuhkan dari laju alir dan beda tekanan; mengecek bukaan katup ideal (20-80%).', g: 'Memahami sizing katup kontrol untuk presisi.', r: 'Pemilihan control valve pada proses fluida.' },
   'encoder-motion': { w: 'Menghitung resolusi encoder dan gerak (PPR, count, jarak/derajat per pulsa).', g: 'Memahami umpan balik posisi dan kecepatan.', r: 'Desain servo dan sistem motion control.' },
+  'manuver-sutet': { w: 'Latihan urutan manuver membebaskan tegangan saluran transmisi 150 kV untuk pemeliharaan; tiap langkah yang keliru memunculkan akibat nyatanya di gardu induk.', g: 'Menguasai aturan pokok manuver: PMT dulu baru PMS, uji tegangan sebelum membumikan, izin kerja paling akhir.', r: 'Operasi dan pemeliharaan gardu induk serta saluran transmisi PLN — salah urutan manuver adalah penyebab kecelakaan fatal di gardu.' },
+  'boq-panel': { w: 'Menyusun daftar material panel MDP dari katalog sesuai permintaan pelanggan, lalu menghitung biaya pokok, harga penawaran, laba, dan posisinya terhadap anggaran.', g: 'Memahami bahwa penawaran yang murah tetapi kurang komponen justru gugur — kelengkapan spesifikasi mendahului harga.', r: 'Pekerjaan technical sales dan estimator panel: menyusun BoQ, menentukan harga, dan menjawab tawar-menawar tanpa mengorbankan kepatuhan.' },
+  'bess-puncak': { w: 'Menjadwalkan jam pengisian dan pelepasan BESS pada profil beban 24 jam, lalu melihat puncak baru, jalur SoC, dan penghematan biaya energi.', g: 'Memahami hubungan kapasitas, daya, dan SoC — baterai tidak bisa melepas energi yang belum pernah diisi.', r: 'Perencanaan peak shaving dan load shifting di industri serta gedung komersial berdaya besar.' },
+  'gen-sinkron': { w: 'Latihan menutup PMT paralel generator: setel governor & AVR, tunggu synchroscope masuk zona hijau, lalu tutup. Menutup di luar syarat langsung memperlihatkan akibatnya.', g: 'Menguasai tiga syarat paralel — beda tegangan, beda frekuensi, dan sudut fasa — beserta alasan fisisnya.', r: 'Operasi pembangkit dan genset paralel: PLTD, PLTU, genset gedung, serta commissioning sinkronisasi ke jaringan PLN.' },
+  'pv-string': { w: 'Menyusun jumlah modul per string dan string paralel per MPPT, lalu mengecek Voc dingin vs batas isolasi inverter, Vmp panas vs jendela MPPT, arus masukan, dan rasio DC/AC.', g: 'Memahami mengapa string PV dibatasi suhu ekstrem, bukan sekadar jumlah modul.', r: 'Desain PLTS atap dan PLTS skala utilitas — kesalahan string adalah penyebab kerusakan inverter paling umum.' },
+  'karbon-aksi': { w: 'Menghitung emisi Scope 1 & 2 sebuah gedung lalu memasang aksi mitigasi satu per satu sampai target penurunan 30% tercapai, lengkap investasi dan payback.', g: 'Membedakan pengurangan emisi nyata (efisiensi, PLTS) dari offset berbasis pasar (REC).', r: 'Penyusunan laporan keberlanjutan, target SBTi, dan program efisiensi energi korporasi.' },
+  'ev-sesi': { w: 'Menjalankan sesi pengisian kendaraan listrik: pilih kendaraan & charger, atur SoC awal-target, lihat kurva daya menurun (taper) di atas 80% beserta durasi dan biaya.', g: 'Memahami mengapa 80→100% jauh lebih lama daripada 20→80%, dan apa yang sebenarnya membatasi daya pengisian.', r: 'Perencanaan SPKLU, pemilihan charger untuk armada, dan edukasi pengguna kendaraan listrik.' },
+  'wte-komposisi': { w: 'Mengatur komposisi massa sampah kota dan melihat nilai kalor sampah basah, daya termal, daya listrik netto, serta hasil spesifik kWh per ton.', g: 'Memahami bahwa kelayakan PLTSa ditentukan kadar air dan komposisi, bukan volume sampah.', r: 'Studi kelayakan PLTSa, kebijakan pemilahan sampah kota, dan desain tungku insinerator.' },
+  'h2-pabrik': { w: 'Menyusun kapasitas PLTS dan elektroliser hingga seimbang; menampilkan produksi H₂, efisiensi sistem, kebutuhan air, energi terbuang, dan LCOH.', g: 'Memahami trade-off penyusunan pabrik hidrogen hijau: stack menganggur vs energi terbuang.', r: 'Perencanaan proyek hidrogen hijau dan analisis kelayakan power-to-hydrogen.' },
 };
+
+// ================================================================
+// STATE & RENDER — enam lab hands-on tambahan (S7, S10, S11, S12, S13, S14)
+// ================================================================
+// Berbeda dari lab "geser slider lihat angka", enam lab ini digerakkan aksi:
+// menekan tombol, menyusun konfigurasi, menutup PMT pada saat yang tepat.
+// Fungsi di bawah sengaja global (bukan modul) supaya bisa dipanggil dari
+// atribut onclick pada HTML yang dirakit _labShell.
+//
+// Dua lab memakai requestAnimationFrame (sinkronisasi generator & sesi
+// pengisian EV). Loop-nya berhenti sendiri karena closeSimulator()
+// mengosongkan isi modal: begitu elemen acuannya hilang dari DOM, tick
+// berikutnya langsung return dan tidak menjadwalkan frame baru.
+// ================================================================
+
+// ---------- S7: Sinkronisasi generator ----------
+var _gsS = { f: 49.70, v: 392, th: 0, last: 0, run: false, closed: false,
+             msg: 'Setel governor & AVR, lalu tutup PMT saat jarum di zona hijau.', col: _GOLD, ok: 0, bad: 0 };
+function _gsAdj(k, d) {
+  var s = _gsS; if (s.closed) return;
+  if (k === 'f') s.f = Math.min(50.6, Math.max(49.4, Math.round((s.f + d) * 100) / 100));
+  else s.v = Math.min(425, Math.max(375, Math.round(s.v + d)));
+  _gsRender();
+}
+function _gsReset() {
+  var s = _gsS;
+  s.f = 49.70; s.v = 392; s.th = 0; s.closed = false; s.last = 0;
+  s.msg = 'Setel governor & AVR, lalu tutup PMT saat jarum di zona hijau.'; s.col = _GOLD;
+  _gsRender();
+  if (!s.run) { s.run = true; requestAnimationFrame(_gsTick); }
+}
+function _gsTick(ts) {
+  var s = _gsS;
+  if (!document.getElementById('gs-needle')) { s.run = false; return; }
+  if (!s.last) s.last = ts;
+  var dt = Math.min(0.1, (ts - s.last) / 1000); s.last = ts;
+  if (!s.closed) {
+    s.th += 360 * (s.f - 50) * dt;
+    while (s.th > 180) s.th -= 360;
+    while (s.th <= -180) s.th += 360;
+  }
+  _gsRender();
+  requestAnimationFrame(_gsTick);
+}
+function _gsSyarat() {
+  var s = _gsS, dV = s.v - 400, df = Math.round((s.f - 50) * 100) / 100;
+  return { dV: dV, df: df, th: s.th,
+           okV: Math.abs(dV) <= 20, okF: (df > 0 && df <= 0.2), okTh: Math.abs(s.th) <= 10 };
+}
+function _gsClose() {
+  var s = _gsS; if (s.closed) return;
+  var c = _gsSyarat();
+  if (c.okV && c.okF && c.okTh) {
+    s.closed = true; s.ok++;
+    // Beban awal yang dipikul sebanding dengan selisih frekuensi sebelum masuk.
+    var mw = (c.df / 0.2) * 0.8;
+    s.msg = '✓ SINKRON — PMT masuk mulus. ΔV ' + c.dV.toFixed(0) + ' V · Δf ' + c.df.toFixed(2)
+          + ' Hz · Δθ ' + c.th.toFixed(1) + '°. Generator langsung memikul sekitar ' + mw.toFixed(1)
+          + ' MW; naikkan governor untuk menambah beban aktif, naikkan AVR untuk menambah daya reaktif.';
+    s.col = _GREEN;
+  } else {
+    s.bad++;
+    var sebab = [];
+    if (!c.okV) sebab.push('ΔV ' + (c.dV > 0 ? '+' : '') + c.dV.toFixed(0) + ' V melewati batas ±20 V — lonjakan arus reaktif menghantam belitan stator');
+    if (c.df <= 0 && c.df >= -0.005) sebab.push('Δf 0 Hz — tanpa selisih frekuensi generator tidak menarik beban dan mudah berbalik jadi motor');
+    else if (c.df < 0) sebab.push('Δf ' + c.df.toFixed(2) + ' Hz, generator lebih lambat dari jaringan — daya balik, relai daya balik (32) akan trip');
+    else if (c.df > 0.2) sebab.push('Δf ' + c.df.toFixed(2) + ' Hz melewati batas +0,2 Hz — hentakan frekuensi saat PMT masuk');
+    if (!c.okTh) sebab.push('Δθ ' + c.th.toFixed(0) + '° melewati batas ±10° — hentakan torsi merusak kopling dan poros');
+    s.msg = '✗ GAGAL SINKRON — ' + sebab.join('. ') + '.';
+    s.col = _RED;
+  }
+  _gsRender();
+}
+function _gsRender() {
+  if (!document.getElementById('gs-needle')) return;
+  var s = _gsS, c = _gsSyarat(), siap = c.okV && c.okF && c.okTh;
+  var cx = 135, cy = 140, r = 74, rad = s.th * Math.PI / 180;
+  _labAttr('gs-needle', 'x2', (cx + r * Math.sin(rad)).toFixed(1));
+  _labAttr('gs-needle', 'y2', (cy - r * Math.cos(rad)).toFixed(1));
+  _labAttr('gs-needle', 'stroke', s.closed ? _INK : (siap ? _GREEN : _RED));
+  _labSet('gs-f', s.f.toFixed(2) + ' Hz');
+  _labSet('gs-v', s.v.toFixed(0) + ' V');
+  _labSet('gs-vtop', s.v.toFixed(0) + ' V');
+  _labSet('gs-dir', s.closed ? 'PMT MASUK — PARALEL' : (c.df > 0 ? 'CEPAT ►' : (c.df < 0 ? '◄ LAMBAT' : 'JARUM DIAM')));
+  _labAttr('gs-dir', 'fill', s.closed ? _GREEN : (siap ? _GREEN : _GOLD));
+  _labSet('gs-ang', 'Δθ ' + (s.th >= 0 ? '+' : '') + s.th.toFixed(0) + '° · Δf ' + (c.df >= 0 ? '+' : '') + c.df.toFixed(2) + ' Hz');
+  var hg = 400 / 425 * 130, hn = s.v / 425 * 130;
+  _labAttr('gs-bar-grid', 'y', (235 - hg).toFixed(1)); _labAttr('gs-bar-grid', 'height', hg.toFixed(1));
+  _labAttr('gs-bar-gen', 'y', (235 - hn).toFixed(1)); _labAttr('gs-bar-gen', 'height', hn.toFixed(1));
+  _labAttr('gs-bar-gen', 'fill', c.okV ? _GREEN : _RED);
+  _labSet('gs-o-dv', (c.dV >= 0 ? '+' : '') + c.dV.toFixed(0));
+  _labSet('gs-o-df', (c.df >= 0 ? '+' : '') + c.df.toFixed(2));
+  _labSet('gs-o-th', (s.th >= 0 ? '+' : '') + s.th.toFixed(0));
+  _labSet('gs-o-try', s.ok + ' / ' + s.bad);
+  var m = document.getElementById('gs-msg');
+  if (m) { m.textContent = s.msg; m.style.color = s.col; }
+}
+
+// ---------- S10: Perancang string PV ----------
+// Voc/Vmp STC, arus hubung singkat, koefisien suhu Voc (%/°C), daya puncak.
+var _PVS_MOD = {
+  '450': { voc: 41.5, vmp: 34.6, isc: 13.85, b: -0.28, wp: 450 },
+  '550': { voc: 49.9, vmp: 41.8, isc: 13.95, b: -0.27, wp: 550 },
+  '615': { voc: 55.6, vmp: 46.3, isc: 14.10, b: -0.24, wp: 615 }
+};
+var _PVS_INV = {
+  besar: { vmax: 1100, mn: 200, mx: 1000, imax: 40, pm: 20000, nama: 'String 100 kW' },
+  kecil: { vmax: 600, mn: 80, mx: 520, imax: 15, pm: 5000, nama: 'Residensial 5 kW' }
+};
+var _PVS_BVMP = -0.40;   // koefisien suhu Vmp (%/°C) — lebih curam dari Voc
+var _pvsS = { n: 21, s: 2 };
+function _pvsInit() {
+  _pvsS = { n: 21, s: 2 };
+  _labBind(['pvs-mod', 'pvs-inv', 'pvs-tmin', 'pvs-tamb'], _pvsRender);
+}
+function _pvsAdd(k, d) {
+  if (k === 'n') _pvsS.n = Math.min(32, Math.max(1, _pvsS.n + d));
+  else _pvsS.s = Math.min(8, Math.max(1, _pvsS.s + d));
+  _pvsRender();
+}
+function _pvsRender() {
+  if (!document.getElementById('pvs-mods')) return;
+  var m = _PVS_MOD[_labRaw('pvs-mod')] || _PVS_MOD['550'];
+  var inv = _PVS_INV[_labRaw('pvs-inv')] || _PVS_INV.besar;
+  var tmin = _labV('pvs-tmin'), tamb = _labV('pvs-tamb'), tsel = tamb + 25;
+  var n = _pvsS.n, ns = _pvsS.s;
+  _labSetv('pvs-tmin', tmin.toFixed(0) + ' °C'); _labSetv('pvs-tamb', tamb.toFixed(0) + ' °C');
+  _labSetv('pvs-n', n + ' modul'); _labSetv('pvs-s', ns + ' string');
+
+  var vocDingin = m.voc * (1 + m.b / 100 * (tmin - 25)) * n;
+  var vmpPanas = m.vmp * (1 + _PVS_BVMP / 100 * (tsel - 25)) * n;
+  var vmpDingin = m.vmp * (1 + _PVS_BVMP / 100 * (tmin - 25)) * n;
+  var iInv = m.isc * ns;              // diadu dengan batas masukan inverter
+  var idesain = iInv * 1.25;          // untuk ukuran kabel & fuse string (PUIL/NEC)
+  var pdc = m.wp * n * ns, rasio = pdc / inv.pm;
+
+  var okVoc = vocDingin <= inv.vmax;
+  var okLow = vmpPanas >= inv.mn;
+  var okHigh = vmpDingin <= inv.mx;
+  var okI = iInv <= inv.imax;
+  var okR = rasio >= 1.0 && rasio <= 1.35;
+  var aman = okVoc && okLow && okHigh && okI;
+
+  _labSet('pvs-voc-o', vocDingin.toFixed(0));
+  _labSet('pvs-vmp-o', vmpPanas.toFixed(0));
+  _labSet('pvs-i', iInv.toFixed(1));
+  _labSet('pvs-ratio', rasio.toFixed(2));
+  _labSet('pvs-vmax-lbl', inv.vmax + ' V');
+
+  // Gambar modul sebagai kotak berjajar (bungkus maksimal 16 per baris).
+  var g = document.getElementById('pvs-mods'), out = '';
+  var perBaris = Math.min(16, n), baris = Math.ceil(n / 16);
+  var lebar = Math.min(18, Math.floor(300 / perBaris)), warna = aman ? _GREEN : _RED;
+  for (var i = 0; i < n; i++) {
+    var br = Math.floor(i / 16), kol = i % 16, jml = Math.min(16, n - br * 16);
+    var x = 200 - (jml * (lebar + 2)) / 2 + kol * (lebar + 2);
+    var y = 42 + br * 26;
+    out += '<rect x="' + x.toFixed(1) + '" y="' + y + '" width="' + lebar + '" height="20" rx="2" fill="'
+        + warna + '" opacity="0.75" stroke="#1a1d2e" stroke-width="0.6"/>';
+  }
+  for (var k = 1; k < ns; k++) {
+    out += '<text x="200" y="' + (42 + baris * 26 + 12 + (k - 1) * 0) + '" text-anchor="middle" font-family="Georgia" font-size="9.5" fill="#6b6d7a">'
+        + '+ ' + (ns - 1) + ' string identik paralel</text>';
+    break;
+  }
+  out += '<text x="200" y="' + (42 + baris * 26 + (ns > 1 ? 28 : 12)) + '" text-anchor="middle" font-family="Georgia" font-size="10.5" font-weight="700" fill="#1a1d2e">'
+      + n + ' modul × ' + ns + ' string = ' + (pdc / 1000).toFixed(2) + ' kWp DC</text>';
+  g.innerHTML = out;
+
+  // Batang jendela MPPT: skala 0..Vmax dipetakan ke x 40..360.
+  var sk = function (v) { return 40 + Math.max(0, Math.min(1, v / inv.vmax)) * 320; };
+  _labAttr('pvs-win', 'x', sk(inv.mn).toFixed(1));
+  _labAttr('pvs-win', 'width', Math.max(2, sk(inv.mx) - sk(inv.mn)).toFixed(1));
+  _labAttr('pvs-voc', 'x', (sk(vocDingin) - 3).toFixed(1));
+  _labAttr('pvs-vmp', 'x', (sk(vmpPanas) - 3).toFixed(1));
+
+  var pesan, col;
+  if (!okVoc) { pesan = '✗ BAHAYA — Voc dingin ' + vocDingin.toFixed(0) + ' V > batas isolasi ' + inv.vmax + ' V'; col = _RED; }
+  else if (!okI) { pesan = '✗ Arus hubung singkat ' + iInv.toFixed(1) + ' A > batas masukan MPPT ' + inv.imax + ' A'; col = _RED; }
+  else if (!okLow) { pesan = '✗ Vmp panas ' + vmpPanas.toFixed(0) + ' V < jendela MPPT ' + inv.mn + ' V'; col = _RED; }
+  else if (!okHigh) { pesan = '✗ Vmp dingin ' + vmpDingin.toFixed(0) + ' V > jendela MPPT ' + inv.mx + ' V'; col = _RED; }
+  else if (!okR) { pesan = (rasio < 1 ? '⚠ Inverter kebesaran — rasio DC/AC ' : '⚠ Array kebesaran — rasio DC/AC ') + rasio.toFixed(2); col = _GOLD; }
+  else { pesan = '✓ String sah — semua batas inverter terpenuhi'; col = _GREEN; }
+  _labSet('pvs-verdict', pesan); _labAttr('pvs-verdict', 'fill', col);
+
+  _labSet('pvs-d1', 'Voc dingin (' + tmin.toFixed(0) + ' °C) ' + vocDingin.toFixed(0) + ' V dari batas ' + inv.vmax
+        + ' V · Vmp panas (sel ' + tsel.toFixed(0) + ' °C) ' + vmpPanas.toFixed(0) + ' V');
+  _labSet('pvs-d2', !okVoc ? 'Kurangi modul per string — inverter bisa rusak permanen saat pagi dingin.'
+        : (!okLow ? 'Tambah modul per string agar tetap di dalam jendela MPPT saat siang panas.'
+        : (!okI ? 'Kurangi string paralel atau pindah ke MPPT lain.'
+        : (!okR ? (rasio < 1 ? 'Tambah modul atau string agar inverter tidak banyak menganggur.'
+                             : 'Kurangi modul/string — kelebihan daya akan dipangkas inverter (clipping).')
+                : 'Rasio DC/AC ' + rasio.toFixed(2) + ' — sedikit clipping siang hari justru menaikkan hasil tahunan. Kabel & fuse string pakai ' + idesain.toFixed(1) + ' A (Isc × 1,25).'))));
+}
+
+// ---------- S11: Jejak karbon & aksi mitigasi ----------
+var _KA_FE = 0.87;      // kgCO2e per kWh — rerata jaringan Jawa-Bali
+var _KA_SOLAR = 2.68;   // kgCO2 per liter solar
+var _KA_TARIF = 1450;   // Rp per kWh, golongan bisnis/industri
+// kwh  : pengurangan konsumsi listrik nyata (kWh/th)
+// pasar: pengurangan emisi berbasis pasar saja (kWh setara/th) — REC
+// biaya: investasi sekali (Rp); rutin: biaya berulang (Rp/th)
+var _KA_AKSI = {
+  led:     { nama: 'Retrofit 100 titik LED', kwh: 18000,  pasar: 0, biaya: 45e6,  rutin: 0 },
+  vsd:     { nama: 'VSD pompa/fan (1 unit)', kwh: 55000,  pasar: 0, biaya: 120e6, rutin: 0 },
+  chiller: { nama: 'Chiller efisien (1 unit)', kwh: 140000, pasar: 0, biaya: 850e6, rutin: 0 },
+  pv:      { nama: 'PLTS atap 50 kWp', kwh: 65000, pasar: 0, biaya: 550e6, rutin: 0 },
+  rec:     { nama: 'Beli REC 100 MWh', kwh: 0, pasar: 100000, biaya: 0, rutin: 35e6 }
+};
+var _kaPasang = [];
+function _kaReset() {
+  _kaPasang = [];
+  var b = document.getElementById('ka-btns');
+  if (b) b.innerHTML = Object.keys(_KA_AKSI).map(function (k) {
+    return '<button type="button" onclick="_kaAdd(\'' + k + '\')" style="' + _BTN + '">+ ' + _KA_AKSI[k].nama + '</button>';
+  }).join('');
+  _labBind(['ka-kwh', 'ka-solar'], _kaRender);
+}
+function _kaAdd(k) { _kaPasang.push(k); _kaRender(); }
+function _kaUndo() { _kaPasang.pop(); _kaRender(); }
+function _kaRender() {
+  if (!document.getElementById('ka-bars')) return;
+  var kwh = _labV('ka-kwh') * 1000, liter = _labV('ka-solar') * 1000;
+  _labSetv('ka-kwh', (_labV('ka-kwh')).toFixed(0) + ' ribu kWh');
+  _labSetv('ka-solar', (_labV('ka-solar')).toFixed(0) + ' ribu L');
+
+  var s1 = liter * _KA_SOLAR / 1000;                 // ton CO2e Scope 1
+  var s2 = kwh * _KA_FE / 1000;                      // ton CO2e Scope 2
+  var awal = s1 + s2;
+
+  var hematKwh = 0, offsetKwh = 0, invest = 0, rutin = 0, hitung = {};
+  _kaPasang.forEach(function (k) {
+    var a = _KA_AKSI[k];
+    hematKwh += a.kwh; offsetKwh += a.pasar; invest += a.biaya; rutin += a.rutin;
+    hitung[k] = (hitung[k] || 0) + 1;
+  });
+  hematKwh = Math.min(hematKwh, kwh);                          // tidak bisa hemat melebihi pemakaian
+  offsetKwh = Math.min(offsetKwh, Math.max(0, kwh - hematKwh)); // REC hanya menutup sisa listrik jaringan
+
+  var s2Akhir = (kwh - hematKwh - offsetKwh) * _KA_FE / 1000;
+  var akhir = s1 + s2Akhir;
+  var turun = awal > 0 ? (awal - akhir) / awal * 100 : 0;
+  var hematRp = hematKwh * _KA_TARIF - rutin;
+  var pb = hematRp > 0 ? invest / hematRp : Infinity;
+
+  _labSet('ka-base', awal.toFixed(0));
+  _labSet('ka-now', akhir.toFixed(0));
+  _labSet('ka-cut', turun.toFixed(1));
+  _labSet('ka-pb', isFinite(pb) ? pb.toFixed(1) : '—');
+
+  var maks = Math.max(awal, 1) * 1.12, H = 165, dasar = 215, sk = H / maks;
+  var g = document.getElementById('ka-bars');
+  var batang = function (x, s1v, s2v, lbl) {
+    var h1 = s1v * sk, h2 = s2v * sk, o = '';
+    o += '<rect x="' + x + '" y="' + (dasar - h1).toFixed(1) + '" width="76" height="' + h1.toFixed(1) + '" fill="#9a7f4f"/>';
+    o += '<rect x="' + x + '" y="' + (dasar - h1 - h2).toFixed(1) + '" width="76" height="' + h2.toFixed(1) + '" fill="#1a1d2e" opacity="0.8"/>';
+    o += '<text x="' + (x + 38) + '" y="' + (dasar - h1 - h2 - 7).toFixed(1) + '" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#1a1d2e">' + (s1v + s2v).toFixed(0) + ' t</text>';
+    o += '<text x="' + (x + 38) + '" y="231" text-anchor="middle" font-family="Georgia" font-size="10" fill="#1a1d2e">' + lbl + '</text>';
+    return o;
+  };
+  g.innerHTML = batang(120, s1, s2, 'Sebelum') + batang(240, s1, s2Akhir, 'Sesudah')
+    + '<text x="66" y="130" font-family="Georgia" font-size="8.5" fill="#6b6d7a" transform="rotate(-90 66 130)">Scope 1 ▪ Scope 2</text>';
+  var yT = dasar - (awal * 0.7) * sk;
+  _labAttr('ka-target', 'y1', yT.toFixed(1)); _labAttr('ka-target', 'y2', yT.toFixed(1));
+  _labAttr('ka-target-lbl', 'y', (yT - 5).toFixed(1));
+
+  var tercapai = turun >= 30;
+  _labSet('ka-verdict', tercapai ? ('✓ Target tercapai — turun ' + turun.toFixed(1) + '%')
+                                 : ('◐ Baru turun ' + turun.toFixed(1) + '% — target 30% belum tercapai'));
+  _labAttr('ka-verdict', 'fill', tercapai ? _GREEN : _GOLD);
+  _labSet('ka-detail', _kaPasang.length === 0
+    ? 'Belum ada aksi — klik tombol di panel kanan untuk memasang.'
+    : ('Investasi Rp ' + fmtRp(invest) + ' · hemat energi Rp ' + fmtRp(Math.max(0, hematRp)) + '/th'
+       + (offsetKwh > 0 ? ' · REC menutup ' + (offsetKwh / 1000).toFixed(0) + ' MWh (emisi pasar saja)' : '')));
+
+  var l = document.getElementById('ka-list');
+  if (l) {
+    var baris = Object.keys(hitung).map(function (k) { return hitung[k] + '× ' + _KA_AKSI[k].nama; });
+    l.innerHTML = baris.length ? baris.join('<br>') : 'Belum ada aksi terpasang.';
+  }
+}
+
+// ---------- S12: Sesi pengisian kendaraan listrik ----------
+var _EV_CAR = {
+  motor: { nama: 'Motor listrik', kap: 3.6,  ac: 1.0,  dc: 0 },
+  kota:  { nama: 'Mobil kota',    kap: 37.9, ac: 6.6,  dc: 40 },
+  suv:   { nama: 'SUV listrik',   kap: 64,   ac: 10.5, dc: 77 },
+  bus:   { nama: 'Bus listrik',   kap: 324,  ac: 22,   dc: 150 }
+};
+var _EV_CHG = {
+  ac74:  { nama: 'AC 7,4 kW',  p: 7.4,  dc: false },
+  ac22:  { nama: 'AC 22 kW',   p: 22,   dc: false },
+  dc50:  { nama: 'DC 50 kW',   p: 50,   dc: true },
+  dc100: { nama: 'DC 100 kW',  p: 100,  dc: true },
+  dc200: { nama: 'DC 200 kW',  p: 200,  dc: true }
+};
+var _evS = { run: false, soc: 0, last: 0, anim: false };
+function _evInit() {
+  _evS = { run: false, soc: 0, last: 0, anim: false };
+  _labBind(['ev-car', 'ev-chg', 'ev-s0', 'ev-s1', 'ev-tar'], function () { _evS.run = false; _evRender(); });
+}
+// Daya pengisian pada SoC tertentu: tetap sampai 80%, lalu turun linier ke 15%.
+function _evDaya(pMaks, soc, dc) {
+  var mulaiTaper = dc ? 80 : 95, sisa = 100 - mulaiTaper;
+  if (soc <= mulaiTaper) return pMaks;
+  return pMaks * (1 - 0.85 * (soc - mulaiTaper) / sisa);
+}
+function _evKonfig() {
+  var car = _EV_CAR[_labRaw('ev-car')] || _EV_CAR.kota;
+  var chg = _EV_CHG[_labRaw('ev-chg')] || _EV_CHG.dc50;
+  var pakaiDc = chg.dc && car.dc > 0;
+  var batas = pakaiDc ? car.dc : car.ac;
+  var pMaks = Math.min(chg.p, batas);
+  var s0 = _labV('ev-s0'), s1 = _labV('ev-s1');
+  if (s1 <= s0) s1 = Math.min(100, s0 + 5);
+  return { car: car, chg: chg, dc: pakaiDc, pMaks: pMaks, s0: s0, s1: s1,
+           eta: pakaiDc ? 0.92 : 0.88, tarif: _labV('ev-tar'), tolak: chg.dc && car.dc === 0 };
+}
+function _evHitung(k, sampai) {
+  // Integrasi numerik waktu pengisian dari s0 sampai `sampai` (langkah 0,2%).
+  var jam = 0, e = 0, s = k.s0, h = 0.2;
+  while (s < sampai - 1e-9) {
+    var d = Math.min(h, sampai - s);
+    var p = _evDaya(k.pMaks, s + d / 2, k.dc);
+    var de = k.car.kap * d / 100;
+    e += de; jam += p > 0 ? de / p : 0;
+    s += d;
+  }
+  return { jam: jam, kwh: e };
+}
+function _evRun() { var k = _evKonfig(); if (k.tolak || k.pMaks <= 0) return; _evS.run = true; _evS.soc = k.s0; _evS.last = 0; if (!_evS.anim) { _evS.anim = true; requestAnimationFrame(_evTick); } _evRender(); }
+function _evStop() { _evS.run = false; _evRender(); }
+function _evTick(ts) {
+  if (!document.getElementById('ev-dot')) { _evS.anim = false; _evS.run = false; return; }
+  if (!_evS.last) _evS.last = ts;
+  var dt = Math.min(0.1, (ts - _evS.last) / 1000); _evS.last = ts;
+  if (_evS.run) {
+    var k = _evKonfig();
+    // 1 detik nyata = 6 menit sesi, supaya sesi panjang tetap enak ditonton.
+    var jamSim = dt * 0.1;
+    var p = _evDaya(k.pMaks, _evS.soc, k.dc);
+    _evS.soc += (p * jamSim) / k.car.kap * 100;
+    if (_evS.soc >= k.s1) { _evS.soc = k.s1; _evS.run = false; }
+  }
+  _evRender();
+  requestAnimationFrame(_evTick);
+}
+function _evRender() {
+  if (!document.getElementById('ev-curve')) return;
+  var k = _evKonfig();
+  _labSetv('ev-s0', k.s0.toFixed(0) + ' %'); _labSetv('ev-s1', k.s1.toFixed(0) + ' %');
+  _labSetv('ev-tar', 'Rp ' + k.tarif.toFixed(0));
+
+  var skalaP = Math.max(k.chg.p, 1);
+  var x = function (s) { return 52 + s / 100 * 320; };
+  var y = function (p) { return 180 - Math.max(0, Math.min(1, p / skalaP)) * 146; };
+
+  if (k.tolak || k.pMaks <= 0) {
+    _labAttr('ev-curve', 'd', '');
+    _labAttr('ev-band', 'width', 0);
+    _labSet('ev-soc', '—'); _labSet('ev-live', '—');
+    _labSet('ev-verdict', '✗ Kendaraan ini tidak punya port DC — pakai charger AC');
+    _labAttr('ev-verdict', 'fill', _RED);
+    _labSet('ev-kwh', '—'); _labSet('ev-time', '—'); _labSet('ev-cost', '—'); _labSet('ev-pav', '—');
+    _labSet('ev-pmax', skalaP.toFixed(0) + ' kW');
+    return;
+  }
+
+  var d = 'M' + x(0).toFixed(1) + ' ' + y(0).toFixed(1);
+  for (var s = 0; s <= 100.001; s += 2) d += ' L' + x(s).toFixed(1) + ' ' + y(_evDaya(k.pMaks, s, k.dc)).toFixed(1);
+  d += ' L' + x(100).toFixed(1) + ' 180 L' + x(0).toFixed(1) + ' 180 Z';
+  _labAttr('ev-curve', 'd', d);
+  _labAttr('ev-band', 'x', x(k.s0).toFixed(1));
+  _labAttr('ev-band', 'width', Math.max(0, x(k.s1) - x(k.s0)).toFixed(1));
+  _labSet('ev-pmax', skalaP.toFixed(0) + ' kW');
+
+  var total = _evHitung(k, k.s1);
+  var kwhTagih = total.kwh / k.eta;
+  var menit = total.jam * 60;
+  _labSet('ev-kwh', kwhTagih.toFixed(1));
+  _labSet('ev-time', menit.toFixed(0));
+  _labSet('ev-cost', fmtRp(kwhTagih * k.tarif));
+  _labSet('ev-pav', total.jam > 0 ? (total.kwh / total.jam).toFixed(1) : '—');
+
+  var socKini = _evS.run || _evS.soc > 0 ? _evS.soc : k.s0;
+  var pKini = _evDaya(k.pMaks, socKini, k.dc);
+  _labAttr('ev-dot', 'cx', x(socKini).toFixed(1));
+  _labAttr('ev-dot', 'cy', y(pKini).toFixed(1));
+  _labAttr('ev-dot', 'fill', _evS.run ? _RED : _INK);
+  _labSet('ev-soc', socKini.toFixed(0) + ' %');
+  var lalu = _evHitung(k, socKini);
+  _labSet('ev-live', 'Daya saat ini ' + pKini.toFixed(1) + ' kW · sudah ' + (lalu.jam * 60).toFixed(0)
+        + ' menit · masuk baterai ' + lalu.kwh.toFixed(1) + ' kWh');
+
+  var s80 = _evHitung(k, Math.min(80, k.s1));
+  var pesan, col;
+  if (_evS.run) { pesan = '⚡ Mengisi…'; col = _GOLD; }
+  else if (_evS.soc >= k.s1 && _evS.soc > k.s0) { pesan = '✓ Sesi selesai di ' + k.s1.toFixed(0) + '% — ' + menit.toFixed(0) + ' menit, Rp ' + fmtRp(kwhTagih * k.tarif); col = _GREEN; }
+  else if (!k.dc) { pesan = 'Mode AC — dibatasi pengisi bawaan kendaraan ' + k.car.ac + ' kW'; col = _GOLD; }
+  else if (k.s1 > 80) { pesan = 'Dari 80% ke ' + k.s1.toFixed(0) + '% butuh ' + ((total.jam - s80.jam) * 60).toFixed(0) + ' menit sendiri — ' + ((total.jam - s80.jam) / total.jam * 100).toFixed(0) + '% dari total waktu'; col = _GOLD; }
+  else { pesan = '✓ Berhenti di 80% adalah titik paling efisien waktu'; col = _GREEN; }
+  _labSet('ev-verdict', pesan); _labAttr('ev-verdict', 'fill', col);
+}
+
+// ---------- S13: Komposisi sampah & nilai kalor PLTSa ----------
+// lhv = nilai kalor bahan kering (MJ/kg), air = kadar air fraksi tersebut
+var _WK_FRAKSI = [
+  { k: 'org',  nama: 'Organik (sisa makanan)', lhv: 17, air: 0.70, warna: '#6b8f3a' },
+  { k: 'plas', nama: 'Plastik',                lhv: 38, air: 0.10, warna: '#c0392b' },
+  { k: 'ker',  nama: 'Kertas & karton',        lhv: 16, air: 0.20, warna: '#9a7f4f' },
+  { k: 'tek',  nama: 'Kain, karet, kayu',      lhv: 19, air: 0.15, warna: '#1a1d2e' },
+  { k: 'in',   nama: 'Inert (logam, kaca)',    lhv: 0,  air: 0.05, warna: '#a9aeb8' }
+];
+var _WK_PRESET = {
+  id:     { org: 60, plas: 12, ker: 10, tek: 8,  in: 10 },
+  pilah:  { org: 35, plas: 18, ker: 18, tek: 14, in: 15 },
+  // Plastik didaur ulang lebih dulu: baik untuk hierarki sampah, tetapi
+  // mencabut penyumbang kalor terbesar sehingga tungku jadi marginal.
+  daur:   { org: 60, plas: 2,  ker: 10, tek: 8,  in: 10 },
+  eropa:  { org: 32, plas: 14, ker: 22, tek: 12, in: 20 }
+};
+var _wkS = { org: 60, plas: 12, ker: 10, tek: 8, in: 10 };
+function _wkPreset(p) {
+  var s = _WK_PRESET[p] || _WK_PRESET.id;
+  _wkS = { org: s.org, plas: s.plas, ker: s.ker, tek: s.tek, in: s.in };
+  var b = document.getElementById('wk-btns');
+  if (b) b.innerHTML = _WK_FRAKSI.map(function (f) {
+    return '<div style="display:flex;align-items:center;gap:6px">'
+      + '<span style="width:11px;height:11px;border-radius:2px;background:' + f.warna + ';flex:none"></span>'
+      + '<span style="flex:1;font-size:12px;color:#1a1d2e">' + f.nama + '</span>'
+      + '<span style="font-size:12px;font-weight:700;min-width:34px;text-align:right" id="wk-v-' + f.k + '">—</span>'
+      + '<button type="button" onclick="_wkAdd(\'' + f.k + '\',-2)" style="' + _BTN + ';padding:4px 9px">−</button>'
+      + '<button type="button" onclick="_wkAdd(\'' + f.k + '\',2)" style="' + _BTN + ';padding:4px 9px">+</button></div>';
+  }).join('');
+  _labBind(['wk-ton', 'wk-eff'], _wkRender);
+}
+function _wkAdd(k, d) { _wkS[k] = Math.max(0, Math.min(100, _wkS[k] + d)); _wkRender(); }
+function _wkRender() {
+  if (!document.getElementById('wk-bar')) return;
+  var ton = _labV('wk-ton'), eff = _labV('wk-eff') / 100;
+  _labSetv('wk-ton', ton.toFixed(0) + ' t/hari'); _labSetv('wk-eff', (eff * 100).toFixed(0) + ' %');
+
+  var total = _WK_FRAKSI.reduce(function (a, f) { return a + _wkS[f.k]; }, 0);
+  _labSet('wk-tot', total.toFixed(0) + '%');
+  var norm = total > 0 ? total : 1;
+
+  // Energi dari bahan kering per kg sampah basah, dikurangi panas laten air.
+  var kering = 0, air = 0;
+  _WK_FRAKSI.forEach(function (f) {
+    var w = _wkS[f.k] / norm;
+    kering += w * (1 - f.air) * f.lhv;
+    air += w * f.air;
+  });
+  var lhv = Math.max(0, kering - 2.44 * air);
+
+  var termal = ton * 1000 * lhv / 86400;      // MW termal
+  var listrik = termal * eff;                  // MW listrik netto
+  var spesifik = ton > 0 ? listrik * 24 * 1000 / ton : 0;  // kWh per ton
+
+  _labSet('wk-lhv', lhv.toFixed(2));
+  _labSet('wk-th', termal.toFixed(1));
+  _labSet('wk-mw', listrik.toFixed(1));
+  _labSet('wk-spec', spesifik.toFixed(0));
+  _labSet('wk-lhv-txt', lhv.toFixed(2) + ' MJ/kg · ' + listrik.toFixed(1) + ' MW netto');
+
+  _WK_FRAKSI.forEach(function (f) { _labSet('wk-v-' + f.k, _wkS[f.k].toFixed(0) + '%'); });
+
+  // Batang komposisi (lebar 300 px, x mulai 50) + legenda kadar air.
+  var g = document.getElementById('wk-bar'), x = 50, out = '';
+  _WK_FRAKSI.forEach(function (f) {
+    var w = _wkS[f.k] / norm * 300;
+    if (w > 0.5) {
+      out += '<rect x="' + x.toFixed(1) + '" y="40" width="' + w.toFixed(1) + '" height="34" fill="' + f.warna + '"/>';
+      if (w > 26) out += '<text x="' + (x + w / 2).toFixed(1) + '" y="61" text-anchor="middle" font-family="Georgia" font-size="10" font-weight="700" fill="#fff">'
+        + (_wkS[f.k] / norm * 100).toFixed(0) + '%</text>';
+    }
+    x += w;
+  });
+  out += '<text x="200" y="92" text-anchor="middle" font-family="Georgia" font-size="10" fill="#6b6d7a">Kadar air campuran '
+      + (air * 100).toFixed(0) + '% · bahan kering mudah bakar ' + kering.toFixed(2) + ' MJ/kg</text>';
+  out += '<text x="200" y="110" text-anchor="middle" font-family="Georgia" font-size="10" fill="'
+      + (Math.abs(total - 100) < 0.5 ? '#6b6d7a' : '#c0392b') + '">'
+      + (Math.abs(total - 100) < 0.5 ? 'Total komposisi 100% ✓' : ('Total ' + total.toFixed(0) + '% — dinormalkan ke 100% untuk perhitungan')) + '</text>';
+  g.innerHTML = out;
+
+  _labAttr('wk-lhv-bar', 'width', Math.max(0, Math.min(300, lhv / 15 * 300)).toFixed(1));
+  _labAttr('wk-lhv-bar', 'fill', lhv >= 7 ? _GREEN : (lhv >= 5 ? _GOLD : _RED));
+
+  var pesan, col, detail;
+  if (lhv >= 7) { pesan = '✓ Pembakaran mandiri — tanpa bahan bakar bantu'; col = _GREEN;
+    detail = 'Hasil ' + spesifik.toFixed(0) + ' kWh/ton (PLTSa modern lazimnya 500–600 kWh/ton).'; }
+  else if (lhv >= 5) { pesan = '⚠ Marginal — perlu bahan bakar bantu saat sampah basah'; col = _GOLD;
+    detail = 'Kurangi fraksi organik basah atau keringkan dulu (bio-drying) agar lewat ambang 7 MJ/kg.'; }
+  else { pesan = '✗ Tidak layak dibakar — nilai kalor terlalu rendah'; col = _RED;
+    detail = 'Kadar air ' + (air * 100).toFixed(0) + '% terlalu tinggi. Olah organik lewat komposting/biogas, bakar sisanya.'; }
+  _labSet('wk-verdict', pesan); _labAttr('wk-verdict', 'fill', col);
+  _labSet('wk-detail', detail);
+}
+
+// ---------- S14: Rancang pabrik hidrogen hijau ----------
+// sec = konsumsi spesifik (kWh per kg H2), capex US$/kW, bebanMin = fraksi
+var _H2_TEK = {
+  alk: { nama: 'Alkaline', sec: 51, capex: 800, bebanMin: 0.20 },
+  pem: { nama: 'PEM', sec: 55, capex: 1200, bebanMin: 0.05 }
+};
+var _H2_HHV = 39.4;        // kWh per kg H2 (basis HHV)
+var _H2_PV_CAPEX = 700;    // US$ per kWp terpasang
+var _H2_CRF = 0.1019;      // faktor anuitas, 8% selama 20 tahun
+var _H2_ELZ_CF = 0.30;     // faktor kapasitas maksimum elektroliser bersuplai PLTS
+var _h2S = { pv: 3, elz: 2 };   // satuan 0,5 MWp / 0,5 MW
+function _h2Reset() { _h2S = { pv: 3, elz: 2 }; _labBind(['h2-tek', 'h2-yield'], _h2Render); }
+function _h2Add(k, d) {
+  if (k === 'pv') _h2S.pv = Math.min(20, Math.max(1, _h2S.pv + d));
+  else _h2S.elz = Math.min(20, Math.max(1, _h2S.elz + d));
+  _h2Render();
+}
+function _h2Render() {
+  if (!document.getElementById('h2-pv')) return;
+  var t = _H2_TEK[_labRaw('h2-tek')] || _H2_TEK.alk;
+  var hasil = _labV('h2-yield');
+  var pvMWp = _h2S.pv * 0.5, elzMW = _h2S.elz * 0.5;
+  _labSetv('h2-yield', hasil.toFixed(0) + ' kWh/kWp');
+  _labSetv('h2-pvn', pvMWp.toFixed(1) + ' MWp'); _labSetv('h2-en', elzMW.toFixed(1) + ' MW');
+
+  var energiPv = pvMWp * 1000 * hasil;                       // kWh per tahun
+  var batasElz = elzMW * 1000 * 8760 * _H2_ELZ_CF;           // kWh per tahun
+  var terpakai = Math.min(energiPv, batasElz);
+  var terbuang = energiPv - terpakai;
+
+  var kg = terpakai / t.sec;
+  var efis = _H2_HHV / t.sec * 100;
+  var airTon = kg * 9 / 1000;
+  var capex = elzMW * 1000 * t.capex + pvMWp * 1000 * _H2_PV_CAPEX;
+  var biaya = capex * _H2_CRF + capex * 0.03;
+  var lcoh = kg > 0 ? biaya / kg : 0;
+  var rasio = elzMW > 0 ? pvMWp / elzMW : 0;
+
+  _labSet('h2-kg', (kg / 1000).toFixed(1));
+  _labSet('h2-eff', efis.toFixed(0));
+  _labSet('h2-air', airTon.toFixed(0));
+  _labSet('h2-lcoh', lcoh.toFixed(2));
+  _labSet('h2-pv-lbl', 'PLTS ' + pvMWp.toFixed(1) + ' MWp');
+  _labSet('h2-elz-lbl', t.nama + ' ' + elzMW.toFixed(1) + ' MW');
+  _labSet('h2-out', (kg / 1000).toFixed(1) + ' ton H₂/th · US$' + lcoh.toFixed(2) + '/kg');
+
+  // Panel PV di kiri, tumpukan stack elektroliser di kanan.
+  var gp = document.getElementById('h2-pv'), o = '';
+  for (var i = 0; i < _h2S.pv; i++) {
+    var bx = 40 + (i % 5) * 26, by = 46 + Math.floor(i / 5) * 24;
+    o += '<rect x="' + bx + '" y="' + by + '" width="22" height="18" rx="2" fill="#1a3a5c" stroke="#9a7f4f" stroke-width="0.8"/>'
+      + '<line x1="' + (bx + 11) + '" y1="' + by + '" x2="' + (bx + 11) + '" y2="' + (by + 18) + '" stroke="#3a6fa0" stroke-width="0.8"/>';
+  }
+  gp.innerHTML = o;
+  var ge = document.getElementById('h2-elz'), e = '';
+  for (var j = 0; j < _h2S.elz; j++) {
+    var ex = 236 + (j % 5) * 26, ey = 46 + Math.floor(j / 5) * 24;
+    e += '<rect x="' + ex + '" y="' + ey + '" width="22" height="18" rx="2" fill="#15803d" opacity="0.85" stroke="#1a1d2e" stroke-width="0.8"/>';
+  }
+  ge.innerHTML = e;
+
+  var sk = energiPv > 0 ? 300 / energiPv : 0;
+  var wU = terpakai * sk, wC = terbuang * sk;
+  _labAttr('h2-use', 'width', Math.max(0, wU).toFixed(1));
+  _labAttr('h2-curt', 'x', (50 + wU).toFixed(1));
+  _labAttr('h2-curt', 'width', Math.max(0, wC).toFixed(1));
+  _labSet('h2-split', 'Terpakai ' + (terpakai / 1e6).toFixed(2) + ' GWh ('
+        + (energiPv > 0 ? (terpakai / energiPv * 100).toFixed(0) : '0') + '%) · terbuang '
+        + (terbuang / 1e6).toFixed(2) + ' GWh');
+
+  var pesan, col, detail;
+  if (rasio < 1.2) {
+    pesan = '⚠ Elektroliser kebesaran — rasio PLTS/elektroliser ' + rasio.toFixed(2); col = _GOLD;
+    detail = 'Stack sering di bawah beban minimum ' + (t.bebanMin * 100).toFixed(0)
+           + '%, CAPEX menganggur. Tambah PLTS atau kurangi stack (sasaran rasio 1,2–1,8).';
+  } else if (rasio > 1.8) {
+    pesan = '⚠ PLTS berlebih — energi terbuang ' + (energiPv > 0 ? (terbuang / energiPv * 100).toFixed(0) : '0') + '%'; col = _GOLD;
+    detail = 'Rasio ' + rasio.toFixed(2) + ' di atas 1,8. Tambah kapasitas elektroliser atau baterai penyangga agar energi terserap.';
+  } else {
+    pesan = '✓ Seimbang — rasio PLTS/elektroliser ' + rasio.toFixed(2); col = _GREEN;
+    detail = 'Efisiensi sistem ' + efis.toFixed(0) + '% (HHV) · butuh ' + airTon.toFixed(0)
+           + ' ton air demineral/th · LCOH US$' + lcoh.toFixed(2) + '/kg (target kompetitif US$2–4/kg).';
+  }
+  _labSet('h2-verdict', pesan); _labAttr('h2-verdict', 'fill', col);
+  _labSet('h2-detail', detail);
+}
+
+// ---------- S4: Manuver pembebasan tegangan saluran 150 kV ----------
+// `akibat` = yang terjadi kalau langkah itu diambil sebelum gilirannya. Pesan
+// spesifik per langkah, bukan "urutan salah" generik, karena justru alasannya
+// yang harus menempel di kepala petugas.
+var _MV_LANGKAH = [
+  { t: 'Koordinasi dispatcher & alihkan beban saluran',
+    akibat: 'Manuver dimulai tanpa izin dispatcher — pasokan jatuh dan berisiko memicu padam meluas.' },
+  { t: 'Buka PMT kedua ujung saluran',
+    akibat: 'PMT dibuka sebelum beban dialihkan — pelanggan di ujung saluran padam mendadak.' },
+  { t: 'Buka PMS line kedua ujung',
+    akibat: 'PMS bukan pemutus beban. Membukanya saat masih berarus menimbulkan busur api dan ledakan di gardu.' },
+  { t: 'Uji tegangan — pastikan saluran bebas tegangan',
+    akibat: 'Pengujian dilakukan saat saluran belum dipisah — hasilnya tidak sah sebagai dasar pengamanan.' },
+  { t: 'Tutup PMS tanah (pentanahan) kedua ujung',
+    akibat: 'Menutup PMS tanah ke saluran yang belum diuji nol = hubung singkat tiga fasa ke tanah.' },
+  { t: 'Pasang pentanahan lokal & rambu di lokasi kerja',
+    akibat: 'Pentanahan lokal dipasang pada saluran yang belum dibumikan di gardu — petugas menjadi jalur arus.' },
+  { t: 'Terbitkan surat izin kerja (working permit)',
+    akibat: 'Izin kerja terbit sebelum saluran aman — regu masuk ke saluran yang masih berbahaya.' }
+];
+var _mvDone = [], _mvErr = 0, _mvPesan = '', _mvCol = _GOLD;
+function _mvReset() {
+  _mvDone = []; _mvErr = 0;
+  _mvPesan = 'Saluran masih bertegangan. Mulai dari koordinasi dengan dispatcher.'; _mvCol = _GOLD;
+  _mvRender();
+}
+function _mvPick(i) {
+  var next = _mvDone.length;
+  if (i === next) {
+    _mvDone.push(i);
+    _mvPesan = _mvDone.length === _MV_LANGKAH.length
+      ? '✓ Saluran bebas tegangan, dibumikan di kedua ujung, izin kerja terbit — regu boleh naik.'
+      : '◐ Benar. Lanjut ke langkah ' + (_mvDone.length + 1) + ' dari ' + _MV_LANGKAH.length + '.';
+    _mvCol = _mvDone.length === _MV_LANGKAH.length ? _GREEN : _GOLD;
+  } else {
+    _mvErr++;
+    _mvPesan = '✗ ' + _MV_LANGKAH[i].akibat + ' Manuver dibatalkan — ulangi dari awal.';
+    _mvCol = _RED;
+    _mvDone = [];
+  }
+  _mvRender();
+}
+function _mvRender() {
+  if (!document.getElementById('mv-sld')) return;
+  var n = _mvDone.length;
+  var pmtBuka = n >= 2, pmsBuka = n >= 3, diuji = n >= 4, dibumikan = n >= 5, aman = n >= 7;
+  var warnaSal = pmsBuka ? '#a9aeb8' : '#c0392b';
+
+  // Diagram satu garis: [GI A] PMT—PMS ==== saluran ==== PMS—PMT [GI B]
+  var s = '';
+  s += '<rect x="26" y="52" width="40" height="34" rx="3" fill="#1a1d2e"/><text x="46" y="73" text-anchor="middle" font-family="Georgia" font-size="9" fill="#f5f0e6">GI A</text>';
+  s += '<rect x="334" y="52" width="40" height="34" rx="3" fill="#1a1d2e"/><text x="354" y="73" text-anchor="middle" font-family="Georgia" font-size="9" fill="#f5f0e6">GI B</text>';
+  s += '<line x1="66" y1="69" x2="150" y2="69" stroke="' + warnaSal + '" stroke-width="3"/>';
+  s += '<line x1="250" y1="69" x2="334" y2="69" stroke="' + warnaSal + '" stroke-width="3"/>';
+  s += '<line x1="150" y1="69" x2="250" y2="69" stroke="' + warnaSal + '" stroke-width="3"' + (pmsBuka ? '' : ' class="lab-flow"') + '/>';
+  // PMT (kotak) — terbuka digambar sebagai celah
+  var pmt = function (x) {
+    return pmtBuka
+      ? '<rect x="' + (x - 7) + '" y="60" width="14" height="18" rx="2" fill="#faf7f0" stroke="#1a1d2e" stroke-width="1.4"/>'
+        + '<line x1="' + (x - 7) + '" y1="69" x2="' + (x - 2) + '" y2="69" stroke="#1a1d2e" stroke-width="2"/>'
+        + '<line x1="' + (x + 2) + '" y1="69" x2="' + (x + 7) + '" y2="69" stroke="#1a1d2e" stroke-width="2"/>'
+      : '<rect x="' + (x - 7) + '" y="60" width="14" height="18" rx="2" fill="#c0392b" stroke="#1a1d2e" stroke-width="1.4"/>';
+  };
+  // PMS (pisau) — terbuka digambar miring
+  var pms = function (x) {
+    return pmsBuka
+      ? '<line x1="' + (x - 8) + '" y1="69" x2="' + (x + 5) + '" y2="55" stroke="#1a1d2e" stroke-width="2.4"/><circle cx="' + (x - 8) + '" cy="69" r="2.6" fill="#1a1d2e"/><circle cx="' + (x + 8) + '" cy="69" r="2.6" fill="#1a1d2e"/>'
+      : '<line x1="' + (x - 8) + '" y1="69" x2="' + (x + 8) + '" y2="69" stroke="#c0392b" stroke-width="2.4"/><circle cx="' + (x - 8) + '" cy="69" r="2.6" fill="#1a1d2e"/><circle cx="' + (x + 8) + '" cy="69" r="2.6" fill="#1a1d2e"/>';
+  };
+  s += pmt(90) + pms(130) + pms(270) + pmt(310);
+  s += '<text x="90" y="98" text-anchor="middle" font-family="Georgia" font-size="8" fill="#6b6d7a">PMT</text>';
+  s += '<text x="130" y="98" text-anchor="middle" font-family="Georgia" font-size="8" fill="#6b6d7a">PMS</text>';
+  s += '<text x="270" y="98" text-anchor="middle" font-family="Georgia" font-size="8" fill="#6b6d7a">PMS</text>';
+  s += '<text x="310" y="98" text-anchor="middle" font-family="Georgia" font-size="8" fill="#6b6d7a">PMT</text>';
+  // Pentanahan di kedua ujung
+  if (dibumikan) {
+    [150, 250].forEach(function (x) {
+      s += '<line x1="' + x + '" y1="69" x2="' + x + '" y2="104" stroke="#15803d" stroke-width="2.2"/>'
+        + '<path d="M' + (x - 10) + ' 105 h20 M' + (x - 6) + ' 111 h12 M' + (x - 3) + ' 117 h6" stroke="#15803d" stroke-width="2" stroke-linecap="round"/>';
+    });
+  }
+  s += '<text x="200" y="44" text-anchor="middle" font-family="Georgia" font-size="10" font-weight="700" fill="' + warnaSal + '">'
+    + (dibumikan ? 'SALURAN DIBUMIKAN' : (diuji ? 'DIUJI — 0 V' : (pmsBuka ? 'TERPISAH' : '150 kV BERTEGANGAN'))) + '</text>';
+  document.getElementById('mv-sld').innerHTML = s;
+
+  // Daftar langkah beserta centangnya
+  var g = document.getElementById('mv-steps'), o = '';
+  _MV_LANGKAH.forEach(function (l, i) {
+    var y = 140 + i * 19, sudah = i < n;
+    o += '<circle cx="46" cy="' + (y - 4) + '" r="7" fill="' + (sudah ? '#15803d' : '#cfd3da') + '"/>';
+    o += '<text x="46" y="' + (y - 1) + '" text-anchor="middle" font-family="Georgia" font-size="8" fill="#fff" font-weight="700">' + (sudah ? '✓' : (i + 1)) + '</text>';
+    o += '<text x="60" y="' + y + '" font-family="Georgia" font-size="10" fill="' + (sudah ? '#15803d' : '#6b6d7a') + '" font-weight="' + (sudah ? '700' : '400') + '">' + l.t + '</text>';
+  });
+  g.innerHTML = o;
+
+  _labSet('mv-prog', n + ' /' + _MV_LANGKAH.length);
+  _labSet('mv-state', aman ? 'AMAN BEKERJA' : (dibumikan ? 'dibumikan' : (pmsBuka ? 'terpisah' : 'bertegangan')));
+  _labSet('mv-err', _mvErr + '×');
+  _labSet('mv-status', aman ? '✓ Manuver selesai — saluran aman dikerjakan' : (_mvCol === _RED ? '✗ Manuver dibatalkan' : '◐ Manuver berlangsung'));
+  _labAttr('mv-status', 'fill', _mvCol);
+
+  var btns = document.getElementById('mv-btns');
+  if (btns) {
+    var sisa = _MV_LANGKAH.map(function (l, i) { return i; }).filter(function (i) { return _mvDone.indexOf(i) === -1; });
+    // Diacak tetap (bukan urut) supaya peserta benar-benar memilih, bukan menurut.
+    var urut = sisa.slice().sort(function (a, b) { return ((a * 5 + 2) % 7) - ((b * 5 + 2) % 7); });
+    btns.innerHTML = urut.length
+      ? urut.map(function (i) { return '<button type="button" onclick="_mvPick(' + i + ')" style="' + _BTN + ';text-align:left">' + _MV_LANGKAH[i].t + '</button>'; }).join('')
+      : '<span style="color:#15803d;font-weight:700">Manuver selesai ✓</span>';
+  }
+  var m = document.getElementById('mv-msg');
+  if (m) { m.textContent = _mvPesan; m.style.color = _mvCol; }
+}
+
+// ---------- S9: Susun BoQ panel & harga penawaran ----------
+// Brief pelanggan: MDP 3 fasa 250 A, 8 grup keluaran, metering, SPD, IP54.
+var _BQ_ITEM = {
+  acb400:    { nama: 'ACB 400 A 3P',            harga: 28.0e6, tipe: 'incoming', arus: 400 },
+  mccb250:   { nama: 'MCCB 250 A 3P 36 kA',     harga: 9.5e6,  tipe: 'incoming', arus: 250 },
+  mccb160:   { nama: 'MCCB 160 A 3P 25 kA',     harga: 5.2e6,  tipe: 'incoming', arus: 160 },
+  busbar400: { nama: 'Busbar Cu 400 A',         harga: 11.0e6, tipe: 'busbar',   arus: 400 },
+  busbar250: { nama: 'Busbar Cu 250 A',         harga: 6.8e6,  tipe: 'busbar',   arus: 250 },
+  busbar160: { nama: 'Busbar Cu 160 A',         harga: 4.1e6,  tipe: 'busbar',   arus: 160 },
+  mccb63:    { nama: 'MCCB 63 A 3P keluaran',   harga: 2.4e6,  tipe: 'outgoing' },
+  mcb32:     { nama: 'MCB 32 A 3P keluaran',    harga: 0.85e6, tipe: 'outgoing' },
+  meter:     { nama: 'Power meter digital',     harga: 4.5e6,  tipe: 'meter' },
+  ct:        { nama: 'Trafo arus (CT) 250/5',   harga: 2.6e6,  tipe: 'ct' },
+  spd:       { nama: 'SPD Tipe 2 40 kA',        harga: 3.2e6,  tipe: 'spd' },
+  box:       { nama: 'Enklosur IP54 + finishing', harga: 14.0e6, tipe: 'box' },
+  pilot:     { nama: 'Pilot lamp & selector',   harga: 1.1e6,  tipe: 'aksesori' }
+};
+var _BQ_RAKIT = 6.0e6;   // ongkos rakit, uji, dan wiring panel
+var _bqKeranjang = [];
+function _bqReset() {
+  _bqKeranjang = [];
+  var b = document.getElementById('bq-btns');
+  if (b) b.innerHTML = Object.keys(_BQ_ITEM).map(function (k) {
+    return '<button type="button" onclick="_bqAdd(\'' + k + '\')" style="' + _BTN + '">+ ' + _BQ_ITEM[k].nama + '</button>';
+  }).join('');
+  _labBind(['bq-margin', 'bq-budget'], _bqRender);
+}
+function _bqAdd(k) { _bqKeranjang.push(k); _bqRender(); }
+function _bqUndo() { _bqKeranjang.pop(); _bqRender(); }
+function _bqRender() {
+  if (!document.getElementById('bq-check')) return;
+  var margin = _labV('bq-margin') / 100, anggaran = _labV('bq-budget');
+  _labSetv('bq-margin', (margin * 100).toFixed(0) + ' %');
+  _labSetv('bq-budget', 'Rp ' + anggaran.toFixed(0) + ' jt');
+
+  var hitung = {}, pokok = 0, arusIn = 0, arusBus = 0, nOut = 0, nIn = 0;
+  _bqKeranjang.forEach(function (k) {
+    var it = _BQ_ITEM[k]; if (!it) return;
+    hitung[k] = (hitung[k] || 0) + 1; pokok += it.harga;
+    if (it.tipe === 'incoming') { nIn++; arusIn = Math.max(arusIn, it.arus); }
+    if (it.tipe === 'busbar') arusBus = Math.max(arusBus, it.arus);
+    if (it.tipe === 'outgoing') nOut++;
+  });
+  var ada = function (t) { return _bqKeranjang.some(function (k) { return _BQ_ITEM[k].tipe === t; }); };
+
+  var syarat = [
+    { t: 'Incoming ≥ 250 A', ok: arusIn >= 250 && nIn === 1,
+      gagal: nIn === 0 ? 'belum ada incoming' : (nIn > 1 ? 'incoming dobel' : 'incoming hanya ' + arusIn + ' A') },
+    { t: 'Busbar ≥ 250 A', ok: arusBus >= 250,
+      gagal: arusBus === 0 ? 'belum ada busbar' : 'busbar hanya ' + arusBus + ' A' },
+    { t: '8 grup keluaran', ok: nOut >= 8, gagal: 'baru ' + nOut + ' grup' },
+    { t: 'Metering (meter + CT)', ok: ada('meter') && ada('ct'),
+      gagal: ada('meter') ? 'meter tanpa CT' : 'belum ada meter' },
+    { t: 'Proteksi surja (SPD)', ok: ada('spd'), gagal: 'belum ada SPD' },
+    { t: 'Enklosur IP54', ok: ada('box'), gagal: 'belum ada enklosur' }
+  ];
+  var lolos = syarat.filter(function (s) { return s.ok; }).length;
+
+  if (_bqKeranjang.length) pokok += _BQ_RAKIT;
+  var jual = pokok * 1.12 * (1 + margin);
+  var laba = jual - pokok * 1.12 + (pokok * 0.12);   // laba kotor = margin + overhead terserap
+
+  _labSet('bq-lengkap', lolos + ' /6');
+  _labSet('bq-pokok', (pokok / 1e6).toFixed(1));
+  _labSet('bq-jual', (jual / 1e6).toFixed(1));
+  _labSet('bq-laba', (laba / 1e6).toFixed(1));
+
+  var g = document.getElementById('bq-check'), o = '';
+  syarat.forEach(function (s, i) {
+    var y = 44 + i * 24;
+    o += '<circle cx="62" cy="' + (y - 4) + '" r="7.5" fill="' + (s.ok ? '#15803d' : '#cfd3da') + '"/>';
+    o += '<text x="62" y="' + (y - 1) + '" text-anchor="middle" font-family="Georgia" font-size="9" fill="#fff" font-weight="700">' + (s.ok ? '✓' : '·') + '</text>';
+    o += '<text x="78" y="' + y + '" font-family="Georgia" font-size="10.5" fill="' + (s.ok ? '#15803d' : '#6b6d7a') + '" font-weight="' + (s.ok ? '700' : '400') + '">' + s.t + '</text>';
+    if (!s.ok) o += '<text x="344" y="' + y + '" text-anchor="end" font-family="Georgia" font-size="9.5" fill="#c0392b">' + s.gagal + '</text>';
+  });
+  g.innerHTML = o;
+
+  // Batang harga penawaran terhadap anggaran pelanggan.
+  var gb = document.getElementById('bq-bar');
+  var skala = Math.max(anggaran, jual / 1e6, 1) * 1.1, lebar = 300;
+  var wJual = jual / 1e6 / skala * lebar, wAng = anggaran / skala * lebar;
+  var muat = jual / 1e6 <= anggaran;
+  gb.innerHTML = '<rect x="50" y="206" width="' + lebar + '" height="18" rx="3" fill="#eef0f3"/>'
+    + '<rect x="50" y="206" width="' + Math.max(0, wJual).toFixed(1) + '" height="18" rx="3" fill="' + (muat ? _GREEN : _RED) + '" opacity="0.8"/>'
+    + '<line x1="' + (50 + wAng).toFixed(1) + '" y1="201" x2="' + (50 + wAng).toFixed(1) + '" y2="229" stroke="#1a1d2e" stroke-width="1.6"/>'
+    + '<text x="' + (50 + wAng).toFixed(1) + '" y="240" text-anchor="middle" font-family="Georgia" font-size="9" fill="#1a1d2e">anggaran</text>'
+    + '<text x="52" y="219" font-family="Georgia" font-size="10" font-weight="700" fill="#fff">Rp ' + (jual / 1e6).toFixed(1) + ' jt</text>';
+
+  var pesan, col, detail;
+  if (_bqKeranjang.length === 0) {
+    pesan = 'Keranjang kosong — mulai dari incoming dan busbar'; col = _GOLD;
+    detail = 'Urutan menyusun BoQ: incoming → busbar → keluaran → metering → proteksi → enklosur.';
+  } else if (lolos < 6) {
+    pesan = '✗ Belum memenuhi spesifikasi (' + lolos + ' dari 6)'; col = _RED;
+    detail = 'Kurang: ' + syarat.filter(function (s) { return !s.ok; }).map(function (s) { return s.gagal; }).join(', ') + '.';
+  } else if (!muat) {
+    pesan = '⚠ Spesifikasi lengkap tetapi Rp ' + (jual / 1e6 - anggaran).toFixed(1) + ' jt di atas anggaran'; col = _GOLD;
+    detail = 'Jangan buang SPD atau metering. Turunkan margin, tawarkan MCB alih-alih MCCB keluaran, atau ajukan opsi bertahap.';
+  } else {
+    pesan = '✓ Penawaran sah — Rp ' + (jual / 1e6).toFixed(1) + ' jt, laba Rp ' + (laba / 1e6).toFixed(1) + ' jt'; col = _GREEN;
+    detail = 'Keenam butir spesifikasi terpenuhi dan masih di dalam anggaran pelanggan.';
+  }
+  _labSet('bq-verdict', pesan); _labAttr('bq-verdict', 'fill', col);
+  _labSet('bq-detail', detail);
+
+  var l = document.getElementById('bq-list');
+  if (l) {
+    var baris = Object.keys(hitung).map(function (k) {
+      return hitung[k] + '× ' + _BQ_ITEM[k].nama + ' — Rp ' + fmtRp(hitung[k] * _BQ_ITEM[k].harga);
+    });
+    l.innerHTML = baris.length ? baris.join('<br>') + '<br>1× Ongkos rakit & uji — Rp ' + fmtRp(_BQ_RAKIT) : 'Keranjang masih kosong.';
+  }
+}
+
+// ---------- S15: Jadwal BESS pangkas beban puncak ----------
+var _BP_BEBAN = [320, 300, 300, 310, 320, 340, 480, 620, 760, 790, 780, 770,
+                 640, 790, 800, 810, 800, 700, 950, 980, 960, 930, 600, 400];
+var _BP_WBP = [18, 19, 20, 21];                 // jam beban puncak PLN
+var _BP_LWBP = 1114.74;                          // Rp per kWh, golongan industri
+var _bpJadwal = new Array(24).fill(0);           // 0 netral · 1 lepas · 2 isi
+function _bpReset() { _bpJadwal = new Array(24).fill(0); _labBind(['bp-kwh', 'bp-kw', 'bp-soc0'], _bpRender); }
+function _bpAuto() {
+  // Jadwal contoh yang menyesuaikan diri dengan baterai yang dipasang: isi di
+  // jam berbeban paling rendah, lalu lepas hanya pada sebanyak jam puncak yang
+  // energinya benar-benar sanggup ditanggung. Baterai kecil sengaja tidak
+  // dipaksa menutup seluruh jendela WBP — justru di situ pelajarannya.
+  var kwh = _labV('bp-kwh'), kw = _labV('bp-kw'), soc0 = _labV('bp-soc0') / 100;
+  _bpJadwal = new Array(24).fill(0);
+  var jamIsi = [1, 2, 3, 4];
+  jamIsi.forEach(function (h) { _bpJadwal[h] = 2; });
+  var socIsi = Math.min(0.95 * kwh, soc0 * kwh + jamIsi.length * kw * 0.95);
+  var tersedia = Math.max(0, socIsi - 0.10 * kwh) * 0.95;
+  var jamLepas = Math.max(1, Math.min(_BP_WBP.length, Math.floor(tersedia / kw)));
+  // Jam puncak tertinggi lebih dulu — memangkas yang paling tinggi paling berguna.
+  _BP_WBP.slice().sort(function (a, b) { return _BP_BEBAN[b] - _BP_BEBAN[a]; })
+    .slice(0, jamLepas).forEach(function (h) { _bpJadwal[h] = 1; });
+  _bpRender();
+}
+function _bpKlik(h) { _bpJadwal[h] = (_bpJadwal[h] + 1) % 3; _bpRender(); }
+function _bpSimulasi(kwh, kw, soc0) {
+  var soc = soc0 / 100 * kwh, profil = [], socJalur = [], socMin = soc / kwh * 100;
+  for (var h = 0; h < 24; h++) {
+    var p = 0;
+    if (_bpJadwal[h] === 1) {
+      // Melepas: dibatasi daya, energi tersisa di atas 10%, dan beban jam itu.
+      var bisa = Math.max(0, (soc - 0.10 * kwh)) * 0.95;
+      p = Math.min(kw, bisa, _BP_BEBAN[h]);
+      soc -= p / 0.95;
+    } else if (_bpJadwal[h] === 2) {
+      var ruang = Math.max(0, (0.95 * kwh - soc)) / 0.95;
+      p = -Math.min(kw, ruang);
+      soc -= p * 0.95;
+    }
+    profil.push(_BP_BEBAN[h] - p);
+    socJalur.push(soc / kwh * 100);
+    socMin = Math.min(socMin, soc / kwh * 100);
+  }
+  return { profil: profil, soc: socJalur, socMin: socMin };
+}
+function _bpRender() {
+  if (!document.getElementById('bp-bars')) return;
+  var kwh = _labV('bp-kwh'), kw = _labV('bp-kw'), soc0 = _labV('bp-soc0');
+  _labSetv('bp-kwh', kwh.toFixed(0) + ' kWh'); _labSetv('bp-kw', kw.toFixed(0) + ' kW'); _labSetv('bp-soc0', soc0.toFixed(0) + ' %');
+
+  var r = _bpSimulasi(kwh, kw, soc0);
+  var puncakAwal = Math.max.apply(null, _BP_BEBAN);
+  var puncakBaru = Math.max.apply(null, r.profil);
+  var skala = Math.max(puncakAwal, puncakBaru) * 1.08;
+
+  var tarif = function (h) { return _BP_WBP.indexOf(h) >= 0 ? _BP_LWBP * 1.4 : _BP_LWBP; };
+  var sebelum = 0, sesudah = 0;
+  for (var h = 0; h < 24; h++) { sebelum += _BP_BEBAN[h] * tarif(h); sesudah += r.profil[h] * tarif(h); }
+  var hemat = (sebelum - sesudah) * 30;
+
+  _labSet('bp-new', puncakBaru.toFixed(0));
+  _labSet('bp-cut', (puncakAwal - puncakBaru).toFixed(0));
+  _labSet('bp-socmin', r.socMin.toFixed(0));
+  _labSet('bp-save', fmtRp(hemat));
+
+  var x0 = 38, lebar = 346 / 24, dasar = 205, tinggi = 160;
+  var g = document.getElementById('bp-bars'), o = '';
+  for (var i = 0; i < 24; i++) {
+    var x = x0 + i * lebar;
+    if (_BP_WBP.indexOf(i) >= 0) o += '<rect x="' + x.toFixed(1) + '" y="40" width="' + lebar.toFixed(1) + '" height="165" fill="rgba(201,169,110,0.16)"/>';
+    var hAwal = _BP_BEBAN[i] / skala * tinggi, hBaru = r.profil[i] / skala * tinggi;
+    o += '<rect x="' + (x + 0.6).toFixed(1) + '" y="' + (dasar - hAwal).toFixed(1) + '" width="' + (lebar - 1.2).toFixed(1)
+      + '" height="' + hAwal.toFixed(1) + '" fill="#cfd3da"/>';
+    var warna = _bpJadwal[i] === 1 ? _GREEN : (_bpJadwal[i] === 2 ? '#1a3a5c' : '#9a7f4f');
+    o += '<rect x="' + (x + 0.6).toFixed(1) + '" y="' + (dasar - hBaru).toFixed(1) + '" width="' + (lebar - 1.2).toFixed(1)
+      + '" height="' + hBaru.toFixed(1) + '" fill="' + warna + '" opacity="0.85"/>';
+    o += '<rect x="' + x.toFixed(1) + '" y="38" width="' + lebar.toFixed(1) + '" height="169" fill="transparent" style="cursor:pointer"'
+      + ' onclick="_bpKlik(' + i + ')"><title>Jam ' + i + ':00 — ' + _BP_BEBAN[i] + ' kW</title></rect>';
+  }
+  g.innerHTML = o;
+
+  var titik = r.soc.map(function (s, i) {
+    return (x0 + i * lebar + lebar / 2).toFixed(1) + ',' + (dasar - s / 100 * tinggi).toFixed(1);
+  }).join(' ');
+  _labAttr('bp-soc', 'points', titik);
+
+  var yP = dasar - puncakAwal / skala * tinggi;
+  _labAttr('bp-peak', 'y1', yP.toFixed(1)); _labAttr('bp-peak', 'y2', yP.toFixed(1));
+  _labAttr('bp-peak-lbl', 'y', (yP - 4).toFixed(1));
+  _labSet('bp-peak-lbl', 'puncak awal ' + puncakAwal + ' kW');
+
+  var adaLepas = _bpJadwal.indexOf(1) >= 0, adaIsi = _bpJadwal.indexOf(2) >= 0;
+  var pesan, col, detail;
+  if (!adaLepas && !adaIsi) {
+    pesan = 'Belum ada jadwal — klik batang jam untuk mengatur'; col = _GOLD;
+    detail = 'Coba isi baterai saat dini hari (beban rendah) lalu lepas saat WBP pukul 18–22.';
+  } else if (!adaIsi) {
+    pesan = '⚠ Baterai hanya dilepas, tidak pernah diisi'; col = _GOLD;
+    detail = 'SoC turun ke ' + r.socMin.toFixed(0) + '% dan tidak pulih — besok tidak ada energi untuk memangkas puncak.';
+  } else if (r.socMin <= 10.5) {
+    pesan = '⚠ SoC menyentuh batas bawah ' + r.socMin.toFixed(0) + '%'; col = _GOLD;
+    detail = 'Baterai kehabisan energi sebelum puncak berakhir. Tambah kapasitas, tambah jam pengisian, atau kurangi jam pelepasan.';
+  } else if (puncakBaru >= puncakAwal) {
+    pesan = '⚠ Puncak belum turun — pengisian justru menambah beban'; col = _GOLD;
+    detail = 'Pindahkan jam pengisian ke jam berbeban rendah, dan lepas tepat pada jam puncak.';
+  } else {
+    pesan = '✓ Puncak turun ' + (puncakAwal - puncakBaru).toFixed(0) + ' kW menjadi ' + puncakBaru.toFixed(0) + ' kW'; col = _GREEN;
+    var wbpTerbuka = _BP_WBP.filter(function (h) { return _bpJadwal[h] !== 1; });
+    detail = 'Hemat energi Rp ' + fmtRp(hemat) + '/bulan · daya tersambung bisa diturunkan sekitar '
+           + ((puncakAwal - puncakBaru) / 0.85).toFixed(0) + ' kVA (faktor daya 0,85).'
+           + (wbpTerbuka.length ? ' Jam WBP ' + wbpTerbuka.map(function (h) { return h + '.00'; }).join(', ')
+               + ' masih terbuka — energi baterai tidak cukup menutup seluruh jendela puncak; perbesar kapasitas.' : '');
+  }
+  _labSet('bp-verdict', pesan); _labAttr('bp-verdict', 'fill', col);
+  _labSet('bp-detail', detail);
+}
