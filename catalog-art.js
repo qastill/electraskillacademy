@@ -1,6 +1,6 @@
 /* Original editorial artwork, shared by Academy practice, Labs and Library.
- * Decorative SVG; the adjacent HTML remains the accessible source of titles.
- * No remote image dependencies, embedded fonts, or per-card network requests.
+ * Local realistic illustrations with decorative SVG fallbacks.
+ * Titles remain HTML; images are lazy-loaded and shared across related titles.
  */
 (() => {
   const drawings = {
@@ -27,6 +27,18 @@
     arc: '<path d="m180 17 96 159H84zM185 57l-31 53h25l-8 36 36-57h-27z"/>',
   };
   const topics = [
+    [/gambar.teknik|drafting/, 'drafting', 'Gambar teknik'],
+    [/refrigerasi|refrigeration|tata.udara|hvac/, 'refrigeration', 'Refrigerasi & tata udara'],
+    [/pneumatik|pneumatic|hidrolik/, 'pneumatic', 'Pneumatik & hidrolik'],
+    [/physics|fisika|electromagnet|elektromagnet/, 'physics', 'Fisika & elektromagnetik'],
+    [/probability|statistics|statisti|ekonomi|econom|wirausaha|produk.kreatif/, 'chart', 'Analisis & ekonomi teknik'],
+    [/pengembangan.peserta|panduan.pandemi|panduan.penyelenggaraan|bahan.tambahan/, 'book', 'Pendidikan & pembelajaran'],
+    [/hydrogen|hidrogen|elektroliser/, 'hydrogen', 'Energi hidrogen'],
+    [/biogas|biomass|waste|sampah/, 'biomass', 'Energi biomassa'],
+    [/charging|spklu|kendaraan|\bev\b/, 'ev', 'Mobilitas listrik'],
+    [/kontrol|control|otomasi|sensor|plc|robot/, 'control', 'Kontrol & otomasi'],
+    [/pembangkit|pembangkitan|generation/, 'generation', 'Pembangkitan listrik'],
+    [/listrik.industri/, 'industrial', 'Kelistrikan industri'],
     [/loto|lock.out|tag.out/, 'safety', 'Keselamatan kerja'],
     [/arc.flash|bahaya|safety|keselamatan|k3/, 'arc', 'Proteksi & keselamatan'],
     [/pembumian|ground|earthing|rcd|bonding|tn-s/, 'earth', 'Pembumian & proteksi'],
@@ -36,29 +48,52 @@
     [/hidro|hydro|plta|pneumatik|fluida/, 'hydro', 'Aliran & energi'],
     [/motor|machine|machinery|mesin|generator|trafo|transform/, 'motor', 'Mesin listrik'],
     [/ukur|measure|meter|instrument/, 'meter', 'Pengukuran listrik'],
-    [/anten|communi|telekom|propagasi|radio/, 'antenna', 'Telekomunikasi'],
+    [/anten|communi|komunikasi|telekom|propagasi|radio/, 'antenna', 'Telekomunikasi'],
     [/signal|sinyal|dsp|osiloskop|harmonik/, 'signal', 'Sinyal & gelombang'],
     [/transmis|distribusi|power.sys|grid|tegangan tinggi|high voltage|gardu/, 'tower', 'Sistem tenaga'],
     [/cable|kabel|conduit/, 'cable', 'Kabel & penghantar'],
     [/penerangan|light/, 'light', 'Teknik penerangan'],
     [/wiring|instalasi|installation|panel|pemanfaatan/, 'wiring', 'Instalasi listrik'],
-    [/elektromekanik|pemeliharaan|maintenance|repair|bengkel|gambar teknik/, 'tool', 'Praktik teknik'],
-    [/kontrol|control|otomasi|sensor|digital|micro|plc|robot|vlsi|cmos|elektronik|electronic/, 'chip', 'Elektronika & kendali'],
+    [/elektromekanik|perbaikan|pemeliharaan|maintenance|repair|bengkel|gambar teknik/, 'tool', 'Praktik teknik'],
+    [/kontrol|control|otomasi|sensor|digital|micro|plc|robot|vlsi|cmos|semiconductor|semikonduktor|elektronik|electronic/, 'chip', 'Elektronika & kendali'],
     [/ekonomi|econom|demand|audit|efisiensi|bisnis|manajemen|finance/, 'chart', 'Analisis & efisiensi'],
     [/math|matemat|algebra|calculus|fisika|physics|numer|model|simul|statisti/, 'math', 'Sains & pemodelan'],
     [/circuit|rangkaian|listrik|electri|power|energi|energy|proteksi/, 'circuit', 'Teknik kelistrikan'],
   ];
+  const images = {
+    wiring: '/img/catalog/wiring.webp', light: '/img/catalog/light.webp',
+    control: '/img/catalog/control.webp', math: '/img/catalog/math.webp',
+    signal: '/img/catalog/signal.webp', circuit: '/img/catalog/signal.webp',
+    antenna: '/img/catalog/antenna.webp', physics: '/img/catalog/physics.webp',
+    pneumatic: '/img/catalog/pneumatic.webp', safety: '/img/catalog/safety.webp',
+    arc: '/img/catalog/safety.webp', earth: '/img/catalog/earth.webp',
+    book: '/img/catalog/book.webp', tower: '/img/catalog/tower.webp',
+    refrigeration: '/img/catalog/refrigeration.webp', chart: '/img/catalog/chart.webp',
+    drafting: '/img/catalog/drafting.webp', cable: '/img/catalog/wiring.webp',
+    meter: '/img/library/dasar-pengukuran.webp', chip: '/img/library/dasar-listrik-elektronika.webp',
+    motor: '/img/library/kelistrikan-mesin.webp', tool: '/img/library/pekerjaan-elektromekanik-1.webp',
+    industrial: '/img/library/pekerjaan-elektromekanik-c2.webp',
+    solar: '/track-art/s10.webp', wind: '/track-art/s11.webp', battery: '/track-art/s15.webp',
+    ev: '/track-art/s12.webp', hydrogen: '/track-art/s14.webp', biomass: '/track-art/s13.webp',
+    generation: '/track-art/s7.webp', hydro: '/track-art/s7.webp'
+  };
+  const fallbackDrawing = {drafting:'tool', refrigeration:'motor', pneumatic:'hydro', physics:'circuit',
+    control:'chip', industrial:'motor', generation:'tower', hydrogen:'battery', biomass:'tower', ev:'battery'};
   const palettes = [['#123e40','#75c9bf','#d9b77b'],['#243b57','#8ab9dc','#edc88a'],['#493729','#ddb383','#9cc8b7'],['#3b3553','#b7a1d8','#e6c590'],['#294535','#a4cf9c','#ebca87'],['#503035','#e2a293','#d8c18a']];
   function topic(item) {
-    const text = [item.id || item.lab, item.title || item.name || item.nama, item.categoryLabel || item.category].join(' ').toLowerCase();
-    return topics.find(([re]) => re.test(text)) || [null, 'book', 'Pengetahuan & pembelajaran'];
+    const title = String(item.title || item.name || item.nama || '').toLowerCase();
+    const context = [item.id || item.lab, item.categoryLabel || item.category].join(' ').toLowerCase();
+    return topics.find(([re]) => re.test(title)) || topics.find(([re]) => re.test(context)) || [null, 'book', 'Pengetahuan & pembelajaran'];
   }
   function art(item, variant = 'lab') {
+    variant = variant === 'book' ? 'book' : 'lab';
     const [,key,label] = topic(item);
     const seed = [...String(item.id || item.lab || item.title || item.name || '')].reduce((a,c) => a + c.charCodeAt(0), 0);
     const [bg,ink,gold] = palettes[seed % palettes.length];
     const grid = Array.from({length:12},(_,i)=>`<path d="M${i*36} 0v220M0 ${i*24}h360"/>`).join('');
-    return `<span class="catalog-art catalog-art--${variant}" data-art-topic="${key}" style="--art-bg:${bg};--art-ink:${ink};--art-gold:${gold}" aria-hidden="true"><svg viewBox="0 0 360 220" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width=".5" opacity=".12">${grid}</g><circle cx="180" cy="108" r="88" fill="currentColor" opacity=".045"/><circle cx="180" cy="108" r="94" stroke="currentColor" opacity=".14"/><g transform="translate(0 10)" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${drawings[key]}</g><path d="M20 20h24M20 20v24m316 156h-24m24 0v-24" stroke="var(--art-gold)" stroke-width="2"/></svg><span class="catalog-art-label">${label}</span><span class="catalog-art-mark">E / A</span></span>`;
+    return `<span class="catalog-art catalog-art--${variant}" data-art-topic="${key}" style="--art-bg:${bg};--art-ink:${ink};--art-gold:${gold}" aria-hidden="true"><svg viewBox="0 0 360 220" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width=".5" opacity=".12">${grid}</g><circle cx="180" cy="108" r="88" fill="currentColor" opacity=".045"/><circle cx="180" cy="108" r="94" stroke="currentColor" opacity=".14"/><g transform="translate(0 10)" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${drawings[key] || drawings[fallbackDrawing[key]] || drawings.book}</g><path d="M20 20h24M20 20v24m316 156h-24m24 0v-24" stroke="var(--art-gold)" stroke-width="2"/></svg>${variant === 'lab' ? `<img class="catalog-art-photo" src="${images[key]}" alt="" loading="lazy" decoding="async" width="640" height="960" onerror="this.remove()"><span class="catalog-art-photo-shade"></span>` : ''}<span class="catalog-art-label">${label}</span><span class="catalog-art-mark">E / A</span></span>`;
   }
   window.esaCatalogArt = art;
+  window.esaCatalogCover = (item) => images[topic(item)[1]];
+  window.esaCatalogTopic = (item) => topic(item)[1];
 })();

@@ -165,5 +165,17 @@ for (const item of [...sandbox.SIMULATORS, ...sandbox.VIRTUAL_LABS, ...sandbox.C
   const art = ctx.esaCatalogArt(item);
   assert(art.includes('<svg') && !art.includes('undefined'), `Valid illustration: ${item.id || item.lab}`);
 }
-assert(!ctx.esaCatalogArt({title:'<img src=x onerror=alert(1)>'}).includes('<img'), 'Catalog metadata cannot inject markup');
+assert(!ctx.esaCatalogArt({title:'<img src=x onerror=alert(1)>'}).includes('onerror=alert(1)'), 'Catalog metadata cannot inject markup');
 console.log(`PASS artwork: ${ctx.BOOKS.length} books plus all simulator, virtual lab and calculator entries`);
+
+for (const item of [...sandbox.SIMULATORS, ...sandbox.VIRTUAL_LABS, ...sandbox.CALCULATORS, ...ctx.BOOKS]) {
+  const cover = item.cover || ctx.esaCatalogCover(item);
+  assert(cover.startsWith('/'), 'All artwork is hosted locally');
+  assert(fs.existsSync(path.join(ROOT, cover)), `Missing artwork: ${cover}`);
+}
+assert.equal(ctx.esaCatalogTopic({title:'Fundamentals of Physics'}), 'physics');
+assert.equal(ctx.esaCatalogTopic({title:'Pneumatik dan Hidrolik'}), 'pneumatic');
+assert.equal(ctx.esaCatalogTopic({title:'Kontrol Refrigerasi dan Tata Udara'}), 'refrigeration');
+assert.equal(ctx.esaCatalogTopic({title:'Signals and Systems'}), 'signal');
+assert.equal(ctx.esaCatalogTopic({title:'Teknik Kontrol 1'}), 'control');
+console.log('PASS realistic assets: all 120 books and 73 labs resolve to local artwork');
