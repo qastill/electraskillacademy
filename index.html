@@ -4400,6 +4400,19 @@ const SIMULATORS = [
   { id: 'bess-arbitrage', jalur: 'S15', category: 'BESS · Pendapatan', name: 'Energy Arbitrage', desc: 'Beli energi murah, jual mahal: pendapatan arbitrase harian/tahunan dengan efisiensi round-trip & spread tarif.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
   { id: 'bess-pack', jalur: 'S15', category: 'BESS · Konfigurasi', name: 'Battery Pack Series-Parallel', desc: 'Susun sel sSpP: tegangan & kapasitas pack dari konfigurasi seri-paralel untuk capai target sistem.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.battery, working: true },
 
+  // ===== Lab hands-on tambahan — melengkapi Academy yang labnya masih tipis =====
+  // Enam Academy di bawah sebelumnya hanya punya Wiring Trainer generik plus
+  // satu-dua lab wiring, tanpa satu pun latihan interaktif berbasis aksi.
+  { id: 'manuver-sutet', jalur: 'S4', category: 'Transmisi · Manuver', name: 'Manuver Pembebasan Tegangan 150 kV', desc: 'Bebaskan saluran transmisi untuk pemeliharaan dengan urutan manuver yang benar — setiap langkah di luar urutan langsung memperlihatkan akibatnya di gardu induk.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.shield, working: true },
+  { id: 'boq-panel', jalur: 'S9', category: 'Technical Sales · Penawaran', name: 'Susun BoQ Panel & Harga Penawaran', desc: 'Susun daftar material panel MDP dari katalog sesuai permintaan pelanggan, lalu lihat pemenuhan spesifikasi, biaya pokok, harga jual, dan posisinya terhadap anggaran.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.mcb, working: true },
+  { id: 'bess-puncak', jalur: 'S15', category: 'Battery & BESS · Operasi', name: 'Jadwal BESS Pangkas Beban Puncak', desc: 'Klik batang jam untuk menjadwalkan pengisian & pelepasan baterai pada profil beban 24 jam; lihat puncak baru, jalur SoC, dan penghematannya.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'gen-sinkron', jalur: 'S7', category: 'Pembangkitan · Paralel', name: 'Sinkronisasi Generator ke Jaringan', desc: 'Setel governor & AVR, amati synchroscope berputar, lalu tutup PMT tepat saat jarum di zona hijau — menutup di luar syarat memperlihatkan akibat hentakan torsinya.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.phase, working: true },
+  { id: 'pv-string', jalur: 'S10', category: 'Solar · Desain DC', name: 'Perancang String PV & Jendela MPPT', desc: 'Susun modul per string dan string paralel per MPPT dengan tombol; sistem mengecek Voc saat dingin, Vmp saat panas, arus masukan, dan rasio DC/AC.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.pv, working: true },
+  { id: 'karbon-aksi', jalur: 'S11', category: 'Keberlanjutan · GRK', name: 'Jejak Karbon & Aksi Mitigasi', desc: 'Hitung emisi Scope 1 & 2 sebuah gedung, lalu pasang aksi efisiensi satu per satu sampai target penurunan 30% tercapai — lengkap investasi & payback.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.audit, working: true },
+  { id: 'ev-sesi', jalur: 'S12', category: 'EV · SPKLU', name: 'Sesi Pengisian Kendaraan Listrik', desc: 'Pilih kendaraan & charger, jalankan sesi pengisian, dan lihat daya menurun di atas 80% — durasi serta biaya dihitung langsung.', level: 'Profesional', duration: '~20 menit', icon: SIM_ICONS.battery, working: true },
+  { id: 'wte-komposisi', jalur: 'S13', category: 'Waste to Energy · Bahan Bakar', name: 'Komposisi Sampah & Nilai Kalor PLTSa', desc: 'Atur komposisi sampah kota dengan tombol dan lihat nilai kalor basah, daya listrik netto, serta apakah pembakaran bisa mandiri tanpa bahan bakar bantu.', level: 'Advance', duration: '~20 menit', icon: SIM_ICONS.grid, working: true },
+  { id: 'h2-pabrik', jalur: 'S14', category: 'Hidrogen · Perancangan Pabrik', name: 'Rancang Pabrik Hidrogen Hijau', desc: 'Susun kapasitas PLTS dan elektroliser hingga seimbang; lihat produksi H₂, efisiensi sistem, kebutuhan air, energi terbuang, dan LCOH.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.motor, working: true },
+
   // ===== S16 · Kontrol & Otomasi =====
   { id: 'pid-tuning', jalur: 'S16', category: 'Otomasi · Kontrol', name: 'PID Controller Tuning', desc: 'Atur Kp/Ki/Kd & lihat respon step sistem real-time: overshoot, settling time, steady-state error.', level: 'Advance', duration: '~25 menit', icon: SIM_ICONS.data, working: true },
   { id: 'sensor-scaling', jalur: 'S16', category: 'Otomasi · Instrumentasi', name: 'Sensor Scaling (4–20 mA)', desc: 'Konversi arus 4–20 mA ke nilai proses & raw ADC PLC; deteksi sinyal putus/over-range.', level: 'Profesional', duration: '~15 menit', icon: SIM_ICONS.data, working: true },
@@ -4608,7 +4621,16 @@ const ESA_HANDSON_LABS = new Set([
   'anomaly-zscore',    // deteksi anomali profil beban
   'lighting-retrofit', // klik ganti lampu lama → LED, hitung ROI
   'loto-sequence',     // drill urutan LOTO — salah urutan = reset
-  'pid-tuning'         // tuning Kp/Ki/Kd dengan respon sistem real-time
+  'pid-tuning',        // tuning Kp/Ki/Kd dengan respon sistem real-time
+  'gen-sinkron',       // tutup PMT paralel saat synchroscope di zona hijau
+  'pv-string',         // susun modul/string PV vs batas & jendela MPPT inverter
+  'karbon-aksi',       // pasang aksi mitigasi sampai target penurunan tercapai
+  'ev-sesi',           // jalankan sesi pengisian EV, amati taper di atas 80%
+  'wte-komposisi',     // atur komposisi sampah, baca nilai kalor & daya PLTSa
+  'h2-pabrik',         // seimbangkan kapasitas PLTS vs elektroliser
+  'manuver-sutet',     // urutan manuver bebas tegangan saluran 150 kV
+  'boq-panel',         // susun BoQ panel dari katalog vs spesifikasi pelanggan
+  'bess-puncak'        // jadwalkan isi/lepas BESS pada profil beban 24 jam
 ]);
 for (let i = SIMULATORS.length - 1; i >= 0; i--) {
   const s = SIMULATORS[i];

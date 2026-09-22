@@ -10,6 +10,7 @@ node tests/quiz-coverage.test.mjs    # tanpa browser
 node tests/quiz-kejelasan.test.mjs   # tanpa browser
 node tests/quiz-coverage.test.mjs --backlog   # + daftar modul yang banknya masih tipis
 node tests/academy-labs.test.mjs     # tanpa browser
+node tests/lab-handson.test.mjs      # tanpa browser
 node tests/youtube-map.test.mjs      # tanpa browser
 node tests/module-thumbs.test.mjs    # tanpa browser
 node tests/sertifikat-profil.test.mjs # tanpa browser
@@ -56,6 +57,17 @@ sedangkan virtual lab dan kalkulator dipetakan tangan di `academy-labs.js`.
 Tes ini gagal kalau ada Academy yang bagian praktiknya kosong, ada id lab yang
 tidak dikenal, atau ada tombol yang memanggil fungsi pembuka yang tidak ada —
 tiga cara paling gampang bagian ini membusuk tanpa ketahuan.
+
+### `lab-handson.test.mjs` — tiap Academy punya lab yang benar-benar dikerjakan
+`academy-labs.test.mjs` memastikan bagian praktik tidak kosong; tes ini soal
+mutunya. Audit menemukan sembilan Academy (S4, S7, S9, S10, S11, S12, S13, S14,
+S15) yang bagian praktiknya cuma berisi Wiring Trainer generik plus kalkulator
+geser-slider — peserta di bidang itu tidak pernah benar-benar melakukan apa pun.
+Yang dijaga: setiap id di `ESA_HANDSON_LABS` punya pembangun di
+`data/sim-builders.js`, terdaftar di `SIMULATORS` dengan `working: true` dan
+jalur yang sah, punya entri `SIM_INFO`, dan — yang paling penting — tidak ada
+satu pun dari keenam belas Academy yang kembali nol lab berbasis aksi. Menghapus
+sebuah lab tanpa menggantinya gagal di sini, bukan di keluhan peserta.
 
 ### `module-thumbs.test.mjs` — sampul modul tidak menunjuk berkas yang tidak ada
 `data/module-thumbs.js` mengisi thumbnail modul yang videonya belum di YouTube.
