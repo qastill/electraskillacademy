@@ -5628,7 +5628,7 @@ function openSimulator(simId) {
   // Kode lab (245 KB) baru diunduh saat lab benar-benar dibuka. Modal dibuka
   // duluan supaya klik terasa langsung merespons, lalu fungsi ini dipanggil
   // ulang begitu berkasnya siap.
-  if (!window.SIM_BUILDERS) {
+  if (!window.SIM_BUILDERS || !window.LAB_PANDUAN) {
     content.innerHTML = '<div style="padding:64px 24px;text-align:center;color:rgba(245,240,230,0.6);font-size:14px;letter-spacing:0.04em">Menyiapkan lab…</div>';
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -5679,7 +5679,11 @@ function openSimulator(simId) {
   // AI Tutor hanya untuk lab non-iframe; lab wiring (iframe) sudah punya
   // widget "Tanya AI" sendiri (sim-assistant.js) di dalam halamannya.
   const tutor = sim.embed ? '' : _labTutorHTML(sim);
-  content.innerHTML = banner + about + body + tutor;
+  // Panduan langkah demi langkah: untuk apa lab ini, langkah yang dicentang,
+  // pemahaman yang didapat, dua soal bukti paham, dan tanda selesai.
+  // Data & logikanya di /data/lab-panduan.js (dimuat bersama sim-builders).
+  const panduan = (typeof window.esaLabPanduanHTML === 'function') ? window.esaLabPanduanHTML(simId) : '';
+  content.innerHTML = banner + about + panduan + body + tutor;
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -5721,20 +5725,27 @@ function closeSimulator() {
 // SIM_BUILDERS (245 KB) dipindah ke /data/sim-builders.js dan dimuat sesuai
 // permintaan saat lab dibuka — lihat esaLoadSimBuilders() dan openSimulator().
 function esaLoadSimBuilders(cb) {
-  if (window.SIM_BUILDERS) { if (cb) cb(); return; }
+  if (window.SIM_BUILDERS && window.LAB_PANDUAN) { if (cb) cb(); return; }
   window.__esaSBcbs = window.__esaSBcbs || [];
   if (cb) window.__esaSBcbs.push(cb);
   if (window.__esaSBloading) return;
   window.__esaSBloading = true;
-  var s = document.createElement('script');
-  s.src = '/data/sim-builders.js';
-  s.onload = s.onerror = function () {
+  // Dua berkas dimuat bersamaan: pembangun lab (245 KB) dan panduan langkah
+  // demi langkah (80 KB). Callback baru dipanggil setelah keduanya selesai.
+  var sisa = 2;
+  function siap() {
+    if (--sisa > 0) return;
     if (!window.SIM_BUILDERS) window.SIM_BUILDERS = {}; // fail-soft
+    if (!window.LAB_PANDUAN) window.LAB_PANDUAN = {};
     window.__esaSBloading = false;
     var cbs = window.__esaSBcbs || []; window.__esaSBcbs = [];
     cbs.forEach(function (f) { try { f(); } catch (e) {} });
-  };
-  document.head.appendChild(s);
+  }
+  ['/data/sim-builders.js', '/data/lab-panduan.js?v=1'].forEach(function (src) {
+    var s = document.createElement('script');
+    s.src = src; s.onload = s.onerror = siap;
+    document.head.appendChild(s);
+  });
 }
 window.esaLoadSimBuilders = esaLoadSimBuilders;
 
