@@ -7,6 +7,7 @@ Semuanya lahir dari keluhan peserta yang nyata.
 ```bash
 node tests/quiz-integrity.test.mjs   # tanpa browser
 node tests/quiz-coverage.test.mjs    # tanpa browser
+node tests/quiz-kejelasan.test.mjs   # tanpa browser
 node tests/quiz-coverage.test.mjs --backlog   # + daftar modul yang banknya masih tipis
 node tests/academy-labs.test.mjs     # tanpa browser
 node tests/youtube-map.test.mjs      # tanpa browser
@@ -26,6 +27,16 @@ padahal soal itu tidak punya gambar. Tes ini gagal kalau ada soal yang merujuk
 gambar/diagram/grafik tanpa menyertakan `svg`. Rujukan yang sudah ditinjau
 manual dicocokkan lewat potongan teksnya, bukan nomor urut, agar tidak bergeser
 saat bank soal berubah.
+
+### `quiz-kejelasan.test.mjs` — batang soal berdiri sendiri sebagai pertanyaan
+Keluhan aslinya: peserta membaca *"Testing commissioning PHB baru:"* atau
+*"RCD 30mA, TT system, R_ground = 10 Ω (marginal). Touch voltage saat fault:"* —
+potongan catatan, bukan pertanyaan. Soal begitu hanya bisa dijawab dengan menebak
+dari opsinya. Tes ini gagal kalau ada batang soal yang berakhir titik dua,
+pembahasan yang memuat sisa "berpikir keras" model (*"Wait"*, *"Hmm"*,
+*"Actually let me recompute"*), pembahasan yang merujuk huruf opsi (*"Jawaban B"* —
+rapuh karena urutan opsi bisa berubah), atau opsi yang menyelipkan penilaian
+dalam kurung (*"(sangat aman)"*) sehingga membocorkan jawaban.
 
 ### `academy-labs.test.mjs` — tiap Academy punya teori DAN praktik
 Sejak lab dilepas dari menu atas dan ditempelkan ke bawah daftar modul tiap
