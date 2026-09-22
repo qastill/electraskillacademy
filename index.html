@@ -543,6 +543,7 @@ if ('serviceWorker' in navigator) {
 <link rel="stylesheet" href="/academy-lobby.css?v=10">
 <link rel="stylesheet" href="/membership.css?v=1">
 <link rel="stylesheet" href="/academy-journey.css?v=2">
+<link rel="stylesheet" href="/library-covers.css?v=1">
 <link rel="stylesheet" href="/academy-labs.css?v=1">
 <script src="/membership.js?v=1" defer></script>
 </head>
@@ -5451,7 +5452,7 @@ function esaLoadBooks(cb) {
   if (window.__esaBKloading) return;
   window.__esaBKloading = true;
   var s = document.createElement('script');
-  s.src = '/data/books.js';
+  s.src = '/data/books.js?v=2';
   s.onload = s.onerror = function () {
     if (typeof window.BOOKS === 'undefined') window.BOOKS = []; // fail-soft, cegah loop
     window.__esaBKloading = false;
@@ -8993,7 +8994,8 @@ function renderReferensi() {
   const _unlocked = esaContentUnlocked();
   grid.innerHTML = list.map(b => `
     <a href="${escapeHtml(b.driveUrl)}" target="_blank" rel="noopener" class="esa-book esa-book-p${b.palette}${_unlocked ? '' : ' locked'}" title="${escapeHtml(b.title)} — ${escapeHtml(b.author)}" onclick="if(!window.esaRequireAccess()){event.preventDefault();return false;}">
-      <div class="esa-book-cover">
+      <div class="esa-book-cover${b.cover ? ' has-cover-art' : ''}">
+        ${b.cover ? `<img class="esa-book-cover-art" src="${escapeHtml(b.cover)}" alt="" loading="lazy" decoding="async" onerror="this.parentElement.classList.remove('has-cover-art');this.remove()"><span class="esa-book-cover-shade" aria-hidden="true"></span>` : ''}
         <div class="esa-book-cover-spine"></div>
         <div class="esa-book-cover-band">${escapeHtml(b.categoryLabel)}</div>
         <div class="esa-book-cover-title">${escapeHtml(b.title)}</div>

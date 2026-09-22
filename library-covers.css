@@ -1,0 +1,12 @@
+/* Five pilot editorial illustrations. Titles/author metadata remain real HTML. */
+.esa-book-cover.has-cover-art{isolation:isolate}
+.esa-book-cover-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none}
+.esa-book-cover-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(5,10,20,.74) 0%,rgba(5,10,20,.40) 27%,transparent 45%,transparent 62%,rgba(5,10,20,.82) 85%,rgba(5,10,20,.95) 100%)}
+.esa-book-cover:not(.has-cover-art) .esa-book-cover-shade{display:none}
+.has-cover-art .esa-book-cover-spine{z-index:3}
+.has-cover-art .esa-book-cover-band{color:#f0cd8b;border-bottom-color:#f0cd8b55}
+.has-cover-art .esa-book-cover-title{color:#fff7e4;text-shadow:0 2px 9px #000;font-weight:700}
+.has-cover-art .esa-book-cover-author{color:#f1e9d9;text-shadow:0 1px 5px #000}
+.has-cover-art .esa-book-cover-edition{color:#dfc185;text-shadow:0 1px 5px #000}
+.has-cover-art .esa-book-cover-foil{color:#dfc18599;z-index:2}
+@media(max-width:600px){.esa-book-cover.has-cover-art{padding-bottom:32px}.has-cover-art .esa-book-cover-edition{letter-spacing:.10em;line-height:1.5}.has-cover-art .esa-book-cover-foil{bottom:10px}}
