@@ -8103,7 +8103,7 @@ function startLevel(levelId, trackId) {
     return;
   }
 
-  // Open first module
+  // Resume at the first unpassed module; completed levels can be replayed.
   const firstMod = modules.find(m => !(typeof window.esaIsModulePassed === 'function' && window.esaIsModulePassed(m.code))) || modules[0];
   openModul(firstMod.code, trackId, levelId);
 }

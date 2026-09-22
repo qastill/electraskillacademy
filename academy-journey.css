@@ -74,3 +74,4 @@
 .has-journey .lvlflow-track{display:flex;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap}
 .has-journey .lvlflow-node{flex:1 0 155px}
 @media(max-width:560px){.has-journey .lvlflow-node{flex:0 0 156px}.has-journey .esa-modgrid{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:245px;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:16px}.has-journey .esa-modgrid>*{scroll-snap-align:start;min-width:0}}
+@media(max-width:560px){body:has(#view-jalur.active) #esa-sticky-mobile-cta{display:none!important}.has-journey .journey-episodes>span:after{content:' · geser untuk melihat lainnya'}}
