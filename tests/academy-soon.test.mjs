@@ -15,9 +15,9 @@
 //      bukan membuka view kosong;
 //   4. Energy Modeller ada di ketiga sumbernya (nama, metadata, lobi) dan
 //      menyebut perangkat yang dijanjikan, termasuk LEAP.
-//   5. Nuclear (S18) dan Energy Policy (S19), yang menyusul dengan pola sama,
-//      juga lengkap di ketiga sumbernya; prefix modul tiap jalur unik; dan tiap
-//      ikon yang dirujuk panggung lobi benar-benar ada di kamus gambarnya.
+//   5. Nuclear (S18) dan Energy Policy (S19) sudah berkurikulum 64 modul, tidak
+//      lagi bertanda coming soon, dan lengkap di ketiga sumbernya; prefix modul
+//      tiap jalur unik; dan tiap ikon yang dirujuk panggung lobi benar-benar ada.
 
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -69,17 +69,28 @@ assert(/S17: \['ENERGY MODELLER'/.test(lobby), 'Energy Modeller belum muncul di 
 assert(/comingSoon/.test(lobby), 'lobi tidak membedakan jalur coming soon');
 assert(/SEGERA HADIR/.test(lobby), 'panggung lobi tidak menandai jalur yang belum dibuka');
 
-// --- 5. Nuclear (S18) dan Energy Policy (S19) mengikuti pola yang sama ---
-// Keduanya diminta pemilik platform setelah Energy Modeller; tanpa kurikulum,
-// jadi wajib bertanda coming soon dan tampil di ketiga sumber lobi.
+// --- 5. Nuclear (S18) dan Energy Policy (S19) sudah punya kurikulum ---
+// Keduanya menyusul Energy Modeller, tetapi kurikulumnya sudah diisi: 64 modul
+// per Academy dengan sebaran tingkat yang sama seperti S13–S16, tanpa penanda
+// coming soon, dan tetap lengkap di ketiga sumber lobi.
 const BARU = {
-  S18: { nama: /Nuclear/i, peran: 'NUCLEAR ENGINEER', kata: ['SMR', 'BAPETEN', 'radiasi'] },
-  S19: { nama: /Energy Policy/i, peran: 'ENERGY POLICY ANALYST', kata: ['RUPTL', 'tarif', 'transisi energi'] }
+  S18: { nama: /Nuclear/i, peran: 'NUCLEAR ENGINEER', kata: ['SMR', 'BAPETEN', 'radiasi'], prefix: 'S' },
+  S19: { nama: /Energy Policy/i, peran: 'ENERGY POLICY ANALYST', kata: ['RUPTL', 'tarif', 'transisi energi'], prefix: 'T' }
 };
 for (const [id, j] of Object.entries(BARU)) {
   const meta = TRACKS_META[id];
   assert(meta, `jalur ${id} tidak ada di TRACKS_META`);
-  assert(meta.comingSoon === true, `${id} harus bertanda comingSoon`);
+  assert(!meta.comingSoon, `${id} sudah punya kurikulum — penanda comingSoon harus dicabut`);
+  assert(!/coming soon/i.test(meta.desc), `deskripsi ${id} masih menyebut coming soon`);
+  assert.equal(modul(id), 64, `${id} harus punya 64 modul seperti S13–S16`);
+  const perLevel = {};
+  for (const m of CURRICULUM[id]) perLevel[m.level] = (perLevel[m.level] || 0) + 1;
+  assert.deepEqual(perLevel, { L3: 18, L4: 16, L5: 15, L6: 15 }, `sebaran tingkat ${id} tidak sama dengan S16`);
+  for (const m of CURRICULUM[id]) {
+    assert(new RegExp('^' + m.level.slice(1) + j.prefix + '\\.\\d{2}$').test(m.code), `kode modul ${m.code} tidak sesuai prefix ${id}`);
+    assert(m.title && m.category && [4, 6, 8].includes(m.jp) && ['T', 'T+P'].includes(m.mode), `modul ${m.code} tidak lengkap`);
+  }
+  assert.equal(new Set(CURRICULUM[id].map(m => m.code)).size, 64, `ada kode modul kembar di ${id}`);
   assert(j.nama.test(ACADEMY_NAMES[id] || ''), `nama Academy ${id} belum terdaftar`);
   for (const kata of j.kata) {
     assert((meta.desc + ' ' + meta.tagline).toLowerCase().includes(kata.toLowerCase()),

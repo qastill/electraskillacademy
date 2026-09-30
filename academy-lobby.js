@@ -25,8 +25,8 @@
     S14: ['HYDROGEN ENGINEER', 'Elektrolisis · Green hydrogen · Fuel cell', '#a5dee0', 'hydrogen', 'tank', 'helmet'],
     S15: ['BATTERY & BESS ENGINEER', 'Penyimpanan energi · BMS · Integrasi grid', '#c2d4a0', 'battery', 'data', 'helmet'],
     S16: ['AUTOMATION ENGINEER', 'PLC · Robotika · Kontrol industri', '#b3c3e7', 'robot', 'panel', 'helmet'],
-    // Jalur ke-17 sampai ke-19 masih disiapkan: belum punya kurikulum, jadi tombol
-    // masuknya diganti penanda "Segera hadir" dan nomor panggungnya bukan 1–16.
+    // Jalur yang belum punya kurikulum (comingSoon) tampil dengan penanda
+    // "Segera hadir" dan nomor panggungnya bukan urutan biasa.
     S17: ['ENERGY MODELLER', 'LEAP · OSeMOSYS · HOMER · PyPSA · PLEXOS', '#d6c2a8', 'model', 'chart', 'hair'],
     S18: ['NUCLEAR ENGINEER', 'Reaktor · SMR · Proteksi radiasi · Keselamatan', '#b9dcd2', 'atom', 'dome', 'helmet'],
     S19: ['ENERGY POLICY ANALYST', 'Regulasi · RUPTL · Tarif · Transisi energi', '#e6cf9e', 'policy', 'chart', 'hair']
@@ -114,7 +114,7 @@
     document.getElementById('career-role').textContent = c[0];
     const soon = !!(window.TRACKS_META && TRACKS_META[id] && TRACKS_META[id].comingSoon
       && !(window.CURRICULUM && CURRICULUM[id] && CURRICULUM[id].length));
-    document.getElementById('academy-number').textContent = soon ? 'SEGERA HADIR' : id.slice(1).padStart(2, '0') + ' / 16';
+    document.getElementById('academy-number').textContent = soon ? 'SEGERA HADIR' : id.slice(1).padStart(2, '0') + ' / ' + ids.length;
     document.getElementById('academy-selected-name').textContent = ACADEMY_NAMES[id];
     document.getElementById('academy-selected-description').textContent = c[1];
     document.getElementById('academy-status').textContent = soon

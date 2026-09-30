@@ -9,9 +9,8 @@ function setup(){
  for(const f of ['data/app-data.js','academy-names.js','academy-journey.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c);
  return c;
 }
-test('all 16 Academies have real art, curriculum-derived counts and the next incomplete stage',()=>{
- const c=setup();for(let i=1;i<=16;i++){
-  const id='S'+i;
+test('all Academies with curriculum have real art, curriculum-derived counts and the next incomplete stage',()=>{
+ const c=setup();for(const id of [...Array.from({length:16},(_,i)=>'S'+(i+1)),'S18','S19']){
   assert(fs.existsSync(path.join(root,'track-art',id.toLowerCase()+'.webp')));
   const data=c.LEVELS.map((lvl,index)=>{const modules=index<2?c.CURRICULUM[lvl.id]:c.CURRICULUM[id].filter(m=>m.level===lvl.id);return {lvl,total:modules.length,passed:index===0?modules.length:0,complete:index===0};});
   const html=c.esaJourneyHero(id,data);assert(html.includes(c.ACADEMY_NAMES[id].replace(/&/g,'&amp;')));

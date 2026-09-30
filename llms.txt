@@ -51,7 +51,7 @@ Tersedia penuh (kurikulum Level 3–6 lengkap) — 8 jalur:
 - [Pembangkitan dan Renewable](https://electraacademy.com/jalur/pembangkitan-renewable/): PLTU, PLTG, PLTA, PLTS, BESS, green hydrogen.
 - [K3 Listrik](https://electraacademy.com/jalur/k3-listrik/): Ahli K3 Listrik bersertifikat kompetensi.
 
-Segera hadir (sudah diumumkan, modul masih disiapkan) — 8 jalur:
+Kurikulum tersusun, video bertahap — 10 jalur:
 - Sales & Technical Marketing: Technical sales engineer untuk vendor electrical.
 - PV & Solar Engineer: Solar design engineer untuk PLTS rooftop & utility.
 - Sustainability & Carbon Engineer: Carbon analyst, ESG specialist, GHG accounting.
@@ -60,6 +60,8 @@ Segera hadir (sudah diumumkan, modul masih disiapkan) — 8 jalur:
 - Hydrogen Energy: Green hydrogen, elektrolisis & fuel cell.
 - Baterai & BESS: Battery Energy Storage System & manajemen baterai.
 - Kontrol & Otomasi: PLC, SCADA, DCS & otomasi industri.
+- Nuclear Academy: Fisika reaktor, PWR/BWR/SMR, proteksi radiasi, keselamatan & regulasi PLTN.
+- Energy Policy Academy: KEN, RUEN, RUPTL, tarif & subsidi, PPA, JETP & analisis kebijakan transisi energi.
 
 ## Kamus istilah kelistrikan
 
