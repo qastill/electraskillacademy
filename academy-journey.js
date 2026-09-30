@@ -16,7 +16,9 @@
     S13: ['#cde49d', '#354229', 'Lihat sampah sebagai sumber energi.', 'Biogas, PLTSa, konversi limbah, dan kelayakan proyek energi.', 'Membandingkan teknologi pengolahan limbah menjadi energi beserta kelayakannya.', 'WASTE / ENERGY'],
     S14: ['#9ce9e3', '#164447', 'Molekul kecil. Potensi energi besar.', 'Elektrolisis, green hydrogen, penyimpanan, dan fuel cell.', 'Menjelaskan rantai nilai hidrogen dan mengevaluasi pilihan teknologi serta aplikasinya.', 'H₂ / HYDROGEN'],
     S15: ['#c6e6a4', '#30412a', 'Simpan energi. Seimbangkan kebutuhan.', 'Teknologi baterai, BMS, BESS, dan integrasi penyimpanan ke grid.', 'Menganalisis kebutuhan penyimpanan dan menjelaskan pilihan sistem BESS.', 'BATTERY / STORAGE'],
-    S16: ['#bccfff', '#2c3553', 'Beri sistem kemampuan untuk bergerak.', 'PLC, kontrol industri, robotika, dan otomasi cerdas.', 'Menjelaskan rancangan kontrol dan menyusun pendekatan otomasi industri.', 'CONTROL / AUTOMATION']
+    S16: ['#bccfff', '#2c3553', 'Beri sistem kemampuan untuk bergerak.', 'PLC, kontrol industri, robotika, dan otomasi cerdas.', 'Menjelaskan rancangan kontrol dan menyusun pendekatan otomasi industri.', 'CONTROL / AUTOMATION'],
+    S18: ['#b9dcd2', '#1f3a3c', 'Energi besar dari inti yang kecil.', 'Fisika reaktor, PWR/BWR/SMR, proteksi radiasi, keselamatan nuklir, dan regulasi PLTN.', 'Menjelaskan prinsip kerja reaktor dan menilai keselamatan serta kelayakan program PLTN.', 'NUCLEAR / REACTOR'],
+    S19: ['#e6cf9e', '#3d3320', 'Rancang aturan yang menggerakkan energi.', 'KEN, RUEN, RUPTL, tarif dan subsidi, PPA, pendanaan transisi, dan analisis kebijakan energi.', 'Menganalisis kebijakan energi dan menyusun rekomendasi berbasis data untuk transisi energi.', 'POLICY / TRANSITION']
   };
   window.ESA_ACADEMY_THEMES = themes;
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

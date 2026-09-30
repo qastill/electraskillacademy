@@ -2351,4 +2351,805 @@ window.QUIZ_BANK_EXT = {
    "hint": "Bedah namanya: \"On Delay\" berarti penundaan terjadi sebelum keluaran menyala, bukan sesudahnya."
   }
  ]
+,
+ "3S.01": [
+  {
+   "type": "pg",
+   "q": "Keunggulan utama PLTN sebagai pembangkit beban dasar dibanding PLTS dan PLTB adalah…",
+   "opts": [
+    "Biaya pembangunannya paling murah",
+    "Tidak membutuhkan sistem pendingin",
+    "Menghasilkan listrik rendah karbon secara terus-menerus tanpa bergantung cuaca",
+    "Bisa dibangun dalam hitungan bulan"
+   ],
+   "a": 2,
+   "explain": "PLTN beroperasi dengan faktor kapasitas sangat tinggi dan keluarannya tidak bergantung pada matahari atau angin, sehingga cocok menanggung beban dasar dengan emisi operasi yang hampir nol. Biaya modalnya justru tinggi dan waktu pembangunannya bertahun-tahun.",
+   "hint": "Bandingkan sifat keluaran tiap pembangkit sepanjang hari dan sepanjang musim."
+  },
+  {
+   "type": "pg",
+   "q": "Bagian PLTN yang mengubah energi hasil fisi menjadi listrik adalah…",
+   "opts": [
+    "Turbin uap yang memutar generator",
+    "Batang kendali yang bergerak naik-turun",
+    "Perisai beton pengungkung reaktor",
+    "Pompa pendingin primer"
+   ],
+   "a": 0,
+   "explain": "Panas fisi dipakai untuk menghasilkan uap, dan uap itulah yang memutar turbin yang dikopel ke generator. Prinsip konversi akhirnya sama dengan PLTU, hanya sumber panasnya yang berbeda.",
+   "hint": "Ikuti alur energinya: panas, uap, gerak putar, lalu listrik. Komponen mana yang ada di ujung rantai?"
+  },
+  {
+   "type": "pg",
+   "q": "Satuan yang lazim dipakai untuk menyatakan daya listrik bersih sebuah unit PLTN adalah…",
+   "opts": [
+    "MWh per detik",
+    "Sievert per jam",
+    "Becquerel",
+    "MWe (megawatt elektrik)"
+   ],
+   "a": 3,
+   "explain": "Daya listrik keluaran pembangkit dinyatakan dalam megawatt elektrik (MWe) untuk membedakannya dari daya termal reaktor (MWt). Sievert dan becquerel adalah satuan radiasi, bukan daya.",
+   "hint": "Pisahkan dulu mana satuan daya dan mana satuan radiasi, lalu cari yang khusus menyebut listrik."
+  },
+  {
+   "type": "pg",
+   "q": "Rasio daya listrik terhadap daya termal reaktor (sekitar 33 persen pada PLTN konvensional) disebut…",
+   "opts": [
+    "Faktor beban",
+    "Efisiensi termal",
+    "Faktor kapasitas",
+    "Burnup"
+   ],
+   "a": 1,
+   "explain": "Efisiensi termal adalah perbandingan daya listrik yang dihasilkan terhadap daya panas yang dibangkitkan reaktor. Faktor kapasitas membandingkan energi yang benar-benar diproduksi dengan energi maksimum teoretis dalam satu periode, sedangkan burnup menyatakan energi yang diambil dari bahan bakar.",
+   "hint": "Ada dua besaran daya di PLTN: yang dihasilkan teras dan yang keluar dari generator. Istilah apa yang membandingkan keduanya?"
+  },
+  {
+   "type": "pg",
+   "q": "Pembangkit yang paling mirip dengan PLTN dari sisi siklus uap dan turbinnya adalah…",
+   "opts": [
+    "PLTS terapung",
+    "PLTU batu bara",
+    "PLTB lepas pantai",
+    "PLTA run-of-river"
+   ],
+   "a": 1,
+   "explain": "PLTN dan PLTU sama-sama pembangkit termal bersiklus uap: air dipanaskan menjadi uap, uap memutar turbin, lalu dikondensasikan kembali. Perbedaan pokoknya ada pada sumber panas, yaitu reaksi fisi dan bukan pembakaran.",
+   "hint": "Cari pembangkit lain yang juga memanaskan air menjadi uap untuk memutar turbin."
+  },
+  {
+   "type": "pg",
+   "q": "Alasan PLTN membutuhkan pendinginan terus-menerus bahkan setelah reaktor dipadamkan adalah…",
+   "opts": [
+    "Turbin masih berputar beberapa hari",
+    "Generator harus tetap dijaga hangat",
+    "Batang kendali menghasilkan panas saat dimasukkan",
+    "Bahan bakar memancarkan panas peluruhan dari produk fisi yang masih radioaktif"
+   ],
+   "a": 3,
+   "explain": "Setelah reaksi berantai berhenti, produk fisi di dalam bahan bakar masih meluruh dan melepaskan panas peluruhan yang awalnya beberapa persen dari daya penuh. Tanpa pendinginan, panas ini cukup untuk merusak bahan bakar.",
+   "hint": "Reaksi berantai bisa dihentikan seketika, tetapi apakah semua sumber panas ikut berhenti?"
+  }
+ ],
+ "3S.03": [
+  {
+   "type": "pg",
+   "q": "Reaktor berada dalam keadaan kritis ketika faktor multiplikasi neutron (k-efektif) bernilai…",
+   "opts": [
+    "Nol",
+    "Kurang dari satu",
+    "Tepat satu",
+    "Lebih dari satu"
+   ],
+   "a": 2,
+   "explain": "Pada k-efektif sama dengan satu, jumlah neutron tiap generasi tetap sehingga daya reaktor stabil. Nilai di bawah satu berarti subkritis dan reaksi mereda, sedangkan di atas satu berarti superkritis dan daya naik.",
+   "hint": "Pikirkan generasi neutron: berapa neutron baru yang harus lahir dari tiap neutron yang hilang agar populasinya tidak berubah?"
+  },
+  {
+   "type": "pg",
+   "q": "Fungsi moderator seperti air ringan atau grafit di dalam teras reaktor termal adalah…",
+   "opts": [
+    "Memperlambat neutron cepat agar lebih mudah memicu fisi pada U-235",
+    "Menyerap neutron berlebih untuk menghentikan reaksi",
+    "Mendinginkan bahan bakar dari luar bejana",
+    "Menghasilkan neutron tambahan"
+   ],
+   "a": 0,
+   "explain": "Neutron hasil fisi lahir dengan energi tinggi, padahal peluang U-235 membelah jauh lebih besar untuk neutron lambat. Moderator menurunkan energi neutron melalui tumbukan berulang tanpa banyak menyerapnya.",
+   "hint": "Peluang fisi U-235 bergantung pada kecepatan neutron. Perubahan apa yang diinginkan pada neutron cepat?"
+  },
+  {
+   "type": "pg",
+   "q": "Isotop uranium yang mudah membelah oleh neutron lambat dan menjadi bahan bakar utama reaktor termal adalah…",
+   "opts": [
+    "U-234",
+    "U-238",
+    "U-239",
+    "U-235"
+   ],
+   "a": 3,
+   "explain": "U-235 bersifat fisil, artinya dapat membelah oleh neutron berenergi rendah sekalipun. U-238 yang jauh lebih melimpah bersifat fertil: ia menyerap neutron dan berubah menjadi plutonium, tetapi tidak membelah oleh neutron lambat.",
+   "hint": "Bedakan istilah fisil dan fertil; hanya satu isotop uranium alam yang fisil."
+  },
+  {
+   "type": "pg",
+   "q": "Energi yang dilepaskan oleh satu peristiwa fisi inti U-235 kira-kira sebesar…",
+   "opts": [
+    "2 eV",
+    "200 MeV",
+    "200 keV",
+    "200 GeV"
+   ],
+   "a": 1,
+   "explain": "Satu fisi melepaskan sekitar 200 MeV, sebagian besar sebagai energi kinetik fragmen fisi yang kemudian menjadi panas. Angka ini puluhan juta kali lebih besar daripada energi satu reaksi kimia pembakaran yang hanya beberapa eV.",
+   "hint": "Bandingkan orde energi reaksi kimia (beberapa eV) dengan reaksi inti yang jutaan kali lebih kuat."
+  },
+  {
+   "type": "pg",
+   "q": "Batang kendali dibuat dari bahan seperti boron atau kadmium karena bahan tersebut…",
+   "opts": [
+    "Memancarkan neutron ketika dipanaskan",
+    "Menyerap neutron dengan kuat sehingga dapat menurunkan reaktivitas",
+    "Memantulkan neutron kembali ke teras",
+    "Memperlambat neutron seperti moderator"
+   ],
+   "a": 1,
+   "explain": "Boron dan kadmium memiliki tampang lintang serapan neutron yang sangat besar. Memasukkan batang kendali berarti mengambil neutron dari populasi sehingga reaksi berantai mereda; menariknya membuat reaksi menguat.",
+   "hint": "Untuk mengendalikan populasi neutron, bahan apa yang paling berguna: yang menambah, memantulkan, atau yang mengambil neutron?"
+  },
+  {
+   "type": "pg",
+   "q": "Kendali reaktor dimungkinkan secara praktis karena sebagian kecil neutron fisi dilepaskan…",
+   "opts": [
+    "Dari moderator air",
+    "Dari batang kendali",
+    "Hanya saat reaktor dipadamkan",
+    "Beberapa detik kemudian oleh produk fisi (neutron kasip)"
+   ],
+   "a": 3,
+   "explain": "Sekitar 0,65 persen neutron pada fisi U-235 adalah neutron kasip yang muncul beberapa detik setelah fisi. Kehadirannya memperpanjang waktu respons daya reaktor dari orde mikrodetik menjadi orde detik, sehingga operator dan sistem kendali sempat bereaksi.",
+   "hint": "Bayangkan kalau semua neutron lahir seketika: seberapa cepat daya bisa berubah, dan sempatkah dikendalikan?"
+  }
+ ],
+ "3S.06": [
+  {
+   "type": "pg",
+   "q": "Ciri khas reaktor PWR dibanding BWR adalah…",
+   "opts": [
+    "Uap dibentuk langsung di dalam teras lalu dialirkan ke turbin",
+    "Menggunakan grafit sebagai moderator",
+    "Air di sirkuit primer dijaga bertekanan tinggi agar tidak mendidih, dan uap dibuat di pembangkit uap terpisah",
+    "Tidak memerlukan bejana tekan"
+   ],
+   "a": 2,
+   "explain": "PWR menjaga air primer pada tekanan sekitar 150 bar sehingga tetap cair pada suhu tinggi. Panasnya dipindahkan ke sirkuit sekunder melalui pembangkit uap, dan uap sekunder itulah yang memutar turbin. Pada BWR, air mendidih langsung di teras.",
+   "hint": "Kata kunci pada nama kedua reaktor menunjukkan apa yang terjadi pada air di teras: ditekan atau dididihkan."
+  },
+  {
+   "type": "pg",
+   "q": "Pada reaktor BWR, uap yang memutar turbin berasal dari…",
+   "opts": [
+    "Air yang mendidih langsung di dalam teras reaktor",
+    "Sirkuit sekunder yang terpisah dari teras",
+    "Boiler berbahan bakar gas",
+    "Pembangkit uap heliks"
+   ],
+   "a": 0,
+   "explain": "BWR hanya memiliki satu sirkuit: air pendingin mendidih di teras dan uapnya langsung dialirkan ke turbin. Akibatnya ruang turbin ikut menjadi area terkendali radiasi selama operasi.",
+   "hint": "BWR berarti Boiling Water Reactor; di mana pendidihan itu terjadi?"
+  },
+  {
+   "type": "pg",
+   "q": "Reaktor PHWR tipe CANDU dapat memakai uranium alam tanpa pengayaan karena…",
+   "opts": [
+    "Terasnya lebih panas",
+    "Menggunakan bahan bakar plutonium murni",
+    "Tidak memerlukan moderator",
+    "Memakai air berat (D2O) yang sangat sedikit menyerap neutron"
+   ],
+   "a": 3,
+   "explain": "Air berat hampir tidak menyerap neutron sehingga ekonomi neutron di teras sangat baik. Dengan begitu konsentrasi U-235 alami sebesar 0,7 persen sudah cukup untuk mempertahankan reaksi berantai, tanpa perlu pengayaan.",
+   "hint": "Reaksi berantai gagal kalau terlalu banyak neutron hilang. Bahan moderator mana yang paling hemat neutron?"
+  },
+  {
+   "type": "pg",
+   "q": "Menurut definisi IAEA, sebuah reaktor digolongkan SMR bila daya listrik per modulnya…",
+   "opts": [
+    "Tepat 1.000 MWe",
+    "Paling besar sekitar 300 MWe",
+    "Di atas 1.600 MWe",
+    "Kurang dari 1 kWe"
+   ],
+   "a": 1,
+   "explain": "SMR (Small Modular Reactor) didefinisikan IAEA sebagai reaktor dengan daya sampai sekitar 300 MWe per modul, dirancang agar sebagian besar komponennya dibuat di pabrik dan dirakit di tapak. Reaktor daya besar konvensional berada di kisaran 1.000 MWe ke atas.",
+   "hint": "Kata Small pada SMR merujuk pada daya, dan skalanya jauh di bawah PLTN konvensional seribuan megawatt."
+  },
+  {
+   "type": "pg",
+   "q": "Reaktor HTGR menggunakan pendingin gas helium dan bahan bakar TRISO, yang memberi keunggulan…",
+   "opts": [
+    "Tidak menghasilkan limbah radioaktif sama sekali",
+    "Suhu keluaran sangat tinggi untuk panas proses dan bahan bakar yang tahan terhadap pelepasan produk fisi",
+    "Bisa dioperasikan tanpa sistem pendingin",
+    "Menggunakan air laut sebagai moderator"
+   ],
+   "a": 1,
+   "explain": "Helium memungkinkan suhu keluaran 700 sampai 950 derajat Celsius, cocok untuk produksi hidrogen dan panas industri. Partikel TRISO berlapis keramik menahan produk fisi bahkan pada suhu tinggi, sehingga keselamatannya melekat pada bahan bakarnya.",
+   "hint": "Perhatikan huruf HT pada namanya, lalu pikirkan aplikasi apa yang membutuhkan suhu setinggi itu."
+  },
+  {
+   "type": "pg",
+   "q": "Alasan utama pembangunan SMR dinilai lebih mudah dibiayai daripada PLTN skala besar adalah…",
+   "opts": [
+    "Harga per kWh-nya pasti lebih murah",
+    "Tidak memerlukan izin dari regulator",
+    "Bahan bakarnya gratis",
+    "Kebutuhan modal awal per proyek lebih kecil dan risiko konstruksi lebih terkendali karena dibuat modular di pabrik"
+   ],
+   "a": 3,
+   "explain": "PLTN besar membutuhkan modal puluhan miliar dolar dengan risiko keterlambatan tinggi. SMR memecah investasi menjadi modul-modul lebih kecil yang dibangun bertahap, sehingga eksposur modal dan risiko jadwal berkurang. Biaya per kWh-nya belum tentu lebih rendah.",
+   "hint": "Pikirkan dari sudut pandang investor: apa yang paling menakutkan pada proyek nuklir besar, dan bagian mana yang dijawab oleh konsep modular?"
+  }
+ ],
+ "3S.12": [
+  {
+   "type": "pg",
+   "q": "Satuan yang menyatakan dosis efektif, yaitu dampak biologis radiasi pada tubuh manusia, adalah…",
+   "opts": [
+    "Gray (Gy)",
+    "Becquerel (Bq)",
+    "Sievert (Sv)",
+    "Coulomb per kilogram"
+   ],
+   "a": 2,
+   "explain": "Sievert dipakai untuk dosis ekuivalen dan dosis efektif yang sudah memperhitungkan jenis radiasi dan kepekaan organ. Gray hanya menyatakan energi yang diserap per kilogram bahan, sedangkan becquerel menyatakan laju peluruhan sumber.",
+   "hint": "Tiga satuan itu menjawab tiga pertanyaan berbeda: seberapa aktif sumbernya, seberapa banyak energi diserap, dan seberapa besar efeknya pada tubuh."
+  },
+  {
+   "type": "pg",
+   "q": "Prinsip ALARA dalam proteksi radiasi berarti…",
+   "opts": [
+    "Dosis dijaga serendah yang dapat dicapai secara wajar dengan mempertimbangkan faktor sosial dan ekonomi",
+    "Dosis harus nol dalam keadaan apa pun",
+    "Dosis boleh berapa pun asal di bawah nilai batas",
+    "Hanya pekerja radiasi yang perlu dilindungi"
+   ],
+   "a": 0,
+   "explain": "ALARA (As Low As Reasonably Achievable) menuntut optimisasi: setelah batas dosis dipenuhi, paparan masih harus terus ditekan sejauh masuk akal secara teknis dan ekonomi. Memenuhi batas dosis saja belum cukup.",
+   "hint": "Uraikan kepanjangannya kata per kata; perhatikan kata reasonably."
+  },
+  {
+   "type": "pg",
+   "q": "Tiga cara dasar mengurangi dosis dari sumber radiasi eksternal adalah…",
+   "opts": [
+    "Suhu, tekanan dan kelembapan",
+    "Masker, sarung tangan dan sepatu",
+    "Ventilasi, filtrasi dan dekontaminasi",
+    "Waktu, jarak dan perisai"
+   ],
+   "a": 3,
+   "explain": "Dosis eksternal turun bila waktu paparan dipersingkat, jarak ke sumber diperbesar (laju dosis turun mengikuti kuadrat jarak), dan perisai dipasang di antara sumber dan pekerja. Ventilasi dan APD lebih berperan untuk mencegah kontaminasi internal.",
+   "hint": "Pikirkan sumber yang tidak bisa dimatikan: apa saja yang bisa diubah pada posisi dan lamanya pekerja di dekatnya?"
+  },
+  {
+   "type": "pg",
+   "q": "Jenis radiasi yang dapat dihentikan oleh selembar kertas atau lapisan luar kulit adalah…",
+   "opts": [
+    "Gamma",
+    "Alfa",
+    "Neutron",
+    "Sinar-X"
+   ],
+   "a": 1,
+   "explain": "Partikel alfa bermuatan besar dan berat sehingga jangkauannya sangat pendek; kertas atau kulit mati sudah menghentikannya. Bahayanya justru muncul bila zat pemancar alfa masuk ke tubuh lewat pernapasan atau makanan. Gamma dan neutron sangat tembus dan butuh timbal, beton atau air.",
+   "hint": "Semakin berat dan bermuatan sebuah partikel, semakin cepat ia kehilangan energi di dalam bahan."
+  },
+  {
+   "type": "pg",
+   "q": "Jika jarak ke sebuah sumber titik radiasi gamma digandakan, laju dosis yang diterima menjadi sekitar…",
+   "opts": [
+    "Setengahnya",
+    "Seperempatnya",
+    "Tetap sama",
+    "Dua kali lipat"
+   ],
+   "a": 1,
+   "explain": "Untuk sumber titik berlaku hukum kuadrat terbalik: laju dosis berbanding terbalik dengan kuadrat jarak. Jarak dua kali lebih jauh berarti laju dosis turun menjadi satu per empat.",
+   "hint": "Radiasi menyebar ke seluruh permukaan bola di sekeliling sumber; bagaimana luas bola itu berubah ketika jari-jarinya digandakan?"
+  },
+  {
+   "type": "pg",
+   "q": "Nilai batas dosis efektif tahunan untuk pekerja radiasi yang dianut BAPETEN, dirata-rata selama lima tahun, adalah…",
+   "opts": [
+    "1 mSv",
+    "200 mSv",
+    "2 Sv",
+    "20 mSv"
+   ],
+   "a": 3,
+   "explain": "Batas dosis pekerja radiasi adalah 20 mSv per tahun dirata-rata selama lima tahun berturut-turut, dengan batas 50 mSv pada satu tahun tertentu. Anggota masyarakat dibatasi 1 mSv per tahun. Nilai ratusan milisievert hingga sievert sudah masuk wilayah efek deterministik.",
+   "hint": "Ada dua kelompok yang batasnya berbeda: pekerja radiasi dan masyarakat umum. Yang mana yang lebih besar, dan berapa kelipatannya?"
+  }
+ ],
+ "3S.15": [
+  {
+   "type": "pg",
+   "q": "Inti dari konsep pertahanan berlapis (defence in depth) pada PLTN adalah…",
+   "opts": [
+    "Satu sistem keselamatan yang sangat andal sudah cukup",
+    "Semua sistem harus dikendalikan manual oleh operator",
+    "Beberapa lapis penghalang dan tingkat perlindungan yang saling independen sehingga kegagalan satu lapis tidak langsung berujung pelepasan radioaktif",
+    "Reaktor dibangun sedalam mungkin di bawah tanah"
+   ],
+   "a": 2,
+   "explain": "Pertahanan berlapis menyusun perlindungan bertingkat, mulai dari pencegahan penyimpangan, deteksi dan kendali, pengendalian kecelakaan desain, manajemen kecelakaan parah, sampai tanggap darurat di luar tapak. Tiap tingkat dirancang agar tidak bergantung pada tingkat lainnya.",
+   "hint": "Kata lapis pada namanya menyiratkan lebih dari satu; pikirkan apa yang terjadi kalau satu lapis gagal."
+  },
+  {
+   "type": "pg",
+   "q": "Penghalang fisik pertama yang menahan produk fisi agar tidak lepas ke lingkungan adalah…",
+   "opts": [
+    "Matriks pelet bahan bakar keramik dan kelongsongnya",
+    "Gedung pengungkung beton",
+    "Bejana tekan reaktor",
+    "Menara pendingin"
+   ],
+   "a": 0,
+   "explain": "Produk fisi terbentuk di dalam pelet bahan bakar UO2 dan sebagian besar terperangkap di matriks keramiknya. Kelongsong logam membungkus pelet sebagai penghalang berikutnya, lalu disusul batas sirkuit primer dan pengungkung.",
+   "hint": "Urutkan penghalang dari yang paling dekat dengan tempat produk fisi lahir sampai yang paling luar."
+  },
+  {
+   "type": "pg",
+   "q": "Prinsip yang mengharuskan badan pengawas nuklir terpisah dari lembaga yang mempromosikan atau mengoperasikan tenaga nuklir bertujuan…",
+   "opts": [
+    "Menghemat anggaran negara",
+    "Mempercepat pembangunan PLTN",
+    "Menyatukan seluruh tanggung jawab di satu kantor",
+    "Menjaga independensi pengawasan agar keputusan keselamatan tidak dipengaruhi kepentingan produksi"
+   ],
+   "a": 3,
+   "explain": "Standar keselamatan IAEA mensyaratkan regulator yang independen secara efektif dari organisasi yang punya kepentingan mengembangkan atau mengoperasikan fasilitas nuklir. Di Indonesia pemisahan itu diwujudkan dengan BAPETEN sebagai pengawas.",
+   "hint": "Siapa yang mengawasi, dan siapa yang diawasi; apa masalahnya jika keduanya berada di bawah satu atap?"
+  },
+  {
+   "type": "pg",
+   "q": "Sistem keselamatan pasif pada reaktor generasi baru disebut pasif karena…",
+   "opts": [
+    "Hanya bekerja bila operator menekan tombol",
+    "Bekerja mengandalkan gaya alam seperti gravitasi, sirkulasi alami dan tekanan gas tanpa pompa atau catu daya listrik",
+    "Tidak pernah perlu diuji",
+    "Terletak di luar tapak PLTN"
+   ],
+   "a": 1,
+   "explain": "Sistem pasif memanfaatkan gravitasi, perbedaan massa jenis, dan tekanan tersimpan untuk mendinginkan teras. Karena tidak bergantung pada pompa, diesel, atau tindakan operator, sistem ini tetap bekerja saat catu daya hilang seperti yang terjadi di Fukushima.",
+   "hint": "Apa yang hilang di Fukushima sehingga pendinginan gagal, dan sistem seperti apa yang tidak membutuhkannya?"
+  },
+  {
+   "type": "pg",
+   "q": "Unsur budaya keselamatan yang mendorong pekerja mempertanyakan asumsi dan melaporkan kejanjilan tanpa takut disalahkan disebut…",
+   "opts": [
+    "Kepatuhan buta pada prosedur",
+    "Sikap bertanya (questioning attitude) dan lingkungan pelaporan terbuka",
+    "Kompetisi antar-shift",
+    "Rahasia perusahaan"
+   ],
+   "a": 1,
+   "explain": "Budaya keselamatan yang kuat menempatkan keselamatan di atas produksi, mendorong sikap bertanya, dan menjamin laporan kejanggalan tidak berujung hukuman. Kecelakaan besar hampir selalu didahului tanda peringatan yang diabaikan karena budaya organisasi yang lemah.",
+   "hint": "Kecelakaan besar biasanya didahului tanda-tanda kecil. Perilaku organisasi apa yang membuat tanda itu terangkat, bukan terkubur?"
+  },
+  {
+   "type": "pg",
+   "q": "Lapisan terakhir pertahanan berlapis yang bekerja bila pelepasan radioaktif ke luar tapak tidak lagi terhindarkan adalah…",
+   "opts": [
+    "Batang kendali cadangan",
+    "Pengayaan ulang bahan bakar",
+    "Penambahan moderator",
+    "Kesiapsiagaan dan tanggap darurat di luar tapak, termasuk evakuasi dan pembagian tablet iodium"
+   ],
+   "a": 3,
+   "explain": "Tingkat kelima pertahanan berlapis adalah mitigasi konsekuensi radiologis di luar tapak: rencana kedaruratan, jalur evakuasi, pembatasan konsumsi pangan, dan profilaksis iodium. Lapis ini disiapkan justru dengan asumsi semua lapis teknis di dalam pembangkit telah gagal.",
+   "hint": "Setelah semua sistem di dalam pembangkit gagal, perlindungan siapa yang masih harus dipikirkan, dan oleh siapa?"
+  }
+ ],
+ "3T.02": [
+  {
+   "type": "pg",
+   "q": "Tiga sisi trilema energi yang harus diseimbangkan pembuat kebijakan adalah…",
+   "opts": [
+    "Harga, pajak dan subsidi",
+    "Minyak, gas dan batu bara",
+    "Keamanan pasokan, keterjangkauan atau keadilan akses, dan keberlanjutan lingkungan",
+    "Pembangkit, transmisi dan distribusi"
+   ],
+   "a": 2,
+   "explain": "Trilema energi menggambarkan tarik-menarik antara menjamin pasokan yang andal, membuat energi terjangkau dan merata, serta menekan dampak lingkungan. Kebijakan yang menguatkan satu sisi sering mengorbankan sisi lain, sehingga keseimbangannya menjadi inti perdebatan kebijakan.",
+   "hint": "Kata trilema menunjuk tiga tujuan yang saling tarik-menarik, bukan tiga jenis bahan bakar atau tiga bagian sistem."
+  },
+  {
+   "type": "pg",
+   "q": "Menaikkan tarif listrik ke tingkat keekonomian untuk mengurangi beban subsidi terutama menekan sisi trilema…",
+   "opts": [
+    "Keterjangkauan bagi rumah tangga",
+    "Keamanan pasokan",
+    "Keberlanjutan lingkungan",
+    "Keandalan transmisi"
+   ],
+   "a": 0,
+   "explain": "Tarif yang mencerminkan biaya penuh memperbaiki kesehatan fiskal dan keuangan utilitas, tetapi langsung mengurangi keterjangkauan bagi pelanggan berpendapatan rendah. Itulah sebabnya reformasi tarif biasanya dibarengi subsidi tepat sasaran.",
+   "hint": "Pikirkan siapa yang paling merasakan dampak langsung kenaikan tarif, dan sisi trilema mana yang menyangkut mereka."
+  },
+  {
+   "type": "pg",
+   "q": "Kebijakan yang menambah cadangan bahan bakar strategis dan mendiversifikasi sumber impor terutama ditujukan untuk memperkuat…",
+   "opts": [
+    "Keberlanjutan lingkungan",
+    "Pertumbuhan energi terbarukan",
+    "Penurunan tarif",
+    "Keamanan pasokan energi"
+   ],
+   "a": 3,
+   "explain": "Cadangan strategis dan diversifikasi pemasok mengurangi kerentanan terhadap gangguan pasokan dan gejolak geopolitik. Keduanya adalah instrumen klasik untuk sisi keamanan energi dalam trilema.",
+   "hint": "Apa risiko yang dikurangi ketika sebuah negara punya stok cadangan dan lebih dari satu pemasok?"
+  },
+  {
+   "type": "pg",
+   "q": "Konflik trilema yang paling sering muncul saat memensiunkan PLTU batu bara lebih awal adalah…",
+   "opts": [
+    "Antara pembangkit dan transmisi",
+    "Antara keberlanjutan lingkungan di satu sisi dengan keamanan pasokan dan keterjangkauan di sisi lain",
+    "Antara pemerintah pusat dan daerah saja",
+    "Tidak ada konflik sama sekali"
+   ],
+   "a": 1,
+   "explain": "Pensiun dini PLTU menurunkan emisi, tetapi menghilangkan kapasitas beban dasar yang murah dan andal sehingga harus diganti dengan pembangkit baru plus penyimpanan. Biaya pengganti dan risiko pasokan itulah yang menjadi sumber perdebatan.",
+   "hint": "Sebutkan apa yang hilang ketika PLTU ditutup, lalu petakan ke sisi trilema yang terganggu."
+  },
+  {
+   "type": "pg",
+   "q": "Indikator yang paling tepat untuk mengukur sisi keadilan atau keterjangkauan energi adalah…",
+   "opts": [
+    "Cadangan batu bara terbukti",
+    "Rasio elektrifikasi dan porsi pengeluaran rumah tangga untuk energi",
+    "Intensitas emisi pembangkitan",
+    "Panjang jaringan transmisi"
+   ],
+   "a": 1,
+   "explain": "Rasio elektrifikasi menunjukkan seberapa merata akses listrik, sedangkan porsi belanja energi terhadap pendapatan menunjukkan keterjangkauannya. Cadangan batu bara mengukur keamanan pasokan dan intensitas emisi mengukur keberlanjutan.",
+   "hint": "Sisi ini berbicara tentang manusia sebagai pengguna: siapa yang dapat akses dan seberapa berat membayarnya."
+  },
+  {
+   "type": "pg",
+   "q": "Pendekatan yang paling masuk akal ketika tiga tujuan trilema tidak bisa dipenuhi sekaligus adalah…",
+   "opts": [
+    "Memilih satu tujuan dan mengabaikan dua lainnya selamanya",
+    "Menyerahkan sepenuhnya kepada pasar tanpa kebijakan",
+    "Menunda semua keputusan sampai teknologi sempurna",
+    "Menetapkan prioritas dan urutan waktu secara eksplisit lalu memakai instrumen pendamping untuk menutup sisi yang dikorbankan"
+   ],
+   "a": 3,
+   "explain": "Kebijakan yang baik mengakui adanya pertukaran, menetapkan prioritas yang transparan, dan menyiapkan kompensasi bagi sisi yang tertekan, misalnya subsidi tepat sasaran saat tarif naik atau cadangan saat batu bara dikurangi. Mengabaikan dua sisi sama sekali tidak berkelanjutan secara politik maupun ekonomi.",
+   "hint": "Pertukaran tidak bisa dihilangkan, tetapi bisa dikelola. Cari jawaban yang mengelola, bukan yang menghindar."
+  }
+ ],
+ "3T.06": [
+  {
+   "type": "pg",
+   "q": "Kebijakan Energi Nasional (KEN) disusun oleh Dewan Energi Nasional dan ditetapkan dalam bentuk…",
+   "opts": [
+    "Surat edaran direksi PLN",
+    "Peraturan daerah provinsi",
+    "Peraturan Pemerintah yang disetujui DPR",
+    "Keputusan menteri perdagangan"
+   ],
+   "a": 2,
+   "explain": "KEN dirancang oleh Dewan Energi Nasional, ditetapkan dengan Peraturan Pemerintah setelah mendapat persetujuan DPR. Kedudukannya di atas rencana-rencana turunan seperti RUEN, RUED dan RUKN.",
+   "hint": "KEN adalah kebijakan tingkat nasional yang mengikat semua sektor; bentuk hukum apa yang sepadan dengan kedudukan itu?"
+  },
+  {
+   "type": "pg",
+   "q": "Hubungan antara KEN dan RUEN adalah…",
+   "opts": [
+    "RUEN adalah rencana pelaksanaan lintas sektor yang menjabarkan KEN menjadi program dan target terukur",
+    "KEN adalah turunan dari RUEN",
+    "Keduanya dokumen yang sama dengan nama berbeda",
+    "RUEN hanya berlaku untuk sektor ketenagalistrikan"
+   ],
+   "a": 0,
+   "explain": "KEN memuat arah dan sasaran kebijakan, sedangkan Rencana Umum Energi Nasional menjabarkannya menjadi rencana aksi lintas sektor lengkap dengan target per periode. RUEN kemudian diturunkan lagi oleh provinsi menjadi RUED.",
+   "hint": "Salah satunya berisi arah kebijakan, satunya lagi berisi rencana pelaksanaan. Mana yang harus ada lebih dulu?"
+  },
+  {
+   "type": "pg",
+   "q": "Sasaran yang menjadi ciri utama KEN dan sering dikutip dalam perdebatan transisi energi adalah…",
+   "opts": [
+    "Daftar harga eceran BBM di tiap kota",
+    "Jadwal pemadaman bergilir",
+    "Struktur organisasi kementerian",
+    "Target bauran energi primer per sumber pada tahun tertentu"
+   ],
+   "a": 3,
+   "explain": "KEN menetapkan sasaran bauran energi primer, misalnya porsi energi baru dan terbarukan, minyak, gas dan batu bara pada tahun-tahun sasaran. Angka bauran ini menjadi tolok ukur seluruh perencanaan energi di bawahnya.",
+   "hint": "Cari sasaran yang bersifat strategis dan berjangka panjang, bukan urusan operasional harian."
+  },
+  {
+   "type": "pg",
+   "q": "Lembaga yang bertugas merancang dan merumuskan KEN serta menetapkan RUEN adalah…",
+   "opts": [
+    "Bursa Efek Indonesia",
+    "Dewan Energi Nasional yang diketuai Presiden",
+    "Perusahaan Listrik Negara",
+    "Badan Pusat Statistik"
+   ],
+   "a": 1,
+   "explain": "Dewan Energi Nasional dibentuk berdasarkan UU Energi, diketuai Presiden dengan Menteri ESDM sebagai ketua harian, dan beranggotakan unsur pemerintah serta pemangku kepentingan. Tugasnya antara lain merancang KEN dan menetapkan RUEN.",
+   "hint": "Kebijakan energi bersifat lintas kementerian; lembaga mana yang dirancang untuk memayungi lintas sektor itu?"
+  },
+  {
+   "type": "pg",
+   "q": "Turunan RUEN di tingkat provinsi dikenal dengan nama…",
+   "opts": [
+    "RUPTL",
+    "RUED",
+    "RUKN",
+    "RKAP"
+   ],
+   "a": 1,
+   "explain": "Rencana Umum Energi Daerah (RUED) disusun pemerintah provinsi dengan mengacu pada RUEN dan ditetapkan melalui peraturan daerah. RUPTL dan RUKN adalah dokumen perencanaan ketenagalistrikan, bukan energi secara keseluruhan.",
+   "hint": "Perhatikan huruf D pada salah satu singkatan; huruf itu menunjuk tingkat pemerintahannya."
+  },
+  {
+   "type": "pg",
+   "q": "Alasan KEN memuat sasaran bauran energi jangka panjang sampai puluhan tahun ke depan adalah…",
+   "opts": [
+    "Agar tidak perlu direvisi selamanya",
+    "Karena harga energi tidak pernah berubah",
+    "Untuk mengganti fungsi APBN",
+    "Investasi infrastruktur energi berumur panjang dan butuh kepastian arah sebelum dibangun"
+   ],
+   "a": 3,
+   "explain": "Pembangkit, kilang dan jaringan beroperasi 25 sampai 50 tahun, sehingga keputusan investasi hari ini menentukan bauran energi puluhan tahun mendatang. Sasaran jangka panjang memberi sinyal arah bagi investor dan perencana, meski tetap dapat ditinjau berkala.",
+   "hint": "Pikirkan umur ekonomis sebuah pembangkit dan apa yang dibutuhkan investor sebelum menanam modal sebesar itu."
+  }
+ ],
+ "3T.07": [
+  {
+   "type": "pg",
+   "q": "Dokumen perencanaan penyediaan tenaga listrik untuk sepuluh tahun ke depan yang disusun PLN dan disahkan Menteri ESDM adalah…",
+   "opts": [
+    "RUKN",
+    "RUED",
+    "RUPTL",
+    "APBN"
+   ],
+   "a": 2,
+   "explain": "Rencana Usaha Penyediaan Tenaga Listrik (RUPTL) disusun pemegang wilayah usaha, dalam hal ini PLN, untuk sepuluh tahun dan disahkan Menteri ESDM. Isinya proyeksi kebutuhan, rencana pembangkit, transmisi dan distribusi, serta kebutuhan investasinya.",
+   "hint": "Perhatikan kata usaha pada singkatannya; dokumen ini disusun oleh pelaku usaha, bukan oleh pemerintah."
+  },
+  {
+   "type": "pg",
+   "q": "Perbedaan pokok RUKN dan RUPTL adalah…",
+   "opts": [
+    "RUKN disusun pemerintah sebagai kebijakan umum ketenagalistrikan nasional, sedangkan RUPTL adalah rencana usaha pemegang wilayah usaha yang mengacu padanya",
+    "RUKN hanya berlaku untuk Jawa dan RUPTL untuk luar Jawa",
+    "RUPTL berlaku dua puluh tahun dan RUKN satu tahun",
+    "Keduanya disusun oleh DPR"
+   ],
+   "a": 0,
+   "explain": "Rencana Umum Ketenagalistrikan Nasional adalah dokumen pemerintah yang memuat arah kebijakan dan proyeksi kebutuhan nasional jangka panjang. RUPTL adalah penjabaran usaha oleh PLN untuk wilayah usahanya, dan wajib selaras dengan RUKN.",
+   "hint": "Satu dokumen berbicara tentang kebijakan, satunya tentang rencana bisnis. Siapa yang wajar menyusun masing-masing?"
+  },
+  {
+   "type": "pg",
+   "q": "Angka RUPTL yang paling menentukan besarnya kebutuhan pembangkit baru adalah…",
+   "opts": [
+    "Jumlah pegawai PLN",
+    "Harga saham perusahaan tambang",
+    "Panjang jalan tol",
+    "Proyeksi pertumbuhan permintaan listrik dan beban puncak per sistem"
+   ],
+   "a": 3,
+   "explain": "Semua rencana penambahan kapasitas dalam RUPTL diturunkan dari proyeksi permintaan energi dan beban puncak tiap sistem kelistrikan, ditambah margin cadangan. Bila proyeksi terlalu tinggi, terjadi kelebihan kapasitas yang tetap harus dibayar.",
+   "hint": "Rencana membangun pembangkit selalu diawali pertanyaan: berapa yang akan dibutuhkan, di mana, dan kapan?"
+  },
+  {
+   "type": "pg",
+   "q": "Istilah reserve margin dalam RUPTL menyatakan…",
+   "opts": [
+    "Jumlah bahan bakar di gudang",
+    "Selisih kapasitas terpasang terhadap beban puncak, sebagai cadangan untuk gangguan dan pemeliharaan",
+    "Uang kas cadangan PLN",
+    "Panjang jaringan yang belum terpakai"
+   ],
+   "a": 1,
+   "explain": "Margin cadangan adalah kelebihan kapasitas pembangkit di atas beban puncak, dinyatakan dalam persen. Nilainya harus cukup untuk menutup unit yang keluar karena gangguan atau pemeliharaan, tetapi terlalu besar berarti aset menganggur yang membebani biaya.",
+   "hint": "Mengapa kapasitas terpasang harus lebih besar daripada beban tertinggi yang pernah dilayani?"
+  },
+  {
+   "type": "pg",
+   "q": "Alasan RUPTL diperbarui secara berkala, bukan disusun sekali untuk sepuluh tahun, adalah…",
+   "opts": [
+    "Karena Menteri berganti setiap tahun",
+    "Pertumbuhan permintaan, harga teknologi dan kebijakan energi berubah sehingga rencana harus disesuaikan",
+    "Untuk menambah jumlah halaman",
+    "Karena PLN tidak punya data"
+   ],
+   "a": 1,
+   "explain": "Realisasi permintaan sering menyimpang dari proyeksi, biaya PLTS dan baterai turun cepat, dan target bauran energi berubah. Pembaruan berkala memungkinkan rencana pembangkit, transmisi dan investasi menyesuaikan kondisi terbaru tanpa mengorbankan arah jangka panjang.",
+   "hint": "Bandingkan asumsi RUPTL sepuluh tahun lalu dengan kenyataan hari ini; asumsi apa saja yang meleset?"
+  },
+  {
+   "type": "pg",
+   "q": "Bagian RUPTL yang paling relevan bagi pengembang pembangkit swasta (IPP) yang mencari peluang proyek adalah…",
+   "opts": [
+    "Bab tentang sejarah perusahaan",
+    "Daftar tarif pelanggan rumah tangga",
+    "Lampiran struktur organisasi",
+    "Daftar rencana penambahan pembangkit per sistem beserta jenis, kapasitas dan tahun operasinya"
+   ],
+   "a": 3,
+   "explain": "Rencana penambahan pembangkit dalam RUPTL menunjukkan proyek mana yang akan dilelang atau dibuka bagi swasta, lengkap dengan lokasi, jenis energi, kapasitas dan tahun target operasi. Dari sinilah pengembang menyusun strategi pengembangan proyeknya.",
+   "hint": "Pengembang butuh tahu apa yang akan dibangun, di mana, dan kapan; bagian mana yang menjawab ketiganya?"
+  }
+ ],
+ "3T.10": [
+  {
+   "type": "pg",
+   "q": "Biaya Pokok Penyediaan (BPP) pembangkitan menyatakan…",
+   "opts": [
+    "Harga jual listrik ke pelanggan industri",
+    "Biaya membangun satu gardu induk",
+    "Rata-rata biaya yang dikeluarkan untuk menyediakan tiap kWh listrik di suatu sistem atau wilayah",
+    "Besaran pajak penerangan jalan"
+   ],
+   "a": 2,
+   "explain": "BPP adalah biaya rata-rata per kWh untuk menyediakan tenaga listrik, dihitung per sistem atau wilayah dan ditetapkan Menteri ESDM. Nilainya dipakai sebagai acuan harga pembelian listrik dari pembangkit swasta dan untuk menghitung subsidi.",
+   "hint": "Kata pokok pada istilah ini merujuk pada biaya penyediaan, bukan harga jual atau pajak."
+  },
+  {
+   "type": "pg",
+   "q": "LCOE (levelized cost of electricity) dihitung dengan cara…",
+   "opts": [
+    "Membagi total biaya seumur hidup pembangkit yang sudah didiskonto dengan total energi seumur hidup yang juga didiskonto",
+    "Menjumlahkan biaya bahan bakar satu tahun saja",
+    "Membagi harga jual dengan jumlah pelanggan",
+    "Mengalikan kapasitas dengan tarif"
+   ],
+   "a": 0,
+   "explain": "LCOE meratakan seluruh biaya modal, operasi, pemeliharaan, bahan bakar dan dekomisioning sepanjang umur pembangkit terhadap seluruh kWh yang dihasilkannya, keduanya didiskonto ke nilai sekarang. Hasilnya adalah biaya per kWh yang bisa dibandingkan antar-teknologi.",
+   "hint": "Kata levelized berarti meratakan biaya sepanjang umur proyek terhadap seluruh energi yang dihasilkannya."
+  },
+  {
+   "type": "pg",
+   "q": "Faktor yang paling menurunkan LCOE pembangkit padat modal seperti PLTS, PLTB dan PLTN adalah…",
+   "opts": [
+    "Harga bahan bakar yang tinggi",
+    "Umur proyek yang pendek",
+    "Pajak yang tinggi",
+    "Biaya modal per kW yang rendah, bunga pinjaman rendah dan faktor kapasitas tinggi"
+   ],
+   "a": 3,
+   "explain": "Pada pembangkit padat modal, sebagian besar biaya adalah investasi awal dan bunganya. Menurunkan biaya modal dan bunga, serta memperbanyak kWh yang dihasilkan lewat faktor kapasitas tinggi, langsung menekan biaya per kWh. Bahan bakar hampir tidak berperan pada PLTS dan PLTB.",
+   "hint": "Pisahkan dulu komponen biaya yang dominan pada pembangkit tanpa bahan bakar, lalu pikirkan apa yang membuat pembaginya, yaitu jumlah kWh, membesar."
+  },
+  {
+   "type": "pg",
+   "q": "Komponen biaya yang dominan pada BPP sistem yang mengandalkan PLTU batu bara dan PLTG gas adalah…",
+   "opts": [
+    "Biaya iklan",
+    "Biaya bahan bakar",
+    "Biaya sewa kantor",
+    "Biaya pelatihan"
+   ],
+   "a": 1,
+   "explain": "Pada sistem berbasis pembangkit termal, bahan bakar biasanya menjadi komponen terbesar BPP, sehingga BPP sangat sensitif terhadap harga batu bara, gas dan nilai tukar. Karena itu kebijakan DMO batu bara dan harga gas sangat memengaruhi biaya listrik.",
+   "hint": "Bayangkan struktur biaya pembangkit yang harus membeli bahan bakar setiap hari; pos mana yang paling besar?"
+  },
+  {
+   "type": "pg",
+   "q": "Alasan LCOE PLTS yang lebih rendah dari PLTU belum otomatis berarti sistem berbasis PLTS lebih murah adalah…",
+   "opts": [
+    "PLTS tidak menghasilkan listrik",
+    "LCOE tidak memperhitungkan biaya integrasi seperti penyimpanan, cadangan dan jaringan untuk mengatasi sifat intermiten",
+    "LCOE hanya berlaku untuk pembangkit gas",
+    "PLTU tidak punya biaya modal"
+   ],
+   "a": 1,
+   "explain": "LCOE membandingkan biaya per kWh di titik pembangkit dan mengabaikan kapan listrik itu tersedia. PLTS hanya berproduksi siang hari, sehingga sistem butuh baterai, pembangkit cadangan atau jaringan tambahan yang biayanya tidak tercermin di LCOE. Perbandingan yang adil memakai biaya sistem.",
+   "hint": "Tanyakan apa yang tidak ditangkap sebuah angka per kWh: kapan listrik itu tersedia dan siapa yang menutup saat tidak tersedia."
+  },
+  {
+   "type": "pg",
+   "q": "Jika BPP suatu wilayah lebih tinggi daripada BPP nasional, dampak kebijakannya adalah…",
+   "opts": [
+    "Pelanggan di wilayah itu membayar tarif berbeda dari wilayah lain",
+    "Wilayah itu dilarang membangun pembangkit",
+    "Tidak ada dampak apa pun",
+    "Harga patokan pembelian listrik dari pembangkit swasta di wilayah itu cenderung lebih tinggi dan kebutuhan subsidi atau kompensasinya lebih besar"
+   ],
+   "a": 3,
+   "explain": "Karena tarif pelanggan berlaku seragam secara nasional, wilayah dengan BPP tinggi seperti sistem terisolasi menanggung selisih yang ditutup subsidi atau kompensasi. BPP wilayah juga menjadi acuan batas harga pembelian dari pembangkit swasta di wilayah tersebut.",
+   "hint": "Tarif pelanggan sama di seluruh Indonesia, tetapi biaya penyediaannya tidak; siapa yang menanggung selisihnya?"
+  }
+ ],
+ "3T.11": [
+  {
+   "type": "pg",
+   "q": "Golongan pelanggan rumah tangga yang menerima subsidi listrik dalam APBN adalah…",
+   "opts": [
+    "Semua pelanggan industri besar",
+    "Pelanggan bisnis daya di atas 200 kVA",
+    "Rumah tangga daya 450 VA dan 900 VA yang masuk kategori tidak mampu",
+    "Gedung pemerintah"
+   ],
+   "a": 2,
+   "explain": "Subsidi listrik diarahkan kepada rumah tangga kecil berdaya 450 VA dan 900 VA yang masuk basis data penerima, ditambah beberapa golongan sosial dan usaha kecil. Golongan berdaya besar membayar tarif keekonomian.",
+   "hint": "Subsidi dimaksudkan untuk yang paling membutuhkan; golongan daya mana yang paling dekat dengan gambaran itu?"
+  },
+  {
+   "type": "pg",
+   "q": "Mekanisme tariff adjustment yang berlaku untuk pelanggan nonsubsidi menyesuaikan tarif secara berkala berdasarkan…",
+   "opts": [
+    "Nilai tukar rupiah, harga minyak mentah Indonesia, inflasi dan harga patokan batu bara",
+    "Jumlah pegawai PLN",
+    "Hasil pemilihan umum",
+    "Curah hujan tahunan"
+   ],
+   "a": 0,
+   "explain": "Empat parameter ekonomi makro, yaitu kurs, ICP, inflasi dan harga patokan batu bara, menjadi dasar penyesuaian tarif pelanggan nonsubsidi. Bila pemerintah memutuskan tarif tidak naik meski parameternya berubah, selisihnya dibayar sebagai kompensasi kepada PLN.",
+   "hint": "Cari besaran-besaran yang benar-benar menggerakkan biaya produksi listrik, terutama bahan bakar dan pembelian dalam mata uang asing."
+  },
+  {
+   "type": "pg",
+   "q": "Perbedaan antara subsidi listrik dan kompensasi listrik adalah…",
+   "opts": [
+    "Keduanya sama persis",
+    "Subsidi dibayar pelanggan dan kompensasi dibayar PLN",
+    "Kompensasi hanya untuk pelanggan industri",
+    "Subsidi menutup selisih tarif golongan bersubsidi terhadap biaya, sedangkan kompensasi menutup selisih akibat tarif nonsubsidi yang tidak disesuaikan ke tingkat keekonomian"
+   ],
+   "a": 3,
+   "explain": "Subsidi direncanakan dalam APBN untuk golongan yang memang berhak menerima. Kompensasi muncul ketika pemerintah menahan tarif golongan nonsubsidi di bawah tarif keekonomian, sehingga negara mengganti kekurangan pendapatan PLN. Keduanya membebani anggaran, tetapi dasar kebijakannya berbeda.",
+   "hint": "Satu dibayar karena pelanggan berhak, satu lagi dibayar karena pemerintah memilih menahan harga; mana yang mana?"
+  },
+  {
+   "type": "pg",
+   "q": "Tarif listrik yang dibedakan menurut golongan daya dan jenis pelanggan disebut…",
+   "opts": [
+    "Biaya pokok penyediaan",
+    "Struktur tarif tenaga listrik",
+    "Margin cadangan",
+    "Faktor daya"
+   ],
+   "a": 1,
+   "explain": "Struktur tarif mengelompokkan pelanggan ke dalam golongan seperti rumah tangga, bisnis, industri, sosial dan pemerintah, masing-masing dengan batas daya dan tarif per kWh sendiri. Pengelompokan ini menjadi alat untuk subsidi silang dan penargetan subsidi.",
+   "hint": "Istilah yang dicari adalah tentang cara menetapkan harga bagi pelanggan, bukan tentang biaya atau teknis sistem."
+  },
+  {
+   "type": "pg",
+   "q": "Kritik utama terhadap subsidi energi yang tidak tepat sasaran adalah…",
+   "opts": [
+    "Subsidi membuat listrik menjadi terlalu mahal",
+    "Manfaatnya lebih banyak dinikmati kelompok mampu yang mengonsumsi energi lebih besar sementara membebani anggaran negara",
+    "Subsidi meningkatkan emisi nol",
+    "Subsidi hanya dinikmati pemerintah"
+   ],
+   "a": 1,
+   "explain": "Subsidi berbasis harga mengalir sebanding dengan konsumsi, sehingga rumah tangga kaya yang memakai lebih banyak energi menerima nominal subsidi lebih besar. Karena itu reformasi subsidi mengarah ke bantuan langsung kepada rumah tangga yang berhak.",
+   "hint": "Kalau subsidi menempel pada tiap kWh atau liter, siapa yang menerima paling banyak: yang boros atau yang hemat?"
+  },
+  {
+   "type": "pg",
+   "q": "Langkah yang lazim menyertai pengurangan subsidi energi agar dampak sosialnya terkendali adalah…",
+   "opts": [
+    "Pemutusan listrik massal",
+    "Larangan memakai listrik pada malam hari",
+    "Penghapusan semua golongan tarif",
+    "Bantuan tunai atau bantuan langsung kepada rumah tangga miskin dan kenaikan harga secara bertahap"
+   ],
+   "a": 3,
+   "explain": "Pengalaman reformasi subsidi BBM dan listrik menunjukkan kenaikan harga bertahap yang dibarengi bantuan langsung kepada kelompok rentan jauh lebih diterima publik dan tetap melindungi daya beli. Tanpa pendamping, penghapusan subsidi memicu penolakan dan inflasi mendadak.",
+   "hint": "Tujuannya mengalihkan bantuan dari harga ke orang; kebijakan pendamping apa yang mewujudkan pengalihan itu?"
+  }
+ ]
 };

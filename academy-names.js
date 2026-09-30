@@ -16,7 +16,9 @@ window.ACADEMY_NAMES = {
   "S14": "Hydrogen Academy",
   "S15": "Battery & BESS Academy",
   "S16": "Automation Academy",
-  "S17": "Energy Modeller Academy"
+  "S17": "Energy Modeller Academy",
+  "S18": "Nuclear Academy",
+  "S19": "Energy Policy Academy"
 };
 Object.entries(ACADEMY_NAMES).forEach(([id, name]) => {
   if (window.TRACKS_META && TRACKS_META[id]) Object.assign(TRACKS_META[id], { name, shortName: name });

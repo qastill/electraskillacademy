@@ -8,7 +8,7 @@
  *
  * DARI MANA ISINYA
  *   • Simulator  — diambil OTOMATIS dari SIMULATORS, yang setiap entrinya sudah
- *     menyebut `jalur` (S1..S16). Datanya sendiri yang tahu miliknya siapa, jadi
+ *     menyebut `jalur` (S1..S19). Datanya sendiri yang tahu miliknya siapa, jadi
  *     tidak ada daftar tangan yang perlu ikut diperbarui: simulator baru langsung
  *     muncul di Academy yang benar.
  *   • Virtual lab & kalkulator — keduanya lintas bidang dan tidak menyebut jalur,
@@ -39,7 +39,11 @@
     S13: { vlab: [], calc: [] },
     S14: { vlab: [], calc: [] },
     S15: { vlab: ['power-elec'], calc: [] },
-    S16: { vlab: ['control', 'micro', 'digital'], calc: [] }
+    S16: { vlab: ['control', 'micro', 'digital'], calc: [] },
+    // Nuclear: sistem kelistrikan PLTN, catu daya keselamatan, dan koordinasi proteksi.
+    S18: { vlab: ['power-sys', 'measure'], calc: ['protection-coord'] },
+    // Energy Policy: perencanaan sistem tenaga dan estimasi kebutuhan beban.
+    S19: { vlab: ['power-sys'], calc: ['max-demand'] }
   };
 
   // Batas kartu yang ditampilkan. Tujuannya mengedukasi, bukan memamerkan

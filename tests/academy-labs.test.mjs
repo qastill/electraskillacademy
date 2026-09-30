@@ -83,7 +83,7 @@ vm.runInContext(fs.readFileSync(path.join(ROOT, 'academy-labs.js'), 'utf8'), ctx
 const PETA = ctx.window.ESA_ACADEMY_LABS;
 const praktik = ctx.window.esaAcademyPracticeHtml;
 assert(PETA && praktik, 'academy-labs.js memuat peta dan fungsinya');
-assert.equal(Object.keys(PETA).length, 16, 'peta mencakup 16 Academy');
+assert.equal(Object.keys(PETA).length, 18, 'peta mencakup 18 Academy (S1–S16, S18, S19)');
 
 const punya = {
   sim: new Set(sandbox.SIMULATORS.map(s => s.id)),
@@ -148,7 +148,7 @@ if (masalah.length || kosong.length) {
 }
 
 const total = Object.keys(PETA).reduce((n, t) => n + (praktik(t).match(/class="prak-card"/g) || []).length, 0);
-console.log(`PASS praktik: 16 Academy, ${total} kartu lab, semua id dikenal dan pembukanya ada`);
+console.log(`PASS praktik: ${Object.keys(PETA).length} Academy, ${total} kartu lab, semua id dikenal dan pembukanya ada`);
 console.log(`Lab tersedia : ${punya.sim.size} simulator · ${punya.vlab.size} virtual lab · ${punya.calc.size} kalkulator`);
 const rinci = Object.keys(PETA)
   .map(t => `${t}:${(praktik(t).match(/class="prak-card"/g) || []).length}`).join(' ');
