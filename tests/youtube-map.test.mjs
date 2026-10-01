@@ -54,6 +54,19 @@ for (const [kode, nilai] of Object.entries(YT)) {
   else pemakaiId.set(id, kode);
 }
 
+// videoUrl Drive harus menunjuk SATU berkas (/file/d/<ID>), bukan folder:
+// link folder dirender sebagai iframe yang tidak memutar apa pun. Satu berkas
+// juga tidak boleh dipakai dua modul.
+const pemakaiDrive = new Map();
+for (const [kode, m] of Object.entries(MEDIA)) {
+  const url = (m && m.videoUrl) || '';
+  if (!url) continue;
+  const gd = url.match(/^https:\/\/drive\.google\.com\/file\/d\/([\w-]{25,})\/view$/);
+  if (!gd && !/youtu\.?be/.test(url)) { masalah.push(`${kode}: videoUrl "${url}" bukan link berkas Drive (/file/d/<ID>/view)`); continue; }
+  if (gd && pemakaiDrive.has(gd[1])) masalah.push(`${kode}: berkas Drive ${gd[1]} sudah dipakai modul ${pemakaiDrive.get(gd[1])}`);
+  else if (gd) pemakaiDrive.set(gd[1], kode);
+}
+
 if (masalah.length) {
   console.error(`\nPeta YouTube bermasalah di ${masalah.length} titik:`);
   masalah.forEach(m => console.error('  - ' + m));
