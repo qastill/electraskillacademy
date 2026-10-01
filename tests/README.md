@@ -105,8 +105,9 @@ LinkedIn" tidak lagi menunjuk `#cert=` yang hanya berarti bagi pemiliknya.
 di Drive, atau berkas lokal `/img/modul/`). Tes ini menolak kode modul yang tidak
 ada di kurikulum, berkas lokal yang hilang, dan URL yang bentuknya tidak dikenal.
 Ia juga memeriksa urutan cabang di `esaMediaThumb()` — MODULE_THUMBS → YouTube →
-frame video Drive — dan bahwa sampul Drive dikecilkan lewat lh3, karena urutan
-yang tertukar tidak memunculkan galat apa pun, hanya gambar yang diam-diam salah.
+sampul "segera hadir" (frame video Drive tidak dipakai) — dan bahwa sampul Drive
+dikecilkan lewat lh3, karena urutan yang tertukar tidak memunculkan galat apa pun,
+hanya gambar yang diam-diam salah.
 
 ### `youtube-map.test.mjs` — peta video tidak salah tunjuk
 `data/youtube-map.js` adalah cadangan untuk modul yang belum punya `videoUrl`

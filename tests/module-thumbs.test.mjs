@@ -7,7 +7,7 @@
 //      bukan kembali ke sampul gradien, karena <img> sudah terlanjur dipasang;
 //   3. ID Drive rusak (salah salin) — gambar tidak termuat dan tak ada galat;
 //   4. urutan di esaMediaThumb() tertukar — sampul folder thumbnail harus
-//      menang atas thumbnail YouTube dan frame video Drive.
+//      menang atas thumbnail YouTube, dan frame video Drive tidak dipakai.
 // Tes ini gagal untuk keempatnya.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -48,16 +48,17 @@ for (const [kode, src] of Object.entries(THUMBS)) {
   masalah.push(`${kode}: sumber "${src}" tidak sesuai pola (URL Drive uc?id=<ID> atau /img/modul/<KODE>.<ext>)`);
 }
 
-// Urutan di esaMediaThumb(): MODULE_THUMBS -> YouTube -> frame video Drive.
+// Urutan di esaMediaThumb(): MODULE_THUMBS -> thumbnail YouTube -> null
+// (null = pemanggil merender sampul "segera hadir" berdesain). Frame video
+// Drive tidak boleh kembali dipakai: isinya satu halaman Google Slides.
 const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-const fn = html.slice(html.indexOf('function esaMediaThumb('));
+const awal = html.indexOf('function esaMediaThumb(');
+const fn = html.slice(awal, html.indexOf('window.esaMediaThumb', awal));
 const posSendiri = fn.indexOf('MODULE_THUMBS');
 const posYt = fn.indexOf('media.youtubeId');
-const posDrive = fn.indexOf('media.videoUrl');
-assert(posYt > -1 && posSendiri > -1 && posDrive > -1, 'ketiga cabang ada di esaMediaThumb()');
-if (!(posSendiri < posYt && posYt < posDrive)) {
-  masalah.push('urutan di esaMediaThumb() salah: harus MODULE_THUMBS → YouTube → frame video Drive');
-}
+assert(awal > -1 && posSendiri > -1 && posYt > -1, 'cabang MODULE_THUMBS dan YouTube ada di esaMediaThumb()');
+if (!(posSendiri < posYt)) masalah.push('urutan di esaMediaThumb() salah: MODULE_THUMBS harus mendahului YouTube');
+if (fn.includes('media.videoUrl')) masalah.push('esaMediaThumb() kembali memakai frame video Drive sebagai sampul');
 // Entri Drive wajib diubah ke versi kecil, bukan berkas asli 0,5–2,5 MB per kartu.
 if (!/lh3\.googleusercontent\.com\/d\/' \+ gs\[1\] \+ '=' \+ ws/.test(fn)) {
   masalah.push('esaMediaThumb() tidak lagi mengecilkan sampul Drive lewat lh3 (=w320/w640)');
@@ -71,4 +72,4 @@ if (masalah.length) {
 }
 
 console.log(`PASS sampul: ${Object.keys(THUMBS).length} modul punya sampul (${hitung.drive} Drive, ${hitung.lokal} lokal), semua kode valid`);
-console.log('PASS urutan: MODULE_THUMBS → YouTube → frame video Drive; sampul Drive dikecilkan lewat lh3');
+console.log('PASS urutan: MODULE_THUMBS → YouTube → sampul "segera hadir"; sampul Drive dikecilkan lewat lh3');
