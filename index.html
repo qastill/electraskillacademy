@@ -5970,8 +5970,8 @@ function careerOpenModule(trackId, code) {
 // KATALOG KURSUS — grid kartu ber-thumbnail + filter + pencarian
 // ----------------------------------------------------------------
 // Sumber video per modul diselesaikan oleh esaResolveModuleMedia():
-// YOUTUBE_MAP (kalau ada) menang atas MODULE_MEDIA (Google Drive),
-// jadi migrasi ke YouTube bisa bertahap tanpa mengubah file lain.
+// videoUrl Google Drive di MODULE_MEDIA menang; YOUTUBE_MAP hanya cadangan
+// untuk modul yang belum punya berkas video di Drive.
 // ================================================================
 
 // --- Lazy-loader peta YouTube (/data/youtube-map.js) ---
@@ -6006,7 +6006,9 @@ function esaYtId(v) {
 }
 window.esaYtId = esaYtId;
 
-// Media modul final: YouTube menang, sisanya jatuh balik ke Google Drive.
+// Media modul final: berkas video Google Drive (MODULE_MEDIA) menang.
+// YOUTUBE_MAP hanya cadangan untuk modul yang belum punya berkas di Drive,
+// dan tetap dibaca untuk tanda `gratis` serta durasi kartu.
 function esaResolveModuleMedia(code) {
   var base = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[code]) ? MODULE_MEDIA[code] : {};
   var out = {};
@@ -6016,18 +6018,18 @@ function esaResolveModuleMedia(code) {
   out.code = code;
   var entry = (typeof window.YOUTUBE_MAP !== 'undefined') ? window.YOUTUBE_MAP[code] : null;
   var id = esaYtId(entry);
-  if (id) {
-    out.videoUrl = 'https://www.youtube.com/watch?v=' + id;
-    out.videoSource = 'youtube';
-    out.youtubeId = id;
-    if (entry && typeof entry === 'object' && entry.durasi) out.duration = entry.durasi;
-  } else if (out.videoUrl) {
+  if (out.videoUrl) {
     out.videoSource = /youtu\.?be/.test(out.videoUrl) ? 'youtube'
       : (/drive\.google\.com/.test(out.videoUrl) ? 'drive' : 'lain');
     if (out.videoSource === 'youtube') out.youtubeId = esaYtId(out.videoUrl);
+  } else if (id) {
+    out.videoUrl = 'https://www.youtube.com/watch?v=' + id;
+    out.videoSource = 'youtube';
+    out.youtubeId = id;
   } else {
     out.videoSource = null;
   }
+  if (!out.duration && entry && typeof entry === 'object' && entry.durasi) out.duration = entry.durasi;
   return out;
 }
 window.esaResolveModuleMedia = esaResolveModuleMedia;
@@ -8021,7 +8023,7 @@ function openModul(code, trackId, levelId) {
   // Live Class panel — render rekaman kalau ada, atau jadwal upcoming
   renderLiveClassPanel(module, levelId, trackId, instructor);
 
-  // === Inject VIDEO from MODULE_MEDIA (+ override YouTube dari YOUTUBE_MAP) ===
+  // === Inject VIDEO dari MODULE_MEDIA (Drive); YOUTUBE_MAP hanya cadangan ===
   const media = esaResolveModuleMedia(code);
   const videoWrap = document.getElementById('video-player-wrap');
   const moduleLocked = esaModuleLocked(code, levelId);

@@ -60,16 +60,16 @@ if (masalah.length) {
   process.exit(1);
 }
 
-// Ringkasan sumber video tiap modul — dicetak supaya perpindahan dari Drive ke
-// YouTube kelihatan kemajuannya dari waktu ke waktu.
+// Ringkasan sumber video tiap modul. Berkas Drive menang; YouTube hanya untuk
+// modul yang belum punya berkas di Drive (mengikuti esaResolveModuleMedia()).
 const kode = [...modul.keys()];
-const dariYoutube = kode.filter(k => YT[k]);
-const dariDrive = kode.filter(k => !YT[k] && MEDIA[k] && MEDIA[k].videoUrl);
+const dariDrive = kode.filter(k => MEDIA[k] && MEDIA[k].videoUrl);
+const dariYoutube = kode.filter(k => YT[k] && !(MEDIA[k] && MEDIA[k].videoUrl));
 const belumAda = kode.length - dariYoutube.length - dariDrive.length;
 
 console.log(`PASS peta YouTube: ${Object.keys(YT).length} entri, semua kode dikenal, ID sah, tidak ada yang kembar`);
 console.log(`Sumber video ${kode.length} modul: ${dariYoutube.length} YouTube · ${dariDrive.length} Google Drive · ${belumAda} belum ada video`);
 if (process.argv.includes('--drive')) {
-  console.log('\nMasih memutar dari Google Drive:');
-  dariDrive.forEach(k => console.log(`  · ${k} (${modul.get(k).track}) ${modul.get(k).title}`));
+  console.log('\nMasih memutar dari YouTube (belum ada berkas di Drive):');
+  dariYoutube.forEach(k => console.log(`  · ${k} (${modul.get(k).track}) ${modul.get(k).title}`));
 }

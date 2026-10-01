@@ -24,15 +24,15 @@
 //   sebelum orang memutuskan bayar. Default-nya TERKUNCI, jadi tidak ada modul
 //   yang jadi gratis tanpa ditulis eksplisit di sini.
 //
-// PERILAKU
-//   • Modul yang ADA di sini  → video diambil dari YouTube, thumbnail
-//     asli YouTube dipakai di katalog kursus dan di halaman modul.
-//   • Modul yang BELUM ada di sini → otomatis tetap memakai videoUrl
-//     Google Drive dari /data/module-media.js. Tidak ada yang rusak.
+// PERILAKU (sejak Okt 2026: Google Drive menang)
+//   • Modul yang punya videoUrl Drive di /data/module-media.js → video
+//     diputar dari Drive; entri di sini TIDAK dipakai untuk pemutar.
+//   • Modul yang BELUM punya berkas di Drive → entri di sini jadi cadangan,
+//     video diambil dari YouTube.
+//   • Tanda `gratis` dan `durasi` di sini tetap dibaca apa pun sumbernya.
+//   • Sampul kartu selalu dari /data/module-thumbs.js (folder "thumbnail"
+//     di Drive), bukan thumbnail YouTube.
 //   • Slide/PPT tidak terpengaruh — tetap dari module-media.js.
-//
-// Jadi migrasi bisa bertahap: tambah barisnya begitu satu video naik
-// ke YouTube, tanpa menyentuh file lain.
 //
 // ----------------------------------------------------------------
 // MENGISI OTOMATIS DARI CHANNEL

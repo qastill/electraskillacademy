@@ -101,19 +101,19 @@ terpasang di modal selesai kuis dan modal profil, serta "Tambahkan ke
 LinkedIn" tidak lagi menunjuk `#cert=` yang hanya berarti bagi pemiliknya.
 
 ### `module-thumbs.test.mjs` — sampul modul tidak menunjuk berkas yang tidak ada
-`data/module-thumbs.js` mengisi thumbnail modul yang videonya belum di YouTube.
-Tes ini menolak kode modul yang tidak ada di kurikulum, berkas gambar yang
-hilang, dan entri untuk modul yang ternyata sudah punya video YouTube. Ia juga
-memeriksa urutan cabang di `esaMediaThumb()` — YouTube → MODULE_THUMBS → Drive —
-karena urutan yang tertukar tidak memunculkan galat apa pun, hanya gambar yang
-diam-diam salah.
+`data/module-thumbs.js` memetakan kode modul ke sampul kartu (folder "thumbnail"
+di Drive, atau berkas lokal `/img/modul/`). Tes ini menolak kode modul yang tidak
+ada di kurikulum, berkas lokal yang hilang, dan URL yang bentuknya tidak dikenal.
+Ia juga memeriksa urutan cabang di `esaMediaThumb()` — MODULE_THUMBS → YouTube →
+frame video Drive — dan bahwa sampul Drive dikecilkan lewat lh3, karena urutan
+yang tertukar tidak memunculkan galat apa pun, hanya gambar yang diam-diam salah.
 
 ### `youtube-map.test.mjs` — peta video tidak salah tunjuk
-`data/youtube-map.js` menang atas `videoUrl` Google Drive, jadi satu baris yang
-salah membuat sebuah modul memutar video yang keliru. Tes ini menolak kode modul
-yang tidak ada di kurikulum, ID YouTube yang bentuknya tidak sah, dan satu video
-yang dipakai dua modul. Ia juga mencetak perbandingan sumber video (YouTube vs
-Google Drive vs belum ada) supaya perpindahannya kelihatan kemajuannya.
+`data/youtube-map.js` adalah cadangan untuk modul yang belum punya `videoUrl`
+Google Drive; satu baris yang salah membuat modul itu memutar video yang keliru.
+Tes ini menolak kode modul yang tidak ada di kurikulum, ID YouTube yang bentuknya
+tidak sah, dan satu video yang dipakai dua modul. Ia juga mencetak perbandingan
+sumber video (Google Drive vs YouTube vs belum ada).
 
 ### `quiz-coverage.test.mjs` — kuis tidak keluar bidang, dan bentuk soalnya layak
 Menjaga satu janji yang tegas: **tidak ada modul yang menyajikan soal di luar
