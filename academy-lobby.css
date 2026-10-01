@@ -95,3 +95,11 @@
    diganti penanda, jadi tidak ada yang mengetuk lalu menemukan Academy kosong. */
 .academy-enter.is-soon { background: transparent; color: var(--accent, #c9a96e); border: 1px dashed currentColor; cursor: default; }
 .academy-enter.is-soon:hover { transform: none; }
+
+/* Judul kelompok Academy: satu baris penuh di grid pilihan. */
+.academy-group-head{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:14px 0 2px;padding:0 2px 6px;border-bottom:1px solid #ffffff14}
+.academy-group-head:first-child{margin-top:0}
+.academy-group-head strong{font:700 12px/1.4 sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#e6f0d9}
+.academy-group-head span{font:11px/1.4 sans-serif;color:#8fa497}
+.career-panel-cat{display:inline-block;margin:2px 0 8px;padding:3px 10px;border-radius:999px;border:1px solid var(--accent,#d9e9a1);color:var(--accent,#d9e9a1);font:600 10.5px/1.4 sans-serif;letter-spacing:.04em}
+.career-panel-cat:empty{display:none}

@@ -51,7 +51,7 @@ Tersedia penuh (kurikulum Level 3–6 lengkap) — 8 jalur:
 - [Pembangkitan dan Renewable](https://electraacademy.com/jalur/pembangkitan-renewable/): PLTU, PLTG, PLTA, PLTS, BESS, green hydrogen.
 - [K3 Listrik](https://electraacademy.com/jalur/k3-listrik/): Ahli K3 Listrik bersertifikat kompetensi.
 
-Kurikulum tersusun, video bertahap — 10 jalur:
+Kurikulum tersusun, video bertahap — 14 jalur:
 - Sales & Technical Marketing: Technical sales engineer untuk vendor electrical.
 - PV & Solar Engineer: Solar design engineer untuk PLTS rooftop & utility.
 - Sustainability & Carbon Engineer: Carbon analyst, ESG specialist, GHG accounting.
@@ -62,6 +62,12 @@ Kurikulum tersusun, video bertahap — 10 jalur:
 - Kontrol & Otomasi: PLC, SCADA, DCS & otomasi industri.
 - Nuclear Academy: Fisika reaktor, PWR/BWR/SMR, proteksi radiasi, keselamatan & regulasi PLTN.
 - Energy Policy Academy: KEN, RUEN, RUPTL, tarif & subsidi, PPA, JETP & analisis kebijakan transisi energi.
+- Power System Studies Academy: ETAP/DIgSILENT, load flow, short circuit IEC 60909, arc flash IEEE 1584, koordinasi proteksi untuk konsultan & EPC.
+- Geothermal Academy: eksplorasi, pengeboran, reservoir, PLTP flash & binary, regulasi dan keekonomian panas bumi.
+- CCUS Academy: penangkapan, transportasi, penyimpanan & pemanfaatan CO2, MRV, regulasi CCS Indonesia.
+- Data Center Power Academy: Tier, redundansi N+1/2N, UPS, genset, pendinginan, PUE & liquid cooling.
+
+Klasifikasi Academy (6 kelompok): Fondasi & Keselamatan; Pembangkitan & Energi Baru; Jaringan (Grid); Pemanfaatan, Elektrifikasi & Efisiensi; Digital & Analitik; Bisnis, Kebijakan & Keberlanjutan.
 
 ## Kamus istilah kelistrikan
 

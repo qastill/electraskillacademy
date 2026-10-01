@@ -18,6 +18,9 @@
 //   5. Nuclear (S18) dan Energy Policy (S19) sudah berkurikulum 64 modul, tidak
 //      lagi bertanda coming soon, dan lengkap di ketiga sumbernya; prefix modul
 //      tiap jalur unik; dan tiap ikon yang dirujuk panggung lobi benar-benar ada.
+//   6. Power System Studies (S20), Geothermal (S21), CCUS (S22) dan Data Center
+//      Power (S23) juga berkurikulum 64 modul; dan setiap Academy masuk TEPAT
+//      satu dari enam kelompok klasifikasi (ACADEMY_CATEGORIES).
 
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -75,7 +78,11 @@ assert(/SEGERA HADIR/.test(lobby), 'panggung lobi tidak menandai jalur yang belu
 // coming soon, dan tetap lengkap di ketiga sumber lobi.
 const BARU = {
   S18: { nama: /Nuclear/i, peran: 'NUCLEAR ENGINEER', kata: ['SMR', 'BAPETEN', 'radiasi'], prefix: 'S' },
-  S19: { nama: /Energy Policy/i, peran: 'ENERGY POLICY ANALYST', kata: ['RUPTL', 'tarif', 'transisi energi'], prefix: 'T' }
+  S19: { nama: /Energy Policy/i, peran: 'ENERGY POLICY ANALYST', kata: ['RUPTL', 'tarif', 'transisi energi'], prefix: 'T' },
+  S20: { nama: /Power System Studies/i, peran: 'POWER SYSTEM STUDY ENGINEER', kata: ['ETAP', 'DIgSILENT', 'load flow', 'short circuit', 'arc flash'], prefix: 'U' },
+  S21: { nama: /Geothermal/i, peran: 'GEOTHERMAL ENGINEER', kata: ['eksplorasi', 'PLTP', 'reservoir'], prefix: 'V' },
+  S22: { nama: /CCUS/i, peran: 'CCUS ENGINEER', kata: ['CO2', 'penyimpanan', 'Perpres 14/2024'], prefix: 'W' },
+  S23: { nama: /Data Center/i, peran: 'DATA CENTER POWER ENGINEER', kata: ['UPS', 'redundansi', 'PUE'], prefix: 'X' }
 };
 for (const [id, j] of Object.entries(BARU)) {
   const meta = TRACKS_META[id];
@@ -107,6 +114,16 @@ const artKeys = new Set([...lobby.matchAll(/^    ([a-z]+): '<(?:path|rect|circle
 for (const m of lobby.matchAll(/^    (S\d+): \['[^']*', '[^']*', '#[0-9a-f]{6}', '([a-z]+)', '([a-z]+)'/gm)) {
   for (const ikon of [m[2], m[3]]) assert(artKeys.has(ikon), `${m[1]} memakai ikon '${ikon}' yang tidak ada di art`);
 }
+
+// --- 6. klasifikasi: tiap Academy di lobi masuk tepat satu kelompok ---
+const KAT = ctx.window.ACADEMY_CATEGORIES;
+assert(Array.isArray(KAT) && KAT.length === 6, 'harus ada 6 kelompok klasifikasi Academy');
+const semuaId = KAT.flatMap(k => k.ids);
+assert.equal(new Set(semuaId).size, semuaId.length, 'ada Academy yang masuk dua kelompok');
+const idLobi = [...lobby.matchAll(/^    (S\d+): \['/gm)].map(m => m[1]);
+assert.deepEqual([...semuaId].sort(), [...idLobi].sort(), 'kelompok klasifikasi harus mencakup persis Academy yang ada di lobi');
+for (const k of KAT) assert(k.name && k.desc && k.ids.length > 0, `kelompok ${k.id} tidak lengkap`);
+for (const id of idLobi) assert(ctx.window.academyCategoryOf(id), `${id} tidak punya kelompok`);
 
 const soon = Object.entries(TRACKS_META).filter(([, m]) => m.comingSoon).map(([id]) => id);
 console.log(`✓ academy-soon: ${Object.keys(TRACKS_META).length} jalur, coming soon: ${soon.join(', ')} ` +
