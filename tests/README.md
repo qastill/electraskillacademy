@@ -155,3 +155,10 @@ memahami materi: opsi placeholder ("Random", "None"), opsi kembar, pengecoh
 yang absurd pendek ("Sama", "Old") berdampingan dengan jawaban berupa kalimat,
 dan jawaban yang jauh lebih panjang dari semua pengecohnya. Jalankan dengan
 `--check` untuk melihat laporannya tanpa mengubah berkas.
+
+### `academy-soon.test.mjs` — Academy baru lengkap, dan terklasifikasi
+Menjaga S18–S23 (Nuclear, Energy Policy, Power System Studies, Geothermal, CCUS,
+Data Center Power): 64 modul per Academy dengan sebaran L3 18 / L4 16 / L5 15 /
+L6 15, kode modul sesuai prefix unik, tampil di lobi, dan ikon panggungnya ada.
+Juga memastikan `ACADEMY_CATEGORIES` (6 kelompok) mencakup persis Academy yang
+ada di lobi, tanpa satu pun masuk dua kelompok.

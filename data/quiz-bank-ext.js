@@ -3152,4 +3152,1624 @@ window.QUIZ_BANK_EXT = {
    "hint": "Tujuannya mengalihkan bantuan dari harga ke orang; kebijakan pendamping apa yang mewujudkan pengalihan itu?"
   }
  ]
+,
+ "3U.01": [
+  {
+   "type": "pg",
+   "q": "Apa tujuan utama studi aliran daya (load flow) pada sebuah proyek kelistrikan?",
+   "opts": [
+    "Memeriksa tegangan bus, pembebanan peralatan dan rugi-rugi pada kondisi operasi",
+    "Menghitung energi busur api yang diterima pekerja saat terjadi gangguan",
+    "Menentukan kemampuan pemutus tenaga memutus arus gangguan maksimum",
+    "Menilai respons sudut rotor generator setelah gangguan besar"
+   ],
+   "a": 0,
+   "explain": "Load flow menghitung kondisi tunak jaringan sehingga insinyur dapat memeriksa apakah tegangan bus, pembebanan trafo dan kabel, serta rugi-rugi masih dalam batas. Energi busur api ditangani studi arc flash, kemampuan pemutus oleh studi hubung singkat, dan respons sudut rotor oleh studi transient stability.",
+   "hint": "Cari studi yang menjawab pertanyaan apakah jaringan sehat saat beroperasi normal, bukan saat gangguan."
+  },
+  {
+   "type": "pg",
+   "q": "Studi manakah yang dipakai untuk memastikan rating pemutus tenaga dan busbar cukup terhadap arus gangguan?",
+   "opts": [
+    "Studi aliran daya pada beban puncak",
+    "Studi harmonik pada bus beban nonlinier",
+    "Studi hubung singkat (short circuit)",
+    "Studi motor starting pada motor terbesar"
+   ],
+   "a": 2,
+   "explain": "Studi hubung singkat menghasilkan arus gangguan maksimum di setiap bus, yang dibandingkan dengan rating breaking dan withstand peralatan. Load flow, harmonik dan motor starting menilai kondisi operasi, distorsi gelombang dan penurunan tegangan saat start, sehingga tidak menjawab kecukupan rating terhadap gangguan.",
+   "hint": "Rating pemutusan hanya bermakna jika kita tahu arus terbesar yang bisa mengalir saat gangguan."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa studi sistem tenaga pada tahap FEED biasanya diperbarui saat detail engineering dalam proyek EPC?",
+   "opts": [
+    "Karena perangkat lunak studi hanya dapat dijalankan setelah konstruksi selesai",
+    "Data vendor aktual seperti impedansi trafo dan rating peralatan menggantikan asumsi awal",
+    "Karena standar studi berubah setiap kali kontrak EPC baru ditandatangani",
+    "Karena hasil studi tahap FEED tidak pernah dipakai pada tahap berikutnya"
+   ],
+   "a": 1,
+   "explain": "Pada FEED banyak parameter masih berupa asumsi tipikal, sedangkan saat detail engineering pabrikan sudah menyerahkan data nyata sehingga hasil studi dapat bergeser dan perlu dikonfirmasi ulang. Perangkat lunak bisa dijalankan sejak desain awal, standar tidak berubah mengikuti kontrak, dan hasil FEED justru menjadi dasar dokumen berikutnya.",
+   "hint": "Bandingkan seberapa pasti data di awal desain dengan data setelah peralatan dibeli."
+  },
+  {
+   "type": "pg",
+   "q": "Studi apa yang menghasilkan energi insiden dan batas busur api bagi pekerja di dekat panel?",
+   "opts": [
+    "Studi aliran daya pada beban puncak",
+    "Studi reliabilitas dengan indeks SAIDI",
+    "Studi stabilitas tegangan sistem",
+    "Studi arc flash menurut IEEE 1584"
+   ],
+   "a": 3,
+   "explain": "Studi arc flash memakai model IEEE 1584 untuk menghitung energi insiden dalam cal/cm² dan arc flash boundary berdasarkan arus gangguan, konfigurasi dan waktu pembersihan. Studi aliran daya, reliabilitas dan stabilitas tegangan tidak memodelkan busur listrik sehingga tidak menghasilkan besaran tersebut.",
+   "hint": "Besaran yang dicari berkaitan dengan keselamatan pekerja dan pakaian pelindung, bukan performa jaringan."
+  },
+  {
+   "type": "pg",
+   "q": "Studi mana yang menganalisis apakah generator tetap sinkron setelah gangguan besar seperti hubung singkat di saluran transmisi?",
+   "opts": [
+    "Studi aliran daya kondisi tunak",
+    "Studi pemilihan ukuran kabel penyulang",
+    "Studi transient stability",
+    "Studi grounding gardu induk"
+   ],
+   "a": 2,
+   "explain": "Transient stability mensimulasikan sudut rotor, tegangan dan frekuensi terhadap waktu selama dan setelah gangguan, sehingga terlihat apakah mesin tetap sinkron. Aliran daya tunak, pemilihan kabel dan grounding gardu bekerja pada kondisi statis dan tidak memodelkan dinamika rotor.",
+   "hint": "Kata kuncinya tetap sinkron, yang butuh simulasi berubah terhadap waktu dan bukan hitungan satu kondisi."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa kualitas data masukan sama pentingnya dengan pilihan perangkat lunak dalam studi sistem tenaga?",
+   "opts": [
+    "Karena setiap perangkat lunak studi selalu memberi hasil identik meskipun datanya berbeda",
+    "Solver secanggih apa pun tetap menghasilkan angka salah jika impedansi atau topologi keliru",
+    "Karena data hanya dipakai untuk mempercantik tampilan laporan dan label peralatan",
+    "Karena solver otomatis mengoreksi data yang salah sebelum perhitungan dimulai"
+   ],
+   "a": 1,
+   "explain": "Algoritma hanya mengolah angka yang diberikan, sehingga data yang keliru menghasilkan hasil yang tampak meyakinkan tetapi salah. Perangkat lunak yang berbeda memberi hasil berbeda bila modelnya berbeda, dan tidak ada solver yang mengoreksi data salah secara otomatis.",
+   "hint": "Ingat prinsip garbage in, garbage out pada setiap perhitungan numerik."
+  }
+ ]
+,
+ "3U.05": [
+  {
+   "type": "pg",
+   "q": "Trafo 1.000 kVA, 20/0,4 kV dengan impedansi 6% dimodelkan pada basis sisi 0,4 kV. Berapa impedansinya dalam ohm?",
+   "opts": [
+    "96 mΩ",
+    "0,96 mΩ",
+    "6,0 mΩ",
+    "9,6 mΩ"
+   ],
+   "a": 3,
+   "explain": "Impedansi = %Z/100 × kV²/MVA = 0,06 × 0,16/1 = 0,0096 Ω atau 9,6 mΩ. Nilai 96 mΩ dan 0,96 mΩ keliru karena bergeser satu orde desimal, sedangkan 6,0 mΩ mengabaikan kuadrat tegangan dan rating daya.",
+   "hint": "Gunakan impedansi sama dengan persen impedansi dibagi 100 dikali kV kuadrat per MVA, dan ubah kVA ke MVA dulu."
+  },
+  {
+   "type": "pg",
+   "q": "Trafo 1.000 kVA, 400 V, impedansi 6% disuplai dari sumber tak hingga. Berapa arus hubung singkat 3 fasa di terminal sekunder?",
+   "opts": [
+    "Sekitar 24 kA",
+    "Sekitar 12 kA",
+    "Sekitar 60 kA",
+    "Sekitar 144 kA"
+   ],
+   "a": 0,
+   "explain": "Arus beban penuh = 1.000/(√3 × 0,4) ≈ 1.443 A, dan arus hubung singkat = 1.443/0,06 ≈ 24 kA. Nilai 12 kA mengandaikan impedansi dua kali lebih besar, sedangkan 60 kA dan 144 kA berasal dari impedansi yang dihitung terlalu kecil atau kesalahan desimal.",
+   "hint": "Hitung dulu arus beban penuh sisi sekunder, lalu bagi dengan impedansi dalam bentuk desimal."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa vector group trafo harus dimodelkan dengan benar untuk studi gangguan fasa ke tanah?",
+   "opts": [
+    "Karena menentukan warna dan polaritas kabel kontrol yang terhubung ke trafo",
+    "Karena hanya memengaruhi besar rugi besi pada kondisi trafo tanpa beban",
+    "Karena menentukan apakah arus urutan nol dapat mengalir dan lewat jalur mana",
+    "Karena menentukan jumlah sirip radiator yang diperlukan untuk pendinginan"
+   ],
+   "a": 2,
+   "explain": "Hubungan belitan seperti Dyn11 atau YNyn menentukan apakah trafo menyediakan jalur arus urutan nol; belitan delta, misalnya, menjebak arus urutan nol sehingga tidak mengalir ke sisi lain. Rugi besi, kabel kontrol dan pendingin tidak mengubah jaringan urutan nol sehingga tidak berpengaruh pada besar arus gangguan tanah.",
+   "hint": "Pikirkan ke mana arus urutan nol bisa pergi jika salah satu belitan terhubung delta."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa resistansi kabel pada perhitungan arus hubung singkat minimum diambil pada suhu konduktor lebih tinggi dari 20 °C?",
+   "opts": [
+    "Agar arus gangguan yang dihasilkan menjadi lebih besar dan lebih konservatif untuk rating",
+    "Resistansi logam naik bersama suhu sehingga impedansi lebih besar dan arus gangguan lebih kecil",
+    "Karena kabel selalu bekerja pada suhu 20 °C ketika gangguan sedang terjadi",
+    "Karena resistansi kabel tidak berubah, jadi nilai suhu hanya formalitas laporan"
+   ],
+   "a": 1,
+   "explain": "Resistansi tembaga dan aluminium naik sekitar 0,4% per °C, sehingga pada suhu kerja impedansi loop lebih besar dan arus gangguan lebih kecil; itulah kasus terburuk untuk menguji sensitivitas proteksi. Nilai pada 20 °C dipakai untuk arus maksimum, dan klaim bahwa resistansi tidak bergantung suhu keliru.",
+   "hint": "Bayangkan arah perubahan resistansi saat konduktor panas, lalu arah efeknya pada arus gangguan."
+  },
+  {
+   "type": "pg",
+   "q": "Dengan basis 100 MVA dan 20 kV, berapa impedansi dasar (Z base) sistem tersebut?",
+   "opts": [
+    "4 Ω",
+    "0,25 Ω",
+    "40 Ω",
+    "20 Ω"
+   ],
+   "a": 0,
+   "explain": "Z base = kV² / MVA = 20² / 100 = 4 Ω. Nilai 0,25 Ω adalah hasil terbalik (MVA dibagi kV²), sedangkan 40 Ω dan 20 Ω berasal dari salah penempatan pangkat atau pembagi.",
+   "hint": "Rumus impedansi basis memakai kuadrat tegangan dibagi daya basis."
+  },
+  {
+   "type": "pg",
+   "q": "Manakah kelompok data pelat nama trafo yang paling dibutuhkan agar model load flow dan hubung singkat akurat?",
+   "opts": [
+    "Merek pabrikan, tahun pembuatan, berat total dan dimensi tangki",
+    "Nomor seri, lokasi pabrik, warna cat dan jenis kemasan pengiriman",
+    "Jenis minyak isolasi, jumlah sirip radiator dan nomor gambar pabrik",
+    "kVA, rasio tegangan, persen impedansi dengan X/R, vector group dan rentang tap"
+   ],
+   "a": 3,
+   "explain": "Model trafo memerlukan rating daya, rasio tegangan, impedansi dan rasio X/R, hubungan belitan serta rentang tap karena parameter itulah yang masuk ke persamaan jaringan. Data identitas fisik seperti merek, nomor seri atau sirip radiator tidak memengaruhi perhitungan listriknya.",
+   "hint": "Pilih data yang benar-benar menjadi angka dalam matriks impedansi atau rasio belitan."
+  }
+ ]
+,
+ "4U.03": [
+  {
+   "type": "pg",
+   "q": "Pada metode ANSI/IEEE untuk pemutus tegangan menengah, arus momentary (rms asimetris) lazimnya diperoleh dengan mengalikan arus simetris first cycle dengan faktor berapa?",
+   "opts": [
+    "1,0",
+    "1,6",
+    "2,7",
+    "3,5"
+   ],
+   "a": 1,
+   "explain": "Untuk bus di atas 1 kV, standar menyederhanakan asimetri dengan faktor 1,6 pada arus rms simetris first cycle untuk memperoleh duty momentary. Faktor 2,7 berlaku untuk nilai puncak (crest) dan bukan rms, sedangkan 1,0 mengabaikan komponen DC dan 3,5 melebihi batas wajar.",
+   "hint": "Cari faktor yang mengubah rms simetris menjadi rms asimetris, bukan yang menghasilkan nilai puncak."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa metode ANSI/IEEE memakai jaringan reaktansi first cycle dan interrupting yang berbeda?",
+   "opts": [
+    "Karena pemutus tenaga selalu membuka tepat pada siklus pertama setelah gangguan terjadi pada bus",
+    "Karena kedua jaringan itu dipakai untuk fasa yang berbeda pada sebuah sistem tiga fasa seimbang",
+    "Karena arus gangguan dari sumber utilitas terus naik sepanjang durasi gangguan sampai pemutus membuka",
+    "Kontribusi mesin berputar meluruh sehingga reaktansi efektifnya lebih besar saat kontak pemutus terbuka"
+   ],
+   "a": 3,
+   "explain": "Reaktansi subtransien mesin berputar membesar seiring peluruhan fluks, sehingga ketika kontak pemutus terpisah kontribusi mesin lebih kecil dan duty interrupting dihitung dengan reaktansi yang dikalikan faktor tertentu. Pemutus membuka dalam rentang beberapa siklus, bukan selalu pada siklus pertama, dan arus sumber utilitas tidak naik sepanjang gangguan.",
+   "hint": "Bayangkan arus kontribusi motor yang kehabisan tenaga beberapa siklus setelah gangguan."
+  },
+  {
+   "type": "pg",
+   "q": "Duty momentary hasil studi dibandingkan dengan kemampuan pemutus tenaga yang mana?",
+   "opts": [
+    "Closing and latching (momentary withstand)",
+    "Rated interrupting current pada tegangan operasi",
+    "Arus nominal kontinu pemutus tenaga",
+    "Rating tegangan impuls petir (BIL)"
+   ],
+   "a": 0,
+   "explain": "Duty momentary (first cycle) mewakili beban mekanik saat pemutus menutup dan menahan arus puncak gangguan, sehingga dibandingkan dengan kemampuan closing and latching. Duty interrupting dibandingkan dengan rated interrupting current, sedangkan arus kontinu dan BIL tidak berkaitan dengan besar arus gangguan awal.",
+   "hint": "Ada dua duty: satu soal menutup ke gangguan dan satu lagi soal memutus gangguan. Yang ditanyakan yang pertama."
+  },
+  {
+   "type": "pg",
+   "q": "Jika rasio X/R di titik gangguan meningkat, apa dampaknya pada arus gangguan asimetris?",
+   "opts": [
+    "Komponen DC meluruh lebih cepat sehingga arus asimetris mengecil",
+    "Arus simetris menjadi nol karena reaktansi semakin dominan",
+    "Komponen DC meluruh lebih lambat sehingga arus asimetris lebih besar",
+    "Tidak ada dampak, asimetri hanya bergantung pada level tegangan"
+   ],
+   "a": 2,
+   "explain": "Konstanta waktu peluruhan DC sebanding dengan X/R, sehingga X/R lebih tinggi membuat komponen DC bertahan lebih lama dan arus asimetris yang harus diputus pemutus lebih besar. Arus simetris tidak menjadi nol, dan asimetri jelas bergantung pada X/R serta saat gangguan terjadi.",
+   "hint": "Konstanta waktu rangkaian L/R menentukan seberapa cepat komponen searah hilang."
+  },
+  {
+   "type": "pg",
+   "q": "Bus 13,8 kV memiliki duty interrupting simetris hasil studi 18 kA dan X/R di bawah batas rating. Pemutus terpasang berating 25 kA simetris pada 13,8 kV. Bagaimana penilaiannya?",
+   "opts": [
+    "Tidak memadai karena duty harus sama persis dengan rating pemutus",
+    "Tidak memadai karena rating harus tepat dua kali duty hasil studi",
+    "Tidak dapat dinilai karena rating simetris tidak boleh dibandingkan dengan arus simetris",
+    "Memadai, duty sekitar 72% dari rating sehingga ada margin sekitar 28%"
+   ],
+   "a": 3,
+   "explain": "Selama rating tegangan sesuai dan X/R tidak melampaui asumsi rating, duty 18 kA terhadap rating 25 kA berarti pemakaian 72% dan margin 28%. Tidak ada aturan bahwa rating harus persis sama atau dua kali duty, dan membandingkan simetris dengan simetris justru cara baku.",
+   "hint": "Bagi duty dengan rating lalu lihat apakah hasilnya di bawah 100 persen."
+  },
+  {
+   "type": "pg",
+   "q": "Standar IEEE manakah yang menjadi panduan aplikasi pemutus tenaga AC di atas 1.000 V terhadap arus hubung singkat?",
+   "opts": [
+    "IEEE C37.010",
+    "IEEE 1584",
+    "IEEE 80",
+    "IEEE 519"
+   ],
+   "a": 0,
+   "explain": "IEEE C37.010 adalah panduan aplikasi pemutus tenaga AC tegangan tinggi (di atas 1.000 V) berbasis arus simetris, termasuk faktor pengali motor dan perhitungan duty. IEEE 1584 membahas arc flash, IEEE 80 membahas grounding gardu, dan IEEE 519 membahas batas harmonik.",
+   "hint": "Pilih standar yang memang khusus tentang aplikasi pemutus tenaga, bukan arc flash, grounding atau harmonik."
+  }
+ ]
+,
+ "5U.04": [
+  {
+   "type": "pg",
+   "q": "Titik interkoneksi memiliki daya hubung singkat 600 MVA dan PLTS terpasang 100 MWac. Berapa short circuit ratio (SCR)-nya?",
+   "opts": [
+    "0,17",
+    "60",
+    "6",
+    "3"
+   ],
+   "a": 2,
+   "explain": "SCR = Ssc / daya nominal pembangkit = 600/100 = 6, sehingga jaringan tergolong cukup kuat. Nilai 0,17 adalah kebalikan perhitungan, 60 muncul dari salah desimal, dan 3 tidak punya dasar dari data soal.",
+   "hint": "SCR adalah rasio kekuatan jaringan terhadap kapasitas pembangkit yang menyambung."
+  },
+  {
+   "type": "pg",
+   "q": "Berapa SCR yang umumnya dipakai sebagai batas awal jaringan lemah bagi pembangkit berbasis inverter?",
+   "opts": [
+    "SCR di atas 20",
+    "SCR sekitar 3 atau lebih rendah",
+    "SCR tepat sama dengan 10",
+    "SCR di atas 50"
+   ],
+   "a": 1,
+   "explain": "Banyak panduan teknis memandang SCR di bawah sekitar 3 sebagai jaringan lemah, tempat kontrol inverter grid-following rawan tidak stabil. SCR tinggi seperti 20 atau 50 justru menandakan jaringan kuat, dan tidak ada nilai tunggal 10 yang menjadi batas baku.",
+   "hint": "Jaringan lemah berarti daya hubung singkat kecil relatif terhadap pembangkit, sehingga rasionya kecil."
+  },
+  {
+   "type": "pg",
+   "q": "PLTS 50 MW diwajibkan mampu beroperasi pada faktor daya 0,95 lagging di titik interkoneksi pada daya aktif penuh. Berapa kebutuhan daya reaktif minimumnya?",
+   "opts": [
+    "8,2 MVAr",
+    "24,2 MVAr",
+    "47,5 MVAr",
+    "16,4 MVAr"
+   ],
+   "a": 3,
+   "explain": "Q = P × tan(arccos 0,95) = 50 × 0,329 ≈ 16,4 MVAr. Nilai 24,2 MVAr sesuai faktor daya 0,90, 8,2 MVAr hanya separuh kebutuhan, dan 47,5 MVAr adalah perkalian P dengan 0,95 yang bukan daya reaktif.",
+   "hint": "Daya reaktif diperoleh dari daya aktif dikali tangen sudut faktor daya."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa kapabilitas daya reaktif di titik interkoneksi biasanya lebih kecil daripada di terminal inverter?",
+   "opts": [
+    "Reaktansi seri trafo step-up dan kabel kolektor menyerap sebagian daya reaktif sebelum titik interkoneksi",
+    "Daya reaktif tidak dapat melewati trafo step-up pada frekuensi sistem 50 Hz sama sekali",
+    "Kabel kolektor selalu membangkitkan daya aktif tambahan yang menggeser faktor daya di titik sambung",
+    "Standar jaringan melarang inverter mengeluarkan daya reaktif di luar terminalnya sendiri secara mutlak"
+   ],
+   "a": 0,
+   "explain": "Reaktansi bocor trafo step-up dan impedansi seri kabel kolektor menyerap daya reaktif (I²X) pada arus tinggi, sehingga yang tiba di titik interkoneksi lebih kecil; pengisian kapasitif kabel dapat mengimbangi sebagian, jadi nilai bersihnya dihitung dengan load flow. Daya reaktif tetap dapat melewati trafo, kabel tidak menghasilkan daya aktif, dan tidak ada larangan standar semacam itu.",
+   "hint": "Telusuri komponen yang ada di antara terminal inverter dan titik sambung ke jaringan, lalu apa yang terjadi pada VAR di sana."
+  },
+  {
+   "type": "pg",
+   "q": "Apa risiko utama SCR rendah bagi inverter grid-following pada titik interkoneksi?",
+   "opts": [
+    "Arus gangguan menjadi sangat besar hingga merusak semikonduktor inverter",
+    "Interaksi kontrol seperti PLL dan pengatur tegangan dapat memicu osilasi atau ketidakstabilan",
+    "Tegangan jaringan selalu melonjak permanen di atas 1,5 pu",
+    "Kontrol inverter otomatis berubah menjadi perilaku generator sinkron"
+   ],
+   "a": 1,
+   "explain": "Pada jaringan lemah impedansi Thevenin besar, sehingga perubahan arus inverter menggeser tegangan di titik sambung dan kontrol PLL serta loop tegangan dapat berinteraksi hingga berosilasi atau tidak stabil. Arus gangguan justru kecil pada SCR rendah, tegangan tidak otomatis melonjak permanen, dan inverter tidak berubah menjadi mesin sinkron.",
+   "hint": "Jaringan lemah membuat tegangan sangat sensitif terhadap arus yang diinjeksikan."
+  },
+  {
+   "type": "pg",
+   "q": "Berapa kontribusi arus gangguan inverter PLTS yang lazim dimodelkan dalam studi hubung singkat?",
+   "opts": [
+    "Sekitar 5 hingga 7 pu seperti generator sinkron",
+    "Nol karena inverter selalu mati saat tegangan jatuh",
+    "Sekitar 1,1 hingga 1,5 pu arus nominal",
+    "Lebih dari 10 pu selama satu detik penuh"
+   ],
+   "a": 2,
+   "explain": "Inverter membatasi arus keluaran secara elektronik pada kisaran 1,1 hingga 1,5 pu arus nominal, dan kontribusinya dapat mengikuti kebutuhan injeksi arus saat gangguan menurut grid code. Generator sinkron memberi 5 hingga 7 pu, inverter tidak otomatis mati karena ada kewajiban fault ride-through, dan 10 pu melampaui kemampuan semikonduktor.",
+   "hint": "Semikonduktor daya tidak tahan arus berlebih, jadi kontrolnya menahan arus di dekat nominal."
+  }
+ ]
+,
+ "6U.02": [
+  {
+   "type": "pg",
+   "q": "Apa langkah awal yang paling tepat ketika mengaudit sebuah studi sistem tenaga?",
+   "opts": [
+    "Memverifikasi data masukan terhadap single line diagram, datasheet dan sumber data resmi",
+    "Langsung membaca kesimpulan laporan lalu menyetujuinya jika tampilannya rapi",
+    "Menjalankan ulang model yang sama dan memeriksa apakah angkanya identik",
+    "Mengganti perangkat lunak dengan produk lain sebelum memeriksa data"
+   ],
+   "a": 0,
+   "explain": "Kesalahan terbesar studi biasanya berasal dari data dan topologi, sehingga audit dimulai dengan menelusuri setiap parameter ke dokumen sumbernya. Membaca kesimpulan saja tidak menguji apa pun, menjalankan ulang model yang sama hanya mengulang kesalahan input, dan mengganti perangkat lunak tidak memperbaiki data yang keliru.",
+   "hint": "Auditor mencari sumber kesalahan paling sering, yaitu bagian yang berada sebelum perhitungan dimulai."
+  },
+  {
+   "type": "pg",
+   "q": "Hasil load flow melaporkan rugi-rugi total sekitar 25% dari beban pada jaringan distribusi pabrik biasa. Bagaimana sikap auditor?",
+   "opts": [
+    "Menerimanya karena rugi sebesar itu wajar pada jaringan tegangan rendah pabrik",
+    "Menolak seluruh laporan tanpa memeriksa data ataupun model terlebih dahulu",
+    "Mencurigai kesalahan data seperti satuan impedansi, tap trafo atau panjang kabel",
+    "Menaikkan tegangan sumber di model agar angka rugi-rugi tampak mengecil"
+   ],
+   "a": 2,
+   "explain": "Rugi-rugi jaringan industri normal berada di kisaran beberapa persen, sehingga 25% hampir pasti menandakan kesalahan masukan seperti satuan, tap atau panjang kabel yang keliru. Menerima begitu saja, menolak seluruh laporan tanpa penelusuran, atau memanipulasi tegangan sumber tidak mengidentifikasi akar masalahnya.",
+   "hint": "Bandingkan angka itu dengan kisaran rugi yang wajar, lalu tanyakan apa yang paling mungkin salah di model."
+  },
+  {
+   "type": "pg",
+   "q": "Auditor memeriksa cepat arus hubung singkat 3 fasa busbar 400 V di sekunder trafo 1.600 kVA berimpedansi 6% dengan sumber dianggap tak hingga. Hasil perkiraannya sekitar berapa?",
+   "opts": [
+    "22,2 kA",
+    "38,5 kA",
+    "66,7 kA",
+    "16,7 kA"
+   ],
+   "a": 1,
+   "explain": "Arus beban penuh = 1.600/(√3 × 0,4) ≈ 2.309 A, dan dibagi 0,06 menghasilkan sekitar 38,5 kA. Nilai 66,7 kA muncul bila faktor √3 terlupa, 22,2 kA bila dibagi √3 sekali lagi, dan 16,7 kA adalah kebalikan %Z tanpa dikalikan arus nominal.",
+   "hint": "Mulailah dari arus beban penuh sisi 400 V dengan memperhitungkan faktor akar tiga."
+  },
+  {
+   "type": "pg",
+   "q": "Label arc flash memakai waktu pembersihan 0,1 detik, sedangkan relay hulu sebenarnya disetel 0,5 detik. Apa konsekuensinya?",
+   "opts": [
+    "Energi insiden pada label terlalu tinggi sehingga hanya menyebabkan pemborosan PPE",
+    "Tidak ada konsekuensi karena durasi busur tidak memengaruhi energi insiden",
+    "Label menjadi lebih aman karena waktu yang lebih singkat selalu bersifat konservatif",
+    "Energi insiden pada label terlalu rendah, sebab energi busur kira-kira sebanding dengan durasi"
+   ],
+   "a": 3,
+   "explain": "Energi insiden bertambah kira-kira linear dengan durasi busur, jadi memakai 0,1 detik padahal gangguan baru padam setelah 0,5 detik membuat nilai pada label sekitar seperlima dari kenyataan sehingga pekerja salah memilih PPE. Label tidak menjadi konservatif, dan waktu jelas memengaruhi energi.",
+   "hint": "Kaitkan energi yang diterima pekerja dengan lama busur menyala sebelum proteksi memutus."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa auditor sebaiknya tidak hanya membuka berkas model yang sama dan menjalankannya ulang?",
+   "opts": [
+    "Karena menjalankan ulang tidak pernah memberi hasil yang sama di perangkat lunak apa pun",
+    "Karena auditor dilarang membuka berkas model milik pembuat studi",
+    "Kesalahan input yang sama akan menghasilkan jawaban yang sama sehingga tidak teruji",
+    "Karena solver hanya boleh dijalankan satu kali pada setiap revisi proyek"
+   ],
+   "a": 2,
+   "explain": "Menjalankan ulang model yang sama bersifat deterministik, sehingga data atau topologi yang keliru menghasilkan angka identik tanpa tertangkap. Auditor perlu pemeriksaan independen seperti hitungan manual, perbandingan dengan model lain atau data lapangan; tidak ada larangan membuka model maupun batas satu kali menjalankan solver.",
+   "hint": "Apa yang terjadi pada sebuah kesalahan input jika perhitungan diulang persis sama?"
+  },
+  {
+   "type": "pg",
+   "q": "Bagaimana temuan audit sebaiknya disajikan agar dapat ditindaklanjuti tim proyek?",
+   "opts": [
+    "Dalam satu paragraf naratif tanpa bukti agar laporan terlihat ringkas",
+    "Dengan klasifikasi tingkat dampak, bukti, rekomendasi perbaikan dan penanggung jawab",
+    "Dalam daftar berurut abjad tanpa penilaian tingkat dampak masing-masing",
+    "Hanya secara lisan di rapat tanpa dokumen tertulis yang dapat dilacak"
+   ],
+   "a": 1,
+   "explain": "Temuan yang efektif memuat dampak (misalnya keselamatan atau kepatuhan), bukti yang dapat diverifikasi, rekomendasi perbaikan dan pemilik tindakan sehingga tim dapat memprioritaskan dan menutupnya. Paragraf tanpa bukti, daftar tanpa prioritas atau komentar lisan saja tidak dapat dilacak maupun diprioritaskan.",
+   "hint": "Pikirkan apa yang dibutuhkan pembaca agar tahu mana yang harus diperbaiki lebih dulu dan oleh siapa."
+  }
+ ]
+,
+ "3V.01": [
+  {
+   "type": "pg",
+   "q": "Dari mana asal energi panas yang dimanfaatkan dalam sistem panas bumi?",
+   "opts": [
+    "Radiasi matahari yang tersimpan di lapisan permukaan tanah selama musim kemarau",
+    "Panas interior bumi dari magma, peluruhan radioaktif dan sisa panas pembentukan planet",
+    "Gesekan arus laut dengan dasar samudra yang sangat dalam",
+    "Reaksi kimia pelapukan batuan di sekitar permukaan bumi"
+   ],
+   "a": 1,
+   "explain": "Panas bumi berasal dari interior bumi, yaitu sisa panas pembentukan planet, peluruhan unsur radioaktif dan terutama intrusi magma yang dangkal. Radiasi matahari hanya memanaskan lapisan permukaan yang sangat tipis, sedangkan arus laut dan pelapukan batuan tidak menghasilkan panas dalam jumlah yang berarti.",
+   "hint": "Pikirkan sumber panas yang tetap ada di kedalaman ribuan meter, jauh di bawah pengaruh cuaca dan musim."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa Indonesia memiliki potensi panas bumi yang termasuk terbesar di dunia?",
+   "opts": [
+    "Karena banyak batu bara yang terbakar di bawah gunung api",
+    "Karena hujan tropis lebat turun sepanjang tahun",
+    "Karena sebagian besar wilayahnya berupa gurun yang sangat panas",
+    "Posisinya di Cincin Api Pasifik dengan banyak gunung api"
+   ],
+   "a": 3,
+   "explain": "Indonesia berada di zona pertemuan lempeng sehingga memiliki rangkaian gunung api aktif yang menjadi sumber panas bagi banyak sistem hidrotermal. Curah hujan membantu pengisian ulang air, tetapi bukan penyebab utama panas, dan Indonesia tidak berupa gurun.",
+   "hint": "Hubungkan lokasi sumber panas bumi dengan posisi Indonesia pada peta tektonik dunia."
+  },
+  {
+   "type": "pg",
+   "q": "Dibanding PLTS dan PLTB, apa keunggulan utama PLTP dalam sistem tenaga listrik?",
+   "opts": [
+    "Mampu memasok beban dasar dengan faktor kapasitas tinggi",
+    "Biaya eksplorasi dan pengeboran yang hampir tidak ada karena sumber panasnya dangkal",
+    "Dapat dibangun di pusat kota mana pun tanpa memerlukan sumur",
+    "Keluaran dayanya naik turun mengikuti kondisi cuaca harian"
+   ],
+   "a": 0,
+   "explain": "PLTP tidak bergantung pada matahari atau angin sehingga dapat beroperasi hampir sepanjang waktu dengan faktor kapasitas yang tinggi, cocok sebagai pembangkit beban dasar. Biaya eksplorasi dan pengeboran justru besar dan lokasinya terikat pada sumber daya, sedangkan keluaran yang berfluktuasi mengikuti cuaca adalah sifat PLTS dan PLTB.",
+   "hint": "Bandingkan seberapa stabil keluaran daya tiap jenis pembangkit dari jam ke jam."
+  },
+  {
+   "type": "pg",
+   "q": "Tiga komponen minimum sebuah sistem hidrotermal adalah…",
+   "opts": [
+    "Sumber panas, kilang minyak dan jaringan pipa distribusi gas bumi",
+    "Reservoir, panel surya dan baterai",
+    "Sumber panas, reservoir berfluida dan batuan penudung",
+    "Magma, turbin angin dan trafo"
+   ],
+   "a": 2,
+   "explain": "Sistem hidrotermal memerlukan sumber panas, reservoir permeabel yang berisi fluida, dan batuan penudung (cap rock) yang menahan panas serta fluida agar tidak lepas ke permukaan. Komponen lain pada pilihan yang salah berasal dari sistem energi yang berbeda.",
+   "hint": "Bayangkan sebuah panci: harus ada api, isi, dan tutup. Cari padanannya di bawah tanah."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa panas bumi dapat disebut energi terbarukan jika lapangan dikelola dengan benar?",
+   "opts": [
+    "Fluida tidak akan habis walau diproduksi tanpa batas karena selalu terisi dengan sendirinya",
+    "Panas terus dipasok dari bumi dan fluida diisi ulang lewat recharge dan reinjeksi",
+    "Tidak ada sumur yang pernah turun produksinya selama masa operasi",
+    "Pembangkitnya tidak memerlukan lahan sama sekali"
+   ],
+   "a": 1,
+   "explain": "Aliran panas dari bumi berlangsung terus-menerus, dan air yang diambil dapat digantikan melalui recharge alami serta reinjeksi air terproduksi. Namun laju produksi yang terlalu besar tetap bisa menurunkan tekanan dan temperatur, dan pembangkit panas bumi tetap memakai lahan untuk sumur, pipa dan pembangkit.",
+   "hint": "Terbarukan bukan berarti tanpa batas. Cari alasan yang menyebut sumber panas dan penggantian fluida."
+  },
+  {
+   "type": "pg",
+   "q": "Apa perbedaan pokok PLTP dengan PLTU batu bara dari sisi pasokan uap?",
+   "opts": [
+    "PLTP membakar batu bara berkadar sulfur sangat rendah di dalam boiler khusus",
+    "PLTP tidak memakai turbin, melainkan menggerakkan generator dengan pompa panas",
+    "PLTP memakai uap hasil pembakaran gas alam di kilang terdekat",
+    "Uap diambil langsung dari reservoir, tanpa boiler berbahan bakar"
+   ],
+   "a": 3,
+   "explain": "Pada PLTP uap atau campuran uap-air diambil dari sumur produksi, lalu dialirkan ke turbin tanpa boiler berbahan bakar. Turbin dan generator tetap dipakai seperti pada PLTU, dan tidak ada proses pembakaran bahan bakar fosil di PLTP.",
+   "hint": "Fokus pada asal uap yang memutar turbin: apakah dibuat dengan membakar sesuatu atau diambil dari bawah tanah?"
+  }
+ ]
+,
+ "3V.06": [
+  {
+   "type": "pg",
+   "q": "Ciri utama fluida bertipe air klorida (chloride water) pada sistem panas bumi adalah…",
+   "opts": [
+    "Bersifat sangat asam dan terbentuk di sekitar kawah yang dangkal",
+    "Kaya sulfat dan terbentuk dari kondensasi uap di air tanah",
+    "Klorida tinggi, pH mendekati netral dan mewakili fluida reservoir dalam",
+    "Berasal dari air hujan yang meresap ke tanah tanpa pernah mengalami pemanasan oleh batuan"
+   ],
+   "a": 2,
+   "explain": "Air klorida mewakili fluida reservoir dalam yang sudah lama berinteraksi dengan batuan sehingga kaya klorida dan ber-pH sekitar netral. Air sulfat asam justru terbentuk dangkal dari uap dan gas, sedangkan air hujan murni miskin mineral terlarut.",
+   "hint": "Ingat tiga tipe air utama. Mana yang paling mencerminkan fluida dari bagian dalam reservoir?"
+  },
+  {
+   "type": "pg",
+   "q": "Air sulfat asam di sekitar kawah gunung api terbentuk terutama karena…",
+   "opts": [
+    "H2S teroksidasi di air tanah dangkal menjadi asam sulfat",
+    "Air laut yang bercampur dengan air klorida dari reservoir pada zona outflow",
+    "Air hujan yang melarutkan batu kapur",
+    "Air klorida mendingin secara konduktif di zona outflow"
+   ],
+   "a": 0,
+   "explain": "Uap dan gas dari kedalaman, terutama H2S, naik lalu terserap air tanah dangkal yang kaya oksigen sehingga teroksidasi menjadi asam sulfat. Air bertipe ini tidak mencerminkan fluida reservoir, sehingga tidak boleh dipakai langsung untuk menaksir temperatur dalam.",
+   "hint": "Perhatikan peran gas yang naik ke zona dangkal beroksigen dan apa yang terjadi pada belerang di sana."
+  },
+  {
+   "type": "pg",
+   "q": "Geotermometer kimia seperti Na-K atau silika dipakai untuk…",
+   "opts": [
+    "Mengukur laju alir sumur pada kepala sumur saat uji produksi",
+    "Menentukan kedalaman dudukan casing yang paling aman",
+    "Menghitung tahanan jenis batuan dari data magnetotelurik",
+    "Menaksir temperatur reservoir dalam dari komposisi kimia fluida di permukaan"
+   ],
+   "a": 3,
+   "explain": "Kelarutan silika dan rasio kation seperti Na/K bergantung pada temperatur kesetimbangan air dengan batuan, sehingga komposisi air di mata air atau sumur dapat dipakai menaksir temperatur reservoir. Laju alir, desain casing dan tahanan jenis diperoleh dari pengukuran lain.",
+   "hint": "Namanya mirip termometer. Apa yang ingin diukur secara tidak langsung dari sampel air?"
+  },
+  {
+   "type": "pg",
+   "q": "Geotermometer kuarsa tanpa kehilangan uap: T = 1309 / (5,19 − log S) − 273,15 dengan S dalam mg/kg. Jika air mengandung silika 200 mg/kg, taksiran temperatur reservoir sekitar…",
+   "opts": [
+    "150 °C",
+    "180 °C",
+    "210 °C",
+    "240 °C"
+   ],
+   "a": 1,
+   "explain": "Dengan S = 200 mg/kg, log S sekitar 2,301 sehingga penyebutnya 5,19 − 2,301 = 2,889. Hasil 1309 / 2,889 sekitar 453 K, dikurangi 273,15 menjadi sekitar 180 °C. Nilai lain muncul bila konstanta atau logaritma salah dihitung.",
+   "hint": "Hitung bertahap: logaritma basis 10 dulu, kurangkan dari 5,19, bagi 1309, lalu ubah kelvin ke Celsius."
+  },
+  {
+   "type": "pg",
+   "q": "Sampel air yang masuk kategori immature water pada klasifikasi segitiga Na-K-Mg menandakan bahwa…",
+   "opts": [
+    "Geotermometer Na-K sangat andal dan dapat dipakai langsung untuk menaksir temperatur reservoir",
+    "Air berasal dari reservoir superhot yang berada jauh di bawah zona produksi",
+    "Air belum setimbang dengan batuan sehingga geotermometer kation kurang andal",
+    "Air murni bertipe klorida yang mewakili fluida reservoir dalam secara utuh"
+   ],
+   "a": 2,
+   "explain": "Air immature belum setimbang dengan mineral batuan, biasanya karena bercampur dengan air dangkal atau mengalami reaksi lanjutan, sehingga geotermometer Na-K cenderung memberi taksiran keliru. Dalam kasus ini perlu dipakai indikator lain atau data sumur.",
+   "hint": "Geotermometer mengandaikan kesetimbangan. Apa konsekuensinya jika air belum setimbang?"
+  },
+  {
+   "type": "pg",
+   "q": "Isotop stabil δ18O dan δD pada fluida panas bumi terutama dipakai untuk…",
+   "opts": [
+    "Menelusuri asal air dan proses pencampurannya",
+    "Mengukur permeabilitas batuan reservoir secara langsung",
+    "Menghitung kapasitas turbin yang cocok",
+    "Menentukan posisi patahan dari anomali gravitasi"
+   ],
+   "a": 0,
+   "explain": "Perbandingan isotop oksigen dan hidrogen berbeda untuk air hujan, air laut dan air magmatik, sehingga bisa dipakai menelusuri asal fluida dan menilai pencampuran serta pemanasan. Permeabilitas, kapasitas turbin dan posisi patahan ditentukan dengan metode lain.",
+   "hint": "Isotop berfungsi sebagai sidik jari air. Tanyakan apa yang bisa dilacak dari sidik jari itu."
+  }
+ ]
+,
+ "4V.03": [
+  {
+   "type": "pg",
+   "q": "Mengapa casing sumur panas bumi umumnya disemen sampai ke permukaan?",
+   "opts": [
+    "Menahan casing agar tidak tertekuk saat memuai akibat panas",
+    "Supaya lumpur pengeboran dapat dipakai ulang pada sumur lain",
+    "Untuk menaikkan permeabilitas formasi reservoir secara permanen",
+    "Agar tekanan reservoir turun lebih cepat setelah sumur selesai"
+   ],
+   "a": 0,
+   "explain": "Saat sumur dipanaskan, baja casing memuai dan jika tidak tertahan oleh semen di sepanjang trayek, tegangan tekan dapat membuatnya tertekuk atau bergeser. Semen yang kembali ke permukaan menjadi indikator bahwa tidak ada bagian casing yang bebas, sedangkan fungsi lain pada pilihan salah tidak dihasilkan semen.",
+   "hint": "Bayangkan batang baja yang dipanaskan dan tidak bebas memanjang. Apa yang harus menahannya?"
+  },
+  {
+   "type": "pg",
+   "q": "Fungsi utama surface casing atau casing permukaan pada sumur panas bumi adalah…",
+   "opts": [
+    "Mengalirkan fluida dari zona produksi menuju separator",
+    "Menyaring pasir langsung dari lapisan reservoir",
+    "Melindungi air tanah dangkal dan menopang BOP",
+    "Menurunkan temperatur fluida sebelum masuk turbin"
+   ],
+   "a": 2,
+   "explain": "Casing permukaan dipasang cukup dalam untuk melindungi air tanah dangkal dari kontaminasi dan menopang BOP serta kepala sumur untuk pengeboran tahap berikutnya. Pengaliran fluida produksi dilakukan oleh production casing dan liner, sedangkan penurunan temperatur bukan fungsi casing.",
+   "hint": "Casing paling atas berurusan dengan lapisan dangkal dan peralatan di permukaan, bukan dengan reservoir."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa serbuk silika (silica flour) ditambahkan ke bubur semen untuk sumur bertemperatur tinggi?",
+   "opts": [
+    "Mempercepat pengerasan semen di permukaan sebelum casing diturunkan",
+    "Mencegah semen kehilangan kekuatan pada temperatur tinggi",
+    "Menurunkan densitas bubur semen hingga mendekati 1,0 SG",
+    "Menambah porositas agar fluida dari formasi dapat meresap masuk"
+   ],
+   "a": 1,
+   "explain": "Semen Portland biasa mengalami strength retrogression pada temperatur di atas sekitar 110 °C: kekuatannya turun dan permeabilitasnya naik. Penambahan silika dalam proporsi tertentu membentuk fase kalsium silikat stabil sehingga semen tetap kuat. Tujuan lain pada pilihan salah justru tidak diinginkan.",
+   "hint": "Cari alasan yang berkaitan dengan umur dan ketahanan semen pada lingkungan sangat panas."
+  },
+  {
+   "type": "pg",
+   "q": "Casing baja terkekang penuh (E = 207 GPa, α = 1,2 × 10⁻⁵ per °C) dipanaskan dari 25 °C ke 225 °C. Tegangan tekan aksial akibat muai tertahan sekitar…",
+   "opts": [
+    "50 MPa",
+    "99 MPa",
+    "248 MPa",
+    "497 MPa"
+   ],
+   "a": 3,
+   "explain": "Tegangan termal pada batang terkekang adalah σ = E·α·ΔT = 207 × 10⁹ Pa × 1,2 × 10⁻⁵ × 200 ≈ 497 MPa. Nilai ini melampaui kekuatan luluh minimum baja kelas K-55 (sekitar 379 MPa), sehingga desain harus memperhitungkan beban termal, penyemenan penuh dan metode instalasi. Angka lain berasal dari kesalahan faktor atau selisih temperatur.",
+   "hint": "Tegangan termal terkekang sama dengan modulus Young dikali koefisien muai dikali kenaikan suhu. Jaga satuan."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa bagian sumur di zona reservoir sering diselesaikan dengan slotted liner?",
+   "opts": [
+    "Menjaga dinding lubang stabil sambil tetap meloloskan fluida dari rekahan reservoir",
+    "Mencegah seluruh fluida reservoir masuk ke dalam sumur selama produksi",
+    "Menahan beban BOP selama pengeboran tahap atas sumur",
+    "Menggantikan fungsi kepala sumur di permukaan sebagai penutup"
+   ],
+   "a": 0,
+   "explain": "Slotted liner menopang dinding lubang terbuka agar tidak runtuh namun slotnya tetap membuka jalur aliran dari rekahan reservoir ke dalam sumur. Fungsi menahan BOP dimiliki casing permukaan, sedangkan kepala sumur adalah peralatan terpisah di permukaan.",
+   "hint": "Di zona produktif, sumur harus tetap terbuka terhadap fluida sambil mencegah dinding lubang runtuh."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa sumur panas bumi biasanya berdiameter lebih besar daripada sumur minyak biasa?",
+   "opts": [
+    "Karena reservoir panas bumi selalu terletak lebih dalam dari 6.000 m",
+    "Karena lumpur pengeboran panas bumi lebih encer daripada air biasa",
+    "Agar aliran massa besar mengalir dengan kehilangan tekanan kecil",
+    "Karena diameter besar menurunkan temperatur fluida produksi secara berarti"
+   ],
+   "a": 2,
+   "explain": "Sumur panas bumi harus mengalirkan laju massa fluida yang besar sehingga digunakan ukuran seperti production casing 9 5/8 in dan liner 7 in untuk menekan kehilangan tekanan gesek. Kedalaman reservoir umumnya sekitar 1.000 hingga 3.000 m, bukan lebih dari 6.000 m, dan diameter tidak mengubah temperatur fluida secara berarti.",
+   "hint": "Daya pembangkit bergantung pada laju alir massa. Apa yang terjadi pada rugi tekanan di pipa sempit?"
+  }
+ ]
+,
+ "5V.04": [
+  {
+   "type": "pg",
+   "q": "Apa tujuan tahap natural state dalam pemodelan numerik reservoir panas bumi?",
+   "opts": [
+    "Memprediksi harga listrik dan biaya produksi sepanjang masa kontrak",
+    "Mencocokkan laju produksi historis tiap sumur setelah operasi komersial",
+    "Menghitung dimensi turbin dan kondensor yang dibutuhkan pembangkit",
+    "Mereproduksi temperatur dan tekanan reservoir sebelum dieksploitasi sebagai kondisi awal model"
+   ],
+   "a": 3,
+   "explain": "Model natural state dikalibrasi terhadap profil temperatur dan tekanan sumur serta manifestasi permukaan agar mewakili kesetimbangan alami sebelum produksi. Model ini menjadi kondisi awal untuk tahap berikutnya, sedangkan pencocokan data produksi dilakukan pada tahap history matching dan harga listrik bukan keluaran model reservoir.",
+   "hint": "Sebelum menyimulasikan produksi, model harus lebih dulu menggambarkan keadaan reservoir yang belum terganggu."
+  },
+  {
+   "type": "pg",
+   "q": "Apa yang dilakukan pada tahap history matching?",
+   "opts": [
+    "Mengubah data lapangan supaya sesuai dengan hasil simulasi",
+    "Menyetel parameter model hingga simulasi cocok dengan data produksi",
+    "Menambah jumlah sel grid tanpa menyentuh parameter batuan sama sekali",
+    "Menghapus data sumur yang tidak sesuai tanpa analisis lebih lanjut"
+   ],
+   "a": 1,
+   "explain": "History matching menyesuaikan parameter seperti permeabilitas, porositas dan kondisi batas sampai simulasi mereproduksi riwayat produksi, entalpi dan penurunan tekanan yang teramati. Data lapangan adalah acuan sehingga tidak boleh diubah agar cocok dengan model, dan data tidak sesuai perlu dianalisis, bukan dibuang begitu saja.",
+   "hint": "Mana yang harus diubah: model atau pengukuran? Data nyata menjadi pembanding."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa satu model yang cocok dengan data historis belum cukup untuk memutuskan investasi?",
+   "opts": [
+    "Model numerik tidak mampu menghitung aliran dua fase air dan uap secara bersamaan",
+    "Data historis tidak berguna untuk memprakirakan kinerja masa depan",
+    "Solusi tidak unik, sehingga perlu beberapa model dan rentang hasil",
+    "Hasil model selalu lebih rendah dari kenyataan di lapangan"
+   ],
+   "a": 2,
+   "explain": "Banyak kombinasi parameter dapat mencocokkan data yang sama namun memberi prakiraan berbeda, sehingga masalah kalibrasi bersifat tidak unik. Karena itu keputusan didukung beberapa model dan rentang hasil. Simulator modern mampu menangani aliran dua fase, dan data historis justru landasan kalibrasi.",
+   "hint": "Dua model berbeda bisa sama-sama cocok dengan data lama tetapi meramal masa depan secara berbeda."
+  },
+  {
+   "type": "pg",
+   "q": "Pendekatan dual-porosity cocok untuk reservoir dengan karakter…",
+   "opts": [
+    "Reservoir berrekah dengan matriks rapat dan rekahan konduktif",
+    "Reservoir pasir homogen yang tidak memiliki rekahan sama sekali",
+    "Reservoir yang seluruhnya berupa fluida satu fase tanpa batuan padat",
+    "Reservoir tanpa patahan dan tanpa aliran fluida antar sel"
+   ],
+   "a": 0,
+   "explain": "Model dual-porosity memisahkan media menjadi matriks yang menyimpan fluida dan rekahan yang menjadi jalur aliran utama, sesuai untuk reservoir panas bumi berrekah. Reservoir pasir homogen cukup dimodelkan dengan porositas tunggal, dan tidak ada reservoir yang tanpa batuan padat.",
+   "hint": "Nama modelnya menyebut dua jenis ruang pori. Reservoir seperti apa yang memiliki dua ruang itu?"
+  },
+  {
+   "type": "pg",
+   "q": "Dalam model natural state, sumber panas dari kedalaman biasanya direpresentasikan sebagai…",
+   "opts": [
+    "Sel bertekanan konstan pada batas atas model di permukaan tanah",
+    "Beban listrik yang dipikul generator pada saat beban puncak",
+    "Pengaturan laju alir di separator pada kepala sumur produksi",
+    "Masukan massa dan panas pada sel dasar di bawah zona upflow"
+   ],
+   "a": 3,
+   "explain": "Aliran fluida panas dari kedalaman dimodelkan dengan memasukkan massa dan energi pada sel dasar di bawah zona upflow, sehingga pola konveksi alami terbentuk. Kondisi tekanan atmosfer di puncak model mewakili batas permukaan, sedangkan generator dan separator adalah fasilitas permukaan di luar model reservoir.",
+   "hint": "Sumber panas ada di bawah. Cari representasi yang memasukkan massa dan energi dari dasar model."
+  },
+  {
+   "type": "pg",
+   "q": "Simulator reservoir panas bumi seperti TOUGH2 pada dasarnya menyelesaikan…",
+   "opts": [
+    "Persamaan aliran satu fase air dingin tanpa memperhitungkan transfer panas",
+    "Neraca massa dan energi untuk aliran multifase air, uap dan gas di media berpori",
+    "Hanya persamaan konduksi panas pada batuan tanpa aliran fluida",
+    "Persamaan keseimbangan daya aktif dan reaktif pada generator sinkron"
+   ],
+   "a": 1,
+   "explain": "TOUGH2 menyelesaikan neraca massa dan energi untuk aliran multifase air, uap dan gas di media berpori, yang diperlukan untuk reservoir dua fase. Model yang hanya satu fase atau hanya konduksi tidak menangkap pendidihan dan konveksi, sedangkan keseimbangan daya adalah topik jaringan listrik.",
+   "hint": "Reservoir panas bumi melibatkan panas, air dan uap bersamaan. Persamaan apa yang harus dijaga keseimbangannya?"
+  }
+ ]
+,
+ "6V.02": [
+  {
+   "type": "pg",
+   "q": "Pada metode volumetrik, panas tersimpan di reservoir (heat in place) dihitung dari…",
+   "opts": [
+    "Volume, kapasitas panas dan selisih temperatur reservoir",
+    "Tarif listrik, faktor kapasitas dan umur proyek pembangkit",
+    "Laju alir sumur dan diameter pipa uap produksi",
+    "Tinggi menara pendingin dan debit air kondensor pembangkit"
+   ],
+   "a": 0,
+   "explain": "Heat in place dihitung sebagai hasil kali volume reservoir, kapasitas panas volumetrik batuan beserta fluidanya, dan selisih temperatur reservoir dengan temperatur acuan. Tarif, laju alir dan data menara pendingin menyangkut ekonomi dan fasilitas, bukan energi yang tersimpan di batuan.",
+   "hint": "Energi panas yang tersimpan bergantung pada seberapa besar, seberapa banyak menampung panas, dan seberapa panas."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa simulasi Monte Carlo dipakai untuk estimasi potensi pada tahap eksplorasi?",
+   "opts": [
+    "Karena metode ini menghilangkan seluruh ketidakpastian geologi dari perhitungan",
+    "Luas dan ketebalan belum pasti, sehingga diwakili distribusi probabilitas",
+    "Karena metode ini tidak memerlukan data apa pun dari lapangan eksplorasi",
+    "Karena hasilnya selalu berupa satu angka tunggal yang pasti dan tidak berubah"
+   ],
+   "a": 1,
+   "explain": "Pada tahap awal parameter reservoir hanya diketahui dalam rentang, sehingga masing-masing diwakili distribusi dan dicuplik berulang untuk menghasilkan distribusi potensi daya. Monte Carlo tidak menghapus ketidakpastian, hanya mengukurnya, dan tetap memerlukan data untuk menentukan distribusi masukan.",
+   "hint": "Metode ini mengubah rentang ketidakpastian masukan menjadi rentang hasil, bukan satu angka pasti."
+  },
+  {
+   "type": "pg",
+   "q": "Volume reservoir 10 km³, kapasitas panas volumetrik batuan-fluida 2,5 MJ/(m³·K), temperatur reservoir 250 °C dan temperatur acuan 180 °C. Berapa panas tersimpan (heat in place)?",
+   "opts": [
+    "1,75 × 10¹⁶ J",
+    "1,75 × 10¹⁷ J",
+    "1,75 × 10¹⁸ J",
+    "1,75 × 10¹⁹ J"
+   ],
+   "a": 2,
+   "explain": "Volume 10 km³ sama dengan 1 × 10¹⁰ m³ dan selisih temperatur 70 K. Maka Q = 1 × 10¹⁰ × 2,5 × 10⁶ × 70 = 1,75 × 10¹⁸ J. Nilai lain muncul bila konversi km³ ke m³ salah satu orde atau selisih temperatur keliru.",
+   "hint": "Ubah km³ ke m³ lebih dulu (1 km = 1.000 m), lalu kalikan volume, kapasitas panas dan selisih temperatur."
+  },
+  {
+   "type": "pg",
+   "q": "Heat in place 1,75 × 10¹⁸ J, faktor perolehan 10%, efisiensi konversi termal-listrik 10% dan umur proyek 30 tahun (1 tahun ≈ 3,156 × 10⁷ s). Daya listrik rata-rata yang dapat dipertahankan sekitar…",
+   "opts": [
+    "1,8 MWe",
+    "5,5 MWe",
+    "9,2 MWe",
+    "18,5 MWe"
+   ],
+   "a": 3,
+   "explain": "Panas terambil = 1,75 × 10¹⁸ × 0,1 = 1,75 × 10¹⁷ J, lalu energi listrik = 1,75 × 10¹⁷ × 0,1 = 1,75 × 10¹⁶ J. Dibagi 30 tahun (sekitar 9,47 × 10⁸ s) diperoleh sekitar 1,85 × 10⁷ W atau 18,5 MWe. Angka lain berasal dari melewatkan salah satu faktor atau salah mengubah tahun ke detik.",
+   "hint": "Kalikan berurutan dengan kedua faktor, lalu bagi dengan durasi dalam detik untuk memperoleh daya."
+  },
+  {
+   "type": "pg",
+   "q": "Dengan konvensi eksedans yang lazim di industri energi, nilai P90 hasil Monte Carlo potensi daya menunjukkan…",
+   "opts": [
+    "Peluang 90% potensi sesungguhnya lebih kecil dari nilai ini",
+    "Peluang 90% potensi sesungguhnya melampaui atau sama dengan nilai ini",
+    "Nilai rata-rata aritmetik dari seluruh iterasi simulasi yang dijalankan",
+    "Nilai maksimum yang pernah muncul pada seluruh iterasi simulasi"
+   ],
+   "a": 1,
+   "explain": "Pada konvensi eksedans, P90 adalah estimasi konservatif karena 90% hasil simulasi berada pada atau di atas nilai itu. P10 adalah kebalikannya yang optimistis. Rata-rata dan maksimum adalah statistik lain yang tidak berkaitan dengan persentil tertentu.",
+   "hint": "P menyatakan probabilitas dilampaui. Semakin besar angkanya, semakin konservatif nilainya."
+  },
+  {
+   "type": "pg",
+   "q": "Dalam klasifikasi potensi panas bumi di Indonesia, tingkat keyakinan paling tinggi dimiliki oleh…",
+   "opts": [
+    "Sumber daya spekulatif",
+    "Sumber daya hipotetis",
+    "Cadangan terbukti",
+    "Cadangan terduga"
+   ],
+   "a": 2,
+   "explain": "Tingkat keyakinan meningkat dari sumber daya spekulatif dan hipotetis menuju cadangan terduga, mungkin dan terbukti. Cadangan terbukti didukung data sumur dan uji produksi, sedangkan sumber daya spekulatif dan hipotetis baru bertumpu pada survei permukaan.",
+   "hint": "Semakin banyak data sumur dan uji yang mendukung, semakin tinggi kategori keyakinannya."
+  }
+ ]
+,
+ "3W.01": [
+  {
+   "type": "pg",
+   "q": "Apa yang dimaksud dengan CCUS dalam konteks mitigasi perubahan iklim?",
+   "opts": [
+    "Skema perdagangan hak emisi yang dijalankan antarnegara berdasarkan kuota",
+    "Menangkap CO2 lalu memanfaatkan atau menyimpannya secara permanen",
+    "Metode menaikkan efisiensi boiler agar bahan bakar lebih hemat",
+    "Teknik mengubah batu bara menjadi gas tanpa menghasilkan CO2"
+   ],
+   "a": 1,
+   "explain": "CCUS adalah singkatan dari Carbon Capture, Utilization and Storage: CO2 dipisahkan dari gas buang atau udara, lalu dipakai sebagai bahan baku atau disuntikkan ke formasi geologi. Perdagangan emisi adalah instrumen ekonomi, efisiensi boiler hanya mengurangi emisi per unit energi, dan gasifikasi batu bara tetap menghasilkan CO2.",
+   "hint": "Uraikan singkatannya satu per satu, lalu cocokkan dengan apa yang terjadi pada molekul CO2."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa pembakaran bahan bakar fosil menambah CO2 netto di atmosfer?",
+   "opts": [
+    "Karena api menghasilkan oksigen berlebih yang lalu berubah menjadi CO2",
+    "Karena CO2 hanya terbentuk saat pembakaran berlangsung tidak sempurna",
+    "Karena hutan langsung berhenti menyerap CO2 ketika bahan bakar fosil dibakar",
+    "Karena melepas karbon yang terkunci jutaan tahun di kerak bumi ke atmosfer"
+   ],
+   "a": 3,
+   "explain": "Bahan bakar fosil adalah karbon yang tersimpan di reservoir geologi selama jutaan tahun, sehingga pembakarannya memindahkan karbon itu ke atmosfer dalam waktu singkat tanpa ada penyeimbang. Pembakaran sempurna justru menghasilkan CO2, dan penyerapan oleh hutan terus berjalan meski tidak mampu mengimbangi tambahan emisi tersebut.",
+   "hint": "Bandingkan dari mana karbon berasal dan berapa lama karbon itu berada di luar siklus atmosfer."
+  },
+  {
+   "type": "pg",
+   "q": "Dalam kerangka net zero, apa yang disebut emisi residual?",
+   "opts": [
+    "Emisi yang sangat sulit dihilangkan, misalnya CO2 dari reaksi proses semen",
+    "Emisi yang dilepas setelah proyek dinyatakan selesai dan tidak lagi dipantau",
+    "Emisi sisa dari kendaraan listrik yang berasal dari keausan ban dan rem jalan",
+    "Emisi yang sudah dihitung dua kali pada laporan inventarisasi nasional"
+   ],
+   "a": 0,
+   "explain": "Emisi residual adalah emisi yang tetap ada setelah semua opsi pengurangan yang layak dijalankan, contohnya CO2 proses dari kalsinasi batu kapur pada pabrik semen. Emisi ini harus diimbangi dengan penghilangan karbon seperti BECCS atau DAC agar net zero tercapai, sehingga tidak sama dengan kesalahan pencatatan atau emisi setelah proyek.",
+   "hint": "Pikirkan emisi yang tidak hilang walau bahan bakarnya diganti."
+  },
+  {
+   "type": "pg",
+   "q": "Pada skenario net zero global, CCUS dibutuhkan terutama untuk sektor…",
+   "opts": [
+    "rumah tangga yang sudah memakai kompor listrik dan lampu LED hemat energi",
+    "transportasi jalan ringan yang beralih ke baterai",
+    "industri berat seperti semen dan baja serta penghilangan karbon",
+    "pembangkit surya atap yang tidak membakar bahan bakar"
+   ],
+   "a": 2,
+   "explain": "Sektor semen, baja, kimia dan sebagian pembangkit termal memiliki emisi proses atau panas suhu tinggi yang sulit digantikan listrik, sehingga penangkapan karbon menjadi salah satu pilihan utama. Rumah tangga elektrifikasi, kendaraan baterai dan PLTS atap tidak mengeluarkan CO2 yang perlu ditangkap di titik pembuangan.",
+   "hint": "Cari sektor yang masih mengeluarkan CO2 dalam jumlah besar dan terkonsentrasi di satu titik cerobong."
+  },
+  {
+   "type": "pg",
+   "q": "Apa perbedaan mendasar antara CCS dan CCU?",
+   "opts": [
+    "CCS menyimpan CO2 permanen di bawah tanah, CCU memakainya sebagai bahan baku",
+    "CCS hanya dipakai pada gas alam, sedangkan CCU hanya dipakai pada batu bara",
+    "CCS memakai udara sebagai sumber CO2, sedangkan CCU memakai flue gas",
+    "CCS berarti pengurangan emisi sukarela, sedangkan CCU wajib secara hukum"
+   ],
+   "a": 0,
+   "explain": "Pada CCS tujuan akhirnya adalah menyimpan CO2 di formasi geologi dalam jangka sangat panjang, sedangkan CCU mengonversi atau memakai CO2 dalam produk seperti urea, metanol atau beton dengan durasi penyimpanan karbon yang bervariasi. Perbedaannya bukan jenis bahan bakar, sumber CO2 maupun status kewajiban hukumnya.",
+   "hint": "Lihat ke mana CO2 berakhir pada kedua skema, bukan dari mana asalnya."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa CCUS dipandang relevan bagi Indonesia yang menargetkan net zero emission pada 2060 atau lebih cepat?",
+   "opts": [
+    "Karena CCUS menghapus kebutuhan energi terbarukan di seluruh sistem",
+    "Karena Indonesia tidak punya formasi geologi sehingga seluruh CO2 harus diekspor",
+    "Karena CO2 sudah dilarang dilepas ke atmosfer oleh siapa pun sejak 2024",
+    "Karena PLTU dan industri berat masih beroperasi serta ada cekungan penyimpan"
+   ],
+   "a": 3,
+   "explain": "Indonesia masih memiliki banyak PLTU dan industri semen, baja, pupuk serta migas, dan memiliki cekungan sedimen dengan saline aquifer serta reservoir migas yang berpotensi menjadi penyimpan. CCUS bersifat pelengkap, bukan pengganti energi terbarukan, dan tidak ada larangan menyeluruh melepas CO2 yang menjadikannya satu-satunya jalan.",
+   "hint": "Tanyakan apa yang dimiliki Indonesia di sisi sumber emisi dan di sisi calon tempat penyimpanan."
+  }
+ ]
+,
+ "3W.07": [
+  {
+   "type": "pg",
+   "q": "Pada unit penangkapan amine, di kolom manakah CO2 dari flue gas diserap oleh pelarut?",
+   "opts": [
+    "Stripper, tempat pelarut dipanaskan oleh steam reboiler",
+    "Kolom reflux, tempat uap air dikondensasikan kembali",
+    "Absorber, tempat gas naik melawan pelarut lean yang turun",
+    "Heat exchanger lean-rich, tempat panas antaraliran dipertukarkan"
+   ],
+   "a": 2,
+   "explain": "Absorber adalah kolom kontak gas-cair berlawanan arah: flue gas masuk dari bawah, pelarut lean dari atas, sehingga CO2 terserap dan pelarut keluar sebagai rich amine. Stripper bertugas melepas CO2, kolom reflux menahan uap pelarut, dan heat exchanger hanya memindahkan panas tanpa menyerap CO2.",
+   "hint": "Cari kolom tempat gas bersih dan pelarut miskin CO2 bertemu pertama kali."
+  },
+  {
+   "type": "pg",
+   "q": "Apa fungsi utama stripper pada siklus penangkapan amine?",
+   "opts": [
+    "Memanaskan rich amine agar melepas CO2 dan menjadi lean amine",
+    "Menyaring partikel abu dari flue gas sebelum masuk absorber",
+    "Mendinginkan flue gas hingga di bawah titik embun air",
+    "Menaikkan tekanan CO2 sampai kondisi pipa"
+   ],
+   "a": 0,
+   "explain": "Di stripper, panas dari reboiler membalik reaksi pengikatan CO2 sehingga CO2 lepas sebagai gas dan pelarut regenerasi kembali ke absorber. Penyaringan partikel dan pendinginan flue gas dilakukan di unit pra-perlakuan, sedangkan pemampatan CO2 menjadi tugas train kompresi yang terpisah.",
+   "hint": "Regenerasi berarti pelarut dibuat siap dipakai lagi: apa yang harus dilepas darinya?"
+  },
+  {
+   "type": "pg",
+   "q": "Komponen mana yang paling besar menyumbang kebutuhan energi pada penangkapan CO2 dengan amine?",
+   "opts": [
+    "Pompa sirkulasi pelarut antara absorber dan stripper",
+    "Reboiler stripper yang memakai steam regenerasi",
+    "Blower flue gas yang mengatasi penurunan tekanan absorber",
+    "Pompa air pendingin pada kondensor kolom stripper"
+   ],
+   "a": 1,
+   "explain": "Kebutuhan panas regenerasi di reboiler merupakan porsi terbesar, kira-kira 3,5 hingga 4 GJ per ton CO2 untuk MEA konvensional, dan biasanya diambil dari steam pembangkit. Pompa dan blower memakai listrik dalam jumlah jauh lebih kecil, sehingga bukan sumber utama penalti energi.",
+   "hint": "Ingat bahwa melepas ikatan kimia membutuhkan panas, bukan sekadar daya listrik mesin berputar."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa SOx dan NOx perlu dikurangi sebelum flue gas masuk absorber amine?",
+   "opts": [
+    "Keduanya mengubah warna pelarut sehingga pemantauan visual di lapangan sulit dilakukan",
+    "Keduanya membuat flue gas terlalu dingin sehingga CO2 tidak lagi dapat terserap",
+    "Keduanya meningkatkan kadar oksigen sehingga terjadi ledakan di kolom",
+    "Keduanya bereaksi dengan amine menjadi garam stabil panas yang menurunkan kapasitas"
+   ],
+   "a": 3,
+   "explain": "Gas asam seperti SO2 dan NO2 bereaksi tak balik dengan amine menjadi heat-stable salts yang tidak dapat diregenerasi pada kondisi stripper normal, sehingga pelarut berkurang dan korosi naik. Alasan warna, suhu atau ledakan tidak mencerminkan mekanisme kimia yang sebenarnya.",
+   "hint": "Pikirkan reaksi yang tidak bisa dibalik oleh panas reboiler."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa suhu stripper lebih tinggi dibandingkan suhu absorber?",
+   "opts": [
+    "Reaksi serap eksotermik lebih baik pada suhu rendah, sedangkan pelepasan butuh panas",
+    "Karena pelarut akan membeku jika suhu absorber dinaikkan terlalu jauh dari titik leburnya",
+    "Karena tekanan atmosfer naik di dalam kolom stripper",
+    "Karena reaksi di absorber memerlukan katalis logam yang baru aktif pada suhu tinggi"
+   ],
+   "a": 0,
+   "explain": "Reaksi penyerapan CO2 oleh amine melepas panas dan kesetimbangannya bergeser ke arah penyerapan pada suhu sekitar 40 hingga 60 derajat Celsius, sedangkan pelepasan CO2 dipacu pada kira-kira 100 hingga 120 derajat Celsius. Pembekuan pelarut, tekanan atmosfer dan katalis bukan alasan perbedaan suhu itu.",
+   "hint": "Hubungkan arah reaksi dengan prinsip Le Chatelier saat suhu dinaikkan atau diturunkan."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa kolom absorber diisi packing atau tray?",
+   "opts": [
+    "Menahan abu dan partikel padat yang terbawa flue gas dari boiler",
+    "Menurunkan suhu pelarut sebelum dikirim ke stripper",
+    "Memperluas bidang kontak gas-cair untuk perpindahan massa CO2",
+    "Mengubah CO2 langsung menjadi karbonat padat di dalam kolom"
+   ],
+   "a": 2,
+   "explain": "Packing atau tray memperbanyak luas permukaan dan waktu kontak antara gas dan pelarut sehingga CO2 berpindah ke fase cair dengan efisien. Fungsi penyaring partikel dipegang unit pra-perlakuan, pendinginan pelarut ditangani heat exchanger, dan CO2 tidak diendapkan menjadi padatan di absorber.",
+   "hint": "Perpindahan massa dibantu oleh luas permukaan kontak, bukan oleh ukuran kolom semata."
+  }
+ ]
+,
+ "4W.03": [
+  {
+   "type": "pg",
+   "q": "Berapa kira-kira densitas gas CO2 ideal pada 1 atm dan 25 derajat Celsius (massa molar 44 g/mol)?",
+   "opts": [
+    "0,18 kg/m³",
+    "0,44 kg/m³",
+    "18 kg/m³",
+    "1,8 kg/m³"
+   ],
+   "a": 3,
+   "explain": "Dengan hukum gas ideal, densitas = P x M / (R x T) = 101.325 x 0,04401 / (8,314 x 298,15), yang menghasilkan sekitar 1,8 kg/m³. Nilai 0,18 dan 0,44 terlalu kecil, sedangkan 18 kg/m³ baru sesuai tekanan sekitar 10 atm.",
+   "hint": "Gunakan rumus densitas dari hukum gas ideal dengan satuan SI dan suhu dalam kelvin."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa persamaan gas ideal tidak layak dipakai untuk CO2 pada tekanan 100 bar?",
+   "opts": [
+    "Karena CO2 pada tekanan itu pasti sudah menjadi padatan beku",
+    "Interaksi antarmolekul dominan sehingga Z menyimpang jauh dari 1",
+    "Karena massa molar CO2 berubah mengikuti tekanan",
+    "Karena hukum gas ideal hanya berlaku untuk campuran dua komponen gas"
+   ],
+   "a": 1,
+   "explain": "Pada tekanan tinggi molekul sangat berdekatan, gaya tarik dan volume molekul tidak lagi dapat diabaikan, sehingga nilai Z jauh dari 1 dan densitas dari persamaan ideal meleset besar. CO2 pada 100 bar dan suhu pipa biasa berupa fluida padat atau superkritis, bukan padatan, dan massa molarnya tetap konstan.",
+   "hint": "Tanyakan asumsi apa yang runtuh ketika molekul dipadatkan pada tekanan ratusan kali atmosfer."
+  },
+  {
+   "type": "pg",
+   "q": "Persamaan keadaan yang dikembangkan khusus dengan akurasi tinggi untuk CO2 murni adalah…",
+   "opts": [
+    "persamaan Antoine untuk tekanan uap",
+    "van der Waals dengan parameter bawaan buku teks",
+    "persamaan Span-Wagner",
+    "gas ideal dengan faktor koreksi tetap"
+   ],
+   "a": 2,
+   "explain": "Persamaan Span-Wagner adalah persamaan keadaan berbasis energi bebas Helmholtz yang dikalibrasi pada data eksperimen CO2 murni dan menjadi acuan akurasi dalam desain proses. Persamaan Antoine hanya menggambarkan tekanan uap, sedangkan van der Waals dan gas ideal terlalu kasar untuk rentang tekanan pipa dan injeksi.",
+   "hint": "Cari persamaan yang memang dikalibrasi pada data satu zat saja, bukan model umum buku teks."
+  },
+  {
+   "type": "pg",
+   "q": "Pipa mengalirkan CO2 fase padat dengan densitas 800 kg/m³ pada laju massa 100 kg/s. Berapa laju volumetriknya?",
+   "opts": [
+    "0,125 m³/s",
+    "0,80 m³/s",
+    "8,0 m³/s",
+    "0,0125 m³/s"
+   ],
+   "a": 0,
+   "explain": "Laju volumetrik sama dengan laju massa dibagi densitas, yaitu 100 / 800 = 0,125 m³/s. Nilai 0,80 dan 8,0 berasal dari pembagian atau perkalian yang terbalik, sedangkan 0,0125 salah satu orde besarnya.",
+   "hint": "Satuan kg/s dibagi kg/m³ memberi satuan apa? Gunakan itu untuk memeriksa operasinya."
+  },
+  {
+   "type": "pg",
+   "q": "Laju alir massa rata-rata 1 juta ton CO2 per tahun (operasi 365 hari penuh) setara dengan kira-kira…",
+   "opts": [
+    "3,17 kg/s",
+    "317 kg/s",
+    "31,7 kg/s",
+    "114 kg/s"
+   ],
+   "a": 2,
+   "explain": "Satu juta ton adalah 1 x 10^9 kg dan satu tahun berisi sekitar 3,15 x 10^7 detik, sehingga laju rata-ratanya sekitar 31,7 kg/s. Nilai 3,17 dan 317 meleset satu orde besar, sedangkan 114 kg/s mencampur satuan kg per jam dengan kg per detik.",
+   "hint": "Ubah ton menjadi kilogram, tahun menjadi detik, lalu bagi keduanya."
+  },
+  {
+   "type": "pg",
+   "q": "Bagaimana impuritas nonkondensabel seperti N2 dan H2 memengaruhi aliran CO2 fase padat dalam pipa?",
+   "opts": [
+    "Menaikkan densitas dan menurunkan tekanan minimum aliran pada suhu sama",
+    "Menurunkan densitas dan menaikkan tekanan minimum satu fase",
+    "Tidak mengubah apa pun karena fraksinya selalu sangat kecil",
+    "Hanya menggeser titik tripel tanpa memengaruhi tekanan didih campuran"
+   ],
+   "a": 1,
+   "explain": "Gas ringan nonkondensabel menurunkan densitas campuran dan menaikkan tekanan gelembung, sehingga tekanan operasi harus lebih tinggi agar tidak terbentuk dua fase dan kapasitas angkut pipa turun. Anggapan bahwa dampaknya nol keliru karena persen kecil saja sudah mengubah envelope fase.",
+   "hint": "Gas ringan yang sulit mengembun akan mengubah kemudahan campuran untuk tetap cair atau padat."
+  }
+ ]
+,
+ "5W.04": [
+  {
+   "type": "pg",
+   "q": "Mengapa plume CO2 yang diinjeksikan ke saline aquifer cenderung naik dan menyebar di bawah caprock?",
+   "opts": [
+    "CO2 superkritis lebih ringan daripada brine sehingga naik karena gaya apung",
+    "CO2 bereaksi dengan brine menjadi gas ringan yang akhirnya menguap ke atmosfer",
+    "Tekanan injeksi selalu mengarah ke atas pada seluruh sumur",
+    "Brine memiliki viskositas lebih rendah daripada CO2 pada semua kondisi"
+   ],
+   "a": 0,
+   "explain": "Densitas CO2 superkritis sekitar 600 hingga 800 kg/m³, lebih rendah daripada brine sekitar 1.000 kg/m³, sehingga gaya apung mendorongnya naik hingga tertahan caprock lalu menyebar lateral. Arah tekanan injeksi tidak ditentukan seperti itu, dan CO2 tidak berubah menjadi gas lain yang lolos ke atmosfer.",
+   "hint": "Bandingkan massa jenis kedua fluida di dalam pori batuan."
+  },
+  {
+   "type": "pg",
+   "q": "Batas geomekanik utama yang membatasi tekanan injeksi pada simulasi reservoir adalah…",
+   "opts": [
+    "kapasitas kompresor cadangan yang terpasang di anjungan injeksi",
+    "salinitas brine di sekitar sumur pantau dan sumur injeksi",
+    "tekanan rekah formasi dengan margin keselamatan",
+    "diameter pipa pengumpul di permukaan"
+   ],
+   "a": 2,
+   "explain": "Tekanan reservoir yang melampaui tekanan rekah dapat membuka rekahan pada caprock dan merusak containment, sehingga operator menetapkan batas, misalnya 90 persen dari tekanan rekah. Kapasitas kompresor, salinitas dan diameter pipa memang relevan bagi desain, tetapi bukan batas geomekanik formasi.",
+   "hint": "Pikirkan apa yang bisa merusak batuan penutup bila tekanan terus naik."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa histeresis permeabilitas relatif penting dalam simulasi trapping CO2?",
+   "opts": [
+    "Karena histeresis menentukan harga karbon pada kontrak penyimpanan jangka panjang",
+    "Karena histeresis mengubah massa molar CO2 selama berlangsungnya injeksi",
+    "Karena histeresis hanya memengaruhi kecepatan suara pada survei seismik 4D",
+    "Karena saturasi CO2 residual yang tertinggal saat brine mendesak balik menentukan trapping"
+   ],
+   "a": 3,
+   "explain": "Saat injeksi berhenti dan brine masuk kembali ke pori yang ditinggalkan plume, sebagian CO2 terjebak sebagai gelembung terisolasi, dan jumlahnya diatur oleh kurva imbibisi yang berbeda dari kurva drainase. Tanpa memodelkan efek ini, kapasitas trapping residual akan keliru, sedangkan tiga alasan lain tidak berkaitan dengan fisika aliran dua fase.",
+   "hint": "Fokus pada apa yang terjadi pada CO2 ketika arah desakan fluida berbalik."
+  },
+  {
+   "type": "pg",
+   "q": "Bagaimana lapisan shale tipis yang tersebar memengaruhi migrasi vertikal plume?",
+   "opts": [
+    "Mempercepat naiknya plume karena permeabilitas shale sangat tinggi",
+    "Memperlambat naiknya plume dan melebarkannya ke samping",
+    "Menghentikan seluruh aliran CO2 sehingga injeksi tidak mungkin dilakukan",
+    "Tidak berpengaruh karena simulator mengabaikan heterogenitas lapisan"
+   ],
+   "a": 1,
+   "explain": "Shale tipis berpermeabilitas rendah menjadi penghalang parsial yang membelokkan CO2 ke samping, memperpanjang jalur migrasi dan memperbesar kontak dengan brine sehingga pelarutan serta trapping meningkat. Shale tidak sangat permeabel, tidak otomatis menyumbat injeksi, dan heterogenitas justru harus dimasukkan dalam model.",
+   "hint": "Bayangkan CO2 harus mencari jalan memutar saat bertemu lapisan yang sulit ditembus."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa kenaikan tekanan pada akuifer tertutup lebih besar daripada akuifer terbuka pada laju injeksi yang sama?",
+   "opts": [
+    "Akuifer tertutup memiliki porositas yang selalu lebih besar daripada akuifer terbuka",
+    "Brine terdesak tidak bisa keluar lewat batas sehingga tekanan menumpuk",
+    "Akuifer terbuka selalu memiliki caprock yang lebih tebal",
+    "Akuifer tertutup mengandung CO2 alami yang menambah tekanan"
+   ],
+   "a": 1,
+   "explain": "Pada batas tanpa aliran, volume yang disuntikkan hanya dapat ditampung dengan memampatkan batuan dan fluida, sehingga tekanan terakumulasi lebih tinggi, sementara akuifer terbuka membiarkan brine mengalir keluar dan menyalurkan tekanan. Perbedaan porositas, ketebalan caprock atau CO2 alami bukan penyebab pola ini.",
+   "hint": "Tanyakan ke mana brine pengganti bisa pergi pada tiap jenis batas."
+  },
+  {
+   "type": "pg",
+   "q": "Reservoir pada kedalaman 2.000 m memiliki gradien tekanan rekah 0,0180 MPa/m. Bila batas tekanan injeksi ditetapkan 90 persen dari tekanan rekah, berapa batas tekanannya?",
+   "opts": [
+    "36,0 MPa",
+    "18,0 MPa",
+    "3,24 MPa",
+    "32,4 MPa"
+   ],
+   "a": 3,
+   "explain": "Tekanan rekah di kedalaman itu adalah 0,0180 x 2.000 = 36,0 MPa, lalu dikalikan 0,9 menjadi 32,4 MPa sebagai batas operasi. Nilai 36,0 MPa lupa menerapkan faktor 90 persen, 18,0 MPa memakai setengah kedalaman, dan 3,24 MPa meleset satu orde besar.",
+   "hint": "Hitung dulu tekanan rekah penuh pada kedalaman itu, baru kenakan faktor pembatas."
+  }
+ ]
+,
+ "6W.02": [
+  {
+   "type": "pg",
+   "q": "Pada hierarki kapasitas penyimpanan CO2, tingkat mana yang paling kecil karena sudah mencocokkan sumber emisi dengan tapak?",
+   "opts": [
+    "Kapasitas matched",
+    "Kapasitas teoretis berdasarkan seluruh volume pori formasi",
+    "Kapasitas efektif yang hanya memakai batas geologi",
+    "Kapasitas praktis tanpa memperhitungkan sumber CO2"
+   ],
+   "a": 0,
+   "explain": "Kapasitas teoretis adalah batas atas, efektif menambahkan batas geologi, praktis menambahkan batas teknis, hukum dan ekonomi, dan matched mencocokkan sumber CO2 tertentu dengan tapak tertentu sehingga nilainya paling kecil dan paling dekat ke keputusan proyek. Karena itu tiga tingkat lain lebih besar dan lebih bersifat sumber daya daripada cadangan.",
+   "hint": "Semakin banyak filter diterapkan, semakin kecil angkanya; tingkat mana yang filternya paling lengkap?"
+  },
+  {
+   "type": "pg",
+   "q": "Pada rumus kapasitas volumetrik saline aquifer M = A x h x porositas x densitas CO2 x E, apa arti E?",
+   "opts": [
+    "Energi injeksi yang dibutuhkan untuk setiap ton CO2 yang disimpan",
+    "Eksponen kompresibilitas batuan reservoir pada tekanan awal",
+    "Faktor efisiensi penyimpanan: bagian pori yang dapat ditempati CO2",
+    "Emisi bersih proyek setelah dikurangi seluruh emisi hulu pasokan energi"
+   ],
+   "a": 2,
+   "explain": "Faktor E biasanya hanya beberapa persen karena tidak seluruh pori dijangkau plume akibat gaya apung, heterogenitas dan batas tekanan. Energi, eksponen kompresibilitas dan emisi bersih bukan komponen rumus volumetrik ini.",
+   "hint": "Tidak seluruh volume pori bisa terisi; cari simbol yang mewakili bagian yang bisa terisi."
+  },
+  {
+   "type": "pg",
+   "q": "Tapak punya luas 100 km², tebal bersih 50 m, porositas 0,2, densitas CO2 700 kg/m³ dan E = 2 persen. Berapa kapasitas penyimpanannya?",
+   "opts": [
+    "140 Mt CO2",
+    "1,4 Mt CO2",
+    "0,14 Mt CO2",
+    "14 Mt CO2"
+   ],
+   "a": 3,
+   "explain": "Volume bruto = 100 x 10^6 m² x 50 m = 5 x 10^9 m³, volume pori = 1 x 10^9 m³, volume terisi dengan E 2 persen = 2 x 10^7 m³, dan massanya = 2 x 10^7 x 700 = 1,4 x 10^10 kg atau 14 Mt. Jawaban 140 Mt memakai E sepuluh kali lebih besar, sedangkan 1,4 dan 0,14 Mt salah satu atau dua orde besar.",
+   "hint": "Kalikan berurutan dari luas ke massa, dan periksa orde besar tiap langkah."
+  },
+  {
+   "type": "pg",
+   "q": "Apa yang diukur oleh injectivity index sumur injeksi?",
+   "opts": [
+    "Jumlah CO2 maksimum yang dapat disimpan di seluruh tapak penyimpanan",
+    "Laju injeksi per satuan selisih tekanan sumur dan reservoir",
+    "Kecepatan migrasi plume menuju sumur pantau terdekat",
+    "Rasio CO2 terhadap impuritas dalam aliran yang diinjeksikan"
+   ],
+   "a": 1,
+   "explain": "Injectivity index menyatakan seberapa besar laju injeksi untuk setiap kenaikan tekanan di sumur, misalnya dalam ton per hari per bar, sehingga menentukan jumlah sumur yang diperlukan. Kapasitas total, kecepatan plume dan kemurnian aliran adalah besaran lain yang tidak menggambarkan respons tekanan sumur.",
+   "hint": "Besaran ini berupa rasio antara laju dan tekanan, jadi cari opsi yang berbentuk perbandingan itu."
+  },
+  {
+   "type": "pg",
+   "q": "Karakteristik caprock yang paling penting bagi containment CO2 adalah…",
+   "opts": [
+    "tekanan masuk kapiler tinggi serta ketebalan dan kemenerusan memadai",
+    "porositas tinggi agar CO2 dapat meresap ke dalam lapisan penutup",
+    "kandungan pasir kuarsa yang melimpah di seluruh lapisan batuan",
+    "permeabilitas horizontal yang besar untuk menyebarkan plume dengan cepat"
+   ],
+   "a": 0,
+   "explain": "Caprock yang baik berpermeabilitas sangat rendah dengan tekanan masuk kapiler tinggi sehingga gaya apung CO2 tidak mampu menembusnya, dan harus menerus secara lateral serta cukup tebal. Porositas atau permeabilitas besar justru membuka jalur bocor, dan pasir kuarsa adalah ciri batuan reservoir bukan penutup.",
+   "hint": "Batuan penutup berfungsi sebagai penghalang, jadi lawan dari ciri reservoir."
+  },
+  {
+   "type": "pg",
+   "q": "Apa risiko menilai kapasitas tapak hanya dengan satu nilai deterministik?",
+   "opts": [
+    "Kapasitas yang dihitung pasti selalu lebih besar dari kenyataan di lapangan",
+    "Perhitungan menjadi tidak mungkin dilakukan tanpa memakai simulator reservoir",
+    "Ketidakpastian tersembunyi sehingga keputusan terlalu optimistis; gunakan P10, P50, P90",
+    "Hanya regulator yang boleh memakai nilai tunggal dalam laporan resmi"
+   ],
+   "a": 2,
+   "explain": "Parameter seperti porositas, ketebalan dan efisiensi penyimpanan sangat tidak pasti, sehingga satu angka menyembunyikan rentang kemungkinan dan dapat membuat kontrak serta investasi terlalu bergantung pada hasil terbaik. Pelaporan P10, P50 dan P90 atau analisis probabilistik memberi gambaran risiko yang jujur. Nilai tunggal tidak otomatis lebih besar dari kenyataan dan tidak dilarang bagi operator.",
+   "hint": "Satu angka tunggal tidak memberi tahu seberapa jauh hasil bisa meleset."
+  }
+ ]
+,
+ "3X.01": [
+  {
+   "type": "pg",
+   "q": "Apa fungsi utama sebuah data center?",
+   "opts": [
+    "Membangkitkan listrik untuk dijual ke jaringan distribusi",
+    "Menampung dan melindungi peralatan IT agar layanan digital terus berjalan",
+    "Menyalurkan air bersih dan gas industri untuk kawasan pabrik di sekitarnya",
+    "Menyimpan arsip fisik berupa dokumen kertas milik perusahaan"
+   ],
+   "a": 1,
+   "explain": "Data center menyediakan daya listrik, pendinginan, keamanan fisik dan konektivitas yang andal bagi server, penyimpanan dan jaringan. Ia bukan pembangkit, bukan fasilitas air bersih dan bukan gudang arsip kertas; listrik hanya dikonsumsi di sana, bukan dijual.",
+   "hint": "Pikirkan apa yang sebenarnya ditempatkan di dalam gedung itu dan apa yang dibutuhkan agar benda tersebut tidak mati."
+  },
+  {
+   "type": "pg",
+   "q": "Bagaimana urutan umum aliran daya dari sumber utama sampai ke peralatan IT di rak?",
+   "opts": [
+    "Utility, PDU, trafo, UPS, switchgear, lalu rack",
+    "Genset, rack, UPS, trafo, switchgear, lalu PDU",
+    "Utility, trafo, switchgear, UPS, PDU, lalu rack",
+    "Utility, UPS, genset, trafo, rack, lalu PDU"
+   ],
+   "a": 2,
+   "explain": "Daya masuk dari utility pada tegangan menengah, diturunkan trafo, dibagi di switchgear, dikondisikan UPS, lalu disalurkan PDU ke rack. Urutan lain menempatkan PDU atau rack sebelum penurunan tegangan, padahal peralatan rack bekerja pada tegangan rendah, dan genset adalah sumber cadangan, bukan titik tengah rantai.",
+   "hint": "Ikuti tegangan dari tinggi ke rendah, dan perhatikan di titik mana daya dikondisikan sebelum dibagi ke rak."
+  },
+  {
+   "type": "pg",
+   "q": "Bagaimana PUE sebuah data center dihitung?",
+   "opts": [
+    "Total daya fasilitas dibagi daya beban IT",
+    "Daya beban IT dibagi total daya fasilitas",
+    "Daya sistem pendinginan dibagi daya beban IT",
+    "Daya UPS dibagi daya genset terpasang"
+   ],
+   "a": 0,
+   "explain": "PUE (power usage effectiveness) adalah total daya fasilitas dibagi daya peralatan IT, sehingga nilai idealnya mendekati 1,0 dan tidak pernah di bawahnya. Kebalikannya adalah DCiE, rasio pendinginan terhadap IT hanya satu komponen overhead, dan rasio UPS terhadap genset tidak mengukur efisiensi sama sekali.",
+   "hint": "Pembilangnya mencakup semua daya yang masuk gedung, jadi hasilnya tidak mungkin kurang dari satu."
+  },
+  {
+   "type": "pg",
+   "q": "Sebuah data center memiliki beban IT 800 kW dan total daya fasilitas 1.200 kW. Berapa PUE-nya?",
+   "opts": [
+    "0,67",
+    "1,25",
+    "1,50",
+    "2,00"
+   ],
+   "a": 2,
+   "explain": "PUE = 1.200 kW dibagi 800 kW = 1,50, artinya setiap 1 kW untuk IT diikuti 0,5 kW overhead untuk pendinginan, rugi-rugi listrik dan lainnya. Nilai 0,67 adalah hasil pembagian terbalik, sedangkan 1,25 dan 2,00 tidak cocok dengan angka yang diberikan.",
+   "hint": "Bagi angka yang lebih besar dengan yang lebih kecil, lalu cek apakah hasilnya masuk akal untuk sebuah PUE."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa fasilitas dengan beban IT besar selalu memerlukan sistem pendinginan yang sepadan?",
+   "opts": [
+    "Server menyimpan energi listrik sebagai panas untuk dipakai kembali",
+    "Pendinginan diperlukan untuk menaikkan tegangan catu menuju rak",
+    "Panas di ruang server hanya berasal dari lampu penerangan ruangan",
+    "Daya listrik yang diserap server pada akhirnya hampir seluruhnya dilepas sebagai panas"
+   ],
+   "a": 3,
+   "explain": "Menurut kekekalan energi, daya yang masuk ke chip, memori dan power supply dilepas sebagai panas, sehingga 1 kW beban IT kira-kira menjadi 1 kW beban panas yang harus dibuang. Server tidak menyimpan panas untuk dipakai ulang, pendinginan tidak berurusan dengan tegangan, dan lampu hanya menyumbang bagian kecil.",
+   "hint": "Tanyakan ke mana perginya energi listrik setelah dipakai chip untuk menghitung."
+  },
+  {
+   "type": "pg",
+   "q": "Apa peran UPS dalam rantai catu daya saat utility tiba-tiba padam?",
+   "opts": [
+    "Menggantikan genset sebagai sumber energi jangka panjang selama berhari-hari",
+    "Menyuplai beban IT dari baterai sampai genset siap menanggung beban",
+    "Menurunkan tegangan menengah dari utility menjadi tegangan rendah",
+    "Mendinginkan ruang server selama masa transisi berlangsung"
+   ],
+   "a": 1,
+   "explain": "UPS menjembatani celah antara padamnya utility dan siapnya genset, yang umumnya butuh sekitar 10 sampai 15 detik untuk start dan menerima beban. Kapasitas baterai hanya cukup untuk menit, bukan hari, penurunan tegangan adalah tugas trafo, dan pendinginan ditangani sistem mekanikal.",
+   "hint": "Bayangkan selang waktu antara listrik padam dan mesin cadangan stabil; siapa yang menutup celah itu?"
+  }
+ ]
+,
+ "3X.05": [
+  {
+   "type": "pg",
+   "q": "Standar manakah yang berasal dari Eropa dan menjadi dasar bagi seri ISO/IEC 22237?",
+   "opts": [
+    "TIA-942",
+    "Uptime Institute Tier Standard",
+    "EN 50600",
+    "NFPA 75"
+   ],
+   "a": 2,
+   "explain": "Seri ISO/IEC 22237 dikembangkan dari rangkaian EN 50600 sehingga keduanya sangat selaras dalam struktur dan istilah. TIA-942 berasal dari Amerika Serikat, Tier Standard adalah kerangka milik Uptime Institute, dan NFPA 75 mengatur proteksi kebakaran peralatan IT, bukan arsitektur fasilitas.",
+   "hint": "Cari standar yang asal wilayahnya sama dengan prefiks EN, lalu ingat standar internasional mana yang menyerapnya."
+  },
+  {
+   "type": "pg",
+   "q": "Apa ciri khas TIA-942 dibanding kerangka lain?",
+   "opts": [
+    "Memuat persyaratan telekomunikasi, arsitektur, kelistrikan dan mekanikal dengan rating 1 sampai 4",
+    "Hanya mengatur efisiensi energi dengan batas PUE yang wajib dipenuhi oleh seluruh pemilik data center",
+    "Hanya berlaku di Eropa dan melarang penilaian oleh pihak ketiga terhadap fasilitas",
+    "Hanya mengatur proteksi kebakaran untuk gedung perkantoran biasa"
+   ],
+   "a": 0,
+   "explain": "TIA-942 adalah standar infrastruktur telekomunikasi untuk data center yang membahas aspek arsitektur, kabel, kelistrikan, mekanikal dan keamanan, dengan tingkat Rated-1 sampai Rated-4. Ia tidak menetapkan batas PUE wajib, berasal dari Amerika Serikat, dan penilaian pihak ketiga justru lazim dilakukan.",
+   "hint": "Ingat bahwa asalnya standar telekomunikasi, jadi cakupannya lebih luas dari satu topik tunggal."
+  },
+  {
+   "type": "pg",
+   "q": "Dalam ISO/IEC 22237 dan EN 50600, tingkat ketersediaan fasilitas dinyatakan dengan istilah apa?",
+   "opts": [
+    "Tier I sampai IV yang disertifikasi Uptime Institute",
+    "Availability Class 1 sampai 4",
+    "Level 1 sampai 5 pada tahapan commissioning",
+    "Kelas PUE A sampai E berdasarkan konsumsi energi"
+   ],
+   "a": 1,
+   "explain": "Kedua rangkaian standar itu memakai Availability Class 1 sampai 4 untuk menggambarkan tingkat redundansi dan ketahanan infrastruktur. Tier I-IV adalah istilah Uptime Institute, Level 1-5 adalah tahapan commissioning, dan pengelompokan kelas PUE bukan cara menyatakan ketersediaan.",
+   "hint": "Perhatikan istilah yang memang dipakai standar Eropa dan internasional, bukan istilah milik lembaga lain."
+  },
+  {
+   "type": "pg",
+   "q": "Mana pernyataan yang paling tepat tentang klasifikasi Tier I sampai IV dari Uptime Institute?",
+   "opts": [
+    "Standar nasional yang wajib dipenuhi oleh semua data center di dunia",
+    "Peringkat yang dinilai dari luas lantai ruang server",
+    "Peringkat yang hanya menilai besar kapasitas genset",
+    "Klasifikasi topologi infrastruktur dari Tier I (kapasitas dasar) sampai Tier IV (toleran gangguan)"
+   ],
+   "a": 3,
+   "explain": "Tier Standard dari Uptime Institute menilai topologi dan ketahanan infrastruktur, dari Tier I berkapasitas dasar hingga Tier IV yang toleran terhadap kegagalan tunggal. Ia bukan hukum nasional yang wajib, dan luas lantai atau kapasitas genset saja tidak menentukan tier.",
+   "hint": "Tier menilai cara fasilitas dirancang menghadapi gangguan, bukan ukuran fisiknya."
+  },
+  {
+   "type": "pg",
+   "q": "Cakupan seri ISO/IEC 22237 terutama meliputi hal apa?",
+   "opts": [
+    "Aplikasi perangkat lunak dan algoritma enkripsi yang berjalan di server maupun basis data pelanggan",
+    "Spesifikasi prosesor, memori dan perangkat penyimpanan yang dipasang di dalam server",
+    "Fasilitas dan infrastruktur: bangunan, distribusi daya, kontrol lingkungan, kabel, keamanan",
+    "Skema tarif dan kontrak penyewaan ruang colocation untuk pelanggan"
+   ],
+   "a": 2,
+   "explain": "ISO/IEC 22237 membahas infrastruktur fasilitas data center, mulai dari konstruksi bangunan, distribusi daya, pengendalian lingkungan, kabel telekomunikasi hingga keamanan fisik. Perangkat lunak, spesifikasi server dan skema bisnis berada di luar ruang lingkupnya.",
+   "hint": "Standar ini bicara soal wadah dan penunjang peralatan IT, bukan isi peralatan itu."
+  },
+  {
+   "type": "pg",
+   "q": "Tier III Uptime dan Rated-3 pada TIA-942 sama-sama menuntut kemampuan apa?",
+   "opts": [
+    "Toleran penuh terhadap kegagalan tunggal tanpa campur tangan operator sama sekali",
+    "Concurrently maintainable: komponen dapat dirawat tanpa menghentikan beban IT",
+    "Hanya satu jalur distribusi tanpa kebutuhan redundansi apa pun",
+    "Redundansi komponen kapasitas tetapi tanpa jalur distribusi ganda"
+   ],
+   "a": 1,
+   "explain": "Tingkat ketiga pada kedua kerangka mensyaratkan concurrent maintainability, yaitu setiap komponen atau jalur bisa dirawat atau diganti tanpa memadamkan beban IT. Toleransi kegagalan otomatis adalah ciri tingkat keempat, sementara jalur tunggal dan redundansi komponen tanpa jalur ganda mencerminkan tingkat I dan II.",
+   "hint": "Bedakan antara boleh dirawat tanpa mati dan kebal terhadap kegagalan mendadak; yang mana tingkat ketiga?"
+  }
+ ]
+,
+ "4X.03": [
+  {
+   "type": "pg",
+   "q": "Pada topologi distributed redundant dengan tiga modul UPS identik masing-masing 1.000 kW, berapa beban IT maksimum agar kegagalan satu UPS tidak menyebabkan overload?",
+   "opts": [
+    "1.000 kW",
+    "1.500 kW",
+    "3.000 kW",
+    "2.000 kW"
+   ],
+   "a": 3,
+   "explain": "Bila satu dari tiga sistem gagal, dua sisanya harus menanggung seluruh beban sehingga batasnya 2 x 1.000 kW = 2.000 kW atau sekitar 67% dari kapasitas terpasang. Angka 3.000 kW membuat sisa dua UPS kelebihan beban, sedangkan 1.000 kW dan 1.500 kW terlalu konservatif untuk topologi ini.",
+   "hint": "Hitung dulu kapasitas yang tersisa setelah satu sistem hilang, itulah batas atas bebannya."
+  },
+  {
+   "type": "pg",
+   "q": "Berapa kisaran pemanfaatan kapasitas maksimum pada 2N dibanding distributed redundant dengan tiga sistem?",
+   "opts": [
+    "Keduanya mencapai 100% karena seluruh modul aktif",
+    "2N sekitar 50% dan distributed redundant sekitar 67%",
+    "2N sekitar 67% dan distributed redundant sekitar 50%",
+    "2N sebesar 100% dan distributed redundant sebesar 75%"
+   ],
+   "a": 1,
+   "explain": "Pada 2N, satu sistem harus mampu memikul seluruh beban sehingga batasnya sekitar 50% dari total kapasitas. Pada distributed redundant tiga sistem, dua sistem yang tersisa memikul beban sehingga batasnya sekitar 67%. Klaim 100% mengabaikan syarat redundansi, dan dua opsi lain menukar atau melebih-lebihkan angkanya.",
+   "hint": "Tanyakan berapa bagian kapasitas yang harus tetap kosong agar sisa sistem sanggup menggantikan yang gagal."
+  },
+  {
+   "type": "pg",
+   "q": "Pada topologi isolated redundant (catcher), apa peran UPS cadangan?",
+   "opts": [
+    "Menyuplai input bypass statis UPS primer yang mengalami gangguan",
+    "Berbagi beban rata dengan UPS primer pada bus keluaran bersama setiap saat",
+    "Mengisi daya baterai UPS primer selama utility normal",
+    "Menggantikan fungsi genset ketika padam berlangsung panjang"
+   ],
+   "a": 0,
+   "explain": "Pada skema isolated redundant, keluaran UPS cadangan dihubungkan ke input bypass statis tiap UPS primer sehingga ia hanya mengambil beban saat salah satu primer bermasalah. Pembagian beban di bus bersama adalah ciri parallel redundant, dan UPS tidak mengisi baterai unit lain ataupun menggantikan genset.",
+   "hint": "Cari peran yang hanya aktif ketika ada UPS lain yang jatuh, bukan peran harian."
+  },
+  {
+   "type": "pg",
+   "q": "Apa kelemahan utama topologi parallel redundant N+1 yang memakai bus keluaran bersama?",
+   "opts": [
+    "Tidak dapat memakai lebih dari satu modul UPS dalam satu sistem bus paralel yang sama",
+    "Tidak memiliki kapasitas cadangan sama sekali",
+    "Bus keluaran bersama dan switchgear paralel menjadi single point of failure",
+    "Hanya cocok untuk beban DC tanpa inverter"
+   ],
+   "a": 2,
+   "explain": "Pada N+1 paralel, modul-modulnya redundan tetapi semuanya bertemu di satu bus keluaran dan switchgear paralel, sehingga kegagalan atau perawatan di titik itu memadamkan beban. Topologi ini justru memakai banyak modul dengan satu modul cadangan, dan ia melayani beban AC biasa.",
+   "hint": "Redundansi modul tidak otomatis berarti redundansi jalur; cari titik tempat semua jalur menyatu."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa topologi distributed redundant paling cocok untuk beban IT dual-corded?",
+   "opts": [
+    "Karena beban dual-corded tidak memerlukan UPS sama sekali",
+    "Karena topologi ini menghilangkan kebutuhan switchgear dan kabel feeder pada setiap jalur menuju rak",
+    "Karena dual-corded menggandakan kapasitas tiap modul UPS",
+    "Setiap beban mendapat dua jalur dari dua sistem berbeda sehingga satu sistem dapat gagal atau dirawat"
+   ],
+   "a": 3,
+   "explain": "Beban dual-corded memiliki dua input daya, sehingga masing-masing dapat dihubungkan ke dua sistem berbeda dan tetap hidup bila salah satu sistem gagal atau dirawat. Beban tetap membutuhkan UPS, switchgear dan feeder tetap diperlukan, dan dua kabel tidak mengubah kapasitas modul.",
+   "hint": "Kaitkan jumlah input daya pada peralatan dengan jumlah sumber independen yang bisa dihubungkan."
+  },
+  {
+   "type": "pg",
+   "q": "Empat modul UPS 500 kW dipasang paralel redundant N+1 pada satu bus. Berapa beban maksimum agar tetap redundan?",
+   "opts": [
+    "500 kW",
+    "1.500 kW",
+    "1.000 kW",
+    "2.000 kW"
+   ],
+   "a": 1,
+   "explain": "Pada N+1, kapasitas yang dihitung hanya N modul, sedangkan satu modul adalah cadangan, sehingga 3 x 500 kW = 1.500 kW. Beban 2.000 kW memakai seluruh modul sehingga redundansi hilang, dan 500 kW atau 1.000 kW terlalu rendah dibanding kemampuan N modul aktif.",
+   "hint": "Kurangi satu modul cadangan dari jumlah total, lalu kalikan dengan kapasitas tiap modul."
+  }
+ ]
+,
+ "5X.04": [
+  {
+   "type": "pg",
+   "q": "Berapa energi baterai minimum pada sisi DC untuk menopang beban 1.000 kW selama 5 menit dengan efisiensi inverter 96%, tanpa margin lain?",
+   "opts": [
+    "86,8 kWh",
+    "83,3 kWh",
+    "104,2 kWh",
+    "500 kWh"
+   ],
+   "a": 0,
+   "explain": "Energi keluaran = 1.000 kW x 5/60 jam = 83,3 kWh, lalu dibagi efisiensi 0,96 menjadi sekitar 86,8 kWh di sisi DC. Angka 83,3 kWh lupa memperhitungkan rugi inverter, 104,2 kWh menambahkan faktor 1,25 yang tidak diminta, dan 500 kWh keliru mengalikan daya dengan 0,5 jam.",
+   "hint": "Hitung energi sisi beban terlebih dulu, lalu naikkan sesuai rugi konversi."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa kapasitas baterai dirancang dengan faktor penuaan (end-of-life) dan margin desain?",
+   "opts": [
+    "Agar tegangan DC bus naik di atas tegangan nominal inverter",
+    "Karena baterai harus dikosongkan penuh setiap bulan",
+    "Kapasitas efektif turun seiring usia, sehingga runtime tetap terpenuhi pada akhir masa pakai",
+    "Karena standar melarang baterai bekerja di bawah beban penuh"
+   ],
+   "a": 2,
+   "explain": "Kapasitas baterai menurun karena umur, suhu dan jumlah siklus, sehingga baterai baru harus dibuat lebih besar agar di akhir masa pakai masih memenuhi runtime desain. Margin tidak berfungsi menaikkan tegangan DC, pengosongan penuh rutin justru mempercepat degradasi, dan tidak ada larangan baterai bekerja pada beban penuh.",
+   "hint": "Ingat bahwa baterai tidak selamanya sebesar saat baru; desain harus cukup untuk kondisi terburuknya."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa pada UPS besar yang didukung genset, runtime baterai umumnya hanya dipilih beberapa menit?",
+   "opts": [
+    "Karena baterai tidak dapat menyimpan energi lebih dari beberapa menit secara teknis pada sel modern berkapasitas besar",
+    "Karena genset selalu start dalam kurang dari satu detik",
+    "Karena standar membatasi runtime baterai maksimum lima menit",
+    "Genset hanya perlu dijembatani sampai start dan menerima beban; baterai lebih besar menambah biaya dan risiko"
+   ],
+   "a": 3,
+   "explain": "Tugas baterai adalah menjembatani waktu start dan sinkronisasi genset yang berkisar belasan detik, ditambah waktu respons bila genset gagal start. Baterai berkapasitas besar dapat dibuat tetapi menambah biaya, area dan beban pemeliharaan; genset tidak start dalam satu detik, dan tidak ada batas standar tunggal lima menit.",
+   "hint": "Tanyakan apa sebenarnya yang harus ditutup baterai ketika ada genset sebagai sumber jangka panjang."
+  },
+  {
+   "type": "pg",
+   "q": "Apa keunggulan baterai Li-ion dibanding VRLA pada UPS data center?",
+   "opts": [
+    "Densitas energi lebih tinggi, umur siklus lebih panjang dan jejak lebih kecil",
+    "Tidak memerlukan monitoring tingkat sel karena kimianya jauh lebih stabil dibanding VRLA",
+    "Biaya awal selalu lebih murah dalam semua kasus",
+    "Tidak pernah mengalami thermal runaway meski sel rusak atau terlalu panas"
+   ],
+   "a": 0,
+   "explain": "Li-ion menawarkan densitas energi tinggi, umur lebih panjang dan ruang lebih ringkas, tetapi bergantung pada battery management system (BMS) untuk keselamatan dan keseimbangan sel. Biaya awalnya umumnya lebih tinggi meski biaya siklus hidup bisa lebih rendah, dan risiko thermal runaway tetap ada.",
+   "hint": "Bandingkan dua sisi: keuntungan fisik dan kebutuhan pengamanan tambahan yang menyertainya."
+  },
+  {
+   "type": "pg",
+   "q": "Apa yang dimaksud thermal runaway pada baterai Li-ion?",
+   "opts": [
+    "Penurunan tegangan sel akibat pendinginan yang berlebihan pada ruang baterai di musim dingin",
+    "Kenaikan suhu sel yang mempercepat reaksi panas internal hingga menjalar ke sel lain",
+    "Tahap pengisian float yang dilakukan secara normal",
+    "Kenaikan kapasitas baterai ketika suhu lingkungan naik"
+   ],
+   "a": 1,
+   "explain": "Thermal runaway adalah reaksi berantai ketika panas dari sel yang rusak memicu reaksi eksotermik lebih lanjut dan merambat ke sel tetangga, sehingga perlu proteksi, pemisahan dan deteksi dini. Pendinginan berlebih, pengisian float dan kenaikan kapasitas bukan fenomena tersebut.",
+   "hint": "Kata runaway menunjukkan proses yang menguat sendiri, bukan kondisi operasi normal."
+  },
+  {
+   "type": "pg",
+   "q": "UPS double conversion 1.000 kW beroperasi pada efisiensi 96% di beban penuh. Berapa rugi daya yang dilepas sebagai panas?",
+   "opts": [
+    "Sekitar 4,0 kW",
+    "Sekitar 96 kW",
+    "Sekitar 100 kW",
+    "Sekitar 41,7 kW"
+   ],
+   "a": 3,
+   "explain": "Daya masukan = 1.000 kW dibagi 0,96 = 1.041,7 kW, sehingga rugi = 1.041,7 - 1.000 = 41,7 kW yang harus dibuang sistem pendingin. Angka 4 kW terlalu kecil, sedangkan 96 kW dan 100 kW salah menerapkan persentase pada angka yang keliru.",
+   "hint": "Cari daya masukan dari daya keluaran dan efisiensi, lalu ambil selisihnya."
+  }
+ ]
+,
+ "6X.02": [
+  {
+   "type": "pg",
+   "q": "Tahap Tier Certification Uptime Institute yang menilai dokumen desain sebelum konstruksi disebut apa?",
+   "opts": [
+    "Tier Certification of Constructed Facility",
+    "Tier Certification of Design Documents",
+    "Tier Certification of Operational Sustainability",
+    "Integrated Systems Test tingkat akhir"
+   ],
+   "a": 1,
+   "explain": "Tier Certification of Design Documents menilai gambar dan spesifikasi desain sebelum konstruksi. Certification of Constructed Facility menilai fasilitas yang selesai dibangun lewat pengamatan dan demonstrasi, sedangkan Operational Sustainability menilai praktik operasi dan pemeliharaan; IST adalah uji commissioning, bukan tahap sertifikasi.",
+   "hint": "Urutkan tahapan siklus hidup fasilitas: rancangan di atas kertas, bangunan jadi, lalu operasi harian."
+  },
+  {
+   "type": "pg",
+   "q": "Mengapa sertifikat desain Tier saja tidak cukup untuk menyimpulkan keandalan fasilitas yang beroperasi?",
+   "opts": [
+    "Hanya menilai kualitas arsitektur gedung, bukan sistem kelistrikan",
+    "Hanya berlaku bila fasilitas telah beroperasi minimal lima tahun berturut-turut tanpa gangguan listrik",
+    "Belum menguji hasil konstruksi dan praktik operasi sehingga kesesuaian lapangan harus dibuktikan",
+    "Mensyaratkan seluruh peralatan memakai satu merek yang sama"
+   ],
+   "a": 2,
+   "explain": "Sertifikat desain menilai dokumen, sedangkan konstruksi bisa menyimpang dan praktik operasi, perawatan serta kompetensi staf menentukan keandalan nyata. Karena itu auditor perlu bukti tahap konstruksi dan operasi; sertifikat desain bukan hanya soal arsitektur, tidak terikat usia operasi, dan tidak mensyaratkan satu merek.",
+   "hint": "Bedakan apa yang tertulis di dokumen dengan apa yang sungguh terpasang dan dijalankan."
+  },
+  {
+   "type": "pg",
+   "q": "Pada ISO/IEC 22237 dan EN 50600, kelas yang menyatakan ketahanan terhadap akses tidak sah dan ancaman fisik disebut apa?",
+   "opts": [
+    "Availability class",
+    "Cooling grade",
+    "Cabling category",
+    "Protection class"
+   ],
+   "a": 3,
+   "explain": "Protection class mengelompokkan tingkat perlindungan fisik fasilitas terhadap akses tidak sah dan ancaman lainnya, terpisah dari availability class yang menilai redundansi infrastruktur. Cooling grade dan cabling category bukan nama kelas keamanan fisik dalam rangkaian standar tersebut.",
+   "hint": "Cari kata yang mengandung makna melindungi, bukan tersedia atau mendinginkan."
+  },
+  {
+   "type": "pg",
+   "q": "Auditor menemukan beban IT satu kabel catu (single-corded) pada fasilitas yang mengklaim Tier III. Temuan yang paling tepat adalah…",
+   "opts": [
+    "Celah potensial concurrent maintainability kecuali ada STS atau pengaman setara untuk beban itu",
+    "Tidak ada masalah karena Tier III tidak membahas jalur catu daya",
+    "Pelanggaran mutlak yang otomatis menurunkan fasilitas menjadi Tier I dan membatalkan desain",
+    "Hal yang hanya relevan untuk Tier IV sehingga boleh diabaikan"
+   ],
+   "a": 0,
+   "explain": "Concurrent maintainability menuntut perawatan satu jalur tanpa mematikan beban; beban satu kabel hanya aman jika ada perangkat transfer seperti STS yang diperhitungkan desain. Jadi hal ini temuan yang harus dinilai, bukan boleh diabaikan, namun juga tidak otomatis menjatuhkan fasilitas ke Tier I.",
+   "hint": "Tanyakan apa yang terjadi pada beban satu kabel saat salah satu jalur dimatikan untuk perawatan."
+  },
+  {
+   "type": "pg",
+   "q": "Langkah yang benar sebelum auditor menyatakan sebuah fasilitas sesuai dengan standar adalah…",
+   "opts": [
+    "Mengandalkan pernyataan lisan pengelola fasilitas bahwa semuanya sudah sesuai standar",
+    "Menilai dari kesan umum kebersihan ruang",
+    "Menyalin hasil audit fasilitas lain yang mirip",
+    "Membandingkan bukti dokumen, pengamatan lapangan dan hasil uji dengan tiap persyaratan"
+   ],
+   "a": 3,
+   "explain": "Audit kesesuaian menuntut bukti objektif yang dipetakan ke setiap klausul sehingga kesimpulannya dapat ditelusuri dan diuji ulang. Pernyataan lisan, kesan visual atau salinan hasil fasilitas lain tidak membuktikan kondisi fasilitas yang sedang dinilai.",
+   "hint": "Auditor menyimpulkan dari bukti yang dapat diperiksa ulang, bukan dari kata orang."
+  },
+  {
+   "type": "pg",
+   "q": "Seorang konsultan merekomendasikan kerangka bagi klien yang beroperasi di Eropa dan Asia dan menginginkan acuan lintas negara. Pilihan yang paling relevan adalah…",
+   "opts": [
+    "Seri ISO/IEC 22237, ditambah persyaratan lokal dan kontrak klien bila ada",
+    "Hanya PUIL, karena otomatis berlaku di semua negara",
+    "Hanya aturan tarif listrik setempat tanpa kriteria teknis",
+    "Hanya klasifikasi berdasarkan jumlah rak terpasang"
+   ],
+   "a": 0,
+   "explain": "ISO/IEC 22237 adalah standar internasional yang berakar pada EN 50600, sehingga cocok sebagai acuan lintas negara dan masih dapat dilengkapi regulasi lokal serta syarat kontrak. PUIL berlaku di Indonesia saja, tarif listrik bukan kriteria teknis fasilitas, dan jumlah rak tidak menggambarkan ketahanan infrastruktur.",
+   "hint": "Cari kerangka yang diakui lintas negara, lalu ingat bahwa aturan lokal tetap perlu dipenuhi."
+  }
+ ]
 };
