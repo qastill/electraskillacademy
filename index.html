@@ -3534,7 +3534,7 @@ if ('serviceWorker' in navigator) {
 
 
 <script src="/data/app-data.js"></script>
-<script src="/data/module-thumbs.js?v=1"></script>
+<script src="/data/module-thumbs.js?v=2"></script>
 <script src="/academy-names.js"></script>
 <script src="/academy-journey.js?v=2"></script>
 <script src="/catalog-art.js?v=2"></script>
@@ -6087,6 +6087,24 @@ window.esaLockedPanel = esaLockedPanel;
 function esaMediaThumb(media, ukuran) {
   if (!media) return null;
   var besar = ukuran === 'besar';
+  // Sampul dari folder "thumbnail" (MODULE_THUMBS) menang atas semua sumber
+  // lain, termasuk thumbnail YouTube, supaya semua kartu satu keluarga.
+  // Entri Drive disimpan sebagai drive.google.com/uc?id=<ID> (berkas asli,
+  // 0,5–2,5 MB) — di sini diubah ke versi kecil dari Google supaya memori
+  // tab aman (lihat catatan UKURAN PENTING di atas), dengan berkas asli
+  // sebagai cadangan terakhir.
+  var sendiri = (window.MODULE_THUMBS || {})[media.code];
+  if (sendiri) {
+    var gs = String(sendiri).match(/drive\.google\.com\/uc\?id=([\w-]+)/);
+    if (gs) {
+      var ws = besar ? 'w640' : 'w320';
+      return {
+        src: 'https://lh3.googleusercontent.com/d/' + gs[1] + '=' + ws,
+        alt: ['https://drive.google.com/thumbnail?id=' + gs[1] + '&sz=' + ws, sendiri]
+      };
+    }
+    return { src: sendiri, alt: [] };
+  }
   if (media.youtubeId) {
     var v = media.youtubeId;
     return besar
@@ -6096,13 +6114,9 @@ function esaMediaThumb(media, ukuran) {
       : { src: 'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg',
           alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg'] };
   }
-  // Sampul buatan sendiri untuk modul yang videonya belum di YouTube.
-  // Ditaruh SETELAH cabang YouTube supaya tidak pernah menimpa thumbnail
-  // YouTube, dan SEBELUM cabang Drive karena frame pertama video rekaman
-  // slide hampir selalu berupa satu halaman Google Slides — bukan sampul.
-  var sendiri = (window.MODULE_THUMBS || {})[media.code];
-  if (sendiri) return { src: sendiri, alt: [] };
-
+  // Frame video Drive hanya dipakai bila modul tak punya sampul di
+  // MODULE_THUMBS: frame pertama rekaman slide hampir selalu berupa satu
+  // halaman Google Slides — bukan sampul.
   if (media.videoUrl) {
     var gd = media.videoUrl.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
     if (gd) {
