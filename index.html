@@ -3534,7 +3534,7 @@ if ('serviceWorker' in navigator) {
 
 
 <script src="/data/app-data.js"></script>
-<script src="/data/module-thumbs.js?v=1"></script>
+<script src="/data/module-thumbs.js?v=3"></script>
 <script src="/academy-names.js"></script>
 <script src="/academy-journey.js?v=2"></script>
 <script src="/catalog-art.js?v=2"></script>
@@ -5970,8 +5970,8 @@ function careerOpenModule(trackId, code) {
 // KATALOG KURSUS — grid kartu ber-thumbnail + filter + pencarian
 // ----------------------------------------------------------------
 // Sumber video per modul diselesaikan oleh esaResolveModuleMedia():
-// YOUTUBE_MAP (kalau ada) menang atas MODULE_MEDIA (Google Drive),
-// jadi migrasi ke YouTube bisa bertahap tanpa mengubah file lain.
+// videoUrl Google Drive di MODULE_MEDIA menang; YOUTUBE_MAP hanya cadangan
+// untuk modul yang belum punya berkas video di Drive.
 // ================================================================
 
 // --- Lazy-loader peta YouTube (/data/youtube-map.js) ---
@@ -6006,7 +6006,9 @@ function esaYtId(v) {
 }
 window.esaYtId = esaYtId;
 
-// Media modul final: YouTube menang, sisanya jatuh balik ke Google Drive.
+// Media modul final: berkas video Google Drive (MODULE_MEDIA) menang.
+// YOUTUBE_MAP hanya cadangan untuk modul yang belum punya berkas di Drive,
+// dan tetap dibaca untuk tanda `gratis` serta durasi kartu.
 function esaResolveModuleMedia(code) {
   var base = (typeof MODULE_MEDIA !== 'undefined' && MODULE_MEDIA[code]) ? MODULE_MEDIA[code] : {};
   var out = {};
@@ -6016,18 +6018,18 @@ function esaResolveModuleMedia(code) {
   out.code = code;
   var entry = (typeof window.YOUTUBE_MAP !== 'undefined') ? window.YOUTUBE_MAP[code] : null;
   var id = esaYtId(entry);
-  if (id) {
-    out.videoUrl = 'https://www.youtube.com/watch?v=' + id;
-    out.videoSource = 'youtube';
-    out.youtubeId = id;
-    if (entry && typeof entry === 'object' && entry.durasi) out.duration = entry.durasi;
-  } else if (out.videoUrl) {
+  if (out.videoUrl) {
     out.videoSource = /youtu\.?be/.test(out.videoUrl) ? 'youtube'
       : (/drive\.google\.com/.test(out.videoUrl) ? 'drive' : 'lain');
     if (out.videoSource === 'youtube') out.youtubeId = esaYtId(out.videoUrl);
+  } else if (id) {
+    out.videoUrl = 'https://www.youtube.com/watch?v=' + id;
+    out.videoSource = 'youtube';
+    out.youtubeId = id;
   } else {
     out.videoSource = null;
   }
+  if (!out.duration && entry && typeof entry === 'object' && entry.durasi) out.duration = entry.durasi;
   return out;
 }
 window.esaResolveModuleMedia = esaResolveModuleMedia;
@@ -6087,32 +6089,37 @@ window.esaLockedPanel = esaLockedPanel;
 function esaMediaThumb(media, ukuran) {
   if (!media) return null;
   var besar = ukuran === 'besar';
+  // Sampul dari folder "thumbnail" (MODULE_THUMBS) menang atas semua sumber
+  // lain, termasuk thumbnail YouTube, supaya semua kartu satu keluarga.
+  // Entri Drive disimpan sebagai drive.google.com/uc?id=<ID> (berkas asli,
+  // 0,5–2,5 MB) — di sini diubah ke versi kecil dari Google supaya memori
+  // tab aman (lihat catatan UKURAN PENTING di atas), dengan berkas asli
+  // sebagai cadangan terakhir.
+  var sendiri = (window.MODULE_THUMBS || {})[media.code];
+  if (sendiri) {
+    var gs = String(sendiri).match(/drive\.google\.com\/uc\?id=([\w-]+)/);
+    if (gs) {
+      var ws = besar ? 'w640' : 'w320';
+      return {
+        src: 'https://lh3.googleusercontent.com/d/' + gs[1] + '=' + ws,
+        alt: ['https://drive.google.com/thumbnail?id=' + gs[1] + '&sz=' + ws, sendiri],
+        desain: true
+      };
+    }
+    return { src: sendiri, alt: [], desain: true };
+  }
   if (media.youtubeId) {
     var v = media.youtubeId;
     return besar
       ? { src: 'https://i.ytimg.com/vi/' + v + '/maxresdefault.jpg',
           alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg',
-                'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg'] }
+                'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg'], desain: true }
       : { src: 'https://i.ytimg.com/vi/' + v + '/mqdefault.jpg',
-          alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg'] };
+          alt: ['https://i.ytimg.com/vi/' + v + '/hqdefault.jpg'], desain: true };
   }
-  // Sampul buatan sendiri untuk modul yang videonya belum di YouTube.
-  // Ditaruh SETELAH cabang YouTube supaya tidak pernah menimpa thumbnail
-  // YouTube, dan SEBELUM cabang Drive karena frame pertama video rekaman
-  // slide hampir selalu berupa satu halaman Google Slides — bukan sampul.
-  var sendiri = (window.MODULE_THUMBS || {})[media.code];
-  if (sendiri) return { src: sendiri, alt: [] };
-
-  if (media.videoUrl) {
-    var gd = media.videoUrl.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
-    if (gd) {
-      var w = besar ? 'w640' : 'w320';
-      return {
-        src: 'https://lh3.googleusercontent.com/d/' + gd[1] + '=' + w,
-        alt: ['https://drive.google.com/thumbnail?id=' + gd[1] + '&sz=' + w]
-      };
-    }
-  }
+  // Tanpa sampul: null. Pemanggil merender sampul "coming soon" berdesain
+  // (gradien + hook). Frame pertama video Drive sengaja tidak dipakai — untuk
+  // rekaman slide isinya hampir selalu satu halaman Google Slides, bukan sampul.
   return null;
 }
 window.esaMediaThumb = esaMediaThumb;
@@ -6448,19 +6455,20 @@ function esaCrsCard(d) {
   // di bawah thumbnail. Yang dicetak di sini hanya hook — plus penanda kalau
   // videonya memang belum ada.
   var cover = '<div class="crs-thumb-fallback">' +
-    (d.thumb ? '' : '<span class="t">Video segera hadir</span>') +
+    (d.thumb ? '' : '<span class="t">' + (d.source ? 'Sampul segera hadir' : 'Segera hadir') + '</span>') +
   '</div>';
 
-  // Judul hook dicetak di atas thumbnail, seperti teks besar di thumbnail
-  // YouTube — supaya alasan menonton terbaca sebelum judul modulnya.
-  // Video yang sudah punya thumbnail YouTube dilewati: pemiliknya sudah
-  // merancang gambarnya sendiri, menimpanya justru merusak.
-  var hookEl = d.source === 'youtube' ? ''
-    : '<div class="crs-hook"><span>' + esaCrsEsc(esaModuleHook(it)) + '</span></div>';
+  // Judul hook dicetak di atas sampul cadangan, seperti teks besar di
+  // thumbnail YouTube — supaya alasan menonton terbaca sebelum judul modulnya.
+  // Sampul berdesain sudah memuat judulnya sendiri, jadi hook disembunyikan
+  // lewat CSS selama <img> ada (.crs-thumb > img + .crs-hook) dan baru muncul
+  // kalau gambarnya gagal dimuat dan dibuang esaCrsThumbErr().
+  var hookEl = '<div class="crs-hook"><span>' + esaCrsEsc(esaModuleHook(it)) + '</span></div>';
 
   var srcBadge = d.source === 'youtube'
     ? '<span class="crs-badge crs-badge-src yt">▶ YouTube</span>'
-    : (d.source === 'drive' ? '<span class="crs-badge crs-badge-src gd">Drive</span>' : '');
+    : (d.source === 'drive' ? '<span class="crs-badge crs-badge-src gd">Drive</span>'
+      : '<span class="crs-badge crs-badge-src soon">Segera hadir</span>');
 
   var durBadge = d.media.duration
     ? '<span class="crs-badge crs-badge-dur">' + esaCrsEsc(d.media.duration) + '</span>' : '';
@@ -8007,7 +8015,7 @@ function openModul(code, trackId, levelId) {
   // Live Class panel — render rekaman kalau ada, atau jadwal upcoming
   renderLiveClassPanel(module, levelId, trackId, instructor);
 
-  // === Inject VIDEO from MODULE_MEDIA (+ override YouTube dari YOUTUBE_MAP) ===
+  // === Inject VIDEO dari MODULE_MEDIA (Drive); YOUTUBE_MAP hanya cadangan ===
   const media = esaResolveModuleMedia(code);
   const videoWrap = document.getElementById('video-player-wrap');
   const moduleLocked = esaModuleLocked(code, levelId);
@@ -8047,13 +8055,13 @@ function openModul(code, trackId, levelId) {
         </span>`;
       videoWrap.parentElement.insertBefore(acts, videoWrap.nextSibling);
     } else {
+      // Video belum ada: sampul modul (kalau sudah ada) tetap dipasang, dengan
+      // label "segera hadir" di atasnya.
+      const soonThumb = esaMediaThumb(media, 'besar');
       videoWrap.innerHTML = `
         <div class="video-player video-placeholder" style="position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,var(--navy-deep),var(--navy));display:flex;align-items:center;justify-content:center;overflow:hidden;">
-          <div class="video-play-btn" style="position:relative;z-index:2;width:88px;height:88px;border-radius:50%;background:rgba(245,240,230,0.15);backdrop-filter:blur(8px);border:1px solid rgba(201,169,110,0.4);color:var(--gold);display:flex;align-items:center;justify-content:center;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </div>
-          <div class="video-placeholder-text">Video belum di-upload · Tambah YOUTUBE_MAP['${code}'] di /data/youtube-map.js, atau videoUrl di MODULE_MEDIA['${code}']</div>
-          <div class="video-duration" style="position:absolute;bottom:20px;right:20px;padding:6px 14px;background:rgba(26,29,46,0.85);color:var(--cream);font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0.1em;">—:—</div>
+          ${soonThumb ? esaThumbImg(soonThumb, 'video-soon-img') : ''}
+          <div class="video-soon-badge">Video segera hadir</div>
         </div>
       `;
     }

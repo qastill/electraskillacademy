@@ -11174,6 +11174,15 @@ button:active:not(:disabled),
 .crs-badge-src { top: 8px; right: 8px; }
 .crs-badge-src.yt { background: #cc0000; color: #fff; }
 .crs-badge-src.gd { background: rgba(0, 0, 0, 0.7); color: rgba(245, 240, 230, 0.85); }
+.crs-badge-src.soon { background: rgba(201, 169, 110, 0.92); color: #1a1d2e; }
+.crs-thumb > img + .crs-hook { display: none; }
+.video-soon-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.video-soon-badge {
+  position: relative; z-index: 2; padding: 10px 20px; border-radius: 999px;
+  background: rgba(26, 29, 46, 0.82); color: var(--gold, #c9a96e);
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  border: 1px solid rgba(201, 169, 110, 0.45);
+}
 .crs-badge-dur {
   bottom: 8px; right: 8px;
   background: rgba(0, 0, 0, 0.8);
