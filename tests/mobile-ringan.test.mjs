@@ -7,7 +7,7 @@
 // Talent. Yang dijaga adalah hal-hal yang dulu membuat HP terasa berat atau
 // tidak bisa dipakai, dan yang tidak pernah memunculkan galat:
 //   1. tidak ada overflow horizontal di view mana pun;
-//   2. 16 tombol Academy di lobby ≥ 44 px lebar (dulu 38 px, 8 kolom);
+//   2. semua tombol Academy di lobby (sebanyak ACADEMY_NAMES) ≥ 44 px lebar (dulu 38 px, 8 kolom);
 //   3. membuka sebuah jalur tidak mengunduh PNG potret (dulu 9,8 MB);
 //   4. beranda tidak merakit grid Labs/Talent (DOM beranda < 9.000 node);
 //   5. kuis, lab generasi pertama (Ohm), lab baru, view Labs, dan view Talent
@@ -46,7 +46,8 @@ const nodeBeranda = await nodes();
 cek('beranda: DOM < 10.000 node (grid Labs/Talent tidak dirakit)', nodeBeranda < 10000, `${nodeBeranda} node`);
 cek('beranda: tanpa overflow horizontal', (await overflow()) <= 0);
 const tombol = await p.evaluate(() => [...document.querySelectorAll('.academy-choices button')].map(b => Math.round(b.getBoundingClientRect().width)));
-cek('lobby: 16 tombol Academy ≥ 44 px lebar', tombol.length === 16 && tombol.every(w => w >= 44), `lebar ${Math.min(...tombol)}–${Math.max(...tombol)} px`);
+const jumlahAcademy = await p.evaluate(() => Object.keys(window.ACADEMY_NAMES).length);
+cek(`lobby: ${jumlahAcademy} tombol Academy ≥ 44 px lebar`, tombol.length === jumlahAcademy && tombol.every(w => w >= 44), `lebar ${Math.min(...tombol)}–${Math.max(...tombol)} px`);
 const kolom = await p.evaluate(() => getComputedStyle(document.querySelector('.academy-choices')).gridTemplateColumns.split(' ').length);
 cek('lobby: grid 4 kolom di ponsel', kolom === 4, `${kolom} kolom`);
 

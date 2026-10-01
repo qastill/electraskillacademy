@@ -540,7 +540,7 @@ if ('serviceWorker' in navigator) {
 #view-modul .ai-tutor-messages::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
 
 </style>
-<link rel="stylesheet" href="/academy-lobby.css?v=10">
+<link rel="stylesheet" href="/academy-lobby.css?v=11">
 <link rel="stylesheet" href="/membership.css?v=1">
 <link rel="stylesheet" href="/academy-journey.css?v=2">
 <link rel="stylesheet" href="/library-covers.css?v=1">
@@ -601,12 +601,12 @@ if ('serviceWorker' in navigator) {
     </nav>
 
     <div class="academy-lobby">
-      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Dunia bertransisi energi. <em>Kamu jadi ahli apa?</em></h1><p class="lobby-sub">Pilih. Pelajari. Kuasai. 16 jalur spesialis energi menunggumu.</p></header>
+      <header class="lobby-intro"><span class="lobby-eyebrow">ELECTRA · CHOOSE YOUR FUTURE</span><h1>Dunia bertransisi energi. <em>Kamu jadi ahli apa?</em></h1><p class="lobby-sub">Pilih. Pelajari. Kuasai. 23 jalur spesialis energi dalam 6 kelompok menunggumu.</p></header>
       <div class="career-layout">
       <section class="career-stage" aria-label="Karakter dan dunia Academy pilihan">
         <div class="stage-wordmark" aria-hidden="true">ELECTRA</div>
         <div id="career-world" class="career-world" role="img" aria-label="Engineer EV dengan charging unit dan kendaraan listrik"></div>
-        <div class="stage-corner"><span class="stage-signal" aria-hidden="true"></span> CAREER SELECT <span id="academy-number">12 / 16</span></div>
+        <div class="stage-corner"><span class="stage-signal" aria-hidden="true"></span> CAREER SELECT <span id="academy-number">12 / 23</span></div>
         <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Jeda animasi">Ⅱ</button>
         <button class="career-arrow career-prev" id="academy-prev" type="button" aria-label="Academy sebelumnya">←</button>
         <button class="career-arrow career-next" id="academy-next" type="button" aria-label="Academy berikutnya">→</button>
@@ -616,6 +616,7 @@ if ('serviceWorker' in navigator) {
         <div class="career-panel-photo"><img id="academy-photo" src="" alt="" decoding="async"><span class="career-panel-badge">Jalur <strong id="academy-jalur">04</strong></span></div>
         <div class="career-panel-body">
           <span class="career-panel-eyebrow">Masuk langsung ke</span>
+          <span class="career-panel-cat" id="academy-category"></span>
           <h3 id="academy-panel-name">Transmission Academy</h3>
           <span class="career-panel-count" id="academy-modules">57 modul</span>
           <a class="career-panel-fasttrack" id="academy-fasttrack" href="https://plnakademi.vercel.app/" target="_blank" rel="noopener" hidden><span class="fasttrack-tag">S · Special</span> Fast Track PLN Akademi <span aria-hidden="true">↗</span></a>
@@ -3535,12 +3536,12 @@ if ('serviceWorker' in navigator) {
 
 <script src="/data/app-data.js"></script>
 <script src="/data/module-thumbs.js?v=3"></script>
-<script src="/academy-names.js"></script>
-<script src="/academy-journey.js?v=2"></script>
+<script src="/academy-names.js?v=2"></script>
+<script src="/academy-journey.js?v=3"></script>
 <script src="/catalog-art.js?v=2"></script>
-<script src="/academy-labs.js?v=2"></script>
+<script src="/academy-labs.js?v=3"></script>
 <script src="/sertifikat-share.js?v=1" defer></script>
-<script src="/academy-lobby.js?v=12" defer></script>
+<script src="/academy-lobby.js?v=13" defer></script>
 <script>
 // Data aplikasi (CURRICULUM, TRACKS_META, LEVELS, FAQ_DATA, dll) dipindah
 // ke /data/app-data.js — dimuat oleh tag <script> tepat di atas blok ini.
@@ -3999,7 +4000,11 @@ const _TRACK_ART_FILES = {
   S15: 'track-art/s15.webp',
   S16: 'track-art/s16.webp',
   S18: 'track-art/s18.webp',
-  S19: 'track-art/s19.webp'
+  S19: 'track-art/s19.webp',
+  S20: 'track-art/s20.webp',
+  S21: 'track-art/s21.webp',
+  S22: 'track-art/s22.webp',
+  S23: 'track-art/s23.webp'
 };
 // Cache-bust: foto jalur dipakai nama file sama (track-art/sN.webp) tapi isinya
 // sudah diganti. vercel.json meng-cache gambar 7 hari, jadi browser lama masih

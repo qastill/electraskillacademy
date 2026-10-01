@@ -8,7 +8,7 @@
  *
  * DARI MANA ISINYA
  *   • Simulator  — diambil OTOMATIS dari SIMULATORS, yang setiap entrinya sudah
- *     menyebut `jalur` (S1..S19). Datanya sendiri yang tahu miliknya siapa, jadi
+ *     menyebut `jalur` (S1..S23). Datanya sendiri yang tahu miliknya siapa, jadi
  *     tidak ada daftar tangan yang perlu ikut diperbarui: simulator baru langsung
  *     muncul di Academy yang benar.
  *   • Virtual lab & kalkulator — keduanya lintas bidang dan tidak menyebut jalur,
@@ -43,7 +43,15 @@
     // Nuclear: sistem kelistrikan PLTN, catu daya keselamatan, dan koordinasi proteksi.
     S18: { vlab: ['power-sys', 'measure'], calc: ['protection-coord'] },
     // Energy Policy: perencanaan sistem tenaga dan estimasi kebutuhan beban.
-    S19: { vlab: ['power-sys'], calc: ['max-demand'] }
+    S19: { vlab: ['power-sys'], calc: ['max-demand'] },
+    // Power System Studies: model jaringan, hubung singkat, arc flash, dan koordinasi proteksi.
+    S20: { vlab: ['power-sys', 'measure'], calc: ['protection-coord', 'arc-flash'] },
+    // Geothermal: generator-turbin PLTP dan evakuasi daya ke grid.
+    S21: { vlab: ['machines', 'power-sys'], calc: [] },
+    // CCUS: instrumentasi proses dan pengukuran (aliran, tekanan, MRV).
+    S22: { vlab: ['measure'], calc: [] },
+    // Data Center Power: UPS/rectifier, distribusi daya, dan estimasi beban IT.
+    S23: { vlab: ['power-sys', 'power-elec'], calc: ['max-demand', 'cs-iec-60364'] }
   };
 
   // Batas kartu yang ditampilkan. Tujuannya mengedukasi, bukan memamerkan

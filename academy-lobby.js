@@ -29,7 +29,11 @@
     // "Segera hadir" dan nomor panggungnya bukan urutan biasa.
     S17: ['ENERGY MODELLER', 'LEAP · OSeMOSYS · HOMER · PyPSA · PLEXOS', '#d6c2a8', 'model', 'chart', 'hair'],
     S18: ['NUCLEAR ENGINEER', 'Reaktor · SMR · Proteksi radiasi · Keselamatan', '#b9dcd2', 'atom', 'dome', 'helmet'],
-    S19: ['ENERGY POLICY ANALYST', 'Regulasi · RUPTL · Tarif · Transisi energi', '#e6cf9e', 'policy', 'chart', 'hair']
+    S19: ['ENERGY POLICY ANALYST', 'Regulasi · RUPTL · Tarif · Transisi energi', '#e6cf9e', 'policy', 'chart', 'hair'],
+    S20: ['POWER SYSTEM STUDY ENGINEER', 'Load flow · Short circuit · Arc flash · ETAP · DIgSILENT', '#a8c8f0', 'sld', 'transformer', 'hair'],
+    S21: ['GEOTHERMAL ENGINEER', 'Eksplorasi · Reservoir · PLTP · Panas bumi', '#eab38c', 'geo', 'plant', 'helmet'],
+    S22: ['CCUS ENGINEER', 'Carbon capture · Transportasi CO₂ · Penyimpanan · MRV', '#b8d4a4', 'capture', 'underground', 'helmet'],
+    S23: ['DATA CENTER POWER ENGINEER', 'UPS · Genset · Redundansi 2N · Pendinginan · PUE', '#b4b0ea', 'rack', 'battery', 'hair']
   };
   // Small line icons and larger dimensional props share one drawing vocabulary.
   const art = {
@@ -58,9 +62,20 @@
     atom: '<circle class="energy-glow" cx="48" cy="50" r="7" fill="currentColor"/><ellipse cx="48" cy="50" rx="37" ry="13"/><ellipse cx="48" cy="50" rx="37" ry="13" transform="rotate(60 48 50)"/><ellipse cx="48" cy="50" rx="37" ry="13" transform="rotate(-60 48 50)"/><circle cx="85" cy="50" r="3.5" fill="currentColor"/><circle cx="30" cy="18" r="3.5" fill="currentColor"/><circle cx="30" cy="82" r="3.5" fill="currentColor"/>',
     dome: '<path d="M8 89h82"/><path d="M18 89V50a26 26 0 0 1 52 0v39z" fill="#2b3d44"/><path d="M32 89V62m24 27V62M44 62h12"/><path d="M74 89V30l7-16 7 16v59z" fill="#2b3d44"/><path class="energy-flow" d="M70 20q11-9 22 0" opacity=".6"/><path d="M63 12q18-13 36 0" opacity=".35"/>',
     policy: '<path d="M22 9h40l16 16v66H22z" fill="#2c3a44"/><path d="M62 9v16h16M33 40h32M33 52h32M33 64h18"/><circle class="energy-glow" cx="66" cy="74" r="9" fill="#2c3a44"/><path d="M62 74l3 3 6-7"/>',
+    sld: '<rect x="9" y="15" width="78" height="58" rx="5" fill="#2b3c46"/><path d="M9 73h78M48 73v14M30 87h36"/><path d="M48 29v8M24 37h48M24 37v9M72 37v9M24 56v-4M72 56v-4"/><circle class="energy-glow" cx="48" cy="26" r="4" fill="currentColor"/><rect x="16" y="46" width="16" height="10" rx="2"/><rect x="64" y="46" width="16" height="10" rx="2"/>',
+    geo: '<path d="M8 60h82"/><path d="M8 60v28h82V60" fill="#2d3f36"/><path d="M8 74q20-6 40 0t42 0M8 83q22-5 42 0t40 0" opacity=".5"/><path d="M48 60V38M39 38h18"/><path class="energy-flow" d="M43 34c-7-6 7-10 0-17M55 34c-7-6 7-10 0-17"/><path d="M70 60V44h16v16M70 44q8-9 16 0" fill="#2d3f36"/><circle class="energy-glow" cx="48" cy="80" r="5" fill="currentColor" opacity=".6"/>',
+    capture: '<path d="M14 89V38h20v51z" fill="#2b4741"/><path d="M10 38h28M19 48h10M19 60h10M19 72h10"/><path class="energy-flow" d="M24 30q-9-8 0-14t-2-10"/><path d="M38 66h22M54 59l8 7-8 7"/><rect x="64" y="40" width="22" height="49" rx="10" fill="#2b4741"/><path d="M64 58h22M64 72h22"/>',
+    underground: '<path d="M8 26h82"/><path d="M8 26v64h82V26" fill="#2b3f4a"/><path d="M8 52h82M8 72h82" opacity=".55"/><path d="M48 8v50M39 49l9 11 9-11"/><ellipse class="energy-glow" cx="48" cy="80" rx="20" ry="5" fill="currentColor" opacity=".4"/>',
+    rack: '<rect x="22" y="9" width="52" height="80" rx="5" fill="#27403a"/><rect x="29" y="17" width="38" height="10" rx="2"/><rect x="29" y="33" width="38" height="10" rx="2"/><rect x="29" y="49" width="38" height="10" rx="2"/><rect x="29" y="65" width="38" height="10" rx="2"/><circle class="energy-glow" cx="37" cy="22" r="1.8" fill="currentColor"/><circle cx="37" cy="38" r="1.8" fill="currentColor"/><circle class="energy-glow" cx="37" cy="54" r="1.8" fill="currentColor"/><path d="M52 22h9M52 38h9M52 54h9M52 70h9"/>',
     robot: '<path d="M14 90h69l-8-14H23z" fill="#2b403c"/><g class="machine-arm"><path d="M40 76L18 48l11-12 33 23 17-31 11 6-20 43z" fill="#34504a"/><circle cx="27" cy="45" r="9"/><circle cx="59" cy="68" r="9"/><path d="M78 27l-3-12 8-7m7 25 9-7-1-12"/></g>'
   };
-  const ids = Object.keys(careers);
+  // Klasifikasi Academy (academy-names.js): urutan panah dan grid mengikuti kelompoknya.
+  const cats = (window.ACADEMY_CATEGORIES || []).map(c => ({ ...c, ids: c.ids.filter(id => Object.hasOwn(careers, id)) })).filter(c => c.ids.length);
+  const grouped = new Set(cats.flatMap(c => c.ids));
+  const rest = Object.keys(careers).filter(id => !grouped.has(id));
+  if (rest.length) cats.push({ id: 'lainnya', name: 'Lainnya', desc: '', ids: rest });
+  const ids = cats.flatMap(c => c.ids);
+  const categoryName = id => (cats.find(c => c.ids.includes(id)) || {}).name || '';
   const read = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
   const save = (key, value) => { try { localStorage.setItem(key, value); } catch (_) {} };
   let selected = Object.hasOwn(careers, read('esa-lobby-academy')) ? read('esa-lobby-academy') : 'S12';
@@ -116,6 +131,7 @@
       && !(window.CURRICULUM && CURRICULUM[id] && CURRICULUM[id].length));
     document.getElementById('academy-number').textContent = soon ? 'SEGERA HADIR' : id.slice(1).padStart(2, '0') + ' / ' + ids.length;
     document.getElementById('academy-selected-name').textContent = ACADEMY_NAMES[id];
+    const cat = document.getElementById('academy-category'); if (cat) cat.textContent = categoryName(id);
     document.getElementById('academy-selected-description').textContent = c[1];
     document.getElementById('academy-status').textContent = soon
       ? 'Kurikulum sedang disusun'
@@ -144,11 +160,18 @@
   }
   window.esaLobbySelect = select;
   window.esaLobbyCurrent = () => selected;
-  ids.forEach(id => {
-    const button = document.createElement('button'); button.type = 'button'; button.dataset.academy = id;
-    button.innerHTML = icon(careers[id][3]);
-    const label = document.createElement('span'); label.textContent = ACADEMY_NAMES[id]; button.append(label);
-    button.addEventListener('click', () => select(id)); choices.append(button);
+  // Tombol tetap anak langsung #academy-choices (grid); judul kelompok menjangkau satu baris penuh.
+  cats.forEach(cat => {
+    const head = document.createElement('div'); head.className = 'academy-group-head'; head.dataset.category = cat.id;
+    const title = document.createElement('strong'); title.textContent = cat.name;
+    const note = document.createElement('span'); note.textContent = cat.ids.length + ' Academy' + (cat.desc ? ' · ' + cat.desc : '');
+    head.append(title, note); choices.append(head);
+    cat.ids.forEach(id => {
+      const button = document.createElement('button'); button.type = 'button'; button.dataset.academy = id; button.dataset.category = cat.id;
+      button.innerHTML = icon(careers[id][3]);
+      const label = document.createElement('span'); label.textContent = ACADEMY_NAMES[id]; button.append(label);
+      button.addEventListener('click', () => select(id)); choices.append(button);
+    });
   });
   document.getElementById('academy-prev').addEventListener('click', () => select(ids[(ids.indexOf(selected) + ids.length - 1) % ids.length]));
   document.getElementById('academy-next').addEventListener('click', () => select(ids[(ids.indexOf(selected) + 1) % ids.length]));

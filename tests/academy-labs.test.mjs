@@ -83,7 +83,7 @@ vm.runInContext(fs.readFileSync(path.join(ROOT, 'academy-labs.js'), 'utf8'), ctx
 const PETA = ctx.window.ESA_ACADEMY_LABS;
 const praktik = ctx.window.esaAcademyPracticeHtml;
 assert(PETA && praktik, 'academy-labs.js memuat peta dan fungsinya');
-assert.equal(Object.keys(PETA).length, 18, 'peta mencakup 18 Academy (S1–S16, S18, S19)');
+assert.equal(Object.keys(PETA).length, 22, 'peta mencakup 22 Academy (S1–S16, S18–S23)');
 
 const punya = {
   sim: new Set(sandbox.SIMULATORS.map(s => s.id)),

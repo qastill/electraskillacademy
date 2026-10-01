@@ -10,7 +10,7 @@ function setup(){
  return c;
 }
 test('all Academies with curriculum have real art, curriculum-derived counts and the next incomplete stage',()=>{
- const c=setup();for(const id of [...Array.from({length:16},(_,i)=>'S'+(i+1)),'S18','S19']){
+ const c=setup();for(const id of [...Array.from({length:16},(_,i)=>'S'+(i+1)),'S18','S19','S20','S21','S22','S23']){
   assert(fs.existsSync(path.join(root,'track-art',id.toLowerCase()+'.webp')));
   const data=c.LEVELS.map((lvl,index)=>{const modules=index<2?c.CURRICULUM[lvl.id]:c.CURRICULUM[id].filter(m=>m.level===lvl.id);return {lvl,total:modules.length,passed:index===0?modules.length:0,complete:index===0};});
   const html=c.esaJourneyHero(id,data);assert(html.includes(c.ACADEMY_NAMES[id].replace(/&/g,'&amp;')));
