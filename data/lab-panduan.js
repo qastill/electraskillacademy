@@ -23,10 +23,10 @@ window.LAB_PANDUAN = {
 'conduit-fill': {
   tujuan: 'Belajar menentukan ukuran pipa konduit yang benar. Pipa yang terlalu penuh membuat kabel panas dan sulit ditarik; pipa yang terlalu besar memboroskan biaya.',
   langkah: [
-    'Pilih ukuran konduit pada menu "Ukuran konduit" (mulai dari 20 mm).',
-    'Tekan "+ tambah" pada kabel 2,5 mm² tiga kali. Lihat angka "Fill Konduit" naik.',
-    'Tambahkan kabel 4 mm² dan 6 mm² satu per satu. Perhatikan kapan status berubah dari hijau menjadi merah.',
-    'Saat merah (melebihi "Batas Fill"), naikkan ukuran konduit satu tingkat sampai kembali hijau.',
+    'Pada papan lab, pilih menu "Ukuran konduit" lalu pilih 20 mm. Awalnya sudah ada 4 kabel 2,5 mm²; lihat angka "Fill Konduit" dan tulisan di tengah lingkaran.',
+    'Tekan "+ tambah" pada baris kabel 2,5 mm² dua kali. Lihat "Fill Konduit" dan "Jumlah Kabel" naik.',
+    'Tekan "+ tambah" pada kabel 4 mm², lalu kabel 10 mm², satu per satu. Perhatikan kapan status berubah dari hijau (AMAN) menjadi merah (LEBIH).',
+    'Saat merah (melebihi "Batas Fill"), naikkan "Ukuran konduit" satu tingkat (20 → 25 → 32 mm) sampai kembali hijau.',
     'Coba sebaliknya: kurangi kabel dengan "− kurangi" dan turunkan ukuran pipa sampai tepat di bawah batas.'
   ],
   hasil: [
@@ -63,11 +63,11 @@ window.LAB_PANDUAN = {
 'harmonics-thd': {
   tujuan: 'Melihat bagaimana harmonik merusak bentuk gelombang arus dan membandingkannya dengan batas IEEE 519. Pabrik dengan banyak inverter dan UPS wajib memahami ini.',
   langkah: [
-    'Mulai dengan semua orde nonaktif; gelombang masih sinus murni dan THD ≈ 0%.',
+    'Awalnya hanya orde 3 yang aktif (30%), sehingga THD tinggi dan status "GAGAL". Matikan orde 3 (klik tombolnya) sampai semua orde nonaktif: gelombang kembali sinus murni dan THD ≈ 0%.',
     'Aktifkan "orde 5", lalu geser "Amplitudo orde-5" ke 20%. Lihat gelombang mulai bergerigi.',
     'Aktifkan "orde 3" dan "orde 7". Baca "THD Arus" dan "Crest Factor" setiap kali menambah orde.',
-    'Perhatikan status "IEEE 519": cari kombinasi amplitudo yang tepat di bawah batas.',
-    'Turunkan amplitudo satu per satu sampai kembali "Sesuai", lalu bandingkan orde mana yang paling berpengaruh.'
+    'Perhatikan status "IEEE 519" (LULUS / BATAS / GAGAL): cari kombinasi amplitudo yang tepat di bawah batas 5%.',
+    'Turunkan amplitudo satu per satu sampai status kembali LULUS, lalu bandingkan orde mana yang paling berpengaruh.'
   ],
   hasil: [
     'THD adalah perbandingan seluruh harmonik terhadap gelombang dasar; makin besar, makin panas kabel, trafo, dan netral.',
@@ -83,7 +83,7 @@ window.LAB_PANDUAN = {
 'feeder-restore': {
   tujuan: 'Berlatih cara dispatcher memulihkan listrik pelanggan saat ada gangguan di penyulang: gangguan diisolasi, pelanggan yang sehat dipindah ke feeder cadangan.',
   langkah: [
-    'Baca peta jaringan. Cari seksi yang bertanda gangguan (petir merah) dan jumlah pelanggan "Padam".',
+    'Baca peta jaringan (seksi S1–S5). Klik salah satu seksi, misalnya S3, untuk memicu gangguan: seksi itu jadi merah dan angka "Padam" muncul.',
     'Buka sectionalizer di sisi hulu dan hilir seksi yang terganggu (klik saklarnya) sehingga gangguan terisolasi.',
     'Tutup kembali pemutus hulu agar seksi di depan gangguan kembali menyala.',
     'Tekan "Tutup Tie-Switch (feeder B)" untuk menyuplai seksi di belakang gangguan dari feeder cadangan.',
@@ -203,9 +203,9 @@ window.LAB_PANDUAN = {
 'gen-sinkron': {
   tujuan: 'Berlatih memparalelkan generator ke jaringan dengan aman. Menutup pemutus saat belum sinkron dapat mematahkan poros generator.',
   langkah: [
-    'Nyalakan generator, lalu bandingkan tegangan generator dengan tegangan busbar pada panel.',
-    'Atur AVR sampai beda tegangan di bawah 5%.',
-    'Atur governor sampai frekuensi generator sedikit di atas jaringan (≈ 50,1 Hz) supaya jarum synchroscope berputar pelan searah jarum jam.',
+    'Generator sudah berputar. Bandingkan tegangan generator (392 V) dengan tegangan jaringan (400 V) pada panel.',
+    'Tekan tombol AVR (+2 V / +10 V) sampai beda tegangan di bawah 5%.',
+    'Tekan tombol governor (+0,20 Hz / +0,05 Hz) sampai frekuensi generator sedikit di atas jaringan (≈ 50,05–50,1 Hz) supaya jarum synchroscope berputar pelan searah jarum jam.',
     'Tunggu jarum masuk zona hijau (sudut fasa mendekati 0°), lalu tekan tombol tutup PMT tepat di zona itu.',
     'Coba juga menutup di luar zona hijau untuk melihat akibatnya, kemudian ulangi sampai berhasil tanpa peringatan.'
   ],
@@ -244,9 +244,9 @@ window.LAB_PANDUAN = {
   tujuan: 'Menyusun rencana penurunan emisi gedung secara nyata: menghitung emisi awal, memilih aksi, dan melihat biaya serta paybacknya sampai target tercapai.',
   langkah: [
     'Baca emisi awal Scope 1 (bahan bakar) dan Scope 2 (listrik) gedung, serta target penurunan 30%.',
-    'Pasang aksi termurah dulu, misalnya penggantian lampu LED dan setelan AC. Lihat persentase penurunan.',
-    'Tambahkan PLTS atap. Perhatikan lonjakan penurunan Scope 2 dan angka investasi.',
-    'Bandingkan dengan membeli REC (sertifikat energi terbarukan): emisi turun di laporan, tetapi konsumsi listrik tidak berubah.',
+    'Pasang aksi termurah dulu, misalnya "+ Retrofit 100 titik LED" dan "+ VSD pompa/fan". Lihat persentase penurunan.',
+    'Tambahkan "+ PLTS atap 50 kWp". Perhatikan lonjakan penurunan Scope 2 dan angka investasi.',
+    'Bandingkan dengan "+ Beli REC" (sertifikat energi terbarukan): emisi turun di laporan, tetapi konsumsi listrik tidak berubah.',
     'Susun kombinasi aksi hingga target 30% tercapai dengan payback gabungan paling pendek.'
   ],
   hasil: [
@@ -283,11 +283,11 @@ window.LAB_PANDUAN = {
 'wte-komposisi': {
   tujuan: 'Melihat bahwa listrik dari sampah bergantung pada kadar air dan komposisi sampah, bukan pada banyaknya sampah.',
   langkah: [
-    'Pilih preset "Sampah kota Indonesia". Baca nilai kalor sampah basah dan daya listrik netto.',
+    'Pada "Komposisi acuan", klik preset "Kota Indonesia". Baca nilai kalor sampah basah dan daya listrik netto.',
     'Perhatikan fraksi organik yang tinggi dan kadar airnya. Itulah penyebab nilai kalor rendah.',
-    'Pilih preset "Terpilah": organik dikurangi. Bandingkan kWh per ton yang dihasilkan.',
+    'Klik preset "Setelah pemilahan organik": organik dikurangi. Bandingkan kWh per ton yang dihasilkan.',
     'Atur sendiri fraksi plastik dan kertas naik, organik turun. Cari komposisi dengan nilai kalor di atas 7 MJ/kg.',
-    'Bandingkan dengan preset "Eropa" untuk melihat efek pemilahan di sumber yang konsisten.'
+    'Bandingkan dengan preset "Kota Eropa" untuk melihat efek pemilahan di sumber yang konsisten.'
   ],
   hasil: [
     'Air dalam sampah harus diuapkan lebih dulu, sehingga sampah basah menyerap energi sebelum menghasilkan panas.',
@@ -303,9 +303,9 @@ window.LAB_PANDUAN = {
 'h2-pabrik': {
   tujuan: 'Menyeimbangkan ukuran PLTS dan elektroliser pada pabrik hidrogen hijau agar tidak ada stack menganggur maupun energi surya terbuang.',
   langkah: [
-    'Atur kapasitas PLTS 10 MWp dan elektroliser 10 MW. Baca produksi H₂ harian dan energi terbuang.',
-    'Kecilkan elektroliser ke 5 MW. Lihat energi terbuang membesar dan LCOH berubah.',
-    'Besarkan elektroliser ke 15 MW. Perhatikan stack sering menganggur sehingga LCOH naik lagi.',
+    'Awalnya PLTS 1,5 MWp dan elektroliser 1,0 MW. Baca "Produksi H₂", "Biaya H₂ (LCOH)", dan teks energi PLTS terpakai vs terbuang.',
+    'Tekan "− 0,5 MW" pada elektroliser sekali. Lihat energi terbuang membesar dan LCOH berubah.',
+    'Tekan "+ 0,5 MW" pada elektroliser sampai jauh lebih besar dari PLTS (mis. 3 MW). Perhatikan stack sering menganggur sehingga LCOH naik lagi.',
     'Cari rasio PLTS : elektroliser yang memberi LCOH terendah.',
     'Baca kebutuhan air per kg H₂ dan efisiensi sistem; catat berapa kWh listrik per kg hidrogen.'
   ],
@@ -323,7 +323,7 @@ window.LAB_PANDUAN = {
 'manuver-sutet': {
   tujuan: 'Menguasai urutan manuver membebaskan tegangan saluran 150 kV untuk pemeliharaan. Salah urutan di gardu induk adalah penyebab kecelakaan fatal.',
   langkah: [
-    'Baca kondisi awal: saluran berbeban, PMT dan PMS dalam posisi masuk.',
+    'Baca kondisi awal: saluran 150 kV bertegangan, PMT dan PMS masuk. Langkah pertama yang benar adalah "Koordinasi dispatcher & alihkan beban saluran".',
     'Pilih "buka PMT" lebih dulu di kedua ujung saluran (PMT mampu memutus arus beban).',
     'Baru kemudian "buka PMS" (pemisah) di kedua ujung; PMS hanya boleh dibuka tanpa arus.',
     'Uji ketiadaan tegangan dengan detektor, lalu pasang pembumian (PMS tanah) di kedua ujung.',
@@ -364,8 +364,8 @@ window.LAB_PANDUAN = {
   tujuan: 'Menjadwalkan pengisian dan pelepasan BESS pada profil beban 24 jam untuk memangkas puncak, dan merasakan batas fisik kapasitas serta SoC.',
   langkah: [
     'Baca profil beban 24 jam dan cari jam puncaknya. Atur "Kapasitas BESS (kWh)", "Daya BESS (kW)", dan "SoC awal (%)".',
-    'Tandai jam-jam dini hari sebagai "isi" (tarif murah, beban rendah).',
-    'Tandai jam puncak sebagai "lepas". Lihat garis puncak baru dan jalur SoC.',
+    'Klik batang jam dini hari (mis. 01:00–05:00) dua kali sampai berwarna "mengisi" (tarif murah, beban rendah). Satu klik = lepas, dua klik = isi, tiga klik = netral.',
+    'Klik batang jam puncak (18:00–22:00) sekali sampai berwarna "lepas daya". Lihat "Puncak Baru" dan garis SoC baterai.',
     'Bila SoC habis sebelum puncak berakhir, tambah jam pengisian atau kurangi jam pelepasan; energi yang dilepas tidak boleh melebihi yang diisi.',
     'Tekan "◈ Jadwal otomatis" lalu bandingkan penghematan biayanya dengan jadwal buatanmu.'
   ],
@@ -910,7 +910,7 @@ window.LAB_PANDUAN = {
     'Mulai dari skenario "Lampu Tunggal + Saklar": sambungkan L → IN saklar, OUT saklar → lampu, lampu → N. ON-kan saklar lalu tekan "Periksa".',
     'Lanjut "Dua Lampu Seri" lalu "Dua Lampu Paralel". Bandingkan terang lampu dan apa yang terjadi bila satu lampu dilepas.',
     'Kerjakan "Saklar Tukar": COM S1 ke sumber, dua traveler P1-P1 dan P2-P2, COM S2 ke lampu. Coba nyalakan dari dua saklar.',
-    'Kerjakan "Proteksi 1 Fasa" dan "Stop Kontak + Arde": L lewat MCB, N langsung, PE ke arde.',
+    'Kerjakan "Proteksi 1 Fasa" dan "Stop Kontak + Pembumian (Arde)": L lewat MCB, N langsung, PE ke arde.',
     'Tutup dengan "Instalasi Rumah Sederhana": PLN → kWh (1 L masuk, 2 N masuk, 3 L keluar, 4 N keluar) → MCB → grup lampu dan grup stop kontak.',
     'Setiap skenario: tekan "Periksa" sampai hijau, lalu baca panduan dan tutorial di panel kanan.'
   ],
@@ -1043,8 +1043,8 @@ window.LAB_PANDUAN = {
 'wiring-s8': {
   tujuan: 'Bagi K3 listrik: merangkai stop kontak berarde, charger EV AC dengan RCBO dan PE, serta kontrol motor lewat kontaktor, dengan fokus pada keselamatan pengguna.',
   langkah: [
-    'Skenario "Stop Kontak + Arde": L lewat MCB, N langsung, pin PE ke arde. Indikator menyala = bertegangan.',
-    'Skenario "EV Charging AC": L → MCB/RCBO → L charger, N charger → N sumber, PE charger → pembumian.',
+    'Skenario "Stop Kontak + Pembumian (Arde)": L lewat MCB, N langsung, pin PE ke arde. Indikator menyala = bertegangan.',
+    'Skenario "EV Charging (SPKLU) AC + Pembumian": L → MCB/RCBO → L charger, N charger → N sumber, PE charger → pembumian.',
     'Skenario "Kontaktor — Kontrol Motor": kontrol lewat coil A1-A2, daya lewat kontak utama.',
     'Pada tiap skenario, coba lepaskan PE dan lihat peringatan yang muncul saat "Periksa".'
   ],
@@ -1117,7 +1117,7 @@ window.LAB_PANDUAN = {
 'wiring-s12': {
   tujuan: 'Bagi EV & charging: merangkai charger AC berarde dengan RCBO, modul baterai paralel, dan pack lewat BMS ke inverter.',
   langkah: [
-    'Skenario "EV Charging AC": L → MCB/RCBO → L charger; N charger → N; PE charger → pembumian. ON-kan lalu "Periksa".',
+    'Skenario "EV Charging (SPKLU) AC + Pembumian": L → MCB/RCBO → L charger; N charger → N; PE charger → pembumian. ON-kan lalu "Periksa".',
     'Skenario "Baterai Paralel": B1(+) dan B2(+) → DC+ inverter, B1(−) dan B2(−) → DC−.',
     'Skenario "Baterai → BMS → Inverter": B+/B− ke baterai, P+/P− ke inverter.',
     'Bandingkan paralel (kapasitas naik) dengan seri (tegangan naik) di tutorial.'
@@ -1319,8 +1319,8 @@ window.LAB_PANDUAN = {
     'Baca "Sizing per Step": kVAR total dibagi 6 step, dengan ukuran MCB/kontaktor dan CT yang direkomendasikan.',
     'Baca "Penghematan Denda kVAR PLN": bandingkan tagihan sebelum dan sesudah koreksi.',
     'Pelajari "Single Line Diagram" otomatis: MCCB utama → busbar → tiap step (MCB, kontaktor, reactor bila perlu, kapasitor).',
-    'Kerjakan "Panduan Wiring": sambungkan CT ke controller, controller ke coil kontaktor tiap step, kontaktor ke kapasitor.',
-    'Jalankan "Respons Controller (AUTO)": lihat step masuk satu per satu sampai cos φ mencapai target.'
+    'Buka tab "② Wiring Panel", lalu kerjakan "Panduan Wiring": sambungkan CT ke controller, controller ke coil kontaktor tiap step, kontaktor ke kapasitor.',
+    'Di tab "② Wiring Panel", jalankan "Respons Controller (AUTO)": lihat step masuk satu per satu sampai cos φ mencapai target.'
   ],
   hasil: [
     'kVAR yang dibutuhkan = P × (tan φ awal − tan φ target); target 0,95 menghindari denda tanpa risiko over-kompensasi.',
@@ -1340,7 +1340,7 @@ window.LAB_PANDUAN = {
     'Baca "Sizing per Step" dan perhatikan rekomendasi detuned reactor bila beban banyak VFD/rectifier.',
     'Baca "Penghematan Denda kVAR PLN" per bulan dan per tahun.',
     'Pelajari "Single Line Diagram": posisi reactor seri sebelum kapasitor tiap step.',
-    'Kerjakan "Panduan Wiring" lalu jalankan "Respons Controller (AUTO)" dan amati urutan switching step.'
+    'Buka tab "② Wiring Panel", kerjakan "Panduan Wiring", lalu jalankan "Respons Controller (AUTO)" dan amati urutan switching step.'
   ],
   hasil: [
     'Kapasitor tanpa reactor pada jaringan berharmonik bisa beresonansi dan memperbesar harmonik sampai kapasitor meledak.',
@@ -1359,7 +1359,7 @@ window.LAB_PANDUAN = {
     'Isi "Parameter Beban" dengan beban penyulang/pelanggan besar dan target cos φ.',
     'Baca "Sizing per Step" dan pilih ukuran step yang cocok untuk beban yang berubah sepanjang hari.',
     'Baca "Penghematan Denda kVAR PLN" dan hubungkan dengan penurunan arus jaringan.',
-    'Pelajari "Single Line Diagram" lalu kerjakan "Panduan Wiring" (CT, controller, kontaktor, kapasitor).',
+    'Pelajari "Single Line Diagram", buka tab "② Wiring Panel", lalu kerjakan "Panduan Wiring" (CT, controller, kontaktor, kapasitor).',
     'Jalankan "Respons Controller (AUTO)" dan amati bagaimana arus total turun saat step masuk.'
   ],
   hasil: [
@@ -1401,11 +1401,18 @@ window.LAB_PANDUAN = {
   /* Sudah selesai? Dipakai kartu praktik di Academy (academy-labs.js). */
   window.esaLabSelesai = function (id) { var s = baca()[id]; return !!(s && s.selesai); };
 
-  window.esaLabPanduanHTML = function (id) {
-    var p = cari(id); if (!p) return '';
+  /* Panduan dipecah tiga supaya urutannya sama dengan cara orang bekerja:
+       langkah  → di ATAS papan lab (apa yang harus dilakukan)
+       papan    → disisipkan index.html di antaranya, diberi judul "Papan lab"
+       sesudah  → di BAWAH papan lab (pemahaman + soal bukti paham + tanda selesai)
+     Dulu ketiganya satu blok setinggi ±900 px di atas papan, sehingga peserta
+     membaca "kerjakan langkah 1–5" tanpa melihat tempat mengerjakannya. */
+  window.esaLabPanduanParts = function (id) {
+    var p = cari(id); if (!p) return null;
     var s = stateLab(id);
     var kecil = false; try { kecil = window.matchMedia('(max-width: 640px)').matches; } catch (e) {}
     var n = p.langkah.length, nOk = p.langkah.filter(function (_, i) { return s.langkah[i]; }).length;
+    var selesai = !!s.selesai;
     var langkah = p.langkah.map(function (t, i) {
       return '<li' + (s.langkah[i] ? ' class="lp-ok"' : '') + '><label><input type="checkbox" ' + (s.langkah[i] ? 'checked ' : '') +
         'onchange="_lpLangkah(\'' + esc(id) + '\',' + i + ',this.checked)"><span class="lp-no">' + (i + 1) + '</span><span class="lp-txt">' + esc(t) + '</span></label></li>';
@@ -1419,25 +1426,55 @@ window.LAB_PANDUAN = {
             ' onclick="_lpJawab(\'' + esc(id) + '\',' + qi + ',' + oi + ',this)">' + esc(o) + '</button>';
         }).join('') + '</div><div class="lp-fb">' + (sudah ? '✓ Benar.' : '') + '</div></div>';
     }).join('');
-    var selesai = !!s.selesai;
-    return '<details class="sim-panduan" id="sim-panduan"' + (kecil && !selesai ? '' : ' open') + '>' +
-      '<summary><span class="sim-panduan-h">📋 Panduan langkah demi langkah</span>' +
+    var progTxt = selesai ? '✓ Selesai' : nOk + '/' + n + ' langkah';
+    var atas = '<details class="sim-panduan" id="sim-panduan"' + (kecil && !selesai ? '' : ' open') + '>' +
+      '<summary><span class="sim-panduan-h">📋 Langkah yang harus kamu kerjakan</span>' +
       '<span class="sim-panduan-ketuk">Ketuk untuk buka</span>' +
-      '<span class="sim-panduan-prog" id="lp-prog">' + (selesai ? '✓ Selesai' : nOk + '/' + n + ' langkah') + '</span></summary>' +
+      '<span class="sim-panduan-prog lp-prog" id="lp-prog">' + progTxt + '</span></summary>' +
       '<div class="sim-panduan-body">' +
       '<p class="lp-tujuan"><b>Untuk apa lab ini?</b> ' + esc(p.tujuan) + '</p>' +
-      '<div class="lp-sec"><b>Kerjakan urut, centang tiap langkah yang sudah kamu lakukan:</b><ol class="lp-steps">' + langkah + '</ol></div>' +
+      '<div class="lp-sec"><b>Kerjakan urut di <u>papan lab di bawah</u>, lalu centang tiap langkah yang sudah kamu lakukan:</b><ol class="lp-steps">' + langkah + '</ol></div>' +
+      '<div class="lp-ke-papan"><button type="button" class="lp-jump" onclick="_lpKe(\'sim-lab-board\')">🧪 Buka papan lab untuk mengerjakan ↓</button></div>' +
+      '</div></details>';
+    var bawah = '<section class="sim-panduan sim-panduan-sesudah" id="sim-panduan-sesudah">' +
+      '<div class="sim-panduan-body">' +
       '<div class="lp-sec lp-hasil"><b>Setelah berhasil, kamu paham bahwa:</b><ul>' + hasil + '</ul></div>' +
       '<div class="lp-sec lp-uji"><b>Buktikan pemahamanmu (2 soal singkat):</b>' + uji + '</div>' +
       '<div class="lp-foot"><button type="button" class="lp-done' + (selesai ? ' lp-done-ok' : '') + '" id="lp-done" onclick="_lpSelesai(\'' + esc(id) + '\')">' +
       (selesai ? '✓ Lab selesai · pemahaman terbukti' : '✓ Tandai lab ini selesai') + '</button><span class="lp-msg" id="lp-msg"></span></div>' +
-      '</div></details>';
+      '</div></section>';
+    return { atas: atas, bawah: bawah, prog: progTxt, langkah: n };
+  };
+
+  /* Pembungkus papan lab: judul yang menamai tempat mengerjakan, plus progres
+     langkah & tombol kembali ke daftar langkah. Header-nya lengket (sticky)
+     supaya selama peserta menggulir papan, ia tahu sedang di langkah ke berapa. */
+  window.esaLabBoardHTML = function (id, body) {
+    var P = window.esaLabPanduanParts && window.esaLabPanduanParts(id);
+    var kepala = P
+      ? '<div class="sim-lab-board-h"><span class="sim-lab-board-t">🧪 Papan lab <small>— kerjakan langkah di sini</small></span>' +
+        '<span class="sim-lab-board-r"><span class="sim-panduan-prog lp-prog">' + P.prog + '</span>' +
+        '<button type="button" class="lp-jump lp-jump-kecil" onclick="_lpKe(\'sim-panduan\')">↑ Lihat langkah</button></span></div>'
+      : '<div class="sim-lab-board-h"><span class="sim-lab-board-t">🧪 Papan lab</span></div>';
+    return '<section class="sim-lab-board" id="sim-lab-board" aria-label="Papan lab">' + kepala + body + '</section>';
+  };
+
+  /* Kompatibilitas: bentuk lama = satu blok utuh. */
+  window.esaLabPanduanHTML = function (id) {
+    var P = window.esaLabPanduanParts && window.esaLabPanduanParts(id);
+    return P ? P.atas + P.bawah : '';
+  };
+
+  window._lpKe = function (elId) {
+    var el = document.getElementById(elId); if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { el.scrollIntoView(); }
   };
 
   function prog(id) {
-    var p = cari(id), s = stateLab(id), el = document.getElementById('lp-prog'); if (!p || !el) return;
-    if (s.selesai) { el.textContent = '✓ Selesai'; return; }
-    el.textContent = p.langkah.filter(function (_, i) { return s.langkah[i]; }).length + '/' + p.langkah.length + ' langkah';
+    var p = cari(id), s = stateLab(id); if (!p) return;
+    var t = s.selesai ? '✓ Selesai' : p.langkah.filter(function (_, i) { return s.langkah[i]; }).length + '/' + p.langkah.length + ' langkah';
+    document.querySelectorAll('.lp-prog').forEach(function (el) { el.textContent = t; });
   }
 
   window._lpLangkah = function (id, i, on) {

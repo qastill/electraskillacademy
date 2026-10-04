@@ -105,9 +105,10 @@ assert(dominan <= 0.6,
   `kunci jawaban menumpuk di satu posisi (${(dominan * 100).toFixed(0)}%): ${JSON.stringify(hitung)}`);
 
 // --- 4. index.html memakai & memuat panduannya ---
-assert(html.includes("esaLabPanduanHTML(simId)"), 'openSimulator() tidak memanggil esaLabPanduanHTML');
-assert(/content\.innerHTML = banner \+ about \+ panduan \+ body/.test(html),
-  'panel panduan tidak disisipkan ke isi modal lab');
+assert(html.includes("esaLabPanduanParts(simId)") && html.includes("esaLabBoardHTML(simId, body)"),
+  'openSimulator() tidak memakai esaLabPanduanParts/esaLabBoardHTML');
+assert(/content\.innerHTML = banner \+ about \+ \(parts \? parts\.atas : ''\) \+ papan \+ \(parts \? parts\.bawah : ''\)/.test(html),
+  'langkah → papan lab → bukti paham tidak disisipkan berurutan ke isi modal lab');
 assert(html.includes('/data/lab-panduan.js'), 'index.html tidak memuat /data/lab-panduan.js');
 assert(/if \(!window\.SIM_BUILDERS \|\| !window\.LAB_PANDUAN\)/.test(html),
   'openSimulator() tidak menunggu LAB_PANDUAN selesai dimuat');

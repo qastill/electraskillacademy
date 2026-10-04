@@ -5707,8 +5707,13 @@ function openSimulator(simId) {
   // Panduan langkah demi langkah: untuk apa lab ini, langkah yang dicentang,
   // pemahaman yang didapat, dua soal bukti paham, dan tanda selesai.
   // Data & logikanya di /data/lab-panduan.js (dimuat bersama sim-builders).
-  const panduan = (typeof window.esaLabPanduanHTML === 'function') ? window.esaLabPanduanHTML(simId) : '';
-  content.innerHTML = banner + about + panduan + body + tutor;
+  // Urutan di layar: spanduk → tentang → LANGKAH → PAPAN LAB (berjudul, tempat
+  // mengerjakan langkah) → pemahaman + soal bukti paham → tutor. Dulu seluruh
+  // panduan (±900 px) menumpuk di atas papan, jadi peserta disuruh "kerjakan
+  // langkah 1–5" tanpa melihat tempat mengerjakannya.
+  const parts = (typeof window.esaLabPanduanParts === 'function') ? window.esaLabPanduanParts(simId) : null;
+  const papan = (typeof window.esaLabBoardHTML === 'function') ? window.esaLabBoardHTML(simId, body) : body;
+  content.innerHTML = banner + about + (parts ? parts.atas : '') + papan + (parts ? parts.bawah : '') + tutor;
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -5766,7 +5771,7 @@ function esaLoadSimBuilders(cb) {
     var cbs = window.__esaSBcbs || []; window.__esaSBcbs = [];
     cbs.forEach(function (f) { try { f(); } catch (e) {} });
   }
-  ['/data/sim-builders.js', '/data/lab-panduan.js?v=1'].forEach(function (src) {
+  ['/data/sim-builders.js', '/data/lab-panduan.js?v=2'].forEach(function (src) {
     var s = document.createElement('script');
     s.src = src; s.onload = s.onerror = siap;
     document.head.appendChild(s);
