@@ -12041,6 +12041,10 @@ button:active:not(:disabled),
 @media (max-width: 640px) {
   #sim-modal-content { display: flex; flex-direction: column; }
   #sim-modal-content > .sim-banner { order: 0; }
+  #sim-modal-content > .sim-panduan:not(.sim-panduan-sesudah) { order: 1; }
+  #sim-modal-content > .sim-lab-board { order: 2; }
+  #sim-modal-content > .sim-panduan-sesudah { order: 3; }
+  #sim-modal-content > .sim-tutor { order: 4; }
   #sim-modal-content > .sim-about { order: 5; margin-top: 18px; }
 }
 
@@ -12277,7 +12281,7 @@ button:active:not(:disabled),
 .lp-done.lp-done-ok { background: #2f7d5b; }
 .lp-msg { font-size: 0.8rem; color: #5b5e70; }
 @media (max-width: 640px) {
-  #sim-modal-content > .sim-panduan { order: 1; margin: 12px 0 8px; }
+  #sim-modal-content > .sim-panduan { margin: 12px 0 8px; }
   .sim-panduan-body { padding: 12px 13px 14px; font-size: 0.88rem; }
 }
 /* Di ponsel panel panduan mulai tertutup agar papan lab tidak terdorong jauh
@@ -12286,4 +12290,22 @@ button:active:not(:disabled),
 @media (max-width: 640px) {
   .sim-panduan:not([open]) .sim-panduan-ketuk { display: inline; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.03em; text-transform: none; color: #2f7d5b; }
   .sim-panduan > summary { padding: 14px 15px; min-height: 48px; }
+}
+
+/* ── Papan lab: tempat mengerjakan langkah, diberi nama & header lengket ── */
+.sim-lab-board { margin: 0 0 20px; border: 2px solid #2f7d5b; border-radius: 14px; background: #fff; scroll-margin-top: 8px; }
+.sim-lab-board > .sim-modal-header { padding-top: 14px; }
+.sim-lab-board-h { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 14px; background: #2f7d5b; color: #fff; border-radius: 11px 11px 0 0; }
+.sim-lab-board-t { font-weight: 800; font-size: 0.86rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.sim-lab-board-t small { font-weight: 600; text-transform: none; letter-spacing: 0; opacity: .9; font-size: 0.8rem; }
+.sim-lab-board-r { display: flex; align-items: center; gap: 8px; }
+.sim-lab-board-h .sim-panduan-prog { background: #fff; }
+.lp-jump { font: inherit; font-weight: 800; font-size: 0.84rem; padding: 10px 16px; min-height: 44px; border-radius: 10px; border: 0; background: #2f7d5b; color: #fff; cursor: pointer; }
+.lp-jump-kecil { min-height: 34px; padding: 6px 12px; font-size: 0.76rem; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.7); }
+.lp-ke-papan { margin-top: 14px; }
+.sim-panduan-sesudah { border-left-color: #c9a96e; }
+.sim-panduan-sesudah > .sim-panduan-body { padding-top: 6px; }
+@media (max-width: 640px) {
+  .sim-lab-board { margin: 8px 0 12px; }
+  .sim-lab-board-t small { display: none; }
 }
