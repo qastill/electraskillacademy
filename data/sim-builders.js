@@ -4429,6 +4429,25 @@ window.SIM_INFO = {
   'h2-pabrik': { w: 'Menyusun kapasitas PLTS dan elektroliser hingga seimbang; menampilkan produksi H₂, efisiensi sistem, kebutuhan air, energi terbuang, dan LCOH.', g: 'Memahami trade-off penyusunan pabrik hidrogen hijau: stack menganggur vs energi terbuang.', r: 'Perencanaan proyek hidrogen hijau dan analisis kelayakan power-to-hydrogen.' },
 };
 
+// Simulator pihak ketiga (tool.adjiebrotots.com) yang dipasang di beberapa
+// Academy dengan id berakhiran jalur — teks "Tentang lab ini"-nya sama. Tanpa
+// entri di sini openSimulator() memakai teks Wiring Trainer untuk semua lab
+// ber-embed, yang jelas keliru untuk alat ini.
+(function () {
+  var edUc = {
+    w: 'Simulator economic dispatch dan unit commitment: masukkan data unit pembangkit (Pmin/Pmax, fungsi biaya bahan bakar, biaya start-up) dan beban sistem, lalu program menghitung unit mana yang dinyalakan tiap jam dan berapa output masing-masing agar biaya total paling murah.',
+    g: 'Memahami merit order dan biaya inkremental (λ): mengapa unit murah dimuat lebih dulu, mengapa unit mahal hanya hidup saat beban puncak, dan bagaimana biaya start-up serta cadangan mengubah keputusan.',
+    r: 'Dasar kerja dispatcher PLN/P2B, perencana pembangkitan (RUPTL), analis BPP dan tarif, serta pemodel energi yang mengevaluasi masuknya pembangkit EBT ke sistem.'
+  };
+  var lf = {
+    w: 'Simulator aliran daya (load flow): susun bus, saluran, generator dan beban, lalu jalankan perhitungan untuk membaca tegangan dan sudut tiap bus, aliran P dan Q di tiap saluran, serta rugi-rugi jaringan.',
+    g: 'Memahami peran bus slack, PV dan PQ, mengapa daya reaktif paling menentukan tegangan, dan bagaimana perubahan impedansi atau topologi jaringan mengubah aliran daya dan rugi-rugi.',
+    r: 'Studi wajib sebelum menyambung beban besar atau pembangkit baru: engineer studi sistem (ETAP/PowerFactory), perencana jaringan distribusi dan transmisi, serta konsultan interkoneksi PLTS/BESS.'
+  };
+  ['s5', 's7'].forEach(function (j) { window.SIM_INFO['ed-uc-' + j] = edUc; });
+  ['s1', 's2', 's3', 's4', 's20'].forEach(function (j) { window.SIM_INFO['loadflow-' + j] = lf; });
+})();
+
 // ================================================================
 // STATE & RENDER — enam lab hands-on tambahan (S7, S10, S11, S12, S13, S14)
 // ================================================================
