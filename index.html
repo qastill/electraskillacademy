@@ -4649,6 +4649,46 @@ SIMULATORS.push({
   level: 'Profesional', duration: '~25 menit', icon: SIM_ICONS.mcb, working: true, embed: 'wlab.html?lab=mdp-sdp'
 });
 
+// Simulator pihak ketiga dari tool.adjiebrotots.com, dibuka di dalam modal
+// lewat iframe persis seperti World Electricity (pola id <dasar>-<jalur>).
+// Tanda `eksternal` membuat openSimulator() menaruh bilah sumber + tautan
+// "buka di tab baru" di atas papan, karena situs luar bisa saja menolak
+// dibingkai dan papannya tampak kosong.
+//
+// Economic Dispatch & Unit Commitment — operasi pembangkit termurah. Masuk ke
+// Energy Analyst (modul 5E.10 unit commitment & economic dispatch) dan
+// Pembangkitan (6G.01 perencanaan pembangkitan, 6G.02 LCOE).
+const _ESA_TOOLS_ADJIE = 'https://tool.adjiebrotots.com/';
+[
+  { jalur: 'S5', category: 'Data · Operasi Sistem' },
+  { jalur: 'S7', category: 'Pembangkitan · Dispatch' }
+].forEach(o => {
+  SIMULATORS.push({
+    id: 'ed-uc-' + o.jalur.toLowerCase(), jalur: o.jalur, category: o.category,
+    name: 'Economic Dispatch & Unit Commitment',
+    desc: 'Masukkan data unit pembangkit (Pmin/Pmax, fungsi biaya) dan beban, lalu lihat unit mana yang dinyalakan (unit commitment) dan berapa output tiap unit (economic dispatch) agar biaya total paling murah — dasar operasi sistem, merit order, dan BPP.',
+    level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.data, working: true,
+    embed: _ESA_TOOLS_ADJIE + 'ed-uc-simulator/', eksternal: true
+  });
+});
+// Load Flow — studi aliran daya. Masuk ke Academy yang modulnya memang
+// menghitung aliran daya: Instalasi (4A.01), Industri (4B.09), Distribusi
+// (aliran daya & tegangan penyulang), dan Transmisi.
+[
+  { jalur: 'S1', category: 'Instalasi · Aliran Daya' },
+  { jalur: 'S2', category: 'Industri · Aliran Daya' },
+  { jalur: 'S3', category: 'Distribusi · Aliran Daya' },
+  { jalur: 'S4', category: 'Transmisi · Aliran Daya' }
+].forEach(o => {
+  SIMULATORS.push({
+    id: 'loadflow-' + o.jalur.toLowerCase(), jalur: o.jalur, category: o.category,
+    name: 'Load Flow Simulator',
+    desc: 'Susun bus, saluran, generator dan beban, jalankan studi aliran daya (load flow), lalu baca tegangan tiap bus, aliran daya di saluran, dan rugi-rugi jaringan — studi wajib sebelum menyambung beban atau pembangkit baru.',
+    level: 'Advance', duration: '~30 menit', icon: SIM_ICONS.grid, working: true,
+    embed: _ESA_TOOLS_ADJIE + 'loadflow-simulator/', eksternal: true
+  });
+});
+
 // ── Kurasi Simulator Lab: HANYA lab hands-on ─────────────────────────
 // Yang ditampilkan: semua lab wiring (Wiring Trainer, Wiring Lab engine,
 // Capacitor Bank — punya `embed`) + lab interaktif berbasis aksi (klik,
@@ -5639,6 +5679,16 @@ function openExternalSim() {
   document.body.style.overflow = 'hidden';
 }
 
+// Bilah di atas papan untuk simulator pihak ketiga (entri SIMULATORS dengan
+// `eksternal: true`): menyebut sumbernya dan memberi jalan keluar kalau situs
+// itu menolak dibingkai (X-Frame-Options / CSP) sehingga papannya kosong.
+function _esaEksternalBar(sim) {
+  const host = String(sim.embed).replace(/^https?:\/\//, '').split('/')[0];
+  return `<div class="sim-ext-bar" style="display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:0 0 10px;padding:9px 14px;border:1px solid rgba(212,175,106,0.35);border-radius:10px;background:rgba(212,175,106,0.08);font-size:0.82rem;color:rgba(245,240,230,0.82)">` +
+    `<span>Simulator pihak ketiga dari <b>${host}</b>, dimuat apa adanya.</span>` +
+    `<a href="${sim.embed}" target="_blank" rel="noopener" style="color:#d4af6a;font-weight:600;text-decoration:none">Kalau papan di bawah kosong, buka di tab baru ↗</a></div>`;
+}
+
 function openSimulator(simId) {
   const content = document.getElementById('sim-modal-content');
   const modal = document.getElementById('sim-modal');
@@ -5671,7 +5721,7 @@ function openSimulator(simId) {
   else if (simId === 'inst-lighting') body = getLightingHTML();
   else if (simId === 'inst-vdrop') body = getVoltageDropHTML();
   else if (simId === 'inst-mcb') body = getMCBCoordHTML();
-  else if (sim.embed) body = `<iframe src="${sim.embed}" title="${sim.name}" loading="lazy" style="width:100%;height:80vh;min-height:560px;border:0;border-radius:12px;background:#0b0f17;display:block"></iframe>`;
+  else if (sim.embed) body = (sim.eksternal ? _esaEksternalBar(sim) : '') + `<iframe src="${sim.embed}" title="${sim.name}" loading="lazy" allow="fullscreen" allowfullscreen style="width:100%;height:80vh;min-height:560px;border:0;border-radius:12px;background:#0b0f17;display:block"></iframe>`;
   else if (window.SIM_BUILDERS && window.SIM_BUILDERS[simId]) body = window.SIM_BUILDERS[simId].html();
 
   // Banner gambar representatif (bukan emoji) di tiap halaman simulator

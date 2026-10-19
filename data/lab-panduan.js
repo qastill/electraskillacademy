@@ -1371,9 +1371,60 @@ window.LAB_PANDUAN = {
     { q: 'Memasang kapasitor dekat beban menurunkan…', o: ['Daya aktif beban', 'Arus jaringan dan rugi kabel', 'Frekuensi'], j: 1 },
     { q: 'Kompensasi berlebih membuat cos φ menjadi…', o: ['Lagging lebih besar', 'Tepat 1 selalu', 'Leading, tegangan naik'], j: 2 }
   ]
+},
+
+/* ───────── SIMULATOR PIHAK KETIGA (tool.adjiebrotots.com, iframe) ─────────
+   Isi lab berada di domain lain sehingga tidak bisa dibaca dari sini; langkah
+   ditulis tanpa menyebut nama tombol/menu dalam tanda kutip. Satu entri per
+   alat; salinannya untuk jalur lain dipasang di bawah literal ini. */
+
+'ed-uc-s5': {
+  tujuan: 'Memahami cara operator sistem memilih unit pembangkit yang dinyalakan (unit commitment) dan membagi beban di antaranya (economic dispatch) supaya biaya bahan bakar total paling murah.',
+  langkah: [
+    'Masukkan data tiap unit pembangkit: daya minimum dan maksimum (Pmin, Pmax) serta koefisien fungsi biaya bahan bakarnya.',
+    'Masukkan beban sistem yang harus dipenuhi; untuk unit commitment masukkan profil beban per jam.',
+    'Jalankan perhitungan economic dispatch dan catat output tiap unit serta biaya total untuk satu titik beban.',
+    'Naikkan beban secara bertahap dan amati unit mana yang bertambah outputnya lebih dulu; bandingkan dengan biaya inkremental (λ) tiap unit.',
+    'Jalankan unit commitment pada profil beban harian dan periksa jam berapa unit mahal dinyalakan atau dimatikan, serta bagaimana biaya start-up mempengaruhinya.'
+  ],
+  hasil: [
+    'Pada economic dispatch, beban dibagi sehingga biaya inkremental (λ) semua unit yang beroperasi sama; unit murah dimuat lebih dulu sampai batas Pmax-nya.',
+    'Unit commitment memutuskan unit mana yang hidup tiap jam dengan memperhitungkan biaya start-up, waktu minimum hidup/mati, dan cadangan putar.',
+    'Biaya operasi sistem dan biaya pokok penyediaan (BPP) ditentukan oleh urutan merit ini; pembangkit EBT berbiaya marjinal nol selalu masuk lebih dulu.'
+  ],
+  uji: [
+    { q: 'Pada economic dispatch optimal tanpa batasan, syarat yang terpenuhi antar unit adalah…', o: ['Output semua unit sama', 'Biaya total tiap unit sama', 'Biaya inkremental (λ) semua unit sama'], j: 2 },
+    { q: 'Faktor yang dipertimbangkan unit commitment tetapi tidak oleh economic dispatch?', o: ['Biaya start-up dan waktu minimum hidup', 'Koefisien biaya bahan bakar', 'Besar beban sistem'], j: 0 }
+  ]
+},
+
+'loadflow-s3': {
+  tujuan: 'Menjalankan studi aliran daya pada jaringan sederhana dan membaca tegangan tiap bus, aliran daya di saluran, serta rugi-rugi jaringan, seperti yang dilakukan sebelum menyambung beban atau pembangkit baru.',
+  langkah: [
+    'Susun jaringan sederhana: satu bus slack (swing) dengan generator, satu bus beban, dan saluran yang menghubungkannya; masukkan impedansi saluran (R dan X).',
+    'Masukkan daya beban (P dan Q) pada bus beban, lalu jalankan perhitungan aliran daya.',
+    'Baca tegangan dan sudut fasa tiap bus; perhatikan tegangan bus beban yang lebih rendah daripada bus slack.',
+    'Naikkan beban reaktif (Q) dan jalankan ulang; amati tegangan bus beban turun lebih tajam dibanding saat menaikkan P.',
+    'Tambahkan bus dan saluran baru atau ubah impedansi saluran, lalu bandingkan rugi-rugi jaringan dan aliran daya tiap saluran sebelum dan sesudah.'
+  ],
+  hasil: [
+    'Bus slack menyerap selisih daya termasuk rugi-rugi jaringan, sehingga outputnya baru diketahui setelah perhitungan selesai.',
+    'Jatuh tegangan sepanjang saluran dipengaruhi kuat oleh aliran daya reaktif melalui reaktansi X; itu sebabnya kompensasi kapasitor menaikkan tegangan.',
+    'Metode iteratif seperti Gauss-Seidel atau Newton-Raphson mengulang perhitungan sampai selisih daya di tiap bus lebih kecil dari toleransi (konvergen).'
+  ],
+  uji: [
+    { q: 'Bus yang tegangannya ditetapkan 1,0 pu dan sudutnya 0° sebagai acuan adalah…', o: ['Bus beban (PQ)', 'Bus slack (swing)', 'Bus generator (PV)'], j: 1 },
+    { q: 'Menaikkan beban reaktif pada bus ujung saluran terutama membuat…', o: ['Frekuensi sistem turun', 'Sudut fasa bus naik', 'Tegangan bus itu turun'], j: 2 }
+  ]
 }
 
 };
+
+/* Simulator pihak ketiga dipasang di beberapa Academy dengan id berakhiran
+   jalur (ed-uc-s5, ed-uc-s7, loadflow-s1 … s4); panduannya sama, progresnya
+   tetap tersimpan per id. */
+['s7'].forEach(function (j) { window.LAB_PANDUAN['ed-uc-' + j] = window.LAB_PANDUAN['ed-uc-s5']; });
+['s1', 's2', 's4'].forEach(function (j) { window.LAB_PANDUAN['loadflow-' + j] = window.LAB_PANDUAN['loadflow-s3']; });
 
 /* ============================================================
    RENDER & STATE PANDUAN — dipakai openSimulator() di index.html
