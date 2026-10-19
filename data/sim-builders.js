@@ -4445,7 +4445,7 @@ window.SIM_INFO = {
     r: 'Studi wajib sebelum menyambung beban besar atau pembangkit baru: engineer studi sistem (ETAP/PowerFactory), perencana jaringan distribusi dan transmisi, serta konsultan interkoneksi PLTS/BESS.'
   };
   ['s5', 's7'].forEach(function (j) { window.SIM_INFO['ed-uc-' + j] = edUc; });
-  ['s1', 's2', 's3', 's4'].forEach(function (j) { window.SIM_INFO['loadflow-' + j] = lf; });
+  ['s1', 's2', 's3', 's4', 's20'].forEach(function (j) { window.SIM_INFO['loadflow-' + j] = lf; });
 })();
 
 // ================================================================

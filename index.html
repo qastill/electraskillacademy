@@ -4302,6 +4302,7 @@ const SIM_GROUPS = [
   { key: 'S14', num: '14', label: 'Hydrogen Energy', desc: 'Catu daya elektroliser hidrogen: rectifier & keselamatan H₂.', grad: 'linear-gradient(135deg,#3aa0c8,#226f8f)', photo: _trackArtURI('S14') },
   { key: 'S15', num: '15', label: 'Baterai & BESS', desc: 'Wiring BESS: pack → BMS → PCS → grid, AC & DC-coupled.', grad: 'linear-gradient(135deg,#5b8def,#3a5fb0)', photo: _trackArtURI('S15') },
   { key: 'S16', num: '16', label: 'Kontrol & Otomasi', desc: 'PLC I/O & ladder, MCC PLC→motor & tuning PID.', grad: 'linear-gradient(135deg,#6a6f7e,#3a3f4e)', photo: _trackArtURI('S16') },
+  { key: 'S20', num: '20', label: 'Power System Studies', desc: 'Studi aliran daya, hubung singkat, interkoneksi PLTS/BESS & kepatuhan grid code.', grad: 'linear-gradient(135deg,#8b5cf6,#5b21b6)', photo: _trackArtURI('S20') },
   { key: 'Fondasi', num: '★', label: 'Lab Dasar & Tools (Bonus)', desc: 'Konsep dasar & alat hitung lintas jurusan.', grad: 'linear-gradient(135deg,#475569,#1f2433)', photo: _U('1518770660439-4636190af475') }
 ];
 // Simulator Room: pakai ilustrasi resmi ICON HOME untuk kartu jalur S1–S16
@@ -4673,12 +4674,14 @@ const _ESA_TOOLS_ADJIE = 'https://tool.adjiebrotots.com/';
 });
 // Load Flow — studi aliran daya. Masuk ke Academy yang modulnya memang
 // menghitung aliran daya: Instalasi (4A.01), Industri (4B.09), Distribusi
-// (aliran daya & tegangan penyulang), dan Transmisi.
+// (aliran daya & tegangan penyulang), Transmisi, dan Power System Studies
+// (S20 — grupnya ditambahkan ke SIM_GROUPS supaya tampil di halaman Labs).
 [
   { jalur: 'S1', category: 'Instalasi · Aliran Daya' },
   { jalur: 'S2', category: 'Industri · Aliran Daya' },
   { jalur: 'S3', category: 'Distribusi · Aliran Daya' },
-  { jalur: 'S4', category: 'Transmisi · Aliran Daya' }
+  { jalur: 'S4', category: 'Transmisi · Aliran Daya' },
+  { jalur: 'S20', category: 'Studi Sistem · Aliran Daya' }
 ].forEach(o => {
   SIMULATORS.push({
     id: 'loadflow-' + o.jalur.toLowerCase(), jalur: o.jalur, category: o.category,
@@ -5239,7 +5242,7 @@ function renderSimulators() {
     return;
   }
 
-  // Hub: 16 kartu jalur dalam satu layar — klik untuk masuk ke lab-nya.
+  // Hub: kartu jalur dalam satu layar (grup tanpa lab tidak digambar) — klik untuk masuk ke lab-nya.
   const groups = SIM_GROUPS.filter(g => g.key !== 'Fondasi');
   grid.innerHTML = `<div class="lab-jalur-grid">` + groups.map(g => {
     const sims = SIMULATORS.filter(s => (s.jalur || 'Fondasi') === g.key);

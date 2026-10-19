@@ -1421,10 +1421,10 @@ window.LAB_PANDUAN = {
 };
 
 /* Simulator pihak ketiga dipasang di beberapa Academy dengan id berakhiran
-   jalur (ed-uc-s5, ed-uc-s7, loadflow-s1 … s4); panduannya sama, progresnya
+   jalur (ed-uc-s5, ed-uc-s7, loadflow-s1 … s4, s20); panduannya sama, progresnya
    tetap tersimpan per id. */
 ['s7'].forEach(function (j) { window.LAB_PANDUAN['ed-uc-' + j] = window.LAB_PANDUAN['ed-uc-s5']; });
-['s1', 's2', 's4'].forEach(function (j) { window.LAB_PANDUAN['loadflow-' + j] = window.LAB_PANDUAN['loadflow-s3']; });
+['s1', 's2', 's4', 's20'].forEach(function (j) { window.LAB_PANDUAN['loadflow-' + j] = window.LAB_PANDUAN['loadflow-s3']; });
 
 /* ============================================================
    RENDER & STATE PANDUAN — dipakai openSimulator() di index.html
