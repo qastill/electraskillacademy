@@ -593,6 +593,7 @@ if ('serviceWorker' in navigator) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           <span>Cari</span>
         </button>
+        <a class="nav-right" href="peta-dunia.html" title="Peta pembangkit listrik dunia — kapasitas, bahan bakar, dan bauran energi">World Electricity Maps</a>
         <a class="nav-right" onclick="showView('jobs')" style="cursor:pointer;">Job Opportunity</a>
         <a class="nav-right" onclick="showView('talent')" style="cursor:pointer;">Talent Pool</a>
       <button class="nav-daftar-btn" onclick="esaShowAuthModal()" style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#1a1d2e;border:none;border-radius:999px;padding:10px 24px;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Daftar / Masuk</button>
@@ -13423,8 +13424,14 @@ else{setTimeout(init,200);}
     if(sert)sert.textContent='Certification';
     if(sert)sert.onclick=function(e){e.preventDefault();showView('sertifikasi');};
 
-    // World Electricity Maps tidak lagi berdiri sendiri di menu — sekarang
-    // menjadi salah satu tab di halaman Labs (#lab-worldmap).
+    // World Electricity Maps — halaman peta pembangkit listrik dunia, tampil
+    // kembali di menu header atas permintaan. Tab-nya di Labs (#lab-worldmap)
+    // tetap ada, jadi ada dua pintu ke halaman yang sama.
+    var mapsLink=document.createElement('a');
+    mapsLink.className='nav-right';
+    mapsLink.href='peta-dunia.html';
+    mapsLink.textContent='World Electricity Maps';
+    mapsLink.title='Peta pembangkit listrik dunia — kapasitas, bahan bakar, dan bauran energi';
 
     // About Us link — public, bypass auth gate
     var aboutUs=document.createElement('a');
@@ -13485,6 +13492,7 @@ else{setTimeout(init,200);}
     workshopLink.onclick=function(e){e.preventDefault(); publicShow('expert-workshop'); if(typeof window.renderExpertWorkshop==='function') window.renderExpertWorkshop();};
 
     navGroup.innerHTML='';
+    navGroup.appendChild(mapsLink);
     // "About Us" sengaja TIDAK dipasang di menu. Halamannya tetap ada supaya
     // tautan lama dan hasil pencarian tidak mati — hanya pintunya yang ditutup,
     // agar menu berisi hal yang dipakai orang untuk belajar.
