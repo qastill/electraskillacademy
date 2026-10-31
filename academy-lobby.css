@@ -40,21 +40,8 @@
 @keyframes energy-glow{50%{opacity:.4}}
 @keyframes machine-turn{to{transform:rotate(360deg)}}
 @keyframes machine-work{50%{transform:rotate(-12deg)}}
-/* Pilihan Academy di bawah panggung: dua baris. Baris 1 tab kategori,
-   baris 2 kartu Academy milik kategori aktif (maks. 8 kartu → satu baris di
-   desktop). Aturan dasar HARUS di atas media query di bawah. */
-.academy-choices{display:flex;flex-wrap:wrap;gap:10px}
-.academy-choices button{position:relative;display:flex;flex:1 1 150px;max-width:230px;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:104px;padding:14px 12px;border-radius:14px;border:1px solid #ffffff14;background:#ffffff04;color:#c3d3c7;font:600 12.5px/1.35 sans-serif;text-align:center;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
-.academy-choices button[hidden]{display:none}
-.academy-choices button svg{width:30px;height:30px;opacity:.7;flex-shrink:0}
-.academy-choices.is-switching button{animation:cards-in .28s ease both}
-@keyframes cards-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.academy-choices button:hover{background:#ffffff08;transform:translateY(-2px);border-color:#d9e9a15c}
-.academy-choices button[aria-pressed=true]{border-color:var(--accent);background:#c5e3ac0c;color:#e6f0d9}
-.academy-choices button[aria-pressed=true] svg{opacity:1;color:var(--accent)}
-.academy-choices svg *{animation:none!important}
-@media(max-width:1000px){.academy-lobby{padding:8px 28px 32px}.academy-choices button{flex-basis:calc(25% - 8px);min-height:74px;flex-direction:row;text-align:left;justify-content:flex-start;padding:12px 14px}.career-stage{min-height:390px}.career-world{height:310px}}
-@media(max-width:600px){.academy-lobby{padding:8px 16px 28px}.lobby-intro h1{font-size:27px}.lobby-sub{font-size:12.5px;max-width:330px}.lobby-intro h1 em{display:block;margin:3px 0 0}.lobby-eyebrow{font-size:8px}.career-stage{border-radius:18px;min-height:365px}.career-world{height:280px}.career-world svg{width:145%;max-width:none;margin-left:-22.5%}.stage-wordmark{top:64px;font-size:63px}.stage-corner{top:16px;left:16px;font-size:8px}.stage-corner>span:last-child{margin-left:2px}.career-arrow{width:44px;height:44px;top:47%;font-size:17px}.career-prev{left:10px}.career-next{right:10px}.career-caption h2{font-size:25px}.career-caption p{font-size:10px}.career-actions{gap:12px}.academy-enter{padding:12px 20px;gap:24px}#academy-status{font-size:9px}.academy-choices{gap:8px}.academy-choices button{flex-basis:calc(50% - 4px);max-width:none;min-height:60px;flex-direction:row;justify-content:flex-start;text-align:left;font-size:12px;padding:11px 13px}.academy-choices button svg{width:24px;height:24px}.motion-toggle{right:13px;top:11px}}
+@media(max-width:1000px){.academy-lobby{padding:8px 28px 32px}.career-stage{min-height:390px}.career-world{height:310px}}
+@media(max-width:600px){.academy-lobby{padding:8px 16px 28px}.lobby-intro h1{font-size:27px}.lobby-sub{font-size:12.5px;max-width:330px}.lobby-intro h1 em{display:block;margin:3px 0 0}.lobby-eyebrow{font-size:8px}.career-stage{border-radius:18px;min-height:365px}.career-world{height:280px}.career-world svg{width:145%;max-width:none;margin-left:-22.5%}.stage-wordmark{top:64px;font-size:63px}.stage-corner{top:16px;left:16px;font-size:8px}.stage-corner>span:last-child{margin-left:2px}.career-arrow{width:44px;height:44px;top:47%;font-size:17px}.career-prev{left:10px}.career-next{right:10px}.career-caption h2{font-size:25px}.career-caption p{font-size:10px}.career-actions{gap:12px}.academy-enter{padding:12px 20px;gap:24px}#academy-status{font-size:9px}.motion-toggle{right:13px;top:11px}}
 @media(prefers-reduced-motion:reduce){.academy-lobby *{animation:none!important;transition:none!important}.motion-toggle{display:none}}
 .academy-lobby.lobby-offscreen *{animation-play-state:paused!important}
 
@@ -99,15 +86,113 @@
 .academy-enter.is-soon { background: transparent; color: var(--accent, #c9a96e); border: 1px dashed currentColor; cursor: default; }
 .academy-enter.is-soon:hover { transform: none; }
 
-/* Baris 1: tab kategori. Satu baris; di layar sempit bisa digeser ke samping. */
-.academy-cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;padding:0 0 10px;border-bottom:1px solid #ffffff14}
-@media(max-width:1000px){.academy-cats{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}}
-.academy-cats::-webkit-scrollbar{display:none}
-.academy-cat{display:inline-flex;align-items:center;gap:9px;flex:0 0 auto;scroll-snap-align:start;min-height:44px;padding:10px 16px;border-radius:999px;border:1px solid #ffffff16;background:#ffffff04;color:#b7c8bb;font:600 13px/1.2 sans-serif;letter-spacing:.01em;white-space:nowrap;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
-.academy-cat:hover{background:#ffffff0a;border-color:#d9e9a15c;color:#e6f0d9}
-.academy-cat[aria-selected=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,transparent);color:#f2f7ea}
-.academy-cat-count{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#ffffff12;color:#dbe7d6;font:700 11px/1 sans-serif;font-variant-numeric:tabular-nums}
-.academy-cat[aria-selected=true] .academy-cat-count{background:var(--accent);color:#172b20}
-@media(max-width:600px){.academy-cat{min-height:40px;padding:9px 13px;font-size:12px}.academy-cats{margin:0 -16px 10px;padding:0 16px 10px;border-bottom-color:transparent}}
 .career-panel-cat{display:inline-block;margin:2px 0 8px;padding:3px 10px;border-radius:999px;border:1px solid var(--accent,#d9e9a1);color:var(--accent,#d9e9a1);font:600 10.5px/1.4 sans-serif;letter-spacing:.04em}
 .career-panel-cat:empty{display:none}
+
+/* ---- Pemilih Academy: langkah → tab berikon → panel arahan → kartu ----------
+   Semua rata tengah. Aturan ponsel ada di media query paling bawah blok ini. */
+.academy-steps{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 26px;list-style:none;margin:8px auto 16px;padding:0;color:#a9bcaf;font:500 13px/1.4 sans-serif}
+.academy-steps li{display:flex;align-items:center;gap:9px}
+.academy-steps b{color:#e8f1dc}
+.academy-step-no{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);font:700 12px/1 sans-serif}
+.academy-cats{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 16px;padding:0 0 4px}
+.academy-cat{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;min-height:48px;padding:7px 12px 7px 8px;border-radius:999px;border:1px solid #ffffff16;background:#ffffff05;color:#b7c8bb;font:600 13.5px/1.2 sans-serif;white-space:nowrap;cursor:pointer;transition:border-color .2s,background .2s,color .2s,transform .2s}
+.academy-cat:hover{background:#ffffff0b;border-color:#d9e9a15c;color:#e6f0d9;transform:translateY(-1px)}
+.academy-cat[aria-selected=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 15%,transparent);color:#f2f7ea;box-shadow:0 6px 22px -10px var(--accent)}
+.academy-cat-icon{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#ffffff0d;color:#9fb5a6}
+.academy-cat-icon svg{width:19px;height:19px}
+.academy-cat-icon svg *{animation:none}
+.academy-cat[aria-selected=true] .academy-cat-icon{background:var(--accent);color:#172b20}
+.academy-cat[aria-selected=true] .academy-cat-icon svg [fill^="#"]{fill:transparent}
+.academy-cat-count{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:#ffffff12;color:#dbe7d6;font:700 12px/1 sans-serif;font-variant-numeric:tabular-nums}
+.academy-cat[aria-selected=true] .academy-cat-count{background:#ffffff1f;color:#f2f7ea}
+
+/* Panel arahan: ilustrasi bergerak + "untuk kamu yang mau belajar …". */
+.academy-guide{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);align-items:center;gap:28px;max-width:1060px;margin:0 auto 18px;padding:22px 28px;border:1px solid #ffffff12;border-radius:22px;background:radial-gradient(ellipse at 18% 60%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 62%),linear-gradient(140deg,#192824,#111c18)}
+.academy-guide-art{color:var(--accent)}
+.academy-guide-art svg{display:block;width:100%;height:auto;overflow:visible}
+.academy-guide-body{display:flex;flex-direction:column;gap:12px;min-width:0}
+.academy-guide-eyebrow{font:700 11px/1.4 sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.academy-guide h3{margin:0;font:500 clamp(19px,1.8vw,25px)/1.35 sans-serif;color:#eef4e6;letter-spacing:-.01em;text-wrap:balance}
+.academy-guide h3 em{font-style:normal;font-weight:700;color:var(--accent)}
+.academy-guide-fit{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.academy-guide-fit>span{font:600 12px/1.4 sans-serif;color:#8ea897;margin-right:2px}
+.academy-guide-fit ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.academy-guide-fit li{padding:6px 12px;border-radius:999px;background:#ffffff0a;border:1px solid #ffffff12;color:#d5e2d2;font:500 12.5px/1.3 sans-serif}
+.academy-guide-fit li:before{content:'✓';margin-right:6px;color:var(--accent);font-weight:700}
+.academy-guide-start{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font:13px/1.4 sans-serif;color:#9fb3a5}
+.academy-guide-start button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid var(--accent);background:transparent;color:var(--accent);font:700 13px/1.2 sans-serif;cursor:pointer;transition:background .2s,color .2s}
+.academy-guide-start button:hover{background:var(--accent);color:#172b20}
+
+/* Kartu Academy: ikon berwarna jalur, peran, topik, modul, tombol Masuk. */
+.academy-choices{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:1240px;margin:0 auto}
+.academy-card{position:relative;display:flex;flex-direction:column;flex:0 1 calc(25% - 11px);min-width:220px;max-width:300px;border-radius:18px;border:1px solid #ffffff14;background:linear-gradient(165deg,#1a2a26,#121d1a);overflow:hidden;transition:border-color .25s,transform .25s,box-shadow .25s}
+.academy-card[hidden]{display:none}
+.academy-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 45%,transparent)}
+.academy-card.is-selected{border-color:var(--c);box-shadow:0 14px 34px -18px var(--c),inset 0 0 0 1px color-mix(in srgb,var(--c) 35%,transparent)}
+.academy-card-main{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;flex:1;padding:22px 18px 16px;border:0;background:transparent;color:inherit;text-align:center;cursor:pointer}
+.academy-card-icon{display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c) 20%,transparent),transparent 70%);color:var(--c);transition:transform .3s}
+.academy-card-icon svg{width:40px;height:40px;overflow:visible}
+.academy-card-icon svg *{animation-play-state:paused}
+.academy-card:hover .academy-card-icon,.academy-card.is-selected .academy-card-icon{transform:scale(1.08)}
+.academy-card:hover .academy-card-icon svg *,.academy-card.is-selected .academy-card-icon svg *{animation-play-state:running}
+.academy-card-text{display:flex;flex-direction:column;gap:5px}
+.academy-card-text strong{font:700 15px/1.3 sans-serif;color:#eef4e6}
+.academy-card-role{font:600 12px/1.3 sans-serif;color:var(--c)}
+.academy-card-topics{font:12.5px/1.5 sans-serif;color:#9fb2a5}
+.academy-card-meta{margin-top:auto;padding-top:4px;font:600 11px/1.3 sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#7f978a}
+.academy-card-badge{position:absolute;top:12px;left:12px;padding:4px 9px;border-radius:999px;background:var(--c);color:#172b20;font:800 9.5px/1 sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.academy-card-badge.is-soon{left:auto;right:12px;background:transparent;border:1px dashed var(--c);color:var(--c)}
+.academy-card-go{display:none;align-items:center;justify-content:center;gap:10px;margin:0 14px 14px;padding:12px 16px;border:0;border-radius:999px;background:var(--c);color:#172b20;font:700 13.5px/1 sans-serif;cursor:pointer;transition:filter .2s,transform .2s}
+.academy-card-go:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.academy-card-go span{font-size:16px}
+.academy-card-go:disabled{background:transparent;border:1px dashed var(--c);color:var(--c);cursor:default;transform:none}
+.academy-card.is-selected .academy-card-go{display:flex}
+.academy-lobby .academy-card-main:focus-visible,.academy-lobby .academy-card-go:focus-visible{outline:3px solid #efd899;outline-offset:-3px}
+
+.academy-guide.is-switching,.academy-choices.is-switching .academy-card{animation:cards-in .32s ease both}
+.academy-choices.is-switching .academy-card:nth-child(2n){animation-delay:.04s}
+@keyframes cards-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.academy-lobby.motion-paused .academy-guide *,.academy-lobby.motion-paused .academy-card *{animation-play-state:paused!important}
+
+@media(max-width:1000px){
+  .academy-guide{grid-template-columns:1fr;gap:14px;padding:18px 20px;text-align:center}
+  .academy-guide-art{max-width:330px;margin:0 auto}
+  .academy-guide-fit,.academy-guide-fit ul,.academy-guide-start{justify-content:center}
+  .academy-card{flex-basis:calc(33.333% - 10px)}
+  /* Tab di layar sempit: satu baris yang bisa digeser, tetap rata tengah bila muat. */
+  .academy-cats{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;margin:0 -28px 14px;padding:0 28px 6px}
+  .academy-cats::-webkit-scrollbar{display:none}
+  .academy-cat{scroll-snap-align:center}
+  .academy-cat:first-child{margin-left:auto}.academy-cat:last-child{margin-right:auto}
+}
+@media(max-width:600px){
+  .academy-steps{flex-direction:column;align-items:flex-start;width:max-content;max-width:100%;gap:8px;font-size:12.5px}
+  .academy-cats{margin:0 -16px 12px;padding:0 16px 6px}
+  .academy-cat{min-height:44px;padding:6px 13px 6px 7px;font-size:13px;gap:8px}
+  .academy-cat-icon{width:30px;height:30px}
+  .academy-guide{padding:16px;border-radius:18px}
+  .academy-guide h3{font-size:18px}
+  .academy-guide-fit>span{width:100%}
+  .academy-guide-fit li{font-size:12px;padding:5px 10px}
+  /* Ponsel: kartu 2 kolom ringkas (ikon, nama, peran). Kartu yang dipilih
+     melebar penuh dan baru menampilkan topik, jumlah modul, dan tombol Masuk. */
+  .academy-choices{gap:10px}
+  .academy-card{flex:1 1 calc(50% - 5px);min-width:0;max-width:none;border-radius:16px}
+  .academy-card-main{gap:8px;padding:18px 10px 14px}
+  .academy-card-icon{width:48px;height:48px}
+  .academy-card-icon svg{width:30px;height:30px}
+  .academy-card-text strong{font-size:13.5px}
+  .academy-card-role{font-size:11.5px}
+  .academy-card-topics,.academy-card-meta{display:none}
+  .academy-card-badge{top:8px;left:8px;padding:3px 7px;font-size:8.5px}
+  .academy-card-badge.is-soon{left:auto;right:8px}
+  .academy-card.is-selected{flex-basis:100%}
+  .academy-card.is-selected .academy-card-main{display:grid;grid-template-columns:56px minmax(0,1fr);grid-template-areas:"icon text" "icon meta";column-gap:14px;row-gap:6px;align-items:start;padding:30px 16px 12px;text-align:left}
+  .academy-card.is-selected .academy-card-icon{grid-area:icon;width:56px;height:56px}
+  .academy-card.is-selected .academy-card-text{grid-area:text}
+  .academy-card.is-selected .academy-card-text strong{font-size:15px}
+  .academy-card.is-selected .academy-card-topics,.academy-card.is-selected .academy-card-meta{display:block}
+  .academy-card.is-selected .academy-card-meta{grid-area:meta;margin:0}
+  .academy-card-go{margin:0 16px 16px}
+}
