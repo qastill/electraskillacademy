@@ -163,17 +163,12 @@
   }
   window.esaLobbySelect = select;
   window.esaLobbyCurrent = () => selected;
-  // Pemilih Academy di bawah panggung, disusun sebagai arahan bertahap:
-  //   langkah 1-2-3  →  tab kategori berikon  →  panel "untuk kamu yang mau
-  //   belajar … dan jadi ahli …" dengan ilustrasi bergerak  →  kartu Academy
-  //   kategori aktif (peran, topik, jumlah modul, tombol Masuk langsung).
+  // Pemilih Academy di bawah panggung: SATU panel yang muat satu layar.
+  //   Kiri  = "1 · Pilih bidang": daftar kategori vertikal (bisa digeser ke bawah).
+  //   Kanan = "2 · Pilih Academy": satu kalimat arahan + baris Academy ringkas;
+  //           baris terpilih memunculkan tombol Masuk (langkah 3).
   // Kategori aktif selalu mengikuti Academy di panggung, jadi panah ← → dan
-  // keyboard otomatis memindahkan tab bila perlu.
-  const catArt = {
-    fondasi: ['panel', 'shield', 'building'], pembangkitan: ['turbine', 'solar', 'atom'],
-    jaringan: ['tower', 'transformer', 'pole'], pemanfaatan: ['motor', 'charger', 'rack'],
-    digital: ['robot', 'data', 'model'], bisnis: ['policy', 'leaf', 'chart'], lainnya: ['panel', 'data', 'chart']
-  };
+  // keyboard otomatis memindahkan kategori bila perlu.
   const catIcon = { fondasi: 'shield', pembangkitan: 'turbine', jaringan: 'tower', pemanfaatan: 'charger', digital: 'data', bisnis: 'leaf', lainnya: 'panel' };
   const keepUpper = new Set(['EV', 'BESS', 'CCUS']);
   const keepLower = new Set(['TO', 'DAN']);
@@ -181,29 +176,17 @@
   const isSoon = id => !!(window.TRACKS_META && TRACKS_META[id] && TRACKS_META[id].comingSoon
     && !(window.CURRICULUM && CURRICULUM[id] && CURRICULUM[id].length));
   const esc = t => String(t).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
-  function catScene(catId) {
-    const parts = catArt[catId] || catArt.lainnya;
-    const at = [[18, 'prop-float'], [132, 'prop-float-delayed'], [246, 'prop-float']];
-    return `<svg viewBox="0 0 360 132" fill="none" aria-hidden="true">
-      <ellipse cx="180" cy="118" rx="168" ry="9" fill="currentColor" opacity=".06"/>
-      <path d="M8 116H352" stroke="currentColor" stroke-width="1" opacity=".22"/>
-      <path class="energy-flow" d="M8 116H352" stroke="currentColor" stroke-width="2"/>
-      <g stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${parts.map((k, i) => `<g transform="translate(${at[i][0]} 8) scale(.98)"><g class="${at[i][1]}">${art[k]}</g></g>`).join('')}</g>
-      <g fill="currentColor"><circle class="energy-glow" cx="120" cy="116" r="3"/><circle class="energy-glow" cx="240" cy="116" r="3"/></g>
-    </svg>`;
-  }
-  // Langkah singkat supaya calon member tahu urutannya tanpa membaca panjang.
-  const steps = document.createElement('ol');
-  steps.className = 'academy-steps';
-  steps.innerHTML = ['Pilih bidang yang kamu minati', 'Pilih Academy dan lihat isinya', 'Tekan <b>Masuk Academy</b>, mulai dari Level 1']
-    .map((t, i) => `<li><span class="academy-step-no">${i + 1}</span><span>${t}</span></li>`).join('');
+  const picker = document.createElement('div'); picker.className = 'academy-picker';
+  const rail = document.createElement('div'); rail.className = 'academy-rail';
+  rail.innerHTML = '<span class="academy-picker-step"><b>1</b> <span class="academy-step-verb">Pilih</span> bidang</span>';
   const tabs = document.createElement('div');
-  tabs.className = 'academy-cats'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Kategori Academy');
-  const guide = document.createElement('section');
-  guide.className = 'academy-guide'; guide.setAttribute('aria-live', 'polite');
-  choices.insertAdjacentElement('beforebegin', steps);
-  choices.insertAdjacentElement('beforebegin', tabs);
-  choices.insertAdjacentElement('beforebegin', guide);
+  tabs.className = 'academy-cats'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Kategori Academy'); tabs.setAttribute('aria-orientation', 'vertical');
+  rail.append(tabs);
+  const pane = document.createElement('div'); pane.className = 'academy-pane';
+  const guide = document.createElement('div'); guide.className = 'academy-guide'; guide.setAttribute('aria-live', 'polite');
+  choices.insertAdjacentElement('beforebegin', picker);
+  pane.append(guide, choices);
+  picker.append(rail, pane);
   let activeCat = null;
   cats.forEach(cat => {
     const tab = document.createElement('button');
@@ -213,8 +196,8 @@
     tab.title = cat.name + (cat.desc ? ' · ' + cat.desc : '');
     tab.setAttribute('aria-label', cat.name + ' · ' + cat.ids.length + ' Academy');
     tab.innerHTML = `<span class="academy-cat-icon">${icon(catIcon[cat.id] || 'panel')}</span><span class="academy-cat-name">${esc(cat.short || cat.name)}</span><span class="academy-cat-count">${cat.ids.length}</span>`;
-    // Klik tab: tampilkan kategori; bila Academy di panggung bukan anggotanya,
-    // pindah ke Academy rekomendasi kategori itu supaya panggung ikut berubah.
+    // Klik kategori: bila Academy di panggung bukan anggotanya, pindah ke
+    // Academy rekomendasi kategori itu supaya panggung ikut berubah.
     tab.addEventListener('click', () => { cat.ids.includes(selected) ? showCategory(cat.id) : select(cat.ids.includes(cat.start) ? cat.start : cat.ids[0]); });
     tabs.append(tab);
     cat.ids.forEach(id => {
@@ -224,33 +207,24 @@
       card.style.setProperty('--c', c[2]);
       const main = document.createElement('button');
       main.type = 'button'; main.className = 'academy-card-main'; main.dataset.academy = id; main.setAttribute('aria-pressed', 'false');
-      main.innerHTML = `${id === cat.start ? '<span class="academy-card-badge">Mulai di sini</span>' : ''}${soon ? '<span class="academy-card-badge is-soon">Segera hadir</span>' : ''}
-        <span class="academy-card-icon">${icon(c[3])}</span>
-        <span class="academy-card-text"><strong>${esc(ACADEMY_NAMES[id])}</strong><span class="academy-card-role">Jadi ${esc(roleName(id))}</span><span class="academy-card-topics">${esc(c[1])}</span></span>
-        <span class="academy-card-meta">${soon ? 'Kurikulum sedang disusun' : (modules ? modules + ' modul · Level 1–6' : 'Level 1–6')}</span>`;
+      main.title = ACADEMY_NAMES[id] + ' · ' + c[1];
+      const tag = id === cat.start ? '<span class="academy-card-badge">Mulai di sini</span>' : soon ? '<span class="academy-card-badge is-soon">Segera hadir</span>' : '';
+      main.innerHTML = `<span class="academy-card-icon">${icon(c[3])}</span>
+        <span class="academy-card-text"><strong class="academy-card-name">${esc(ACADEMY_NAMES[id])}</strong>
+        <span class="academy-card-sub">${tag}<span>Jadi ${esc(roleName(id))} · ${soon ? 'kurikulum disusun' : (modules ? modules + ' modul' : 'Level 1–6')}</span></span></span>`;
       main.addEventListener('click', () => select(id));
       const go = document.createElement('button');
       go.type = 'button'; go.className = 'academy-card-go'; go.disabled = soon;
-      go.innerHTML = soon ? 'Segera hadir' : 'Masuk Academy <span aria-hidden="true">↗</span>';
+      go.innerHTML = soon ? 'Segera' : 'Masuk <span aria-hidden="true">↗</span>';
       go.setAttribute('aria-label', soon ? ACADEMY_NAMES[id] + ' segera hadir' : 'Masuk ' + ACADEMY_NAMES[id]);
       go.addEventListener('click', () => { if (!soon) window.openJalur?.(id); });
       card.append(main, go); choices.append(card);
     });
   });
   function renderGuide(cat) {
-    const n = cats.indexOf(cat) + 1, startId = cat.ids.includes(cat.start) ? cat.start : cat.ids[0];
-    guide.innerHTML = `<div class="academy-guide-art">${catScene(cat.id)}</div>
-      <div class="academy-guide-body">
-        <span class="academy-guide-eyebrow">Bidang ${n} dari ${cats.length} · ${cat.ids.length} Academy</span>
-        <h3>${cat.learn ? `Untuk kamu yang mau belajar <em>${esc(cat.learn)}</em> dan jadi ahli <em>${esc(cat.expert)}</em>.` : esc(cat.name)}</h3>
-        ${cat.fit ? `<div class="academy-guide-fit"><span>Cocok untuk</span><ul>${cat.fit.map(f => `<li>${esc(f)}</li>`).join('')}</ul></div>` : ''}
-        <div class="academy-guide-start"><span>Bingung mulai dari mana?</span><button type="button" data-start="${startId}">Mulai dari ${esc(ACADEMY_NAMES[startId])} <span aria-hidden="true">→</span></button></div>
-      </div>`;
-    guide.querySelector('[data-start]').addEventListener('click', () => {
-      select(startId);
-      choices.querySelector(`[data-academy="${startId}"]`)?.focus({ preventScroll: true });
-      choices.querySelector(`[data-card="${startId}"]`)?.scrollIntoView?.({ block: 'nearest', behavior: reduced.matches ? 'auto' : 'smooth' });
-    });
+    guide.innerHTML = `<span class="academy-picker-step"><b>2</b> <span class="academy-step-verb">Pilih</span> Academy <span class="academy-guide-cat">· ${esc(cat.name)}</span></span>
+      <p class="academy-guide-lead">${cat.learn ? `Untuk kamu yang mau belajar <em>${esc(cat.learn)}</em> dan jadi ahli <em>${esc(cat.expert)}</em>.` : esc(cat.desc || cat.name)}</p>
+      ${cat.fit ? `<p class="academy-guide-fit"><span>Cocok untuk:</span> ${cat.fit.map(esc).join(' · ')}</p>` : ''}`;
   }
   function showCategory(catId) {
     if (catId === activeCat) return;
@@ -259,20 +233,22 @@
     tabs.querySelectorAll('.academy-cat').forEach(tab => {
       const on = tab.dataset.category === catId;
       tab.setAttribute('aria-selected', String(on)); tab.tabIndex = on ? 0 : -1;
-      // Geser tab aktif ke tampilan hanya di dalam baris tab (bukan halaman).
-      if (on && tabs.scrollWidth > tabs.clientWidth) tabs.scrollTo({ left: tab.offsetLeft - (tabs.clientWidth - tab.offsetWidth) / 2, behavior: 'smooth' });
+      // Geser kategori aktif ke tampilan hanya di dalam daftarnya (bukan halaman).
+      if (on && tabs.scrollHeight > tabs.clientHeight + 1) tabs.scrollTo({ top: tab.offsetTop - (tabs.clientHeight - tab.offsetHeight) / 2, behavior: 'smooth' });
+      if (on && tabs.scrollWidth > tabs.clientWidth + 1) tabs.scrollTo({ left: tab.offsetLeft - (tabs.clientWidth - tab.offsetWidth) / 2, behavior: 'smooth' });
     });
     choices.querySelectorAll('.academy-card').forEach(card => { card.hidden = card.dataset.category !== catId; });
     choices.setAttribute('aria-label', 'Pilih Academy · ' + cat.name);
     renderGuide(cat);
-    for (const el of [choices, guide]) { el.classList.remove('is-switching'); void el.offsetWidth; el.classList.add('is-switching'); }
+    choices.classList.remove('is-switching'); void choices.offsetWidth; choices.classList.add('is-switching');
   }
-  // Panah kiri/kanan di baris tab berpindah kategori.
+  // Panah atas/bawah (dan kiri/kanan) di daftar kategori berpindah kategori.
   tabs.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const dir = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    if (!dir) return;
     e.preventDefault();
     const i = cats.findIndex(c => c.id === activeCat);
-    const next = cats[(i + (e.key === 'ArrowRight' ? 1 : cats.length - 1)) % cats.length];
+    const next = cats[(i + dir + cats.length) % cats.length];
     tabs.querySelector(`[data-category="${next.id}"]`)?.click();
     tabs.querySelector(`[data-category="${next.id}"]`)?.focus({ preventScroll: true });
   });
