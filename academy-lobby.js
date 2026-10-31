@@ -76,6 +76,7 @@
   if (rest.length) cats.push({ id: 'lainnya', name: 'Lainnya', desc: '', ids: rest });
   const ids = cats.flatMap(c => c.ids);
   const categoryName = id => (cats.find(c => c.ids.includes(id)) || {}).name || '';
+  const academyCategoryId = id => (cats.find(c => c.ids.includes(id)) || {}).id || null;
   const read = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
   const save = (key, value) => { try { localStorage.setItem(key, value); } catch (_) {} };
   let selected = Object.hasOwn(careers, read('esa-lobby-academy')) ? read('esa-lobby-academy') : 'S12';
@@ -123,6 +124,7 @@
     selected = id;
     const c = careers[id];
     choices.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.academy === id)));
+    showCategory(academyCategoryId(id));
     lobby.style.setProperty('--accent', c[2]);
     world.innerHTML = scene(c);
     world.setAttribute('aria-label', c[0] + ' — ' + c[1]);
@@ -160,18 +162,56 @@
   }
   window.esaLobbySelect = select;
   window.esaLobbyCurrent = () => selected;
-  // Tombol tetap anak langsung #academy-choices (grid); judul kelompok menjangkau satu baris penuh.
+  // Dua baris saja: baris 1 tab kategori, baris 2 kartu Academy milik kategori
+  // yang aktif. Kategori aktif selalu mengikuti Academy yang sedang di panggung,
+  // jadi panah ← → dan keyboard otomatis memindahkan tab bila perlu.
+  const tabs = document.createElement('div');
+  tabs.className = 'academy-cats'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Kategori Academy');
+  choices.insertAdjacentElement('beforebegin', tabs);
+  let activeCat = null;
   cats.forEach(cat => {
-    const head = document.createElement('div'); head.className = 'academy-group-head'; head.dataset.category = cat.id;
-    const title = document.createElement('strong'); title.textContent = cat.name;
-    const note = document.createElement('span'); note.textContent = cat.ids.length + ' Academy' + (cat.desc ? ' · ' + cat.desc : '');
-    head.append(title, note); choices.append(head);
+    const tab = document.createElement('button');
+    tab.type = 'button'; tab.className = 'academy-cat'; tab.dataset.category = cat.id;
+    tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', 'false'); tab.tabIndex = -1;
+    tab.id = 'academy-cat-' + cat.id; tab.setAttribute('aria-controls', 'academy-choices');
+    tab.title = cat.name + (cat.desc ? ' · ' + cat.desc : '');
+    tab.setAttribute('aria-label', cat.name + ' · ' + cat.ids.length + ' Academy');
+    const name = document.createElement('span'); name.className = 'academy-cat-name'; name.textContent = cat.short || cat.name;
+    const count = document.createElement('span'); count.className = 'academy-cat-count'; count.textContent = cat.ids.length;
+    count.setAttribute('aria-label', cat.ids.length + ' Academy');
+    tab.append(name, count);
+    // Klik tab: tampilkan kategori; bila Academy di panggung bukan anggotanya,
+    // pindah ke Academy pertama kategori itu supaya panggung ikut berubah.
+    tab.addEventListener('click', () => { cat.ids.includes(selected) ? showCategory(cat.id) : select(cat.ids[0]); });
+    tabs.append(tab);
     cat.ids.forEach(id => {
       const button = document.createElement('button'); button.type = 'button'; button.dataset.academy = id; button.dataset.category = cat.id;
       button.innerHTML = icon(careers[id][3]);
       const label = document.createElement('span'); label.textContent = ACADEMY_NAMES[id]; button.append(label);
       button.addEventListener('click', () => select(id)); choices.append(button);
     });
+  });
+  function showCategory(catId) {
+    if (catId === activeCat) return;
+    activeCat = catId;
+    const cat = cats.find(c => c.id === catId) || {};
+    tabs.querySelectorAll('.academy-cat').forEach(tab => {
+      const on = tab.dataset.category === catId;
+      tab.setAttribute('aria-selected', String(on)); tab.tabIndex = on ? 0 : -1;
+      if (on) tab.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+    });
+    choices.querySelectorAll('button').forEach(button => { button.hidden = button.dataset.category !== catId; });
+    choices.setAttribute('aria-label', 'Pilih Academy · ' + (cat.name || ''));
+    choices.classList.remove('is-switching'); void choices.offsetWidth; choices.classList.add('is-switching');
+  }
+  // Panah kiri/kanan di baris tab berpindah kategori.
+  tabs.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    const i = cats.findIndex(c => c.id === activeCat);
+    const next = cats[(i + (e.key === 'ArrowRight' ? 1 : cats.length - 1)) % cats.length];
+    tabs.querySelector(`[data-category="${next.id}"]`)?.click();
+    tabs.querySelector(`[data-category="${next.id}"]`)?.focus({ preventScroll: true });
   });
   document.getElementById('academy-prev').addEventListener('click', () => select(ids[(ids.indexOf(selected) + ids.length - 1) % ids.length]));
   document.getElementById('academy-next').addEventListener('click', () => select(ids[(ids.indexOf(selected) + 1) % ids.length]));
