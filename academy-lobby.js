@@ -76,6 +76,7 @@
   if (rest.length) cats.push({ id: 'lainnya', name: 'Lainnya', desc: '', ids: rest });
   const ids = cats.flatMap(c => c.ids);
   const categoryName = id => (cats.find(c => c.ids.includes(id)) || {}).name || '';
+  const academyCategoryId = id => (cats.find(c => c.ids.includes(id)) || {}).id || null;
   const read = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
   const save = (key, value) => { try { localStorage.setItem(key, value); } catch (_) {} };
   let selected = Object.hasOwn(careers, read('esa-lobby-academy')) ? read('esa-lobby-academy') : 'S12';
@@ -122,7 +123,9 @@
     if (!Object.hasOwn(careers, id)) return;
     selected = id;
     const c = careers[id];
-    choices.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.academy === id)));
+    choices.querySelectorAll('.academy-card').forEach(card => card.classList.toggle('is-selected', card.dataset.card === id));
+    choices.querySelectorAll('.academy-card-main').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.academy === id)));
+    showCategory(academyCategoryId(id));
     lobby.style.setProperty('--accent', c[2]);
     world.innerHTML = scene(c);
     world.setAttribute('aria-label', c[0] + ' — ' + c[1]);
@@ -160,18 +163,94 @@
   }
   window.esaLobbySelect = select;
   window.esaLobbyCurrent = () => selected;
-  // Tombol tetap anak langsung #academy-choices (grid); judul kelompok menjangkau satu baris penuh.
+  // Pemilih Academy di bawah panggung: SATU panel yang muat satu layar.
+  //   Kiri  = "1 · Pilih bidang": daftar kategori vertikal (bisa digeser ke bawah).
+  //   Kanan = "2 · Pilih Academy": satu kalimat arahan + baris Academy ringkas;
+  //           baris terpilih memunculkan tombol Masuk (langkah 3).
+  // Kategori aktif selalu mengikuti Academy di panggung, jadi panah ← → dan
+  // keyboard otomatis memindahkan kategori bila perlu.
+  const catIcon = { fondasi: 'shield', pembangkitan: 'turbine', jaringan: 'tower', pemanfaatan: 'charger', digital: 'data', bisnis: 'leaf', lainnya: 'panel' };
+  const keepUpper = new Set(['EV', 'BESS', 'CCUS']);
+  const keepLower = new Set(['TO', 'DAN']);
+  const roleName = id => careers[id][0].split(' ').map(w => keepUpper.has(w) || w === '&' ? w : keepLower.has(w) ? w.toLowerCase() : w.charAt(0) + w.slice(1).toLowerCase()).join(' ');
+  const isSoon = id => !!(window.TRACKS_META && TRACKS_META[id] && TRACKS_META[id].comingSoon
+    && !(window.CURRICULUM && CURRICULUM[id] && CURRICULUM[id].length));
+  const esc = t => String(t).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  const picker = document.createElement('div'); picker.className = 'academy-picker';
+  const rail = document.createElement('div'); rail.className = 'academy-rail';
+  rail.innerHTML = '<span class="academy-picker-step"><b>1</b> <span class="academy-step-verb">Pilih</span> bidang</span>';
+  const tabs = document.createElement('div');
+  tabs.className = 'academy-cats'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Kategori Academy'); tabs.setAttribute('aria-orientation', 'vertical');
+  rail.append(tabs);
+  const pane = document.createElement('div'); pane.className = 'academy-pane';
+  const guide = document.createElement('div'); guide.className = 'academy-guide'; guide.setAttribute('aria-live', 'polite');
+  choices.insertAdjacentElement('beforebegin', picker);
+  pane.append(guide, choices);
+  picker.append(rail, pane);
+  let activeCat = null;
   cats.forEach(cat => {
-    const head = document.createElement('div'); head.className = 'academy-group-head'; head.dataset.category = cat.id;
-    const title = document.createElement('strong'); title.textContent = cat.name;
-    const note = document.createElement('span'); note.textContent = cat.ids.length + ' Academy' + (cat.desc ? ' · ' + cat.desc : '');
-    head.append(title, note); choices.append(head);
+    const tab = document.createElement('button');
+    tab.type = 'button'; tab.className = 'academy-cat'; tab.dataset.category = cat.id;
+    tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', 'false'); tab.tabIndex = -1;
+    tab.id = 'academy-cat-' + cat.id; tab.setAttribute('aria-controls', 'academy-choices');
+    tab.title = cat.name + (cat.desc ? ' · ' + cat.desc : '');
+    tab.setAttribute('aria-label', cat.name + ' · ' + cat.ids.length + ' Academy');
+    tab.innerHTML = `<span class="academy-cat-icon">${icon(catIcon[cat.id] || 'panel')}</span><span class="academy-cat-name">${esc(cat.short || cat.name)}</span><span class="academy-cat-count">${cat.ids.length}</span>`;
+    // Klik kategori: bila Academy di panggung bukan anggotanya, pindah ke
+    // Academy rekomendasi kategori itu supaya panggung ikut berubah.
+    tab.addEventListener('click', () => { cat.ids.includes(selected) ? showCategory(cat.id) : select(cat.ids.includes(cat.start) ? cat.start : cat.ids[0]); });
+    tabs.append(tab);
     cat.ids.forEach(id => {
-      const button = document.createElement('button'); button.type = 'button'; button.dataset.academy = id; button.dataset.category = cat.id;
-      button.innerHTML = icon(careers[id][3]);
-      const label = document.createElement('span'); label.textContent = ACADEMY_NAMES[id]; button.append(label);
-      button.addEventListener('click', () => select(id)); choices.append(button);
+      const c = careers[id], soon = isSoon(id), modules = window.esaTrackModuleCount?.(id) || 0;
+      const card = document.createElement('article');
+      card.className = 'academy-card'; card.dataset.card = id; card.dataset.category = cat.id;
+      card.style.setProperty('--c', c[2]);
+      const main = document.createElement('button');
+      main.type = 'button'; main.className = 'academy-card-main'; main.dataset.academy = id; main.setAttribute('aria-pressed', 'false');
+      main.title = ACADEMY_NAMES[id] + ' · ' + c[1];
+      const tag = id === cat.start ? '<span class="academy-card-badge">Mulai di sini</span>' : soon ? '<span class="academy-card-badge is-soon">Segera hadir</span>' : '';
+      main.innerHTML = `<span class="academy-card-icon">${icon(c[3])}</span>
+        <span class="academy-card-text"><strong class="academy-card-name">${esc(ACADEMY_NAMES[id])}</strong>
+        <span class="academy-card-sub">${tag}<span>Jadi ${esc(roleName(id))} · ${soon ? 'kurikulum disusun' : (modules ? modules + ' modul' : 'Level 1–6')}</span></span></span>`;
+      main.addEventListener('click', () => select(id));
+      const go = document.createElement('button');
+      go.type = 'button'; go.className = 'academy-card-go'; go.disabled = soon;
+      go.innerHTML = soon ? 'Segera' : 'Masuk <span aria-hidden="true">↗</span>';
+      go.setAttribute('aria-label', soon ? ACADEMY_NAMES[id] + ' segera hadir' : 'Masuk ' + ACADEMY_NAMES[id]);
+      go.addEventListener('click', () => { if (!soon) window.openJalur?.(id); });
+      card.append(main, go); choices.append(card);
     });
+  });
+  function renderGuide(cat) {
+    guide.innerHTML = `<span class="academy-picker-step"><b>2</b> <span class="academy-step-verb">Pilih</span> Academy <span class="academy-guide-cat">· ${esc(cat.name)}</span></span>
+      <p class="academy-guide-lead">${cat.learn ? `Untuk kamu yang mau belajar <em>${esc(cat.learn)}</em> dan jadi ahli <em>${esc(cat.expert)}</em>.` : esc(cat.desc || cat.name)}</p>
+      ${cat.fit ? `<p class="academy-guide-fit"><span>Cocok untuk:</span> ${cat.fit.map(esc).join(' · ')}</p>` : ''}`;
+  }
+  function showCategory(catId) {
+    if (catId === activeCat) return;
+    activeCat = catId;
+    const cat = cats.find(c => c.id === catId) || cats[0];
+    tabs.querySelectorAll('.academy-cat').forEach(tab => {
+      const on = tab.dataset.category === catId;
+      tab.setAttribute('aria-selected', String(on)); tab.tabIndex = on ? 0 : -1;
+      // Geser kategori aktif ke tampilan hanya di dalam daftarnya (bukan halaman).
+      if (on && tabs.scrollHeight > tabs.clientHeight + 1) tabs.scrollTo({ top: tab.offsetTop - (tabs.clientHeight - tab.offsetHeight) / 2, behavior: 'smooth' });
+      if (on && tabs.scrollWidth > tabs.clientWidth + 1) tabs.scrollTo({ left: tab.offsetLeft - (tabs.clientWidth - tab.offsetWidth) / 2, behavior: 'smooth' });
+    });
+    choices.querySelectorAll('.academy-card').forEach(card => { card.hidden = card.dataset.category !== catId; });
+    choices.setAttribute('aria-label', 'Pilih Academy · ' + cat.name);
+    renderGuide(cat);
+    choices.classList.remove('is-switching'); void choices.offsetWidth; choices.classList.add('is-switching');
+  }
+  // Panah atas/bawah (dan kiri/kanan) di daftar kategori berpindah kategori.
+  tabs.addEventListener('keydown', e => {
+    const dir = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    if (!dir) return;
+    e.preventDefault();
+    const i = cats.findIndex(c => c.id === activeCat);
+    const next = cats[(i + dir + cats.length) % cats.length];
+    tabs.querySelector(`[data-category="${next.id}"]`)?.click();
+    tabs.querySelector(`[data-category="${next.id}"]`)?.focus({ preventScroll: true });
   });
   document.getElementById('academy-prev').addEventListener('click', () => select(ids[(ids.indexOf(selected) + ids.length - 1) % ids.length]));
   document.getElementById('academy-next').addEventListener('click', () => select(ids[(ids.indexOf(selected) + 1) % ids.length]));
@@ -180,6 +259,7 @@
   const motion = document.getElementById('motion-toggle');
   function updateMotion() {
     stage.classList.toggle('is-paused', paused || !visible || document.hidden || reduced.matches);
+    lobby.classList.toggle('motion-paused', paused || document.hidden || reduced.matches);
     motion.setAttribute('aria-pressed', String(paused));
     motion.setAttribute('aria-label', paused ? 'Lanjutkan animasi' : 'Jeda animasi');
     motion.textContent = paused ? '▷' : 'Ⅱ';
