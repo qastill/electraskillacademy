@@ -84,7 +84,10 @@
   function icon(kind) { return `<svg viewBox="-8 0 112 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${art[kind]}</svg>`; }
   function scene(c) {
     const helmet = c[5] === 'helmet';
-    return `<svg viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    // viewBox dipotong ke area engineer + dua peralatannya (x 195–705) supaya
+    // karakter tampil besar dan di tengah; garis dekorasi di luar area ini tetap
+    // terlihat karena svg overflow:visible.
+    return `<svg viewBox="195 28 510 308" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs><linearGradient id="suit" x1="393" y1="140" x2="499" y2="243" gradientUnits="userSpaceOnUse"><stop stop-color="#57766d"/><stop offset="1" stop-color="#243a34"/></linearGradient><linearGradient id="skin" x1="425" y1="70" x2="474" y2="121" gradientUnits="userSpaceOnUse"><stop stop-color="#ebbf96"/><stop offset="1" stop-color="#b77e5c"/></linearGradient><radialGradient id="aura"><stop stop-color="${c[2]}" stop-opacity=".14"/><stop offset="1" stop-color="${c[2]}" stop-opacity="0"/></radialGradient></defs>
       <ellipse cx="450" cy="180" rx="245" ry="147" fill="url(#aura)"/>
       <g stroke="${c[2]}" stroke-width="1" opacity=".17"><path d="M90 260h120l40-40h90M810 260H690l-40-40h-90M160 130h95l33 33h42M740 130h-95l-33 33h-42"/><circle cx="450" cy="174" r="126" stroke-dasharray="2 10"/><path d="M340 103a126 126 0 0 1 220 0"/></g>
@@ -207,11 +210,13 @@
       card.style.setProperty('--c', c[2]);
       const main = document.createElement('button');
       main.type = 'button'; main.className = 'academy-card-main'; main.dataset.academy = id; main.setAttribute('aria-pressed', 'false');
-      main.title = ACADEMY_NAMES[id] + ' · ' + c[1];
+      main.title = ACADEMY_NAMES[id] + ' · ' + c[1] + (soon ? ' · kurikulum disusun' : modules ? ' · ' + modules + ' modul' : '');
       const tag = id === cat.start ? '<span class="academy-card-badge">Mulai di sini</span>' : soon ? '<span class="academy-card-badge is-soon">Segera hadir</span>' : '';
-      main.innerHTML = `<span class="academy-card-icon">${icon(c[3])}</span>
+      // Label "Mulai di sini"/"Segera hadir" menempel di pojok kartu supaya tidak
+      // menambah tinggi; baris kedua cukup peran (modul ada di panel & tooltip).
+      main.innerHTML = `${tag}<span class="academy-card-icon">${icon(c[3])}</span>
         <span class="academy-card-text"><strong class="academy-card-name">${esc(ACADEMY_NAMES[id])}</strong>
-        <span class="academy-card-sub">${tag}<span>Jadi ${esc(roleName(id))} · ${soon ? 'kurikulum disusun' : (modules ? modules + ' modul' : 'Level 1–6')}</span></span></span>`;
+        <span class="academy-card-sub">Jadi ${esc(roleName(id))}</span></span>`;
       main.addEventListener('click', () => select(id));
       const go = document.createElement('button');
       go.type = 'button'; go.className = 'academy-card-go'; go.disabled = soon;
