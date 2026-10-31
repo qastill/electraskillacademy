@@ -183,7 +183,7 @@
   .lobby-sub{max-width:none;margin-top:3px;font-size:13px}
   .career-layout{grid-template-columns:minmax(0,1fr) 270px;gap:14px;margin-bottom:12px}
   .career-stage{min-height:0;border-radius:20px}
-  .career-world{height:clamp(110px,calc(100vh - 625px),340px)}
+  .career-world{height:clamp(140px,calc(100vh - 556px),480px)}
   .stage-wordmark{top:14px;font-size:clamp(48px,8vw,118px)}
   .stage-corner{top:16px}.motion-toggle{top:10px}
   .career-caption{margin-top:-6px;padding:0 20px 12px}
@@ -211,8 +211,25 @@
   .academy-card-go:disabled{width:auto;padding:0 10px;font-size:11px}
 }
 @media(min-width:1200px){.academy-choices{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* Pemilih dipadatkan ke atas: bidang 2 kolom (jumlah Academy jadi lencana di
+   pojok ikon) dan Academy 4 kolom di layar lebar. Tinggi kiri dan kanan jadi
+   seimbang sehingga tidak ada ruang kosong di bawah, dan sisa ruangnya dipakai
+   panggung engineer. */
+@media(min-width:1001px){
+  .academy-picker{grid-template-columns:340px minmax(0,1fr)}
+  .academy-cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;max-height:none;overflow:visible}
+  .academy-cat{position:relative;min-height:42px;padding:5px 8px 5px 5px;font-size:13px;line-height:1.2}
+  .academy-cat-count{position:absolute;top:1px;left:27px;min-width:16px;padding:2px 4px;font-size:9.5px;background:#2a3b35;border:1px solid #0f1916}
+  .academy-cat[aria-selected=true] .academy-cat-count{background:#f2f7ea;color:#172b20}
+}
+@media(min-width:1200px){.academy-choices{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.academy-card-badge{position:absolute;top:-7px;right:10px;z-index:1;box-shadow:0 0 0 3px #131f1c}
+.academy-card-badge.is-soon{background:#131f1c}
+.academy-card-sub{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Desktop: tombol "Masuk Academy" besar sudah ada di panel samping panggung. */
+@media(min-width:1001px){.academy-card.is-selected .academy-card-go{display:none}.academy-card-main:has(.academy-card-badge){padding-top:12px}}
 /* Laptop pendek: foto panel disembunyikan supaya panggung tidak terlalu kecil. */
-@media(min-width:1001px) and (max-height:820px){.career-world{height:clamp(110px,calc(100vh - 600px),340px)}.career-panel-photo,#academy-status,.career-caption p,.academy-guide-fit{display:none}.career-caption{padding-bottom:8px}.academy-cat{min-height:37px}}
+@media(min-width:1001px) and (max-height:820px){.career-world{height:clamp(130px,calc(100vh - 526px),480px)}#academy-status,.career-caption p,.academy-guide-fit{display:none}.career-caption{padding-bottom:8px}.academy-cat{min-height:37px}}
 @media(max-width:600px){
   .lobby-intro{margin-bottom:10px}
   .lobby-eyebrow{display:none}
